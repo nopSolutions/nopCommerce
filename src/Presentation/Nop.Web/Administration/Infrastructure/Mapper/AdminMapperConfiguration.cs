@@ -375,7 +375,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<CurrencyModel, Currency>()
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore());
+                    .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.RoundingType, mo => mo.Ignore());
                 //measure weights
                 cfg.CreateMap<MeasureWeight, MeasureWeightModel>()
                     .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore())
@@ -625,7 +626,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                     .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
-                    .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableRequirementGroups, mo => mo.Ignore())
+                    .ForMember(dest => dest.GroupName, mo => mo.Ignore())
+                    .ForMember(dest => dest.RequirementGroupId, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<DiscountModel, Discount>()
                     .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
@@ -682,6 +685,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultTaxCategoryId_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TaxBasedOn_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.TaxBasedOnPickupPointAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultTaxAddress_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShippingIsTaxable_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.ShippingPriceIncludesTax_OverrideForStore, mo => mo.Ignore())
@@ -915,7 +919,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                     .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore())
-                    .ForMember(dest => dest.CustomOrderNumberMask_OverrideForStore, mo => mo.Ignore());
+                    .ForMember(dest => dest.CustomOrderNumberMask_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.ExportWithProducts_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<OrderSettingsModel, OrderSettings>()
                     .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                     .ForMember(dest => dest.ReturnRequestsFileMaximumSize, mo => mo.Ignore())
@@ -963,9 +968,9 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore());
+                    .ForMember(dest => dest.ImportProductImagesUsingHash_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.DefaultPictureZoomEnabled_OverrideForStore, mo => mo.Ignore());
                 cfg.CreateMap<MediaSettingsModel, MediaSettings>()
-                    .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                     .ForMember(dest => dest.ImageSquarePictureSize, mo => mo.Ignore())
                     .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
                 cfg.CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()

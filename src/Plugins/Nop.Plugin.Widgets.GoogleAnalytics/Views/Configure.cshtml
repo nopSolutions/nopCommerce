@@ -65,24 +65,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    Google Analytics is a free website stats tool from Google. It keeps track of statistics
-                    about the visitors and ecommerce conversion on your website.<br />
-                    <br />
-                    Follow the next steps to enable Google Analytics integration:<br />
-                    <ul>
-                        <li>
-                            <a href="http://www.google.com/analytics/" target="_blank">
-                                Create a Google Analytics
-                                account
-                            </a> and follow the wizard to add your website
-                        </li>
-                        <li>Copy the Tracking ID into the 'ID' box below</li>
-                        <li>Click the 'Save' button below and Google Analytics will be integrated into your store</li>
-                    </ul>
-                    <br />
-                    If you would like to switch between Google Analytics (used by default) and Universal Analytics, then please use the buttons below:
-                </p>               
+                @T("Plugins.Widgets.GoogleAnalytics.Instructions")              
             </div>
             <div class="panel-footer">
                 <input type="button" id="pre-configure-google-analytics" class="btn btn-primary" value="Pre-configure Google Analytics" />
@@ -112,9 +95,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    <em>Please note that {ECOMMERCE} line works only when you have "Disable order completed page" order setting unticked.</em>
-                </p>
+                @T("Plugins.Widgets.GoogleAnalytics.Note")
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Messages;
 using Nop.Web.Framework;
@@ -30,6 +31,8 @@ namespace Nop.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Password")]
         [AllowHtml]
+        [DataType(DataType.Password)]
+        [NoTrim]
         public string Password { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EnableSsl")]

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -156,10 +155,8 @@ namespace Nop.Admin.Controllers
                 Data = languages.Select(x => x.ToModel()),
                 Total = languages.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public virtual ActionResult Create()

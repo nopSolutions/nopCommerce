@@ -11,8 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
-using Nop.Core.ComponentModel;
-using Nop.Core.Domain.Shipping;
 
 namespace Nop.Core
 {

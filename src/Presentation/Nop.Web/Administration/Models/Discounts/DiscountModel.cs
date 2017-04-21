@@ -15,7 +15,7 @@ namespace Nop.Admin.Models.Discounts
         public DiscountModel()
         {
             AvailableDiscountRequirementRules = new List<SelectListItem>();
-            DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
+            AvailableRequirementGroups = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
@@ -82,16 +82,32 @@ namespace Nop.Admin.Models.Discounts
 
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
 
-        public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
-        
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.GroupName")]
+        public string GroupName { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.RequirementGroup")]
+        public int RequirementGroupId { get; set; }
+
+        public IList<SelectListItem> AvailableRequirementGroups { get; set; }
 
         #region Nested classes
 
         public partial class DiscountRequirementMetaInfo : BaseNopModel
         {
+            public DiscountRequirementMetaInfo()
+            {
+                ChildRequirements = new List<DiscountRequirementMetaInfo>();
+            }
+
             public int DiscountRequirementId { get; set; }
             public string RuleName { get; set; }
             public string ConfigurationUrl { get; set; }
+            public int InteractionTypeId { get; set; }
+            public int? ParentId { get; set; }
+            public SelectList AvailableInteractionTypes { get; set; }
+            public bool IsGroup { get; set; }
+            public bool IsLastInGroup { get; set; }
+            public IList<DiscountRequirementMetaInfo> ChildRequirements { get; set; }
         }
 
         public partial class DiscountUsageHistoryModel : BaseNopEntityModel

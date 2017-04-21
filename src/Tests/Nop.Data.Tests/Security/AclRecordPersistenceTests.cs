@@ -1,6 +1,4 @@
-﻿using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security;
-using Nop.Tests;
+﻿using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Data.Tests.Security
@@ -11,31 +9,14 @@ namespace Nop.Data.Tests.Security
         [Test]
         public void Can_save_and_load_urlRecord()
         {
-            var aclRecord = new AclRecord
-            {
-                EntityId = 1,
-                EntityName = "EntityName 1",
-                CustomerRole = GetTestCustomerRole(),
-            };
+            var aclRecord = this.GetTestAclRecord();
+            aclRecord.CustomerRole = this.GetTestCustomerRole();
 
             var fromDb = SaveAndLoadEntity(aclRecord);
             fromDb.ShouldNotBeNull();
-            fromDb.EntityId.ShouldEqual(1);
-            fromDb.EntityName.ShouldEqual("EntityName 1");
+            fromDb.PropertiesShouldEqual(this.GetTestAclRecord());
             fromDb.CustomerRole.ShouldNotBeNull();
-        }
-
-        protected CustomerRole GetTestCustomerRole()
-        {
-            return new CustomerRole
-            {
-                Name = "Administrators",
-                FreeShipping = true,
-                TaxExempt = true,
-                Active = true,
-                IsSystemRole = true,
-                SystemName = "Administrators"
-            };
+            fromDb.CustomerRole.PropertiesShouldEqual(this.GetTestCustomerRole());
         }
     }
 }

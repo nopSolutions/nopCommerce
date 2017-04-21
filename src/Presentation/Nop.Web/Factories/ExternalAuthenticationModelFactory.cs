@@ -6,6 +6,9 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the external authentication model factory
+    /// </summary>
     public partial class ExternalAuthenticationModelFactory : IExternalAuthenticationModelFactory
     {
 		#region Fields
@@ -31,6 +34,10 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the external authentication method model
+        /// </summary>
+        /// <returns>List of the external authentication method model</returns>
         public virtual List<ExternalAuthenticationMethodModel> PrepareExternalMethodsModel()
         {
             var model = new List<ExternalAuthenticationMethodModel>();

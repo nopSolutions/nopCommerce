@@ -15,6 +15,9 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the address model factory
+    /// </summary>
     public partial class AddressModelFactory : IAddressModelFactory
     {
         #region Fields
@@ -46,6 +49,12 @@ namespace Nop.Web.Factories
 
         #region Utilities
 
+        /// <summary>
+        /// Prepare address attributes
+        /// </summary>
+        /// <param name="model">Address model</param>
+        /// <param name="address">Address entity</param>
+        /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of address entity</param>
         protected virtual void PrepareCustomAddressAttributes(AddressModel model,
             Address address, string overrideAttributesXml = "")
         {
@@ -134,6 +143,17 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare address model
+        /// </summary>
+        /// <param name="model">Address model</param>
+        /// <param name="address">Address entity</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <param name="addressSettings">Address settings</param>
+        /// <param name="loadCountries">Countries loading function; pass null if countries do not need to load</param>
+        /// <param name="prePopulateWithCustomerFields">Whether to populate model properties with the customer fields (used with the customer entity)</param>
+        /// <param name="customer">Customer entity; required if prePopulateWithCustomerFields is true</param>
+        /// <param name="overrideAttributesXml">Overridden address attributes in XML format; pass null to use CustomAttributes of the address entity</param>
         public virtual void PrepareAddressModel(AddressModel model,
             Address address, bool excludeProperties,
             AddressSettings addressSettings,

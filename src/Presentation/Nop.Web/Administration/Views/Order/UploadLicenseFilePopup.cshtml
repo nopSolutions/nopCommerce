@@ -32,22 +32,22 @@
         @Html.ValidationSummary(false)
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-popup">
                     <div class="panel-body">
                         @Html.HiddenFor(model => model.OrderId)
                         @Html.HiddenFor(model => model.OrderItemId)
                         <div class="form-group">
-                            <div class="col-xs-12">
+                            <div class="col-sm-12">
                                 @Html.NopEditorFor(model => model.LicenseDownloadId)
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-xs-2 col-xs-offset-4">
+                            <div class="col-sm-2 col-sm-offset-4">
                                 <button type="submit" name="uploadlicense" id="uploadlicense" class="btn btn-primary">
                                     @T("Admin.Common.Save")
                                 </button>
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-sm-2">
                                 @if (Model.LicenseDownloadId > 0)
                                 {
                                     <button type="submit" name="deletelicense" id="deletelicense" class="btn bg-red">

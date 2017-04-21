@@ -66,5 +66,8 @@ namespace Nop.Admin.Models.Settings
         public bool ImportProductImagesUsingHash { get; set; }
         public bool ImportProductImagesUsingHash_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.DefaultPictureZoomEnabled")]
+        public bool DefaultPictureZoomEnabled { get; set; }
+        public bool DefaultPictureZoomEnabled_OverrideForStore { get; set; }
     }
 }

@@ -43,7 +43,7 @@
                             }
                             else
                             {
-                                @Html.NopEditorFor(model => model.Title)
+                                @Html.NopEditorFor(model => model.Title, required: true)
                                 @Html.ValidationMessageFor(model => model.Title)
                             }
                         </div>
@@ -59,7 +59,7 @@
                             }
                             else
                             {
-                                @Html.NopTextAreaFor(model => model.ReviewText)
+                                @Html.NopTextAreaFor(model => model.ReviewText, required: true)
                                 @Html.ValidationMessageFor(model => model.ReviewText)
                             }
                         </div>

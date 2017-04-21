@@ -11,7 +11,7 @@ namespace Nop.Data.Tests
         protected NopObjectContext context;
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             //TODO fix compilation warning (below)
             #pragma warning disable 0618
@@ -23,7 +23,7 @@ namespace Nop.Data.Tests
 
         protected string GetTestDbName()
         {
-            string testDbName = "Data Source=" + (System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)) + @"\\Nop.Data.Tests.Db.sdf;Persist Security Info=False";
+            var testDbName = "Data Source=" + System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\\Nop.Data.Tests.Db.sdf;Persist Security Info=False";
             return testDbName;
         }        
         
@@ -35,7 +35,6 @@ namespace Nop.Data.Tests
         /// <param name="disposeContext">A value indicating whether to dispose context</param>
         protected T SaveAndLoadEntity<T>(T entity, bool disposeContext = true) where T : BaseEntity
         {
-
             context.Set<T>().Add(entity);
             context.SaveChanges();
 

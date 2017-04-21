@@ -105,9 +105,17 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
+        /// <summary>
+        /// Prepare billing address model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="selectedCountryId">Selected country identifier</param>
+        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
+        /// <param name="overrideAttributesXml">Override attributes xml</param>
+        /// <returns>Billing address model</returns>
         public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
             int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false,
@@ -150,6 +158,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare shipping address model
+        /// </summary>
+        /// <param name="selectedCountryId">Selected country identifier</param>
+        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
+        /// <param name="overrideAttributesXml">Override attributes xml</param>
+        /// <returns>Shipping address model</returns>
         public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
@@ -248,6 +263,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare shipping method model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="shippingAddress">Shipping address</param>
+        /// <returns>Shipping method model</returns>
         public virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
             var model = new CheckoutShippingMethodModel();
@@ -325,6 +346,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare payment method model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="filterByCountryId">Filter by country identifier</param>
+        /// <returns>Payment method model</returns>
         public virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
@@ -397,6 +424,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare payment info model
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
             var model = new CheckoutPaymentInfoModel();
@@ -411,6 +443,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare confirm order model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>Confirm order model</returns>
         public virtual CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel();
@@ -425,7 +462,12 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare checkout completed model
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Checkout completed model</returns>
         public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
         {
             if (order ==null)
@@ -441,12 +483,22 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare checkout progress model
+        /// </summary>
+        /// <param name="step">Step</param>
+        /// <returns>Checkout progress model</returns>
         public virtual CheckoutProgressModel PrepareCheckoutProgressModel(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel {CheckoutProgressStep = step};
             return model;
         }
 
+        /// <summary>
+        /// Prepare one page checkout model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>One page checkout model</returns>
         public virtual OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)

@@ -25,7 +25,7 @@ namespace Nop.Admin.Validators.Blogs
                 .Must(x => x == null || !x.Contains("."))
                 .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots"));
 
-            SetStringPropertiesMaxLength<BlogPost>(dbContext);
+            SetDatabaseValidationRules<BlogPost>(dbContext);
 
         }
     }

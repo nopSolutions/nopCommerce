@@ -30,6 +30,9 @@ using WebGrease.Css.Extensions;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the customer model factory
+    /// </summary>
     public partial class CustomerModelFactory : ICustomerModelFactory
     {
         #region Fields
@@ -137,6 +140,12 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the custom customer attribute models
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="overrideAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <returns>List of the customer attribute model</returns>
         public virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)
@@ -228,7 +237,15 @@ namespace Nop.Web.Factories
 
             return result;
         }
-        
+
+        /// <summary>
+        /// Prepare the customer info model
+        /// </summary>
+        /// <param name="model">Customer info model</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <returns>Customer info model</returns>
         public virtual CustomerInfoModel PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, 
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
@@ -378,6 +395,14 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the customer register model
+        /// </summary>
+        /// <param name="model">Customer register model</param>
+        /// <param name="excludeProperties">Whether to exclude populating of model properties from the entity</param>
+        /// <param name="overrideCustomCustomerAttributesXml">Overridden customer attributes in XML format; pass null to use CustomCustomerAttributes of customer</param>
+        /// <param name="setDefaultValues">Whether to populate model properties by default values</param>
+        /// <returns>Customer register model</returns>
         public virtual RegisterModel PrepareRegisterModel(RegisterModel model, bool excludeProperties, 
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
@@ -473,6 +498,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the login model
+        /// </summary>
+        /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>
+        /// <returns>Login model</returns>
         public virtual LoginModel PrepareLoginModel(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
@@ -482,18 +512,31 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the password recovery model
+        /// </summary>
+        /// <returns>Password recovery model</returns>
         public virtual PasswordRecoveryModel PreparePasswordRecoveryModel()
         {
             var model = new PasswordRecoveryModel();
             return model;
         }
 
+        /// <summary>
+        /// Prepare the password recovery confirm model
+        /// </summary>
+        /// <returns>Password recovery confirm model</returns>
         public virtual PasswordRecoveryConfirmModel PreparePasswordRecoveryConfirmModel()
         {
             var model = new PasswordRecoveryConfirmModel();
             return model;
         }
 
+        /// <summary>
+        /// Prepare the register result model
+        /// </summary>
+        /// <param name="resultId">Value of UserRegistrationType enum</param>
+        /// <returns>Register result model</returns>
         public virtual RegisterResultModel PrepareRegisterResultModel(int resultId)
         {
             var resultText = "";
@@ -521,6 +564,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the customer navigation model
+        /// </summary>
+        /// <param name="selectedTabId">Identifier of the selected tab</param>
+        /// <returns>Customer navigation model</returns>
         public virtual CustomerNavigationModel PrepareCustomerNavigationModel(int selectedTabId = 0)
         {
             var model = new CustomerNavigationModel();
@@ -650,6 +698,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the customer address list model
+        /// </summary>
+        /// <returns>Customer address list model</returns>
         public virtual CustomerAddressListModel PrepareCustomerAddressListModel()
         {
             var addresses = _workContext.CurrentCustomer.Addresses
@@ -670,7 +722,11 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the customer downloadable products model
+        /// </summary>
+        /// <returns>Customer downloadable products model</returns>
         public virtual CustomerDownloadableProductsModel PrepareCustomerDownloadableProductsModel()
         {
             var model = new CustomerDownloadableProductsModel();
@@ -700,6 +756,12 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the user agreement model
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="product">Product</param>
+        /// <returns>User agreement model</returns>
         public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem,Product product)
         {
             if (orderItem == null)
@@ -715,12 +777,21 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the change password model
+        /// </summary>
+        /// <returns>Change password model</returns>
         public virtual ChangePasswordModel PrepareChangePasswordModel()
         {
             var model = new ChangePasswordModel();
             return model;
         }
-        
+
+        /// <summary>
+        /// Prepare the customer avatar model
+        /// </summary>
+        /// <param name="model">Customer avatar model</param>
+        /// <returns>Customer avatar model</returns>
         public virtual CustomerAvatarModel PrepareCustomerAvatarModel(CustomerAvatarModel model)
         {
             if (model == null)

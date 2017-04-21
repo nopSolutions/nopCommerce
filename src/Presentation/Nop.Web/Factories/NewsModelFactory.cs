@@ -17,6 +17,9 @@ using Nop.Web.Models.News;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the news model factory
+    /// </summary>
     public partial class NewsModelFactory : INewsModelFactory
     {
         #region Fields
@@ -65,6 +68,11 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the news comment model
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        /// <returns>News comment model</returns>
         public virtual NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment)
         {
             if (newsComment == null)
@@ -92,6 +100,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the news item model
+        /// </summary>
+        /// <param name="model">News item model</param>
+        /// <param name="newsItem">News item</param>
+        /// <param name="prepareComments">Whether to prepare news comment models</param>
+        /// <returns>News item model</returns>
         public virtual NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
@@ -133,6 +148,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the home page news items model
+        /// </summary>
+        /// <returns>Home page news items model</returns>
         public virtual HomePageNewsItemsModel PrepareHomePageNewsItemsModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
@@ -162,6 +181,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the news item list model
+        /// </summary>
+        /// <param name="command">News paging filtering model</param>
+        /// <returns>News item list model</returns>
         public virtual NewsItemListModel PrepareNewsItemListModel(NewsPagingFilteringModel command)
         {
             var model = new NewsItemListModel();

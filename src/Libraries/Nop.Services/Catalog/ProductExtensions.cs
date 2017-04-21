@@ -22,8 +22,8 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
-        /// <returns>Price</returns>
-        public static decimal? GetPreferredTierPrice(this Product product, Customer customer, int storeId, int quantity)
+        /// <returns>Tier price</returns>
+        public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, int storeId, int quantity)
         {
             if (!product.HasTierPrices)
                 return null;
@@ -37,8 +37,7 @@ namespace Nop.Services.Catalog
 
             //get the most suitable tier price based on the passed quantity
             var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
-
-            return tierPrice != null ? (decimal?)tierPrice.Price : null;
+            return tierPrice;
         }
         
         /// <summary>

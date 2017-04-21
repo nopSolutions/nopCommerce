@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Tax
         public TaxBasedOn TaxBasedOn { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation
+        /// </summary>
+        public bool TaxBasedOnPickupPointAddress { get; set; }
+
+        /// <summary>
         /// Tax display type
         /// </summary>
         public TaxDisplayType TaxDisplayType { get; set; }

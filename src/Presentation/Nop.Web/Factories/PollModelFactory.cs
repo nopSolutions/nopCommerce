@@ -10,6 +10,9 @@ using Nop.Web.Models.Polls;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the poll model factory
+    /// </summary>
     public partial class PollModelFactory : IPollModelFactory
     {
         #region Fields
@@ -35,6 +38,12 @@ namespace Nop.Web.Factories
 
         #region Methods
 
+        /// <summary>
+        /// Prepare the poll model
+        /// </summary>
+        /// <param name="poll">Poll</param>
+        /// <param name="setAlreadyVotedProperty">Whether to load a value indicating that customer already voted for this poll</param>
+        /// <returns>Poll model</returns>
         public virtual PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
             if (poll == null)
@@ -63,6 +72,11 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Get the poll model by poll system keyword
+        /// </summary>
+        /// <param name="systemKeyword">Poll system keyword</param>
+        /// <returns>Poll model</returns>
         public virtual PollModel PreparePollModelBySystemName(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
@@ -89,6 +103,10 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the home page poll models
+        /// </summary>
+        /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomePagePollModels()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);

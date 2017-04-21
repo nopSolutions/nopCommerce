@@ -64,7 +64,7 @@
                             @Html.NopLabelFor(model => model.Name)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name)
+                            @Html.NopEditorFor(model => model.Name, required: true)
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                         @Html.NopLabelFor(model => model.TwoLetterIsoCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.TwoLetterIsoCode)
+                        @Html.NopEditorFor(model => model.TwoLetterIsoCode, required: true)
                         @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                         @Html.NopLabelFor(model => model.ThreeLetterIsoCode)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ThreeLetterIsoCode)
+                        @Html.NopEditorFor(model => model.ThreeLetterIsoCode, required: true)
                         @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
                     </div>
                 </div>

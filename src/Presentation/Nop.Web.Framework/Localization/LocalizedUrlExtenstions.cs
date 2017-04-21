@@ -140,7 +140,7 @@ namespace Nop.Web.Framework.Localization
                 result = url.Substring(_seoCodeLength + 1); //urls like "/en/" or "/en/somethingelse"
 
             if (applicationPath.IsVirtualDirectory())
-                result = applicationPath + result;  //add back applciation path
+                result = applicationPath + result;  //add back application path
             return result;
         }
 

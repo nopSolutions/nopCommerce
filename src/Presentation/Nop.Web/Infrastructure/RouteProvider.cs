@@ -702,6 +702,11 @@ namespace Nop.Web.Infrastructure
                             "sitemap.xml",
                             new { controller = "Common", action = "SitemapXml" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("sitemap-indexed.xml",
+                            "sitemap-{Id}.xml",
+                            new { controller = "Common", action = "SitemapXml" },
+                            new { Id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
 
             //store closed
             routes.MapLocalizedRoute("StoreClosed",

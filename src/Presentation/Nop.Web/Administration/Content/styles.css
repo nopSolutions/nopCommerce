@@ -122,6 +122,88 @@ ul.common-list {
 .dropdown-menu li:hover button{
     background-color: transparent !important;
 }
+.scroll-wrapper {
+    overflow-x: scroll;
+}
+
+/*DISCOUNT*/
+.requirement-container {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border: 1px dashed #8c949a;
+    display: table;
+}
+.requirement-container.requirement-group {
+    border: none;
+    border-left: 2px solid #8c949a;
+}
+.requirement-container .requirement-heading {
+    padding: 7px 10px 3px 10px;
+    line-height: 24px;
+}
+.requirement-container.requirement-group > .requirement-heading {
+    height: 30px;
+    line-height: 30px;
+    display: table;
+    background: #eeeeee;
+    padding: 0px 2px 0px 10px;
+}
+.requirement-container .requirement-heading .btn-link {
+    padding: 0 3px;
+    margin-left: 50px;
+    font-size: 15px;
+    color: #367fa9;
+    float: right;
+    text-decoration: none;
+}
+.requirement-container.requirement-group > .requirement-heading .btn-link {
+    padding: 3px 10px 3px 0px;
+}
+.requirement-container .requirement-body {
+    padding: 10px 20px 8px 10px;
+    min-height: 35px;
+}
+.requirement-container.requirement-group > .requirement-body {
+    padding: 10px 0 5px 20px;
+}
+.requirement-container .requirement-product-names.filled {
+    clear: both;
+    max-width: 600px;
+    padding-top: 5px;
+}
+.requirement-data-buttons {
+    margin-top: 5px;
+}
+.requirement-container .requirement-data-buttons {
+    margin-top: 0;
+    float: left;
+}
+.requirement-container .requirement-data-input {
+    float: left;
+    margin-right: 5px;
+}
+.requirement-container .requirement-label-col {
+    width: auto;
+}
+.requirement-container .requirement-data-col {
+    width: auto;
+}
+.requirement-container .requirement-data-buttons button{
+    margin-top: 0;
+}
+.requirement-container .requirement-messages-col {
+    margin-left: 0;
+}
+.interaction-type select{
+    width: 70px;
+    height: 26px;
+    line-height: 25px;
+    font-size: 12px;
+    margin-top: 2px;
+}
+.panel-add-requirement{
+    margin-top: 20px;
+}
 
 /*MODAL WINDOWS*/
 .modal-content {
@@ -359,6 +441,9 @@ td.k-state-focused.k-state-selected {
 .k-datetimepicker .k-picker-wrap .k-icon {
     padding: 0 3px;
 }
+.ui-tooltip {
+    z-index: 10005;
+}
 .k-multiselect.k-header {
     border-color: #d2d6de;
     border-radius: 0;
@@ -380,25 +465,30 @@ td.k-state-focused.k-state-selected {
     border-color: #DEDEDE;
     background-color: #FFFFFF;
 }
-.form-horizontal .form-group .k-dropdown{
+.form-horizontal .form-group .k-dropdown, 
+.k-grid .k-dropdown{
     cursor: default;
     width: 100% !important;
     height: 32px;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap, 
+.k-grid .k-dropdown .k-dropdown-wrap {
     background: #fff;
     box-shadow: none;
     padding: 0 8px;
     border: 1px solid #d2d6de;
     border-radius: 0;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-select{
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-select, 
+.k-grid .k-dropdown .k-dropdown-wrap .k-select{
     width: 20px;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap.k-state-border-down {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap.k-state-border-down,
+.k-grid .k-dropdown .k-dropdown-wrap.k-state-border-down  {
     border-color: #3c8dbc !important;
 }
-.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input {
+.form-horizontal .form-group .k-dropdown .k-dropdown-wrap .k-input,
+.k-grid .k-dropdown .k-dropdown-wrap .k-input {
     height: 32px;
     line-height: 32px;
     display: block;
@@ -690,13 +780,10 @@ td.k-state-focused.k-state-selected {
     top: 9px;
 }
 .form-horizontal span.required {
-    float: right;
-    margin-top: 8px;
-    margin-left: 5px;
-    color: #FF5E5E;
-}
-.form-horizontal .label-wrapper span.required {
-    float: none;
+    color: #ff2e2e;
+    margin-left: 6px;
+    font-size: 16px;
+    font-weight: bold;
 }
 .form-group {
     margin-bottom: 5px;
@@ -718,6 +805,25 @@ td.k-state-focused.k-state-selected {
     padding: 8px 15px;
     margin-left: -20px !important;
 }
+    
+.form-group .attributes label{
+	font-weight: normal;
+}
+.form-horizontal .attributes select {
+    width: 300px !important;
+    max-width: 100%;
+    border-radius: 0;
+    border-color: #d2d6de;
+    height: 34px;
+}
+.form-group .attributes .qty-box {
+	width: 48px;
+    display: inline-block;
+}
+.form-horizontal .attributes .input-group-required{
+    width: 320px;
+}
+
 .form-horizontal .k-autocomplete, .form-horizontal .k-combobox, 
 .form-horizontal .k-numerictextbox, .form-horizontal .k-dropdown, 
 .form-horizontal .k-selectbox, .form-horizontal .k-textbox, 
@@ -731,10 +837,17 @@ td.k-state-focused.k-state-selected {
     height: 34px;
 }
 .k-grid-edit-row>td>.k-numerictextbox {
-    width: auto !important;
+    width: 100% !important;
+    min-width: 150px !important;
 }
 .k-grid .k-dropdown{
-    width: auto !important;
+    width: 100% !important;
+    min-width: 120px !important;
+    background: none;
+}
+.k-grid .k-textbox{
+    width: 100% !important;
+    min-width: 150px !important;
 }
 .tag-editor {
     border: 1px solid #d2d6de !important;
@@ -782,6 +895,14 @@ td.k-state-focused.k-state-selected {
 }
 .input-group.input-group-short .input-group-text {
     margin-right: 10px;
+}
+.input-group-required {
+    width: 100%;
+}
+.input-group-required .input-group-btn{
+    font-size: inherit;
+    vertical-align: top;
+    width: 1.5%;
 }
 input[type=file].form-control {
     height: auto;
@@ -886,7 +1007,7 @@ table td .form-group {
 .skin-blue .qq-upload-button {
     display: inline-block;
     padding: 6px 12px;
-    margin-bottom: 0;
+    margin-bottom: 4px;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.42857143;
@@ -1063,6 +1184,11 @@ span.grid-report-item.red {
 .bootstrap-touchspin {
     max-width: 300px;
 }
+.bootstrap-touchspin input {
+    height: auto;
+    display: table-cell !important;
+    min-height: 34px;
+}
 .bootstrap-touchspin-postfix {
     border-left: none;
 }
@@ -1071,18 +1197,21 @@ span.grid-report-item.red {
 }
 .input-group-addon.bootstrap-touchspin-postfix {
     background-color: #eee;
+    height: 34px;
 }
 .bootstrap-touchspin .input-group-btn-vertical>.btn {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
+    padding: 0 10px;
+    height: 18px;
 }
 .bootstrap-touchspin .input-group-btn-vertical>.btn:hover {
     border-color: #afafaf;
 }
 .bootstrap-touchspin .input-group-btn-vertical .bootstrap-touchspin-down {
-   margin-top: 0;
-   padding-bottom: 7px; 
+   margin-top: -1px;
+   height: 17px;
 }
 
 /* THROBBER */
@@ -1180,9 +1309,6 @@ span.grid-report-item.red {
     }
     .form-horizontal .panel-popup .form-group input[type=checkbox] {
         margin-top: 10px;
-    }
-    .form-horizontal span.required {
-        float: none;
     }
     .form-group input[type=checkbox] {
         margin-top: 2px;

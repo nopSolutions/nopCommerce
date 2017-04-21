@@ -10,14 +10,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    To configure plugin follow one of these steps:<br />
-                    1. If you are a Canada Post commercial customer, fill Customer number, Contract ID and API key below.<br />
-                    2. If you are a Solutions for Small Business customer, specify your Customer number and API key below.<br />
-                    3. If you are a non-contracted customer or you want to use the regular price of shipping paid by customers, fill the API key field only.<br />
-                    <br />
-                    <em>Note: Canada Post gateway returns shipping price in the CAD currency, ensure that you have correctly configured exchange rate from PrimaryStoreCurrency to CAD.</em>
-                </p>
+                @T("Plugins.Shipping.CanadaPost.Instructions")
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CustomerNumber)

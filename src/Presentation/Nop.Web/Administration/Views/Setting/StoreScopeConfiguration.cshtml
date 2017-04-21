@@ -26,7 +26,7 @@
                 @T("Admin.Configuration.Settings.StoreScope")
             </label>
         </div>
-        @Html.NopDropDownList("store-scope-configuration", stores, new {onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;"})
+        @Html.NopDropDownList("store-scope-configuration", stores, htmlAttributes: new { onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;" })
         @if (Model.StoreId > 0)
         {
             <div class="checkbox">

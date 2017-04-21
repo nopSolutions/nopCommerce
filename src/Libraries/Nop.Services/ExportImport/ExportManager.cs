@@ -55,6 +55,7 @@ namespace Nop.Services.ExportImport
         private readonly CatalogSettings _catalogSettings;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -76,7 +77,8 @@ namespace Nop.Services.ExportImport
             IMeasureService measureService,
             CatalogSettings catalogSettings,
             IGenericAttributeService genericAttributeService,
-            ICustomerAttributeFormatter customerAttributeFormatter)
+            ICustomerAttributeFormatter customerAttributeFormatter,
+            OrderSettings orderSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -95,6 +97,7 @@ namespace Nop.Services.ExportImport
             this._catalogSettings = catalogSettings;
             this._genericAttributeService = genericAttributeService;
             this._customerAttributeFormatter = customerAttributeFormatter;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -429,12 +432,84 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        private byte[] ExportOrderToXlsxWithProducts(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
+        {
+            var orderItemProperties = new[]
+            {
+                new PropertyByName<OrderItem>("Name", oi => oi.Product.Name),
+                new PropertyByName<OrderItem>("Sku", oi => oi.Product.Sku),
+                new PropertyByName<OrderItem>("PriceExclTax", oi => oi.UnitPriceExclTax),
+                new PropertyByName<OrderItem>("PriceInclTax", oi => oi.UnitPriceInclTax),
+                new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
+                new PropertyByName<OrderItem>("DiscountExclTax", oi => oi.DiscountAmountExclTax),
+                new PropertyByName<OrderItem>("DiscountInclTax", oi => oi.DiscountAmountInclTax),
+                new PropertyByName<OrderItem>("TotalExclTax", oi => oi.PriceExclTax),
+                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax)
+            };
+
+            var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties);
+
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handles to the worksheets
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
+                    var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                    fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                    //create Headers and format them 
+                    var manager = new PropertyManager<Order>(properties.Where(p => !p.Ignore));
+                    manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var order in itemsToExport)
+                    {
+                        manager.CurrentObject = order;
+                        manager.WriteToXlsx(worksheet, row++, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities);
+                        
+                        //products
+                        var orederItems = order.OrderItems.ToList();
+
+                        //a vendor should have access only to his products
+                        if (_workContext.CurrentVendor != null)
+                            orederItems = orederItems.Where(p => p.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+                        if (!orederItems.Any())
+                            continue;
+
+                        orderItemsManager.WriteCaption(worksheet, SetCaptionStyle, row, 2);
+                        worksheet.Row(row).OutlineLevel = 1;
+                        worksheet.Row(row).Collapsed = true;
+
+                        foreach (var orederItem in orederItems)
+                        {
+                            row++;
+                            orderItemsManager.CurrentObject = orederItem;
+                            orderItemsManager.WriteToXlsx(worksheet, row, _catalogSettings.ExportImportUseDropdownlistsForAssociatedEntities, 2, fpWorksheet);
+                            worksheet.Row(row).OutlineLevel = 1;
+                            worksheet.Row(row).Collapsed = true;
+                        }
+
+                        row++;
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
+
         private string GetCustomCustomerAttributes(Customer customer)
         {
             var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
             return _customerAttributeFormatter.FormatAttributes(selectedCustomerAttributes, ";");
         }
-
+        
         #endregion
 
         #region Methods
@@ -611,7 +686,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("ShortDescription", product.ShortDescription);
                 xmlWriter.WriteString("FullDescription", product.FullDescription);
                 xmlWriter.WriteString("AdminComment", product.AdminComment, IgnoreExportPoductProperty(p => p.AdminComment));
-                xmlWriter.WriteString("VendorId", product.VendorId, IgnoreExportPoductProperty(p => p.Vendor));
+                //vendor can't change this field
+                xmlWriter.WriteString("VendorId", product.VendorId, IgnoreExportPoductProperty(p => p.Vendor) || _workContext.CurrentVendor != null);
                 xmlWriter.WriteString("ProductTemplateId", product.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate));
                 xmlWriter.WriteString("ShowOnHomePage", product.ShowOnHomePage, IgnoreExportPoductProperty(p => p.ShowOnHomePage));
                 xmlWriter.WriteString("MetaKeywords", product.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo));
@@ -1130,45 +1206,36 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("Deleted", order.Deleted, ignore);
                 xmlWriter.WriteString("CreatedOnUtc", order.CreatedOnUtc);
 
-                //products
-                var orderItems = order.OrderItems;
-
-                //a vendor should have access only to his products
-                if (_workContext.CurrentVendor != null)
-                    orderItems = orderItems.Where(oi => oi.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
-
-                if (orderItems.Any())
+                if (_orderSettings.ExportWithProducts)
                 {
-                    xmlWriter.WriteStartElement("OrderItems");
-                    foreach (var orderItem in orderItems)
-                    {
-                        xmlWriter.WriteStartElement("OrderItem");
-                        xmlWriter.WriteElementString("Id", null, orderItem.Id.ToString());
-                        xmlWriter.WriteElementString("OrderItemGuid", null, orderItem.OrderItemGuid.ToString());
-                        xmlWriter.WriteElementString("ProductId", null, orderItem.ProductId.ToString());
+                    //products
+                    var orderItems = order.OrderItems;
 
-                        var product = orderItem.Product;
-                        xmlWriter.WriteElementString("ProductName", null, product.Name);
-                        xmlWriter.WriteElementString("UnitPriceInclTax", null, orderItem.UnitPriceInclTax.ToString());
-                        xmlWriter.WriteElementString("UnitPriceExclTax", null, orderItem.UnitPriceExclTax.ToString());
-                        xmlWriter.WriteElementString("PriceInclTax", null, orderItem.PriceInclTax.ToString());
-                        xmlWriter.WriteElementString("PriceExclTax", null, orderItem.PriceExclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
-                        xmlWriter.WriteElementString("OriginalProductCost", null, orderItem.OriginalProductCost.ToString());
-                        xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
-                        xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
-                        xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
-                        xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
-                        xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
-                        xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : String.Empty;
-                        xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : String.Empty;
-                        xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
+                    //a vendor should have access only to his products
+                    if (_workContext.CurrentVendor != null)
+                        orderItems = orderItems.Where(oi => oi.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+                    if (orderItems.Any())
+                    {
+                        xmlWriter.WriteStartElement("OrderItems");
+                        foreach (var orderItem in orderItems)
+                        {
+                            xmlWriter.WriteStartElement("OrderItem");
+                            xmlWriter.WriteString("Id", orderItem.Id);
+                            xmlWriter.WriteString("OrderItemGuid", orderItem.OrderItemGuid);
+                            xmlWriter.WriteString("Name", orderItem.Product.Name);
+                            xmlWriter.WriteString("Sku", orderItem.Product.Sku);
+                            xmlWriter.WriteString("PriceExclTax", orderItem.UnitPriceExclTax);
+                            xmlWriter.WriteString("PriceInclTax", orderItem.UnitPriceInclTax);
+                            xmlWriter.WriteString("Quantity", orderItem.Quantity);
+                            xmlWriter.WriteString("DiscountExclTax", orderItem.DiscountAmountExclTax);
+                            xmlWriter.WriteString("DiscountInclTax", orderItem.DiscountAmountInclTax);
+                            xmlWriter.WriteString("TotalExclTax", orderItem.PriceExclTax);
+                            xmlWriter.WriteString("TotalInclTax", orderItem.PriceInclTax);
+                            xmlWriter.WriteEndElement();
+                        }
                         xmlWriter.WriteEndElement();
                     }
-                    xmlWriter.WriteEndElement();
                 }
 
                 //shipments
@@ -1269,7 +1336,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.FaxNumber, String.Empty))
             };
 
-            return ExportToXlsx(properties, orders);
+            return _orderSettings.ExportWithProducts ? ExportOrderToXlsxWithProducts(properties, orders) : ExportToXlsx(properties, orders);
         }
 
         /// <summary>
@@ -1296,6 +1363,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
                 new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
                 new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
+                new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
                 new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
                 new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
@@ -1357,6 +1425,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
                 xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
                 xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
+                xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString());
 
                 xmlWriter.WriteElementString("FirstName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName));
                 xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));

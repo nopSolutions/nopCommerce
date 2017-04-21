@@ -7,7 +7,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Nop.Core;
 
-namespace Nop.Data 
+namespace Nop.Data
 {
     public static class DbContextExtensions
     {
@@ -158,16 +158,45 @@ namespace Nop.Data
         /// <returns></returns>
         public static IDictionary<string, int> GetColumnsMaxLength(this IDbContext context, string entityTypeName, params string[] columnNames)
         {
+            int temp;
+
+            var fildFacets = GetFildFacets(context, entityTypeName, "String", columnNames);
+
+            var queryResult = fildFacets
+                .Select(f => new { Name = f.Key, MaxLength = f.Value["MaxLength"].Value })
+                .Where(p => int.TryParse(p.MaxLength.ToString(), out temp))
+                .ToDictionary(p => p.Name, p => Convert.ToInt32(p.MaxLength));
+
+            return queryResult;
+        }
+
+
+        /// <summary>
+        /// Get maximum decimal values
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="entityTypeName">Entity type name</param>
+        /// <param name="columnNames">Column names</param>
+        /// <returns></returns>
+        public static IDictionary<string, decimal> GetDecimalMaxValue(this IDbContext context, string entityTypeName, params string[] columnNames)
+        {
+            var fildFacets = GetFildFacets(context, entityTypeName, "Decimal", columnNames);
+
+            return fildFacets.ToDictionary(p => p.Key, p => int.Parse(p.Value["Precision"].Value.ToString()) - int.Parse(p.Value["Scale"].Value.ToString()))
+                .ToDictionary(p => p.Key, p => new decimal(Math.Pow(10, p.Value)));
+        }
+
+        private static Dictionary<string, ReadOnlyMetadataCollection<Facet>> GetFildFacets(this IDbContext context,
+            string entityTypeName, string edmTypeName, params string[] columnNames)
+        {
             //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
-           
+
             var entType = Type.GetType(entityTypeName);
             var adapter = ((IObjectContextAdapter)context).ObjectContext;
             var metadataWorkspace = adapter.MetadataWorkspace;
             var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
-                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == "String")
+                    from p in (meta as EntityType).Properties.Where(p => columnNames.Contains(p.Name) && p.TypeUsage.EdmType.Name == edmTypeName)
                     select p;
-
-            int temp;
 
             var queryResult = q.Where(p =>
             {
@@ -180,18 +209,18 @@ namespace Nop.Data
 
                 return match;
 
-            }).Select(sel => new {sel.Name, MaxLength = sel.TypeUsage.Facets["MaxLength"].Value}).Where(p=>Int32.TryParse(p.MaxLength.ToString(), out temp)).ToDictionary(p=>p.Name,p=>Convert.ToInt32(p.MaxLength));
-            
+            }).ToDictionary(p => p.Name, p => p.TypeUsage.Facets);
+
             return queryResult;
         }
 
         public static string DbName(this IDbContext context)
         {
             var connection = ((IObjectContextAdapter)context).ObjectContext.Connection as EntityConnection;
-            if(connection==null)
+            if (connection == null)
                 return string.Empty;
 
-            return connection.StoreConnection.Database; 
+            return connection.StoreConnection.Database;
         }
 
         #endregion

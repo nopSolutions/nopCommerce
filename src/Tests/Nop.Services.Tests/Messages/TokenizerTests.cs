@@ -142,12 +142,11 @@ namespace Nop.Services.Tests.Messages
             {
                 new Token("Token1", true),
                 new Token("Token2", 1),
-                new Token("Token3", 2.0M),
-                new Token("Token4", "value"),
+                new Token("Token3", "value"),
             };
 
-            tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%, %Token4%", tokens, true)
-                .ShouldEqual("Some text True, 1, 2,0, value");
+            tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%", tokens, true)
+                .ShouldEqual("Some text True, 1, value");
         }
     }
 }

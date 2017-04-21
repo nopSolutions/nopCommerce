@@ -25,7 +25,7 @@ namespace Nop.Admin.Validators.Vendors
                 return null;
             });
 
-            SetStringPropertiesMaxLength<Vendor>(dbContext);
+            SetDatabaseValidationRules<Vendor>(dbContext);
         }
     }
 }

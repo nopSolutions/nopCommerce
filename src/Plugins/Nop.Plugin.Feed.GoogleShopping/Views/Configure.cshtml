@@ -34,19 +34,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    <ul>
-                        <li>
-                            At least two unique product identifiers are required. So each of your product should
-                            have manufacturer (brand) and MPN (manufacturer part number) specified
-                        </li>
-                        <li>Specify default tax values in your Google Merchant Center account settings</li>
-                        <li>Specify default shipping values in your Google Merchant Center account settings</li>
-                        <li>
-                            In order to get more info about required fields look at the following article <a href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a>
-                        </li>
-                    </ul>
-                </p>
+                @T("Plugins.Feed.GoogleShopping.GeneralInstructions")
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ProductPictureSize)
@@ -150,10 +138,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081" target="_blank">here</a>
-                </p>
-
+                @T("Plugins.Feed.GoogleShopping.OverrideInstructions")
                 <script id="google-popup-editor" type="text/x-kendo-template">
                     <div style="padding: 0 20px;">
                         <div class="form-horizontal">

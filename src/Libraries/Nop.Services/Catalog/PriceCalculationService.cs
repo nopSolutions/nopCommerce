@@ -393,7 +393,9 @@ namespace Nop.Services.Catalog
                 decimal price = overriddenProductPrice.HasValue ? overriddenProductPrice.Value : product.Price;
 
                 //tier prices
-                price = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity) ?? price;
+                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
+                if (tierPrice != null)
+                    price = tierPrice.Price;
 
                 //additional charge
                 price = price + additionalCharge;

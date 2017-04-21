@@ -21,7 +21,7 @@
                             @Html.NopLabelFor(model => model.From)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.From)
+                            @Html.NopEditorFor(model => model.From, required: true)
                             @Html.ValidationMessageFor(model => model.From)
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                             @Html.NopLabelFor(model => model.To)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.To)
+                            @Html.NopEditorFor(model => model.To, required: true)
                             @Html.ValidationMessageFor(model => model.To)
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                             <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.AttachedDownloadId)
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-9">
                                 @{
                                     //Static file attachments do not support URLs yet
                                     //A store owner have to upload a file
@@ -182,7 +182,7 @@
                             }
                             else
                             {
-                                @T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")
+                                <div class="form-text-row">@T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")</div>
                             }
                         </div>
                     </div>

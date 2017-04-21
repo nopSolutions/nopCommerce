@@ -82,8 +82,100 @@ namespace Nop.Services.Discounts
         [Serializable]
         public class DiscountRequirementForCaching
         {
+            public DiscountRequirementForCaching()
+            {
+                ChildRequirements = new List<DiscountRequirementForCaching>();
+            }
+
             public int Id { get; set; }
             public string SystemName { get; set; }
+            public bool IsGroup { get; set; }
+            public RequirementGroupInteractionType? InteractionType { get; set; }
+            public IList<DiscountRequirementForCaching> ChildRequirements { get; set; }
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Get requirements for caching
+        /// </summary>
+        /// <param name="requirements">Collection of discount requirement</param>
+        /// <returns>List of DiscountRequirementForCaching</returns>
+        protected IList<DiscountRequirementForCaching> GetReqirementsForCaching(IEnumerable<DiscountRequirement> requirements)
+        {
+            var requirementForCaching = requirements.Select(requirement => new DiscountRequirementForCaching
+            {
+                Id = requirement.Id,
+                IsGroup = requirement.IsGroup,
+                SystemName = requirement.DiscountRequirementRuleSystemName,
+                InteractionType = requirement.InteractionType,
+                ChildRequirements = GetReqirementsForCaching(requirement.ChildRequirements)
+            });
+            
+            return requirementForCaching.ToList();
+        }
+
+        /// <summary>
+        /// Get discount validation result
+        /// </summary>
+        /// <param name="requirements">Collection of discount requirement</param>
+        /// <param name="groupInteractionType">Interaction type within the group of requirements</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="errors">Errors</param>
+        /// <returns>True if result is valid; otherwise false</returns>
+        protected bool GetValidationResult(IEnumerable<DiscountRequirementForCaching> requirements, 
+            RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
+        {
+            var result = false;
+
+            foreach (var requirement in requirements)
+            {
+                if (requirement.IsGroup)
+                {
+                    //get child requirements for the group
+                    var interactionType = requirement.InteractionType.HasValue 
+                        ? requirement.InteractionType.Value : RequirementGroupInteractionType.And;
+                    result = GetValidationResult(requirement.ChildRequirements, interactionType, customer, errors);
+                }
+                else
+                {
+                    //or try to get validation result for the requirement
+                    var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(requirement.SystemName);
+                    if (requirementRulePlugin == null)
+                        continue;
+
+                    if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
+                        continue;
+
+                    if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
+                        continue;
+
+                    var ruleResult = requirementRulePlugin.CheckRequirement(new DiscountRequirementValidationRequest
+                    {
+                        DiscountRequirementId = requirement.Id,
+                        Customer = customer,
+                        Store = _storeContext.CurrentStore
+                    });
+
+                    //add validation error
+                    if (!ruleResult.IsValid)
+                        errors.Add(ruleResult.UserError);
+
+                    result = ruleResult.IsValid;
+                }
+
+                //all requirements must be met, so return false
+                if (!result && groupInteractionType == RequirementGroupInteractionType.And)
+                    return result;
+
+                //any of requirements must be met, so return true
+                if (result && groupInteractionType == RequirementGroupInteractionType.Or)
+                    return result;
+            }
+
+            return result;
         }
 
         #endregion
@@ -306,18 +398,23 @@ namespace Nop.Services.Discounts
         /// Get all discount requirements
         /// </summary>
         /// <param name="discountId">Discont identifier</param>
+        /// <param name="topLevelOnly">Whether to load top-level requirements only (without parent identifier)</param>
         /// <returns>Requirements</returns>
-        public virtual IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0)
+        public virtual IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0, bool topLevelOnly = false)
         {
             var query = _discountRequirementRepository.Table;
-            if (discountId > 0)
-            {
-                query = query.Where(dr => dr.DiscountId == discountId);
-            }
-            query = query.OrderBy(d => d.Id);
 
-            var discountRequirements = query.ToList();
-            return discountRequirements;
+            //filter by discount
+            if (discountId > 0)
+                query = query.Where(requirement => requirement.DiscountId == discountId);
+
+            //filter by top-level
+            if (topLevelOnly)
+                query = query.Where(requirement => !requirement.ParentId.HasValue);
+
+            query = query.OrderBy(requirement => requirement.Id);
+            
+            return query.ToList();
         }
 
         /// <summary>
@@ -454,7 +551,7 @@ namespace Nop.Services.Discounts
                 var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
                 if (hasGiftCards)
                 {
-                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
+                    result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
                     return result;
                 }
             }
@@ -466,7 +563,7 @@ namespace Nop.Services.Discounts
                 DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
                 {
-                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet");
+                    result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet") };
                     return result;
                 }
             }
@@ -475,7 +572,7 @@ namespace Nop.Services.Discounts
                 DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
                 {
-                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.Expired");
+                    result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.Expired") };
                     return result;
                 }
             }
@@ -497,7 +594,7 @@ namespace Nop.Services.Discounts
                             var usedTimes = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
                             if (usedTimes >= discount.LimitationTimes)
                             {
-                                result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedAnymore");
+                                result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedAnymore") };
                                 return result;
                             }
                         }
@@ -510,45 +607,29 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             string key = string.Format(DiscountEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
-            var requirements = _cacheManager.Get(key, () =>
+            var requirementsForCaching = _cacheManager.Get(key, () =>
             {
-                var cachedRequirements = new List<DiscountRequirementForCaching>();
-                foreach (var dr in GetAllDiscountRequirements(discount.Id))
-                    cachedRequirements.Add(new DiscountRequirementForCaching
-                    {
-                        Id = dr.Id,
-                        SystemName = dr.DiscountRequirementRuleSystemName
-                    });
-                return cachedRequirements;
+                var requirements = GetAllDiscountRequirements(discount.Id, true);
+                return GetReqirementsForCaching(requirements);
             });
-            foreach (var req in requirements)
+
+            //get top-level group
+            var topLevelGroup = requirementsForCaching.FirstOrDefault();
+            if (topLevelGroup == null || (topLevelGroup.IsGroup && !topLevelGroup.ChildRequirements.Any()) || !topLevelGroup.InteractionType.HasValue)
             {
-                //load a plugin
-                var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
-                if (requirementRulePlugin == null)
-                    continue;
-
-                if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, customer))
-                    continue;
-
-                if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
-                    continue;
-
-                var ruleRequest = new DiscountRequirementValidationRequest
-                {
-                    DiscountRequirementId = req.Id,
-                    Customer = customer,
-                    Store = _storeContext.CurrentStore
-                };
-                var ruleResult = requirementRulePlugin.CheckRequirement(ruleRequest);
-                if (!ruleResult.IsValid)
-                {
-                    result.UserError = ruleResult.UserError;
-                    return result;
-                }
+                //there are no requirements, so discount is valid
+                result.IsValid = true;
+                return result;
             }
 
-            result.IsValid = true;
+            //requirements are exist, let's check them
+            var errors = new List<string>();
+            result.IsValid = GetValidationResult(requirementsForCaching, topLevelGroup.InteractionType.Value, customer, errors);
+
+            //set errors if result is not valid
+            if (!result.IsValid)
+                result.Errors = errors;
+
             return result;
         }
 

@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators.Directory
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Name.Required"));
 
-            SetStringPropertiesMaxLength<StateProvince>(dbContext);
+            SetDatabaseValidationRules<StateProvince>(dbContext);
         }
     }
 }

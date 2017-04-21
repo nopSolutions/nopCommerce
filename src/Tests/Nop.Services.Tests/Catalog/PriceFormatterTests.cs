@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Autofac;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -37,7 +40,8 @@ namespace Nop.Services.Tests.Catalog
         {
             var cacheManager = new NopNullCache();
 
-            _workContext = null;
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(w => w.WorkingCurrency).Return(new Currency { RoundingType = RoundingType.Rounding001 });
 
             _currencySettings = new CurrencySettings();
             var currency1 = new Currency
@@ -81,6 +85,19 @@ namespace Nop.Services.Tests.Catalog
             
             _priceFormatter = new PriceFormatter(_workContext, _currencyService,_localizationService, 
                 _taxSettings, _currencySettings);
+
+            var nopEngine = MockRepository.GenerateMock<NopEngine>();
+            var containe = MockRepository.GenerateMock<IContainer>();
+            var containerManager = MockRepository.GenerateMock<ContainerManager>(containe);
+            nopEngine.Expect(x => x.ContainerManager).Return(containerManager);
+            containerManager.Expect(x => x.Resolve<IWorkContext>()).Return(_workContext);
+            EngineContext.Replace(nopEngine);
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
         }
 
         [Test]

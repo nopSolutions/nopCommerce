@@ -9,14 +9,18 @@
                 <div class="col-md-3">
                     <div class="label-wrapper">
                         <label class="control-label">@T("Admin.GiftCards.Fields.RecipientName")</label>
-                        <span class="required">*</span>
                         <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientName.Hint")">
                             <i class="fa fa-question-circle"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    @Html.NopEditorFor(model => model.RecipientName)
+                    <div class="input-group input-group-required">
+                        @Html.NopEditorFor(model => model.RecipientName)
+                        <div class="input-group-btn">
+                            @Html.RequiredHint()
+                        </div>
+                    </div>
                 </div>
             </div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
@@ -25,14 +29,18 @@
                     <div class="col-md-3">
                         <div class="label-wrapper">
                             <label class="control-label">@T("Admin.GiftCards.Fields.RecipientEmail")</label>
-                            <span class="required">*</span>
                             <div class="ico-help" title="@T("Admin.GiftCards.Fields.RecipientEmail.Hint")">
                                 <i class="fa fa-question-circle"></i>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        @Html.NopEditorFor(model => model.RecipientEmail)
+                        <div class="input-group input-group-required">
+                            @Html.NopEditorFor(model => model.RecipientEmail)
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
                     </div>
                 </div>
             }
@@ -40,14 +48,18 @@
                 <div class="col-md-3">
                     <div class="label-wrapper">
                         <label class="control-label">@T("Admin.GiftCards.Fields.SenderName")</label>
-                        <span class="required">*</span>
                         <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderName.Hint")">
                             <i class="fa fa-question-circle"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    @Html.NopEditorFor(model => model.SenderName)
+                    <div class="input-group input-group-required">
+                        @Html.NopEditorFor(model => model.SenderName)
+                        <div class="input-group-btn">
+                            @Html.RequiredHint()
+                        </div>
+                    </div>
                 </div>
             </div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
@@ -56,14 +68,18 @@
                     <div class="col-md-3">
                         <div class="label-wrapper">
                             <label class="control-label">@T("Admin.GiftCards.Fields.SenderEmail")</label>
-                            <span class="required">*</span>
                             <div class="ico-help" title="@T("Admin.GiftCards.Fields.SenderEmail.Hint")">
                                 <i class="fa fa-question-circle"></i>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        @Html.NopEditorFor(model => model.SenderEmail)
+                        <div class="input-group input-group-required">
+                            @Html.NopEditorFor(model => model.SenderEmail)
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
                     </div>
                 </div>
             }

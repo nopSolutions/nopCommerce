@@ -17,7 +17,7 @@ namespace Nop.Admin.Validators.Messages
             RuleFor(x => x.SentTries).NotNull().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.SentTries.Required"))
                                     .InclusiveBetween(0, 99999).WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.SentTries.Range"));
 
-            SetStringPropertiesMaxLength<QueuedEmail>(dbContext);
+            SetDatabaseValidationRules<QueuedEmail>(dbContext);
 
         }
     }

@@ -39,6 +39,10 @@
 
 <ul class="top-menu">
     @Html.Widget("header_menu_before")
+    @if (Model.DisplayHomePageMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+    }
     @{
         var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
     }
@@ -50,25 +54,28 @@
     {
         <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
     }
-    @if (rootCategories.Count == 0 && Model.Topics.Count == 0)
+    @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
     {
-        //no categories or topis to display? in this case let's diplay some default menu items (should we?)
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-        if (Model.NewProductsEnabled)
-        {
-            <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
-            </li>
-        }
+        <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+    }
+    @if (Model.DisplayProductSearchMenuItem)
+    {
         <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+    }
+    @if (Model.DisplayCustomerInfoMenuItem)
+    {
         <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-        if (Model.BlogEnabled)
-        {
-            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-        }
-        if (Model.ForumEnabled)
-        {
-            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-        }
+    }
+    @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+    }
+    @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+    }
+    @if (Model.DisplayContactUsMenuItem)
+    {
         <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     }
     @Html.Widget("header_menu_after")
@@ -77,10 +84,14 @@
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
-    var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
+    var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @Html.Widget("mob_header_menu_before")
+        @if (Model.DisplayHomePageMenuItem)
+        {
+            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+        }
         @foreach (var category in rootCategoriesResponsive)
         {
             @RenderCategoryLine(category, 0, true)
@@ -89,26 +100,28 @@
         {
             <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
         }
-        @if (rootCategoriesResponsive.Count == 0 && Model.Topics.Count == 0)
+        @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
         {
-            //no categories or topis to display? in this case let's diplay some default menu items (should we?)
-            <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-            if (Model.NewProductsEnabled)
-            {
-                <li>
-                    <a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
-                </li>
-            }
-            <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+            <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+        }
+        @if (Model.DisplayProductSearchMenuItem)
+        {
+            <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+        }
+        @if (Model.DisplayCustomerInfoMenuItem)
+        {
             <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-            if (Model.BlogEnabled)
-            {
-                <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-            }
-            if (Model.ForumEnabled)
-            {
-                <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-            }
+        }
+        @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
+        {
+            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+        }
+        @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
+        {
+            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+        }
+        @if (Model.DisplayContactUsMenuItem)
+        {
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
         }
         @Html.Widget("mob_header_menu_after")

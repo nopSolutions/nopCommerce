@@ -99,7 +99,7 @@
                         @Html.NopLabelFor(model => model.Title)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Title)
+                        @Html.NopEditorFor(model => model.Title, required: true)
                         @Html.ValidationMessageFor(model => model.Title)
                     </div>
                 </div>
@@ -108,7 +108,12 @@
                         @Html.NopLabelFor(model => model.Body)
                     </div>
                     <div class="col-md-9">
-                        @Html.EditorFor(x => x.Body, "RichEditor")
+                        <div class="input-group input-group-required">
+                            @Html.EditorFor(x => x.Body, "RichEditor")
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
                         @Html.ValidationMessageFor(model => model.Body)
                     </div>
                 </div>

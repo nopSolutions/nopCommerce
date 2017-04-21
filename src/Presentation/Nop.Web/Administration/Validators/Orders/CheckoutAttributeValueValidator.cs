@@ -13,7 +13,7 @@ namespace Nop.Admin.Validators.Orders
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
 
-            SetStringPropertiesMaxLength<CheckoutAttributeValue>(dbContext);
+            SetDatabaseValidationRules<CheckoutAttributeValue>(dbContext);
         }
     }
 }
