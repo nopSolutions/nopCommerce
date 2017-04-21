@@ -5,26 +5,30 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework
 {
+    /// <summary>
+    /// Represents custom validator factory that looks for the attribute instance on the specified type in order to provide the validator instance.
+    /// </summary>
     public class NopValidatorFactory : AttributedValidatorFactory
     {
-        //private readonly InstanceCache _cache = new InstanceCache();
+        /// <summary>
+        /// Gets a validator for the appropriate type
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <returns>Created IValidator instance; null if a validator cannot be created</returns>
         public override IValidator GetValidator(Type type)
         {
-            if (type != null)
-            {
-                var attribute = (ValidatorAttribute)Attribute.GetCustomAttribute(type, typeof(ValidatorAttribute));
-                if ((attribute != null) && (attribute.ValidatorType != null))
-                {
-                    //validators can depend on some customer specific settings (such as working language)
-                    //that's why we do not cache validators
-                    //var instance = _cache.GetOrCreateInstance(attribute.ValidatorType,
-                    //                           x => EngineContext.Current.ContainerManager.ResolveUnregistered(x));
-                    var instance = EngineContext.Current.ResolveUnregistered(attribute.ValidatorType);
-                    return instance as IValidator;
-                }
-            }
-            return null;
+            if (type == null)
+                return null;
 
+            //get a custom attribute applied to a member of a type
+            var validatorAttribute = (ValidatorAttribute)Attribute.GetCustomAttribute(type, typeof(ValidatorAttribute));
+            if (validatorAttribute == null || validatorAttribute.ValidatorType == null)
+                return null;
+
+            //try to create instance of the validator
+            var instance = EngineContext.Current.ResolveUnregistered(validatorAttribute.ValidatorType);
+
+            return instance as IValidator;
         }
     }
 }

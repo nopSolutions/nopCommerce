@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Data;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -36,6 +37,9 @@ namespace Nop.Web.Framework.Extensions
                 });
             }
 #endif
+
+            //add fluent validation
+            mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
 
             return mvcBuilder;
         }
