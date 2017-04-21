@@ -1,16 +1,16 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Extensions;
-using Nop.Web.Framework.Mvc.Extensions;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Routes;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web
 {
+    /// <summary>
+    /// Represents startup class of appllication
+    /// </summary>
     public class Startup
     {
         #region Properties
@@ -41,13 +41,13 @@ namespace Nop.Web
         /// <param name="services">The contract for a collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //add MVC feature
-            services.AddMvc().AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
+            //add and configure MVC feature
+            services.AddNopMvc();
 
             //add MiniProfiler services
             services.AddMiniProfiler();
 
-            //add Nop engine
+            //add and configure Nop engine
             var engine = services.AddNopEngine(Configuration);
 
             //return service provider provided by engine
@@ -59,8 +59,7 @@ namespace Nop.Web
         /// </summary>
         /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
         /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
-        /// <param name="routePublisher">Route publisher</param>
-        public void Configure(IApplicationBuilder application, IHostingEnvironment environment, IRoutePublisher routePublisher)
+        public void Configure(IApplicationBuilder application, IHostingEnvironment environment)
         {
             //get detailed exceptions
             if (environment.IsDevelopment())
@@ -75,14 +74,7 @@ namespace Nop.Web
             application.UseMiniProfiler();
 
             //use MVC routing
-            application.UseMvc(routeBuilder =>
-            {
-                //register all routes
-                routePublisher.RegisterRoutes(routeBuilder);
-
-                //default route
-                routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
-            });
+            application.UseNopMvc();
         }
     }
 }

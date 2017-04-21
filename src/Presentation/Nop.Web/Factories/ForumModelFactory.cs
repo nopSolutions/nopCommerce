@@ -17,7 +17,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 

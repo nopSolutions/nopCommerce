@@ -1,12 +1,14 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
+using Nop.Web.Framework.Mvc.Routes;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
 
-namespace Nop.Web.Framework.Mvc.Extensions
+namespace Nop.Web.Framework.Extensions
 {
     /// <summary>
     /// Represents extensions of IApplicationBuilder
@@ -34,6 +36,25 @@ namespace Nop.Web.Framework.Mvc.Extensions
                         EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
                 });
             }
+
+            return application;
+        }
+
+        /// <summary>
+        /// Configure MVC routing
+        /// </summary>
+        /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
+        /// <returns>Builder that provides the mechanisms to configure an application's request pipeline</returns>
+        public static IApplicationBuilder UseNopMvc(this IApplicationBuilder application)
+        {
+            application.UseMvc(routeBuilder =>
+            {
+                //register all routes
+                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+
+                //and default one
+                routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            });
 
             return application;
         }
