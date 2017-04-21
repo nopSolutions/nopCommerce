@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
@@ -22,6 +23,10 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>Builder that provides the mechanisms to configure an application's request pipeline</returns>
         public static IApplicationBuilder UseMiniProfiler(this IApplicationBuilder application)
         {
+            //whether database is already installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return application;
+
             //whether MiniProfiler should be displayed
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {

@@ -1,6 +1,9 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Data;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -12,15 +15,12 @@ namespace Nop.Web.Framework.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add anf configure MVC for the application
+        /// Add and configure MVC for the application
         /// </summary>
         /// <param name="services">The contract for a collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
-            //whether database is already installed
-            var databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
-
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
 
@@ -28,9 +28,10 @@ namespace Nop.Web.Framework.Extensions
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
 
 #if NET451
-            //add themeable view engine
-            if (databaseInstalled)
+            //whether database is already installed
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
+                //add themeable view engine
                 mvcBuilder.AddViewOptions(options =>
                 {
                     options.ViewEngines.Clear();
@@ -43,6 +44,45 @@ namespace Nop.Web.Framework.Extensions
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Create and configure manager of scheduled tasks
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <returns>The contract for a collection of service descriptors</returns>
+        public static IServiceCollection AddScheduledTasks(this IServiceCollection services)
+        {
+            //whether database is already installed
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //start scheduled tasks
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
+            }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Create 'Application start' record in log
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <returns>The contract for a collection of service descriptors</returns>
+        public static IServiceCollection LogApplicationStart(this IServiceCollection services)
+        {
+            //whether database is already installed
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                try
+                {
+                    //log application start
+                    EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
+                }
+                catch { }
+            }
+
+            return services;
         }
     }
 }

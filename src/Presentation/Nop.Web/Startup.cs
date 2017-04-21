@@ -50,6 +50,9 @@ namespace Nop.Web
             //add and configure Nop engine
             var engine = services.AddNopEngine(Configuration);
 
+            services.AddScheduledTasks();
+            services.LogApplicationStart();
+
             //return service provider provided by engine
             return engine.ServiceProvider;
         }
