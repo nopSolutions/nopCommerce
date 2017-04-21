@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.Routes;
+using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Infrastructure

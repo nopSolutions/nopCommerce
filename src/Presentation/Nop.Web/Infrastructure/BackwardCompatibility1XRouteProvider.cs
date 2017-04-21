@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Mvc.Routes;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
 {

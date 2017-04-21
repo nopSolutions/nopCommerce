@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
-using Nop.Web.Framework.Mvc.Routes;
+using Nop.Web.Framework.Mvc.Routing;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
 
