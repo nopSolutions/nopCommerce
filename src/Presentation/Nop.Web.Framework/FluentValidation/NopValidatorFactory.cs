@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.Attributes;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Web.Framework
+namespace Nop.Web.Framework.FluentValidation
 {
     /// <summary>
     /// Represents custom validator factory that looks for the attribute instance on the specified type in order to provide the validator instance.
