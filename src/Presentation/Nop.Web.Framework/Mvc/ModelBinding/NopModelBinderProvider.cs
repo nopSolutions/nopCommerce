@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Nop.Web.Framework.Mvc
+namespace Nop.Web.Framework.Mvc.ModelBinding
 {
     /// <summary>
     /// Represents model binder provider for the creating NopModelBinder

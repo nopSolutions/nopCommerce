@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Nop.Web.Framework.Mvc
+namespace Nop.Web.Framework.Mvc.ModelBinding
 {
     /// <summary>
     /// Attribute indicating that entered values should not be trimmed

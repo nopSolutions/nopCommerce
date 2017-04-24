@@ -5,7 +5,6 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Extensions
