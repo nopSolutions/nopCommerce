@@ -5,6 +5,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Extensions
@@ -26,6 +27,9 @@ namespace Nop.Web.Framework.Extensions
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
+
+            //add custom model binder provider (to the top of the provider list)
+            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
 #if NET451
             //whether database is already installed

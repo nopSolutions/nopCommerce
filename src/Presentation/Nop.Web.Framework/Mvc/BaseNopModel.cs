@@ -1,50 +1,62 @@
 ﻿using System.Collections.Generic;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Nop.Web.Framework.Mvc
 {
     /// <summary>
-    /// Base nopCommerce model
+    /// Represents base nopCommerce model
     /// </summary>
-#if NET451
-    [ModelBinder(typeof(NopModelBinder))]
-#endif
     public partial class BaseNopModel
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets property to store any custom values for models 
+        /// </summary>
+        public Dictionary<string, object> CustomProperties { get; set; }
+
+        #endregion
+
+        #region Ctor
+
         public BaseNopModel()
         {
             this.CustomProperties = new Dictionary<string, object>();
             PostInitialize();
         }
 
-#if NET451
-        public virtual void BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-        {
-        }
-#endif
+        #endregion
+
+        #region Methods
 
         /// <summary>
-        /// Developers can override this method in custom partial classes
-        /// in order to add some custom initialization code to constructors
+        /// Perform additional actions for binding the model
         /// </summary>
+        /// <param name="bindingContext">Model binding context</param>
+        /// <remarks>Developers can override this method in custom partial classes in order to add some custom model binding</remarks>
+        public virtual void BindModel(ModelBindingContext bindingContext)
+        {
+        }
+
+        /// <summary>
+        /// Perform additional actions for the model initialization
+        /// </summary>
+        /// <remarks>Developers can override this method in custom partial classes in order to add some custom initialization code to constructors</remarks>
         protected virtual void PostInitialize()
-        {
-            
+        {            
         }
 
-        /// <summary>
-        /// Use this property to store any custom value for your models. 
-        /// </summary>
-        public Dictionary<string, object> CustomProperties { get; set; }
+        #endregion
     }
 
     /// <summary>
-    /// Base nopCommerce entity model
+    /// Represents base nopCommerce entity model
     /// </summary>
     public partial class BaseNopEntityModel : BaseNopModel
     {
+        /// <summary>
+        /// Gets or sets model identifier
+        /// </summary>
         public virtual int Id { get; set; }
     }
 }

@@ -1,38 +1,73 @@
-﻿#if NET451
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Nop.Web.Framework.Mvc
 {
-    public class NopModelBinder : DefaultModelBinder
+    /// <summary>
+    /// Represents model binder for the binding models inherited from the BaseNopModel
+    /// </summary>
+    public class NopModelBinder : ComplexTypeModelBinder
     {
-        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        #region Ctor
+
+        public NopModelBinder(IDictionary<ModelMetadata, IModelBinder> propertyBinders) : base(propertyBinders)
         {
-            var model = base.BindModel(controllerContext, bindingContext);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Create model for given binding context
+        /// </summary>
+        /// <param name="bindingContext">Model binding context</param>
+        /// <returns>Model</returns>
+        protected override object CreateModel(ModelBindingContext bindingContext)
+        {
+            if (bindingContext == null)
+                throw new ArgumentNullException(nameof(bindingContext));
+            
+            //create base model
+            var model = base.CreateModel(bindingContext);
+
+            //add custom model binding
             if (model is BaseNopModel)
-            {
-                ((BaseNopModel)model).BindModel(controllerContext, bindingContext);
-            }
+                (model as BaseNopModel).BindModel(bindingContext);
+
             return model;
         }
 
-        protected override void SetProperty(ControllerContext controllerContext, ModelBindingContext bindingContext,
-            PropertyDescriptor propertyDescriptor, object value)
+        /// <summary>
+        ///  Updates a property in the current model
+        /// </summary>
+        /// <param name="bindingContext">Model binding context</param>
+        /// <param name="modelName">The model name</param>
+        /// <param name="propertyMetadata">The model metadata for the property to set</param>
+        /// <param name="bindingResult">The binding result for the property's new value</param>
+        protected override void SetProperty(ModelBindingContext bindingContext, string modelName, 
+            ModelMetadata propertyMetadata, ModelBindingResult bindingResult)
         {
-            //check if data type of value is System.String
-            if (propertyDescriptor.PropertyType == typeof(string))
+            if (bindingContext == null)
+                throw new ArgumentNullException(nameof(bindingContext));
+
+            //trim property string values for nop models
+            var valueAsString = bindingResult.Model as string;
+            if (bindingContext.Model is BaseNopModel && !string.IsNullOrEmpty(valueAsString))
             {
-                //developers can mark properties to be excluded from trimming with [NoTrim] attribute
-                if (propertyDescriptor.Attributes.Cast<object>().All(a => a.GetType() != typeof (NoTrimAttribute)))
-                {
-                        var stringValue = (string)value;
-                        value = string.IsNullOrEmpty(stringValue) ? stringValue : stringValue.Trim();
-                }
+                //excluding properties with [NoTrim] attribute
+                var noTrim = (propertyMetadata as DefaultModelMetadata)?.Attributes?.Attributes?.OfType<NoTrimAttribute>().Any();
+                if (!noTrim.HasValue || !noTrim.Value)
+                    bindingResult = ModelBindingResult.Success(valueAsString.Trim());
             }
 
-            base.SetProperty(controllerContext, bindingContext, propertyDescriptor, value);
+            base.SetProperty(bindingContext, modelName, propertyMetadata, bindingResult);
         }
+
+        #endregion
     }
 }
-#endif
