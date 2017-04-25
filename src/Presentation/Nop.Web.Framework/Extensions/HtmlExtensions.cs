@@ -15,7 +15,8 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Extensions
 {

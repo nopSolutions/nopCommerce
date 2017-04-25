@@ -1,6 +1,7 @@
-﻿namespace Nop.Web.Framework.Mvc
+﻿
+namespace Nop.Web.Framework.Mvc.Models
 {
-    public class ActionConfirmationModel
+    public class DeleteConfirmationModel : BaseNopEntityModel
     {
         public string ControllerName { get; set; }
         public string ActionName { get; set; }

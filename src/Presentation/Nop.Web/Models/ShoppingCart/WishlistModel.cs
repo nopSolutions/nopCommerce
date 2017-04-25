@@ -3,7 +3,7 @@ using System.Collections.Generic;
 #if NET451
 using System.Web.Mvc;
 #endif
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart

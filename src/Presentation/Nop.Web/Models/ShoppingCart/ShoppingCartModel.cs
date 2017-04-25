@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 #endif
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 

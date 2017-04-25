@@ -1,7 +1,8 @@
-﻿#if NET451using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 #endif
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Models.News
 {

@@ -5,8 +5,8 @@ using System.Web.Mvc;
 #endif
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog

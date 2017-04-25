@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Mvc.ModelBinding
 {

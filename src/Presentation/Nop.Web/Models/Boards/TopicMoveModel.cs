@@ -2,7 +2,7 @@
 #if NET451
 using System.Web.Mvc;
 #endif
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
