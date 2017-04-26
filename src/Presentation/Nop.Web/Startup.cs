@@ -67,6 +67,9 @@ namespace Nop.Web
             //exception handling
             application.UseExceptionHandler(environment.IsDevelopment());
 
+            //handle 404 Page Not Found errors
+            application.UsePageNotFound();
+
             //get access to HttpContext
             application.UseStaticHttpContext();
 

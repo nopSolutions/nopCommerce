@@ -112,8 +112,12 @@ namespace Nop.Web.Controllers
         //page not found
         public virtual ActionResult PageNotFound()
         {
+#if NET451
+            if (_commonSettings.Log404Errors)
+                _logger.Log();
+#endif
+
             this.Response.StatusCode = 404;
-            this.Response.TrySkipIisCustomErrors = true;
             this.Response.ContentType = "text/html";
 
             return View();
