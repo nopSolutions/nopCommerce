@@ -260,17 +260,19 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
-        /// Check whether a plugin that found by some type which is located into its assembly is installed
+        /// Find a plugin descriptor by some type which is located into the same assembly as plugin
         /// </summary>
-        /// <param name="typeInAssembly">Some type which is located into the same assembly as plugin</param>
-        /// <returns>True if plugin exists and is installed; otherwise false</returns>
-        public static bool PluginInstalled(Type typeInAssembly)
+        /// <param name="typeInAssembly">Type</param>
+        /// <returns>Plugin descriptor if exists; otherwise null</returns>
+        public static PluginDescriptor FindPlugin(Type typeInAssembly)
         {
             if (typeInAssembly == null)
                 throw new ArgumentNullException("typeInAssembly");
 
-            return ReferencedPlugins.Any(plugin => plugin.Installed
-                && plugin.ReferencedAssembly != null
+            if (ReferencedPlugins == null)
+                return null;
+
+            return ReferencedPlugins.FirstOrDefault(plugin => plugin.ReferencedAssembly != null
                 && plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase));
         }
 

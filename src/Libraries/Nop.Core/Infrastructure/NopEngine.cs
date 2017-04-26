@@ -41,7 +41,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup tasks
             var instances = startupTasks
-                .Where(startupTask => PluginManager.PluginInstalled(startupTask)) //ignore not installed plugins
+                .Where(startupTask => PluginManager.FindPlugin(startupTask).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
                 .OrderBy(startupTask => startupTask.Order);
 
@@ -71,7 +71,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                .Where(dependencyRegistrar => PluginManager.PluginInstalled(dependencyRegistrar)) //ignore not installed plugins
+                .Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
@@ -97,7 +97,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                .Where(mapperConfiguration => PluginManager.PluginInstalled(mapperConfiguration)) //ignore not installed plugins
+                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(mapperConfiguration => (IMapperConfiguration)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
