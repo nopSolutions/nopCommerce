@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -10,7 +9,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Fakes;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
@@ -68,29 +66,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
-#if NET451
-            //HTTP context and other related stuff
-            builder.Register(c => 
-                //register FakeHttpContext when HttpContext is not available
-                HttpContext.Current != null ?
-                (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) :
-                (new FakeHttpContext("~/") as HttpContextBase))
-                .As<HttpContextBase>()
-                .InstancePerLifetimeScope();
-            builder.Register(c => c.Resolve<HttpContextBase>().Request)
-                .As<HttpRequestBase>()
-                .InstancePerLifetimeScope();
-            builder.Register(c => c.Resolve<HttpContextBase>().Response)
-                .As<HttpResponseBase>()
-                .InstancePerLifetimeScope();
-            builder.Register(c => c.Resolve<HttpContextBase>().Server)
-                .As<HttpServerUtilityBase>()
-                .InstancePerLifetimeScope();
-            builder.Register(c => c.Resolve<HttpContextBase>().Session)
-                .As<HttpSessionStateBase>()
-                .InstancePerLifetimeScope();
-#endif
-
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
