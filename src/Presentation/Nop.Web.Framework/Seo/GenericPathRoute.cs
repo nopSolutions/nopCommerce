@@ -68,6 +68,7 @@ namespace Nop.Web.Framework.Seo
 
                 //route request
                 await _target.RouteAsync(context);
+                return;
             }
 
             if (!urlRecord.IsActive)
@@ -83,6 +84,7 @@ namespace Nop.Web.Framework.Seo
 
                     //route request
                     await _target.RouteAsync(context);
+                    return;
                 }
 
 #if NET451
