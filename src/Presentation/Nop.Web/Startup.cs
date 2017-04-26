@@ -64,20 +64,17 @@ namespace Nop.Web
         /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
         public void Configure(IApplicationBuilder application, IHostingEnvironment environment)
         {
-            //get detailed exceptions
-            if (environment.IsDevelopment())
-                application.UseDeveloperExceptionPage();
-            else
-                application.UseExceptionHandler("/Home/Error");
+            //exception handling
+            application.UseExceptionHandler(environment.IsDevelopment());
 
             //get access to HttpContext
             application.UseStaticHttpContext();
 
+            //MVC routing
+            application.UseNopMvc();
+
             //add MiniProfiler
             application.UseMiniProfiler();
-
-            //use MVC routing
-            application.UseNopMvc();
         }
     }
 }

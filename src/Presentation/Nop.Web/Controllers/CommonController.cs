@@ -103,6 +103,12 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        //error page
+        public virtual IActionResult Error()
+        {
+            return View("~/Views/Shared/Error.cshtml");
+        }
+
         //page not found
         public virtual ActionResult PageNotFound()
         {
@@ -298,7 +304,7 @@ namespace Nop.Web.Controllers
 
                 _workflowMessageService.SendContactUsMessage(_workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);
-                
+
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
@@ -352,7 +358,7 @@ namespace Nop.Web.Controllers
 
                 _workflowMessageService.SendContactVendorMessage(vendor, _workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);
-                
+
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
 
@@ -381,7 +387,7 @@ namespace Nop.Web.Controllers
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
-            
+
             var siteMap = _commonModelFactory.PrepareSitemapXml(this.Url, id);
             return Content(siteMap, "text/xml");
         }

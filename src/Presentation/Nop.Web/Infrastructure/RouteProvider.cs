@@ -495,7 +495,11 @@ namespace Nop.Web.Infrastructure
             //install
             routeBuilder.MapRoute("Installation", "install",
 				new { controller = "Install", action = "Index" });
-            
+
+            //error page
+            routeBuilder.MapLocalizedRoute("Error", "error",
+                new { controller = "Common", action = "Error" });
+
             //page not found
             routeBuilder.MapLocalizedRoute("PageNotFound", "page-not-found", 
                 new { controller = "Common", action = "PageNotFound" });
