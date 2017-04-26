@@ -16,6 +16,41 @@ namespace Nop.Web.Framework.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Adds services required for application session state
+        /// </summary>
+        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <returns>The contract for a collection of service descriptors</returns>
+        public static IServiceCollection AddHttpSession(this IServiceCollection services)
+        {
+            services.AddSession(
+#if NET451
+                options => 
+                //Determines the cookie name used to persist the session ID. Defaults to Microsoft.AspNetCore.Session.SessionDefaults.CookieName.
+                options.CookieName
+                
+                //Determines the domain used to create the cookie. Is not provided by default.
+                options.CookieDomain
+                
+                //Determines the path used to create the cookie. Defaults to Microsoft.AspNetCore.Session.SessionDefaults.CookiePath.
+                options.CookiePath
+                
+                //Determines if the browser should allow the cookie to be accessed by client-side JavaScript. The default is true, 
+                //which means the cookie will only be passed to HTTP requests and is not made available to script on the page.
+                options.CookieHttpOnly
+                
+                //Determines if the cookie should only be transmitted on HTTPS requests.
+                options.CookieSecure
+                
+                //The IdleTimeout indicates how long the session can be idle before its contents are abandoned. 
+                //Each session access resets the timeout. Note this only applies to the content of the session, not the cookie.
+                options.IdleTimeout
+#endif
+                );
+
+            return services;
+        }
+
+        /// <summary>
         /// Add and configure MVC for the application
         /// </summary>
         /// <param name="services">The contract for a collection of service descriptors</param>

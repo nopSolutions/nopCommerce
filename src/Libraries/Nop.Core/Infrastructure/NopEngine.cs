@@ -144,10 +144,10 @@ namespace Nop.Core.Infrastructure
                 });
             }
             else
-            {
-                //add memory cache
-                services.AddMemoryCache();
-            }
+                services.AddDistributedMemoryCache();
+
+            //add memory cache
+            services.AddMemoryCache();
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();

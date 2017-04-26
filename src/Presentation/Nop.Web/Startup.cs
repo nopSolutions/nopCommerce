@@ -44,6 +44,9 @@ namespace Nop.Web
             //add and configure MVC feature
             services.AddNopMvc();
 
+            //add HTTP sesion state feature
+            services.AddHttpSession();
+
             //add MiniProfiler services
             services.AddMiniProfiler();
 
@@ -72,6 +75,9 @@ namespace Nop.Web
 
             //get access to HttpContext
             application.UseStaticHttpContext();
+
+            //use HTTP session
+            application.UseSession();
 
             //MVC routing
             application.UseNopMvc();
