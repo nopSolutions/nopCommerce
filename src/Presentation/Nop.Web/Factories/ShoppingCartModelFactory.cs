@@ -5,8 +5,8 @@ using System.Linq;
 using System.Web;
 #if NET451
 using System.Web.Mvc;
-using System.Web.Routing;
 #endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -878,7 +878,7 @@ namespace Nop.Web.Factories
             var buttonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
-#if NET451
+
             foreach (var pm in buttonPaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
@@ -895,7 +895,6 @@ namespace Nop.Web.Factories
             }
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
-#endif
 
             #endregion
 

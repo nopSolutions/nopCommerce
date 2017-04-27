@@ -1,6 +1,4 @@
-﻿#if NET451
-using System.Web.Routing;
-#endif
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Common;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping.Tracking;
@@ -29,8 +27,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="address">Address</param>
         /// <returns>Represents a response of getting pickup points</returns>
         GetPickupPointsResponse GetPickupPoints(Address address);
-
-#if NET451
+        
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
@@ -38,8 +35,7 @@ namespace Nop.Services.Shipping.Pickup
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-
-#endif
+        
         #endregion
     }
 }

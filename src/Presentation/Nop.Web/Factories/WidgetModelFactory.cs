@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-#if NET451
-using System.Web.Routing;
-#endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
@@ -53,7 +51,6 @@ namespace Nop.Web.Factories
         /// <returns>List of the render widget models</returns>
         public virtual List<RenderWidgetModel> GetRenderWidgetModels(string widgetZone, object additionalData = null)
         {
-#if NET451
             var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
                 _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
@@ -101,9 +98,6 @@ namespace Nop.Web.Factories
             }
                             
             return clonedModel;
-#else
-            return null;
-#endif
         }
 
         #endregion

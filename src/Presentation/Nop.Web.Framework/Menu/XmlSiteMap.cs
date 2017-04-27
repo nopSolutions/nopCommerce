@@ -3,10 +3,8 @@
 using System;
 using System.IO;
 using System.Linq;
-#if NET451
-using System.Web.Routing;
-#endif
 using System.Xml;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -89,10 +87,8 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.ControllerName = controllerName;
                 siteMapNode.ActionName = actionName;
 
-#if NET451
                 //apply admin area as described here - http://www.nopcommerce.com/boards/t/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page.aspx
                 siteMapNode.RouteValues = new RouteValueDictionary { { "area", "Admin" } };
-#endif
             }
             else if (!string.IsNullOrEmpty(url))
             {

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-#if NET451
-using System.Web.Routing;
-#endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Cms
@@ -17,7 +15,6 @@ namespace Nop.Services.Cms
         /// <returns>Widget zones</returns>
         IList<string> GetWidgetZones();
 
-#if NET451
         /// <summary>
         /// Gets a route for plugin configuration
         /// </summary>
@@ -35,6 +32,5 @@ namespace Nop.Services.Cms
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-#endif
     }
 }

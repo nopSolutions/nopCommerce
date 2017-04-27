@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-#if NET451using System.Web.Routing;
-#endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -435,13 +434,11 @@ namespace Nop.Web.Factories
             var model = new CheckoutPaymentInfoModel();
             string actionName;
             string controllerName;
-#if NET451
             RouteValueDictionary routeValues;
             paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
             model.PaymentInfoActionName = actionName;
             model.PaymentInfoControllerName = controllerName;
             model.PaymentInfoRouteValues = routeValues;
-#endif
             model.DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab;
             return model;
         }

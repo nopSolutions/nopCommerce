@@ -15,6 +15,7 @@
     <PackageReference Include="ImageResizer" Version="4.0.5" />
     <PackageReference Include="iTextSharp" Version="5.5.11" />
     <PackageReference Include="MaxMind.GeoIP2" Version="2.7.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="1.1.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.3.0" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.1.1" />

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 #if NET451
 using System.Web.Mvc;
-using System.Web.Routing;
 #endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
@@ -24,9 +24,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             ButtonPaymentMethodActionNames = new List<string>();
             ButtonPaymentMethodControllerNames = new List<string>();
-#if NET451
             ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
-#endif
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -51,9 +49,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         public IList<string> ButtonPaymentMethodActionNames { get; set; }
         public IList<string> ButtonPaymentMethodControllerNames { get; set; }
-#if NET451
         public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
-#endif
 
         public bool HideCheckoutButton { get; set; }
 
@@ -204,6 +200,6 @@ namespace Nop.Web.Models.ShoppingCart
 
             public Dictionary<string, object> CustomValues { get; set; }
         }
-#endregion
+        #endregion
     }
 }

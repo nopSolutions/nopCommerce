@@ -1,6 +1,4 @@
-#if NET451
-using System.Web.Routing;
-#endif
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Common
@@ -11,7 +9,6 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface IMiscPlugin : IPlugin
     {
-#if NET451
         /// <summary>
         /// Gets a route for plugin configuration
         /// </summary>
@@ -19,6 +16,5 @@ namespace Nop.Services.Common
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-#endif
     }
 }
