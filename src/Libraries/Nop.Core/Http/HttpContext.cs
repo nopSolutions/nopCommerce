@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Nop.Core
+namespace Nop.Core.Http
 {
     /// <summary>
     /// Represents HTTP context

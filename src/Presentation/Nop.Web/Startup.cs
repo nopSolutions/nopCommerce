@@ -76,6 +76,12 @@ namespace Nop.Web
             //get access to HttpContext
             application.UseStaticHttpContext();
 
+            //check whether requested page is keep alive page
+            application.UseKeepAlive();
+
+            //check whether database is installed
+            application.UseInstallUrl();
+
             //use HTTP session
             application.UseSession();
 

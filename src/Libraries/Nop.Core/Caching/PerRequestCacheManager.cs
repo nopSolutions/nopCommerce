@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Http;
 
 namespace Nop.Core.Caching
 {
