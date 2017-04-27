@@ -10,9 +10,6 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
-#if NET451
-using System.Web.Hosting;
-#endif
 
 namespace Nop.Core
 {
@@ -21,6 +18,8 @@ namespace Nop.Core
     /// </summary>
     public partial class CommonHelper
     {
+        #region Methods
+
         /// <summary>
         /// Ensures the subscriber email or throw.
         /// </summary>
@@ -344,18 +343,19 @@ namespace Nop.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public static string MapPath(string path)
         {
-#if NET451
-            if (HostingEnvironment.IsHosted)
-            {
-                //hosted
-                return HostingEnvironment.MapPath(path);
-            }
-
-#endif
-            //not hosted. For example, run in unit tests
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(baseDirectory, path);
-        }        
+            return Path.Combine(BaseDirectory, path);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets application base path
+        /// </summary>
+        internal static string BaseDirectory { get; set; }
+
+        #endregion
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Web;
-#if NET451
-using System.Web.Hosting;
-#endif
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Nop.Core.Infrastructure
 {
@@ -42,16 +38,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string GetBinDirectory()
         {
-#if NET451
-            if (HostingEnvironment.IsHosted)
-            {
-                //hosted
-                return HttpRuntime.BinDirectory;
-            }
-
-#endif
-            //not hosted. For example, run either in unit tests
-            return AppDomain.CurrentDomain.BaseDirectory;
+            return PlatformServices.Default.Application.ApplicationBasePath;
         }
 
         public override IList<Assembly> GetAssemblies()
@@ -67,6 +54,6 @@ namespace Nop.Core.Infrastructure
             return base.GetAssemblies();
         }
 
-#endregion
+        #endregion
     }
 }

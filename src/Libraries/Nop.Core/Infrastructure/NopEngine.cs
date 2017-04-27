@@ -5,6 +5,7 @@ using System.Net;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -93,7 +94,8 @@ namespace Nop.Core.Infrastructure
         protected virtual void AddAutoMapper(IServiceCollection services)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = Resolve<ITypeFinder>().FindClassesOfType<IMapperConfiguration>();
+            var typeFinder = new WebAppTypeFinder();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperConfiguration>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
@@ -126,6 +128,10 @@ namespace Nop.Core.Infrastructure
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+            //set base application path
+            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
+            CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
+
             //initialize plugins
             PluginManager.Initialize();
 
@@ -155,11 +161,11 @@ namespace Nop.Core.Infrastructure
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
-            //register dependencies
-            RegisterDependencies(nopConfig, services);
-
             //register mapper configurations
             AddAutoMapper(services);
+
+            //register dependencies
+            RegisterDependencies(nopConfig, services);
 
             //startup tasks
             if (!nopConfig.IgnoreStartupTasks)
