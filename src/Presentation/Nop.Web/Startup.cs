@@ -79,6 +79,9 @@ namespace Nop.Web
             //use HTTP session
             application.UseSession();
 
+            //set request culture
+            application.UseCulture();
+
             //MVC routing
             application.UseNopMvc();
 

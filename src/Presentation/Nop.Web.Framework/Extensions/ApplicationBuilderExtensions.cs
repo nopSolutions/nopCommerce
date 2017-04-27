@@ -8,6 +8,7 @@ using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
@@ -85,6 +86,16 @@ namespace Nop.Web.Framework.Extensions
             });
 
             return application;
+        }
+
+        /// <summary>
+        /// Set current culture info
+        /// </summary>
+        /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
+        /// <returns>Builder that provides the mechanisms to configure an application's request pipeline</returns>
+        public static IApplicationBuilder UseCulture(this IApplicationBuilder application)
+        {
+            return application.UseMiddleware<CultureMiddleware>();
         }
 
         /// <summary>

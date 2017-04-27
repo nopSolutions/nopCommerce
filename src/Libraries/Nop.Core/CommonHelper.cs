@@ -8,7 +8,6 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Web;
 
 namespace Nop.Core
@@ -313,11 +312,10 @@ namespace Nop.Core
         public static void SetTelerikCulture()
         {
             //little hack here
-            //always set culture to 'en-US' (Kendo UI has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-
+            //always set culture to 'en-US' (Kendo UI has a bug related to editing decimal values in other cultures)
             var culture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
         }
 
         /// <summary>
