@@ -126,6 +126,9 @@ namespace Nop.Core.Infrastructure
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+            //initialize plugins
+            PluginManager.Initialize();
+
             //add options feature
             services.AddOptions();
 

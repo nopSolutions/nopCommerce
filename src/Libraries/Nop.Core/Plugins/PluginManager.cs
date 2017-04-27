@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
-#if NET451
-using System.Web.Compilation;
-#endif
 using Nop.Core.ComponentModel;
-using Nop.Core.Plugins;
 
 //Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
 //SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
-#if NET451
-[assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
-#endif
 namespace Nop.Core.Plugins
 {
     /// <summary>
@@ -38,7 +30,9 @@ namespace Nop.Core.Plugins
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static DirectoryInfo _shadowCopyFolder;
+#if NET451
         private static bool _clearShadowDirectoryOnStartup;
+#endif
 
         #endregion
 
@@ -85,6 +79,7 @@ namespace Nop.Core.Plugins
 
                     //get list of all files in bin
                     var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
+#if NET451
                     if (_clearShadowDirectoryOnStartup)
                     {
                         //clear out shadow copied plugins
@@ -101,6 +96,7 @@ namespace Nop.Core.Plugins
                             }
                         }
                     }
+#endif
 
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
