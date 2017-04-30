@@ -201,7 +201,8 @@ namespace Nop.Web.Factories
                 foreach (var option in activeOptions)
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
+                    var query = new Dictionary<string, string[]> { ["orderby"] = new string[] { option.Key.ToString() } };
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, query);
 
                     var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
 #if NET451
@@ -300,8 +301,9 @@ namespace Nop.Web.Factories
                     }
 
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+                    var query = new Dictionary<string, string[]> { ["pagesize"] = new string[] { "{0}" } };
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, query);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, new[] { "pagenumber" });
 
                     foreach (var pageSize in pageSizes)
                     {

@@ -1,56 +1,49 @@
-using System.Web;
+using System.Collections.Generic;
 
 namespace Nop.Core
 {
     /// <summary>
-    /// Represents a common helper
+    /// Represents a web helper
     /// </summary>
     public partial interface IWebHelper
     {
         /// <summary>
-        /// Get URL referrer
+        /// Get URL referrer if exists
         /// </summary>
         /// <returns>URL referrer</returns>
         string GetUrlReferrer();
 
         /// <summary>
-        /// Get context IP address
+        /// Get IP address from HTTP context
         /// </summary>
-        /// <returns>URL referrer</returns>
+        /// <returns>String of IP address</returns>
         string GetCurrentIpAddress();
 
         /// <summary>
-        /// Gets this page name
+        /// Gets this page URL
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
-        /// <returns>Page name</returns>
+        /// <returns>Page URL</returns>
         string GetThisPageUrl(bool includeQueryString);
 
         /// <summary>
-        /// Gets this page name
+        /// Gets this page URL
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected page</param>
-        /// <returns>Page name</returns>
+        /// <param name="useSsl">Value indicating whether to get SSL secured page URL</param>
+        /// <returns>Page URL</returns>
         string GetThisPageUrl(bool includeQueryString, bool useSsl);
 
         /// <summary>
         /// Gets a value indicating whether current connection is secured
         /// </summary>
-        /// <returns>true - secured, false - not secured</returns>
+        /// <returns>True if it's secured, otherwise false</returns>
         bool IsCurrentConnectionSecured();
-        
-        /// <summary>
-        /// Gets server variable by name
-        /// </summary>
-        /// <param name="name">Name</param>
-        /// <returns>Server variable</returns>
-        string ServerVariables(string name);
 
         /// <summary>
         /// Gets store host location
         /// </summary>
-        /// <param name="useSsl">Use SSL</param>
+        /// <param name="useSsl">Whether to get SSL secured URL</param>
         /// <returns>Store host location</returns>
         string GetStoreHost(bool useSsl);
 
@@ -63,52 +56,32 @@ namespace Nop.Core
         /// <summary>
         /// Gets store location
         /// </summary>
-        /// <param name="useSsl">Use SSL</param>
+        /// <param name="useSsl">Whether to get SSL secured URL</param>
         /// <returns>Store location</returns>
         string GetStoreLocation(bool useSsl);
 
-#if NET451
         /// <summary>
-        /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
-        /// </summary>
-        /// <param name="request">HTTP Request</param>
-        /// <returns>True if the request targets a static resource file.</returns>
-        /// <remarks>
-        /// These are the file extensions considered to be static resources:
-        /// .css
-        ///	.gif
-        /// .png 
-        /// .jpg
-        /// .jpeg
-        /// .js
-        /// .axd
-        /// .ashx
-        /// </remarks>
-        bool IsStaticResource(HttpRequest request);        
-#endif
-
-        /// <summary>
-        /// Modifies query string
+        /// Modify query string of the URL
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryStringModification">Query string modification</param>
+        /// <param name="queryStrings">Query string parameters to add</param>
         /// <param name="anchor">Anchor</param>
-        /// <returns>New url</returns>
-        string ModifyQueryString(string url, string queryStringModification, string anchor);
+        /// <returns>New URL with added passed query string</returns>
+        string ModifyQueryString(string url, IDictionary<string, string[]> queryStrings, string anchor = null);
 
         /// <summary>
-        /// Remove query string from url
+        /// Remove query string from the URL
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryString">Query string to remove</param>
-        /// <returns>New url</returns>
-        string RemoveQueryString(string url, string queryString);
-        
+        /// <param name="queryNames">Query parameter names to remove</param>
+        /// <returns>New URL without passed query string</returns>
+        string RemoveQueryString(string url, IEnumerable<string> queryNames);
+
         /// <summary>
         /// Gets query string value by name
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name">Parameter name</param>
+        /// <typeparam name="T">Returned value type</typeparam>
+        /// <param name="name">Query parameter name</param>
         /// <returns>Query string value</returns>
         T QueryString<T>(string name);
 

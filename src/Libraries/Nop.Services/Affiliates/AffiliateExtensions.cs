@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Infrastructure;
@@ -51,13 +52,13 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException("webHelper");
 
             var storeUrl = webHelper.GetStoreLocation(false);
-            var url = !String.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
+            var query = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null):
+                new Dictionary<string, string[]> { ["affiliate"] = new[] { affiliate.FriendlyUrlName} } :
                 //use ID
-                webHelper.ModifyQueryString(storeUrl, "affiliateid=" + affiliate.Id, null);
+                new Dictionary<string, string[]> { ["affiliateid"] = new[] { affiliate.Id.ToString() } };
 
-            return url;
+            return webHelper.ModifyQueryString(storeUrl, query);
         }
 
         /// <summary>
