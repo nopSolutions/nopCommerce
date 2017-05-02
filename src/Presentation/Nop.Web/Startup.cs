@@ -44,6 +44,9 @@ namespace Nop.Web
             //add and configure MVC feature
             services.AddNopMvc();
 
+            //add localization
+            services.AddLocalization();
+
             //add HTTP sesion state feature
             services.AddHttpSession();
 
@@ -78,6 +81,9 @@ namespace Nop.Web
 
             //check whether requested page is keep alive page
             application.UseKeepAlive();
+
+            //use request localization
+            application.UseRequestLocalization();
 
             //check whether database is installed
             application.UseInstallUrl();
