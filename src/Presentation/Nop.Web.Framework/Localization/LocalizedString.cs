@@ -1,10 +1,10 @@
-﻿#if NET451
+﻿using Microsoft.AspNetCore.Html;
 using System;
 using System.Web;
 
 namespace Nop.Web.Framework.Localization
 {
-    public class LocalizedString : MarshalByRefObject, IHtmlString
+    public class LocalizedString : MarshalByRefObject
     {
         private readonly string _localized;
         private readonly string _scope;
@@ -80,4 +80,3 @@ namespace Nop.Web.Framework.Localization
 
     }
 }
-#endif

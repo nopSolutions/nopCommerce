@@ -672,7 +672,7 @@ namespace Nop.Web.Framework.Extensions
         {
             return new HtmlString("");
             //TODO implement
-            //return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
+            //return ViewComponent("WidgetsByZone", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
 
 #if NET451

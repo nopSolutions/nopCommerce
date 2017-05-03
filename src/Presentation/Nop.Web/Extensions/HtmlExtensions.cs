@@ -1,8 +1,6 @@
-﻿#if NET451
+﻿
 using System;
 using System.Text;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
@@ -13,11 +11,13 @@ using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
+        #if NET451
         /// <summary>
         /// BBCode editor
         /// </summary>
@@ -223,7 +223,7 @@ namespace Nop.Web.Extensions
         {
             return new Pager(pagination, helper.ViewContext);
         }
-
+#endif
         /// <summary>
         /// Get topic system name
         /// </summary>
@@ -231,13 +231,13 @@ namespace Nop.Web.Extensions
         /// <param name="html">HTML helper</param>
         /// <param name="systemName">System name</param>
         /// <returns>Topic SEO Name</returns>
-        public static string GetTopicSeName<T>(this HtmlHelper<T> html, string systemName)
+        public static string GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName)
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
 
             //static cache manager
-            var cacheManager = EngineContext.Current.ContainerManager.Resolve<IStaticCacheManager>();
+            var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {
@@ -252,4 +252,3 @@ namespace Nop.Web.Extensions
         }
     }
 }
-#endif

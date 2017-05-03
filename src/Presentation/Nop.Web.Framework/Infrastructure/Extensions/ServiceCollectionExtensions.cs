@@ -39,8 +39,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 //database is already installed, so start scheduled tasks
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
+                //TODO uncomment schedule tasks
+                //TaskManager.Instance.Initialize();
+                //TaskManager.Instance.Start();
 
                 try
                 {

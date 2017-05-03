@@ -1,8 +1,4 @@
-﻿#if NET451
-using System.IO;
-using System.Web.Mvc;
-using Nop.Core;
-using Nop.Core.Data;
+﻿using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
@@ -14,8 +10,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
     /// Web view page
     /// </summary>
     /// <typeparam name="TModel">Model</typeparam>
-    public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
+    public abstract class WebViewPage<TModel> : Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
+//TODO rename to RazorPage
         private ILocalizationService _localizationService;
         private Localizer _localizer;
 
@@ -26,62 +23,51 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             get
             {
+                if (_localizationService == null)
+                    _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
                 if (_localizer == null)
                 {
-                    //null localizer
-                    //_localizer = (format, args) => new LocalizedString((args == null || args.Length == 0) ? format : string.Format(format, args));
-
-                    //default localizer
                     _localizer = (format, args) =>
-                                     {
-                                         var resFormat = _localizationService.GetResource(format);
-                                         if (string.IsNullOrEmpty(resFormat))
-                                         {
-                                             return new LocalizedString(format);
-                                         }
-                                         return
-                                             new LocalizedString((args == null || args.Length == 0)
-                                                                     ? resFormat
-                                                                     : string.Format(resFormat, args));
-                                     };
+                    {
+                        var resFormat = _localizationService.GetResource(format);
+                        if (string.IsNullOrEmpty(resFormat))
+                        {
+                            return new LocalizedString(format);
+                        }
+                        return new LocalizedString((args == null || args.Length == 0)
+                            ? resFormat
+                            : string.Format(resFormat, args));
+                    };
                 }
                 return _localizer;
             }
         }
-        public override void InitHelpers()
-        {
-            base.InitHelpers();
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            }
-        }
+        //TODO public override string Layout
+        //{
+        //    get
+        //    {
+        //        var layout = base.Layout;
 
-        public override string Layout
-        {
-            get
-            {
-                var layout = base.Layout;
+        //        if (!string.IsNullOrEmpty(layout))
+        //        {
+        //            var filename = Path.GetFileNameWithoutExtension(layout);
+        //            ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindView(ViewContext.Controller.ControllerContext, filename, "");
 
-                if (!string.IsNullOrEmpty(layout))
-                {
-                    var filename = Path.GetFileNameWithoutExtension(layout);
-                    ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindView(ViewContext.Controller.ControllerContext, filename, "");
+        //            if (viewResult.View != null && viewResult.View is RazorView)
+        //            {
+        //                layout = (viewResult.View as RazorView).ViewPath;
+        //            }
+        //        }
 
-                    if (viewResult.View != null && viewResult.View is RazorView)
-                    {
-                        layout = (viewResult.View as RazorView).ViewPath;
-                    }
-                }
-
-                return layout;
-            }
-            set
-            {
-                base.Layout = value;
-            }
-        }
+        //        return layout;
+        //    }
+        //    set
+        //    {
+        //        base.Layout = value;
+        //    }
+        //}
 
         /// <summary>
         /// Return a value indicating whether the working language and theme support RTL (right-to-left)
@@ -109,4 +95,3 @@ namespace Nop.Web.Framework.ViewEngines.Razor
     {
     }
 }
-#endif

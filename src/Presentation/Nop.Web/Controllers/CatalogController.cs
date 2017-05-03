@@ -146,16 +146,6 @@ namespace Nop.Web.Controllers
             var model = _catalogModelFactory.PrepareTopMenuModel();
             return PartialView(model);
         }
-        
-        [ChildActionOnly]
-        public virtual ActionResult HomepageCategories()
-        {
-            var model = _catalogModelFactory.PrepareHomepageCategoryModels();
-            if (!model.Any())
-                return Content("");
-
-            return PartialView(model);
-        }
 
         #endregion
 
