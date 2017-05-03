@@ -19,11 +19,17 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc
 using Nop.Web.Framework.Mvc.Models;
 
+#endif
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace Nop.Web.Framework.Extensions
 {
     public static class HtmlExtensions
     {
-#region Admin area extensions
+#if NET451
+        #region Admin area extensions
 
         public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
             string name,
@@ -358,7 +364,7 @@ namespace Nop.Web.Framework.Extensions
             return tabName;
         }
 
-#region Form fields
+        #region Form fields
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
@@ -517,12 +523,14 @@ namespace Nop.Web.Framework.Extensions
             return htmlAttributes as RouteValueDictionary;
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
+        
+#endif
+        #region Common extensions
 
-#region Common extensions
-
+#if NET451
         public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
         {
             // Create tag builder
@@ -657,12 +665,17 @@ namespace Nop.Web.Framework.Extensions
             }
 
         }
+        
+#endif
 
-        public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
+        public static IHtmlContent Widget(this IHtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
         {
-            return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
+            return new HtmlString("");
+            //TODO implement
+            //return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
 
+#if NET451
         /// <summary>
         /// Renders the standard label with a specified suffix added to label text
         /// </summary>
@@ -696,7 +709,8 @@ namespace Nop.Web.Framework.Extensions
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 
-#endregion
+#endif
+
+        #endregion
     }
 }
-#endif
