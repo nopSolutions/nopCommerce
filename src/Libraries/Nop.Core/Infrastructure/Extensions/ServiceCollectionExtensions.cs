@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Infrastructure;
 
-namespace Nop.Core.Extensions
+namespace Nop.Core.Infrastructure.Extensions
 {
     /// <summary>
     /// Represents extensions of IServiceCollection
@@ -12,27 +11,10 @@ namespace Nop.Core.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Initialize an instance of the Nop engine
-        /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <param name="configuration">The root of an configuration hierarchy</param>
-        /// <returns>Engine instance</returns>
-        public static IEngine AddNopEngine(this IServiceCollection services, IConfigurationRoot configuration)
-        {
-            //create engine
-            var engine = EngineContext.Create();
-
-            //and configure it
-            engine.Configure(services, configuration);
-
-            return engine;
-        }
-
-        /// <summary>
         /// Create, bind and register as service the specified configuration parameters 
         /// </summary>
         /// <typeparam name="TConfig">Configuration parameters</typeparam>
-        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Set of key/value application configuration properties</param>
         /// <returns>Instance of configuration parameters</returns>
         public static TConfig ConfigureStartupConfig<TConfig>(this IServiceCollection services, IConfiguration configuration) where TConfig : class, new()
@@ -58,7 +40,7 @@ namespace Nop.Core.Extensions
         /// <summary>
         /// Register HttpContextAccessor
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <param name="services">Collection of service descriptors</param>
         public static void AddHttpContextAccessor(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

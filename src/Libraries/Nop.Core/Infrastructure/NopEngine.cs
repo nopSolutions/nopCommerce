@@ -5,6 +5,7 @@ using System.Net;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,10 +36,11 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Run startup tasks
         /// </summary>
-        protected virtual void RunStartupTasks()
+        /// <param name="typeFinder">Type finder</param>
+        protected virtual void RunStartupTasks(ITypeFinder typeFinder)
         {
             //find startup tasks provided by other assemblies
-            var startupTasks = Resolve<ITypeFinder>().FindClassesOfType<IStartupTask>();
+            var startupTasks = typeFinder.FindClassesOfType<IStartupTask>();
 
             //create and sort instances of startup tasks
             var instances = startupTasks
@@ -55,8 +57,9 @@ namespace Nop.Core.Infrastructure
         /// Register dependencies using Autofac
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        protected virtual void RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services)
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="typeFinder">Type finder</param>
+        protected virtual void RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -64,7 +67,6 @@ namespace Nop.Core.Infrastructure
             containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
 
             //register type finder
-            var typeFinder = new WebAppTypeFinder();
             containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
 
             //find dependency registrars provided by other assemblies
@@ -90,11 +92,11 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        protected virtual void AddAutoMapper(IServiceCollection services)
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="typeFinder">Type finder</param>
+        protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
             var mapperConfigurations = typeFinder.FindClassesOfType<IMapperConfiguration>();
 
             //create and sort instances of mapper configurations
@@ -119,57 +121,73 @@ namespace Nop.Core.Infrastructure
         #region Methods
 
         /// <summary>
-        /// Configure components in the nop environment
+        /// Initialize engine
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <param name="configuration">The root of an configuration hierarchy</param>
-        public void Configure(IServiceCollection services, IConfigurationRoot configuration)
+        /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
+        public void Initialize(IHostingEnvironment hostingEnvironment)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //set base application path
-            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
 
             //initialize plugins
             PluginManager.Initialize();
+        }
 
-            //add options feature
-            services.AddOptions();
+        /// <summary>
+        /// Add and configure services
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Configuration root of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        {
+            //find startup configurations provided by other assemblies
+            var typeFinder = new WebAppTypeFinder();
+            var startupConfigurations = typeFinder.FindClassesOfType<IStartup>();
 
-            //add NopConfig configuration parameters
-            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            //create and sort instances of startup configurations
+            var instances = startupConfigurations
+                .Where(startupConfiguration => PluginManager.FindPlugin(startupConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(startupConfiguration => (IStartup)Activator.CreateInstance(startupConfiguration))
+                .OrderBy(startupConfiguration => startupConfiguration.Order);
 
-            //add hosting configuration parameters
-            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
-
-            if (nopConfig.RedisCachingEnabled)
-            {
-                //add Redis distributed cache
-                services.AddDistributedRedisCache(options =>
-                {
-                    options.Configuration = nopConfig.RedisCachingConnectionString;
-                });
-            }
-            else
-                services.AddDistributedMemoryCache();
-
-            //add memory cache
-            services.AddMemoryCache();
-
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
+            //configure services
+            foreach (var instance in instances)
+                instance.ConfigureServices(services,configuration);
 
             //register mapper configurations
-            AddAutoMapper(services);
+            AddAutoMapper(services, typeFinder);
 
             //register dependencies
-            RegisterDependencies(nopConfig, services);
+            var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
+            RegisterDependencies(nopConfig, services, typeFinder);
 
-            //startup tasks
+            //run startup tasks
             if (!nopConfig.IgnoreStartupTasks)
-                RunStartupTasks();
+                RunStartupTasks(typeFinder);
+        }
+
+        /// <summary>
+        /// Configure HTTP request pipeline
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void ConfigureRequestPipeline(IApplicationBuilder application)
+        {
+            //find startup configurations provided by other assemblies
+            var typeFinder = Resolve<ITypeFinder>();
+            var startupConfigurations = typeFinder.FindClassesOfType<IStartup>();
+
+            //create and sort instances of startup configurations
+            var instances = startupConfigurations
+                .Where(startupConfiguration => PluginManager.FindPlugin(startupConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(startupConfiguration => (IStartup)Activator.CreateInstance(startupConfiguration))
+                .OrderBy(startupConfiguration => startupConfiguration.Order);
+
+            //configure request pipeline
+            foreach (var instance in instances)
+                instance.Configure(application);
         }
 
         /// <summary>

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Nop.Core.Infrastructure
 {
     /// <summary>
-    /// Classes implementing this interface can serve as a portal for the 
-    /// various services composing the Nop engine. Edit functionality, modules
-    /// and implementations access most Nop functionality through this 
-    /// interface.
+    /// Classes implementing this interface can serve as a portal for the various services composing the Nop engine. 
+    /// Edit functionality, modules and implementations access most Nop functionality through this interface.
     /// </summary>
     public interface IEngine
     {
@@ -19,11 +19,23 @@ namespace Nop.Core.Infrastructure
         IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
-        /// Configure components in the nop environment
+        /// Initialize engine
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <param name="configuration">The root of an configuration hierarchy</param>
-        void Configure(IServiceCollection services, IConfigurationRoot configuration);
+        /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
+        void Initialize(IHostingEnvironment hostingEnvironment);
+
+        /// <summary>
+        /// Add and configure services
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Configuration root of the application</param>
+        void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
+
+        /// <summary>
+        /// Configure HTTP request pipeline
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        void ConfigureRequestPipeline(IApplicationBuilder application);
 
         /// <summary>
         /// Resolve dependency

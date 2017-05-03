@@ -1,4 +1,7 @@
-﻿using FluentValidation.AspNetCore;
+﻿using System;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -8,7 +11,7 @@ using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Framework.Extensions
+namespace Nop.Web.Framework.Infrastructure.Extensions
 {
     /// <summary>
     /// Represents extensions of IServiceCollection
@@ -16,11 +19,45 @@ namespace Nop.Web.Framework.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
+        /// Add services to the application and configure service provider
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Configuration root of the application</param>
+        /// <returns></returns>
+        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
+        {
+            //create engine
+            var engine = EngineContext.Create();
+
+            //then initialize
+            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
+            engine.Initialize(hostingEnvironment);
+
+            //and configure it
+            engine.ConfigureServices(services, configuration);
+
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //database is already installed, so start scheduled tasks
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
+
+                try
+                {
+                    //and log application start
+                    EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
+                }
+                catch { }
+            }
+
+            return engine.ServiceProvider;
+        }
+
+        /// <summary>
         /// Adds services required for application session state
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <returns>The contract for a collection of service descriptors</returns>
-        public static IServiceCollection AddHttpSession(this IServiceCollection services)
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddHttpSession(this IServiceCollection services)
         {
             services.AddSession(
 #if NET451
@@ -45,15 +82,13 @@ namespace Nop.Web.Framework.Extensions
                 //Each session access resets the timeout. Note this only applies to the content of the session, not the cookie.
                 options.IdleTimeout
 #endif
-                );
-
-            return services;
+            );
         }
 
         /// <summary>
         /// Add and configure MVC for the application
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
@@ -85,45 +120,6 @@ namespace Nop.Web.Framework.Extensions
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
 
             return mvcBuilder;
-        }
-
-        /// <summary>
-        /// Create and configure manager of scheduled tasks
-        /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <returns>The contract for a collection of service descriptors</returns>
-        public static IServiceCollection AddScheduledTasks(this IServiceCollection services)
-        {
-            //whether database is already installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //start scheduled tasks
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
-            }
-
-            return services;
-        }
-
-        /// <summary>
-        /// Create 'Application start' record in log
-        /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
-        /// <returns>The contract for a collection of service descriptors</returns>
-        public static IServiceCollection LogApplicationStart(this IServiceCollection services)
-        {
-            //whether database is already installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                try
-                {
-                    //log application start
-                    EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
-                }
-                catch { }
-            }
-
-            return services;
         }
     }
 }

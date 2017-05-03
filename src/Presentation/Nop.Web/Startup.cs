@@ -3,20 +3,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Extensions;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web
 {
     /// <summary>
-    /// Represents startup class of appllication
+    /// Represents startup class of application
     /// </summary>
     public class Startup
     {
         #region Properties
 
         /// <summary>
-        /// Get configuration root
+        /// Get configuration root of the application
         /// </summary>
         public IConfigurationRoot Configuration { get; }
 
@@ -26,6 +25,7 @@ namespace Nop.Web
 
         public Startup(IHostingEnvironment environment)
         {
+            //create configuration
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -36,69 +36,21 @@ namespace Nop.Web
         #endregion
 
         /// <summary>
-        /// Add services to the container
+        /// Add services to the application and configure service provider
         /// </summary>
-        /// <param name="services">The contract for a collection of service descriptors</param>
+        /// <param name="services">Collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //add and configure MVC feature
-            services.AddNopMvc();
-
-            //add localization
-            services.AddLocalization();
-
-            //add HTTP sesion state feature
-            services.AddHttpSession();
-
-            //add MiniProfiler services
-            services.AddMiniProfiler();
-
-            //add and configure Nop engine
-            var engine = services.AddNopEngine(Configuration);
-
-            services.AddScheduledTasks();
-            services.LogApplicationStart();
-
-            //return service provider provided by engine
-            return engine.ServiceProvider;
+            return services.ConfigureApplicationServices(Configuration);
         }
 
         /// <summary>
-        /// Configure the HTTP request pipeline
+        /// Configure the application HTTP request pipeline
         /// </summary>
-        /// <param name="application">Builder that provides the mechanisms to configure an application's request pipeline</param>
-        /// <param name="environment">Provides information about the web hosting environment an application is running in</param>
-        public void Configure(IApplicationBuilder application, IHostingEnvironment environment)
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void Configure(IApplicationBuilder application)
         {
-            //exception handling
-            application.UseExceptionHandler(environment.IsDevelopment());
-
-            //handle 404 Page Not Found errors
-            application.UsePageNotFound();
-
-            //get access to HttpContext
-            application.UseStaticHttpContext();
-
-            //check whether requested page is keep alive page
-            application.UseKeepAlive();
-
-            //use request localization
-            application.UseRequestLocalization();
-
-            //check whether database is installed
-            application.UseInstallUrl();
-
-            //use HTTP session
-            application.UseSession();
-
-            //set request culture
-            application.UseCulture();
-
-            //MVC routing
-            application.UseNopMvc();
-
-            //add MiniProfiler
-            application.UseMiniProfiler();
+            application.ConfigureRequestPipeline();
         }
     }
 }
