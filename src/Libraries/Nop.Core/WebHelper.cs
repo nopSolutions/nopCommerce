@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Http;
@@ -62,7 +63,7 @@ namespace Nop.Core
                 return string.Empty;
 
             //try get URL referred from header
-            var referedHeader = HttpContext.Current.Request.Headers["Referer"];
+            var referedHeader = HttpContext.Current.Request.Headers[HeaderNames.Referer];
             if (StringValues.IsNullOrEmpty(referedHeader))
                 return string.Empty;
 
@@ -183,7 +184,7 @@ namespace Nop.Core
             var result = string.Empty;
 
             //try to get host from the request HOST header
-            var hostHeader = HttpContext.Current.Request.Headers["HOST"];
+            var hostHeader = HttpContext.Current.Request.Headers[HeaderNames.Host];
             if (!StringValues.IsNullOrEmpty(hostHeader))
                 result = "http://" + hostHeader.FirstOrDefault();
 

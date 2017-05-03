@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Http;
@@ -34,7 +35,7 @@ namespace Nop.Web.Framework
                     return _cachedStore;
 
                 //try to determine the current store by HOST header
-                var host = HttpContext.Current.Request.Headers["HOST"];
+                var host = HttpContext.Current.Request.Headers[HeaderNames.Host];
                 var allStores = _storeService.GetAllStores();
                 var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
 
