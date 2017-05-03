@@ -145,7 +145,8 @@ namespace Nop.Services.Authentication
 #else
         public Customer GetAuthenticatedCustomer()
         {
-            throw new NotImplementedException();
+            //TODO implement. now returning null to avoid exception
+            return null;
         }
 
         public void SignIn(Customer customer, bool createPersistentCookie)
