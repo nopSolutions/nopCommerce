@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -13,20 +15,19 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial class UserAgentHelper : IUserAgentHelper
     {
-#if NET451
         private readonly NopConfig _config;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly object _locker = new object();
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="config">Config</param>
-        /// <param name="httpContext">HTTP context</param>
-        public UserAgentHelper(NopConfig config, HttpContextBase httpContext)
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
+        public UserAgentHelper(NopConfig config, IHttpContextAccessor httpContextAccessor)
         {
             this._config = config;
-            this._httpContext = httpContext;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -62,7 +63,7 @@ namespace Nop.Services.Helpers
         /// <returns>Result</returns>
         public virtual bool IsSearchEngine()
         {
-            if (_httpContext == null)
+            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
                 return false;
 
             //we put required logic in try-catch block
@@ -75,7 +76,8 @@ namespace Nop.Services.Helpers
                 if (bowscapXmlHelper == null)
                     return false;
 
-                var userAgent = _httpContext.Request.UserAgent;
+                IHeaderDictionary headersDictionary = _httpContextAccessor.HttpContext.Request.Headers;
+                var userAgent = headersDictionary[HeaderNames.UserAgent];
                 return bowscapXmlHelper.IsCrawler(userAgent);
             }
             catch (Exception exc)
@@ -85,11 +87,5 @@ namespace Nop.Services.Helpers
 
             return false;
         }
-#else
-        public bool IsSearchEngine()
-        {
-            throw new NotImplementedException();
-        }
-#endif
     }
 }
