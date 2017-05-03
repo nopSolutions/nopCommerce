@@ -1,7 +1,4 @@
-using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
@@ -15,20 +12,25 @@ namespace Nop.Services.Helpers
     /// </summary>
     public partial class UserAgentHelper : IUserAgentHelper
     {
-        private readonly NopConfig _config;
+        #region Fields
+
+        private readonly NopConfig _nopConfig;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly object _locker = new object();
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="config">Config</param>
-        /// <param name="httpContextAccessor">HTTP context accessor</param>
-        public UserAgentHelper(NopConfig config, IHttpContextAccessor httpContextAccessor)
+        #endregion
+
+        #region Ctor
+        
+        public UserAgentHelper(NopConfig nopConfig, IHttpContextAccessor httpContextAccessor)
         {
-            this._config = config;
+            this._nopConfig = nopConfig;
             this._httpContextAccessor = httpContextAccessor;
         }
+
+        #endregion
+
+        #region Utilities
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         protected virtual BrowscapXmlHelper GetBrowscapXmlHelper()
@@ -37,7 +39,7 @@ namespace Nop.Services.Helpers
                 return Singleton<BrowscapXmlHelper>.Instance;
 
             //no database created
-            if (String.IsNullOrEmpty(_config.UserAgentStringsPath))
+            if (string.IsNullOrEmpty(_nopConfig.UserAgentStringsPath))
                 return null;
 
             //prevent multi loading data
@@ -47,8 +49,9 @@ namespace Nop.Services.Helpers
                 if (Singleton<BrowscapXmlHelper>.Instance != null)
                     return Singleton<BrowscapXmlHelper>.Instance;
 
-                var userAgentStringsPath = CommonHelper.MapPath(_config.UserAgentStringsPath);
-                var crawlerOnlyUserAgentStringsPath = string.IsNullOrEmpty(_config.CrawlerOnlyUserAgentStringsPath) ? string.Empty : CommonHelper.MapPath(_config.CrawlerOnlyUserAgentStringsPath);
+                var userAgentStringsPath = CommonHelper.MapPath(_nopConfig.UserAgentStringsPath);
+                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_nopConfig.CrawlerOnlyUserAgentStringsPath) ?
+                    CommonHelper.MapPath(_nopConfig.CrawlerOnlyUserAgentStringsPath) : string.Empty;
 
                 var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
                 Singleton<BrowscapXmlHelper>.Instance = browscapXmlHelper;
@@ -56,6 +59,10 @@ namespace Nop.Services.Helpers
                 return Singleton<BrowscapXmlHelper>.Instance;
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Get a value indicating whether the request is made by search engine (web crawler)
@@ -76,16 +83,14 @@ namespace Nop.Services.Helpers
                 if (bowscapXmlHelper == null)
                     return false;
 
-                IHeaderDictionary headersDictionary = _httpContextAccessor.HttpContext.Request.Headers;
-                var userAgent = headersDictionary[HeaderNames.UserAgent];
+                var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
                 return bowscapXmlHelper.IsCrawler(userAgent);
             }
-            catch (Exception exc)
-            {
-                Debug.WriteLine(exc);
-            }
+            catch { }
 
             return false;
         }
+
+        #endregion
     }
 }

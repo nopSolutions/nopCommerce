@@ -27,7 +27,7 @@ namespace Nop.Core.Http
         /// <summary>
         /// Get current HttpContext
         /// </summary>
-        public static Microsoft.AspNetCore.Http.HttpContext Current => _contextAccessor.HttpContext ?? new FakeHttpContext();
+        public static Microsoft.AspNetCore.Http.HttpContext Current => (_contextAccessor?.HttpContext) ?? new FakeHttpContext();
 
         #endregion
     }
