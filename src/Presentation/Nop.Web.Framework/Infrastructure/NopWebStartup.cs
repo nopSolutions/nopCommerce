@@ -43,6 +43,13 @@ namespace Nop.Web.Framework.Infrastructure
             //use request localization
             application.UseRequestLocalization();
 
+            //enable cookie authentication
+            application.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "NopCookie",
+                CookieHttpOnly = true
+            });
+
             //set request culture
             application.UseCulture();
 

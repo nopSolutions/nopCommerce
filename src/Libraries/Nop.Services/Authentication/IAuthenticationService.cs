@@ -11,8 +11,8 @@ namespace Nop.Services.Authentication
         /// Sign in
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="createPersistentCookie">A value indicating whether to create a persistent cookie</param>
-        void SignIn(Customer customer, bool createPersistentCookie);
+        /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
+        void SignIn(Customer customer, bool isPersistent);
 
         /// <summary>
         /// Sign out

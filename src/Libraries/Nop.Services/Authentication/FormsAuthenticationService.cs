@@ -1,25 +1,24 @@
 using System;
-using System.Web;
-#if NET451
-using System.Web.Security;
-#endif
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Authentication
 {
     /// <summary>
-    /// Authentication service
+    /// Represents service using cookie middleware for the authentication
     /// </summary>
     public partial class FormsAuthenticationService : IAuthenticationService
     {
-#if NET451
         #region Fields
 
-        private readonly HttpContextBase _httpContext;
-        private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;
-        private readonly TimeSpan _expirationTimeSpan;
+        private readonly ICustomerService _customerService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private Customer _cachedCustomer;
 
@@ -27,43 +26,13 @@ namespace Nop.Services.Authentication
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="httpContext">HTTP context</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="customerSettings">Customer settings</param>
-        public FormsAuthenticationService(HttpContextBase httpContext,
-            ICustomerService customerService, CustomerSettings customerSettings)
+        public FormsAuthenticationService(CustomerSettings customerSettings,
+            ICustomerService customerService,
+            IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContext = httpContext;
-            this._customerService = customerService;
             this._customerSettings = customerSettings;
-            this._expirationTimeSpan = FormsAuthentication.Timeout;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Get authenticated customer
-        /// </summary>
-        /// <param name="ticket">Ticket</param>
-        /// <returns>Customer</returns>
-        protected virtual Customer GetAuthenticatedCustomerFromTicket(FormsAuthenticationTicket ticket)
-        {
-            if (ticket == null)
-                throw new ArgumentNullException("ticket");
-
-            var usernameOrEmail = ticket.UserData;
-
-            if (String.IsNullOrWhiteSpace(usernameOrEmail))
-                return null;
-            var customer = _customerSettings.UsernamesEnabled
-                ? _customerService.GetCustomerByUsername(usernameOrEmail)
-                : _customerService.GetCustomerByEmail(usernameOrEmail);
-            return customer;
+            this._customerService = customerService;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -74,36 +43,37 @@ namespace Nop.Services.Authentication
         /// Sign in
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="createPersistentCookie">A value indicating whether to create a persistent cookie</param>
-        public virtual void SignIn(Customer customer, bool createPersistentCookie)
+        /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
+        public virtual void SignIn(Customer customer, bool isPersistent)
         {
-            var now = DateTime.UtcNow.ToLocalTime();
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Authentication == null)
+                return;
 
-            var ticket = new FormsAuthenticationTicket(
-                1 /*version*/,
-                _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
-                now,
-                now.Add(_expirationTimeSpan),
-                createPersistentCookie,
-                _customerSettings.UsernamesEnabled ? customer.Username : customer.Email,
-                FormsAuthentication.FormsCookiePath);
-
-            var encryptedTicket = FormsAuthentication.Encrypt(ticket);
-
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-            cookie.HttpOnly = true;
-            if (ticket.IsPersistent)
+            //create claims for username and email of the customer
+            var claims = new[]
             {
-                cookie.Expires = ticket.Expiration;
-            }
-            cookie.Secure = FormsAuthentication.RequireSSL;
-            cookie.Path = FormsAuthentication.FormsCookiePath;
-            if (FormsAuthentication.CookieDomain != null)
-            {
-                cookie.Domain = FormsAuthentication.CookieDomain;
-            }
+                new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, "nopCommerce"),
+                new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, "nopCommerce")
+            };
 
-            _httpContext.Response.Cookies.Add(cookie);
+            //create principal for the current authentication scheme
+            var userIdentity = new ClaimsIdentity(claims, "NopCookie");
+            var userPrincipal = new ClaimsPrincipal(userIdentity);
+
+            //set value indicating whether session is persisted and the time at which the authentication was issued
+            var authenticationProperties = new AuthenticationProperties
+            {
+                IsPersistent = isPersistent,
+                IssuedUtc = DateTime.UtcNow
+            };
+
+            //sign in
+            Task.Run(async () =>
+            {
+                await _httpContextAccessor.HttpContext.Authentication.SignInAsync("NopCookie", userPrincipal, authenticationProperties);
+            });
+
+            //cache authenticated customer
             _cachedCustomer = customer;
         }
 
@@ -112,8 +82,17 @@ namespace Nop.Services.Authentication
         /// </summary>
         public virtual void SignOut()
         {
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Authentication == null)
+                return;
+
+            //reset cached customer
             _cachedCustomer = null;
-            FormsAuthentication.SignOut();
+
+            //and sign out from the current authentication scheme
+            Task.Run(async () =>
+            {
+                await _httpContextAccessor.HttpContext.Authentication.SignOutAsync("NopCookie");
+            });
         }
 
         /// <summary>
@@ -122,42 +101,57 @@ namespace Nop.Services.Authentication
         /// <returns>Customer</returns>
         public virtual Customer GetAuthenticatedCustomer()
         {
+            //whether there is a cached customer
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
-            if (_httpContext == null ||
-                _httpContext.Request == null ||
-                !_httpContext.Request.IsAuthenticated ||
-                !(_httpContext.User.Identity is FormsIdentity))
-            {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null || httpContext.User == null || httpContext.User.Identities == null)
                 return null;
+
+            //try to get identity for the nop authentication scheme
+            var nopIdentity = httpContext.User.Identities.FirstOrDefault(identity =>
+                identity.IsAuthenticated && !string.IsNullOrEmpty(identity.AuthenticationType) &&
+                identity.AuthenticationType.Equals("NopCookie", StringComparison.InvariantCultureIgnoreCase));
+
+            //whether there is authenticated identity
+            if (nopIdentity == null)
+                return null;
+
+            Customer customer = null;
+            if (_customerSettings.UsernamesEnabled)
+            {
+                //try to get claim with username
+                var usernameClaim = nopIdentity.Claims.FirstOrDefault(claim =>
+                    claim.Type == ClaimTypes.Name && claim.Issuer.Equals("nopCommerce", StringComparison.InvariantCultureIgnoreCase));
+                if (usernameClaim == null)
+                    return null;
+
+                //get customer by username
+                customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+            }
+            else
+            {
+                //try to get claim with email
+                var emailClaim = nopIdentity.Claims.FirstOrDefault(claim =>
+                    claim.Type == ClaimTypes.Email && claim.Issuer.Equals("nopCommerce", StringComparison.InvariantCultureIgnoreCase));
+                if (emailClaim == null)
+                    return null;
+
+                //get customer by email
+                customer = _customerService.GetCustomerByEmail(emailClaim.Value);
             }
 
-            var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
-            var customer = GetAuthenticatedCustomerFromTicket(formsIdentity.Ticket);
-            if (customer != null && customer.Active && !customer.RequireReLogin && !customer.Deleted  && customer.IsRegistered())
-                _cachedCustomer = customer;
+            //whether the found customer is available
+            if (customer == null || !customer.Active || customer.RequireReLogin || customer.Deleted || !customer.IsRegistered())
+                return null;
+
+            //cache authenticated customer
+            _cachedCustomer = customer;
+
             return _cachedCustomer;
         }
 
         #endregion
-
-#else
-        public Customer GetAuthenticatedCustomer()
-        {
-            //TODO implement. now returning null to avoid exception
-            return null;
-        }
-
-        public void SignIn(Customer customer, bool createPersistentCookie)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SignOut()
-        {
-            throw new NotImplementedException();
-        }
-#endif
     }
 }
