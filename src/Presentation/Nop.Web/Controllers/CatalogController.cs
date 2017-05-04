@@ -140,13 +140,6 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult TopMenu()
-        {
-            var model = _catalogModelFactory.PrepareTopMenuModel();
-            return PartialView(model);
-        }
-
         #endregion
 
         #region Manufacturers
@@ -317,12 +310,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult SearchBox()
-        {
-            var model = _catalogModelFactory.PrepareSearchBoxModel();
-            return PartialView(model);
-        }
 
         [ValidateInput(false)]
         public virtual ActionResult SearchTermAutoComplete(string term)

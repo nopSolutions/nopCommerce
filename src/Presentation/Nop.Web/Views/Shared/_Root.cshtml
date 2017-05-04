@@ -3,17 +3,16 @@
 }
 @Html.Widget("body_start_html_tag_after")
 @Html.Partial("_Notifications")
-@Html.Action("JavaScriptDisabledWarning", "Common")
-@Html.Partial("OldInternetExplorerWarning")
-
+@Html.Partial("_JavaScriptDisabledWarning")
+@Html.Partial("_OldInternetExplorerWarning")
 <div class="master-wrapper-page">
-    @Html.Action("AdminHeaderLinks", "Common")
-    @Html.Partial("Header")
+    @await Component.InvokeAsync("AdminHeaderLinks")
+    @Html.Partial("_Header")
     <script type="text/javascript">
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
     </script>
     <div class="header-menu">
-        @Html.Action("TopMenu", "Catalog")
+        @await Component.InvokeAsync("TopMenu")
     </div>
     <div class="master-wrapper-content">
         @Html.Widget("content_before")
@@ -27,7 +26,7 @@
         </div>
         @Html.Widget("content_after")
     </div>
-    @Html.Action("Footer", "Common")
+    @await Component.InvokeAsync("Footer")
 </div>
-@Html.Action("EuCookieLaw", "Common")
+@await Component.InvokeAsync("EuCookieLaw")
 @Html.Widget("body_end_html_tag_before")

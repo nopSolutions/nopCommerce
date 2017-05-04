@@ -18,11 +18,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="App_Data\browscap.crawlersonly.xml" />
+    <None Remove="App_Data\InstalledPlugins.txt" />
+    <None Remove="App_Data\Settings.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

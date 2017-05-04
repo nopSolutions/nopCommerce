@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
@@ -45,6 +48,25 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use HTTP session
             application.UseSession();
+
+            //static files
+            application.UseStaticFiles();
+            //TODO temporary
+            application.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Content")),
+                RequestPath = new PathString("/Content")
+            });
+            application.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Scripts")),
+                RequestPath = new PathString("/Scripts")
+            });
+            application.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
+                RequestPath = new PathString("/Themes")
+            });
 
             //MVC routing
             application.UseNopMvc();

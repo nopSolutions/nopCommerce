@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.Encodings.Web
+@{
     //success messages
     var successMessages = new List<string>();
     if (TempData[string.Format("nop.notifications.{0}", NotifyType.Success)] != null)
@@ -38,7 +39,7 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            var msg = [ @Html.Raw("'" + string.Join("', '", successMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            var msg = [ @Html.Raw("'" + string.Join("', '", successMessages.Select(x => JavaScriptEncoder.Default.Encode(x)).ToList()) + "'")];
             displayPopupNotification(msg, 'success', false);
         });
     </script>
@@ -47,7 +48,7 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            var msg = [ @Html.Raw("'" + string.Join("', '", errorMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            var msg = [ @Html.Raw("'" + string.Join("', '", errorMessages.Select(x => JavaScriptEncoder.Default.Encode(x)).ToList()) + "'")];
             displayPopupNotification(msg, 'error', false);
         });
     </script>
@@ -56,7 +57,7 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            var msg = [ @Html.Raw("'" + string.Join("', '", warningMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            var msg = [ @Html.Raw("'" + string.Join("', '", warningMessages.Select(x => JavaScriptEncoder.Default.Encode(x)).ToList()) + "'")];
             displayPopupNotification(msg, 'warning', false);
         });
     </script>

@@ -45,10 +45,18 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
+        //TODO rename to TopicModel
         public class TopMenuTopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
+        }
+
+        public class CategoryLineModel : BaseNopModel
+        {
+            public int Level { get; set; }
+            public bool ResponsiveMobileMenu { get; set; }
+            public CategorySimpleModel Category { get; set; }
         }
 
         #endregion

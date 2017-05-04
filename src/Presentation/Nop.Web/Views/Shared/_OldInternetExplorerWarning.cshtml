@@ -1,7 +1,7 @@
-﻿@using Nop.Core.Infrastructure;
-@using Nop.Web.Framework.Themes;
+﻿@using Nop.Web.Framework.Themes;
+@inject IThemeContext ThemeContext
 @{
-    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var currentThemeName = ThemeContext.WorkingThemeName;
     var logoPath = "~/Themes/" + currentThemeName + "/Content/images/ie_warning.jpg";
 
 }

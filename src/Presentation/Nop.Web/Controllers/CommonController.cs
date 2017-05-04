@@ -123,14 +123,6 @@ namespace Nop.Web.Controllers
             return View();
         }
 
-        //logo
-        [ChildActionOnly]
-        public virtual ActionResult Logo()
-        {
-            var model = _commonModelFactory.PrepareLogoModel();
-            return PartialView(model);
-        }
-
         //language
         [ChildActionOnly]
         public virtual ActionResult LanguageSelector()
@@ -231,48 +223,6 @@ namespace Nop.Web.Controllers
                 returnUrl = Url.RouteUrl("HomePage");
 
             return Redirect(returnUrl);
-        }
-
-        //footer
-        [ChildActionOnly]
-        public virtual ActionResult JavaScriptDisabledWarning()
-        {
-            if (!_commonSettings.DisplayJavaScriptDisabledWarning)
-                return Content("");
-
-            return PartialView();
-        }
-
-        //header links
-        [ChildActionOnly]
-        public virtual ActionResult HeaderLinks()
-        {
-            var model = _commonModelFactory.PrepareHeaderLinksModel();
-            return PartialView(model);
-        }
-        [ChildActionOnly]
-        public virtual ActionResult AdminHeaderLinks()
-        {
-            var model = _commonModelFactory.PrepareAdminHeaderLinksModel();
-            return PartialView(model);
-        }
-
-
-        //social
-        [ChildActionOnly]
-        public virtual ActionResult Social()
-        {
-            var model = _commonModelFactory.PrepareSocialModel();
-            return PartialView(model);
-        }
-
-
-        //footer
-        [ChildActionOnly]
-        public virtual ActionResult Footer()
-        {
-            var model = _commonModelFactory.PrepareFooterModel();
-            return PartialView(model);
         }
 
 
@@ -396,16 +346,6 @@ namespace Nop.Web.Controllers
             return Content(siteMap, "text/xml");
         }
 
-        //store theme
-        [ChildActionOnly]
-        public virtual ActionResult StoreThemeSelector()
-        {
-            if (!_storeInformationSettings.AllowCustomerToSelectTheme)
-                return Content("");
-
-            var model = _commonModelFactory.PrepareStoreThemeSelectorModel();
-            return PartialView(model);
-        }
         public virtual ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingThemeName = themeName;
@@ -421,40 +361,6 @@ namespace Nop.Web.Controllers
             return Redirect(returnUrl);
         }
 
-        //favicon
-        [ChildActionOnly]
-        public virtual ActionResult Favicon()
-        {
-            var model = _commonModelFactory.PrepareFaviconModel();
-            if (String.IsNullOrEmpty(model.FaviconUrl))
-                return Content("");
-
-            return PartialView(model);
-        }
-
-        //EU Cookie law
-        [ChildActionOnly]
-        public virtual ActionResult EuCookieLaw()
-        {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
-                //disabled
-                return Content("");
-
-            //ignore search engines because some pages could be indexed with the EU cookie as description
-            if (_workContext.CurrentCustomer.IsSearchEngineAccount())
-                return Content("");
-
-            if (_workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
-                //already accepted
-                return Content("");
-
-            //ignore notification?
-            //right now it's used during logout so popup window is not displayed twice
-            if (TempData["nop.IgnoreEuCookieLawWarning"] != null && Convert.ToBoolean(TempData["nop.IgnoreEuCookieLawWarning"]))
-                return Content("");
-
-            return PartialView();
-        }
         [HttpPost]
         //available even when a store is closed
         [StoreClosed(true)]

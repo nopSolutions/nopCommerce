@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 #endif
 
+using Microsoft.AspNetCore.Mvc;
+
 namespace Nop.Web.Framework.UI
 {
     /// <summary>
@@ -23,15 +25,11 @@ namespace Nop.Web.Framework.UI
 
         void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync);
         void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync);
-#if NET451
-        string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
-#endif
+        string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
         void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
         void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
-#if NET451
-        string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
-#endif
+        string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
         void AddCanonicalUrlParts(string part);
         void AppendCanonicalUrlParts(string part);

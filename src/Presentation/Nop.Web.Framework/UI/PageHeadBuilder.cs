@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using Microsoft.AspNetCore.Mvc;
 #if NET451
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -230,22 +231,26 @@ namespace Nop.Web.Framework.UI
                 Part = part
             });
         }
-#if NET451
         
 
-        public virtual string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
 
             if (!_scriptParts.Any())
                 return "";
-            
+
+#if NET451
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableJsBundling && BundleTable.EnableOptimizations;
             }
+#else
+            bundleFiles = false;
+#endif
+
             if (bundleFiles.Value)
             {
                 var partsToBundle = _scriptParts[location]
@@ -262,6 +267,7 @@ namespace Nop.Web.Framework.UI
 
                 var result = new StringBuilder();
 
+#if NET451
                 if (partsToBundle.Length > 0)
                 {
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", partsToBundle);
@@ -286,6 +292,7 @@ namespace Nop.Web.Framework.UI
                     //parts to bundle
                     result.AppendLine(Scripts.Render(bundleVirtualPath).ToString());
                 }
+#endif
 
                 //parts to do not bundle
                 foreach (var item in partsToDontBundle)
@@ -307,9 +314,7 @@ namespace Nop.Web.Framework.UI
                 return result.ToString();
             }
         }
-
-#endif
-
+        
         public virtual void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -338,9 +343,8 @@ namespace Nop.Web.Framework.UI
                 Part = part
             });
         }
-        #if NET451
  
-        public virtual string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -348,11 +352,16 @@ namespace Nop.Web.Framework.UI
             if (!_cssParts.Any())
                 return "";
 
+#if NET451
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableCssBundling && BundleTable.EnableOptimizations;
             }
+#else
+            bundleFiles = false;
+#endif
+
             if (bundleFiles.Value)
             {
                 var partsToBundle = _cssParts[location]
@@ -369,6 +378,7 @@ namespace Nop.Web.Framework.UI
 
                 var result = new StringBuilder();
 
+#if NET451
                 if (partsToBundle.Length > 0)
                 {
                     //IMPORTANT: Do not use CSS bundling in virtual directories
@@ -398,6 +408,7 @@ namespace Nop.Web.Framework.UI
                     //parts to bundle
                     result.AppendLine(Styles.Render(bundleVirtualPath).ToString());
                 }
+#endif
 
                 //parts to do not bundle
                 foreach (var item in partsToDontBundle)
@@ -420,7 +431,6 @@ namespace Nop.Web.Framework.UI
                 return result.ToString();
             }
         }
-#endif
 
         public virtual void AddCanonicalUrlParts(string part)
         {

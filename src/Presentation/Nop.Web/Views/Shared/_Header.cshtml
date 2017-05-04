@@ -1,0 +1,23 @@
+﻿<div class="header">
+    @Html.Widget("header")
+    <div class="header-upper">
+        <div class="header-selectors-wrapper">
+            @*TODO @Html.Action("TaxTypeSelector", "Common")
+            @Html.Action("CurrencySelector", "Common")
+            @Html.Action("LanguageSelector", "Common")*@
+            @Html.Widget("header_selectors")
+        </div>
+        <div class="header-links-wrapper">
+            @await Component.InvokeAsync("HeaderLinks")
+            @await Component.InvokeAsync("FlyoutShoppingCart")
+        </div>
+    </div>
+    <div class="header-lower">
+        <div class="header-logo">
+            @await Component.InvokeAsync("Logo")
+        </div>
+        <div class="search-box store-search-box">
+            @await Component.InvokeAsync("SearchBox")
+        </div>
+    </div>
+</div>

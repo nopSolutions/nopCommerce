@@ -39,16 +39,6 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult NewsletterBox()
-        {
-            if (_customerSettings.HideNewsletterBlock)
-                return Content("");
-
-            var model = _newsletterModelFactory.PrepareNewsletterBoxModel();
-            return PartialView(model);
-        }
-
         //available even when a store is closed
         [StoreClosed(true)]
         [HttpPost]

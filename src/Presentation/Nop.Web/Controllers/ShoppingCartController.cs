@@ -1593,20 +1593,6 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual ActionResult FlyoutShoppingCart()
-        {
-            if (!_shoppingCartSettings.MiniShoppingCartEnabled)
-                return Content("");
-
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return Content("");
-
-            var model = _shoppingCartModelFactory.PrepareMiniShoppingCartModel();
-            return PartialView(model);
-        }
-
         #endregion
 
         #region Wishlist

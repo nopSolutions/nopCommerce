@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Nop.Core.Infrastructure;
@@ -161,8 +162,6 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendScriptParts(location, part, excludeFromBundle, isAsync);
         }
-#if NET451
-        
         /// <summary>
         /// Generate all script parts
         /// </summary>
@@ -171,13 +170,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static HtmlString NopScripts(this IHtmlHelper html, UrlHelper urlHelper, 
+        public static IHtmlContent NopScripts(this IHtmlHelper html, IUrlHelper urlHelper, 
             ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return MvcHtmlString.Create(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
         }
-#endif
 
         /// <summary>
         /// Add CSS element
@@ -223,8 +221,6 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendCssFileParts(location, part, excludeFromBundle);
         }
-
-#if NET451
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
@@ -233,13 +229,12 @@ namespace Nop.Web.Framework.UI
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public static HtmlString NopCssFiles(this IHtmlHelper html, UrlHelper urlHelper,
+        public static IHtmlContent NopCssFiles(this IHtmlHelper html, IUrlHelper urlHelper,
             ResourceLocation location, bool? bundleFiles = null)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            return MvcHtmlString.Create(pageHeadBuilder.GenerateCssFiles(urlHelper, location, bundleFiles));
+            return new HtmlString(pageHeadBuilder.GenerateCssFiles(urlHelper, location, bundleFiles));
         }
-#endif
 
         /// <summary>
         /// Add canonical URL element to the <![CDATA[<head>]]>

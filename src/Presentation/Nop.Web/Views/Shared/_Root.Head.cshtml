@@ -1,7 +1,9 @@
-﻿@using StackExchange.Profiling;
-@using Nop.Core.Domain.Common;
+﻿@using StackExchange.Profiling
+@using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
-@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure
+@inject CommonSettings commonSettings
+@inject SeoSettings seoSettings
 
 @{
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
@@ -13,13 +15,11 @@
     Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 
     //X-UA-Compatible tag
-    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
     if (commonSettings.RenderXuaCompatible)
     {
         Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
     }
-    //custom tag(s)
-    var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+    //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
@@ -37,18 +37,18 @@
     @Html.NopHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
+    @*TODO temporary solution until we support themes*@
+    @Html.Partial("~/Themes/DefaultClean/Views/Shared/Head.cshtml")
     @Html.Widget("head_html_tag")
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
-    @Html.Action("RssHeaderLink", "News")
-    @Html.Action("RssHeaderLink", "Blog")
+    @*TODO @Html.Action("RssHeaderLink", "News")
+    @Html.Action("RssHeaderLink", "Blog")*@
     @*Favicon - upload favicon.ico file to the root directory*@
-    @Html.Action("Favicon", "Common")
-
-    @*add mini profiler*@
+    @await Component.InvokeAsync("Favicon")
+    @*TODO add condition (only when enabled) - add mini profiler*@
     <mini-profiler position="@RenderPosition.Left" />
-
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
 </head>
 <body>
