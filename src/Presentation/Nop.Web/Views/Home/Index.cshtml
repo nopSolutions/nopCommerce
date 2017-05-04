@@ -7,7 +7,7 @@
 <div class="page home-page">
     <div class="page-body">
         @Html.Widget("home_page_top")
-        @*TODO @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
         @Html.Widget("home_page_before_categories")
         @await Component.InvokeAsync("HomepageCategories")
         @Html.Widget("home_page_before_products")

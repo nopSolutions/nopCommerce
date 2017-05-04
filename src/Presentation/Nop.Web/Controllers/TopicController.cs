@@ -72,16 +72,6 @@ namespace Nop.Web.Controllers
             return PartialView(templateViewPath, model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult TopicBlock(string systemName)
-        {
-            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
-            if (model == null)
-                return Content("");
-
-            return PartialView(model);
-        }
-
         [HttpPost, ValidateInput(false)]
         [PublicAntiForgery]
         public virtual ActionResult Authenticate(int id, string password)
