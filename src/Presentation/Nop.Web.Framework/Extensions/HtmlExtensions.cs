@@ -20,16 +20,19 @@ using Nop.Web.Framework.Mvc
 using Nop.Web.Framework.Mvc.Models;
 
 #endif
+using System;
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Nop.Web.Framework.Extensions
 {
     public static class HtmlExtensions
     {
 #if NET451
-        #region Admin area extensions
+#region Admin area extensions
 
         public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
             string name,
@@ -364,7 +367,7 @@ namespace Nop.Web.Framework.Extensions
             return tabName;
         }
 
-        #region Form fields
+#region Form fields
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
@@ -523,12 +526,12 @@ namespace Nop.Web.Framework.Extensions
             return htmlAttributes as RouteValueDictionary;
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
         
 #endif
-        #region Common extensions
+#region Common extensions
 
 #if NET451
         public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
@@ -544,17 +547,23 @@ namespace Nop.Web.Framework.Extensions
             // Render tag
             return MvcHtmlString.Create(builder.ToString());
         }
+#endif
+        public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
+        {
+            return html.DisplayNameFor(expression);
+            //TODO remove this method and use in cshtml files
 
-        public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
+            //return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
         }
-        public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
+        public static string FieldIdFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
-            var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
+            return html.IdFor(expression);
+            //TODO remove this method and use in cshtml files
+            //var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
             // because "[" and "]" aren't replaced with "_" in GetFullHtmlFieldId
-            return id.Replace('[', '_').Replace(']', '_');
+            //return id.Replace('[', '_').Replace(']', '_');
         }
+#if NET451
 
         /// <summary>
         /// Creates a days, months, years drop down list using an HTML select control. 
@@ -711,6 +720,6 @@ namespace Nop.Web.Framework.Extensions
 
 #endif
 
-        #endregion
+#endregion
     }
 }
