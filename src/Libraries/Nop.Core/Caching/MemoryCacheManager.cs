@@ -1,5 +1,7 @@
 using System;
 using Microsoft.Extensions.Caching.Memory;
+using System.Threading;
+using Microsoft.Extensions.Primitives;
 
 namespace Nop.Core.Caching
 {
@@ -11,6 +13,7 @@ namespace Nop.Core.Caching
         #region Fields
 
         private readonly IMemoryCache _cache;
+        private CancellationTokenSource _cancellationTokenSource;
 
         #endregion
 
@@ -19,6 +22,7 @@ namespace Nop.Core.Caching
         public MemoryCacheManager(IMemoryCache cache)
         {
             _cache = cache;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         #endregion
@@ -44,8 +48,12 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
+            var options = new MemoryCacheEntryOptions()
+                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
+            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTime);
+
             if (data != null)
-                _cache.Set(key, data, TimeSpan.FromMinutes(cacheTime));
+                _cache.Set(key, data, options);
         }
 
         /// <summary>
@@ -83,9 +91,9 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-#if NET451
-            //todo
-#endif
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <summary>
