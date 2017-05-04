@@ -191,7 +191,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<CustomNumberFormatter>().As<ICustomNumberFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerLifetimeScope();
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
-            builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
+            builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
             builder.RegisterType<UrlRecordService>().As<IUrlRecordService>().InstancePerLifetimeScope();
             builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerLifetimeScope();
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerLifetimeScope();
