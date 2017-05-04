@@ -96,10 +96,9 @@ namespace Nop.Web.Framework.Localization
                 newRouteData.Values["controller"] = pathSegments[0];
                 newRouteData.Values["action"] = pathSegments[1];
                 context.RouteData = newRouteData;
-
-                //route request
-                await _target.RouteAsync(context);
             }
+            //route request
+            await _target.RouteAsync(context);
         }
 
         /// <summary>

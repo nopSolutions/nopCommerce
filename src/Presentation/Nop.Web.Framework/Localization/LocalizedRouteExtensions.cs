@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
 
@@ -69,6 +70,9 @@ namespace Nop.Web.Framework.Localization
         public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder,
             string name, string template, object defaults, object constraints, object dataTokens)
         {
+            //TODO temporary solution below (no localization)
+            return routeBuilder.MapRoute(name, template, defaults, constraints, dataTokens);
+            
             if (routeBuilder.DefaultHandler == null)
                 throw new ArgumentNullException(nameof(routeBuilder));
 
