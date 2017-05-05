@@ -290,9 +290,7 @@ namespace Nop.Web.Controllers
                 {
                     model.Username = model.Username.Trim();
                 }
-                var loginResult =
-                    _customerRegistrationService.ValidateCustomer(
-                        _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password);
+                var loginResult = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password);
                 switch (loginResult)
                 {
                     case CustomerLoginResults.Successful:

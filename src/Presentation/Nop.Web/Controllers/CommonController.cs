@@ -1,6 +1,9 @@
-﻿#if NET451
+﻿
 using System;
+#if NET451
 using System.Web.Mvc;
+#endif
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
@@ -103,7 +106,7 @@ namespace Nop.Web.Controllers
 #endregion
 
 #region Methods
-
+#if NET451
         //error page
         public virtual IActionResult Error()
         {
@@ -113,33 +116,21 @@ namespace Nop.Web.Controllers
         //page not found
         public virtual ActionResult PageNotFound()
         {
-#if NET451
             if (_commonSettings.Log404Errors)
                 _logger.Log();
-#endif
 
             this.Response.StatusCode = 404;
             this.Response.ContentType = "text/html";
 
             return View();
         }
-
-        //language
-        [ChildActionOnly]
-        public virtual ActionResult LanguageSelector()
-        {
-            var model = _commonModelFactory.PrepareLanguageSelectorModel();
-
-            if (model.AvailableLanguages.Count == 1)
-                Content("");
-
-            return PartialView(model);
-        }
+        
+#endif
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult SetLanguage(int langid, string returnUrl = "")
+        public virtual IActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
@@ -154,7 +145,7 @@ namespace Nop.Web.Controllers
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
-
+#if NET451
             //language part in URL
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
@@ -166,19 +157,10 @@ namespace Nop.Web.Controllers
                 }
                 returnUrl = returnUrl.AddLanguageSeoCodeToRawUrl(applicationPath, _workContext.WorkingLanguage);
             }
+#endif
             return Redirect(returnUrl);
         }
 
-        //currency
-        [ChildActionOnly]
-        public virtual ActionResult CurrencySelector()
-        {
-            var model = _commonModelFactory.PrepareCurrencySelectorModel();
-            if (model.AvailableCurrencies.Count == 1)
-                Content("");
-
-            return PartialView(model);
-        }
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
@@ -197,17 +179,7 @@ namespace Nop.Web.Controllers
 
             return Redirect(returnUrl);
         }
-
-        //tax type
-        [ChildActionOnly]
-        public virtual ActionResult TaxTypeSelector()
-        {
-            if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                return Content("");
-
-            var model = _commonModelFactory.PrepareTaxTypeSelectorModel();
-            return PartialView(model);
-        }
+        
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
@@ -227,6 +199,7 @@ namespace Nop.Web.Controllers
         }
 
 
+#if NET451
         //contact us page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
@@ -404,8 +377,8 @@ namespace Nop.Web.Controllers
         {
             return View();
         }
-
+        
+#endif
 #endregion
     }
 }
-#endif

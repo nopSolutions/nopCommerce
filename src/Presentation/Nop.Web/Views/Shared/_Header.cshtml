@@ -2,9 +2,9 @@
     @Html.Widget("header")
     <div class="header-upper">
         <div class="header-selectors-wrapper">
-            @*TODO @Html.Action("TaxTypeSelector", "Common")
-            @Html.Action("CurrencySelector", "Common")
-            @Html.Action("LanguageSelector", "Common")*@
+            @await Component.InvokeAsync("TaxTypeSelector")
+            @await Component.InvokeAsync("CurrencySelector")
+            @await Component.InvokeAsync("LanguageSelector")
             @Html.Widget("header_selectors")
         </div>
         <div class="header-links-wrapper">
