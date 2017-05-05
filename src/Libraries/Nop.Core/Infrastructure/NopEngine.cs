@@ -241,7 +241,7 @@ namespace Nop.Core.Infrastructure
                     });
 
                     //all is ok, so create instance
-                    return Activator.CreateInstance(type, parameters);
+                    return Activator.CreateInstance(type, parameters.ToArray());
                 }
                 catch (NopException) { }
             }
