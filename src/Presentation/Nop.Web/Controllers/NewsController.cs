@@ -18,6 +18,7 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.News;
@@ -27,7 +28,7 @@ namespace Nop.Web.Controllers
     [HttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
@@ -45,9 +46,9 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         public NewsController(INewsModelFactory newsModelFactory,
             INewsService newsService,
@@ -81,9 +82,9 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-        #endregion
+#endregion
         
-        #region Methods
+#region Methods
 
         public virtual ActionResult HomePageNews()
         {
@@ -153,7 +154,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("NewsItem")]
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
@@ -227,7 +228,7 @@ namespace Nop.Web.Controllers
             return Content(link);
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

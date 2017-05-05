@@ -2,30 +2,31 @@
 using System.Web.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
     public partial class CountryController : BasePublicController
 	{
-		#region Fields
+#region Fields
 
         private readonly ICountryModelFactory _countryModelFactory;
 
-	    #endregion
+#endregion
 
-		#region Constructors
+#region Constructors
 
         public CountryController(ICountryModelFactory countryModelFactory)
 		{
             this._countryModelFactory = countryModelFactory;
 		}
 
-        #endregion
+#endregion
 
-        #region States / provinces
+#region States / provinces
 
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         [AcceptVerbs(HttpVerbs.Get)]
         public virtual ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
@@ -33,7 +34,7 @@ namespace Nop.Web.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

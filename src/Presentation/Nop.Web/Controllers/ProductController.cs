@@ -22,6 +22,7 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
@@ -31,7 +32,7 @@ namespace Nop.Web.Controllers
 {
     public partial class ProductController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -55,9 +56,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly IStaticCacheManager _cacheManager;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public ProductController(IProductModelFactory productModelFactory,
             IProductService productService,
@@ -104,9 +105,9 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
         }
 
-        #endregion
+#endregion
 
-        #region Product details page
+#region Product details page
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductDetails(int productId, int updatecartitemid = 0)
@@ -264,9 +265,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region Recently viewed products
+#region Recently viewed products
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult RecentlyViewedProducts()
@@ -309,9 +310,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region New (recently added) products page
+#region New (recently added) products page
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult NewProducts()
@@ -372,9 +373,9 @@ namespace Nop.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        #endregion
+#endregion
 
-        #region Home page bestsellers and products
+#region Home page bestsellers and products
 
         [ChildActionOnly]
         public virtual ActionResult HomepageBestSellers(int? productThumbPictureSize)
@@ -405,9 +406,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region Product reviews
+#region Product reviews
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductReviews(int productId)
@@ -434,7 +435,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ProductReviews")]
         [PublicAntiForgery]
         [FormValueRequired("add-review")]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
@@ -588,9 +589,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Email a friend
+#region Email a friend
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductEmailAFriend(int productId)
@@ -607,7 +608,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ProductEmailAFriend")]
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(model.ProductId);
@@ -646,9 +647,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Comparing products
+#region Comparing products
 
         [HttpPost]
         public virtual ActionResult AddProductToCompareList(int productId)
@@ -732,7 +733,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        #endregion 
+#endregion
     }
 }
 #endif

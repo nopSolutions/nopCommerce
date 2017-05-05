@@ -29,6 +29,7 @@ using Nop.Services.Tax;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
@@ -39,7 +40,7 @@ namespace Nop.Web.Controllers
 {
     public partial class ShoppingCartController : BasePublicController
     {
-		#region Fields
+#region Fields
 
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IProductService _productService;
@@ -74,9 +75,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
 
-        #endregion
+#endregion
 
-		#region Ctor
+#region Ctor
 
         public ShoppingCartController(IShoppingCartModelFactory shoppingCartModelFactory,
             IProductService productService, 
@@ -143,9 +144,9 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         [NonAction]
         protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
@@ -278,7 +279,7 @@ namespace Nop.Web.Controllers
         {
             string attributesXml = "";
 
-            #region Product attributes
+#region Product attributes
 
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
@@ -408,9 +409,9 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            #endregion
+#endregion
 
-            #region Gift cards
+#region Gift cards
 
             if (product.IsGiftCard)
             {
@@ -452,7 +453,7 @@ namespace Nop.Web.Controllers
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
-            #endregion
+#endregion
 
             return attributesXml;
         }
@@ -487,9 +488,9 @@ namespace Nop.Web.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region Shopping cart
+#region Shopping cart
         
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
@@ -717,7 +718,7 @@ namespace Nop.Web.Controllers
                 });
             }
             
-            #region Update existing shopping cart item?
+#region Update existing shopping cart item?
 
             int updatecartitemid = 0;
             foreach (string formKey in form.AllKeys)
@@ -755,9 +756,9 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            #endregion
+#endregion
 
-            #region Customer entered price
+#region Customer entered price
             decimal customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
             {
@@ -772,9 +773,9 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
-            #endregion
+#endregion
 
-            #region Quantity
+#region Quantity
 
             int quantity = 1;
             foreach (string formKey in form.AllKeys)
@@ -784,7 +785,7 @@ namespace Nop.Web.Controllers
                     break;
                 }
 
-            #endregion
+#endregion
 
             var addToCartWarnings = new List<string>();
 
@@ -838,7 +839,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            #region Return result
+#region Return result
 
             if (addToCartWarnings.Any())
             {
@@ -921,7 +922,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            #endregion
+#endregion
         }
 
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
@@ -1593,9 +1594,9 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-        #endregion
+#endregion
 
-        #region Wishlist
+#region Wishlist
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Wishlist(Guid? customerGuid)
@@ -1788,7 +1789,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("EmailWishlist")]
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
@@ -1831,7 +1832,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

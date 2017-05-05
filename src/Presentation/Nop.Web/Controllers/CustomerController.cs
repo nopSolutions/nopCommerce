@@ -40,7 +40,7 @@ namespace Nop.Web.Controllers
 {
     public partial class CustomerController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly ICustomerModelFactory _customerModelFactory;
@@ -79,9 +79,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         public CustomerController(IAddressModelFactory addressModelFactory,
             ICustomerModelFactory customerModelFactory,
@@ -156,7 +156,7 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
         }
 
-        #endregion
+#endregion
 
 #region Utilities
 #if NET451
@@ -255,14 +255,15 @@ namespace Nop.Web.Controllers
         }
 #endif
 #endregion
+        
 
 #region Login / logout
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [CheckAccessClosedStoreAttribute(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStoreAttribute(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult Login(bool? checkoutAsGuest)
         {
             var model = _customerModelFactory.PrepareLoginModel(checkoutAsGuest);
@@ -270,11 +271,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateCaptchaAttribute]
+        [ValidateCaptcha]
         //available even when a store is closed
-        [CheckAccessClosedStoreAttribute(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStoreAttribute(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -345,9 +346,9 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [CheckAccessClosedStoreAttribute(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [CheckAccessPublicStoreAttribute(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult Logout()
         {
 #if NET451
@@ -406,7 +407,7 @@ namespace Nop.Web.Controllers
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult PasswordRecovery()
         {
             var model = _customerModelFactory.PreparePasswordRecoveryModel();
@@ -417,7 +418,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult PasswordRecoverySend(PasswordRecoveryModel model)
         {
             if (ModelState.IsValid)
@@ -454,7 +455,7 @@ namespace Nop.Web.Controllers
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult PasswordRecoveryConfirm(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -493,7 +494,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -546,7 +547,7 @@ namespace Nop.Web.Controllers
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult Register()
         {
             //check whether registration is allowed
@@ -560,12 +561,12 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [CaptchaValidator]
-        [HoneypotValidator]
+        [ValidateCaptcha]
+        [ValidateHoneypot]
         [PublicAntiForgery]
         [ValidateInput(false)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, FormCollection form)
         {
             //check whether registration is allowed
@@ -801,7 +802,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult RegisterResult(int resultId)
         {
             var model = _customerModelFactory.PrepareRegisterResultModel(resultId);
@@ -809,7 +810,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         [HttpPost]
         public virtual ActionResult RegisterResult(string returnUrl)
         {
@@ -823,7 +824,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [ValidateInput(false)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult CheckUsernameAvailability(string username)
         {
             var usernameAvailable = false;
@@ -853,7 +854,7 @@ namespace Nop.Web.Controllers
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult AccountActivation(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -1112,7 +1113,7 @@ namespace Nop.Web.Controllers
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult EmailRevalidation(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
