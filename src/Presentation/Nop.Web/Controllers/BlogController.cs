@@ -18,6 +18,7 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Blogs;
@@ -27,7 +28,7 @@ namespace Nop.Web.Controllers
     [HttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
@@ -45,9 +46,9 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public BlogController(IBlogService blogService,
             IWorkContext workContext,
@@ -81,9 +82,9 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public virtual ActionResult List(BlogPagingFilteringModel command)
         {
@@ -161,7 +162,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("BlogPost")]
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
@@ -251,7 +252,7 @@ namespace Nop.Web.Controllers
 
             return Content(link);
         }
-        #endregion
+#endregion
     }
 }
 #endif

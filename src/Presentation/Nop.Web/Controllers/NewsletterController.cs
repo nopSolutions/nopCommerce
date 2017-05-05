@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Controllers
 {
@@ -40,7 +41,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         [HttpPost]
         [ValidateInput(false)]
         public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
@@ -106,7 +107,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         public virtual ActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);

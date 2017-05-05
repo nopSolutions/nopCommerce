@@ -15,6 +15,7 @@ using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
@@ -23,7 +24,7 @@ namespace Nop.Web.Controllers
 {
     public partial class VendorController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly IVendorModelFactory _vendorModelFactory;
         private readonly IWorkContext _workContext;
@@ -38,9 +39,9 @@ namespace Nop.Web.Controllers
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public VendorController(IVendorModelFactory vendorModelFactory,
             IWorkContext workContext,
@@ -68,9 +69,9 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-        #endregion
+#endregion
 
-        #region Utilites
+#region Utilites
 
         [NonAction]
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
@@ -80,9 +81,9 @@ namespace Nop.Web.Controllers
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ApplyVendor()
@@ -100,7 +101,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
@@ -283,7 +284,7 @@ namespace Nop.Web.Controllers
             return RedirectToAction("Info");
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

@@ -18,6 +18,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
@@ -27,7 +28,7 @@ namespace Nop.Web.Controllers
 {
     public partial class CommonController : BasePublicController
     {
-        #region Fields
+#region Fields
 
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ILanguageService _languageService;
@@ -51,9 +52,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public CommonController(ICommonModelFactory commonModelFactory,
             ILanguageService languageService,
@@ -99,9 +100,9 @@ namespace Nop.Web.Controllers
             this._vendorSettings = vendorSettings;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         //error page
         public virtual IActionResult Error()
@@ -135,9 +136,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
@@ -179,7 +180,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
@@ -208,7 +209,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
@@ -229,7 +230,7 @@ namespace Nop.Web.Controllers
         //contact us page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         public virtual ActionResult ContactUs()
         {
             var model = new ContactUsModel();
@@ -238,9 +239,9 @@ namespace Nop.Web.Controllers
         }
         [HttpPost, ActionName("ContactUs")]
         [PublicAntiForgery]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         public virtual ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
@@ -287,7 +288,7 @@ namespace Nop.Web.Controllers
         }
         [HttpPost, ActionName("ContactVendor")]
         [PublicAntiForgery]
-        [CaptchaValidator]
+        [ValidateCaptcha]
         public virtual ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
@@ -336,7 +337,7 @@ namespace Nop.Web.Controllers
         //SEO sitemap page
         [HttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         public virtual ActionResult SitemapXml(int? id)
         {
             if (!_commonSettings.SitemapEnabled)
@@ -363,9 +364,9 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -379,9 +380,9 @@ namespace Nop.Web.Controllers
 
         //robots.txt file
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStore(true)]
         public virtual ActionResult RobotsTextFile()
         {
             var content = _commonModelFactory.PrepareRobotsTextFile();
@@ -398,13 +399,13 @@ namespace Nop.Web.Controllers
 
         //store is closed
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStore(true)]
         public virtual ActionResult StoreClosed()
         {
             return View();
         }
 
-        #endregion
+#endregion
     }
 }
 #endif
