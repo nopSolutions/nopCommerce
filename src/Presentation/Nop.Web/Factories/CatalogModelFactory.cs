@@ -201,11 +201,9 @@ namespace Nop.Web.Factories
                 foreach (var option in activeOptions)
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var query = new Dictionary<string, string[]> { ["orderby"] = new string[] { option.Key.ToString() } };
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, query);
-
-                    var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
 #if NET451
+                    var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
                         Text = sortValue,
@@ -301,8 +299,7 @@ namespace Nop.Web.Factories
                     }
 
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var query = new Dictionary<string, string[]> { ["pagesize"] = new string[] { "{0}" } };
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, query);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
                     sortUrl = _webHelper.RemoveQueryString(sortUrl, new[] { "pagenumber" });
 
                     foreach (var pageSize in pageSizes)
@@ -354,9 +351,9 @@ namespace Nop.Web.Factories
             }
         }
 
-        #endregion
+#endregion
 
-        #region Categories
+#region Categories
 
         /// <summary>
         /// Prepare category model
@@ -779,9 +776,9 @@ namespace Nop.Web.Factories
             return result;
         }
 
-        #endregion
+#endregion
 
-        #region Manufacturers
+#region Manufacturers
 
         /// <summary>
         /// Prepare manufacturer model
@@ -996,9 +993,9 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
-        #endregion
+#endregion
 
-        #region Vendors
+#region Vendors
 
         /// <summary>
         /// Prepare vendor model
@@ -1124,9 +1121,9 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
-        #endregion
+#endregion
 
-        #region Product tags
+#region Product tags
 
         /// <summary>
         /// Prepare popular product tags model
@@ -1242,9 +1239,9 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        #endregion
+#endregion
 
-        #region Searching
+#region Searching
 
         /// <summary>
         /// Prepare search model

@@ -61,13 +61,13 @@ namespace Nop.Core
         string GetStoreLocation(bool useSsl);
 
         /// <summary>
-        /// Modify query string of the URL
+        /// Modifies query string
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryStrings">Query string parameters to add</param>
+        /// <param name="queryStringModification">Query string modification</param>
         /// <param name="anchor">Anchor</param>
-        /// <returns>New URL with added passed query string</returns>
-        string ModifyQueryString(string url, IDictionary<string, string[]> queryStrings, string anchor = null);
+        /// <returns>New url</returns>
+        string ModifyQueryString(string url, string queryStringModification, string anchor);
 
         /// <summary>
         /// Remove query string from the URL

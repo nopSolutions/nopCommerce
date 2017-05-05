@@ -237,8 +237,7 @@ namespace Nop.Web.Models.Catalog
                             item.Selected = true;
 
                         //filter URL
-                        var query = new Dictionary<string, string[]> { [QUERYSTRINGPARAM] = new string[] { string.Format("{0}-{1}", fromQuery, toQuery) } };
-                        var url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), query);
+                        string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + fromQuery + "-" + toQuery, null);
                         url = ExcludeQueryStringParams(url, webHelper);
                         item.FilterUrl = url;
 
@@ -249,7 +248,7 @@ namespace Nop.Web.Models.Catalog
                     if (selectedPriceRange != null)
                     {
                         //remove filter URL
-                        string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), new[] { QUERYSTRINGPARAM });
+                        string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), new[] {QUERYSTRINGPARAM});
                         url = ExcludeQueryStringParams(url, webHelper);
                         this.RemoveFilterUrl = url;
                     }
@@ -344,6 +343,20 @@ namespace Nop.Web.Models.Catalog
                 return url;
             }
 
+            /// <summary>
+            /// Generate URL of already filtered items
+            /// </summary>
+            /// <param name="optionIds">Option IDs</param>
+            /// <returns>URL</returns>
+            protected virtual string GenerateFilteredSpecQueryParam(IList<int> optionIds)
+            {
+                if (optionIds == null)
+                    return "";
+
+                string result = string.Join(",", optionIds);
+                return result;
+            }
+
             #endregion
 
             #region Methods
@@ -432,8 +445,8 @@ namespace Nop.Web.Models.Catalog
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<int> { x.SpecificationAttributeOptionId });
-                    var query = new Dictionary<string, string[]> { [QUERYSTRINGPARAM] = alreadyFiltered.Select(option => option.ToString()).ToArray() };
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), query);
+                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
 
                     return new SpecificationFilterItem()
                     {

@@ -52,13 +52,13 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException("webHelper");
 
             var storeUrl = webHelper.GetStoreLocation(false);
-            var query = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
+            var url = !String.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                new Dictionary<string, string[]> { ["affiliate"] = new[] { affiliate.FriendlyUrlName} } :
+                webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null) :
                 //use ID
-                new Dictionary<string, string[]> { ["affiliateid"] = new[] { affiliate.Id.ToString() } };
+                webHelper.ModifyQueryString(storeUrl, "affiliateid=" + affiliate.Id, null);
 
-            return webHelper.ModifyQueryString(storeUrl, query);
+            return url;
         }
 
         /// <summary>

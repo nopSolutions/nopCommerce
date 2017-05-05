@@ -1,8 +1,8 @@
-﻿#if NET451
+﻿
 using System;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -31,9 +31,9 @@ using Nop.Web.Extensions;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
-using Nop.Web.Framework.Security.Honeypot;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
@@ -158,8 +158,8 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Utilities
-
+#region Utilities
+#if NET451
         [NonAction]
         protected virtual void TryAssociateAccountWithExternalAccount(Customer customer)
         {
@@ -253,16 +253,16 @@ namespace Nop.Web.Controllers
 
             return attributesXml;
         }
+#endif
+#endregion
 
-        #endregion
-
-        #region Login / logout
+#region Login / logout
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStoreAttribute(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStoreAttribute(true)]
         public virtual ActionResult Login(bool? checkoutAsGuest)
         {
             var model = _customerModelFactory.PrepareLoginModel(checkoutAsGuest);
@@ -270,11 +270,11 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [CaptchaValidator]
+        [ValidateCaptchaAttribute]
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStoreAttribute(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStoreAttribute(true)]
         public virtual ActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -345,13 +345,15 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [StoreClosed(true)]
+        [CheckAccessClosedStoreAttribute(true)]
         //available even when navigation is not allowed
-        [PublicStoreAllowNavigation(true)]
+        [CheckAccessPublicStoreAttribute(true)]
         public virtual ActionResult Logout()
         {
+#if NET451
             //external authentication
             ExternalAuthorizerHelper.RemoveParameters();
+#endif
 
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
@@ -398,9 +400,9 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-        #endregion
-
-        #region Password recovery
+#endregion
+#if NET451
+#region Password recovery
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
@@ -538,9 +540,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Register
+#region Register
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
@@ -881,9 +883,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region My account / Info
+#region My account / Info
 
         [ChildActionOnly]
         public virtual ActionResult CustomerNavigation(int selectedTabId = 0)
@@ -1162,9 +1164,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region My account / Addresses
+#region My account / Addresses
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Addresses()
@@ -1329,9 +1331,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region My account / Downloadable products
+#region My account / Downloadable products
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult DownloadableProducts()
@@ -1360,9 +1362,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region My account / Change password
+#region My account / Change password
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ChangePassword()
@@ -1409,9 +1411,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region My account / Avatar
+#region My account / Avatar
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Avatar()
@@ -1503,7 +1505,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CustomerAvatar");
         }
 
-        #endregion
+#endregion
+#endif
     }
 }
-#endif
