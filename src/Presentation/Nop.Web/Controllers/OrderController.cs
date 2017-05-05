@@ -61,7 +61,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         //My account / Orders
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Reward points
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerRewardPoints(int? page)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -153,7 +153,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Details(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / Print
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult PrintOrderDetails(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -238,7 +238,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / Shipment details page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ShipmentDetails(int shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);

@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())

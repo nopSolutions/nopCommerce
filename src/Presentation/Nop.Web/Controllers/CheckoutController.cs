@@ -27,7 +27,7 @@ using Nop.Web.Models.Checkout;
 
 namespace Nop.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement(SslRequirement.Yes)]
     public partial class CheckoutController : BasePublicController
     {
         #region Fields

@@ -1244,7 +1244,7 @@ namespace Nop.Web.Controllers
             }, MimeTypes.TextPlain);
         }
         
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -1597,7 +1597,7 @@ namespace Nop.Web.Controllers
 
         #region Wishlist
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
@@ -1766,7 +1766,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)

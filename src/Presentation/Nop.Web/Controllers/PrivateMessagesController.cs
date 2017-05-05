@@ -15,7 +15,7 @@ using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement(SslRequirement.Yes)]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields

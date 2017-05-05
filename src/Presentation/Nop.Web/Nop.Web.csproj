@@ -21,6 +21,7 @@
     <None Remove="App_Data\browscap.crawlersonly.xml" />
     <None Remove="App_Data\InstalledPlugins.txt" />
     <None Remove="App_Data\Settings.txt" />
+    <None Remove="Controllers\ve-7F8E.tmp" />
   </ItemGroup>
 
   <ItemGroup>

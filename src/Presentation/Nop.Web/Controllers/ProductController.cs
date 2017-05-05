@@ -108,7 +108,7 @@ namespace Nop.Web.Controllers
 
         #region Product details page
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductDetails(int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
@@ -268,7 +268,7 @@ namespace Nop.Web.Controllers
 
         #region Recently viewed products
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -313,7 +313,7 @@ namespace Nop.Web.Controllers
 
         #region New (recently added) products page
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
@@ -409,7 +409,7 @@ namespace Nop.Web.Controllers
 
         #region Product reviews
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -592,7 +592,7 @@ namespace Nop.Web.Controllers
 
         #region Email a friend
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductEmailAFriend(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -696,7 +696,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)

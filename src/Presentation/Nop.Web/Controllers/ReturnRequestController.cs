@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -85,7 +85,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ReturnRequest(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);

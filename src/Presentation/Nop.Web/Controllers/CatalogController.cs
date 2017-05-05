@@ -93,7 +93,7 @@ namespace Nop.Web.Controllers
 
         #region Categories
         
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -144,7 +144,7 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -184,7 +184,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ManufacturerAll()
         {
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
@@ -209,7 +209,7 @@ namespace Nop.Web.Controllers
 
         #region Vendors
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
@@ -232,7 +232,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
@@ -271,7 +271,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductTagsAll()
         {
             var model = _catalogModelFactory.PrepareProductTagsAllModel();
@@ -293,7 +293,7 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [HttpsRequirement(SslRequirement.No)]
         [ValidateInput(false)]
         public virtual ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {

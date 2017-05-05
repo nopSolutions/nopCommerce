@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -94,7 +95,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc()
+                //MVC now serializes JSON with camel case names by default
+                //Use this code to avoid camel case names by default
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));

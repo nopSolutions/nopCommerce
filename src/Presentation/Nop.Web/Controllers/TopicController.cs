@@ -1,10 +1,11 @@
-﻿#if NET451
-using System.Web.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
@@ -41,10 +42,11 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Methods
+#region Methods
 
-        [NopHttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult TopicDetails(int topicId)
+#if NET451
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult TopicDetails(int topicId)
         {
             var model = _topicModelFactory.PrepareTopicModelById(topicId);
             if (model == null)
@@ -71,10 +73,15 @@ namespace Nop.Web.Controllers
             var templateViewPath = _topicModelFactory.PrepareTemplateViewPath(model.TopicTemplateId);
             return PartialView(templateViewPath, model);
         }
+#endif
 
-        [HttpPost, ValidateInput(false)]
+
+        [HttpPost]
+#if NET451
+        [ValidateInput(false)]
         [PublicAntiForgery]
-        public virtual ActionResult Authenticate(int id, string password)
+#endif
+        public virtual IActionResult Authenticate(int id, string password)
         {
             var authResult = false;
             var title = string.Empty;
@@ -105,7 +112,6 @@ namespace Nop.Web.Controllers
             return Json(new { Authenticated = authResult, Title = title, Body = body, Error = error });
         }
 
-        #endregion
+#endregion
     }
 }
-#endif
