@@ -87,15 +87,11 @@ namespace Nop.Web.Framework.Seo
                     return;
                 }
 
-#if NET451
                 //the active one is found
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var response = httpContext.Response;
-                response.Status = "301 Moved Permanently";
-                response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
-                response.End();
-                return null;
-#endif
+                var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
+                context.HttpContext.Response.Redirect(location, true);
+                return;
             }
 
             //ensure that the slug is the same for the current language
@@ -104,16 +100,11 @@ namespace Nop.Web.Framework.Seo
             var slugForCurrentLanguage = SeoExtensions.GetSeName(urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
             if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
             {
-#if NET451
                 //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var response = httpContext.Response;
-                //response.Status = "302 Found";
-                response.Status = "302 Moved Temporarily";
-                response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
-                response.End();
-                return null;
-#endif
+                var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
+                context.HttpContext.Response.Redirect(location, false);
+                return;
             }
 
             //process URL
