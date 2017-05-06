@@ -300,7 +300,7 @@ namespace Nop.Web.Factories
 
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, new[] { "pagenumber" });
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
 
                     foreach (var pageSize in pageSizes)
                     {

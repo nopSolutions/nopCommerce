@@ -73,9 +73,9 @@ namespace Nop.Core
         /// Remove query string from the URL
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryNames">Query parameter names to remove</param>
+        /// <param name="queryString">Query string to remove</param>
         /// <returns>New URL without passed query string</returns>
-        string RemoveQueryString(string url, IEnumerable<string> queryNames);
+        string RemoveQueryString(string url, string queryString);
 
         /// <summary>
         /// Gets query string value by name

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using HttpContext = Nop.Core.Http.HttpContext;
 
 namespace Nop.Core
 {
@@ -19,15 +20,17 @@ namespace Nop.Core
     {
         #region Fields 
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
 
         #endregion
 
         #region Ctor
 
-        public WebHelper(HostingConfig hostingConfig)
+        public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor)
         {
             this._hostingConfig = hostingConfig;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -40,14 +43,20 @@ namespace Nop.Core
         /// <returns>True if available; otherwise false</returns>
         protected virtual bool IsRequestAvailable()
         {
-            if (HttpContext.Current == null)
+            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
                 return false;
 
             try
             {
-                return HttpContext.Current.Request == null;
+                if (_httpContextAccessor.HttpContext.Request == null)
+                    return false;
             }
-            catch { return false; }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -63,12 +72,8 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return string.Empty;
 
-            //try get URL referred from header
-            var referedHeader = HttpContext.Current.Request.Headers[HeaderNames.Referer];
-            if (StringValues.IsNullOrEmpty(referedHeader))
-                return string.Empty;
-
-            return referedHeader.ToString();
+            //URL referrer is null in some case (for example, in IE 8)
+            return _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
         }
 
         /// <summary>
@@ -84,7 +89,7 @@ namespace Nop.Core
             try
             {
                 //first try to get IP address from the forwarded header
-                if (HttpContext.Current.Request.Headers != null)
+                if (_httpContextAccessor.HttpContext.Request.Headers != null)
                 {
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
@@ -96,14 +101,14 @@ namespace Nop.Core
                         forwardedHttpHeaderKey = _hostingConfig.ForwardedHttpHeader;
                     }
 
-                    var forwardedHeader = HttpContext.Current.Request.Headers[forwardedHttpHeaderKey];
+                    var forwardedHeader = _httpContextAccessor.HttpContext.Request.Headers[forwardedHttpHeaderKey];
                     if (!StringValues.IsNullOrEmpty(forwardedHeader))
                         result = forwardedHeader.FirstOrDefault();
                 }
 
                 //if this header not exists try get connection remote IP address
-                if (string.IsNullOrEmpty(result) && HttpContext.Current.Connection.RemoteIpAddress != null)
-                    result = HttpContext.Current.Connection.RemoteIpAddress.ToString();
+                if (string.IsNullOrEmpty(result) && _httpContextAccessor.HttpContext.Connection.RemoteIpAddress != null)
+                    result = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             }
             catch { return string.Empty; }
 
@@ -146,8 +151,8 @@ namespace Nop.Core
             var host = GetStoreHost(useSsl).TrimEnd('/');
 
             //get full URL with or without query string
-            var url = string.Format("{0}{1}{2}", host, HttpContext.Current.Request.Path,
-                includeQueryString ? HttpContext.Current.Request.QueryString.Value : string.Empty);
+            var url = string.Format("{0}{1}{2}", host, _httpContextAccessor.HttpContext.Request.Path,
+                includeQueryString ? _httpContextAccessor.HttpContext.Request.QueryString.Value : string.Empty);
 
             return url.ToLowerInvariant();
         }
@@ -172,7 +177,7 @@ namespace Nop.Core
                 return ServerVariables("HTTP_X_FORWARDED_PROTO").Equals("https", StringComparison.OrdinalIgnoreCase);
 
 #endif
-            return HttpContext.Current.Request.IsHttps;
+            return _httpContextAccessor.HttpContext.Request.IsHttps;
         }
 
         /// <summary>
@@ -185,7 +190,8 @@ namespace Nop.Core
             var result = string.Empty;
 
             //try to get host from the request HOST header
-            var hostHeader = HttpContext.Current.Request.Headers[HeaderNames.Host];
+            //TODO test (it's better to yuse server variables)
+            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
             if (!StringValues.IsNullOrEmpty(hostHeader))
                 result = "http://" + hostHeader.FirstOrDefault();
 
@@ -258,7 +264,7 @@ namespace Nop.Core
 
             //add application path base if exists
             if (IsRequestAvailable())
-                host += HttpContext.Current.Request.PathBase;
+                host += _httpContextAccessor.HttpContext.Request.PathBase;
 
             if (!host.EndsWith("/"))
                 host += "/";
@@ -376,32 +382,65 @@ namespace Nop.Core
         /// Remove query string from the URL
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryNames">Query parameter names to remove</param>
+        /// <param name="queryString">Query string to remove</param>
         /// <returns>New URL without passed query string</returns>
-        public virtual string RemoveQueryString(string url, IEnumerable<string> queryNames)
+        public virtual string RemoveQueryString(string url, string queryString)
         {
-            if (string.IsNullOrEmpty(url))
-                return string.Empty;
+            if (url == null)
+                url = string.Empty;
+            url = url.ToLowerInvariant();
 
-            if (queryNames == null || !queryNames.Any())
-                return url;
+            if (queryString == null)
+                queryString = string.Empty;
+            queryString = queryString.ToLowerInvariant();
 
-            var uri = new Uri(url);
 
-            //get all query string key value pairs as a collection
-            var queryCollection = QueryHelpers.ParseQuery(uri.Query);
+            string str = string.Empty;
+            if (url.Contains("?"))
+            {
+                str = url.Substring(url.IndexOf("?") + 1);
+                url = url.Substring(0, url.IndexOf("?"));
+            }
+            if (!string.IsNullOrEmpty(queryString))
+            {
+                if (!string.IsNullOrEmpty(str))
+                {
+                    var dictionary = new Dictionary<string, string>();
+                    foreach (string str3 in str.Split(new[] { '&' }))
+                    {
+                        if (!string.IsNullOrEmpty(str3))
+                        {
+                            string[] strArray = str3.Split(new[] { '=' });
+                            if (strArray.Length == 2)
+                            {
+                                dictionary[strArray[0]] = strArray[1];
+                            }
+                            else
+                            {
+                                dictionary[str3] = null;
+                            }
+                        }
+                    }
+                    dictionary.Remove(queryString);
 
-            //remove query strings by the names if exist
-            foreach (var name in queryNames)
-                queryCollection.Remove(name);
-
-            //get the page path from URL without QueryString
-            var pathWithoutQueryString = uri.GetLeftPart(UriPartial.Path);
-            if (!queryCollection.Any())
-                return pathWithoutQueryString;
-
-            return QueryHelpers.AddQueryString(pathWithoutQueryString, 
-                queryCollection.ToDictionary(query => query.Key, query => query.Value.ToString().ToLowerInvariant()));
+                    var builder = new StringBuilder();
+                    foreach (string str5 in dictionary.Keys)
+                    {
+                        if (builder.Length > 0)
+                        {
+                            builder.Append("&");
+                        }
+                        builder.Append(str5);
+                        if (dictionary[str5] != null)
+                        {
+                            builder.Append("=");
+                            builder.Append(dictionary[str5]);
+                        }
+                    }
+                    str = builder.ToString();
+                }
+            }
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)));
         }
 
         /// <summary>
@@ -415,10 +454,10 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return default(T);
 
-            if (StringValues.IsNullOrEmpty(HttpContext.Current.Request.Query[name]))
+            if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
                 return default(T);
 
-            return CommonHelper.To<T>(HttpContext.Current.Request.Query[name].ToString());
+            return CommonHelper.To<T>(_httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
 
         /// <summary>
@@ -461,11 +500,11 @@ namespace Nop.Core
             // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
             // current request can be processed correctly.  So, we redirect to the same URL, so that the
             // new request will come to the newly started AppDomain.
-            if (HttpContext.Current != null && makeRedirect)
+            if (_httpContextAccessor.HttpContext != null && makeRedirect)
             {
                 if (String.IsNullOrEmpty(redirectUrl))
                     redirectUrl = GetThisPageUrl(true);
-                HttpContext.Current.Response.Redirect(redirectUrl, true /*endResponse*/);
+                _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl, true /*endResponse*/);
             }
 #endif
         }
@@ -478,7 +517,7 @@ namespace Nop.Core
             get
             {
 #if NET451
-                var response = HttpContext.Current.Response;
+                var response = _httpContextAccessor.HttpContext.Response;
 
                 return response.IsRequestBeingRedirected;
 #else 
@@ -494,14 +533,14 @@ namespace Nop.Core
         {
             get
             {
-                if (HttpContext.Current.Items["nop.IsPOSTBeingDone"] == null)
+                if (_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] == null)
                     return false;
 
-                return Convert.ToBoolean(HttpContext.Current.Items["nop.IsPOSTBeingDone"]);
+                return Convert.ToBoolean(_httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
             }
             set
             {
-                HttpContext.Current.Items["nop.IsPOSTBeingDone"] = value;
+                _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
             }
         }
 

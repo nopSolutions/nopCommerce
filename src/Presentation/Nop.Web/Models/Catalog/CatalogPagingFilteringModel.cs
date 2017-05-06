@@ -161,7 +161,8 @@ namespace Nop.Web.Models.Catalog
                 //comma separated list of parameters to exclude
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                url = webHelper.RemoveQueryString(url, excludedQueryStringParamsSplitted);
+                foreach (string exclude in excludedQueryStringParamsSplitted)
+                    url = webHelper.RemoveQueryString(url, exclude);
                 return url;
             }
 
@@ -248,7 +249,7 @@ namespace Nop.Web.Models.Catalog
                     if (selectedPriceRange != null)
                     {
                         //remove filter URL
-                        string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), new[] {QUERYSTRINGPARAM});
+                        string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
                         url = ExcludeQueryStringParams(url, webHelper);
                         this.RemoveFilterUrl = url;
                     }
@@ -339,7 +340,8 @@ namespace Nop.Web.Models.Catalog
                 //comma separated list of parameters to exclude
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                url = webHelper.RemoveQueryString(url, excludedQueryStringParamsSplitted);
+                foreach (string exclude in excludedQueryStringParamsSplitted)
+                    url = webHelper.RemoveQueryString(url, exclude);
                 return url;
             }
 
@@ -427,7 +429,7 @@ namespace Nop.Web.Models.Catalog
 
                 //prepare the model properties
                 Enabled = true;
-                var removeFilterUrl = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), new[] { QUERYSTRINGPARAM });
+                var removeFilterUrl = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
                 RemoveFilterUrl = ExcludeQueryStringParams(removeFilterUrl, webHelper);
 
                 //get already filtered specification options
