@@ -1,7 +1,8 @@
-﻿#if NET451
+﻿
 using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -15,6 +16,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Catalog;
 
@@ -90,8 +92,8 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-
-        #region Categories
+#if NET451
+#region Categories
         
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
@@ -140,9 +142,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region Manufacturers
+#region Manufacturers
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
@@ -205,9 +207,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region Vendors
+#region Vendors
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
@@ -256,9 +258,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
 
-        #region Product tags
+#region Product tags
         
         [ChildActionOnly]
         public virtual ActionResult PopularProductTags()
@@ -289,13 +291,16 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
+#endif
 
-        #region Searching
+#region Searching
 
         [HttpsRequirement(SslRequirement.No)]
+#if NET451
         [ValidateInput(false)]
-        public virtual ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
+#endif
+        public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
@@ -311,8 +316,10 @@ namespace Nop.Web.Controllers
         }
 
 
+#if NET451
         [ValidateInput(false)]
-        public virtual ActionResult SearchTermAutoComplete(string term)
+#endif
+        public virtual IActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
@@ -337,10 +344,9 @@ namespace Nop.Web.Controllers
                               productpictureurl = p.DefaultPictureModel.ImageUrl
                           })
                           .ToList();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
-        #endregion
+#endregion
     }
 }
-#endif

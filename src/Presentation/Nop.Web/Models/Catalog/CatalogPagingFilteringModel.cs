@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -28,11 +29,10 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         public CatalogPagingFilteringModel()
         {
-#if NET451
             this.AvailableSortOptions = new List<SelectListItem>();
             this.AvailableViewModes = new List<SelectListItem>();
             this.PageSizeOptions = new List<SelectListItem>();
-#endif
+
             this.PriceRangeFilter = new PriceRangeFilterModel();
             this.SpecificationFilter = new SpecificationFilterModel();
         }
@@ -54,34 +54,29 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether product sorting is allowed
         /// </summary>
         public bool AllowProductSorting { get; set; }
-#if NET451
+
         /// <summary>
         /// Available sort options
         /// </summary>
         public IList<SelectListItem> AvailableSortOptions { get; set; }
-#endif
 
         /// <summary>
         /// A value indicating whether customers are allowed to change view mode
         /// </summary>
         public bool AllowProductViewModeChanging { get; set; }
-#if NET451
         /// <summary>
         /// Available view mode options
         /// </summary>
         public IList<SelectListItem> AvailableViewModes { get; set; }
-#endif
 
         /// <summary>
         /// A value indicating whether customers are allowed to select page size
         /// </summary>
         public bool AllowCustomersToSelectPageSize { get; set; }
-#if NET451
         /// <summary>
         /// Available page size options
         /// </summary>
         public IList<SelectListItem> PageSizeOptions { get; set; }
-#endif
 
         /// <summary>
         /// Order by

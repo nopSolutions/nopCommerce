@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -13,12 +11,10 @@ namespace Nop.Web.Models.Catalog
         {
             this.PagingFilteringContext = new CatalogPagingFilteringModel();
             this.Products = new List<ProductOverviewModel>();
-
-#if NET451
+            
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
             this.AvailableVendors = new List<SelectListItem>();
-#endif
         }
 
         public string Warning { get; set; }
@@ -81,11 +77,10 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether "allow search by vendor" is enabled
         /// </summary>
         public bool asv { get; set; }
-#if NET451
+
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
-#endif
 
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }

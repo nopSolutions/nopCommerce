@@ -1,13 +1,14 @@
-#if NET451
 //Contributor : MVCContrib
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -15,10 +16,10 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.UI.Paging
 {
-	/// <summary>
+    /// <summary>
     /// Renders a pager component from an IPageableModel datasource.
-	/// </summary>
-	public partial class Pager : IHtmlString
+    /// </summary>
+    public partial class Pager : IHtmlContent
 	{
         protected readonly IPageableModel model;
         protected readonly ViewContext viewContext;
@@ -111,11 +112,17 @@ namespace Nop.Web.Framework.UI.Paging
             return this;
         }
 
-        public override string ToString()
-        {
-            return ToHtmlString();
-        }
-		public virtual string ToHtmlString()
+	    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+	    {
+	        //TODO test new implementation
+            var htmlString = GenerateHtmlString();
+	        writer.Write(htmlString);
+	    }
+	    public override string ToString()
+	    {
+	        return GenerateHtmlString();
+	    }
+        public virtual string GenerateHtmlString()
 		{
             if (model.TotalItems == 0) 
 				return null;
@@ -231,22 +238,30 @@ namespace Nop.Web.Framework.UI.Paging
             if (!String.IsNullOrWhiteSpace(cssClass))
                 liBuilder.AddCssClass(cssClass);
 
-			var aBuilder = new TagBuilder("a");
-            aBuilder.SetInnerText(text);
+		    //TODO test new implementation
+            var aBuilder = new TagBuilder("a");
+            aBuilder.InnerHtml.AppendHtml(text);
             aBuilder.MergeAttribute("href", urlBuilder(pageNumber));
 
-            liBuilder.InnerHtml += aBuilder;
+            liBuilder.InnerHtml.AppendHtml(aBuilder);
 
-            return liBuilder.ToString(TagRenderMode.Normal);
+		    using (var writer = new StringWriter())
+		    {
+		        liBuilder.WriteTo(writer, HtmlEncoder.Default);
+		        var htmlOutput = writer.ToString();
+		        return htmlOutput;
+		    }
 		}
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{
 			var routeValues = new RouteValueDictionary();
 
             var parametersWithEmptyValues = new List<string>();
-			foreach (var key in viewContext.RequestContext.HttpContext.Request.QueryString.AllKeys.Where(key => key != null))
+            //TODO test new implementation (QueryString, keys)
+			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
 			{
-                var value = viewContext.RequestContext.HttpContext.Request.QueryString[key];
+                //TODO ensure no null exceptino is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
+                var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && String.IsNullOrEmpty(value))
 			    {
                     //we store query string parameters with empty values separately
@@ -281,7 +296,9 @@ namespace Nop.Web.Framework.UI.Paging
                 }
             }
 
-			var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
+#if NET451
+
+            var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
             if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
                 //we add such parameters manually because UrlHelper.GenerateUrl() ignores them
@@ -292,7 +309,10 @@ namespace Nop.Web.Framework.UI.Paging
                 }
             }
 			return url;
-		}
-	}
-}
+#else
+		    return "";
 #endif
+		}
+
+    }
+}

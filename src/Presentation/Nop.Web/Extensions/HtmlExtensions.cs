@@ -17,7 +17,7 @@ namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
-        #if NET451
+#if NET451
         /// <summary>
         /// BBCode editor
         /// </summary>
@@ -219,11 +219,11 @@ namespace Nop.Web.Extensions
             }
             return MvcHtmlString.Create(string.Empty);
         }
-        public static Pager Pager(this HtmlHelper helper, IPageableModel pagination)
+#endif
+        public static Pager Pager(this IHtmlHelper helper, IPageableModel pagination)
         {
             return new Pager(pagination, helper.ViewContext);
         }
-#endif
         /// <summary>
         /// Get topic system name
         /// </summary>
