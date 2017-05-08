@@ -1,0 +1,23 @@
+﻿@model CategoryNavigationModel
+@using Nop.Web.Models.Catalog;
+@if (Model.Categories.Count > 0)
+{
+    <div class="block block-category-navigation">
+        <div class="title">
+            <strong>@T("Categories")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="list">
+                @foreach (var category in Model.Categories)
+                {
+                    var categoryLineModel = new CategoryNavigationModel.CategoryLineModel
+                    {
+                        CurrentCategoryId = Model.CurrentCategoryId,
+                        Category = category
+                    };
+                    @Html.Partial("_CategoryLine.Navigation", categoryLineModel)
+                }
+            </ul>
+        </div>
+    </div>
+}

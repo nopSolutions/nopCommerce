@@ -17,7 +17,7 @@
         @Html.Widget("home_page_before_news")
         @*TODO @Html.Action("HomePageNews", "News")*@
         @Html.Widget("home_page_before_poll")
-        @*TODO @Html.Action("HomePagePolls", "Poll")*@
+        @await Component.InvokeAsync("HomePagePolls")
         @Html.Widget("home_page_bottom")
     </div>
 </div>

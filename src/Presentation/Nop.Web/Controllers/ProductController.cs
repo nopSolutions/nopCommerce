@@ -283,33 +283,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
-        {
-            if (!_catalogSettings.RecentlyViewedProductsEnabled)
-                return Content("");
-
-            var preparePictureModel = productThumbPictureSize.HasValue;
-            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
-
-            if (!products.Any())
-                return Content("");
-
-            //prepare model
-            var model = new List<ProductOverviewModel>();
-            model.AddRange(_productModelFactory.PrepareProductOverviewModels(products,
-                preparePriceModel.GetValueOrDefault(),
-                preparePictureModel,
-                productThumbPictureSize));
-
-            return PartialView(model);
-        }
-
 #endregion
 
 #region New (recently added) products page

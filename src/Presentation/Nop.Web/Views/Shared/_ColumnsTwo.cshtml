@@ -42,15 +42,15 @@
     }
     else
     {
-        @*TODO @Html.Widget("left_side_column_before")
-        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+        @Html.Widget("left_side_column_before")
+        @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         @Html.Widget("left_side_column_after_category_navigation")
-        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-        @Html.Action("VendorNavigation", "Catalog")
-        @Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })
-        @Html.Action("PopularProductTags", "Catalog")
-        @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-        @Html.Widget("left_side_column_after")*@
+        @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+        @await Component.InvokeAsync("VendorNavigation")
+        @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
+        @await Component.InvokeAsync("PopularProductTags")
+        @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
+        @Html.Widget("left_side_column_after")
     }
 </div>
 <div class="center-2">

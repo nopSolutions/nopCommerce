@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
@@ -39,21 +38,10 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [ChildActionOnly]
-        public virtual ActionResult PollBlock(string systemKeyword)
-        {
-            if (String.IsNullOrWhiteSpace(systemKeyword))
-                return Content("");
-
-            var model = _pollModelFactory.PreparePollModelBySystemName(systemKeyword);
-            if (model == null)
-                return Content("");
-
-            return PartialView(model);
-        }
-
         [HttpPost]
+#if NET451
         [ValidateInput(false)]
+#endif
         public virtual ActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
@@ -96,19 +84,7 @@ namespace Nop.Web.Controllers
                 html = this.RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
             });
         }
-        
-        [ChildActionOnly]
-        public virtual ActionResult HomePagePolls()
-        {
-            var model = _pollModelFactory.PrepareHomePagePollModels();
-            if (!model.Any())
-                Content("");
-
-            return PartialView(model);
-        }
-
-        #endregion
+#endregion
 
     }
 }
-#endif

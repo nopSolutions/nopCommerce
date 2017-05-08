@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Poll\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

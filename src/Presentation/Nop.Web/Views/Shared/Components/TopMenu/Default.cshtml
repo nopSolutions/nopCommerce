@@ -15,7 +15,7 @@
         {
             Category = category
         };
-        @Html.Partial("_TopMenuCategoryLine", categoryLineModel)
+        @Html.Partial("_CategoryLine.TopMenu", categoryLineModel)
     }
     @foreach (var topic in Model.Topics)
     {
@@ -65,7 +65,7 @@
                 Category = category,
                 ResponsiveMobileMenu = true
             };
-            @Html.Partial("_TopMenuCategoryLine", categoryLineModel)
+            @Html.Partial("_CategoryLine.TopMenu", categoryLineModel)
         }
         @foreach (var topic in Model.Topics)
         {

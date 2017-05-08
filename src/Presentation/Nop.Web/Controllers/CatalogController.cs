@@ -134,14 +134,7 @@ namespace Nop.Web.Controllers
             var templateViewPath = _catalogModelFactory.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
             return View(templateViewPath, model);
         }
-
-        [ChildActionOnly]
-        public virtual ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
-        {
-            var model = _catalogModelFactory.PrepareCategoryNavigationModel(currentCategoryId, currentProductId);
-            return PartialView(model);
-        }
-
+        
 #endregion
 
 #region Manufacturers
@@ -194,15 +187,8 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public virtual ActionResult ManufacturerNavigation(int currentManufacturerId)
+        public virtual ActionResult ManufacturerNavigation()
         {
-            if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
-                return Content("");
-
-            var model = _catalogModelFactory.PrepareManufacturerNavigationModel(currentManufacturerId);
-
-            if (!model.Manufacturers.Any())
-                return Content("");
             
             return PartialView(model);
         }
@@ -245,34 +231,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult VendorNavigation()
-        {
-            if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
-                return Content("");
-
-            var model = _catalogModelFactory.PrepareVendorNavigationModel();
-            if (!model.Vendors.Any())
-                return Content("");
-            
-            return PartialView(model);
-        }
 
 #endregion
 
 #region Product tags
         
-        [ChildActionOnly]
-        public virtual ActionResult PopularProductTags()
-        {
-            var model = _catalogModelFactory.PreparePopularProductTagsModel();
-
-            if (!model.Tags.Any())
-                return Content("");
-            
-            return PartialView(model);
-        }
-
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
