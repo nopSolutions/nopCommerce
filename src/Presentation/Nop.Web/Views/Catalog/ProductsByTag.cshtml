@@ -1,4 +1,5 @@
 ﻿@model ProductsByTagModel
+@inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -8,10 +9,9 @@
     Html.AppendPageCssClassParts("html-product-tag-page");
 
     //canonical URL
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
-    if (canonicalUrlsEnabled)
+    if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Request.Url.Scheme);
+        var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(productsByTagUrl);
     }
 }
@@ -26,7 +26,7 @@
         @Html.Widget("productsbytag_top", Model.Id)
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @Html.Widget("productsbytag_before_product_list", Model.Id)
         @if (Model.Products.Count > 0)
