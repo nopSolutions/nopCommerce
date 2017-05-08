@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.Localization
         /// </summary>
         /// <param name="context">A route context object</param>
         /// <returns>Task of the routing</returns>
-        public override async Task RouteAsync(RouteContext context)
+        public override Task RouteAsync(RouteContext context)
         {
             if (DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
@@ -94,20 +94,22 @@ namespace Nop.Web.Framework.Localization
                     newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
 
                     //get path segments
-                    //TODO test (and do not use "return")
+                    //TODO test
                     var pathSegments = newVirtualPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     if (pathSegments == null || pathSegments.Length < 2)
-                        return;
+                        return _target.RouteAsync(context);
 
                     //create new route data
                     var newRouteData = new RouteData(context.RouteData);
                     newRouteData.Values["controller"] = pathSegments[0];
                     newRouteData.Values["action"] = pathSegments[1];
                     context.RouteData = newRouteData;
+                    //route request
+                    return _target.RouteAsync(context);
                 }
             }
             //route request
-            await _target.RouteAsync(context);
+            return _target.RouteAsync(context);
         }
 
         /// <summary>

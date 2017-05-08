@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Framework.Localization
 {
@@ -70,24 +72,30 @@ namespace Nop.Web.Framework.Localization
         public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder,
             string name, string template, object defaults, object constraints, object dataTokens)
         {
-            //TODO temporary solution below (no localization)
-            return routeBuilder.MapRoute(name, template, defaults, constraints, dataTokens);
-            
+#if NET451
             if (routeBuilder.DefaultHandler == null)
                 throw new ArgumentNullException(nameof(routeBuilder));
 
             //get registered InlineConstraintResolver
-            var inlineConstraintResolver = EngineContext.Current.Resolve<IInlineConstraintResolver>();
+            var inlineConstraintResolver = routeBuilder
+                .ServiceProvider
+                .GetRequiredService<IInlineConstraintResolver>();
 
-            //create new localized route
-            var localizedRoute = new LocalizedRoute(routeBuilder.DefaultHandler, name, template,
-                new RouteValueDictionary(defaults), new RouteValueDictionary(constraints),
-                new RouteValueDictionary(dataTokens), inlineConstraintResolver);
-
-            //and add it to route collection
-            routeBuilder.Routes.Add(localizedRoute);
+            //create new generic route
+            routeBuilder.Routes.Add(new LocalizedRoute(
+                routeBuilder.DefaultHandler,
+                name,
+                template,
+                new RouteValueDictionary(defaults),
+                new RouteValueDictionary(constraints),
+                new RouteValueDictionary(dataTokens),
+                inlineConstraintResolver));
 
             return routeBuilder;
+#else
+            //TODO temporary solution below (no localization)
+            return routeBuilder.MapRoute(name, template, defaults, constraints, dataTokens);
+#endif
         }
 
         /// <summary>

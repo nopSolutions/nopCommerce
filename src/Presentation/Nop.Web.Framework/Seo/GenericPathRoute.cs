@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Data;
@@ -34,24 +35,34 @@ namespace Nop.Web.Framework.Seo
         #endregion
 
         #region Methods
-
+        
         /// <summary>
         /// Route request to the particular action
         /// </summary>
         /// <param name="context">A route context object</param>
         /// <returns>Task of the routing</returns>
-        public override async Task RouteAsync(RouteContext context)
+        public override Task RouteAsync(RouteContext context)
         {
-            //get current route data
-            var currentRouteData = new RouteData(context.RouteData);
-            if (currentRouteData == null || !DataSettingsHelper.DatabaseIsInstalled())
-                return;
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+            {
+                return Task.CompletedTask;
+            }
 
-            //get registered UrlRecordService
+            //get current route data
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
 
             //get slug from path
+            var currentRouteData = new RouteData(context.RouteData);
+#if NET451
             var slug = currentRouteData.Values["generic_se_name"] as string;
+#else
+            //TODO temporary solution until we can get currentRouteData.Values
+            string path = context.HttpContext.Request.Path.Value;
+            if (!string.IsNullOrEmpty(path) && path[0] == '/')
+                path = path.Substring(1);
+            var pathParts = path.Split('/');
+            var slug = pathParts.Length > 1 ? pathParts[0] : path;
+#endif
 
             //performance optimization
             //we load a cached verion here. It reduces number of SQL requests for each page load
@@ -68,8 +79,7 @@ namespace Nop.Web.Framework.Seo
                 context.RouteData = currentRouteData;
 
                 //route request
-                await _target.RouteAsync(context);
-                return;
+                return _target.RouteAsync(context);
             }
 
             if (!urlRecord.IsActive)
@@ -84,15 +94,14 @@ namespace Nop.Web.Framework.Seo
                     context.RouteData = currentRouteData;
 
                     //route request
-                    await _target.RouteAsync(context);
-                    return;
+                    return _target.RouteAsync(context);
                 }
 
                 //the active one is found
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
                 context.HttpContext.Response.Redirect(location, true);
-                return;
+                return Task.CompletedTask;
             }
 
             //ensure that the slug is the same for the current language
@@ -105,7 +114,7 @@ namespace Nop.Web.Framework.Seo
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
                 context.HttpContext.Response.Redirect(location, false);
-                return;
+                return Task.CompletedTask;
             }
 
             //process URL
@@ -162,9 +171,9 @@ namespace Nop.Web.Framework.Seo
             context.RouteData = currentRouteData;
 
             //route request
-            await _target.RouteAsync(context);
+            return _target.RouteAsync(context);
         }
 
-        #endregion
+#endregion
     }
 }
