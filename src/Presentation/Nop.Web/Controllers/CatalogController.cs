@@ -136,11 +136,10 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-#if NET451
         #region Manufacturers
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
+        public virtual IActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted)
@@ -180,25 +179,18 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult ManufacturerAll()
+        public virtual IActionResult ManufacturerAll()
         {
             var model = _catalogModelFactory.PrepareManufacturerAllModels();
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual ActionResult ManufacturerNavigation()
-        {
-            
-            return PartialView(model);
-        }
-
+        
         #endregion
 
         #region Vendors
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
+        public virtual IActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null || vendor.Deleted || !vendor.Active)
@@ -234,6 +226,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
+#if NET451
         #region Product tags
         
         [HttpsRequirement(SslRequirement.No)]

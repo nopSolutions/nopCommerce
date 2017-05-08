@@ -1,4 +1,5 @@
 ﻿@model VendorModel
+@inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -10,10 +11,9 @@
     //page class
     Html.AppendPageCssClassParts("html-vendor-page");
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
-    if (canonicalUrlsEnabled)
+    if (seoSettings.CanonicalUrlsEnabled)
     {
-        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(vendorUrl);
     }
 }
@@ -42,7 +42,7 @@
         }
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @*product list*@
         @if (Model.Products.Count > 0)

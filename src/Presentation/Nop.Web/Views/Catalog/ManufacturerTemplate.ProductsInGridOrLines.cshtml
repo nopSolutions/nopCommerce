@@ -1,4 +1,5 @@
 ﻿@model ManufacturerModel
+@inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -10,10 +11,9 @@
     //page class
     Html.AppendPageCssClassParts("html-manufacturer-page");
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
-    if (canonicalUrlsEnabled)
+    if (seoSettings.CanonicalUrlsEnabled)
     {
-        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(manufacturerUrl);
     }
 }
@@ -54,13 +54,13 @@
         @Html.Widget("manufacturerdetails_after_featured_products", Model.Id)
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @Html.Widget("manufacturerdetails_before_filters", Model.Id)
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
-            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
         }
         @Html.Widget("manufacturerdetails_before_product_list", Model.Id)
 
