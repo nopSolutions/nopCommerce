@@ -255,7 +255,7 @@ namespace Nop.Web.Framework.Infrastructure
         }
 
         /// <summary>
-        /// Gets order of this dependency registrar implementation (more is better)
+        /// Gets order of this dependency registrar implementation
         /// </summary>
         public int Order
         {

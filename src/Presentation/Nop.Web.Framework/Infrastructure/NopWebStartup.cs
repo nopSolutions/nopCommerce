@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Infrastructure
         }
 
         /// <summary>
-        /// Gets order of this startup configuration implementation (the lower the better) 
+        /// Gets order of this startup configuration implementation
         /// </summary>
         public int Order
         {

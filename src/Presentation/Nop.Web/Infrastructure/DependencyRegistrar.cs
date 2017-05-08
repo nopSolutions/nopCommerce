@@ -50,7 +50,7 @@ namespace Nop.Web.Infrastructure
         }
 
         /// <summary>
-        /// Gets order of this dependency registrar implementation (more is better)
+        /// Gets order of this dependency registrar implementation
         /// </summary>
         public int Order
         {

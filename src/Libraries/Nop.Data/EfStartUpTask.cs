@@ -19,7 +19,7 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Gets order of this startup task implementation (less is better)
+        /// Gets order of this startup task implementation
         /// </summary>
         public int Order
         {

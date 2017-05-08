@@ -15,7 +15,7 @@ namespace Nop.Core.Infrastructure.Mapper
         Action<IMapperConfigurationExpression> GetConfiguration();
 
         /// <summary>
-        /// Gets order of this configuration implementation (more is better) 
+        /// Gets order of this configuration implementation
         /// </summary>
         int Order { get; }
     }

@@ -70,7 +70,7 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Gets order of this startup configuration implementation (the lower the better) 
+        /// Gets order of this startup configuration implementation
         /// </summary>
         public int Order
         {
