@@ -59,7 +59,7 @@ namespace Nop.Services.Common
         protected virtual string GetBackupDirectoryPath()
         {
 #if NET451
-            return string.Format("{0}Administration\\db_backups\\", _httpContext.Request.PhysicalApplicationPath);
+            return string.Format("{0}Administration\\db_backups\\", _hostingEnvironment.WebRootPath);
 #else
             return string.Format("{0}Administration\\db_backups\\", string.Empty);
 #endif
