@@ -365,8 +365,9 @@ namespace Nop.Web.Controllers
             Response.Write(content);
             return null;
         }
+#endif
 
-        public virtual ActionResult GenericUrl()
+        public virtual IActionResult GenericUrl()
         {
             //seems that no entity was found
             return InvokeHttp404();
@@ -375,12 +376,11 @@ namespace Nop.Web.Controllers
         //store is closed
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual ActionResult StoreClosed()
+        public virtual IActionResult StoreClosed()
         {
             return View();
         }
         
-#endif
 #endregion
     }
 }

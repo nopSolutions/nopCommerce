@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.Localization
         public override VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
             //get base virtual path
-            var data = _target.GetVirtualPath(context);
+            var data = base.GetVirtualPath(context);
             
             if (data != null && DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
@@ -49,7 +49,11 @@ namespace Nop.Web.Framework.Localization
                 var path = context.HttpContext.Request.Path.Value;
 
                 //get application path
-                var applicationPath = context.HttpContext.Request.PathBase;
+#if NET451
+                var applicationPath = context.HttpContext.Request.ApplicationPath;
+#else
+                var applicationPath = "/";
+#endif
 
                 //add language code to path in case if it's localized URL
                 if (path.IsLocalizedUrl(applicationPath, true))
@@ -72,30 +76,35 @@ namespace Nop.Web.Framework.Localization
                 var path = context.HttpContext.Request.Path.Value;
 
                 //get application path
-                var applicationPath = context.HttpContext.Request.PathBase;
+#if NET451
+                var applicationPath = context.HttpContext.Request.ApplicationPath;
+#else
+                var applicationPath = "/";
+#endif
 
                 //path isn't localized, so no special action required
-                if (!path.IsLocalizedUrl(applicationPath, false))
-                    return;
+                if (path.IsLocalizedUrl(applicationPath, false))
+                {
+                    //remove language code from the path
+                    var newVirtualPath = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+                    if (string.IsNullOrEmpty(newVirtualPath))
+                        newVirtualPath = "/";
 
-                //remove language code from the path
-                var newVirtualPath = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-                if (string.IsNullOrEmpty(newVirtualPath))
-                    newVirtualPath = "/";
+                    //and application path
+                    newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
 
-                //and application path
-                newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
+                    //get path segments
+                    //TODO test (and do not use "return")
+                    var pathSegments = newVirtualPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (pathSegments == null || pathSegments.Length < 2)
+                        return;
 
-                //get path segments
-                var pathSegments = newVirtualPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                if (pathSegments == null || pathSegments.Length < 2)
-                    return;
-
-                //create new route data
-                var newRouteData = new RouteData(context.RouteData);
-                newRouteData.Values["controller"] = pathSegments[0];
-                newRouteData.Values["action"] = pathSegments[1];
-                context.RouteData = newRouteData;
+                    //create new route data
+                    var newRouteData = new RouteData(context.RouteData);
+                    newRouteData.Values["controller"] = pathSegments[0];
+                    newRouteData.Values["action"] = pathSegments[1];
+                    context.RouteData = newRouteData;
+                }
             }
             //route request
             await _target.RouteAsync(context);
@@ -109,9 +118,9 @@ namespace Nop.Web.Framework.Localization
             _seoFriendlyUrlsForLanguagesEnabled = null;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForLanguagesEnabled settings
@@ -127,6 +136,6 @@ namespace Nop.Web.Framework.Localization
             }
         }
 
-        #endregion
+#endregion
     }
 }

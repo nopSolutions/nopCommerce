@@ -74,6 +74,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //ensure that there is route and it is registered and localizable
+                //TODO wrong implementation (doesn't work)
                 if (context.RouteData == null || context.RouteData.Routers == null|| !context.RouteData.Routers.Any(route => route is LocalizedRoute))
                     return;
 

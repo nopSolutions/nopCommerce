@@ -1,9 +1,12 @@
-﻿#if NET451
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+#if NET451
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -110,7 +113,7 @@ namespace Nop.Web.Controllers
 #region Product details page
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult ProductDetails(int productId, int updatecartitemid = 0)
+        public virtual IActionResult ProductDetails(int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -185,7 +188,7 @@ namespace Nop.Web.Controllers
 
             return View(productTemplateViewPath, model);
         }
-
+#if NET451
         [ChildActionOnly]
         public virtual ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
@@ -264,10 +267,10 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
-
-#endregion
-
-#region Recently viewed products
+#endif
+        #endregion
+#if NET451
+        #region Recently viewed products
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual ActionResult RecentlyViewedProducts()
@@ -706,7 +709,8 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-#endregion
+        #endregion
+
+#endif
     }
 }
-#endif

@@ -7,13 +7,14 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework.Seo
 {
     /// <summary>
     /// Provides properties and methods for defining a SEO friendly route, and for getting information about the route.
     /// </summary>
-    public class GenericPathRoute : Route
+    public class GenericPathRoute : LocalizedRoute
     {
         #region Fields
 
