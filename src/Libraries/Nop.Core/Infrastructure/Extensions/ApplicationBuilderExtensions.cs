@@ -25,7 +25,7 @@ namespace Nop.Core.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/error");
+                application.UseExceptionHandler("/errorpage.htm");
             }
         }
 

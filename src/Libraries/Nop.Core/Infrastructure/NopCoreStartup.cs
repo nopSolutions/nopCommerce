@@ -59,14 +59,15 @@ namespace Nop.Core.Infrastructure
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
             application.UseExceptionHandler(hostingEnvironment.IsDevelopment());
 
-            //handle 404 Page Not Found errors
-            application.UsePageNotFound();
-
             //check whether requested page is keep alive page
             application.UseKeepAlive();
 
             //check whether database is installed
             application.UseInstallUrl();
+
+            //handle 404 Page Not Found errors
+            application.UsePageNotFound();
+
         }
 
         /// <summary>
