@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -215,7 +216,6 @@ namespace Nop.Web.Factories
             //countries and states
             if (addressSettings.CountryEnabled && loadCountries != null)
             {
-#if NET451
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in loadCountries())
                 {
@@ -226,7 +226,6 @@ namespace Nop.Web.Factories
                         Selected = c.Id == model.CountryId
                     });
                 }
-#endif
 
                 if (addressSettings.StateProvinceEnabled)
                 {
@@ -234,7 +233,6 @@ namespace Nop.Web.Factories
                     var states = _stateProvinceService
                         .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
                         .ToList();
-#if NET451
                     if (states.Any())
                     {
                         model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
@@ -258,7 +256,6 @@ namespace Nop.Web.Factories
                             Value = "0"
                         });
                     }
-#endif
                 }
             }
 

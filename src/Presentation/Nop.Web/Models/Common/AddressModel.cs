@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-#if NET451
-using System.Web.Mvc;
-#endif
 using FluentValidation.Attributes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Validators.Common;
@@ -14,10 +12,8 @@ namespace Nop.Web.Models.Common
     {
         public AddressModel()
         {
-#if NET451
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
-#endif
             CustomAddressAttributes = new List<AddressAttributeModel>();
         }
 
@@ -123,11 +119,9 @@ namespace Nop.Web.Models.Common
 		[AllowHtml]
 #endif
         public string FaxNumber { get; set; }
-
-#if NET451
+        
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-#endif
 
 
         public string FormattedCustomAddressAttributes { get; set; }
