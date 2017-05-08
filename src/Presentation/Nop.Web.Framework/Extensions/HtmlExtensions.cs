@@ -21,7 +21,9 @@ using Nop.Web.Framework.Mvc.Models;
 
 #endif
 using System;
+using System.IO;
 using System.Linq.Expressions;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -533,21 +535,24 @@ namespace Nop.Web.Framework.Extensions
 #endif
 #region Common extensions
 
-#if NET451
-        public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
+        public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
         {
             // Create tag builder
-            var builder = new TagBuilder("span");
-            builder.AddCssClass("required");
+            var tagBuilder = new TagBuilder("span");
+            tagBuilder.AddCssClass("required");
             var innerText = "*";
             //add additional text if specified
             if (!String.IsNullOrEmpty(additionalText))
                 innerText += " " + additionalText;
-            builder.SetInnerText(innerText);
+            tagBuilder.InnerHtml.AppendHtml(innerText);
             // Render tag
-            return MvcHtmlString.Create(builder.ToString());
+            using (var writer = new StringWriter())
+            {
+                tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+                var htmlOutput = writer.ToString();
+                return new HtmlString(htmlOutput);
+            }
         }
-#endif
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             return html.DisplayNameFor(expression);
