@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -80,26 +81,17 @@ namespace Nop.Web.Framework.Controllers
 
             //set model
             ViewData.Model = model;
-
-            //find partial view by view name and action context
             var viewResult = razorViewEngine.FindView(actionContext, viewName, false);
             if (viewResult.View == null)
                 throw new ArgumentNullException($"{viewName} view was not found");
 
             using (var stringWriter = new StringWriter())
             {
-                //create view context
-                var viewContext = new ViewContext(actionContext, viewResult.View, 
-                    this.ViewData, this.TempData, stringWriter, new HtmlHelperOptions());
+                var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
 
-                //render the view to string writer using created view context
-                Task.Run(new Func<Task>(async () =>
-                {
-                    await viewResult.View.RenderAsync(viewContext);
-                }));
-                
-                //return view as string
-                return stringWriter.ToString();
+                var t = viewResult.View.RenderAsync(viewContext);
+                t.Wait();
+                return stringWriter.GetStringBuilder().ToString();
             }
         }
 
