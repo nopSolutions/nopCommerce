@@ -138,7 +138,7 @@ namespace Nop.Services.Catalog
                 productIds.Insert(0, productId);
 
             //limit list based on the allowed number of the recently viewed products
-            productIds = productIds.GetRange(0, _catalogSettings.RecentlyViewedProductsNumber);
+            productIds = productIds.Take(_catalogSettings.RecentlyViewedProductsNumber).ToList();
 
             //set cookie
             AddRecentlyViewedProductsCookie(productIds);

@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
                 comparedProductIds.Insert(0, productId);
 
             //limit list based on the allowed number of products to be compared
-            comparedProductIds = comparedProductIds.GetRange(0, _catalogSettings.CompareProductsNumber);
+            comparedProductIds = comparedProductIds.Take(_catalogSettings.CompareProductsNumber).ToList();
 
             //set cookie
             AddCompareProductsCookie(comparedProductIds);
