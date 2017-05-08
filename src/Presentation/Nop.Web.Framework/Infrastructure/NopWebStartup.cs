@@ -78,11 +78,6 @@ namespace Nop.Web.Framework.Infrastructure
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
                 RequestPath = new PathString("/Themes")
             });
-            application.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory()),
-                RequestPath = new PathString("")
-            });
 
             //MVC routing
             application.UseNopMvc();
