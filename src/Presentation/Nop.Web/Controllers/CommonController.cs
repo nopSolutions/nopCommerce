@@ -103,21 +103,24 @@ namespace Nop.Web.Controllers
             this._vendorSettings = vendorSettings;
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 #if NET451
         //error page
         public virtual IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");
         }
-
+        
+#endif
         //page not found
         public virtual ActionResult PageNotFound()
         {
+#if NET451
             if (_commonSettings.Log404Errors)
                 _logger.Log();
+#endif
 
             this.Response.StatusCode = 404;
             this.Response.ContentType = "text/html";
@@ -125,7 +128,6 @@ namespace Nop.Web.Controllers
             return View();
         }
         
-#endif
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed

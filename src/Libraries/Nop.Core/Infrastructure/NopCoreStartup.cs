@@ -64,10 +64,6 @@ namespace Nop.Core.Infrastructure
 
             //check whether database is installed
             application.UseInstallUrl();
-
-            //handle 404 Page Not Found errors
-            application.UsePageNotFound();
-
         }
 
         /// <summary>

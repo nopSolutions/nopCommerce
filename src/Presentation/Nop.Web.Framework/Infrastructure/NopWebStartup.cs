@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
@@ -55,6 +56,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use HTTP session
             application.UseSession();
+
+            //handle 404 errors
+            application.UsePageNotFound();
 
             //static files
             application.UseStaticFiles();
