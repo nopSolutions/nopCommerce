@@ -1,7 +1,5 @@
 using System.IO;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Services.Seo
 {
@@ -10,7 +8,6 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial interface ISitemapGenerator
     {
-#if NET451
         /// <summary>
         /// This will build an xml sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
@@ -18,7 +15,7 @@ namespace Nop.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(UrlHelper urlHelper, int? id);
+        string Generate(IUrlHelper urlHelper, int? id);
 
         /// <summary>
         /// This will build an xml sitemap for better index with search engines.
@@ -27,8 +24,6 @@ namespace Nop.Services.Seo
         /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        void Generate(UrlHelper urlHelper, Stream stream, int? id);
-
-#endif
+        void Generate(IUrlHelper urlHelper, Stream stream, int? id);
     }
 }

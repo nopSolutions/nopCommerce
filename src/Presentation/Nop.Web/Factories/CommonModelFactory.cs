@@ -6,9 +6,7 @@ using System.Text;
 using System.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -559,14 +557,13 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
-#if NET451
         /// <summary>
         /// Get the sitemap in XML format
         /// </summary>
         /// <param name="url">URL helper</param>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        public virtual string PrepareSitemapXml(UrlHelper url, int? id)
+        public virtual string PrepareSitemapXml(IUrlHelper url, int? id)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
@@ -575,7 +572,6 @@ namespace Nop.Web.Factories
             var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id));
             return siteMap;
         }
-#endif
 
         /// <summary>
         /// Prepare the store theme selector model

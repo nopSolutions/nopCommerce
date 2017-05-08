@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Microsoft.AspNetCore.Http;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -297,6 +298,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
+#endif
 
         //sitemap page
         [HttpsRequirement(SslRequirement.No)]
@@ -358,14 +360,11 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult RobotsTextFile()
+        public virtual IActionResult RobotsTextFile()
         {
-            var content = _commonModelFactory.PrepareRobotsTextFile();
-            Response.ContentType = MimeTypes.TextPlain;
-            Response.Write(content);
-            return null;
+            var robotsFileContent = _commonModelFactory.PrepareRobotsTextFile();
+            return Content(robotsFileContent, MimeTypes.TextPlain);
         }
-#endif
 
         public virtual IActionResult GenericUrl()
         {
