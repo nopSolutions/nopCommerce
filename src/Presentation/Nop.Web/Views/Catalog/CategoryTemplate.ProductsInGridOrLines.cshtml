@@ -1,4 +1,6 @@
 ﻿@model CategoryModel
+@inject SeoSettings seoSettings
+@inject CommonSettings commonSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -10,15 +12,15 @@
     //page class
     Html.AppendPageCssClassParts("html-category-page");
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
-    if (canonicalUrlsEnabled)
+    if (seoSettings.CanonicalUrlsEnabled)
     {
-        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(categoryUrl);
     }
 
-    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
 }
+@using Microsoft.AspNetCore.Http
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
@@ -114,19 +116,19 @@
         @Html.Widget("categorydetails_after_featured_products", Model.Id)
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @Html.Widget("categorydetails_before_filters", Model.Id)
         <div class="product-filters">
             @*filtering*@
             @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
             {
-                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
             }
             @*filtering*@
             @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
             {
-                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
+                @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter)
             }
         </div>
         @Html.Widget("categorydetails_before_product_list", Model.Id)
