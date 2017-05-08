@@ -238,7 +238,6 @@ namespace Nop.Web.Framework.UI.Paging
             if (!String.IsNullOrWhiteSpace(cssClass))
                 liBuilder.AddCssClass(cssClass);
 
-		    //TODO test new implementation
             var aBuilder = new TagBuilder("a");
             aBuilder.InnerHtml.AppendHtml(text);
             aBuilder.MergeAttribute("href", urlBuilder(pageNumber));

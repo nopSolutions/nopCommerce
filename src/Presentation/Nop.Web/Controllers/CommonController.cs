@@ -202,7 +202,6 @@ namespace Nop.Web.Controllers
         }
 
 
-#if NET451
         //contact us page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
@@ -214,7 +213,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactUs")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -263,7 +264,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactVendor")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [ValidateCaptcha]
         public virtual ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
@@ -298,7 +301,6 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-#endif
 
         //sitemap page
         [HttpsRequirement(SslRequirement.No)]

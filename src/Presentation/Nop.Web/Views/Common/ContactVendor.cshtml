@@ -26,7 +26,7 @@
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                //TODO if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
                 {
                     <div class="message-error">@validationSummary</div>
                 }
@@ -59,12 +59,12 @@
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
-                        @if (Model.DisplayCaptcha)
+                        @*TODO @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
                             </div>
-                        }
+                        }*@
                     </div>
                 </div>
                 <div class="buttons">
