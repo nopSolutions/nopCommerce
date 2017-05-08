@@ -23,7 +23,7 @@ namespace Nop.Core.Infrastructure
         void Configure(IApplicationBuilder application);
 
         /// <summary>
-        /// Gets order of this startup configuration implementation (the lower the better) 
+        /// Gets order of this startup configuration implementation
         /// </summary>
         int Order { get; }
     }
