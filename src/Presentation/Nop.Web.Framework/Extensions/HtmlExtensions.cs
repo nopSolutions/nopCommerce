@@ -541,7 +541,7 @@ namespace Nop.Web.Framework.Extensions
 
 
 
-        public static string RequiredTagBuilder(this TagBuilder tagBuilder)
+        public static string RenderTagBuilder(this TagBuilder tagBuilder)
         {
             using (var writer = new StringWriter())
             {
@@ -561,7 +561,7 @@ namespace Nop.Web.Framework.Extensions
             if (!String.IsNullOrEmpty(additionalText))
                 innerText += " " + additionalText;
             tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RequiredTagBuilder());
+            return new HtmlString(tagBuilder.RenderTagBuilder());
         }
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
@@ -678,15 +678,15 @@ namespace Nop.Web.Framework.Extensions
 
             if (wrapTags) 
             {
-                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RequiredTagBuilder() + "</span>";
-                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RequiredTagBuilder() + "</span>";
-                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RequiredTagBuilder() + "</span>";
+                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderTagBuilder() + "</span>";
+                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderTagBuilder() + "</span>";
+                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderTagBuilder() + "</span>";
 
                 return new HtmlString(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
             }
             else
             {
-                return new HtmlString(string.Concat(daysList.RequiredTagBuilder(), monthsList.RequiredTagBuilder(), yearsList.RequiredTagBuilder()));
+                return new HtmlString(string.Concat(daysList.RenderTagBuilder(), monthsList.RenderTagBuilder(), yearsList.RenderTagBuilder()));
             }
 
         }

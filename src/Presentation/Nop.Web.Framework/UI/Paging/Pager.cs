@@ -244,7 +244,7 @@ namespace Nop.Web.Framework.UI.Paging
             aBuilder.MergeAttribute("href", urlBuilder(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);
-		    return liBuilder.RequiredTagBuilder();
+		    return liBuilder.RenderTagBuilder();
 		}
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{

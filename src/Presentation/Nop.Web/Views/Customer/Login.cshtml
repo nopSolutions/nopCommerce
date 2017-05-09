@@ -97,12 +97,12 @@
                                 @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
                             </span>
                         </div>
-                        @*TODO @if (Model.DisplayCaptcha)
+                        @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
                             </div>
-                        }*@
+                        }
                     </div>
                     <div class="buttons">
                         <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
