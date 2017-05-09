@@ -12,24 +12,12 @@ namespace Nop.Web.Models.Vendors
     public class VendorInfoModel : BaseNopModel
     {
         [NopResourceDisplayName("Account.VendorInfo.Name")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Name { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Email")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Email { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Description")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Description { get; set; }
 
         [NopResourceDisplayName("Account.VendorInfo.Picture")]

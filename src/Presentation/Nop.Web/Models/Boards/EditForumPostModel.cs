@@ -15,10 +15,6 @@ namespace Nop.Web.Models.Boards
 
         public bool IsEdit { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Text { get; set; }
         public EditorType ForumEditor { get; set; }
 

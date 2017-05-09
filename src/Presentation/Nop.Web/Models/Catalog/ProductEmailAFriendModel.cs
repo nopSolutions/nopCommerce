@@ -17,24 +17,12 @@ namespace Nop.Web.Models.Catalog
 
         public string ProductSeName { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Products.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Products.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Products.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 

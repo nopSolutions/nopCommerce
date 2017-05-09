@@ -14,32 +14,16 @@ namespace Nop.Web.Models.Common
         public int VendorId { get; set; }
         public string VendorName { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactVendor.Email")]
         public string Email { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactVendor.Subject")]
         public string Subject { get; set; }
         public bool SubjectEnabled { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactVendor.Enquiry")]
         public string Enquiry { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactVendor.FullName")]
         public string FullName { get; set; }
 

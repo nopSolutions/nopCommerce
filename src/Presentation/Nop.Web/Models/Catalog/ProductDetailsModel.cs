@@ -201,34 +201,19 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-            	
-#if NET451
-		[AllowHtml]
-#endif
+
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
-            	
-#if NET451
-		[AllowHtml]
-#endif
+
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-            	
-#if NET451
-		[AllowHtml]
-#endif
+
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
-            	
-#if NET451
-		[AllowHtml]
-#endif
+
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
-            	
-#if NET451
-		[AllowHtml]
-#endif
+
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }

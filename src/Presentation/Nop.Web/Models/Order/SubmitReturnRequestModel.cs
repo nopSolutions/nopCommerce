@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET451
-using System.Web.Mvc;
-#endif
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -22,26 +19,14 @@ namespace Nop.Web.Models.Order
 
         public IList<OrderItemModel> Items { get; set; }
         
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ReturnRequests.ReturnReason")]
         public int ReturnRequestReasonId { get; set; }
         public IList<ReturnRequestReasonModel> AvailableReturnReasons { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("ReturnRequests.ReturnAction")]
         public int ReturnRequestActionId { get; set; }
         public IList<ReturnRequestActionModel> AvailableReturnActions { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("ReturnRequests.Comments")]
         public string Comments { get; set; }
 

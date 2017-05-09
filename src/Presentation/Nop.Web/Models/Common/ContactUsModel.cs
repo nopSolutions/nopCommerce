@@ -11,32 +11,16 @@ namespace Nop.Web.Models.Common
     [Validator(typeof(ContactUsValidator))]
     public partial class ContactUsModel : BaseNopModel
     {
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactUs.Email")]
         public string Email { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("ContactUs.Subject")]
         public string Subject { get; set; }
         public bool SubjectEnabled { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactUs.Enquiry")]
         public string Enquiry { get; set; }
 
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("ContactUs.FullName")]
         public string FullName { get; set; }
 

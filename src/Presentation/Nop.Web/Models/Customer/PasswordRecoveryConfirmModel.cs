@@ -12,19 +12,11 @@ namespace Nop.Web.Models.Customer
     [Validator(typeof(PasswordRecoveryConfirmValidator))]
     public partial class PasswordRecoveryConfirmModel : BaseNopModel
     {
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [DataType(DataType.Password)]
         [NoTrim]
         [NopResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NoTrim]
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]

@@ -11,10 +11,6 @@ namespace Nop.Web.Models.Customer
     [Validator(typeof(PasswordRecoveryValidator))]
     public partial class PasswordRecoveryModel : BaseNopModel
     {
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Account.PasswordRecovery.Email")]
         public string Email { get; set; }
 

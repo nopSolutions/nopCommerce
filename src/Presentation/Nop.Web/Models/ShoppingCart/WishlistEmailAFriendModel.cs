@@ -11,24 +11,12 @@ namespace Nop.Web.Models.ShoppingCart
     [Validator(typeof(WishlistEmailAFriendValidator))]
     public partial class WishlistEmailAFriendModel : BaseNopModel
     {
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("Wishlist.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("Wishlist.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 

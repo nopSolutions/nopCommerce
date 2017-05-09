@@ -71,17 +71,9 @@ namespace Nop.Web.Models.Catalog
 
     public partial class AddProductReviewModel : BaseNopModel
     {
-        	
-#if NET451
-		[AllowHtml]
-#endif
         [NopResourceDisplayName("Reviews.Fields.Title")]
         public string Title { get; set; }
-
-        	
-#if NET451
-		[AllowHtml]
-#endif
+        
         [NopResourceDisplayName("Reviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
 

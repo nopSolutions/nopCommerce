@@ -12,24 +12,12 @@ namespace Nop.Web.Models.Vendors
     public partial class ApplyVendorModel : BaseNopModel
     {
         [NopResourceDisplayName("Vendors.ApplyAccount.Name")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Name { get; set; }
 
         [NopResourceDisplayName("Vendors.ApplyAccount.Email")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Email { get; set; }
 
         [NopResourceDisplayName("Vendors.ApplyAccount.Description")]
-        	
-#if NET451
-		[AllowHtml]
-#endif
         public string Description { get; set; }
         
         public bool DisplayCaptcha { get; set; }
