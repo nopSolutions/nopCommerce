@@ -39,17 +39,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
+#if NET451
+                //implement schedule tasks
                 //database is already installed, so start scheduled tasks
-                //TODO uncomment schedule tasks
                 //TaskManager.Instance.Initialize();
                 //TaskManager.Instance.Start();
-
+#endif
+#if NET451
                 try
                 {
+                    //TODO why try-catch? test and remove
                     //and log application start
                     EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
                 }
-                catch { }
+                catch (Exception exc)
+                {
+                    
+                }
+#endif
             }
 
             return engine.ServiceProvider;

@@ -217,7 +217,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Collection of resolved services</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
-            return (IEnumerable<T>)ServiceProvider.GetRequiredService(typeof(IEnumerable<T>));
+            return (IEnumerable<T>)ServiceProvider.GetServices(typeof(T));
         }
 
         /// <summary>
