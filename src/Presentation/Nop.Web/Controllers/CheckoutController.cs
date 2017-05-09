@@ -317,7 +317,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        [ValidateInput(false)]
         public virtual ActionResult NewBillingAddress(CheckoutBillingAddressModel model, FormCollection form)
         {
             //validation
@@ -438,7 +437,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        [ValidateInput(false)]
         public virtual ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
             //validation
@@ -581,7 +579,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
-        [ValidateInput(false)]
         public virtual ActionResult SelectShippingMethod(string shippingoption)
         {
             //validation
@@ -697,7 +694,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
-        [ValidateInput(false)]
         public virtual ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
@@ -798,7 +794,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("PaymentInfo")]
         [FormValueRequired("nextstep")]
-        [ValidateInput(false)]
         public virtual ActionResult EnterPaymentInfo(FormCollection form)
         {
             //validation
@@ -875,7 +870,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Confirm")]
-        [ValidateInput(false)]
         public virtual ActionResult ConfirmOrder()
         {
             //validation
@@ -1129,7 +1123,6 @@ namespace Nop.Web.Controllers
             return PartialView("OpcBillingAddress", billingAddressModel);
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcSaveBilling(FormCollection form)
         {
             try
@@ -1273,7 +1266,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcSaveShipping(FormCollection form)
         {
             try
@@ -1419,7 +1411,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcSaveShippingMethod(FormCollection form)
         {
             try
@@ -1485,7 +1476,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcSavePaymentMethod(FormCollection form)
         {
             try
@@ -1561,7 +1551,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcSavePaymentInfo(FormCollection form)
         {
             try
@@ -1632,7 +1621,6 @@ namespace Nop.Web.Controllers
             }
         }
 
-        [ValidateInput(false)]
         public virtual ActionResult OpcConfirmOrder()
         {
             try

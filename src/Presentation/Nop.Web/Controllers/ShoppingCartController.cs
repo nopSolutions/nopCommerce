@@ -703,10 +703,6 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
-#if NET451
-
-        [ValidateInput(false)]
-#endif
         public virtual IActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
@@ -938,10 +934,6 @@ namespace Nop.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
-#if NET451
-
-        [ValidateInput(false)]
-#endif
         public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
             bool loadPicture, IFormCollection form)
         {
@@ -1061,7 +1053,6 @@ namespace Nop.Web.Controllers
 
 #if NET451
         [HttpPost]
-        [ValidateInput(false)]
         public virtual ActionResult CheckoutAttributeChange(FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1293,7 +1284,6 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("updatecart")]
         public virtual ActionResult UpdateCart(FormCollection form)
@@ -1360,7 +1350,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
         public virtual ActionResult ContinueShopping()
@@ -1376,7 +1365,6 @@ namespace Nop.Web.Controllers
             }
         }
         
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("checkout")]
         public virtual ActionResult StartCheckout(FormCollection form)
@@ -1416,7 +1404,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applydiscountcouponcode")]
         public virtual ActionResult ApplyDiscountCoupon(string discountcouponcode, FormCollection form)
@@ -1482,7 +1469,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applygiftcardcouponcode")]
         public virtual ActionResult ApplyGiftCard(string giftcardcouponcode, FormCollection form)
@@ -1535,7 +1521,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [PublicAntiForgery]
         [HttpPost]
         public virtual ActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, FormCollection form)
@@ -1564,7 +1549,6 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
         public virtual ActionResult RemoveDiscountCoupon(FormCollection form)
@@ -1589,7 +1573,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
         public virtual ActionResult RemoveGiftCardCode(FormCollection form)
@@ -1639,7 +1622,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("updatecart")]
         public virtual ActionResult UpdateWishlist(FormCollection form)
@@ -1707,7 +1689,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
         public virtual ActionResult AddItemsToCartFromWishlist(Guid? customerGuid, FormCollection form)

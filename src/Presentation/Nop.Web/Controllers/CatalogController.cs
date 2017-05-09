@@ -253,9 +253,6 @@ namespace Nop.Web.Controllers
         #region Searching
 
         [HttpsRequirement(SslRequirement.No)]
-#if NET451
-        [ValidateInput(false)]
-#endif
         public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
@@ -271,10 +268,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-
-#if NET451
-        [ValidateInput(false)]
-#endif
         public virtual IActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)

@@ -194,7 +194,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         [FormValueRequired("save-info-button")]
         public virtual ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
         {
@@ -258,7 +257,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         [FormValueRequired("remove-picture")]
         public virtual ActionResult RemovePicture()
         {

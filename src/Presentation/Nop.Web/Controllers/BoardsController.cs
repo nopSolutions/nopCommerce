@@ -443,7 +443,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult TopicCreate(EditForumTopicModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -579,7 +578,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult TopicEdit(EditForumTopicModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -778,7 +776,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult PostCreate(EditForumPostModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -897,7 +894,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult PostEdit(EditForumPostModel model)
         {
             if (!_forumSettings.ForumsEnabled)

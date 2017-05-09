@@ -78,7 +78,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
 #if NET451
-        [ValidateInput(false)]
         [PublicAntiForgery]
 #endif
         public virtual IActionResult Authenticate(int id, string password)

@@ -43,7 +43,6 @@ namespace Nop.Web.Controllers
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         [HttpPost]
-        [ValidateInput(false)]
         public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;

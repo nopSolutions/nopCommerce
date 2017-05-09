@@ -562,7 +562,6 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         [ValidateHoneypot]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, FormCollection form)
@@ -820,7 +819,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual ActionResult CheckUsernameAvailability(string username)
@@ -907,7 +905,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult Info(CustomerInfoModel model, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1222,7 +1219,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1290,7 +1286,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [ValidateInput(false)]
         public virtual ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())

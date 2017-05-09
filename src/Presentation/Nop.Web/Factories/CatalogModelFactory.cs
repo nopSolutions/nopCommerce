@@ -1363,8 +1363,7 @@ namespace Nop.Web.Factories
             catch
             {
                 //the "A potentially dangerous Request.QueryString value was detected from the client" exception could be thrown here when some wrong char is specified (e.g. <)
-                //although we [ValidateInput(false)] attribute here we try to access "Request.Params" directly
-                //that's why we do not re-throw it
+                //we try to access "Request.Params" directly. that's why we do not re-throw it
 
                 //just ensure that some search term is specified (0 length is not supported inthis case)
                 isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);

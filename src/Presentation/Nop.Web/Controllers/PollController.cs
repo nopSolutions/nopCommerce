@@ -39,9 +39,6 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpPost]
-#if NET451
-        [ValidateInput(false)]
-#endif
         public virtual ActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
