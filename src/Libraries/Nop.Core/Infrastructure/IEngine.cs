@@ -14,11 +14,6 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        IServiceProvider ServiceProvider { get; set; }
-
-        /// <summary>
         /// Initialize engine
         /// </summary>
         /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
@@ -29,7 +24,8 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
-        void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
+        /// <returns>Service provider</returns>
+        IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline

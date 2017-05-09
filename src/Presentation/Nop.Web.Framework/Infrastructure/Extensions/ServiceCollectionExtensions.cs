@@ -35,7 +35,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             engine.Initialize(hostingEnvironment);
 
             //and configure it
-            engine.ConfigureServices(services, configuration);
+            var serviceProvider = engine.ConfigureServices(services, configuration);
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
@@ -59,7 +59,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 #endif
             }
 
-            return engine.ServiceProvider;
+            return serviceProvider;
         }
 
         /// <summary>

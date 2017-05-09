@@ -7,6 +7,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -27,11 +28,18 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Gets or sets service provider
         /// </summary>
-        public IServiceProvider ServiceProvider { get; set; }
+        private IServiceProvider _serviceProvider { get; set; }
 
         #endregion
 
         #region Utilities
+
+        protected IServiceProvider GetServiceProvider()
+        {
+            var accessor = _serviceProvider.GetService<IHttpContextAccessor>();
+            var context = accessor.HttpContext;
+            return context != null ? context.RequestServices : _serviceProvider;
+        }
 
         /// <summary>
         /// Run startup tasks
@@ -59,7 +67,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual void RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
+        protected virtual IServiceProvider RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -86,7 +94,8 @@ namespace Nop.Core.Infrastructure
             containerBuilder.Populate(services);
 
             //create service provider
-            ServiceProvider = new AutofacServiceProvider(containerBuilder.Build());
+            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
+            return _serviceProvider;
         }
 
         /// <summary>
@@ -141,7 +150,8 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        /// <returns>Service provider</returns>
+        public IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -167,6 +177,8 @@ namespace Nop.Core.Infrastructure
             //run startup tasks
             if (!nopConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
+
+            return _serviceProvider;
         }
 
         /// <summary>
@@ -197,7 +209,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
 		{
-            return (T)ServiceProvider.GetRequiredService(typeof(T));
+            return (T)GetServiceProvider().GetRequiredService(typeof(T));
         }
 
         /// <summary>
@@ -207,7 +219,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return ServiceProvider.GetRequiredService(type);
+            return GetServiceProvider().GetRequiredService(type);
         }
 
         /// <summary>
@@ -217,7 +229,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Collection of resolved services</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
-            return (IEnumerable<T>)ServiceProvider.GetServices(typeof(T));
+            return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
         }
 
         /// <summary>
