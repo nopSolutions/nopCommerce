@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.UI.Paging
 {
@@ -243,13 +244,7 @@ namespace Nop.Web.Framework.UI.Paging
             aBuilder.MergeAttribute("href", urlBuilder(pageNumber));
 
             liBuilder.InnerHtml.AppendHtml(aBuilder);
-
-		    using (var writer = new StringWriter())
-		    {
-		        liBuilder.WriteTo(writer, HtmlEncoder.Default);
-		        var htmlOutput = writer.ToString();
-		        return htmlOutput;
-		    }
+		    return liBuilder.RequiredTagBuilder();
 		}
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{

@@ -12,7 +12,7 @@
         {
             <div class="customer-entered-price">
                 <div class="price-input">
-                    @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" }, ":")
+                    @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" })
                     @*round price*@
                     @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "enter-price-input" })
                 </div>
@@ -28,7 +28,7 @@
         @if (!Model.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
-                @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }, ":")
+                @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
                 @if (Model.AllowedQuantities.Count > 0)
                 {
                     @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown" })

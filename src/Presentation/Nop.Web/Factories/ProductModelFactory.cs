@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -670,14 +671,12 @@ namespace Nop.Web.Factories
             var allowedQuantities = product.ParseAllowedQuantities();
             foreach (var qty in allowedQuantities)
             {
-#if NET451
                 model.AllowedQuantities.Add(new SelectListItem
                 {
                     Text = qty.ToString(),
                     Value = qty.ToString(),
                     Selected = updatecartitem != null && updatecartitem.Quantity == qty
                 });
-#endif
             }
             //minimum quantity notification
             if (product.OrderMinimumQuantity > 1)

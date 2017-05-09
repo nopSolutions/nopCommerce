@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -128,9 +129,7 @@ namespace Nop.Web.Models.Catalog
         {
             public AddToCartModel()
             {
-#if NET451
                 this.AllowedQuantities = new List<SelectListItem>();
-#endif
             }
             public int ProductId { get; set; }
 
@@ -138,9 +137,7 @@ namespace Nop.Web.Models.Catalog
             [NopResourceDisplayName("Products.Qty")]
             public int EnteredQuantity { get; set; }
             public string MinimumQuantityNotification { get; set; }
-#if NET451
             public List<SelectListItem> AllowedQuantities { get; set; }
-#endif
 
             //price entered by customers
             [NopResourceDisplayName("Products.EnterProductPrice")]

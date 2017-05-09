@@ -45,9 +45,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 //register all routes
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
-
-                //and default one
-                routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
 

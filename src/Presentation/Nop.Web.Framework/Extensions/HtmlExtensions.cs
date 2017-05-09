@@ -21,20 +21,24 @@ using Nop.Web.Framework.Mvc.Models;
 
 #endif
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
+using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Extensions
 {
     public static class HtmlExtensions
     {
 #if NET451
-#region Admin area extensions
+        #region Admin area extensions
 
         public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
             string name,
@@ -369,7 +373,7 @@ namespace Nop.Web.Framework.Extensions
             return tabName;
         }
 
-#region Form fields
+        #region Form fields
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
@@ -528,12 +532,24 @@ namespace Nop.Web.Framework.Extensions
             return htmlAttributes as RouteValueDictionary;
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
         
 #endif
-#region Common extensions
+        #region Common extensions
+
+
+
+        public static string RequiredTagBuilder(this TagBuilder tagBuilder)
+        {
+            using (var writer = new StringWriter())
+            {
+                tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+                var htmlOutput = writer.ToString();
+                return htmlOutput;
+            }
+        }
 
         public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
         {
@@ -545,13 +561,7 @@ namespace Nop.Web.Framework.Extensions
             if (!String.IsNullOrEmpty(additionalText))
                 innerText += " " + additionalText;
             tagBuilder.InnerHtml.AppendHtml(innerText);
-            // Render tag
-            using (var writer = new StringWriter())
-            {
-                tagBuilder.WriteTo(writer, HtmlEncoder.Default);
-                var htmlOutput = writer.ToString();
-                return new HtmlString(htmlOutput);
-            }
+            return new HtmlString(tagBuilder.RequiredTagBuilder());
         }
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
@@ -568,7 +578,6 @@ namespace Nop.Web.Framework.Extensions
             // because "[" and "]" aren't replaced with "_" in GetFullHtmlFieldId
             //return id.Replace('[', '_').Replace(']', '_');
         }
-#if NET451
 
         /// <summary>
         /// Creates a days, months, years drop down list using an HTML select control. 
@@ -587,7 +596,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="htmlAttributes">HTML attributes</param>
 		/// <param name="wrapTags">Wrap HTML select controls with span tags for styling/layout</param>
         /// <returns></returns>
-        public static MvcHtmlString DatePickerDropDowns(this HtmlHelper html,
+        public static IHtmlContent DatePickerDropDowns(this IHtmlHelper html,
             string dayName, string monthName, string yearName,
             int? beginYear = null, int? endYear = null,
             int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null,
@@ -601,10 +610,12 @@ namespace Nop.Web.Framework.Extensions
             monthsList.Attributes.Add("name", monthName);
             yearsList.Attributes.Add("name", yearName);
 
-            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            daysList.MergeAttributes(htmlAttributesDictionary, true);
-            monthsList.MergeAttributes(htmlAttributesDictionary, true);
-            yearsList.MergeAttributes(htmlAttributesDictionary, true);
+#if NET451
+            //var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            //daysList.MergeAttributes(htmlAttributesDictionary, true);
+            //monthsList.MergeAttributes(htmlAttributesDictionary, true);
+            //yearsList.MergeAttributes(htmlAttributesDictionary, true);
+#endif
 
             var days = new StringBuilder();
             var months = new StringBuilder();
@@ -661,26 +672,25 @@ namespace Nop.Web.Framework.Extensions
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
 
-            daysList.InnerHtml = days.ToString();
-            monthsList.InnerHtml = months.ToString();
-            yearsList.InnerHtml = years.ToString();
+            daysList.InnerHtml.AppendHtml(days.ToString());
+            monthsList.InnerHtml.AppendHtml(months.ToString());
+            yearsList.InnerHtml.AppendHtml(years.ToString());
 
             if (wrapTags) 
             {
-                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList + "</span>";
-                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList + "</span>";
-                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList + "</span>";
+                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RequiredTagBuilder() + "</span>";
+                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RequiredTagBuilder() + "</span>";
+                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RequiredTagBuilder() + "</span>";
 
-                return MvcHtmlString.Create(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
+                return new HtmlString(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
             }
             else
             {
-                return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
+                return new HtmlString(string.Concat(daysList.RequiredTagBuilder(), monthsList.RequiredTagBuilder(), yearsList.RequiredTagBuilder()));
             }
 
         }
-        
-#endif
+
 
         public static IHtmlContent Widget(this IHtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
         {

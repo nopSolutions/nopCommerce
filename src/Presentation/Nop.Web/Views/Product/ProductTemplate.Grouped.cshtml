@@ -1,7 +1,9 @@
 ﻿@model ProductDetailsModel
+@using Microsoft.AspNetCore.Http.Extensions
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -13,12 +15,10 @@
     //page class
     Html.AppendPageCssClassParts("html-product-details-page");
 
-    var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
-
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(productUrl);
     }
 
@@ -29,7 +29,7 @@
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
     }
 
@@ -41,7 +41,7 @@
         Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription)) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
     }
 }
 <!--product breadcrumb-->
@@ -53,7 +53,7 @@
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
-        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
+        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, null, new { id = "product-details-form" }))
         {
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
@@ -133,38 +133,38 @@
                                     @Html.Partial("_DownloadSample", variant)
                                     <!--attributes-->
                                     @{
-                                        var dataDictAttributes = new ViewDataDictionary();
+                                        var dataDictAttributes = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
                                         @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                     }
                                     <!--gift card-->
                                     @{
-                                        var dataDictGiftCard = new ViewDataDictionary();
+                                        var dataDictGiftCard = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
                                         @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                     }
                                     <!--rental info-->
                                     @{
-                                        var dataDictRental = new ViewDataDictionary();
+                                        var dataDictRental = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
                                         @Html.Partial("_RentalInfo", variant, dataDictRental)
                                     }
                                     <!--price & add to cart-->
                                     @{
-                                        var dataDictPrice = new ViewDataDictionary();
+                                        var dataDictPrice = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                         @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                     }
                                     <!--price breaks-->
                                     @Html.Partial("_ProductTierPrices", variant.TierPrices)
                                     @{
-                                        var dataDictAddToCart = new ViewDataDictionary();
+                                        var dataDictAddToCart = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                     }
                                     <!--wishlist-->
                                     @{
-                                        var dataDictAddToWishlist = new ViewDataDictionary();
+                                        var dataDictAddToWishlist = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
                                         dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }
@@ -182,8 +182,8 @@
                     @Html.Partial("_ProductTags", Model.ProductTags)
                 </div>
                 @*we do not display "also purchased" for grouped products
-                @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
-                @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
+                @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })*@
+                @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
             </div>
         }
         @Html.Widget("productdetails_bottom", Model.Id)

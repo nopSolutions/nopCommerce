@@ -1,17 +1,22 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+#if NET451
+
 using System.Web;
 using System.Web.Mvc;
+#endif
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -26,6 +31,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
+using Nop.Web.Components;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -35,6 +41,8 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Primitives;
 
 namespace Nop.Web.Controllers
 {
@@ -147,9 +155,8 @@ namespace Nop.Web.Controllers
 #endregion
 
 #region Utilities
-
-        [NonAction]
-        protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
+        
+        protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -184,7 +191,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -211,7 +218,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            var ctrlAttributes = form[controlId];
+                            var ctrlAttributes = form[controlId].ToString();
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
@@ -274,8 +281,7 @@ namespace Nop.Web.Controllers
         /// <param name="form">Form</param>
         /// <param name="errors">Errors</param>
         /// <returns>Parsed attributes</returns>
-        [NonAction]
-        protected virtual string ParseProductAttributes(Product product, FormCollection form, List<string> errors)
+        protected virtual string ParseProductAttributes(Product product, IFormCollection form, List<string> errors)
         {
             string attributesXml = "";
 
@@ -301,7 +307,7 @@ namespace Nop.Web.Controllers
                                     //get quantity entered by customer
                                     var quantity = 1;
                                     var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
-                                    if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                    if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                         errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml, 
@@ -315,7 +321,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in ctrlAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -323,7 +329,7 @@ namespace Nop.Web.Controllers
                                         //get quantity entered by customer
                                         var quantity = 1;
                                         var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)];
-                                        if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                        if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                             errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
@@ -345,7 +351,7 @@ namespace Nop.Web.Controllers
                                 //get quantity entered by customer
                                 var quantity = 1;
                                 var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
-                                if (quantityStr != null && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
@@ -356,7 +362,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            var ctrlAttributes = form[controlId];
+                            var ctrlAttributes = form[controlId].ToString();
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
@@ -420,7 +426,7 @@ namespace Nop.Web.Controllers
                 string senderName = "";
                 string senderEmail = "";
                 string giftCardMessage = "";
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                 {
                     if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", product.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -465,8 +471,7 @@ namespace Nop.Web.Controllers
         /// <param name="form">Form</param>
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">End date</param>
-        [NonAction]
-        protected virtual void ParseRentalDates(Product product, FormCollection form,
+        protected virtual void ParseRentalDates(Product product, IFormCollection form,
             out DateTime? startDate, out DateTime? endDate)
         {
             startDate = null;
@@ -495,7 +500,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
-        public virtual ActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
+        public virtual IActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
             var cartType = (ShoppingCartType)shoppingCartTypeId;
@@ -677,7 +682,9 @@ namespace Nop.Web.Controllers
                         .LimitPerStore(_storeContext.CurrentStore.Id)
                         .ToList()
                         .GetTotalProducts());
-                        
+
+
+                        //TODO temporary solution until we find how to render view components (ToString)
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderPartialViewToString("FlyoutShoppingCart", _shoppingCartModelFactory.PrepareMiniShoppingCartModel())
                             : "";
@@ -696,8 +703,11 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
+#if NET451
+
         [ValidateInput(false)]
-        public virtual ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
+#endif
+        public virtual IActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -721,7 +731,7 @@ namespace Nop.Web.Controllers
 #region Update existing shopping cart item?
 
             int updatecartitemid = 0;
-            foreach (string formKey in form.AllKeys)
+            foreach (string formKey in form.Keys)
                 if (formKey.Equals(string.Format("addtocart_{0}.UpdatedShoppingCartItemId", productId), StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out updatecartitemid);
@@ -762,7 +772,7 @@ namespace Nop.Web.Controllers
             decimal customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
             {
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                 {
                     if (formKey.Equals(string.Format("addtocart_{0}.CustomerEnteredPrice", productId), StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -778,7 +788,7 @@ namespace Nop.Web.Controllers
 #region Quantity
 
             int quantity = 1;
-            foreach (string formKey in form.AllKeys)
+            foreach (string formKey in form.Keys)
                 if (formKey.Equals(string.Format("addtocart_{0}.EnteredQuantity", productId), StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out quantity);
@@ -928,15 +938,22 @@ namespace Nop.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
+#if NET451
+
         [ValidateInput(false)]
-        public virtual ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
-            bool loadPicture, FormCollection form)
+#endif
+        public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
+            bool loadPicture, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
+#if NET451
                 return new NullJsonResult();
+#else
+                return new JsonResult(null);
+#endif
 
-            var errors = new List<string>();
+                var errors = new List<string>();
             string attributeXml = ParseProductAttributes(product, form, errors);
 
             //rental attributes
@@ -1042,6 +1059,7 @@ namespace Nop.Web.Controllers
             });
         }
 
+#if NET451
         [HttpPost]
         [ValidateInput(false)]
         public virtual ActionResult CheckoutAttributeChange(FormCollection form)
@@ -1299,7 +1317,7 @@ namespace Nop.Web.Controllers
                     _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
                 else
                 {
-                    foreach (string formKey in form.AllKeys)
+                    foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
                             int newQuantity;
@@ -1555,7 +1573,7 @@ namespace Nop.Web.Controllers
 
             //get discount identifier
             int discountId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
                     discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
             var discount = _discountService.GetDiscountById(discountId);
@@ -1580,7 +1598,7 @@ namespace Nop.Web.Controllers
 
             //get gift card identifier
             int giftCardId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
                     giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
             var gc = _giftCardService.GetGiftCardById(giftCardId);
@@ -1594,9 +1612,12 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-#endregion
+        
+#endif
+        #endregion
 
-#region Wishlist
+        #region Wishlist
+#if NET451
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Wishlist(Guid? customerGuid)
@@ -1646,7 +1667,7 @@ namespace Nop.Web.Controllers
                     _shoppingCartService.DeleteShoppingCartItem(sci);
                 else
                 {
-                    foreach (string formKey in form.AllKeys)
+                    foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
                             int newQuantity;
@@ -1831,8 +1852,7 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareWishlistEmailAFriendModel(model, true);
             return View(model);
         }
-
-#endregion
+#endif
+        #endregion
     }
 }
-#endif

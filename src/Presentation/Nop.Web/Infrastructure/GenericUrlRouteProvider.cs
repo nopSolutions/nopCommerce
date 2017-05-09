@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Seo;
@@ -18,6 +19,9 @@ namespace Nop.Web.Infrastructure
         /// <param name="routeBuilder">Route builder</param>
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
+            //and default one
+            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
+
             //generic URLs
             routeBuilder.MapGenericPathRoute("GenericUrl", "{generic_se_name}",
                 new { controller = "Common", action = "GenericUrl" });
@@ -46,8 +50,8 @@ namespace Nop.Web.Infrastructure
 
             //the last route. it's used when none of registered routes could be used for the current request
             //but in this case we cannot process non-registered routes (/controller/action)
-            routeBuilder.MapLocalizedRoute("PageNotFound-Wildchar", "{*url}",
-                new { controller = "Common", action = "PageNotFound" });
+            //routeBuilder.MapLocalizedRoute("PageNotFound-Wildchar", "{*url}",
+            //    new { controller = "Common", action = "PageNotFound" });
         }
 
         #endregion

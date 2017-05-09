@@ -36,6 +36,7 @@ namespace Nop.Web.Framework.Mvc.Models
         /// <remarks>Developers can override this method in custom partial classes in order to add some custom model binding</remarks>
         public virtual void BindModel(ModelBindingContext bindingContext)
         {
+            //TODO test why not invoked
         }
 
         /// <summary>

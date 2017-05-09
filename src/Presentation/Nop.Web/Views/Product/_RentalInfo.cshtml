@@ -14,6 +14,8 @@
             const string datePickerFormat = "mm/dd/yy";
             //C# format for ToString method
             const string datePickerFormat2 = "MM/dd/yyyy";
+            bool isMobileDevice = false;
+            //TODO bool isMobileDevice = this.Url.ActionContext.HttpContext.Request.Browser.IsMobileDevice;
             <div class="attribute-item">
                 <div class="attribute-label">
                     <label class="text-prompt">
@@ -22,7 +24,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
@@ -38,7 +40,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
