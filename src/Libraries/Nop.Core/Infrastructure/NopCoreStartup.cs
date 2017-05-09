@@ -52,9 +52,6 @@ namespace Nop.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //get access to HttpContext
-            application.UseStaticHttpContext();
-
             //exception handling
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
             application.UseExceptionHandler(hostingEnvironment.IsDevelopment());

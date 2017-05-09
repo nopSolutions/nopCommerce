@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -34,6 +35,7 @@ namespace Nop.Web.Framework
 
         #region Fields
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CurrencySettings _currencySettings;
         private readonly IAuthenticationService _authenticationService;
         private readonly ICurrencyService _currencyService;
@@ -58,7 +60,8 @@ namespace Nop.Web.Framework
 
         #region Ctor
 
-        public WebWorkContext(CurrencySettings currencySettings,
+        public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
+            CurrencySettings currencySettings,
             IAuthenticationService authenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
@@ -71,6 +74,7 @@ namespace Nop.Web.Framework
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
+            this._httpContextAccessor = httpContextAccessor;
             this._currencySettings = currencySettings;
             this._authenticationService = authenticationService;
             this._currencyService = currencyService;
@@ -95,10 +99,10 @@ namespace Nop.Web.Framework
         /// <returns>String value of cookie</returns>
         protected virtual string GetCustomerCookie()
         {
-            if (HttpContext.Current == null || HttpContext.Current.Request == null)
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
                 return null;
 
-            return HttpContext.Current.Request.Cookies[CUSTOMER_COOKIE_NAME];
+            return _httpContextAccessor.HttpContext.Request.Cookies[CUSTOMER_COOKIE_NAME];
         }
 
         /// <summary>
@@ -107,11 +111,11 @@ namespace Nop.Web.Framework
         /// <param name="customerGuid">Guid of the customer</param>
         protected virtual void SetCustomerCookie(Guid customerGuid)
         {
-            if (HttpContext.Current == null || HttpContext.Current.Response == null)
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
                 return;
 
             //delete current cookie value
-            HttpContext.Current.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(CUSTOMER_COOKIE_NAME);
 
             //get date of cookie expiration
             var cookieExpires = 24 * 365; //TODO make configurable
@@ -127,7 +131,7 @@ namespace Nop.Web.Framework
                 HttpOnly = true,
                 Expires = cookieExpiresDate
             };
-            HttpContext.Current.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(CUSTOMER_COOKIE_NAME, customerGuid.ToString(), options);
         }
 
         /// <summary>
@@ -136,16 +140,16 @@ namespace Nop.Web.Framework
         /// <returns>The found language</returns>
         protected virtual Language GetLanguageFromUrl()
         {
-            if (HttpContext.Current == null || HttpContext.Current.Request == null)
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
                 return null;
 
             //whether the requsted URL is localized
-            var path = HttpContext.Current.Request.Path.Value;
-            if (!path.IsLocalizedUrl(HttpContext.Current.Request.PathBase, false))
+            var path = _httpContextAccessor.HttpContext.Request.Path.Value;
+            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false))
                 return null;
 
             //get language code from the URL
-            var seoCode = path.GetLanguageSeoCodeFromUrl(HttpContext.Current.Request.PathBase, false);
+            var seoCode = path.GetLanguageSeoCodeFromUrl(_httpContextAccessor.HttpContext.Request.PathBase, false);
             if (string.IsNullOrEmpty(seoCode))
                 return null;
 
@@ -166,11 +170,11 @@ namespace Nop.Web.Framework
         /// <returns>The found language</returns>
         protected virtual Language GetLanguageFromRequest()
         {
-            if (HttpContext.Current == null || HttpContext.Current.Request == null)
+            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
                 return null;
 
             //get request culture
-            var requestCulture = HttpContext.Current.Features.Get<IRequestCultureFeature>()?.RequestCulture;
+            var requestCulture = _httpContextAccessor.HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture;
             if (requestCulture == null)
                 return null;
 
@@ -203,7 +207,7 @@ namespace Nop.Web.Framework
                 Customer customer = null;
 
                 //check whether request is made by a background task
-                if (HttpContext.Current == null || HttpContext.Current is FakeHttpContext)
+                if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext is FakeHttpContext)
                 {
                     //in this case return built-in customer record for background task
                     customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);

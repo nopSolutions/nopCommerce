@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Http;
 
 namespace Nop.Core.Caching
@@ -9,6 +10,24 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
+        #region Fields
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Gets a key/value collection that can be used to share data within the scope of this request 
+        /// </summary>
+        public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
+        {
+            this._httpContextAccessor = httpContextAccessor;
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
@@ -16,8 +35,8 @@ namespace Nop.Core.Caching
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
-            if (HttpContext.Current != null)
-                return HttpContext.Current.Items;
+            if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext != null)
+                return _httpContextAccessor.HttpContext.Items;
 
             return null;
         }
