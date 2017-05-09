@@ -38,7 +38,11 @@ namespace Nop.Web.Framework
                     return _cachedStore;
 
                 //try to determine the current store by HOST header
+#if NET451
                 var host = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+#else
+                var host = "";
+#endif
                 var allStores = _storeService.GetAllStores();
                 var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
 
