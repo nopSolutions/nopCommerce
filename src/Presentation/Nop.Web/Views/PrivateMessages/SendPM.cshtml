@@ -20,7 +20,7 @@
             @{
                 var validationSummary = Html.ValidationSummary(true);
             }
-            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
             {
                 <div class="message-error">@validationSummary</div>
             }

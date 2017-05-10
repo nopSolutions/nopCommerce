@@ -551,6 +551,15 @@ namespace Nop.Web.Framework.Extensions
             }
         }
 
+        public static string ToHtmlString(this IHtmlContent tag)
+        {
+            using (var writer = new StringWriter())
+            {
+                tag.WriteTo(writer, HtmlEncoder.Default);
+                return writer.ToString();
+            }
+        }
+
         public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
         {
             // Create tag builder

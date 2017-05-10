@@ -65,7 +65,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -183,7 +183,7 @@
             </div>
         }
     </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager

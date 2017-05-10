@@ -20,7 +20,7 @@
             @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
             {
                 var validationSummary = Html.ValidationSummary(false);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
                 {
                     <div class="message-error">@validationSummary</div>
                 }

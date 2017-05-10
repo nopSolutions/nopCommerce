@@ -26,7 +26,7 @@
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);
-                //TODO if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
                 {
                     <div class="message-error">@validationSummary</div>
                 }

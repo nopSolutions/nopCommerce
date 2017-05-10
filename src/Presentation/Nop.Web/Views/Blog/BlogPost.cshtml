@@ -59,7 +59,7 @@
                     var validationSummary = Html.ValidationSummary(true);
                 }
                 <div class="notifications">
-                    @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
                     {
                         <div class="message-error">@validationSummary</div>
                     }

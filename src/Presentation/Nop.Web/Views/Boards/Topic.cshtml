@@ -93,7 +93,7 @@
             });
         }
         @Html.Widget("boards_topic_top", Model.Id)
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -139,7 +139,7 @@
                 </script>
             }
         </div>
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager lower">
                 @pager

@@ -79,7 +79,7 @@
                     </table>
                 </div>
                 var pager = Html.Pager(Model.PagerModel);
-                if (!MvcHtmlString.IsNullOrEmpty(pager))
+                if (!String.IsNullOrEmpty(pager.ToHtmlString()))
                 {
                     <div class="pager">
                         @pager
