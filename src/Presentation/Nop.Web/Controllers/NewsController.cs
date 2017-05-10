@@ -86,15 +86,6 @@ namespace Nop.Web.Controllers
         
 #region Methods
 
-        public virtual ActionResult HomePageNews()
-        {
-            if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
-                return Content("");
-
-            var model = _newsModelFactory.PrepareHomePageNewsItemsModel();
-            return PartialView(model);
-        }
-
         public virtual ActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)

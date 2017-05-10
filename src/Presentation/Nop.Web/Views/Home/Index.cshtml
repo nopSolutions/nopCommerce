@@ -15,7 +15,7 @@
         @Html.Widget("home_page_before_best_sellers")
         @await Component.InvokeAsync("HomepageBestSellers")
         @Html.Widget("home_page_before_news")
-        @*TODO @Html.Action("HomePageNews", "News")*@
+        @await Component.InvokeAsync("HomepageNews")
         @Html.Widget("home_page_before_poll")
         @await Component.InvokeAsync("HomepagePolls")
         @Html.Widget("home_page_bottom")
