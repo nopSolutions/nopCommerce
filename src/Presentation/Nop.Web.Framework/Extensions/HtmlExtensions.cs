@@ -574,7 +574,7 @@ namespace Nop.Web.Framework.Extensions
         }
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
-            return html.DisplayNameFor(expression);
+            return html.NameFor(expression);
             //TODO remove this method and use in cshtml files
 
             //return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
