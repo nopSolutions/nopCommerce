@@ -1,19 +1,17 @@
-using System;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading;
-using Microsoft.Extensions.Primitives;
+using System.Linq;
 
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a memory cache manager 
     /// </summary>
-    public partial class MemoryCacheManager : IStaticCacheManager
+    public partial class MemoryCacheManager : BaseCacheManager, IStaticCacheManager
     {
         #region Fields
 
         private readonly IMemoryCache _cache;
-        private CancellationTokenSource _cancellationTokenSource;
 
         #endregion
 
@@ -22,7 +20,6 @@ namespace Nop.Core.Caching
         public MemoryCacheManager(IMemoryCache cache)
         {
             _cache = cache;
-            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         #endregion
@@ -48,12 +45,10 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            var options = new MemoryCacheEntryOptions()
-                .AddExpirationToken(new CancellationChangeToken(_cancellationTokenSource.Token));
-            options.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTime);
-
             if (data != null)
-                _cache.Set(key, data, options);
+            {
+                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
+            }
         }
 
         /// <summary>
@@ -63,7 +58,7 @@ namespace Nop.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            return (_cache.TryGetValue(key, out object value));
+            return _cache.TryGetValue(key, out object _);
         }
 
         /// <summary>
@@ -72,7 +67,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
-            _cache.Remove(key);
+            _cache.Remove(RemoveKey(key));
         }
 
         /// <summary>
@@ -81,9 +76,7 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-#if NET451
-            //todo
-#endif
+            this.RemoveByPattern(pattern, _allKeys.Where(p => p.Value).Select(p => p.Key));
         }
 
         /// <summary>
@@ -91,8 +84,13 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
+            //send cancellation request
             _cancellationTokenSource.Cancel();
+
+            //releases all resources used by this cancellation token
             _cancellationTokenSource.Dispose();
+
+            //recreate cancellation token
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
