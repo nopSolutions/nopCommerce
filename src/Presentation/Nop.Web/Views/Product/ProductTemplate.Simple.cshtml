@@ -89,31 +89,31 @@
                         @Html.Partial("_DownloadSample", Model)
                         <!--attributes-->
                         @{
-                            var dataDictAttributes = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                            var dataDictAttributes = new ViewDataDictionary(ViewData);
                             dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
                             @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)
                         }
                         <!--gift card-->
                         @{
-                            var dataDictGiftCard = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                            var dataDictGiftCard = new ViewDataDictionary(ViewData);
                             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
                             @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                         }
                         <!--rental info-->
                         @{
-                            var dataDictRental = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                            var dataDictRental = new ViewDataDictionary(ViewData);
                             dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
                             @Html.Partial("_RentalInfo", Model, dataDictRental)
                         }
                         <!--price & add to cart-->
                         @{
-                            var dataDictPrice = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                            var dataDictPrice = new ViewDataDictionary(ViewData);
                             dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
                             @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
 
                             @Html.Partial("_ProductTierPrices", Model.TierPrices)
 
-                            var dataDictAddToCart = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                            var dataDictAddToCart = new ViewDataDictionary(ViewData);
                             dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)
                         }
@@ -121,7 +121,7 @@
                         <div class="overview-buttons">
                             @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
                             @{
-                                var dataDictAddToWishlist = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                                var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                 dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                                 @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
                             }
