@@ -1152,27 +1152,28 @@ namespace Nop.Web.Controllers
 #endif
 
 #endregion
-
-#if NET451
-#region My account / Addresses
+        
+        #region My account / Addresses
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _customerModelFactory.PrepareCustomerAddressListModel();
             return View(model);
         }
 
         [HttpPost]
+#if NET451
         [PublicAntiForgery]
+#endif
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult AddressDelete(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1197,7 +1198,7 @@ namespace Nop.Web.Controllers
         public virtual ActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = new CustomerAddressEditModel();
             _addressModelFactory.PrepareAddressModel(model.Address,
@@ -1210,11 +1211,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+#if NET451
         [PublicAntiForgery]
-        public virtual ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
+#endif
+        public virtual ActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1257,7 +1260,7 @@ namespace Nop.Web.Controllers
         public virtual ActionResult AddressEdit(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1277,11 +1280,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+#if NET451
         [PublicAntiForgery]
-        public virtual ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
+#endif
+        public virtual ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1318,7 +1323,7 @@ namespace Nop.Web.Controllers
         }
 
 #endregion
-
+#if NET451
 #region My account / Downloadable products
 
         [HttpsRequirement(SslRequirement.Yes)]

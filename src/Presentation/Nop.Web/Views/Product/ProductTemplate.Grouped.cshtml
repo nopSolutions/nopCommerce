@@ -164,7 +164,7 @@
                                     }
                                     <!--wishlist-->
                                     @{
-                                        var dataDictAddToWishlist = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+                                        var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                         dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }

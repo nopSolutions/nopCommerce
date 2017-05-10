@@ -11,7 +11,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Addresses })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 @using (Html.BeginForm())
 {
@@ -31,7 +31,7 @@
                 </div>
             }
             @{
-            var dataDictAddress = new ViewDataDictionary();
+            var dataDictAddress = new ViewDataDictionary(ViewData);
             //Merge ModelState (required for validation)
             dataDictAddress.ModelState.Merge(ViewData.ModelState);
             dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
