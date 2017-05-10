@@ -13,7 +13,7 @@
         @Html.Widget("home_page_before_products")
         @await Component.InvokeAsync("HomepageProducts")
         @Html.Widget("home_page_before_best_sellers")
-        @*TODO @Html.Action("HomepageBestSellers", "Product")*@
+        @await Component.InvokeAsync("HomepageBestSellers")
         @Html.Widget("home_page_before_news")
         @*TODO @Html.Action("HomePageNews", "News")*@
         @Html.Widget("home_page_before_poll")

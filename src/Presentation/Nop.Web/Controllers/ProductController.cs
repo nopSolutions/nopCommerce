@@ -301,40 +301,7 @@ namespace Nop.Web.Controllers
         }
 
 #endregion
-
-#region Home page bestsellers and products
-
-        [ChildActionOnly]
-        public virtual ActionResult HomepageBestSellers(int? productThumbPictureSize)
-        {
-            if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
-                return Content("");
-
-            //load and cache report
-            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
-                () => _orderReportService.BestSellersReport(
-                    storeId: _storeContext.CurrentStore.Id,
-                    pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
-                    .ToList());
-
-
-            //load products
-            var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
-
-            if (!products.Any())
-                return Content("");
-
-            //prepare model
-            var model = _productModelFactory.PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
-            return PartialView(model);
-        }
-
-#endregion
-
+        
 #region Product reviews
 
         [HttpsRequirement(SslRequirement.No)]
