@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
@@ -58,9 +59,7 @@ namespace Nop.Web.Factories
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
-#if NET451
-        private readonly HttpContextBase _httpContext;
-#endif
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -94,9 +93,7 @@ namespace Nop.Web.Factories
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
-#if NET451
-            HttpContextBase httpContext,
-#endif
+            IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
@@ -126,9 +123,7 @@ namespace Nop.Web.Factories
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
-#if NET451
-            this._httpContext = httpContext;
-#endif
+            this._httpContextAccessor = httpContextAccessor;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -1350,24 +1345,9 @@ namespace Nop.Web.Factories
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            var isSearchTermSpecified = false;
-            try
-            {
-#if NET451
-                // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-                isSearchTermSpecified = _httpContext.Request.Params["q"] != null;
-#else
-                isSearchTermSpecified = true;
-#endif
-            }
-            catch
-            {
-                //the "A potentially dangerous Request.QueryString value was detected from the client" exception could be thrown here when some wrong char is specified (e.g. <)
-                //we try to access "Request.Params" directly. that's why we do not re-throw it
-
-                //just ensure that some search term is specified (0 length is not supported inthis case)
-                isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);
-            }
+            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
+            //we don't use "!String.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
+            var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
             {
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
