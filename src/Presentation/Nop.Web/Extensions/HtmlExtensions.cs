@@ -44,11 +44,10 @@ namespace Nop.Web.Extensions
             return new HtmlString(sb.ToString());
         }
 
-#if NET451
         //we have two pagers:
         //The first one can have custom routes
         //The second one just adds query string parameter
-        public static MvcHtmlString Pager<TModel>(this HtmlHelper<TModel> html, PagerModel model)
+        public static IHtmlContent Pager<TModel>(this IHtmlHelper<TModel> html, PagerModel model)
         {
             if (model.TotalRecords == 0)
                 return null;
@@ -174,9 +173,9 @@ namespace Nop.Web.Extensions
             {
                 result = "<ul>" + result + "</ul>";
             }
-            return MvcHtmlString.Create(result);
+            return new HtmlString(result);
         }
-        public static MvcHtmlString ForumTopicSmallPager<TModel>(this HtmlHelper<TModel> html, ForumTopicRowModel model)
+        public static IHtmlContent ForumTopicSmallPager<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
@@ -216,11 +215,10 @@ namespace Nop.Web.Extensions
                 }
 
                 // Inserts the topic page links into the localized string ([Go to page: {0}])
-                return MvcHtmlString.Create(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links.ToString()));
+                return new HtmlString(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
             }
-            return MvcHtmlString.Create(string.Empty);
+            return new HtmlString(string.Empty);
         }
-#endif
         public static Pager Pager(this IHtmlHelper helper, IPageableModel pagination)
         {
             return new Pager(pagination, helper.ViewContext);
