@@ -30,9 +30,6 @@ namespace Nop.Core.Plugins
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static DirectoryInfo _shadowCopyFolder;
-#if NET451
-        private static bool _clearShadowDirectoryOnStartup;
-#endif
 
         #endregion
 
@@ -62,11 +59,7 @@ namespace Nop.Core.Plugins
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
-
-#if NET451
-                _clearShadowDirectoryOnStartup = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]) &&
-                   Convert.ToBoolean(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]);
-#endif
+                
 
                 try
                 {
@@ -79,24 +72,6 @@ namespace Nop.Core.Plugins
 
                     //get list of all files in bin
                     var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
-#if NET451
-                    if (_clearShadowDirectoryOnStartup)
-                    {
-                        //clear out shadow copied plugins
-                        foreach (var f in binFiles)
-                        {
-                            Debug.WriteLine("Deleting " + f.Name);
-                            try
-                            {
-                                File.Delete(f.FullName);
-                            }
-                            catch (Exception exc)
-                            {
-                                Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
-                            }
-                        }
-                    }
-#endif
 
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
