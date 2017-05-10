@@ -2,7 +2,6 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 }
 @{
-    //TODO implement currentCategoryId, currentManufacturerId, currentProductId
     //current category ID
     int currentCategoryId = 0;
     if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
