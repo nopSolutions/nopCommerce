@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-#if NET451
-using System.Web.Mvc;
-#endif
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -29,10 +26,7 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
-#if NET451
-using WebGrease.Css.Extensions;
 
-#endif
 namespace Nop.Web.Factories
 {
     /// <summary>
@@ -396,10 +390,9 @@ namespace Nop.Web.Factories
 
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
-#if NET451
-            customAttributes.ForEach(model.CustomerAttributes.Add);
+            foreach (var attribute in customAttributes)
+                model.CustomerAttributes.Add(attribute);
 
-#endif
             return model;
         }
 
@@ -498,13 +491,11 @@ namespace Nop.Web.Factories
 
                 }
             }
-
-#if NET451
+            
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
-            customAttributes.ForEach(model.CustomerAttributes.Add);
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
+                model.CustomerAttributes.Add(attribute);
 
-#endif
             return model;
         }
 
