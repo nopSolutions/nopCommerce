@@ -78,13 +78,13 @@
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.FirstName)
+                        @Html.LabelFor(model => model.FirstName, new { }, ":")
                         @Html.EditorFor(model => model.FirstName)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.FirstName)
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.LastName)
+                        @Html.LabelFor(model => model.LastName, new { }, ":")
                         @Html.EditorFor(model => model.LastName)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.LastName)
@@ -111,7 +111,7 @@
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Email)
+                        @Html.LabelFor(model => model.Email, new { }, ":")
                         @Html.EditorFor(model => model.Email)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
@@ -119,7 +119,7 @@
                     @if (Model.EnteringEmailTwice)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.ConfirmEmail)
+                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
                             @Html.EditorFor(model => model.ConfirmEmail)
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.ConfirmEmail)
@@ -128,7 +128,7 @@
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Username)
+                            @Html.LabelFor(model => model.Username, new { }, ":")
                             @Html.EditorFor(model => model.Username)
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Username)
@@ -151,7 +151,7 @@
                         @if (Model.CompanyEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Company)
+                                @Html.LabelFor(model => model.Company, new { }, ":")
                                 @Html.EditorFor(model => model.Company)
                                 @if (Model.CompanyRequired)
                                 {
@@ -163,7 +163,7 @@
                         @if (Model.DisplayVatNumber)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.VatNumber)
+                                @Html.LabelFor(model => model.VatNumber, new { }, ":")
                                 @Html.EditorFor(model => model.VatNumber)
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
@@ -182,7 +182,7 @@
                         @if (Model.StreetAddressEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress)
+                                @Html.LabelFor(model => model.StreetAddress, new { }, ":")
                                 @Html.EditorFor(model => model.StreetAddress)
                                 @if (Model.StreetAddressRequired)
                                 {
@@ -194,7 +194,7 @@
                         @if (Model.StreetAddress2Enabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress2)
+                                @Html.LabelFor(model => model.StreetAddress2, new { }, ":")
                                 @Html.EditorFor(model => model.StreetAddress2)
                                 @if (Model.StreetAddress2Required)
                                 {
@@ -206,7 +206,7 @@
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.ZipPostalCode)
+                                @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
                                 @Html.EditorFor(model => model.ZipPostalCode)
                                 @if (Model.ZipPostalCodeRequired)
                                 {
@@ -218,7 +218,7 @@
                         @if (Model.CityEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.City)
+                                @Html.LabelFor(model => model.City, new { }, ":")
                                 @Html.EditorFor(model => model.City)
                                 @if (Model.CityRequired)
                                 {
@@ -230,7 +230,7 @@
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.CountryId)
+                                @Html.LabelFor(model => model.CountryId, new { }, ":")
                                 @Html.DropDownList("CountryId", Model.AvailableCountries)
                                 @if (Model.CountryRequired)
                                 {
@@ -242,7 +242,7 @@
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StateProvinceId)
+                                @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
                                 @Html.DropDownList("StateProvinceId", Model.AvailableStates)
                                 @if (Model.StateProvinceRequired)
                                 {
@@ -265,7 +265,7 @@
                         @if (Model.PhoneEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Phone)
+                                @Html.LabelFor(model => model.Phone, new { }, ":")
                                 @Html.EditorFor(model => model.Phone)
                                 @if (Model.PhoneRequired)
                                 {
@@ -277,7 +277,7 @@
                         @if (Model.FaxEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Fax)
+                                @Html.LabelFor(model => model.Fax, new { }, ":")
                                 @Html.EditorFor(model => model.Fax)
                                 @if (Model.FaxRequired)
                                 {
@@ -299,7 +299,7 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Newsletter)
+                                @Html.LabelFor(model => model.Newsletter, new { }, ":")
                                 @Html.EditorFor(model => model.Newsletter)
                                 @Html.ValidationMessageFor(model => model.Newsletter)
                             </div>
@@ -321,7 +321,7 @@
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.TimeZoneId)
+                                @Html.LabelFor(model => model.TimeZoneId, new { }, ":")
                                 @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
                                 @Html.ValidationMessageFor(model => model.TimeZoneId)
                             </div>
@@ -335,13 +335,13 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Password)
+                        @Html.LabelFor(model => model.Password, new { }, ":")
                         @Html.EditorFor(model => model.Password)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Password)
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.ConfirmPassword)
+                        @Html.LabelFor(model => model.ConfirmPassword, new { }, ":")
                         @Html.EditorFor(model => model.ConfirmPassword)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.ConfirmPassword)

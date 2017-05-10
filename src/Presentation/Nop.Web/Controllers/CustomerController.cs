@@ -858,8 +858,7 @@ namespace Nop.Web.Controllers
 
             return Json(new {Available = usernameAvailable, Text = statusText});
         }
-
-#if NET451
+        
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -891,7 +890,6 @@ namespace Nop.Web.Controllers
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
             return View(model);
         }
-#endif
 #endregion
 
 #region My account / Info
