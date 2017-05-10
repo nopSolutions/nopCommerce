@@ -1,8 +1,10 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
+#if NET451
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
+#endif
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -86,7 +88,7 @@ namespace Nop.Web.Controllers
         
 #region Methods
 
-        public virtual ActionResult List(NewsPagingFilteringModel command)
+        public virtual IActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -95,7 +97,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult ListRss(int languageId)
+#if NET451
+        public virtual IActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
                 string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -117,6 +120,7 @@ namespace Nop.Web.Controllers
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
+#endif
 
         public virtual ActionResult NewsItem(int newsItemId)
         {
@@ -143,10 +147,12 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("NewsItem")]
+#if NET451
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
+#endif
         [ValidateCaptcha]
-        public virtual ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
+        public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -206,9 +212,9 @@ namespace Nop.Web.Controllers
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
-
+#if NET451
         [ChildActionOnly]
-        public virtual ActionResult RssHeaderLink()
+        public virtual IActionResult RssHeaderLink()
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
                 return Content("");
@@ -218,8 +224,7 @@ namespace Nop.Web.Controllers
 
             return Content(link);
         }
-
+#endif
 #endregion
     }
 }
-#endif

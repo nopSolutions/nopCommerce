@@ -51,12 +51,12 @@
                     @Html.AntiForgeryToken()
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { }, ":")
+                            @Html.LabelFor(model => model.AddNewComment.CommentTitle)
                             @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "enter-comment-title" })
                             @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
+                            @Html.LabelFor(model => model.AddNewComment.CommentText)
                             @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
                             @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                         </div>
