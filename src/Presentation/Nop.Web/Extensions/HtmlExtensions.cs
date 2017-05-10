@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Html;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
@@ -17,7 +18,6 @@ namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
-#if NET451
         /// <summary>
         /// BBCode editor
         /// </summary>
@@ -25,7 +25,7 @@ namespace Nop.Web.Extensions
         /// <param name="html">HTML Helper</param>
         /// <param name="name">Name</param>
         /// <returns>Editor</returns>
-        public static MvcHtmlString BBCodeEditor<TModel>(this HtmlHelper<TModel> html, string name)
+        public static IHtmlContent BBCodeEditor<TModel>(this IHtmlHelper<TModel> html, string name)
         {
             var sb = new StringBuilder();
 
@@ -41,9 +41,10 @@ namespace Nop.Web.Extensions
             sb.Append("</script>");
             sb.AppendLine();
 
-            return MvcHtmlString.Create(sb.ToString());
+            return new HtmlString(sb.ToString());
         }
 
+#if NET451
         //we have two pagers:
         //The first one can have custom routes
         //The second one just adds query string parameter
