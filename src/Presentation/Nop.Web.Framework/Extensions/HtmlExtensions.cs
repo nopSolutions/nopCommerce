@@ -707,8 +707,7 @@ namespace Nop.Web.Framework.Extensions
             //TODO implement
             //return ViewComponent("WidgetsByZone", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
-
-#if NET451
+        
         /// <summary>
         /// Renders the standard label with a specified suffix added to label text
         /// </summary>
@@ -719,8 +718,9 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="htmlAttributes">HTML attributes</param>
         /// <param name="suffix">Suffix</param>
         /// <returns>Label</returns>
-        public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
+        public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
         {
+#if NET451
             string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
@@ -740,9 +740,10 @@ namespace Nop.Web.Framework.Extensions
             tag.MergeAttributes(dictionary, true);
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
-        }
-
+#else
+            return html.LabelFor(expression, html);
 #endif
+        }
 
 #endregion
     }

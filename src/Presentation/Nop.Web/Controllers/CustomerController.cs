@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -43,7 +42,7 @@ namespace Nop.Web.Controllers
 {
     public partial class CustomerController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly IAddressModelFactory _addressModelFactory;
         private readonly ICustomerModelFactory _customerModelFactory;
@@ -81,10 +80,10 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
-
-#endregion
-
-#region Ctor
+        
+        #endregion
+        
+        #region Ctor
 
         public CustomerController(IAddressModelFactory addressModelFactory,
             ICustomerModelFactory customerModelFactory,
@@ -400,7 +399,8 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-#if NET451
+        
+        
         #region Password recovery
 
         [HttpsRequirement(SslRequirement.Yes)]
@@ -413,7 +413,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -489,7 +491,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -541,7 +545,6 @@ namespace Nop.Web.Controllers
 
         #endregion
         
-#endif
 
         #region Register
 

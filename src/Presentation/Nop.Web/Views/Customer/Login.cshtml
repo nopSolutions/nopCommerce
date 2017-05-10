@@ -72,7 +72,7 @@
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Username)
+                                @Html.LabelFor(m => m.Username, new { }, ":")
                                 @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
                                 @Html.ValidationMessageFor(m => m.Username)
                             </div>
@@ -80,13 +80,13 @@
                         else
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Email)
+                                @Html.LabelFor(m => m.Email, new { }, ":")
                                 @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
                                 @Html.ValidationMessageFor(m => m.Email)
                             </div>
                         }
                         <div class="inputs">
-                            @Html.LabelFor(m => m.Password)
+                            @Html.LabelFor(m => m.Password, new { }, ":")
                             @Html.PasswordFor(m => m.Password, new { @class = "password" })
                             @Html.ValidationMessageFor(m => m.Password)
                         </div>

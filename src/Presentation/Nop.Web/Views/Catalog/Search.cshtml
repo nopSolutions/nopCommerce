@@ -38,7 +38,7 @@
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
-                                @Html.LabelFor(model => model.q)
+                                @Html.LabelFor(model => model.q, new { }, ":")
                                 @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
                             </div>
                             @Html.Widget("productsearch_page_basic")
@@ -51,7 +51,7 @@
                             @if (Model.AvailableCategories.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.cid)
+                                    @Html.LabelFor(model => model.cid, new { }, ":")
                                     @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
                                 </div>
                                 <div class="inputs reversed">
@@ -62,14 +62,14 @@
                             @if (Model.AvailableManufacturers.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.mid)
+                                    @Html.LabelFor(model => model.mid, new { }, ":")
                                     @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
                                 </div>
                             }
                             @if (Model.asv && Model.AvailableVendors.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.vid)
+                                    @Html.LabelFor(model => model.vid, new { }, ":")
                                     @Html.DropDownListFor(model => model.vid, Model.AvailableVendors)
                                 </div>
                             }

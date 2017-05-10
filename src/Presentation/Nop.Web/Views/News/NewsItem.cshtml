@@ -56,7 +56,7 @@
                             @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentText)
+                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
                             @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
                             @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                         </div>
