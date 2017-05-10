@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Seo
 #if NET451
             var slug = currentRouteData.Values["generic_se_name"] as string;
 #else
-            //TODO temporary solution until we can get currentRouteData.Values
+            //temporary solution until we can get currentRouteData.Values
             string path = context.HttpContext.Request.Path.Value;
             if (!string.IsNullOrEmpty(path) && path[0] == '/')
                 path = path.Substring(1);

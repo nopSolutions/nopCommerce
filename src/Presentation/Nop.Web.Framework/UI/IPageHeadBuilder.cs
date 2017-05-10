@@ -1,8 +1,4 @@
-﻿#if NET451
-using System.Web.Mvc;
-#endif
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Web.Framework.UI
 {
