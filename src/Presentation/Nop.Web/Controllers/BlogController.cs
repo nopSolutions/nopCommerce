@@ -1,8 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
+#if NET451
 using System.ServiceModel.Syndication;
-using System.Web.Mvc;
+#endif
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
@@ -45,9 +46,9 @@ namespace Nop.Web.Controllers
         private readonly BlogSettings _blogSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-
+        
 #endregion
-
+        
 #region Constructors
 
         public BlogController(IBlogService blogService,
@@ -81,12 +82,12 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
         }
-
+        
 #endregion
-
+        
 #region Methods
 
-        public virtual ActionResult List(BlogPagingFilteringModel command)
+        public virtual IActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -94,7 +95,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual ActionResult BlogByTag(BlogPagingFilteringModel command)
+        public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -102,7 +103,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-        public virtual ActionResult BlogByMonth(BlogPagingFilteringModel command)
+        public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -110,6 +111,7 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
+#if NET451
 
         public virtual ActionResult ListRss(int languageId)
         {
@@ -133,8 +135,8 @@ namespace Nop.Web.Controllers
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-
-        public virtual ActionResult BlogPost(int blogPostId)
+#endif
+        public virtual IActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -160,10 +162,12 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("BlogPost")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
-        public virtual ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
+        public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -221,28 +225,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+
+#if NET451
         [ChildActionOnly]
-        public virtual ActionResult BlogTags()
-        {
-            if (!_blogSettings.Enabled)
-                return Content("");
-
-            var model = _blogModelFactory.PrepareBlogPostTagListModel();
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public virtual ActionResult BlogMonths()
-        {
-            if (!_blogSettings.Enabled)
-                return Content("");
-
-            var model = _blogModelFactory.PrepareBlogPostYearModel();
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public virtual ActionResult RssHeaderLink()
+        public virtual IActionResult RssHeaderLink()
         {
             if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
                 return Content("");
@@ -251,8 +237,8 @@ namespace Nop.Web.Controllers
                 Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
             return Content(link);
-        }
-#endregion
+    }
+#endif
+        #endregion
     }
 }
-#endif
