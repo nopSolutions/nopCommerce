@@ -1321,16 +1321,16 @@ namespace Nop.Web.Controllers
                 overrideAttributesXml: customAttributes);
             return View(model);
         }
-
-#endregion
-#if NET451
-#region My account / Downloadable products
+        
+        #endregion
+        
+        #region My account / Downloadable products
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
@@ -1352,16 +1352,16 @@ namespace Nop.Web.Controllers
             var model = _customerModelFactory.PrepareUserAgreementModel(orderItem, product);
             return View(model);
         }
-
-#endregion
-
-#region My account / Change password
+        
+        #endregion
+        
+        #region My account / Change password
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _customerModelFactory.PrepareChangePasswordModel();
 
@@ -1373,11 +1373,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+#if NET451
         [PublicAntiForgery]
+#endif
         public virtual ActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1402,9 +1404,10 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-#endregion
+        #endregion
 
-#region My account / Avatar
+#if NET451
+        #region My account / Avatar
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Avatar()
