@@ -1,5 +1,7 @@
 ﻿@model RegisterModel
-@using Nop.Web.Models.Customer;
+@using System.Text.Encodings.Web
+@using Nop.Web.Framework.Security.Honeypot
+@using Nop.Web.Models.Customer
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -53,7 +55,7 @@
             {
                 <div class="message-error">@validationSummary</div>
             }
-            @Html.Partial("_ExternalAuthentication.AssociateMessage")
+            @*TODO @Html.Partial("_ExternalAuthentication.AssociateMessage")*@
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -76,13 +78,13 @@
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.FirstName, new { }, ":")
+                        @Html.LabelFor(model => model.FirstName)
                         @Html.EditorFor(model => model.FirstName)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.FirstName)
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.LastName, new { }, ":")
+                        @Html.LabelFor(model => model.LastName)
                         @Html.EditorFor(model => model.LastName)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.LastName)
@@ -109,7 +111,7 @@
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Email, new { }, ":")
+                        @Html.LabelFor(model => model.Email)
                         @Html.EditorFor(model => model.Email)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Email)
@@ -117,7 +119,7 @@
                     @if (Model.EnteringEmailTwice)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
+                            @Html.LabelFor(model => model.ConfirmEmail)
                             @Html.EditorFor(model => model.ConfirmEmail)
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.ConfirmEmail)
@@ -126,7 +128,7 @@
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Username, new { }, ":")
+                            @Html.LabelFor(model => model.Username)
                             @Html.EditorFor(model => model.Username)
                             @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Username)
@@ -149,7 +151,7 @@
                         @if (Model.CompanyEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Company, new { }, ":")
+                                @Html.LabelFor(model => model.Company)
                                 @Html.EditorFor(model => model.Company)
                                 @if (Model.CompanyRequired)
                                 {
@@ -161,7 +163,7 @@
                         @if (Model.DisplayVatNumber)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.VatNumber, new { }, ":")
+                                @Html.LabelFor(model => model.VatNumber)
                                 @Html.EditorFor(model => model.VatNumber)
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
@@ -180,7 +182,7 @@
                         @if (Model.StreetAddressEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress, new { }, ":")
+                                @Html.LabelFor(model => model.StreetAddress)
                                 @Html.EditorFor(model => model.StreetAddress)
                                 @if (Model.StreetAddressRequired)
                                 {
@@ -192,7 +194,7 @@
                         @if (Model.StreetAddress2Enabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress2, new { }, ":")
+                                @Html.LabelFor(model => model.StreetAddress2)
                                 @Html.EditorFor(model => model.StreetAddress2)
                                 @if (Model.StreetAddress2Required)
                                 {
@@ -204,7 +206,7 @@
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
+                                @Html.LabelFor(model => model.ZipPostalCode)
                                 @Html.EditorFor(model => model.ZipPostalCode)
                                 @if (Model.ZipPostalCodeRequired)
                                 {
@@ -216,7 +218,7 @@
                         @if (Model.CityEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.City, new { }, ":")
+                                @Html.LabelFor(model => model.City)
                                 @Html.EditorFor(model => model.City)
                                 @if (Model.CityRequired)
                                 {
@@ -228,7 +230,7 @@
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.CountryId, new { }, ":")
+                                @Html.LabelFor(model => model.CountryId)
                                 @Html.DropDownList("CountryId", Model.AvailableCountries)
                                 @if (Model.CountryRequired)
                                 {
@@ -240,7 +242,7 @@
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
+                                @Html.LabelFor(model => model.StateProvinceId)
                                 @Html.DropDownList("StateProvinceId", Model.AvailableStates)
                                 @if (Model.StateProvinceRequired)
                                 {
@@ -263,7 +265,7 @@
                         @if (Model.PhoneEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Phone, new { }, ":")
+                                @Html.LabelFor(model => model.Phone)
                                 @Html.EditorFor(model => model.Phone)
                                 @if (Model.PhoneRequired)
                                 {
@@ -275,7 +277,7 @@
                         @if (Model.FaxEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Fax, new { }, ":")
+                                @Html.LabelFor(model => model.Fax)
                                 @Html.EditorFor(model => model.Fax)
                                 @if (Model.FaxRequired)
                                 {
@@ -297,7 +299,7 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Newsletter, new { }, ":")
+                                @Html.LabelFor(model => model.Newsletter)
                                 @Html.EditorFor(model => model.Newsletter)
                                 @Html.ValidationMessageFor(model => model.Newsletter)
                             </div>
@@ -319,7 +321,7 @@
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.TimeZoneId, new { }, ":")
+                                @Html.LabelFor(model => model.TimeZoneId)
                                 @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
                                 @Html.ValidationMessageFor(model => model.TimeZoneId)
                             </div>
@@ -333,13 +335,13 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Password, new { }, ":")
+                        @Html.LabelFor(model => model.Password)
                         @Html.EditorFor(model => model.Password)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.Password)
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.ConfirmPassword, new { }, ":")
+                        @Html.LabelFor(model => model.ConfirmPassword)
                         @Html.EditorFor(model => model.ConfirmPassword)
                         @Html.RequiredHint()
                         @Html.ValidationMessageFor(model => model.ConfirmPassword)
@@ -367,7 +369,7 @@
                             }
                             else {
                                 //just show validation errors, dont post
-                                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
                                 return false;
                             }
                         });
@@ -389,9 +391,9 @@
             <div class="buttons">
                 <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
             </div>
-            <div class="external-authentication">
+            @*TODO <div class="external-authentication">
                 @Html.Action("ExternalMethods", "ExternalAuthentication")
-            </div>
+            </div>*@
         </div>
     </div>
 }

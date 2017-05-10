@@ -55,10 +55,10 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
-
-#endregion
-
-#region Constructors
+        
+        #endregion
+        
+        #region Constructors
 
         public CommonController(ICommonModelFactory commonModelFactory,
             ILanguageService languageService,
@@ -107,14 +107,16 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Methods
-#if NET451
+        
+        
+        #if NET451
         //error page
         public virtual IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");
         }
-        
-#endif
+        #endif
+
         //page not found
         public virtual ActionResult PageNotFound()
         {
@@ -382,6 +384,6 @@ namespace Nop.Web.Controllers
             return View();
         }
         
-#endregion
+        #endregion
     }
 }

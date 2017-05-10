@@ -1,8 +1,11 @@
 ﻿
 using System;
 using System.Linq;
+using System.Net;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -156,11 +159,10 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
         }
 
-#endregion
+        #endregion
 
-#region Utilities
+        #region Utilities
 #if NET451
-        [NonAction]
         protected virtual void TryAssociateAccountWithExternalAccount(Customer customer)
         {
             var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
@@ -172,9 +174,8 @@ namespace Nop.Web.Controllers
 
             _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
         }
-
-        [NonAction]
-        protected virtual string ParseCustomCustomerAttributes(FormCollection form)
+#endif
+        protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
@@ -190,7 +191,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.RadioList:
                     {
                         var ctrlAttributes = form[controlId];
-                        if (!String.IsNullOrEmpty(ctrlAttributes))
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
                             int selectedAttributeId = int.Parse(ctrlAttributes);
                             if (selectedAttributeId > 0)
@@ -202,9 +203,9 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.Checkboxes:
                     {
                         var cblAttributes = form[controlId];
-                        if (!String.IsNullOrEmpty(cblAttributes))
+                        if (!StringValues.IsNullOrEmpty(cblAttributes))
                         {
-                            foreach (var item in cblAttributes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            foreach (var item in cblAttributes.ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                             )
                             {
                                 int selectedAttributeId = int.Parse(item);
@@ -235,7 +236,7 @@ namespace Nop.Web.Controllers
                         var ctrlAttributes = form[controlId];
                         if (!String.IsNullOrEmpty(ctrlAttributes))
                         {
-                            string enteredText = ctrlAttributes.Trim();
+                            string enteredText = ctrlAttributes.ToString().Trim();
                             attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                 attribute, enteredText);
                         }
@@ -253,11 +254,10 @@ namespace Nop.Web.Controllers
 
             return attributesXml;
         }
-#endif
-#endregion
-        
+        #endregion
 
-#region Login / logout
+
+        #region Login / logout
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
@@ -399,9 +399,9 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-#endregion
+        #endregion
 #if NET451
-#region Password recovery
+        #region Password recovery
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
@@ -539,9 +539,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-#endregion
+        #endregion
+        
+#endif
 
-#region Register
+        #region Register
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
@@ -561,10 +563,12 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [ValidateCaptcha]
         [ValidateHoneypot]
+#if NET451
         [PublicAntiForgery]
+#endif
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, FormCollection form)
+        public virtual ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -708,8 +712,10 @@ namespace Nop.Web.Controllers
                     if (isApproved)
                         _authenticationService.SignIn(customer, true);
 
+#if NET451
                     //associated with external account (if possible)
                     TryAssociateAccountWithExternalAccount(customer);
+#endif
 
                     //insert default address (if possible)
                     var defaultAddress = new Address
@@ -778,7 +784,7 @@ namespace Nop.Web.Controllers
 
                             var redirectUrl = Url.RouteUrl("RegisterResult", new {resultId = (int) UserRegistrationType.Standard});
                             if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + HttpUtility.UrlEncode(returnUrl), null);
+                                redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
                             return Redirect(redirectUrl);
                         }
                         default:
@@ -818,7 +824,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+#if NET451
         [PublicAntiForgery]
+#endif
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual ActionResult CheckUsernameAvailability(string username)
@@ -848,6 +856,7 @@ namespace Nop.Web.Controllers
             return Json(new {Available = usernameAvailable, Text = statusText});
         }
 
+#if NET451
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -879,9 +888,10 @@ namespace Nop.Web.Controllers
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
             return View(model);
         }
-
+#endif
 #endregion
 
+#if NET451
 #region My account / Info
 
         [ChildActionOnly]
