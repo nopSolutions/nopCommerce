@@ -1,8 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Text;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 
@@ -10,7 +9,7 @@ namespace Nop.Web.Framework.Security.Honeypot
 {
     public static class HtmlExtensions
     {
-        public static MvcHtmlString GenerateHoneypotInput(this HtmlHelper helper)
+        public static IHtmlContent GenerateHoneypotInput(this IHtmlHelper helper)
         {
             var sb = new StringBuilder();
 
@@ -18,18 +17,12 @@ namespace Nop.Web.Framework.Security.Honeypot
             sb.Append(Environment.NewLine);
 
             var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
-            var hpInput = helper.TextBox(securitySettings.HoneypotInputName);
-            sb.Append(hpInput.ToString());
+            sb.AppendFormat("<input id=\"{0}\" name=\"{0}\" type=\"text\">", securitySettings.HoneypotInputName);
 
             sb.Append(Environment.NewLine);
             sb.Append("</div>");
 
-            return MvcHtmlString.Create(sb.ToString());
-
-            //var hpInput = helper.TextBox(securitySettings.HoneypotInputName, "", new { @class = "hp" });
-            //var hpInput = helper.Hidden(securitySettings.HoneypotInputName);
-            //return hpInput;
+            return new HtmlString(sb.ToString());
         }
     }
 }
-#endif
