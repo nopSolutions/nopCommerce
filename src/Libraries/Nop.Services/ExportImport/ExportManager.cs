@@ -324,7 +324,6 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<ExportProductAttribute>("AttributeName", p => p.AttributeName),
                 new PropertyByName<ExportProductAttribute>("AttributeTextPrompt", p => p.AttributeTextPrompt),
                 new PropertyByName<ExportProductAttribute>("AttributeIsRequired", p => p.AttributeIsRequired),
-#if NET451
                 new PropertyByName<ExportProductAttribute>("AttributeControlType", p => p.AttributeControlTypeId)
                 {
                     DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
@@ -336,7 +335,6 @@ namespace Nop.Services.ExportImport
                 {
                     DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                 },
-#endif
                 new PropertyByName<ExportProductAttribute>("AssociatedProductId", p => p.AssociatedProductId),
                 new PropertyByName<ExportProductAttribute>("ColorSquaresRgb", p => p.ColorSquaresRgb),
                 new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId", p => p.ImageSquaresPictureId),
@@ -976,7 +974,6 @@ namespace Nop.Services.ExportImport
         {
             var properties = new[]
             {
-#if NET451
                 new PropertyByName<Product>("ProductType", p => p.ProductTypeId, IgnoreExportPoductProperty(p => p.ProductType))
                 {
                     DropDownElements = ProductType.SimpleProduct.ToSelectList(useLocalization: false)
@@ -1113,7 +1110,6 @@ namespace Nop.Services.ExportImport
                     DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)),
                     AllowBlank = true
                 },
-#endif
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew, IgnoreExportPoductProperty(p => p.MarkAsNew)),
                 new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewStartDate)),
                 new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc, IgnoreExportPoductProperty(p => p.MarkAsNewEndDate)),

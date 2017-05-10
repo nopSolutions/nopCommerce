@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -35,9 +36,6 @@ namespace Nop.Services.Messages
         private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
-#if NET451
-        private readonly HttpContextBase _httpContext;
-#endif
 
         #endregion
 
@@ -54,9 +52,6 @@ namespace Nop.Services.Messages
             CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
             IEventPublisher eventPublisher)
-#if NET451
-            ,HttpContextBase httpContext)
-#endif
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -69,9 +64,6 @@ namespace Nop.Services.Messages
             this._commonSettings = commonSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._eventPublisher = eventPublisher;
-#if NET451
-            this._httpContext = httpContext;
-#endif
         }
 
         #endregion
@@ -1734,13 +1726,8 @@ namespace Nop.Services.Messages
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-#if NET451
                 body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    _httpContext.Server.HtmlEncode(senderName), _httpContext.Server.HtmlEncode(senderEmail), body);
-#else
-                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    senderName, senderEmail, body);
-#endif
+                    WebUtility.HtmlEncode(senderName), WebUtility.HtmlEncode(senderEmail), body);
             }
             else
             {
@@ -1802,13 +1789,8 @@ namespace Nop.Services.Messages
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-#if NET451
                 body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    _httpContext.Server.HtmlEncode(senderName), _httpContext.Server.HtmlEncode(senderEmail), body);
-#else
-                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    senderName, senderEmail, body);
-#endif
+                    WebUtility.HtmlEncode(senderName), WebUtility.HtmlEncode(senderEmail), body);
             }
             else
             {

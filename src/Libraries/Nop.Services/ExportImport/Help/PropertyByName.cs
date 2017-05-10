@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.Extensions;
 
 namespace Nop.Services.ExportImport.Help
 {
@@ -161,47 +160,29 @@ namespace Nop.Services.ExportImport.Help
 
         public bool IsDropDownCell
         {
-#if NET451
             get { return DropDownElements != null; }
-#else
-            get { return false; }
-#endif
 
         }
 
         public string[] GetDropDownElements()
         {
-#if NET451
             return  IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : new string[0];
-#else
-            return new string[0];
-#endif
         }
 
         public string GetItemText(object id)
         {
-#if NET451
             return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString()).Return(ev => ev.Text, String.Empty);
-#else
-            return string.Empty;
-#endif
         }
 
         public int GetItemId(object name)
         {
-#if NET451
             return DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
-#else
-            return 0;
-#endif
         }
-
-#if NET451
+        
         /// <summary>
         /// Elements for a drop-down cell
         /// </summary>
         public SelectList DropDownElements { get; set; }
-#endif
 
         /// <summary>
         /// Indicates whether the cell can contain an empty value. Makes sense only for a drop-down cells

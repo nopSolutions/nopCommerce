@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -23,9 +24,7 @@ namespace Nop.Services.Common
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
-#if NET451
-        private readonly HttpContextBase _httpContext;
-#endif
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -37,19 +36,14 @@ namespace Nop.Services.Common
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="httpContext">HTTP context</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         public MaintenanceService(IDataProvider dataProvider, IDbContext dbContext,
-            CommonSettings commonSettings)
-#if NET451
-            ,HttpContextBase httpContext)
-#endif
+            CommonSettings commonSettings, IHostingEnvironment hostingEnvironment)
         {
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
-#if NET451
-        this._httpContext = httpContext;
-#endif
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -58,11 +52,7 @@ namespace Nop.Services.Common
 
         protected virtual string GetBackupDirectoryPath()
         {
-#if NET451
             return string.Format("{0}Administration\\db_backups\\", _hostingEnvironment.WebRootPath);
-#else
-            return string.Format("{0}Administration\\db_backups\\", string.Empty);
-#endif
         }
 
         protected virtual void CheckBackupSupported()

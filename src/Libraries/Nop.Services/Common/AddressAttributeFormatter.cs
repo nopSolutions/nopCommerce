@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Web;
 using Nop.Core;
@@ -56,10 +57,8 @@ namespace Nop.Services.Common
                             //multiline textbox
                             var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
-#if NET451
                             if (htmlEncode)
-                                attributeName = HttpUtility.HtmlEncode(attributeName);
-#endif
+                                attributeName = WebUtility.HtmlEncode(attributeName);
                             formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
@@ -73,10 +72,8 @@ namespace Nop.Services.Common
                             //other attributes (textbox, datepicker)
                             formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             //encode (if required)
-#if NET451
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
-#endif
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
                     else
@@ -90,10 +87,8 @@ namespace Nop.Services.Common
                                 formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                             }
                             //encode (if required)
-#if NET451
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
-#endif
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 

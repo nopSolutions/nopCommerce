@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-#if NET451
-using System.Web.WebPages;
-#endif
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -346,21 +343,17 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("AttributeName"),
                         new PropertyByName<ExportProductAttribute>("AttributeTextPrompt"),
                         new PropertyByName<ExportProductAttribute>("AttributeIsRequired"),
-#if NET451
                         new PropertyByName<ExportProductAttribute>("AttributeControlType")
                         {
                             DropDownElements = AttributeControlType.TextBox.ToSelectList(useLocalization: false)
                         },
-#endif
                         new PropertyByName<ExportProductAttribute>("AttributeDisplayOrder"), 
                         new PropertyByName<ExportProductAttribute>("ProductAttributeValueId"),
                         new PropertyByName<ExportProductAttribute>("ValueName"),
-#if NET451
                         new PropertyByName<ExportProductAttribute>("AttributeValueType")
                         {
                             DropDownElements = AttributeValueType.Simple.ToSelectList(useLocalization: false)
                         },
-#endif
                         new PropertyByName<ExportProductAttribute>("AssociatedProductId"),
                         new PropertyByName<ExportProductAttribute>("ColorSquaresRgb"),
                         new PropertyByName<ExportProductAttribute>("ImageSquaresPictureId"),
@@ -390,7 +383,6 @@ namespace Nop.Services.ExportImport
                 tempProperty = manager.GetProperty("Manufacturers");
                 var manufacturerCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
 
-#if NET451
                 manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList(useLocalization: false));
                 manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList(useLocalization: false));
                 manager.SetSelectList("DownloadActivationType", DownloadActivationType.Manually.ToSelectList(useLocalization: false));
@@ -408,7 +400,6 @@ namespace Nop.Services.ExportImport
                 manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
 
-#endif
                 var allAttributeIds = new List<int>();
                 var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
 
