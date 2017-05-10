@@ -149,8 +149,8 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("NewsItem")]
 #if NET451
         [PublicAntiForgery]
-        [FormValueRequired("add-comment")]
 #endif
+        [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
