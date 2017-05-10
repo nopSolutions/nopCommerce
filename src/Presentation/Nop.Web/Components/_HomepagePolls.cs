@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Catalog;
-using Nop.Services.Catalog;
-using Nop.Services.Security;
-using Nop.Services.Stores;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using System.Linq;
 using System.Threading.Tasks;
-using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Components
 {
-    public class HomePagePollsViewComponent : ViewComponent
+    public class HomepagePollsViewComponent : ViewComponent
     {
         private readonly IPollModelFactory _pollModelFactory;
 
-        public HomePagePollsViewComponent(IPollModelFactory pollModelFactory)
+        public HomepagePollsViewComponent(IPollModelFactory pollModelFactory)
         {
             this._pollModelFactory = pollModelFactory;
         }
