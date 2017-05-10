@@ -6,14 +6,14 @@
     </div>
     <div class="listbox">
         <ul class="list">
-            @Html.Widget("account_navigation_before")
+            @Html.Widget("account_navigation_before", Model.SelectedTab)
             @foreach (var item in Model.CustomerNavigationItems)
             {
                 <li class="@item.ItemClass">
                     <a href="@Url.RouteUrl(item.RouteName)" class="@(Model.SelectedTab == item.Tab ? "active" : "inactive")">@(item.Title)</a>
                 </li>
             }
-            @Html.Widget("account_navigation_after")
+            @Html.Widget("account_navigation_after", Model.SelectedTab)
         </ul>
     </div>
 </div>
