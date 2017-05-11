@@ -490,7 +490,6 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-#if NET451
         #region Email a friend
 
         [HttpsRequirement(SslRequirement.No)]
@@ -506,7 +505,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductEmailAFriend")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
@@ -546,7 +547,7 @@ namespace Nop.Web.Controllers
             model = _productModelFactory.PrepareProductEmailAFriendModel(model, product, true);
             return View(model);
         }
-        
+
         #endregion
         
         #region Comparing products
@@ -634,7 +635,5 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-
-#endif
     }
 }

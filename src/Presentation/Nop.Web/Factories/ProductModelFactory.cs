@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
@@ -1539,14 +1540,12 @@ namespace Nop.Web.Factories
 
                     switch (psa.AttributeType)
                     {
-#if NET451
                         case SpecificationAttributeType.Option:
-                            m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
+                            m.ValueRaw = WebUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
+                            m.ValueRaw = WebUtility.HtmlEncode(psa.CustomValue);
                             break;
-#endif
                         case SpecificationAttributeType.CustomHtmlText:
                             m.ValueRaw = psa.CustomValue;
                             break;
