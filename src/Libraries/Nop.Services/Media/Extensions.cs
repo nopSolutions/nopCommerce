@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Catalog;
@@ -13,36 +15,32 @@ namespace Nop.Services.Media
     /// </summary>
     public static class Extensions
     {
-#if NET451
         /// <summary>
         /// Gets the download binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">File</param>
         /// <returns>Download binary array</returns>
-        public static byte[] GetDownloadBits(this HttpPostedFileBase postedFile)
+        public static byte[] GetDownloadBits(this IFormFile file)
         {
-            Stream fs = postedFile.InputStream;
-            int size = postedFile.ContentLength;
-            var binary = new byte[size];
-            fs.Read(binary, 0, size);
-            return binary;
+            using (var fileStream = file.OpenReadStream())
+            using (var ms = new MemoryStream())
+            {
+                fileStream.CopyTo(ms);
+                var fileBytes = ms.ToArray();
+                return fileBytes;
+            }
         }
 
         /// <summary>
         /// Gets the picture binary array
         /// </summary>
-        /// <param name="postedFile">Posted file</param>
+        /// <param name="file">File</param>
         /// <returns>Picture binary array</returns>
-        public static byte[] GetPictureBits(this HttpPostedFileBase postedFile)
+        public static byte[] GetPictureBits(this IFormFile file)
         {
-            Stream fs = postedFile.InputStream;
-            int size = postedFile.ContentLength;
-            var img = new byte[size];
-            fs.Read(img, 0, size);
-            return img;
+            return GetDownloadBits(file);
         }
 
-#endif
         /// <summary>
         /// Get product picture (for shopping cart and order details pages)
         /// </summary>

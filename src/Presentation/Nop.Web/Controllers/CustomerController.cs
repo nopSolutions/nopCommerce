@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -1405,15 +1406,14 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-
-#if NET451
+        
         #region My account / Avatar
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1424,12 +1424,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("upload-avatar")]
-        public virtual ActionResult UploadAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
+        public virtual ActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1441,10 +1443,10 @@ namespace Nop.Web.Controllers
                 try
                 {
                     var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
-                    if ((uploadedFile != null) && (!String.IsNullOrEmpty(uploadedFile.FileName)))
+                    if (uploadedFile != null && !String.IsNullOrEmpty(uploadedFile.FileName))
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
-                        if (uploadedFile.ContentLength > avatarMaxSize)
+                        if (uploadedFile.Length > avatarMaxSize)
                             throw new NopException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
 
                         byte[] customerPictureBinary = uploadedFile.GetPictureBits();
@@ -1479,12 +1481,15 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
+
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("remove-avatar")]
-        public virtual ActionResult RemoveAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
+        public virtual ActionResult RemoveAvatar(CustomerAvatarModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1500,7 +1505,6 @@ namespace Nop.Web.Controllers
         }
 
 #endregion
-
-#endif
+        
     }
 }
