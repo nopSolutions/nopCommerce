@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
 
         #region Methods (common)
 
-        public virtual ActionResult Index()
+        public virtual IActionResult Index()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -210,7 +210,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        public virtual ActionResult Completed(int? orderId)
+        public virtual IActionResult Completed(int? orderId)
         {
             //validation
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
@@ -248,7 +248,7 @@ namespace Nop.Web.Controllers
 
         #region Methods (multistep checkout)
 
-        public virtual ActionResult BillingAddress(IFormCollection form)
+        public virtual IActionResult BillingAddress(IFormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -284,7 +284,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult SelectBillingAddress(int addressId, bool shipToSameAddress = false)
+        public virtual IActionResult SelectBillingAddress(int addressId, bool shipToSameAddress = false)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual ActionResult NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
+        public virtual IActionResult NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -387,7 +387,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult ShippingAddress()
+        public virtual IActionResult ShippingAddress()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult SelectShippingAddress(int addressId)
+        public virtual IActionResult SelectShippingAddress(int addressId)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -435,7 +435,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual ActionResult NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
+        public virtual IActionResult NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -535,7 +535,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        public virtual ActionResult ShippingMethod()
+        public virtual IActionResult ShippingMethod()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -577,7 +577,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
-        public virtual ActionResult SelectShippingMethod(string shippingoption)
+        public virtual IActionResult SelectShippingMethod(string shippingoption)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -636,7 +636,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutPaymentMethod");
         }
         
-        public virtual ActionResult PaymentMethod()
+        public virtual IActionResult PaymentMethod()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -692,7 +692,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
-        public virtual ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
+        public virtual IActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -742,7 +742,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutPaymentInfo");
         }
 
-        public virtual ActionResult PaymentInfo()
+        public virtual IActionResult PaymentInfo()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -793,7 +793,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("PaymentInfo")]
         [FormValueRequired("nextstep")]
-        public virtual ActionResult EnterPaymentInfo(IFormCollection form)
+        public virtual IActionResult EnterPaymentInfo(IFormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -847,7 +847,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        public virtual ActionResult Confirm()
+        public virtual IActionResult Confirm()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -869,7 +869,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Confirm")]
-        public virtual ActionResult ConfirmOrder()
+        public virtual IActionResult ConfirmOrder()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1089,7 +1089,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public virtual ActionResult OnePageCheckout()
+        public virtual IActionResult OnePageCheckout()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1111,7 +1111,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public virtual ActionResult OpcBillingForm()
+        public virtual IActionResult OpcBillingForm()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1123,7 +1123,7 @@ namespace Nop.Web.Controllers
             return PartialView("OpcBillingAddress", billingAddressModel);
         }
 
-        public virtual ActionResult OpcSaveBilling(IFormCollection form)
+        public virtual IActionResult OpcSaveBilling(IFormCollection form)
         {
             try
             {
@@ -1266,7 +1266,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcSaveShipping(IFormCollection form)
+        public virtual IActionResult OpcSaveShipping(IFormCollection form)
         {
             try
             {
@@ -1411,7 +1411,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcSaveShippingMethod(IFormCollection form)
+        public virtual IActionResult OpcSaveShippingMethod(IFormCollection form)
         {
             try
             {
@@ -1476,7 +1476,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcSavePaymentMethod(IFormCollection form)
+        public virtual IActionResult OpcSavePaymentMethod(IFormCollection form)
         {
             try
             {
@@ -1551,7 +1551,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcSavePaymentInfo(IFormCollection form)
+        public virtual IActionResult OpcSavePaymentInfo(IFormCollection form)
         {
             try
             {
@@ -1621,7 +1621,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcConfirmOrder()
+        public virtual IActionResult OpcConfirmOrder()
         {
             try
             {
@@ -1716,7 +1716,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual ActionResult OpcCompleteRedirectionPayment()
+        public virtual IActionResult OpcCompleteRedirectionPayment()
         {
             try
             {

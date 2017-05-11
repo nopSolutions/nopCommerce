@@ -39,7 +39,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual ActionResult Vote(int pollAnswerId)
+        public virtual IActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)

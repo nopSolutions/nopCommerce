@@ -214,7 +214,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult VendorAll()
+        public virtual IActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)

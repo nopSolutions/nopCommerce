@@ -86,7 +86,7 @@ namespace Nop.Web.Controllers
 #region Methods
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult ApplyVendor()
+        public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -102,7 +102,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult Info()
+        public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -195,7 +195,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
         [FormValueRequired("save-info-button")]
-        public virtual ActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
+        public virtual IActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -258,7 +258,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
         [FormValueRequired("remove-picture")]
-        public virtual ActionResult RemovePicture()
+        public virtual IActionResult RemovePicture()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();

@@ -113,7 +113,7 @@ namespace Nop.Web.Controllers
         }
 #if NET451
 
-        public virtual ActionResult ListRss(int languageId)
+        public virtual IActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
                 string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),

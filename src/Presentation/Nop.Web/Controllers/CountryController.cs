@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
+        public virtual IActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             var model = _countryModelFactory.GetStatesByCountryId(countryId, addSelectStateItem);
             return Json(model);

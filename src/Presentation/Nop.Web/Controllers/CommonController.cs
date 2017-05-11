@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
         #endif
 
         //page not found
-        public virtual ActionResult PageNotFound()
+        public virtual IActionResult PageNotFound()
         {
 #if NET451
             if (_commonSettings.Log404Errors)
@@ -168,7 +168,7 @@ namespace Nop.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
+        public virtual IActionResult SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
@@ -187,7 +187,7 @@ namespace Nop.Web.Controllers
         
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
+        public virtual IActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
@@ -208,7 +208,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual ActionResult ContactUs()
+        public virtual IActionResult ContactUs()
         {
             var model = new ContactUsModel();
             model = _commonModelFactory.PrepareContactUsModel(model, false);
@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
+        public virtual IActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -252,7 +252,7 @@ namespace Nop.Web.Controllers
         }
         //contact vendor page
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult ContactVendor(int vendorId)
+        public virtual IActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -270,7 +270,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
 #endif
         [ValidateCaptcha]
-        public virtual ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
+        public virtual IActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -306,7 +306,7 @@ namespace Nop.Web.Controllers
 
         //sitemap page
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult Sitemap()
+        public virtual IActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -319,7 +319,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual ActionResult SitemapXml(int? id)
+        public virtual IActionResult SitemapXml(int? id)
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -328,7 +328,7 @@ namespace Nop.Web.Controllers
             return Content(siteMap, "text/xml");
         }
 
-        public virtual ActionResult SetStoreTheme(string themeName, string returnUrl = "")
+        public virtual IActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingThemeName = themeName;
 
@@ -348,7 +348,7 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual ActionResult EuCookieLawAccept()
+        public virtual IActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled

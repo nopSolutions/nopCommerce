@@ -122,7 +122,7 @@ namespace Nop.Web.Controllers
         }
 #endif
 
-        public virtual ActionResult NewsItem(int newsItemId)
+        public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");

@@ -34,7 +34,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
         
-        public virtual ActionResult Sample(int productId)
+        public virtual IActionResult Sample(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -58,7 +58,7 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
         }
 
-        public virtual ActionResult GetDownload(Guid orderItemId, bool agree = false)
+        public virtual IActionResult GetDownload(Guid orderItemId, bool agree = false)
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
         }
 
-        public virtual ActionResult GetLicense(Guid orderItemId)
+        public virtual IActionResult GetLicense(Guid orderItemId)
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
@@ -148,7 +148,7 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual ActionResult GetFileUpload(Guid downloadId)
+        public virtual IActionResult GetFileUpload(Guid downloadId)
         {
             var download = _downloadService.GetDownloadByGuid(downloadId);
             if (download == null)
@@ -167,7 +167,7 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual ActionResult GetOrderNoteFile(int orderNoteId)
+        public virtual IActionResult GetOrderNoteFile(int orderNoteId)
         {
             var orderNote = _orderService.GetOrderNoteById(orderNoteId);
             if (orderNote == null)

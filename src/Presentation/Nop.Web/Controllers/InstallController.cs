@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
 
 #region Methods
 
-        public virtual ActionResult Index()
+        public virtual IActionResult Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -211,7 +211,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult Index(InstallModel model)
+        public virtual IActionResult Index(InstallModel model)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -437,7 +437,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult ChangeLanguage(string language)
+        public virtual IActionResult ChangeLanguage(string language)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -449,7 +449,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult RestartInstall()
+        public virtual IActionResult RestartInstall()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");

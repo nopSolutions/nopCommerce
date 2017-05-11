@@ -59,7 +59,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        public virtual ActionResult TopicDetailsPopup(string systemName)
+        public virtual IActionResult TopicDetailsPopup(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
