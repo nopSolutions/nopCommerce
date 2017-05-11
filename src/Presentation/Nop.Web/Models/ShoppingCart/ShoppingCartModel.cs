@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 #if NET451
 using System.Web.Mvc;
 #endif
@@ -60,9 +61,7 @@ namespace Nop.Web.Models.ShoppingCart
             public ShoppingCartItemModel()
             {
                 Picture = new PictureModel();
-#if NET451
                 AllowedQuantities = new List<SelectListItem>();
-#endif
                 Warnings = new List<string>();
             }
             public string Sku { get; set; }
@@ -83,9 +82,7 @@ namespace Nop.Web.Models.ShoppingCart
             public int? MaximumDiscountedQty { get; set; }
 
             public int Quantity { get; set; }
-#if NET451
             public List<SelectListItem> AllowedQuantities { get; set; }
-#endif
             
             public string AttributeInfo { get; set; }
 

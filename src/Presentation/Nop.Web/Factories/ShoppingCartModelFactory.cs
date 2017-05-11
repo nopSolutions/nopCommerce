@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -339,7 +337,6 @@ namespace Nop.Web.Factories
             model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
             if (model.Enabled)
             {
-#if NET451
                 //countries
                 int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
                     ? _workContext.CurrentCustomer.ShippingAddress.CountryId
@@ -385,7 +382,6 @@ namespace Nop.Web.Factories
                     });
                 }
 
-#endif
                 if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
                     model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
             }
@@ -436,7 +432,6 @@ namespace Nop.Web.Factories
 
             //allowed quantities
             var allowedQuantities = sci.Product.ParseAllowedQuantities();
-#if NET451
             foreach (var qty in allowedQuantities)
             {
                 cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -446,7 +441,6 @@ namespace Nop.Web.Factories
                     Selected = sci.Quantity == qty
                 });
             }
-#endif
 
             //recurring info
             if (sci.Product.IsRecurring)
@@ -572,7 +566,6 @@ namespace Nop.Web.Factories
 
             //allowed quantities
             var allowedQuantities = sci.Product.ParseAllowedQuantities();
-#if NET451
             foreach (var qty in allowedQuantities)
             {
                 cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -582,7 +575,6 @@ namespace Nop.Web.Factories
                     Selected = sci.Quantity == qty
                 });
             }
-#endif
 
 
             //recurring info

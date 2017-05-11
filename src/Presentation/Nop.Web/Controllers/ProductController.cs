@@ -188,38 +188,7 @@ namespace Nop.Web.Controllers
 
             return View(productTemplateViewPath, model);
         }
-
-#if NET451
         
-        [ChildActionOnly]
-        public virtual IActionResult CrossSellProducts(int? productThumbPictureSize)
-        {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-
-            var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
-
-            if (!products.Any())
-                return Content("");
-
-
-            //Cross-sell products are dispalyed on the shopping cart page.
-            //We know that the entire shopping cart page is not refresh
-            //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
-            //That's why we force page refresh (redirect) in this case
-            var model = _productModelFactory.PrepareProductOverviewModels(products,
-                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
-                .ToList();
-
-            return PartialView(model);
-        }
-#endif
         #endregion
 
         #region Recently viewed products

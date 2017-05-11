@@ -11,13 +11,14 @@
 }
 @if (!Model.OnePageCheckoutEnabled)
 {
-    @Html.Action("CheckoutProgress", "Checkout", new {step = CheckoutProgressStep.Cart})
+    @await Component.InvokeAsync("CheckoutProgress", new {step = CheckoutProgressStep.Cart})
 }
 <div class="page shopping-cart-page">
     <div class="page-title">
         <h1>@T("ShoppingCart")</h1>
     </div>
     <div class="page-body">
-        @Html.Partial("OrderSummary", Model)
+        @*TODO temporary workaround here*@
+        @Html.Partial("~/Views/Shared/Components/OrderSummary/Default.cshtml", Model)
     </div>
 </div>

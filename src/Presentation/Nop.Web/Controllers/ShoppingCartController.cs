@@ -48,7 +48,7 @@ namespace Nop.Web.Controllers
 {
     public partial class ShoppingCartController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IProductService _productService;
@@ -82,10 +82,10 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
-
-#endregion
-
-#region Ctor
+        
+        #endregion
+        
+        #region Ctor
 
         public ShoppingCartController(IShoppingCartModelFactory shoppingCartModelFactory,
             IProductService productService, 
@@ -152,9 +152,9 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-#endregion
-
-#region Utilities
+        #endregion
+        
+        #region Utilities
         
         protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
         {
@@ -285,7 +285,7 @@ namespace Nop.Web.Controllers
         {
             string attributesXml = "";
 
-#region Product attributes
+            #region Product attributes
 
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
@@ -414,10 +414,10 @@ namespace Nop.Web.Controllers
                     attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
             }
+            
+            #endregion
 
-#endregion
-
-#region Gift cards
+            #region Gift cards
 
             if (product.IsGiftCard)
             {
@@ -458,8 +458,8 @@ namespace Nop.Web.Controllers
                 attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
-
-#endregion
+            
+            #endregion
 
             return attributesXml;
         }
@@ -492,10 +492,10 @@ namespace Nop.Web.Controllers
             {
             }
         }
-
-#endregion
-
-#region Shopping cart
+        
+        #endregion
+        
+        #region Shopping cart
         
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
@@ -1050,10 +1050,9 @@ namespace Nop.Web.Controllers
                 message = errors.Any() ? errors.ToArray() : null
             });
         }
-
-#if NET451
+        
         [HttpPost]
-        public virtual ActionResult CheckoutAttributeChange(FormCollection form)
+        public virtual IActionResult CheckoutAttributeChange(IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1086,8 +1085,9 @@ namespace Nop.Web.Controllers
             });
         }
 
+#if NET451
         [HttpPost]
-        public virtual ActionResult UploadFileProductAttribute(int attributeId)
+        public virtual IActionResult UploadFileProductAttribute(int attributeId)
         {
             var attribute = _productAttributeService.GetProductAttributeMappingById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
@@ -1171,7 +1171,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult UploadFileCheckoutAttribute(int attributeId)
+        public virtual IActionResult UploadFileCheckoutAttribute(int attributeId)
         {
             var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
@@ -1253,9 +1253,10 @@ namespace Nop.Web.Controllers
                 downloadGuid = download.DownloadGuid,
             }, MimeTypes.TextPlain);
         }
+#endif
         
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult Cart()
+        public virtual IActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -1268,25 +1269,10 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual ActionResult OrderSummary(bool? prepareAndDisplayOrderReviewData)
-        {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-            var model = new ShoppingCartModel();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, 
-                isEditable: false, 
-                prepareEstimateShippingIfEnabled: false,
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
-            return PartialView(model);
-        }
-
+        
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("updatecart")]
-        public virtual ActionResult UpdateCart(FormCollection form)
+        public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -1296,7 +1282,9 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            var allIdsToRemove = form.ContainsKey("removefromcart") ?
+                form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() :
+                new List<int>();
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<int, IList<string>>();
@@ -1352,7 +1340,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
-        public virtual ActionResult ContinueShopping()
+        public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(returnUrl))
@@ -1367,7 +1355,7 @@ namespace Nop.Web.Controllers
         
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("checkout")]
-        public virtual ActionResult StartCheckout(FormCollection form)
+        public virtual IActionResult StartCheckout(IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1396,7 +1384,7 @@ namespace Nop.Web.Controllers
 
                 if (!_orderSettings.AnonymousCheckoutAllowed 
                     || downloadableProductsRequireRegistration)
-                    return new HttpUnauthorizedResult();
+                    return new UnauthorizedResult();
                 
                 return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
             }
@@ -1406,7 +1394,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applydiscountcouponcode")]
-        public virtual ActionResult ApplyDiscountCoupon(string discountcouponcode, FormCollection form)
+        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode, IFormCollection form)
         {
             //trim
             if (discountcouponcode != null)
@@ -1471,7 +1459,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applygiftcardcouponcode")]
-        public virtual ActionResult ApplyGiftCard(string giftcardcouponcode, FormCollection form)
+        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode, IFormCollection form)
         {
             //trim
             if (giftcardcouponcode != null)
@@ -1521,9 +1509,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+#if NET451
         [PublicAntiForgery]
+#endif
         [HttpPost]
-        public virtual ActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, FormCollection form)
+        public virtual IActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1536,22 +1526,10 @@ namespace Nop.Web.Controllers
             var model = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, countryId, stateProvinceId, zipPostalCode);
             return PartialView("_EstimateShippingResult", model);
         }
-
-        [ChildActionOnly]
-        public virtual ActionResult OrderTotals(bool isEditable)
-        {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-
-            var model = _shoppingCartModelFactory.PrepareOrderTotalsModel(cart, isEditable);
-            return PartialView(model);
-        }
-
+        
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
-        public virtual ActionResult RemoveDiscountCoupon(FormCollection form)
+        public virtual IActionResult RemoveDiscountCoupon(IFormCollection form)
         {
             var model = new ShoppingCartModel();
 
@@ -1575,7 +1553,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
-        public virtual ActionResult RemoveGiftCardCode(FormCollection form)
+        public virtual IActionResult RemoveGiftCardCode(IFormCollection form)
         {
             var model = new ShoppingCartModel();
 
@@ -1596,14 +1574,12 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-#endif
         #endregion
-
+        
         #region Wishlist
-#if NET451
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult Wishlist(Guid? customerGuid)
+        public virtual IActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
@@ -1624,7 +1600,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("updatecart")]
-        public virtual ActionResult UpdateWishlist(FormCollection form)
+        public virtual IActionResult UpdateWishlist(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
@@ -1634,8 +1610,8 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form["removefromcart"] != null 
-                ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            var allIdsToRemove = form.ContainsKey("removefromcart")
+                ? form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(int.Parse)
                 .ToList() 
                 : new List<int>();
@@ -1691,7 +1667,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
-        public virtual ActionResult AddItemsToCartFromWishlist(Guid? customerGuid, FormCollection form)
+        public virtual IActionResult AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -1712,10 +1688,8 @@ namespace Nop.Web.Controllers
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
-            var allIdsToAdd = form["addtocart"] != null 
-                ? form["addtocart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
-                .ToList() 
+            var allIdsToAdd = form.ContainsKey("addtocart") 
+                ? form["addtocart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList() 
                 : new List<int>();
             foreach (var sci in pageCart)
             {
@@ -1770,7 +1744,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult EmailWishlist()
+        public virtual IActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
@@ -1789,10 +1763,12 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("EmailWishlist")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
-        public virtual ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
+        public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
@@ -1833,7 +1809,6 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareWishlistEmailAFriendModel(model, true);
             return View(model);
         }
-#endif
         #endregion
     }
 }

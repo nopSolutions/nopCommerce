@@ -943,12 +943,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult CheckoutProgress(CheckoutProgressStep step)
-        {
-            var model = _checkoutModelFactory.PrepareCheckoutProgressModel(step);
-            return PartialView(model);
-        }
 
         #endregion
 

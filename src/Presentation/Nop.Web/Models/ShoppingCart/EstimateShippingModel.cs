@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -11,10 +9,8 @@ namespace Nop.Web.Models.ShoppingCart
     {
         public EstimateShippingModel()
         {
-#if NET451
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
-#endif
         }
 
         public bool Enabled { get; set; }
@@ -25,11 +21,9 @@ namespace Nop.Web.Models.ShoppingCart
         public int? StateProvinceId { get; set; }
         [NopResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
-
-#if NET451
+        
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-#endif
     }
 
     public partial class EstimateShippingResultModel : BaseNopModel
