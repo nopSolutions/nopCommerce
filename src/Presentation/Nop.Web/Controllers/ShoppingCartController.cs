@@ -1508,10 +1508,8 @@ namespace Nop.Web.Controllers
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-
-#if NET451
+        
         [PublicAntiForgery]
-#endif
         [HttpPost]
         public virtual IActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -1763,9 +1761,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("EmailWishlist")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)

@@ -414,9 +414,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -492,9 +490,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -567,9 +563,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [ValidateCaptcha]
         [ValidateHoneypot]
-#if NET451
         [PublicAntiForgery]
-#endif
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
@@ -828,9 +822,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult CheckUsernameAvailability(string username)
@@ -908,9 +900,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1167,9 +1157,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressDelete(int addressId)
         {
@@ -1212,9 +1200,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1281,9 +1267,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1374,9 +1358,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-#if NET451
         [PublicAntiForgery]
-#endif
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1424,9 +1406,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("upload-avatar")]
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
@@ -1481,10 +1461,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("remove-avatar")]
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {

@@ -74,9 +74,7 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual IActionResult CancelRecurringPayment(IFormCollection form)
         {
@@ -112,9 +110,7 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Retry last recurring order
         [HttpPost, ActionName("CustomerOrders")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
         public virtual IActionResult RetryLastRecurringPayment(IFormCollection form)
         {
@@ -214,9 +210,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
-#if NET451
         [PublicAntiForgery]
-#endif
         [FormValueRequired("repost-payment")]
         public virtual IActionResult RePostPayment(int orderId)
         {
