@@ -1,29 +1,45 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Web.Framework.Mvc.Routes;
+﻿using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework.Mvc.Routing;
+using Microsoft.AspNetCore.Builder;
 
 namespace Nop.Plugin.Shipping.FixedOrByWeight
 {
+    /// <summary>
+    /// Route provider
+    /// </summary>
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(RouteCollection routes)
+        /// <summary>
+        /// Register routes
+        /// </summary>
+        /// <param name="routeBuilder">Route builder</param>
+        public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            routes.MapRoute("Plugin.Shipping.FixedOrByWeight.Configure",
+            routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.Configure",
                  "Plugins/FixedOrByWeight/Configure",
-                 new { controller = "FixedOrByWeight", action = "Configure", },
+                 new { controller = "FixedOrByWeight", action = "Configure", }
+                 #if NET451
+                 ,
                  new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
+                 #endif
             );
 
-            routes.MapRoute("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup",
+            routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup",
                  "Plugins/FixedOrByWeight/AddRateByWeighPopup",
-                 new { controller = "FixedOrByWeight", action = "AddRateByWeighPopup" },
+                 new { controller = "FixedOrByWeight", action = "AddRateByWeighPopup" }
+#if NET451
+                 ,
                  new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
+#endif
             );
 
-            routes.MapRoute("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup",
+            routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup",
                  "Plugins/FixedOrByWeight/EditRateByWeighPopup",
-                 new { controller = "FixedOrByWeight", action = "EditRateByWeighPopup" },
+                 new { controller = "FixedOrByWeight", action = "EditRateByWeighPopup" }
+#if NET451
+                 ,
                  new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
+#endif
             );
         }
         public int Priority

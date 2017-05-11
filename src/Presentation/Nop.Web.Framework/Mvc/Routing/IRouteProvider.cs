@@ -3,7 +3,7 @@
 namespace Nop.Web.Framework.Mvc.Routing
 {
     /// <summary>
-    /// Represents route provider
+    /// Route provider
     /// </summary>
     public interface IRouteProvider
     {
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         void RegisterRoutes(IRouteBuilder routeBuilder);
 
         /// <summary>
-        /// Gets a priority of route provider (more the better)
+        /// Gets a priority of route provider
         /// </summary>
         int Priority { get; }
     }

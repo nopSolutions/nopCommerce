@@ -510,7 +510,7 @@ namespace Nop.Web.Infrastructure
         #region Properties
 
         /// <summary>
-        /// Gets a priority of route provider (more the better)
+        /// Gets a priority of route provider
         /// </summary>
         public int Priority
         {

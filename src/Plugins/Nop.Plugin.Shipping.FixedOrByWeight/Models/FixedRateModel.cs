@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.FixedOrByWeight.Models
 {
