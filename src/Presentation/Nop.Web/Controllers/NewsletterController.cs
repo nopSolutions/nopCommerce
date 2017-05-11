@@ -1,6 +1,5 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
@@ -21,15 +20,13 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
 
-        private readonly CustomerSettings _customerSettings;
 
         public NewsletterController(INewsletterModelFactory newsletterModelFactory,
             ILocalizationService localizationService,
             IWorkContext workContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
-            IStoreContext storeContext,
-            CustomerSettings customerSettings)
+            IStoreContext storeContext)
         {
             this._newsletterModelFactory = newsletterModelFactory;
             this._localizationService = localizationService;
@@ -37,13 +34,12 @@ namespace Nop.Web.Controllers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._workflowMessageService = workflowMessageService;
             this._storeContext = storeContext;
-            this._customerSettings = customerSettings;
         }
 
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         [HttpPost]
-        public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
+        public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
             bool success = false;
@@ -126,4 +122,3 @@ namespace Nop.Web.Controllers
         }
     }
 }
-#endif
