@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -41,10 +40,9 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-
-#region Methods
-
-#if NET451
+        
+        #region Methods
+        
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(int topicId)
         {
@@ -73,7 +71,6 @@ namespace Nop.Web.Controllers
             var templateViewPath = _topicModelFactory.PrepareTemplateViewPath(model.TopicTemplateId);
             return PartialView(templateViewPath, model);
         }
-#endif
 
 
         [HttpPost]
@@ -110,7 +107,7 @@ namespace Nop.Web.Controllers
             }
             return Json(new { Authenticated = authResult, Title = title, Body = body, Error = error });
         }
-
-#endregion
+        
+        #endregion
     }
 }
