@@ -1,9 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -13,6 +13,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
@@ -62,10 +63,10 @@ namespace Nop.Web.Controllers
 
         //My account / Orders
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult CustomerOrders()
+        public virtual IActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _orderModelFactory.PrepareCustomerOrderListModel();
             return View(model);
@@ -73,16 +74,18 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public virtual ActionResult CancelRecurringPayment(FormCollection form)
+        public virtual IActionResult CancelRecurringPayment(IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             //get recurring payment identifier
             int recurringPaymentId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
                     recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
 
@@ -109,16 +112,18 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Retry last recurring order
         [HttpPost, ActionName("CustomerOrders")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
-        public virtual ActionResult RetryLastRecurringPayment(FormCollection form)
+        public virtual IActionResult RetryLastRecurringPayment(IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             //get recurring payment identifier
             var recurringPaymentId = 0;
-            if (!form.AllKeys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
+            if (!form.Keys.Any(formValue => formValue.StartsWith("retryLastPayment", StringComparison.InvariantCultureIgnoreCase) &&
                 int.TryParse(formValue.Substring(formValue.IndexOf('_') + 1), out recurringPaymentId)))
             {
                 return RedirectToRoute("CustomerOrders");
@@ -140,10 +145,10 @@ namespace Nop.Web.Controllers
 
         //My account / Reward points
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult CustomerRewardPoints(int? page)
+        public virtual IActionResult CustomerRewardPoints(int? page)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_rewardPointsSettings.Enabled)
                 return RedirectToRoute("CustomerInfo");
@@ -154,11 +159,11 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult Details(int orderId)
+        public virtual IActionResult Details(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _orderModelFactory.PrepareOrderDetailsModel(order);
             return View(model);
@@ -166,11 +171,11 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Print
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult PrintOrderDetails(int orderId)
+        public virtual IActionResult PrintOrderDetails(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _orderModelFactory.PrepareOrderDetailsModel(order);
             model.PrintMode = true;
@@ -179,11 +184,11 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
-        public virtual ActionResult GetPdfInvoice(int orderId)
+        public virtual IActionResult GetPdfInvoice(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var orders = new List<Order>();
             orders.Add(order);
@@ -197,11 +202,11 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / re-order
-        public virtual ActionResult ReOrder(int orderId)
+        public virtual IActionResult ReOrder(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             _orderProcessingService.ReOrder(order);
             return RedirectToRoute("ShoppingCart");
@@ -209,13 +214,15 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("repost-payment")]
-        public virtual ActionResult RePostPayment(int orderId)
+        public virtual IActionResult RePostPayment(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_paymentService.CanRePostProcessPayment(order))
                 return RedirectToRoute("OrderDetails", new { orderId = orderId });
@@ -226,6 +233,7 @@ namespace Nop.Web.Controllers
             };
             _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
+            //TODO test this behaviour in asp.net core
             if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
             {
                 //redirection or POST has been done in PostProcessPayment
@@ -239,21 +247,20 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Shipment details page
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult ShipmentDetails(int shipmentId)
+        public virtual IActionResult ShipmentDetails(int shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var order = shipment.Order;
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _orderModelFactory.PrepareShipmentDetailsModel(shipment);
             return View(model);
         }
-
+        
         #endregion
     }
 }
-#endif
