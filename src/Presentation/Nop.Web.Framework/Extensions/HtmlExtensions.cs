@@ -539,13 +539,11 @@ namespace Nop.Web.Framework.Extensions
 #endif
         #region Common extensions
 
-
-
-        public static string RenderTagBuilder(this TagBuilder tagBuilder)
+        public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
             using (var writer = new StringWriter())
             {
-                tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+                htmlContent.WriteTo(writer, HtmlEncoder.Default);
                 var htmlOutput = writer.ToString();
                 return htmlOutput;
             }
@@ -570,7 +568,7 @@ namespace Nop.Web.Framework.Extensions
             if (!String.IsNullOrEmpty(additionalText))
                 innerText += " " + additionalText;
             tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RenderTagBuilder());
+            return new HtmlString(tagBuilder.RenderHtmlContent());
         }
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
@@ -687,15 +685,15 @@ namespace Nop.Web.Framework.Extensions
 
             if (wrapTags) 
             {
-                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderTagBuilder() + "</span>";
-                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderTagBuilder() + "</span>";
-                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderTagBuilder() + "</span>";
+                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";
+                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderHtmlContent() + "</span>";
+                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderHtmlContent() + "</span>";
 
                 return new HtmlString(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
             }
             else
             {
-                return new HtmlString(string.Concat(daysList.RenderTagBuilder(), monthsList.RenderTagBuilder(), yearsList.RenderTagBuilder()));
+                return new HtmlString(string.Concat(daysList.RenderHtmlContent(), monthsList.RenderHtmlContent(), yearsList.RenderHtmlContent()));
             }
 
         }

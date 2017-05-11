@@ -44,7 +44,7 @@ namespace Nop.Web.Framework.Security.Captcha
                     string.Format(RECAPTCHA_API_URL_HTTP_VERSION1, PublicKey);
                 scriptLoadApiTag.Attributes.Add("src", scriptSrc);
 
-                return scriptCaptchaOptionsTag.RenderTagBuilder() + scriptLoadApiTag.RenderTagBuilder();
+                return scriptCaptchaOptionsTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent();
             }
             else if (_version == ReCaptchaVersion.Version2)
             {
@@ -63,7 +63,7 @@ namespace Nop.Web.Framework.Security.Captcha
                 scriptLoadApiTag.Attributes.Add("async", null);
                 scriptLoadApiTag.Attributes.Add("defer", null);
 
-                return scriptCallbackTag.RenderTagBuilder() + captchaTag.RenderTagBuilder() + scriptLoadApiTag.RenderTagBuilder();
+                return scriptCallbackTag.RenderHtmlContent() + captchaTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent();
             }
 
             throw new NotSupportedException("Specified version is not supported");

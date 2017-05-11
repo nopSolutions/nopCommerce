@@ -13,11 +13,13 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
+        //TODO move to \Nop.Web.Framework\Extensions\HtmlExtensions.cs (except GetTopicSeName)
         /// <summary>
         /// BBCode editor
         /// </summary>
@@ -73,11 +75,13 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"first-page\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
+                            var link = html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
+                            var link = html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -92,11 +96,13 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"previous-page\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
+                            var link = html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
+                            var link = html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -119,11 +125,13 @@ namespace Nop.Web.Extensions
                             links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
                             {
-                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
+                                var link = html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
+                                links.Append(link.ToHtmlString());
                             }
                             else
                             {
-                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
+                                var link = html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
+                                links.Append(link.ToHtmlString());
                             }
                             links.Append("</li>");
                         }
@@ -139,11 +147,13 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") }));
+                            var link = html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new {title = localizationService.GetResource("Pager.NextPageTitle")});
+                            links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") }));
+                            var link = html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -158,11 +168,13 @@ namespace Nop.Web.Extensions
                         links.Append("<li class=\"last-page\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") }));
+                            var link = html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") }));
+                            var link = html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") });
+                            links.Append(link.ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -191,7 +203,8 @@ namespace Nop.Web.Extensions
                 {
                     for (int x = 1; x <= totalPages; x++)
                     {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
+                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        links.Append(link.ToHtmlString());
                         if (x < totalPages)
                         {
                             links.Append(", ");
@@ -200,12 +213,14 @@ namespace Nop.Web.Extensions
                 }
                 else
                 {
-                    links.Append(html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) }));
+                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) });
+                    links.Append(link1.ToHtmlString());
                     links.Append(" ... ");
 
                     for (int x = (totalPages - 2); x <= totalPages; x++)
                     {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
+                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        links.Append(link2.ToHtmlString());
 
                         if (x < totalPages)
                         {
@@ -223,6 +238,7 @@ namespace Nop.Web.Extensions
         {
             return new Pager(pagination, helper.ViewContext);
         }
+
         /// <summary>
         /// Get topic system name
         /// </summary>
