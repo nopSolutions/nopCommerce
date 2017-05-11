@@ -807,7 +807,20 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("cart");
 
             var result = new GetShippingOptionResponse();
-            
+#if NET451
+          
+#else
+            //temporary workaround until we support plugins
+            result.ShippingOptions.Add(new ShippingOption()
+            {
+                Name = "test method 1",
+                Rate = 10,
+                ShippingRateComputationMethodSystemName = "test",
+                Description = "test description 1"
+            });
+
+#endif
+
             //create a package
             bool shippingFromMultipleLocations;
             var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
