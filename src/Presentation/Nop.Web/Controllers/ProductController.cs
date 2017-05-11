@@ -35,7 +35,7 @@ namespace Nop.Web.Controllers
 {
     public partial class ProductController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
@@ -59,9 +59,9 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly IStaticCacheManager _cacheManager;
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
 
         public ProductController(IProductModelFactory productModelFactory,
             IProductService productService,
@@ -108,9 +108,9 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
         }
 
-#endregion
+        #endregion
 
-#region Product details page
+        #region Product details page
 
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductDetails(int productId, int updatecartitemid = 0)
@@ -188,10 +188,11 @@ namespace Nop.Web.Controllers
 
             return View(productTemplateViewPath, model);
         }
+
 #if NET451
         
         [ChildActionOnly]
-        public virtual ActionResult CrossSellProducts(int? productThumbPictureSize)
+        public virtual IActionResult CrossSellProducts(int? productThumbPictureSize)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -220,11 +221,11 @@ namespace Nop.Web.Controllers
         }
 #endif
         #endregion
-#if NET451
+
         #region Recently viewed products
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult RecentlyViewedProducts()
+        public virtual IActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
@@ -237,12 +238,12 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-#endregion
+        #endregion
 
-#region New (recently added) products page
+        #region New (recently added) products page
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult NewProducts()
+        public virtual IActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
@@ -260,7 +261,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult NewProductsRss()
+#if NET451
+        public virtual IActionResult NewProductsRss()
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -299,13 +301,15 @@ namespace Nop.Web.Controllers
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
+#endif
 
-#endregion
-        
-#region Product reviews
+        #endregion
+
+#if NET451
+        #region Product reviews
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult ProductReviews(int productId)
+        public virtual IActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
@@ -330,7 +334,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
-        public virtual ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
+        public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
@@ -408,7 +412,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
+        public virtual IActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = _productService.GetProductReviewById(productReviewId);
             if (productReview == null)
@@ -469,7 +473,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public virtual ActionResult CustomerProductReviews(int? page)
+        public virtual IActionResult CustomerProductReviews(int? page)
         {
             if (_workContext.CurrentCustomer.IsGuest())
                 return new HttpUnauthorizedResult();
@@ -482,13 +486,13 @@ namespace Nop.Web.Controllers
             var model = _productModelFactory.PrepareCustomerProductReviewsModel(page);
             return View(model);
         }
-
-#endregion
-
-#region Email a friend
+        
+        #endregion
+        
+        #region Email a friend
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult ProductEmailAFriend(int productId)
+        public virtual IActionResult ProductEmailAFriend(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -503,7 +507,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
-        public virtual ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
+        public virtual IActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -540,13 +544,13 @@ namespace Nop.Web.Controllers
             model = _productModelFactory.PrepareProductEmailAFriendModel(model, product, true);
             return View(model);
         }
-
-#endregion
-
-#region Comparing products
+        
+        #endregion
+        
+        #region Comparing products
 
         [HttpPost]
-        public virtual ActionResult AddProductToCompareList(int productId)
+        public virtual IActionResult AddProductToCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published)
@@ -577,7 +581,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public virtual ActionResult RemoveProductFromCompareList(int productId)
+        public virtual IActionResult RemoveProductFromCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -592,7 +596,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult CompareProducts()
+        public virtual IActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");
@@ -617,7 +621,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual ActionResult ClearCompareList()
+        public virtual IActionResult ClearCompareList()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");

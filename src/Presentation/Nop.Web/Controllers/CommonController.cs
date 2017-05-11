@@ -32,7 +32,7 @@ namespace Nop.Web.Controllers
 {
     public partial class CommonController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ILanguageService _languageService;
