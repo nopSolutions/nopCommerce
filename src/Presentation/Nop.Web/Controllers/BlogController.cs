@@ -29,7 +29,7 @@ namespace Nop.Web.Controllers
     [HttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
@@ -47,9 +47,9 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         
-#endregion
+        #endregion
         
-#region Constructors
+        #region Constructors
 
         public BlogController(IBlogService blogService,
             IWorkContext workContext,
@@ -83,9 +83,9 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
         
-#endregion
+        #endregion
         
-#region Methods
+        #region Methods
 
         public virtual IActionResult List(BlogPagingFilteringModel command)
         {

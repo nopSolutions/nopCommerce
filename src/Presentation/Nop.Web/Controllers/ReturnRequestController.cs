@@ -1,9 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -15,6 +14,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Order;
 
@@ -76,21 +76,21 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult CustomerReturnRequests()
+        public virtual IActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
             return View(model);
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual ActionResult ReturnRequest(int orderId)
+        public virtual IActionResult ReturnRequest(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
@@ -101,12 +101,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
+#if NET451
         [PublicAntiForgery]
-        public virtual ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
+#endif
+        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
@@ -126,7 +128,7 @@ namespace Nop.Web.Controllers
             foreach (var orderItem in orderItems)
             {
                 int quantity = 0; //parse quantity
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                     if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out quantity);
@@ -176,8 +178,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+#if NET451
         [HttpPost]
-        public virtual ActionResult UploadFileReturnRequest()
+        public virtual IActionResult UploadFileReturnRequest()
         {
             if (!_orderSettings.ReturnRequestsEnabled && !_orderSettings.ReturnRequestsAllowFiles)
             {
@@ -259,8 +262,8 @@ namespace Nop.Web.Controllers
                 downloadGuid = download.DownloadGuid,
             }, MimeTypes.TextPlain);
         }
-
+#endif
+        
         #endregion
     }
 }
-#endif
