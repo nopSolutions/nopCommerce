@@ -305,7 +305,6 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-#if NET451
         #region Product reviews
 
         [HttpsRequirement(SslRequirement.No)]
@@ -331,7 +330,9 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductReviews")]
+#if NET451
         [PublicAntiForgery]
+#endif
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
@@ -476,7 +477,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CustomerProductReviews(int? page)
         {
             if (_workContext.CurrentCustomer.IsGuest())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
             {
@@ -486,9 +487,10 @@ namespace Nop.Web.Controllers
             var model = _productModelFactory.PrepareCustomerProductReviewsModel(page);
             return View(model);
         }
-        
+
         #endregion
-        
+
+#if NET451
         #region Email a friend
 
         [HttpsRequirement(SslRequirement.No)]
