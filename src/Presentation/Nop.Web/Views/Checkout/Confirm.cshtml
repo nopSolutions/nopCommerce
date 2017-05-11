@@ -10,7 +10,7 @@
     Html.AppendPageCssClassParts("html-order-confirm-page");
 }
 <div class="page checkout-page order-confirm-page">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
     <div class="page-title">
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
@@ -95,7 +95,7 @@
         </div>
         @Html.Widget("checkout_confirm_bottom")
         <div class="section order-summary">
-            @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+            @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>
     </div>
 </div>

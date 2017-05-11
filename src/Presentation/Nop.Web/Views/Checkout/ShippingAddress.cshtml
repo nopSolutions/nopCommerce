@@ -10,7 +10,7 @@
     Html.AppendPageCssClassParts("html-shipping-address-page");
 }
 <div class="page checkout-page shipping-address-page">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
     <div class="page-title">
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
@@ -322,7 +322,7 @@
                                 <div class="message-error">@validationSummary</div>
                             }
                             @{
-                                var dataDictAddress = new ViewDataDictionary();
+                                var dataDictAddress = new ViewDataDictionary(ViewData);
                                 //Merge ModelState (required for validation)
                                 dataDictAddress.ModelState.Merge(ViewData.ModelState);
                                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
@@ -341,7 +341,7 @@
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>
-            @Html.Action("OrderSummary", "ShoppingCart")
+            @await Component.InvokeAsync("OrderSummary")
         </div>
     </div>
 </div>

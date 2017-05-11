@@ -10,7 +10,7 @@
     Html.AppendPageCssClassParts("html-payment-info-page");
 }
 <div class="page checkout-page payment-info-page">
-    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Payment })
     <div class="page-title">
         <h1>@T("Checkout.PaymentInfo")</h1>
     </div>
@@ -37,7 +37,7 @@
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>
-            @Html.Action("OrderSummary", "ShoppingCart")
+            @await Component.InvokeAsync("OrderSummary", "ShoppingCart")
         </div>
     </div>
 </div>

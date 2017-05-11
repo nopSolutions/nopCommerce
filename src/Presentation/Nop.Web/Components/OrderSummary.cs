@@ -9,13 +9,13 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Components
 {
-    public class OrderSummaryComponent : ViewComponent
+    public class OrderSummaryViewComponent : ViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
-        public OrderSummaryComponent(IShoppingCartModelFactory shoppingCartModelFactory,
+        public OrderSummaryViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
