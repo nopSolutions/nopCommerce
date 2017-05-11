@@ -81,7 +81,7 @@ namespace Nop.Web.Controllers
                 html = this.RenderPartialViewToString("_Poll", _pollModelFactory.PreparePollModel(poll, true)),
             });
         }
-#endregion
 
+        #endregion
     }
 }

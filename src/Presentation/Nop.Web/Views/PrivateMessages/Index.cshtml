@@ -28,10 +28,10 @@
                 <li><a href="#tabs-2">@T("PrivateMessages.SentItems")</a></li>
             </ul>
             <div id="tabs-1" class="tab-content">
-                @Html.Action("Inbox", new { page = Model.InboxPage, tab = "inbox" })
+                @await Component.InvokeAsync("PrivateMessagesInbox", new { page = Model.InboxPage, tab = "inbox" })
             </div>
             <div id="tabs-2" class="tab-content">
-                @Html.Action("SentItems", new { page = Model.SentItemsPage, tab = "sent" })
+                @await Component.InvokeAsync("PrivateMessagesSentItems", new { page = Model.SentItemsPage, tab = "sent" })
             </div>
         </div>
     </div>
