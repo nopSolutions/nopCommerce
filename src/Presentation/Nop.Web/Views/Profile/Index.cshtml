@@ -30,12 +30,12 @@
                 }
             </ul>
             <div id="tabs-1" class="tab-content">
-                @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+                @await Component.InvokeAsync("ProfileInfo", new { customerProfileId = Model.CustomerProfileId })
             </div>
             @if (Model.ForumsEnabled)
             {
                 <div id="tabs-2" class="tab-content">
-                    @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
                 </div>
             }
         </div>

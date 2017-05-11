@@ -1,9 +1,9 @@
-﻿#if NET451
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
@@ -27,7 +27,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        public virtual ActionResult Index(int? id, int? page)
+        public virtual IActionResult Index(int? id, int? page)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -53,34 +53,5 @@ namespace Nop.Web.Controllers
             var model = _profileModelFactory.PrepareProfileIndexModel(customer, page);
             return View(model);
         }
-
-        //profile info tab
-        [ChildActionOnly]
-        public virtual ActionResult Info(int customerProfileId)
-        {
-            var customer = _customerService.GetCustomerById(customerProfileId);
-            if (customer == null)
-            {
-                return RedirectToRoute("HomePage");
-            }
-
-            var model = _profileModelFactory.PrepareProfileInfoModel(customer);
-            return PartialView(model);
-        }
-
-        //latest posts tab
-        [ChildActionOnly]
-        public virtual ActionResult Posts(int customerProfileId, int page)
-        {
-            var customer = _customerService.GetCustomerById(customerProfileId);
-            if (customer == null)
-            {
-                return RedirectToRoute("HomePage");
-            }
-            
-            var model = _profileModelFactory.PrepareProfilePostsModel(customer, page);
-            return PartialView(model);
-        }
     }
 }
-#endif
