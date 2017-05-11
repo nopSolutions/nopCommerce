@@ -1,7 +1,6 @@
 ﻿@using StackExchange.Profiling
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
-@using Nop.Core.Infrastructure
 @inject CommonSettings commonSettings
 @inject SeoSettings seoSettings
 
@@ -43,8 +42,8 @@
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
-    @*TODO @Html.Action("RssHeaderLink", "News")
-    @Html.Action("RssHeaderLink", "Blog")*@
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
     @*Favicon - upload favicon.ico file to the root directory*@
     @await Component.InvokeAsync("Favicon")
     @*TODO add condition (only when enabled) - add mini profiler*@

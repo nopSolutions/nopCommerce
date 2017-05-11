@@ -210,19 +210,7 @@ namespace Nop.Web.Controllers
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
-#if NET451
-        [ChildActionOnly]
-        public virtual IActionResult RssHeaderLink()
-        {
-            if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
-                return Content("");
-
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"{1}\" title=\"{2}: News\" />",
-                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), MimeTypes.ApplicationRssXml, _storeContext.CurrentStore.GetLocalized(x => x.Name));
-
-            return Content(link);
-        }
-#endif
-#endregion
+        
+        #endregion
     }
 }
