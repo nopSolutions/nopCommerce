@@ -1086,7 +1086,8 @@ namespace Nop.Web.Controllers
                 redirect = Url.Action("Info"),
             });
         }
-
+        
+#endif
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -1140,7 +1141,6 @@ namespace Nop.Web.Controllers
             };
             return View(model);
         }
-#endif
 
 #endregion
         

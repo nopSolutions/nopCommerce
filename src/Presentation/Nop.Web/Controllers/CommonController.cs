@@ -1,9 +1,6 @@
 ﻿
 using System;
 using Microsoft.AspNetCore.Http;
-#if NET451
-using System.Web.Mvc;
-#endif
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
@@ -108,15 +105,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
         
-        
-        #if NET451
-        //error page
-        public virtual IActionResult Error()
-        {
-            return View("~/Views/Shared/Error.cshtml");
-        }
-        #endif
-
         //page not found
         public virtual IActionResult PageNotFound()
         {
