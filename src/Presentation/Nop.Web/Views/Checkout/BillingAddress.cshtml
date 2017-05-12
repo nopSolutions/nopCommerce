@@ -154,7 +154,7 @@
                             //Merge ModelState (required for validation)
                             dataDictAddress.ModelState.Merge(ViewData.ModelState);
                             dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                            @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                            @await Html.PartialAsync("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
                         }
                     </div>
                 </div>

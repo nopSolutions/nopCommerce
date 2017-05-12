@@ -35,7 +35,7 @@
                 //Merge ModelState (required for validation)
                 dataDictAddress.ModelState.Merge(ViewData.ModelState);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
             }
             <div class="buttons">
                 <input type="submit" class="button-1 save-address-button" value="@T("Common.Save")" />                       

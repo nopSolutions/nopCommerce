@@ -11,7 +11,7 @@
             @foreach (var item in Model)
             {
                 <div class="item-box">
-                    @Html.Partial("_ProductBox", item)
+                    @await Html.PartialAsync("_ProductBox", item)
                 </div>
             }
         </div>

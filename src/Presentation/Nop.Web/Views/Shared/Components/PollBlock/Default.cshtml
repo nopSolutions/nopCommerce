@@ -5,6 +5,6 @@
         <strong>@T("Polls.Title")</strong>
     </div>
     <div class="listbox">
-        @Html.Partial("_Poll", Model)
+        @await Html.PartialAsync("_Poll", Model)
     </div>
 </div>

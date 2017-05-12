@@ -55,7 +55,7 @@
             {
                 <div class="message-error">@validationSummary</div>
             }
-            @*TODO @Html.Partial("_ExternalAuthentication.AssociateMessage")*@
+            @*TODO @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")*@
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -134,7 +134,7 @@
                             @Html.ValidationMessageFor(model => model.Username)
                             @if (Model.CheckUsernameAvailabilityEnabled)
                             {
-                                @Html.Partial("_CheckUsernameAvailability")
+                                @await Html.PartialAsync("_CheckUsernameAvailability")
                             }
                         </div>
 
@@ -306,7 +306,7 @@
                         }
                         @if (Model.CustomerAttributes.Count > 0)
                         {
-                            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                            @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                         }
                     </div>
                 </div>

@@ -6,5 +6,5 @@
     Html.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);
 }
 @Html.Widget("boards_topiccreate_before", Model.Id)
-@Html.Partial("_CreateUpdateTopic", Model)
+@await Html.PartialAsync("_CreateUpdateTopic", Model)
 @Html.Widget("boards_topiccreate_after", Model.Id)

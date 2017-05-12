@@ -157,6 +157,6 @@
     }
     @if (Model.CustomAddressAttributes.Count > 0)
     {
-        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }
 </div>

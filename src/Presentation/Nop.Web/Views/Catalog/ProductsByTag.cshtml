@@ -26,7 +26,7 @@
         @Html.Widget("productsbytag_top", Model.Id)
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
+            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @Html.Widget("productsbytag_before_product_list", Model.Id)
         @if (Model.Products.Count > 0)
@@ -36,7 +36,7 @@
                     @foreach (var product in Model.Products)
                     {
                         <div class="item-box">
-                            @Html.Partial("_ProductBox", product)
+                            @await Html.PartialAsync("_ProductBox", product)
                         </div>
                     }
                 </div>

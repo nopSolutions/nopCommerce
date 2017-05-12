@@ -97,7 +97,7 @@
         </div>
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
+            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @Html.Widget("productsearch_page_before_results")
         <div class="search-results">
@@ -121,7 +121,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
+                                @await Html.PartialAsync("_ProductBox", product)
                             </div>
                         }
                     </div>

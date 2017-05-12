@@ -2,12 +2,12 @@
     Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
 @Html.Widget("body_start_html_tag_after")
-@Html.Partial("_Notifications")
-@Html.Partial("_JavaScriptDisabledWarning")
-@Html.Partial("_OldInternetExplorerWarning")
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@await Html.PartialAsync("_OldInternetExplorerWarning")
 <div class="master-wrapper-page">
     @await Component.InvokeAsync("AdminHeaderLinks")
-    @Html.Partial("_Header")
+    @await Html.PartialAsync("_Header")
     <script type="text/javascript">
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
     </script>

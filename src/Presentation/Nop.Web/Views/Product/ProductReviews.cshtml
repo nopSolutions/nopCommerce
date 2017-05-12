@@ -120,7 +120,7 @@
                                     <span>@review.WrittenOnStr</span>
                                 </span>
                             </div>
-                            @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness)
+                            @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
                             @Html.Widget("productreviews_page_inside_review", review.Id)
                             @if (!String.IsNullOrEmpty(review.ReplyText))
                             {

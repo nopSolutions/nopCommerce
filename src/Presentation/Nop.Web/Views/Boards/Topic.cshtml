@@ -11,7 +11,7 @@
 }
 <div class="page forum-topic-page">
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    @Html.Partial("_ForumHeader")
+    @await Html.PartialAsync("_ForumHeader")
     @Html.Widget("boards_topic_after_header", Model.Id)
     @Html.AntiForgeryToken()
     <div class="topic-name">

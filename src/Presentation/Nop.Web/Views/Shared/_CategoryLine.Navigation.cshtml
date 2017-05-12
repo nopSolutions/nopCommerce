@@ -51,7 +51,7 @@
                             CurrentCategoryId = Model.CurrentCategoryId,
                             Category = subCategory
                         };
-                        @Html.Partial("_CategoryLine.Navigation", categoryLineModel)
+                        @await Html.PartialAsync("_CategoryLine.Navigation", categoryLineModel)
                     }
                 </ul>
             }

@@ -10,8 +10,8 @@
 }
 <div class="page active-discussions-page">
     @Html.Action("ForumBreadcrumb")
-    @Html.Partial("_ForumHeader")
+    @await Html.PartialAsync("_ForumHeader")
     @Html.Widget("boards_activediscussions_after_header")
-    @Html.Partial("_ActiveTopics", Model)
+    @await Html.PartialAsync("_ActiveTopics", Model)
     @Html.Widget("boards_activediscussions_after_topics")
 </div>

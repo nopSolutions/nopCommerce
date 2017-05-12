@@ -10,7 +10,7 @@
 }
 <div class="page forums-main-page">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
-    @Html.Partial("_ForumHeader")
+    @await Html.PartialAsync("_ForumHeader")
     @Html.Widget("boards_main_after_header")
     @foreach (var forumGroup in Model.ForumGroups)
     {

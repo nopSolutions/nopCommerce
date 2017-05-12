@@ -8,7 +8,7 @@
         </div>
         @foreach (var poll in Model)
         { 
-            @Html.Partial("_Poll", poll)
+            @await Html.PartialAsync("_Poll", poll)
         }
     </div>
 }

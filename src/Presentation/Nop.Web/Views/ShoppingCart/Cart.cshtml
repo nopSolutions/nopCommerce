@@ -19,6 +19,6 @@
     </div>
     <div class="page-body">
         @*TODO temporary workaround here*@
-        @Html.Partial("~/Views/Shared/Components/OrderSummary/Default.cshtml", Model)
+        @await Html.PartialAsync("~/Views/Shared/Components/OrderSummary/Default.cshtml", Model)
     </div>
 </div>
