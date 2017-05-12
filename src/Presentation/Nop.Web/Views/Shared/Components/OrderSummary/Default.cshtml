@@ -3,9 +3,7 @@
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart;
-@{
-   var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-}
+@inject IWebHelper webHelper;
 <div class="order-summary-content">
    @Html.Widget("order_summary_content_before")
    @Html.Partial("_OrderReviewData", Model.OrderReviewData)
@@ -238,7 +236,7 @@
                        @Html.Partial("_GiftCardBox", Model.GiftCardBox)
                        @Html.Widget("order_summary_content_deals")
                    </div>
-                   @Html.Partial("_EstimateShipping", Model.EstimateShipping)
+                   @await Component.InvokeAsync("EstimateShipping")
                </div>
            }
            <div class="totals">

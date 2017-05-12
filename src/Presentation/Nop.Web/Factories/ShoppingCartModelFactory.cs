@@ -166,9 +166,9 @@ namespace Nop.Web.Factories
             this._customerSettings = customerSettings;
         }
 
-#endregion
-
-#region Utilities
+        #endregion
+        
+        #region Utilities
 
         /// <summary>
         /// Prepare the checkout attribute models
@@ -310,74 +310,6 @@ namespace Nop.Web.Factories
                 }
 
                 model.Add(attributeModel);
-            }
-
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare the estimate shipping model
-        /// </summary>
-        /// <param name="cart">List of the shopping cart item</param>
-        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
-        /// <returns>Estimate shipping model</returns>
-        protected virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
-        {
-            if (cart == null)
-                throw new ArgumentNullException("cart");
-
-            var model = new EstimateShippingModel();
-
-            model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
-            if (model.Enabled)
-            {
-                //countries
-                int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.CountryId
-                    : model.CountryId;
-                model.AvailableCountries.Add(new SelectListItem
-                {
-                    Text = _localizationService.GetResource("Address.SelectCountry"),
-                    Value = "0"
-                });
-                foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.GetLocalized(x => x.Name),
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == defaultEstimateCountryId
-                    });
-
-                //states
-                int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId
-                    : model.StateProvinceId;
-                var states = defaultEstimateCountryId.HasValue
-                    ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value,_workContext.WorkingLanguage.Id).ToList()
-                    : new List<StateProvince>();
-                if (states.Any())
-                {
-                    foreach (var s in states)
-                    {
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = s.GetLocalized(x => x.Name),
-                            Value = s.Id.ToString(),
-                            Selected = s.Id == defaultEstimateStateId
-                        });
-                    }
-                }
-                else
-                {
-                    model.AvailableStates.Add(new SelectListItem
-                    {
-                        Text = _localizationService.GetResource("Address.OtherNonUS"),
-                        Value = "0"
-                    });
-                }
-
-                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
             }
 
             return model;
@@ -738,9 +670,77 @@ namespace Nop.Web.Factories
             return model;
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
+
+        /// <summary>
+        /// Prepare the estimate shipping model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
+        /// <returns>Estimate shipping model</returns>
+        public virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            var model = new EstimateShippingModel();
+
+            model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
+            if (model.Enabled)
+            {
+                //countries
+                int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    ? _workContext.CurrentCustomer.ShippingAddress.CountryId
+                    : model.CountryId;
+                model.AvailableCountries.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Address.SelectCountry"),
+                    Value = "0"
+                });
+                foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
+                    model.AvailableCountries.Add(new SelectListItem
+                    {
+                        Text = c.GetLocalized(x => x.Name),
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == defaultEstimateCountryId
+                    });
+
+                //states
+                int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId
+                    : model.StateProvinceId;
+                var states = defaultEstimateCountryId.HasValue
+                    ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value, _workContext.WorkingLanguage.Id).ToList()
+                    : new List<StateProvince>();
+                if (states.Any())
+                {
+                    foreach (var s in states)
+                    {
+                        model.AvailableStates.Add(new SelectListItem
+                        {
+                            Text = s.GetLocalized(x => x.Name),
+                            Value = s.Id.ToString(),
+                            Selected = s.Id == defaultEstimateStateId
+                        });
+                    }
+                }
+                else
+                {
+                    model.AvailableStates.Add(new SelectListItem
+                    {
+                        Text = _localizationService.GetResource("Address.OtherNonUS"),
+                        Value = "0"
+                    });
+                }
+
+                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
+            }
+
+            return model;
+        }
 
         /// <summary>
         /// Prepare the cart item picture model
@@ -777,14 +777,11 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
         /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
-        /// <param name="prepareEstimateShippingIfEnabled">Whether to prepare estimate shipping model</param>
-        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
         /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
         /// <returns>Shopping cart model</returns>
         public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable = true, 
             bool validateCheckoutAttributes = false, 
-            bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true,
             bool prepareAndDisplayOrderReviewData = false)
         {
             if (cart == null)
@@ -836,12 +833,6 @@ namespace Nop.Web.Factories
             //checkout attributes
             model.CheckoutAttributes = PrepareCheckoutAttributeModels(cart);
     
-            //estimate shipping
-            if (prepareEstimateShippingIfEnabled)
-            {
-                model.EstimateShipping = PrepareEstimateShippingModel(cart, setEstimateShippingDefaultAddress);
-            }
-
             //cart items
             foreach (var sci in cart)
             {
@@ -849,7 +840,7 @@ namespace Nop.Web.Factories
                 model.Items.Add(cartItemModel);
             }
             
-#region Payment methods
+            #region Payment methods
 
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
@@ -881,8 +872,8 @@ namespace Nop.Web.Factories
             }
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
-
-#endregion
+            
+            #endregion
 
             //order review data
             if (prepareAndDisplayOrderReviewData)
@@ -1320,7 +1311,7 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-
-#endregion
+        
+        #endregion
     }
 }

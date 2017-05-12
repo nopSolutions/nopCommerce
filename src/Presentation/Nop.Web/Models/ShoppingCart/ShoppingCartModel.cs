@@ -14,7 +14,6 @@ namespace Nop.Web.Models.ShoppingCart
         {
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
-            EstimateShipping = new EstimateShippingModel();
             DiscountBox = new DiscountBoxModel();
             GiftCardBox = new GiftCardBoxModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
@@ -40,7 +39,6 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
-        public EstimateShippingModel EstimateShipping { get; set; }
         public DiscountBoxModel DiscountBox { get; set; }
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }

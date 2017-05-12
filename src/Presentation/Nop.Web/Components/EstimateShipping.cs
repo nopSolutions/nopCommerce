@@ -9,13 +9,13 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Components
 {
-    public class OrderSummaryViewComponent : ViewComponent
+    public class EstimateShippingViewComponent : ViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
-        public OrderSummaryViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
+        public EstimateShippingViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
@@ -31,10 +31,10 @@ namespace Nop.Web.Components
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var model = new ShoppingCartModel();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart,
-                isEditable: false,
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
+            var model = _shoppingCartModelFactory.PrepareEstimateShippingModel(cart);
+            if (!model.Enabled)
+                return Content("");
+
             return View(model);
         }
     }
