@@ -739,7 +739,7 @@ namespace Nop.Web.Framework.Extensions
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
 #else
-            return html.LabelFor(expression, html);
+            return html.LabelFor(expression, htmlAttributes);
 #endif
         }
 
