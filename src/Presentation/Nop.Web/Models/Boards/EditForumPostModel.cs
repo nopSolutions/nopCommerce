@@ -1,7 +1,4 @@
-﻿#if NET451
-using System.Web.Mvc;
-#endif
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Core.Domain.Forums;
 using Nop.Web.Validators.Boards;
 

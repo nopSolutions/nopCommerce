@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-#if NET451
-using System.Web.Mvc;
-#endif
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -68,8 +66,7 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Utilities
-
-#if NET451
+        
         /// <summary>
         /// Get the list of forum topic types
         /// </summary>
@@ -123,8 +120,7 @@ namespace Nop.Web.Factories
 
             return forumsList;
         }
-
-#endif
+        
         #endregion
 
         #region Methods
@@ -445,9 +441,7 @@ namespace Nop.Web.Factories
 
             var model = new TopicMoveModel
             {
-#if NET451
                 ForumList = ForumGroupsForumsList(),
-#endif
                 Id = forumTopic.Id,
                 TopicSeName = forumTopic.GetSeName(),
                 ForumSelected = forumTopic.ForumId
@@ -475,9 +469,7 @@ namespace Nop.Web.Factories
             model.ForumSeName = forum.GetSeName();
             model.ForumEditor = _forumSettings.ForumEditor;
             model.IsCustomerAllowedToSetTopicPriority = _forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer);
-#if NET451
             model.TopicPriorities = ForumTopicTypesList();
-#endif
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
         }
 
@@ -502,9 +494,7 @@ namespace Nop.Web.Factories
 
             model.IsEdit = true;
             model.Id = forumTopic.Id;
-#if NET451
             model.TopicPriorities = ForumTopicTypesList();
-#endif
             model.ForumName = forum.Name;
             model.ForumSeName = forum.GetSeName();
             model.ForumId = forum.Id;
@@ -652,8 +642,7 @@ namespace Nop.Web.Factories
             var model = new SearchModel();
 
             int pageSize = 10;
-
-#if NET451
+            
             // Create the values for the "Limit results to previous" select list
             var limitList = new List<SelectListItem>
             {
@@ -749,8 +738,7 @@ namespace Nop.Web.Factories
                 }
             };
             model.WithinList = withinList;
-            
-#endif
+           
             int forumIdSelected;
             int.TryParse(forumId, out forumIdSelected);
             model.ForumIdSelected = forumIdSelected;

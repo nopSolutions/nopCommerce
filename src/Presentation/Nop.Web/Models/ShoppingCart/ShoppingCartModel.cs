@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-#if NET451
-using System.Web.Mvc;
-#endif
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.Models;

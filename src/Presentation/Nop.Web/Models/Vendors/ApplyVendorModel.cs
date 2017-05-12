@@ -1,7 +1,4 @@
-﻿#if NET451
-using System.Web.Mvc;
-#endif
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Validators.Vendors;

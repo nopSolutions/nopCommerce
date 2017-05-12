@@ -4,9 +4,6 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-#if NET451
-using System.Web.Mvc;
-#endif
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
@@ -70,9 +70,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IGenericAttributeService _genericAttributeService;
-#if NET451
-        private readonly HttpContextBase _httpContext;
-#endif
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -115,9 +113,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IWebHelper webHelper, 
             IGenericAttributeService genericAttributeService,
-#if NET451
-            HttpContextBase httpContext,
-#endif
+            IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -156,9 +152,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
             this._genericAttributeService = genericAttributeService;
-#if NET451
-            this._httpContext = httpContext;
-#endif
+            this._httpContextAccessor = httpContextAccessor;
 
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -172,9 +166,9 @@ namespace Nop.Web.Factories
             this._customerSettings = customerSettings;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         /// <summary>
         /// Prepare the checkout attribute models
@@ -744,9 +738,9 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Prepare the cart item picture model
@@ -855,7 +849,7 @@ namespace Nop.Web.Factories
                 model.Items.Add(cartItemModel);
             }
             
-            #region Payment methods
+#region Payment methods
 
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
@@ -888,7 +882,7 @@ namespace Nop.Web.Factories
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
 
-            #endregion
+#endregion
 
             //order review data
             if (prepareAndDisplayOrderReviewData)
@@ -1327,6 +1321,6 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        #endregion
+#endregion
     }
 }

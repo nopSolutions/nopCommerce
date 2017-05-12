@@ -58,10 +58,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 if (filterContext == null)
                     throw new ArgumentNullException("filterContext");
-#if NET451
-                if (OutputCacheAttribute.IsChildActionCacheActive(filterContext))
-                    throw new InvalidOperationException("You cannot use [AdminAuthorize] attribute when a child action cache is active");
-#endif
+
                 //there is AdminAuthorizeFilter, so check access
                 if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))
                 {
