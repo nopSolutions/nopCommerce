@@ -1,6 +1,6 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -77,6 +77,7 @@ namespace Nop.Web.Controllers
             }
             return PartialView(model);
         }
+
         [HttpPost]
         public virtual IActionResult SubscribePopupPOST(int productId)
         {
@@ -190,9 +191,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public virtual IActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
+        public virtual IActionResult CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
-            foreach (var key in formCollection.AllKeys)
+            foreach (var key in formCollection.Keys)
             {
                 var value = formCollection[key];
 
@@ -217,4 +218,3 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
-#endif
