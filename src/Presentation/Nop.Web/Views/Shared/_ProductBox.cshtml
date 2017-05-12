@@ -3,8 +3,9 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
-@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
@@ -32,7 +33,7 @@
         <h2 class="product-title">
             <a href="@Url.RouteUrl("Product", new {SeName = Model.SeName})">@Model.Name</a>
         </h2>
-        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+        @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
         {
             <div class="sku">
                 @Model.Sku
@@ -65,7 +66,7 @@
                 <span class="price actual-price">@Model.ProductPrice.Price</span>
                 @if (Model.ProductPrice.DisplayTaxShippingInfo)
                 {
-                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <span class="tax-shipping-info">

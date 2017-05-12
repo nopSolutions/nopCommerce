@@ -1,7 +1,7 @@
-﻿@using Nop.Core.Infrastructure
-@using Nop.Web.Framework.Themes
+﻿@using Nop.Web.Framework.Themes
+@inject IThemeContext themeContext;
 @{
-    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var themeName = themeContext.WorkingThemeName;
 }
 <!DOCTYPE html>
 <html @Html.NopPageCssClasses()>

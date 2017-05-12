@@ -1,8 +1,8 @@
 ﻿@model FooterModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
-@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Common;
+@inject IWorkContext workContext;
 <div class="footer">
     <div class="footer-upper">
         <div class="footer-block information">
@@ -98,7 +98,7 @@
             <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
             @if (Model.DisplayTaxShippingInfoFooter)
             {
-                var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                 <span class="footer-tax-shipping">
                     @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo")}))
                 </span>

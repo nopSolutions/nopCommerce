@@ -1,9 +1,8 @@
 ﻿@model LoginModel
-@using Nop.Web.Models.Customer;
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Microsoft.AspNetCore.Http
+@using Nop.Web.Models.Customer
 @using System.Net
+@using Nop.Core
+@inject IWebHelper webHelper
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -16,7 +15,6 @@
     var registerUrl = Url.RouteUrl("Register");
     if (!String.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
     {
-        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
         registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]), null);
     }
 }

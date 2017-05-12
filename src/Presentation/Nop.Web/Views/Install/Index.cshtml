@@ -2,12 +2,12 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Install;
 @using Nop.Web.Infrastructure.Installation;
+@*localization service for installation service
+we do not use standard nopCommerce localization because database is not installed yet
+locale resources for installation process are stored into \App_Data\Localization\Installation directory*@
+@inject IInstallationLocalizationService ILS
 @{
     Layout = null;
-    //localization service for installation service
-    //we do not use standard nopCommerce localization because database is not installed yet
-    //locale resources for installation process are stored into \App_Data\Localization\Installation directory
-    var ILS = EngineContext.Current.Resolve<IInstallationLocalizationService>();
 }
 <!DOCTYPE html>
 <html>

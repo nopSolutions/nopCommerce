@@ -1,7 +1,5 @@
-﻿@using Nop.Core.Infrastructure
-@using Nop.Services.Helpers
-@{
-    var dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
+﻿@using Nop.Services.Helpers
+@inject IDateTimeHelper dateTimeHelper
 }
 <div class="forums-header">
     <div class="current-time">

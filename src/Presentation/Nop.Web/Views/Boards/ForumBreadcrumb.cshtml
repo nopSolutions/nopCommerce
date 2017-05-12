@@ -1,9 +1,9 @@
 ﻿@model ForumBreadcrumbModel
-@using Nop.Core.Domain.Common;
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Models.Boards;
+@using Nop.Core.Domain.Common
+@using Nop.Web.Models.Boards
+@inject CommonSettings commonSettings
 @{
-    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
 }
 <div class="breadcrumb forum-breadcrumb">
     <ul>

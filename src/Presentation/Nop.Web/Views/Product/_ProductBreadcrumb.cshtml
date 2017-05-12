@@ -1,9 +1,9 @@
 ﻿@model ProductDetailsModel.ProductBreadcrumbModel
-@using Nop.Core.Domain.Common;
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Common
+@using Nop.Web.Models.Catalog
+@inject CommonSettings commonSettings
 @{
-    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
 }
 @if (Model.Enabled)
 {

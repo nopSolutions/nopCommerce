@@ -1,9 +1,11 @@
 ﻿@model IList<ProductDetailsModel.ProductAttributeModel>
-@using Nop.Web.Models.Catalog;
-@using Nop.Core.Domain.Catalog;
-@using Nop.Core.Domain.Media;
-@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Media
 @using System.Text;
+@using Nop.Services.Media
+@inject IDownloadService downloadService
+@inject CatalogSettings catalogSettings
 @if (Model.Count > 0)
 {
     <div class="attributes">
@@ -140,7 +142,6 @@
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
                                 Download download = null;
                                 if (!String.IsNullOrEmpty(attribute.DefaultValue))
                                 {
@@ -358,7 +359,7 @@
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
-    if (EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange)
+    if (catalogSettings.AjaxProcessAttributeChange)
     {
         //generate change event script
         foreach (var attribute in Model)

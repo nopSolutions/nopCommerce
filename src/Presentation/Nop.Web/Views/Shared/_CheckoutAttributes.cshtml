@@ -1,8 +1,9 @@
 ﻿@model IList<Nop.Web.Models.ShoppingCart.ShoppingCartModel.CheckoutAttributeModel>
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Domain.Media
-@using Nop.Core.Infrastructure;
 @using System.Text;
+@using Nop.Services.Media
+@inject IDownloadService downloadService;
 @if (Model.Count > 0)
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
@@ -94,7 +95,6 @@
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
                                 Download download = null;
                                 if (!String.IsNullOrEmpty(attribute.DefaultValue))
                                 {
