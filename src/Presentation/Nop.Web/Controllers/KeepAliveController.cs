@@ -1,5 +1,4 @@
-﻿#if NET451
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Web.Controllers
 {
@@ -13,4 +12,3 @@ namespace Nop.Web.Controllers
         }
     }
 }
-#endif
