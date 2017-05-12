@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-#if NET451
-
-using System.Web;
-using System.Web.Mvc;
-#endif
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -939,11 +934,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-#if NET451
-                return new NullJsonResult();
-#else
-                return new JsonResult(null);
-#endif
+                return new JsonResult("");
 
                 var errors = new List<string>();
             string attributeXml = ParseProductAttributes(product, form, errors);
