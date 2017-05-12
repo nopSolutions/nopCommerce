@@ -13,7 +13,7 @@
         <h1>@T("PageTitle.Vendors.Apply")</h1>
     </div>
     <div class="page-body">
-        @Html.Action("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "ApplyVendor" })
         @Html.Widget("applyvendor_top")
         @if (Model.DisableFormInput)
         {
@@ -23,7 +23,7 @@
         }
         else
         {
-            using (Html.BeginForm(null, null, FormMethod.Post, new RouteValueDictionary { { "enctype", "multipart/form-data" } }))
+            using (Html.BeginForm(FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
                 var validationSummary = Html.ValidationSummary(true);

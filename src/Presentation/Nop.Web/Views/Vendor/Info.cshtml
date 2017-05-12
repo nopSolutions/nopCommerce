@@ -12,7 +12,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
 }
 @using (Html.BeginRouteForm("CustomerVendorInfo", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {

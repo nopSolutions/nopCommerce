@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
-using System.Web;
-using System.Web.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -24,7 +23,7 @@ namespace Nop.Web.Controllers
 {
     public partial class VendorController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly IVendorModelFactory _vendorModelFactory;
         private readonly IWorkContext _workContext;
@@ -38,10 +37,10 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
-
-#endregion
-
-#region Constructors
+        
+        #endregion
+        
+        #region Constructors
 
         public VendorController(IVendorModelFactory vendorModelFactory,
             IWorkContext workContext,
@@ -68,22 +67,21 @@ namespace Nop.Web.Controllers
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
         }
-
-#endregion
-
-#region Utilites
-
-        [NonAction]
+        
+        #endregion
+        
+        #region Utilites
+        
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {
             var picture = _pictureService.GetPictureById(vendor.PictureId);
             if (picture != null)
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
-
-#endregion
-
-#region Methods
+        
+        #endregion
+        
+        #region Methods
 
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ApplyVendor()
@@ -92,7 +90,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             var model = new ApplyVendorModel();
             model = _vendorModelFactory.PrepareApplyVendorModel(model, true, false);
@@ -102,13 +100,13 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, HttpPostedFileBase uploadedFile)
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
@@ -182,7 +180,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -195,10 +193,10 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Info")]
         [PublicAntiForgery]
         [FormValueRequired("save-info-button")]
-        public virtual IActionResult Info(VendorInfoModel model, HttpPostedFileBase uploadedFile)
+        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -261,7 +259,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RemovePicture()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -281,8 +279,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToAction("Info");
         }
-
-#endregion
+        
+        #endregion
     }
 }
-#endif
