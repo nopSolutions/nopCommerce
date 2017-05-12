@@ -9,7 +9,7 @@
     Html.AppendPageCssClassParts("html-active-discussions-page");
 }
 <div class="page active-discussions-page">
-    @Html.Action("ForumBreadcrumb")
+    @await Component.InvokeAsync("ForumBreadcrumb")
     @await Html.PartialAsync("_ForumHeader")
     @Html.Widget("boards_activediscussions_after_header")
     @await Html.PartialAsync("_ActiveTopics", Model)

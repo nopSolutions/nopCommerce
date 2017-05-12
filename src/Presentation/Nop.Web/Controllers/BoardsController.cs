@@ -1,9 +1,12 @@
-﻿#if NET451
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+#if NET451
 using System.ServiceModel.Syndication;
-using System.Web.Mvc;
+#endif
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -13,6 +16,7 @@ using Nop.Services.Seo;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 
@@ -30,9 +34,9 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IForumModelFactory _forumModelFactory;
         private readonly ForumSettings _forumSettings;
-
+        
         #endregion
-
+        
         #region Constructors
 
         public BoardsController(IForumService forumService,
@@ -51,9 +55,9 @@ namespace Nop.Web.Controllers
             this._forumModelFactory = forumModelFactory;
             this._forumSettings = forumSettings;
         }
-
+        
         #endregion
-
+        
         #region Methods
 
         public virtual IActionResult Index()
@@ -66,22 +70,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareBoardsIndexModel();
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual IActionResult ActiveDiscussionsSmall()
-        {
-            if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
-
-            var model = _forumModelFactory.PrepareActiveDiscussionsModel();
-            if (!model.ForumTopics.Any())
-                return Content("");
-
-            return PartialView(model);
-        }
-
+        
         public virtual IActionResult ActiveDiscussions(int forumId = 0, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -93,6 +82,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        #if NET451
         public virtual IActionResult ActiveDiscussionsRss(int forumId = 0)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -135,6 +125,7 @@ namespace Nop.Web.Controllers
 
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
+        #endif
 
         public virtual IActionResult ForumGroup(int id)
         {
@@ -167,7 +158,8 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareForumPageModel(forum, page);
             return View(model);
         }
-
+        
+#if NET451
         public virtual IActionResult ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -222,6 +214,7 @@ namespace Nop.Web.Controllers
 
             return new RssActionResult(new SyndicationFeed(), _webHelper.GetThisPageUrl(false));
         }
+#endif
 
         [HttpPost]
         public virtual IActionResult ForumWatch(int id)
@@ -397,7 +390,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return new HttpUnauthorizedResult();
+                    return new UnauthorizedResult();
                 }
                 var forum = _forumService.GetForumById(forumTopic.ForumId);
 
@@ -433,7 +426,7 @@ namespace Nop.Web.Controllers
 
             if (_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum) == false)
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
 
             var model = new EditForumTopicModel();
@@ -463,7 +456,7 @@ namespace Nop.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum))
                     {
-                        return new HttpUnauthorizedResult();
+                        return new UnauthorizedResult();
                     }
 
                     string subject = model.Subject;
@@ -568,7 +561,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
 
             var model = new EditForumTopicModel();
@@ -603,7 +596,7 @@ namespace Nop.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
                     {
-                        return new HttpUnauthorizedResult();
+                        return new UnauthorizedResult();
                     }
 
                     string subject = model.Subject;
@@ -721,7 +714,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                 {
-                    return new HttpUnauthorizedResult();
+                    return new UnauthorizedResult();
                 }
 
                 var forumTopic = forumPost.ForumTopic;
@@ -766,7 +759,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
 
 
@@ -794,7 +787,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
-                        return new HttpUnauthorizedResult();
+                        return new UnauthorizedResult();
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
@@ -885,7 +878,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
 
             var model = _forumModelFactory.PreparePostEditModel(forumPost, false);
@@ -909,7 +902,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new HttpUnauthorizedResult();
+                return new UnauthorizedResult();
             }
 
             var forumTopic = forumPost.ForumTopic;
@@ -1004,23 +997,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareSearchModel(searchterms,adv, forumId, within, limitDays, page);
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual IActionResult LastPost(int forumPostId, bool showTopic)
-        {
-            var forumPost = _forumService.GetPostById(forumPostId);
-            var model = _forumModelFactory.PrepareLastPostModel(forumPost, showTopic);
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public virtual IActionResult ForumBreadcrumb(int? forumGroupId, int? forumId, int? forumTopicId)
-        {
-            var model = _forumModelFactory.PrepareForumBreadcrumbModel(forumGroupId, forumId, forumTopicId);
-            return PartialView(model);
-        }
-
-
+        
         public virtual IActionResult CustomerForumSubscriptions(int? page)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
@@ -1032,9 +1009,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerForumSubscriptions")]
-        public virtual IActionResult CustomerForumSubscriptionsPOST(FormCollection formCollection)
+        public virtual IActionResult CustomerForumSubscriptionsPOST(IFormCollection formCollection)
         {
-            foreach (var key in formCollection.AllKeys)
+            foreach (var key in formCollection.Keys)
             {
                 var value = formCollection[key];
 
@@ -1060,11 +1037,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PostVote(int postId, bool isUp)
         {
             if (!_forumSettings.AllowPostVoting)
-                return new NullJsonResult();
+                return Json(null);
 
             var forumPost = _forumService.GetPostById(postId);
             if (forumPost == null)
-                return new NullJsonResult();
+                return Json(null);
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Json(new
@@ -1114,7 +1091,6 @@ namespace Nop.Web.Controllers
             return Json(new { VoteCount = forumPost.VoteCount, IsUp = isUp });
         }
 
-        #endregion
+#endregion
     }
 }
-#endif

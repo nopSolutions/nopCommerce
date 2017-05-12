@@ -52,7 +52,7 @@ namespace Nop.Web.Extensions
         public static IHtmlContent Pager<TModel>(this IHtmlHelper<TModel> html, PagerModel model)
         {
             if (model.TotalRecords == 0)
-                return null;
+                return new HtmlString("");
 
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 

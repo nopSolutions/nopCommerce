@@ -102,7 +102,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

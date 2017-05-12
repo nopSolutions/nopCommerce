@@ -26,7 +26,7 @@
         }
     }
 </script>
-@Html.Action("ForumBreadcrumb")
+@await Component.InvokeAsync("ForumBreadcrumb")
 <div class="page forum-search-page">
     <div class="page-title">
         <h1>@T("Forum.Search")</h1>
@@ -214,7 +214,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @Html.Action("LastPost", new {forumPostId = topic.LastPostId, showTopic = false})
+                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

@@ -9,7 +9,7 @@
     Html.AppendPageCssClassParts("html-forum-group-page");
 }
 <div class="page forum-group-page">
-    @Html.Action("ForumBreadcrumb", new { forumGroupId = Model.Id })
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumGroupId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
     @Html.Widget("boards_forumgroup_after_header")
     @await Html.PartialAsync("_ForumGroup", Model)

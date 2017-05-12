@@ -6,7 +6,7 @@
     Html.AppendPageCssClassParts("html-forum-edit-page");
 }
 
-@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+@await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
 <div class="page forum-edit-page">
     <div class="page-title">
         @if (Model.IsEdit)
