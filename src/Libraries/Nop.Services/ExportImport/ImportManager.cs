@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -148,16 +149,12 @@ namespace Nop.Services.ExportImport
 
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
-#if NET451
-            var mimeType = MimeMapping.GetMimeMapping(filePath);
-#else
-            var mimeType = MimeTypes.ImageJpeg;
-#endif
-
-            //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
-            if (mimeType == MimeTypes.ApplicationOctetStream)
+            //TODO test ne implementation
+            string mimeType;
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out mimeType);
+            //set to jpeg in case mime type cannot be found
+            if (mimeType == null)
                 mimeType = MimeTypes.ImageJpeg;
-
             return mimeType;
         }
 

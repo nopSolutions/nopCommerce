@@ -144,7 +144,7 @@ namespace Nop.Services.Media
             if (mimeType == null)
                 return null;
 
-            //also see System.Web.MimeMapping for more mime types
+            //TODO use FileExtensionContentTypeProvider to get file extension
 
             string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
