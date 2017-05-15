@@ -15,17 +15,19 @@ nopCommerce offers unprecedented flexibility and control. Since it is open-sourc
 
 ## nopCommerce resources: ##
 
-nopCommerce Site: [http://www.nopcommerce.com](http://www.nopcommerce.com)
+nopCommerce official site: [http://www.nopcommerce.com](http://www.nopcommerce.com)
 
 nopCommerce demo store: [http://www.nopCommerce.com/demo.aspx](http://www.nopCommerce.com/demo.aspx)
 
-Complete feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.nopcommerce.com/featurelist.aspx)
+Feature list: [http://www.nopcommerce.com/featurelist.aspx](http://www.nopcommerce.com/featurelist.aspx)
 
-Technology & System Requirements: [http://www.nopcommerce.com/technologysystemrequirements.aspx](http://www.nopcommerce.com/technologysystemrequirements.aspx)
+Technology & system Requirements: [http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757](http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757)
 
 Documentation: [http://docs.nopcommerce.com/](http://docs.nopcommerce.com/)
 
 Forums: [http://www.nopcommerce.com/boards/](http://www.nopcommerce.com/boards/)
+
+Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
 
 ## Store demo: ##
 
