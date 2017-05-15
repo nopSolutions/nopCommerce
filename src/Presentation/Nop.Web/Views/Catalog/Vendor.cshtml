@@ -1,4 +1,5 @@
 ﻿@model VendorModel
+@using Nop.Core.Domain.Seo
 @inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -17,9 +18,6 @@
         Html.AddCanonicalUrlParts(vendorUrl);
     }
 }
-@using Nop.Core.Domain.Seo;
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Models.Catalog;
 <div class="page vendor-page">
     <div class="page-title">
         <h1>@Model.Name</h1>

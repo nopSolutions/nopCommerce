@@ -1,6 +1,4 @@
 ﻿@model CustomerProductReviewsModel
-@using Nop.Web.Models.Catalog
-@using Nop.Web.Models.Customer;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -13,7 +11,6 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ProductReviews })
 }
-
 <div class="page account-page my-product-reviews-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerProductReviews")</h1>

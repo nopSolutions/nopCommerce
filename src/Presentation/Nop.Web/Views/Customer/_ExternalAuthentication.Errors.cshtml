@@ -1,7 +1,7 @@
 ﻿@{
     var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true);
 }
-@using Nop.Services.Authentication.External;
+@using Nop.Services.Authentication.External
 @if (errors != null && errors.Count > 0)
 {
     <div class="external-auth-errors">

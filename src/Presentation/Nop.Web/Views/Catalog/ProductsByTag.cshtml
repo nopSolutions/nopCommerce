@@ -1,4 +1,5 @@
 ﻿@model ProductsByTagModel
+@using Nop.Core.Domain.Seo
 @inject SeoSettings seoSettings
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -15,9 +16,6 @@
         Html.AddCanonicalUrlParts(productsByTagUrl);
     }
 }
-@using Nop.Core.Domain.Seo
-@using Nop.Core.Infrastructure
-@using Nop.Web.Models.Catalog;
 <div class="page product-tag-page">
     <div class="page-title">
         <h1>@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>

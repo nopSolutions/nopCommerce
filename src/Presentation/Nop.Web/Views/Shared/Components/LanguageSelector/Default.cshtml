@@ -1,9 +1,7 @@
 ﻿@model LanguageSelectorModel
-@using Nop.Web.Models.Common;
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
 @using Microsoft.AspNetCore.Http
 @using System.Net
+@using Nop.Core
 @inject IWebHelper webHelper
 @inject IHttpContextAccessor httpContextAccessor
 @if (Model.AvailableLanguages.Count > 1)

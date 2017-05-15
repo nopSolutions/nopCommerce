@@ -8,8 +8,6 @@
     Html.AppendPageCssClassParts("html-account-page");
     Html.AppendPageCssClassParts("html-order-list-page");
 }
-@using Nop.Web.Models.Customer
-@using Nop.Web.Models.Order;
 @section left
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders })

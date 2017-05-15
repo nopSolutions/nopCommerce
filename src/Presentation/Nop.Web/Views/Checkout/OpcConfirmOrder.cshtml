@@ -1,5 +1,4 @@
 ﻿@model CheckoutConfirmModel
-@using Nop.Web.Models.Checkout;
 <div class="checkout-data">
     @Html.Widget("op_checkout_confirm_top")
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)

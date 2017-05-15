@@ -1,5 +1,4 @@
 ﻿@model TopMenuModel.CategoryLineModel
-@using Nop.Web.Models.Catalog;
 <li>
     <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">@Model.Category.Name
     @if (Model.Category.NumberOfProducts.HasValue)

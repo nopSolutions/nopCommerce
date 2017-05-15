@@ -1,6 +1,5 @@
 ﻿@model ProductDetailsModel.AddToCartModel
-@using Nop.Web.Models.Catalog;
-@using Nop.Core.Domain.Orders;
+@using Nop.Core.Domain.Orders
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
     @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)

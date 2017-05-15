@@ -1,5 +1,5 @@
-﻿@model IList<Nop.Web.Models.Customer.CustomerAttributeModel>
-@using Nop.Core.Domain.Catalog;
+﻿@model IList<CustomerAttributeModel>
+@using Nop.Core.Domain.Catalog
 @foreach (var attribute in Model)
 {
     string controlId = string.Format("customer_attribute_{0}", attribute.Id);

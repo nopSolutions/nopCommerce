@@ -1,4 +1,6 @@
 ﻿@model CategoryModel
+@using Nop.Core.Domain.Common
+@using Nop.Core.Domain.Seo
 @inject SeoSettings seoSettings
 @inject CommonSettings commonSettings
 @{
@@ -20,11 +22,6 @@
 
     var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
 }
-@using Microsoft.AspNetCore.Http
-@using Nop.Core.Domain.Common;
-@using Nop.Core.Domain.Seo;
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Models.Catalog;
 @*category breadcrumb*@
 @section Breadcrumb
 {
