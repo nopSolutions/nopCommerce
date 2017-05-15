@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
@@ -31,6 +37,65 @@ namespace Nop.Web.Framework.Controllers
     public abstract class BaseController : Controller
     {
         #region Methods
+
+        /// <summary>
+        /// Render componentto string
+        /// </summary>
+        /// <param name="componentName">Component name</param>
+        /// <returns>Result</returns>
+        public virtual string RenderViewComponentToString(string componentName)
+        {
+            //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
+            //we customized it to allow running from controllers
+
+            //TODO add support for parameters (pass ViewComponent as input parameter)
+            if (String.IsNullOrEmpty(componentName))
+                throw new ArgumentNullException("componentName");
+
+            var actionContextAccessor = HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) as IActionContextAccessor;
+            if (actionContextAccessor == null)
+                throw new Exception("IActionContextAccessor cannot be resolved");
+
+            var context = actionContextAccessor.ActionContext;
+
+            var viewComponentResult = ViewComponent(componentName);
+
+            var viewData = this.ViewData;
+            if (viewData == null)
+            {
+                throw new NotImplementedException();
+                //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
+            }
+
+            var tempData = this.TempData;
+            if (tempData == null)
+            {
+                throw new NotImplementedException();
+                //TODO tempData = _tempDataDictionaryFactory.GetTempData(context.HttpContext);
+            }
+
+            using (var writer = new StringWriter())
+            {
+                var viewContext = new ViewContext(
+                    context,
+                    NullView.Instance,
+                    viewData,
+                    tempData,
+                    writer,
+                    new HtmlHelperOptions());
+
+                // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
+                var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
+                (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
+
+                Task<IHtmlContent> result = viewComponentResult.ViewComponentType == null ? 
+                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
+                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
+
+                result.Result.WriteTo(writer, HtmlEncoder.Default);
+                return writer.ToString();
+            }
+        }
 
         /// <summary>
         /// Render partial view to string

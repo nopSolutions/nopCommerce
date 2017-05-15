@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -37,7 +43,14 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
+using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Mvc.Razor;
 
 namespace Nop.Web.Controllers
 {
@@ -678,10 +691,8 @@ namespace Nop.Web.Controllers
                         .ToList()
                         .GetTotalProducts());
 
-
-                        //TODO temporary solution until we find how to render view components (ToString)
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderPartialViewToString("FlyoutShoppingCart", _shoppingCartModelFactory.PrepareMiniShoppingCartModel())
+                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -694,7 +705,6 @@ namespace Nop.Web.Controllers
                     }
             }
         }
-
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
@@ -839,8 +849,8 @@ namespace Nop.Web.Controllers
                     _shoppingCartService.DeleteShoppingCartItem(otherCartItemWithSameParameters);
                 }
             }
-
-#region Return result
+            
+            #region Return result
 
             if (addToCartWarnings.Any())
             {
@@ -909,7 +919,7 @@ namespace Nop.Web.Controllers
                         .GetTotalProducts());
                         
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderPartialViewToString("FlyoutShoppingCart", _shoppingCartModelFactory.PrepareMiniShoppingCartModel())
+                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -921,9 +931,8 @@ namespace Nop.Web.Controllers
                         });
                     }
             }
-
-
-#endregion
+            
+            #endregion
         }
 
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
