@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -11,6 +12,7 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Themes;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -133,5 +135,20 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             return mvcBuilder;
         }
+
+        /// <summary>
+        /// Adds services required for themes support
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddThemes(this IServiceCollection services)
+        {
+            //themes
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
+            });
+
+        }
+
     }
 }
