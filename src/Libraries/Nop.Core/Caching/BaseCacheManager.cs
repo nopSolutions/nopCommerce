@@ -23,7 +23,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// All keys of cache
         /// </summary>
-        /// <remarks>dictionary value indicate with key still exist in cache</remarks> 
+        /// <remarks>Dictionary value indicating whether a key still exists in cache</remarks> 
         protected static readonly ConcurrentDictionary<string, bool> _allKeys;
 
         #endregion
@@ -86,19 +86,19 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        /// Try to remove key from dictionary, or mark key as not exist in cache
+        /// Try to remove a key from dictionary, or mark a key as not existing in cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         protected void TryRemoveKey(string key)
         {
             //try to remove key from dictionary
             if (_allKeys.TryRemove(key, out bool _))
-                //if not possible to remove key from dictionary, then try to mark key as not exist in cache
+                //if not possible to remove key from dictionary, then try to mark key as not existing in cache
                 _allKeys.TryUpdate(key, false, false);
         }
 
         /// <summary>
-        /// Remove all keys marked as not exist
+        /// Remove all keys marked as not existing
         /// </summary>
         private void ClearKeys()
         {
@@ -121,7 +121,7 @@ namespace Nop.Core.Caching
             if (reason == EvictionReason.Replaced)
                 return;
 
-            //try to remove all keys marked as not exist
+            //try to remove all keys marked as not existing
             ClearKeys();
 
             //try to remove this key from dictionary
