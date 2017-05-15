@@ -31,8 +31,6 @@
             }
             @{
                 var dataDictAddress = new ViewDataDictionary(ViewData);
-                //Merge ModelState (required for validation)
-                dataDictAddress.ModelState.Merge(ViewData.ModelState);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
                 @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
             }
