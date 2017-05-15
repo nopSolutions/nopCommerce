@@ -14,13 +14,13 @@ namespace Nop.Web.Framework.Controllers
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>List of validating errors</returns>
-        public abstract IList<string> ValidatePaymentForm(FormCollection form);
+        public abstract IList<string> ValidatePaymentForm(IFormCollection form);
 
         /// <summary>
         /// Get payment information
         /// </summary>
         /// <param name="form">The parsed form values</param>
         /// <returns>Payment info holder</returns>
-        public abstract ProcessPaymentRequest GetPaymentInfo(FormCollection form);
+        public abstract ProcessPaymentRequest GetPaymentInfo(IFormCollection form);
     }
 }

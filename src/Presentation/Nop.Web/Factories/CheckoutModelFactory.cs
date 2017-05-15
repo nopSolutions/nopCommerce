@@ -507,7 +507,8 @@ namespace Nop.Web.Factories
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = cart.RequiresShipping(),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
+                BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;
         }

@@ -61,7 +61,7 @@
                 <div class="message-error">@validationSummary</div>
             }
             @{
-                var dataDictAddress = new ViewDataDictionary();
+                var dataDictAddress = new ViewDataDictionary(ViewData);
                 //Merge ModelState (required for validation)
                 dataDictAddress.ModelState.Merge(ViewData.ModelState);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
