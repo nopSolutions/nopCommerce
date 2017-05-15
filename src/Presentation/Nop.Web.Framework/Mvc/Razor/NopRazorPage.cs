@@ -43,32 +43,6 @@ namespace Nop.Web.Framework.Mvc.Razor
             }
         }
 
-#if NET451
-        //{
-        //    get
-        //    {
-        //        var layout = base.Layout;
-
-        //        if (!string.IsNullOrEmpty(layout))
-        //        {
-        //            var filename = Path.GetFileNameWithoutExtension(layout);
-        //            ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindView(ViewContext.Controller.ControllerContext, filename, "");
-
-        //            if (viewResult.View != null && viewResult.View is RazorView)
-        //            {
-        //                layout = (viewResult.View as RazorView).ViewPath;
-        //            }
-        //        }
-
-        //        return layout;
-        //    }
-        //    set
-        //    {
-        //        base.Layout = value;
-        //    }
-        //}
-#endif
-
         /// <summary>
         /// Return a value indicating whether the working language and theme support RTL (right-to-left)
         /// </summary>
