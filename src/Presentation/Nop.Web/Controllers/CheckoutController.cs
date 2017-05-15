@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -1145,9 +1146,7 @@ namespace Nop.Web.Controllers
                 {
                     //new address
                     var model = new CheckoutBillingAddressModel();
-#if NET451
-                    TryUpdateModel(model.NewAddress, "BillingNewAddress");
-#endif
+                    var updateResult = TryUpdateModelAsync(model.NewAddress, "BillingNewAddress").Result;
 
                     //custom address attributes
                     var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
@@ -1208,12 +1207,8 @@ namespace Nop.Web.Controllers
                 if (cart.RequiresShipping())
                 {
                     //shipping is required
-
                     var model = new CheckoutBillingAddressModel();
-
-#if NET451
-                    TryUpdateModel(model);
-#endif
+                    var updateResult = TryUpdateModelAsync(model, "").Result;
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
                     {
                         //ship to the same address
@@ -1283,9 +1278,7 @@ namespace Nop.Web.Controllers
                 if (_shippingSettings.AllowPickUpInStore)
                 {
                     var model = new CheckoutShippingAddressModel();
-#if NET451
-                    TryUpdateModel(model);
-#endif
+                    var updateResult = TryUpdateModelAsync(model).Result;
                     if (model.PickUpInStore)
                     {
                         //no shipping address selected
@@ -1334,9 +1327,7 @@ namespace Nop.Web.Controllers
                 {
                     //new address
                     var model = new CheckoutShippingAddressModel();
-#if NET451
-                    TryUpdateModel(model.NewAddress, "ShippingNewAddress");
-#endif
+                    var updateResult = TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress").Result;
                     //custom address attributes
                     var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
                     var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
@@ -1495,9 +1486,7 @@ namespace Nop.Web.Controllers
 
 
                 var model = new CheckoutPaymentMethodModel();
-#if NET451
-                TryUpdateModel(model);
-#endif
+                var updateResult = TryUpdateModelAsync(model).Result;
                 //reward points
                 if (_rewardPointsSettings.Enabled)
                 {
