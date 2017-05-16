@@ -205,45 +205,47 @@
                                 var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
                                 var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
 
-                                if (specificationAttributeOptionId === null) {
-                                    //some validation
-                                    if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
-                                        //option
-                                        alert('Select specification attribute option');
+                                //some validation
+                                if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString()) &&
+                                    specificationAttributeOptionId === null){
+                                    //option
+                                    alert('@T("Admin.Catalog.Products.SpecificationAttributes.SelectSpecificationAlert")');
+                                } else
+                                    if(attributeTypeId != @(((int) SpecificationAttributeType.Option).ToString()) &&
+                                        !customValue){
+                                        //other (text, hyperlink, etc)
+                                        alert('@T("Admin.Catalog.Products.SpecificationAttributes.InputSpecificationAlert")');
+                                    }
                                 } else {
-                                    //other (text, hyperlink, etc)
-                                    alert('First, please create at least one specification attribute option');
-                                }
-                            } else {
                                     $('#addProductSpec').attr('disabled', true);
 
-                            var postData = {
-                                attributeTypeId: attributeTypeId,
-                                specificationAttributeOptionId: specificationAttributeOptionId,
-                                customValue: customValue,
-                                allowFiltering: allowFiltering,
-                                showOnProductPage: showOnProductPage,
-                                displayOrder: displayOrder,
-                                productId: @(Model.Id)
-                                };
-                            addAntiForgeryToken(postData);
+                                    var postData = {
+                                        attributeTypeId: attributeTypeId,
+                                        specificationAttributeOptionId: specificationAttributeOptionId,
+                                        customValue: customValue,
+                                        allowFiltering: allowFiltering,
+                                        showOnProductPage: showOnProductPage,
+                                        displayOrder: displayOrder,
+                                        productId: @(Model.Id)
+                                        };
+                                    addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                                data: postData,
-                                success: function(data) {
-                                    var grid = $("#specificationattributes-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-                                    $('#addProductSpec').attr('disabled', false);
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add specification attribute.');
-                                    $('#addProductSpec').attr('disabled', false);
-                                }
-                            });
-                        }
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
+                                        data: postData,
+                                        success: function(data) {
+                                            var grid = $("#specificationattributes-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                            $('#addProductSpec').attr('disabled', false);
+                                        },
+                                        error: function(xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to add specification attribute.');
+                                            $('#addProductSpec').attr('disabled', false);
+                                        }
+                                    });
+                            }
                         });
                         });
 
