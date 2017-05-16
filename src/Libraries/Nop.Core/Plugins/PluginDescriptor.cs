@@ -101,7 +101,15 @@ namespace Nop.Core.Plugins
 
         public virtual T Instance<T>() where T : class, IPlugin
         {
-            var instance = EngineContext.Current.Resolve(PluginType);
+            object instance = null;
+            try
+            {
+                instance = EngineContext.Current.Resolve(PluginType);
+            }
+            catch
+            {
+                //try resolve
+            }
             if (instance == null)
             {
                 //not resolved
