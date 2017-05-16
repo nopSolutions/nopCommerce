@@ -74,7 +74,7 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             return View(model);
         }
-        #if NET451
+#if NET451
         [ChildActionOnly]
         public virtual ActionResult NopCommerceNews()
         {
@@ -147,43 +147,8 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(_adminAreaSettings);
             return Content("Setting changed");
         }
+#endif
 
-        [ChildActionOnly]
-        public virtual ActionResult CommonStatistics()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests) ||
-                !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return Content("");
-
-            //a vendor doesn't have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            var model = new CommonStatisticsModel();
-
-            model.NumberOfOrders = _orderService.SearchOrders(
-                pageIndex: 0, 
-                pageSize: 1).TotalCount;
-
-            model.NumberOfCustomers = _customerService.GetAllCustomers(
-                customerRoleIds: new [] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, 
-                pageIndex: 0, 
-                pageSize: 1).TotalCount;
-
-            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
-                rs: ReturnRequestStatus.Pending, 
-                pageIndex: 0, 
-                pageSize:1).TotalCount;
-
-            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
-                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount;
-
-            return PartialView(model);
-        }
-        #endif
-        
         #endregion
     }
 }

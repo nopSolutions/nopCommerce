@@ -25,12 +25,12 @@
 <div class="content">
     <div class="row">
         <div class="col-md-12">
-            @*TODO @Html.Widget("admin_dashboard_top")
+            @Html.Widget("admin_dashboard_top")
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="row">
                     <div class="col-md-12">
-                        @Html.Action("NopCommerceNews", "Home")
+                        @*TODO@Html.Action("NopCommerceNews", "Home")*@
                     </div>
                 </div>
             }
@@ -39,12 +39,12 @@
             {
                 <div class="row">
                     <div class="col-md-12">
-                        @Html.Action("CommonStatistics", "Home")
+                        @await Component.InvokeAsync("CommonStatistics")
                     </div>
                 </div>
             }
             @Html.Widget("admin_dashboard_commonstatistics_after")
-            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
+            @*TODO @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
             {
                 <div class="row">
                     @if (!Model.IsLoggedInAsVendor && canManageOrders)
