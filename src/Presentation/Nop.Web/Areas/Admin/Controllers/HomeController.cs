@@ -35,7 +35,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         
         #endregion
         
@@ -50,7 +50,7 @@ namespace Nop.Admin.Controllers
             ICustomerService customerService,
             IReturnRequestService returnRequestService,
             IWorkContext workContext,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._storeContext = storeContext;
             this._adminAreaSettings = adminAreaSettings;

@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
         private readonly IProductAttributeService _productAttributeService;
@@ -133,7 +133,7 @@ namespace Nop.Admin.Controllers
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
             IProductAttributeService productAttributeService,

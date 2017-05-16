@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
         private readonly IImportManager _importManager;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
 #endregion
 
@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
             CatalogSettings catalogSettings,
             IWorkContext workContext,
             IImportManager importManager, 
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;

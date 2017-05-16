@@ -1,4 +1,4 @@
-﻿#if NET451
+﻿
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,9 +8,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+#if NET451
 using System.Web.Configuration;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+#endif
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -38,7 +42,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class CommonController : BaseAdminController
     {
-#region Fields
+        #region Fields
 
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
@@ -60,12 +64,13 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMaintenanceService _maintenanceService;
+        private readonly IStaticCacheManager _cacheManager;
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
 
         public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
@@ -87,8 +92,9 @@ namespace Nop.Admin.Controllers
             ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
-            HttpContextBase httpContext,
-            IMaintenanceService maintenanceService)
+            IHttpContextAccessor httpContextAccessor,
+            IMaintenanceService maintenanceService, 
+            IStaticCacheManager cacheManager)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -110,13 +116,14 @@ namespace Nop.Admin.Controllers
             this._settingService = settingService;
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
-            this._httpContext = httpContext;
+            this._httpContextAccessor = httpContextAccessor;
             this._maintenanceService = maintenanceService;
+            this._cacheManager = cacheManager;
         }
 
-#endregion
-
-#region Utitlies
+        #endregion
+        
+        #region Utitlies
 
         private bool IsDebugAssembly(Assembly assembly)
         {
@@ -160,10 +167,11 @@ namespace Nop.Admin.Controllers
             return localTime;
         }
 
-#endregion
+        #endregion
 
 #region Methods
 
+#if NET451
         public virtual IActionResult SystemInfo()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -674,15 +682,16 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
+#endif
+
 
         [HttpPost]
         public virtual IActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
-
-            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-            cacheManager.Clear();
+            
+            _cacheManager.Clear();
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
@@ -693,6 +702,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
+#if NET451
         [HttpPost]
         public virtual IActionResult RestartApplication(string returnUrl = "")
         {
@@ -899,8 +909,9 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) }, JsonRequestBehavior.AllowGet);
         }
+        
+        #endif
 
-#endregion
+        #endregion
     }
 }
-#endif

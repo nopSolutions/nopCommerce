@@ -89,7 +89,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
-	    private readonly ICacheManager _cacheManager;
+	    private readonly IStaticCacheManager _cacheManager;
 
         private readonly OrderSettings _orderSettings;
         private readonly CurrencySettings _currencySettings;
@@ -143,7 +143,7 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IPictureService pictureService,
             ICustomerActivityService customerActivityService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             OrderSettings orderSettings,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,

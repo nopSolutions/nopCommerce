@@ -37,7 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
 		#endregion
 
@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IVendorService vendorService,
             IWorkContext workContext, 
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;

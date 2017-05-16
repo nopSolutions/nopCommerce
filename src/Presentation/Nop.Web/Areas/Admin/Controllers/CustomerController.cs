@@ -93,7 +93,7 @@ namespace Nop.Admin.Controllers
         private readonly IAffiliateService _affiliateService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IRewardPointService _rewardPointService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
             IRewardPointService rewardPointService,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;

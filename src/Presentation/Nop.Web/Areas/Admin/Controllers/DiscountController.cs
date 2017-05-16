@@ -50,7 +50,7 @@ namespace Nop.Admin.Controllers
         private readonly IVendorService _vendorService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
