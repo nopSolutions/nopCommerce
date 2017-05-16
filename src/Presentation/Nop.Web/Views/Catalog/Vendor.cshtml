@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Seo
 @inject SeoSettings seoSettings
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
