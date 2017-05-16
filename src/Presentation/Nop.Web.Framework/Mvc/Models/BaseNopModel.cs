@@ -8,15 +8,6 @@ namespace Nop.Web.Framework.Mvc.Models
     /// </summary>
     public partial class BaseNopModel
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets property to store any custom values for models 
-        /// </summary>
-        public Dictionary<string, object> CustomProperties { get; set; }
-
-        #endregion
-
         #region Ctor
 
         public BaseNopModel()
@@ -47,6 +38,16 @@ namespace Nop.Web.Framework.Mvc.Models
         }
 
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets property to store any custom values for models 
+        /// </summary>
+        public Dictionary<string, object> CustomProperties { get; set; }
+
+        #endregion
+
     }
 
     /// <summary>

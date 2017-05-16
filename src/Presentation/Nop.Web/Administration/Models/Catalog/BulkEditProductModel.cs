@@ -1,17 +1,14 @@
-﻿using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Catalog
 {
     public partial class BulkEditProductModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.Fields.SKU")]
-        [AllowHtml]
         public string Sku { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.Fields.Price")]

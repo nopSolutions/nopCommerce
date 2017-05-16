@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Settings
 {
@@ -17,7 +18,6 @@ namespace Nop.Admin.Models.Settings
         }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")]
@@ -31,7 +31,6 @@ namespace Nop.Admin.Models.Settings
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
     }

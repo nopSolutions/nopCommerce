@@ -1,3 +1,4 @@
+#if NET451
 using Autofac;
 using Autofac.Core;
 using Nop.Admin.Controllers;
@@ -56,3 +57,4 @@ namespace Nop.Admin.Infrastructure
         }
     }
 }
+#endif

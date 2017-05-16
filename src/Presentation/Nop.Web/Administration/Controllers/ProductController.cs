@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -4855,3 +4856,4 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
+#endif

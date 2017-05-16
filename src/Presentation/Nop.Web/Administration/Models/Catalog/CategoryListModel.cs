@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -13,7 +13,6 @@ namespace Nop.Admin.Models.Catalog
         }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
-        [AllowHtml]
         public string SearchCategoryName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchStore")]

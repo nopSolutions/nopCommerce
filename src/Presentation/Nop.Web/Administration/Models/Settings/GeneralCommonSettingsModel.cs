@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Models.Settings
@@ -47,7 +49,6 @@ namespace Nop.Admin.Models.Settings
             public bool StoreClosed_OverrideForStore { get; set; }
             
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
-            [AllowHtml]
             public string DefaultStoreTheme { get; set; }
             public bool DefaultStoreTheme_OverrideForStore { get; set; }
             public IList<ThemeConfigurationModel> AvailableStoreThemes { get; set; }
@@ -124,7 +125,6 @@ namespace Nop.Admin.Models.Settings
         public partial class SeoSettingsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
-            [AllowHtml]
             [NoTrim]
             public string PageTitleSeparator { get; set; }
             public bool PageTitleSeparator_OverrideForStore { get; set; }
@@ -135,22 +135,18 @@ namespace Nop.Admin.Models.Settings
             public SelectList PageTitleSeoAdjustmentValues { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultTitle")]
-            [AllowHtml]
             public string DefaultTitle { get; set; }
             public bool DefaultTitle_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords")]
-            [AllowHtml]
             public string DefaultMetaKeywords { get; set; }
             public bool DefaultMetaKeywords_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription")]
-            [AllowHtml]
             public string DefaultMetaDescription { get; set; }
             public bool DefaultMetaDescription_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription")]
-            [AllowHtml]
             public bool GenerateProductMetaDescription { get; set; }
             public bool GenerateProductMetaDescription_OverrideForStore { get; set; }
 
@@ -184,7 +180,6 @@ namespace Nop.Admin.Models.Settings
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CustomHeadTags")]
-            [AllowHtml]
             public string CustomHeadTags { get; set; }
             public bool CustomHeadTags_OverrideForStore { get; set; }
         }
@@ -192,11 +187,9 @@ namespace Nop.Admin.Models.Settings
         public partial class SecuritySettingsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
-            [AllowHtml]
             public string EncryptionKey { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
-            [AllowHtml]
             public string AdminAreaAllowedIpAddresses { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
@@ -249,11 +242,9 @@ namespace Nop.Admin.Models.Settings
             public bool ShowOnApplyVendorPage { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
-            [AllowHtml]
             public string ReCaptchaPublicKey { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
-            [AllowHtml]
             public string ReCaptchaPrivateKey { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
@@ -278,12 +269,10 @@ namespace Nop.Admin.Models.Settings
             public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
-            [AllowHtml]
             public string InvoiceFooterTextColumn1 { get; set; }
             public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
-            [AllowHtml]
             public string InvoiceFooterTextColumn2 { get; set; }
             public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
 

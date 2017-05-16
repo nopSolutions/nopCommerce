@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.News
 {
@@ -23,7 +25,6 @@ namespace Nop.Admin.Models.News
         public DateTime? CreatedOnTo { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.List.SearchText")]
-        [AllowHtml]
         public string SearchText { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.List.SearchApproved")]

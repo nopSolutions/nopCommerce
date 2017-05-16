@@ -1,6 +1,8 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Common;
 
@@ -11,7 +13,7 @@ namespace Nop.Admin.Extensions
     /// </summary>
     public static class AttributeParserHelper
     {
-        public static string ParseCustomAddressAttributes(this FormCollection form,
+        public static string ParseCustomAddressAttributes(this IFormCollection form,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService)
         {
@@ -94,3 +96,4 @@ namespace Nop.Admin.Extensions
     }
 }
 
+#endif

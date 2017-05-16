@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,7 +24,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class BlogController : BaseAdminController
 	{
-		#region Fields
+#region Fields
 
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
@@ -36,9 +37,9 @@ namespace Nop.Admin.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerActivityService _customerActivityService;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         public BlogController(IBlogService blogService,
             ILanguageService languageService,
@@ -63,9 +64,9 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
 
         [NonAction]
         protected virtual void PrepareLanguagesModel(BlogPostModel model)
@@ -130,9 +131,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+#endregion
         
-		#region Blog posts
+#region Blog posts
 
         public virtual ActionResult Index()
         {
@@ -327,9 +328,9 @@ namespace Nop.Admin.Controllers
 			return RedirectToAction("List");
 		}
 
-		#endregion
+#endregion
 
-        #region Comments
+#region Comments
 
         public virtual ActionResult Comments(int? filterByBlogPostId)
         {
@@ -510,6 +511,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

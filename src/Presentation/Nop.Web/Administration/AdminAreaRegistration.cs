@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 
 namespace Nop.Admin
 {
@@ -23,3 +24,4 @@ namespace Nop.Admin
         }
     }
 }
+#endif

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Directory
 {
@@ -18,11 +19,9 @@ namespace Nop.Admin.Models.Directory
         public int CountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Abbreviation")]
-        [AllowHtml]
         public string Abbreviation { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Published")]
@@ -39,7 +38,6 @@ namespace Nop.Admin.Models.Directory
         public int LanguageId { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
     }
 }

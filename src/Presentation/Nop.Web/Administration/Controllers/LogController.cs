@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -163,3 +164,4 @@ namespace Nop.Admin.Controllers
         }
     }
 }
+#endif

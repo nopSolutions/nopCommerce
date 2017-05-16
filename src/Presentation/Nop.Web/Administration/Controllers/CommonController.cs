@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -37,7 +38,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class CommonController : BaseAdminController
     {
-        #region Fields
+#region Fields
 
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
@@ -62,9 +63,9 @@ namespace Nop.Admin.Controllers
         private readonly HttpContextBase _httpContext;
         private readonly IMaintenanceService _maintenanceService;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
@@ -113,9 +114,9 @@ namespace Nop.Admin.Controllers
             this._maintenanceService = maintenanceService;
         }
 
-        #endregion
+#endregion
 
-        #region Utitlies
+#region Utitlies
 
         private bool IsDebugAssembly(Assembly assembly)
         {
@@ -159,9 +160,9 @@ namespace Nop.Admin.Controllers
             return localTime;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public virtual ActionResult SystemInfo()
         {
@@ -900,6 +901,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) }, JsonRequestBehavior.AllowGet);
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

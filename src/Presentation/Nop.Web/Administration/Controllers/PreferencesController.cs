@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Services.Common;
@@ -45,3 +46,4 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
+#endif

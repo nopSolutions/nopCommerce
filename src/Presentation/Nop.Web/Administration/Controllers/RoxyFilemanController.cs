@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -764,3 +765,4 @@ namespace Nop.Admin.Controllers
 
     }
 }
+#endif

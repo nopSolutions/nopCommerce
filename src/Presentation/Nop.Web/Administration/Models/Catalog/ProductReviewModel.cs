@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -21,16 +22,13 @@ namespace Nop.Admin.Models.Catalog
         public int CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
         public string CustomerInfo { get; set; }
-
-        [AllowHtml]
+        
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Title")]
         public string Title { get; set; }
-
-        [AllowHtml]
+        
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.ReviewText")]
         public string ReviewText { get; set; }
-
-        [AllowHtml]
+        
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.ReplyText")]
         public string ReplyText { get; set; }
 

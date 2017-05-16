@@ -1,5 +1,5 @@
-﻿using System.Web.Routing;
-using Nop.Web.Framework.Mvc;
+﻿using Microsoft.AspNetCore.Routing;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Cms
 {

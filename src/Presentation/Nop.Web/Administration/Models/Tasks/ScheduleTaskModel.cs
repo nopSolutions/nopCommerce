@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Tasks;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Tasks
 {
@@ -10,7 +11,6 @@ namespace Nop.Admin.Models.Tasks
     public partial class ScheduleTaskModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.ScheduleTasks.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.System.ScheduleTasks.Seconds")]

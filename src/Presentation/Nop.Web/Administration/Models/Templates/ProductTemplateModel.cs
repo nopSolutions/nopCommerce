@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Templates;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Templates
 {
@@ -10,18 +11,15 @@ namespace Nop.Admin.Models.Templates
     public partial class ProductTemplateModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.Templates.Product.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.System.Templates.Product.ViewPath")]
-        [AllowHtml]
         public string ViewPath { get; set; }
 
         [NopResourceDisplayName("Admin.System.Templates.Product.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.System.Templates.Product.IgnoredProductTypes")]
-        [AllowHtml]
         public string IgnoredProductTypes { get; set; }
     }
 }

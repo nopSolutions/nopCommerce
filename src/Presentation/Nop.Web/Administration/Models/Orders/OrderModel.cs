@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Models.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Orders
 {
@@ -142,22 +144,16 @@ namespace Nop.Admin.Models.Orders
         //credit card info
         public bool AllowStoringCreditCardNumber { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardType")]
-        [AllowHtml]
         public string CardType { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardName")]
-        [AllowHtml]
         public string CardName { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardNumber")]
-        [AllowHtml]
         public string CardNumber { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardCVV2")]
-        [AllowHtml]
         public string CardCvv2 { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardExpirationMonth")]
-        [AllowHtml]
         public string CardExpirationMonth { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CardExpirationYear")]
-        [AllowHtml]
         public string CardExpirationYear { get; set; }
 
         //misc payment info
@@ -210,7 +206,6 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
         public bool AddOrderNoteDisplayToCustomer { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
-        [AllowHtml]
         public string AddOrderNoteMessage { get; set; }
         public bool AddOrderNoteHasDownload { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
@@ -341,7 +336,6 @@ namespace Nop.Admin.Models.Orders
             }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-            [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public int SearchCategoryId { get; set; }
@@ -361,11 +355,9 @@ namespace Nop.Admin.Models.Orders
             public partial class ProductModel : BaseNopEntityModel
             {
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
-                [AllowHtml]
                 public string Name { get; set; }
 
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.SKU")]
-                [AllowHtml]
                 public string Sku { get; set; }
             }
 
@@ -464,19 +456,14 @@ namespace Nop.Admin.Models.Orders
                 public bool IsGiftCard { get; set; }
 
                 [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
-                [AllowHtml]
                 public string RecipientName { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
-                [AllowHtml]
                 public string RecipientEmail { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
-                [AllowHtml]
                 public string SenderName { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
-                [AllowHtml]
                 public string SenderEmail { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
-                [AllowHtml]
                 public string Message { get; set; }
 
                 public GiftCardType GiftCardType { get; set; }

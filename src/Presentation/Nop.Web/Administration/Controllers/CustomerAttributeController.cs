@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
@@ -407,3 +408,4 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
+#endif

@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Directory
 {
@@ -10,11 +11,9 @@ namespace Nop.Admin.Models.Directory
     public partial class MeasureWeightModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Shipping.Measures.Weights.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword")]
-        [AllowHtml]
         public string SystemKeyword { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio")]

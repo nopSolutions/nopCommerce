@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -29,7 +30,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class CategoryController : BaseAdminController
     {
-        #region Fields
+#region Fields
 
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
@@ -54,9 +55,9 @@ namespace Nop.Admin.Controllers
         private readonly IImportManager _importManager;
         private readonly ICacheManager _cacheManager;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 
@@ -103,9 +104,9 @@ namespace Nop.Admin.Controllers
             this._cacheManager = cacheManager;
         }
 
-        #endregion
+#endregion
         
-        #region Utilities
+#region Utilities
 
         [NonAction]
         protected virtual void UpdateLocales(Category category, CategoryModel model)
@@ -296,9 +297,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+#endregion
         
-        #region List
+#region List
 
         public virtual ActionResult Index()
         {
@@ -338,9 +339,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        #endregion
+#endregion
 
-        #region Create / Edit / Delete
+#region Create / Edit / Delete
 
         public virtual ActionResult Create()
         {
@@ -571,9 +572,9 @@ namespace Nop.Admin.Controllers
         }
         
 
-        #endregion
+#endregion
 
-        #region Export / Import
+#region Export / Import
 
         public virtual ActionResult ExportXml()
         {
@@ -641,9 +642,9 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             }
         }
-        #endregion
+#endregion
 
-        #region Products
+#region Products
 
         [HttpPost]
         public virtual ActionResult ProductList(DataSourceRequest command, int categoryId)
@@ -797,6 +798,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
     }
 }
+#endif

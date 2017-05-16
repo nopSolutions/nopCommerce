@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -16,7 +17,6 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<ProductTagLocalizedModel>();
         }
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
@@ -30,7 +30,6 @@ namespace Nop.Admin.Models.Catalog
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
     }
 }

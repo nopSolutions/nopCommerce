@@ -1,18 +1,17 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Shipping
 {
     public partial class ShippingRateComputationMethodModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.FriendlyName")]
-        [AllowHtml]
         public string FriendlyName { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.SystemName")]
-        [AllowHtml]
         public string SystemName { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder")]

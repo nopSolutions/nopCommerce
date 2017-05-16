@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Discounts
 {
@@ -13,11 +15,9 @@ namespace Nop.Admin.Models.Discounts
         }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchDiscountCouponCode")]
-        [AllowHtml]
         public string SearchDiscountCouponCode { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchDiscountName")]
-        [AllowHtml]
         public string SearchDiscountName { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.List.SearchDiscountType")]

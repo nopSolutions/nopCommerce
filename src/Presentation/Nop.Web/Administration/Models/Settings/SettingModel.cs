@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Settings
 {
@@ -10,11 +11,9 @@ namespace Nop.Admin.Models.Settings
     public partial class SettingModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.Value")]
-        [AllowHtml]
         public string Value { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.StoreName")]

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Validators.Customers;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Customers
 {
@@ -34,15 +36,12 @@ namespace Nop.Admin.Models.Customers
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]
-        [AllowHtml]
         public string Username { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Email")]
-        [AllowHtml]
         public string Email { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
-        [AllowHtml]
         [DataType(DataType.Password)]
         [NoTrim]
         public string Password { get; set; }
@@ -57,10 +56,8 @@ namespace Nop.Admin.Models.Customers
         public string Gender { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
-        [AllowHtml]
         public string FirstName { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
-        [AllowHtml]
         public string LastName { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FullName")]
         public string FullName { get; set; }
@@ -72,27 +69,22 @@ namespace Nop.Admin.Models.Customers
 
         public bool CompanyEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Company")]
-        [AllowHtml]
         public string Company { get; set; }
 
         public bool StreetAddressEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress")]
-        [AllowHtml]
         public string StreetAddress { get; set; }
 
         public bool StreetAddress2Enabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress2")]
-        [AllowHtml]
         public string StreetAddress2 { get; set; }
 
         public bool ZipPostalCodeEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.ZipPostalCode")]
-        [AllowHtml]
         public string ZipPostalCode { get; set; }
 
         public bool CityEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.City")]
-        [AllowHtml]
         public string City { get; set; }
 
         public bool CountryEnabled { get; set; }
@@ -107,12 +99,10 @@ namespace Nop.Admin.Models.Customers
 
         public bool PhoneEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Phone")]
-        [AllowHtml]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Fax")]
-        [AllowHtml]
         public string Fax { get; set; }
 
         public List<CustomerAttributeModel> CustomerAttributes { get; set; }
@@ -123,7 +113,6 @@ namespace Nop.Admin.Models.Customers
 
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
-        [AllowHtml]
         public string AdminComment { get; set; }
         
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
@@ -142,7 +131,6 @@ namespace Nop.Admin.Models.Customers
 
         //time zone
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
-        [AllowHtml]
         public string TimeZoneId { get; set; }
 
         public bool AllowCustomersToSetTimeZone { get; set; }
@@ -155,7 +143,6 @@ namespace Nop.Admin.Models.Customers
 
         //EU VAT
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.VatNumber")]
-        [AllowHtml]
         public string VatNumber { get; set; }
 
         public string VatNumberStatusNote { get; set; }
@@ -203,7 +190,6 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
         public int AddRewardPointsValue { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
-        [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public int AddRewardPointsStoreId { get; set; }
@@ -256,7 +242,6 @@ namespace Nop.Admin.Models.Customers
             public string PointsBalance { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Message")]
-            [AllowHtml]
             public string Message { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Date")]
@@ -266,11 +251,9 @@ namespace Nop.Admin.Models.Customers
         public partial class SendEmailModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
-            [AllowHtml]
             public string Subject { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
-            [AllowHtml]
             public string Body { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.SendImmediately")]

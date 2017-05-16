@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -532,3 +533,4 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
+#endif

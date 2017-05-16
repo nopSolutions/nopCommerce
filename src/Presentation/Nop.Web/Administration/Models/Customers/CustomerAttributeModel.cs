@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Customers;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Customers
 {
@@ -17,7 +18,6 @@ namespace Nop.Admin.Models.Customers
         }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.IsRequired")]
@@ -26,7 +26,6 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
         public int AttributeControlTypeId { get; set; }
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
-        [AllowHtml]
         public string AttributeControlTypeName { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")]
@@ -42,7 +41,6 @@ namespace Nop.Admin.Models.Customers
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
     }

@@ -1,8 +1,9 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Localization
 {
@@ -10,11 +11,9 @@ namespace Nop.Admin.Models.Localization
     public partial class LanguageResourceModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.Value")]
-        [AllowHtml]
         public string Value { get; set; }
 
         public int LanguageId { get; set; }
