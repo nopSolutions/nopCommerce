@@ -27,7 +27,7 @@ namespace Nop.Admin.Controllers
         Dictionary<string, string> _settings = null;
         Dictionary<string, string> _lang = null;
         //custom code by nopCommerce team
-        string confFile = "~/Administration/Content/Roxy_Fileman/conf.json";
+        string confFile = "~/Areas/Admin/Content/Roxy_Fileman/conf.json";
         
         //custom code by nopCommerce team
         private readonly IPermissionService _permissionService;
