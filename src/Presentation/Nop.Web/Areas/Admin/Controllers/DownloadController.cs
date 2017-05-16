@@ -43,7 +43,6 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         //do not validate request token (XSRF)
         [AdminAntiForgery(true)] 
         public virtual IActionResult SaveDownloadUrl(string downloadUrl)

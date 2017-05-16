@@ -2325,7 +2325,6 @@ namespace Nop.Admin.Controllers
 
         //action displaying notification (warning) to a store owner about a lot of traffic 
         //between the Redis server and the application when LoadAllLocaleRecordsOnStartup seetting is set
-        [ValidateInput(false)]
         public IActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning

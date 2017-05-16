@@ -1437,7 +1437,6 @@ namespace Nop.Admin.Controllers
         #region Required products
 
         [HttpPost]
-        [ValidateInput(false)]
         public virtual IActionResult LoadProductFriendlyNames(string productIds)
         {
             var result = "";
@@ -2131,7 +2130,6 @@ namespace Nop.Admin.Controllers
 
         #region Product pictures
 
-        [ValidateInput(false)]
         public virtual IActionResult ProductPictureAdd(int pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
             int productId)
@@ -2292,7 +2290,6 @@ namespace Nop.Admin.Controllers
 
         #region Product specification attributes
 
-        [ValidateInput(false)]
         public virtual IActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage,
             int displayOrder, int productId)
@@ -4356,7 +4353,6 @@ namespace Nop.Admin.Controllers
         }
 
         //action displaying notification (warning) to a store owner when associating some product
-        [ValidateInput(false)]
         public virtual IActionResult AssociatedProductGetWarnings(int productId)
         {
             var associatedProduct = _productService.GetProductById(productId);
@@ -4525,7 +4521,6 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         [HttpPost]
-        [ValidateInput(false)]
         public virtual IActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
             AddProductAttributeCombinationModel model, IFormCollection form)
         {

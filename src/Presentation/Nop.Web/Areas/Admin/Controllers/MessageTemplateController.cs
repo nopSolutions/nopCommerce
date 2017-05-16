@@ -380,7 +380,6 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("TestTemplate")]
         [FormValueRequired("send-test")]
-        [ValidateInput(false)]
         public virtual IActionResult TestTemplate(TestMessageTemplateModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))

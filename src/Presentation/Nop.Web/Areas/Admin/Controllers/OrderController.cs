@@ -1967,7 +1967,6 @@ namespace Nop.Admin.Controllers
 
         //currently we use this method on the add product to order details pages
         [HttpPost]
-        [ValidateInput(false)]
         public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
 	        IFormCollection form)
 	    {
@@ -2137,7 +2136,6 @@ namespace Nop.Admin.Controllers
         
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
-        [ValidateInput(false)]
         public virtual IActionResult EditOrderItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -2248,7 +2246,6 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
-        [ValidateInput(false)]
         public virtual IActionResult DeleteOrderItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -2331,7 +2328,6 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
-        [ValidateInput(false)]
         public virtual IActionResult ResetDownloadCount(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -2371,7 +2367,6 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
-        [ValidateInput(false)]
         public virtual IActionResult ActivateDownloadItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -2842,7 +2837,6 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         public virtual IActionResult AddressEdit(OrderAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -3766,7 +3760,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        [ValidateInput(false)]
         public virtual IActionResult OrderNoteAdd(int orderId, int downloadId, bool displayToCustomer, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))

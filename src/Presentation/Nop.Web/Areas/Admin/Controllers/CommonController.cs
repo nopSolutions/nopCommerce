@@ -885,7 +885,6 @@ namespace Nop.Admin.Controllers
         }
 
         //action displaying notification (warning) to a store owner that entered SE URL already exists
-        [ValidateInput(false)]
         public virtual IActionResult UrlReservedWarning(string entityId, string entityName, string seName)
         {
             if (string.IsNullOrEmpty(seName))

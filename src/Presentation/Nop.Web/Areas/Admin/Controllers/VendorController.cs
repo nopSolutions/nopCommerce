@@ -472,7 +472,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        [ValidateInput(false)]
         public virtual IActionResult VendorNoteAdd(int vendorId, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
