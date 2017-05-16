@@ -123,6 +123,18 @@ namespace Nop.Services.Orders
         IList<OrderItem> GetDownloadableOrderItems(int customerId);
 
         /// <summary>
+        /// Inserts an order item
+        /// </summary>
+        /// <param name="orderItem">Order Item</param>
+        void InsertOrderItem(OrderItem orderItem);
+
+        /// <summary>
+        /// Updates the order item
+        /// </summary>
+        /// <param name="orderItem">The order item</param>
+        void UpdateOrderItem(OrderItem orderItem);
+
+        /// <summary>
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>

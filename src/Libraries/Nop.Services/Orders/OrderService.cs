@@ -351,6 +351,34 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Inserts an order item
+        /// </summary>
+        /// <param name="orderItem">Order Item</param>
+        public virtual void InsertOrderItem(OrderItem orderItem) {
+            if (orderItem == null)
+                throw new ArgumentNullException("orderItem");
+
+            _orderItemRepository.Insert(orderItem);
+
+            //event notification
+            _eventPublisher.EntityInserted(orderItem);
+        }
+
+        /// <summary>
+        /// Updates the order item
+        /// </summary>
+        /// <param name="order">The order item</param>
+        public virtual void UpdateOrderItem(OrderItem orderItem) {
+            if (orderItem == null)
+                throw new ArgumentNullException("orderItem");
+
+            _orderItemRepository.Update(orderItem);
+
+            //event notification
+            _eventPublisher.EntityUpdated(orderItem);
+        }
+
+        /// <summary>
         /// Delete an order item
         /// </summary>
         /// <param name="orderItem">The order item</param>
