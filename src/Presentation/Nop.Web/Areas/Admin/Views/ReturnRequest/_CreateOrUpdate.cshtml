@@ -1,0 +1,137 @@
+﻿@model ReturnRequestModel
+
+@using Nop.Core.Domain.Orders;
+@using Nop.Services
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomNumber)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.CustomNumber)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomOrderNumber)
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.OrderId > 0)
+                            {
+                                @Html.ActionLink(Model.CustomOrderNumber, "Edit", "Order", new {id = Model.OrderId}, new {})
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomerId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ProductName)
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.ProductId > 0)
+                            {
+                                @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Quantity)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Quantity)
+                            @Html.ValidationMessageFor(model => model.Quantity)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ReturnRequestStatusId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.ReturnRequestStatusId, ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())
+                            @Html.ValidationMessageFor(model => model.ReturnRequestStatusId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ReasonForReturn)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ReasonForReturn, required: true)
+                            @Html.ValidationMessageFor(model => model.ReasonForReturn)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RequestedAction)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.RequestedAction, required: true)
+                            @Html.ValidationMessageFor(model => model.RequestedAction)
+                        </div>
+                    </div>
+                    @if (Model.UploadedFileGuid != Guid.Empty)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.UploadedFileGuid)
+                            </div>
+                            <div class="col-md-9">
+                                <a href="@Url.Action("DownloadFile", "Download", new {downloadGuid = Model.UploadedFileGuid})">@T("Admin.ReturnRequests.Fields.UploadedFile.Download")</a>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomerComments)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.CustomerComments)
+                            @Html.ValidationMessageFor(model => model.CustomerComments)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.StaffNotes)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.StaffNotes)
+                            @Html.ValidationMessageFor(model => model.StaffNotes)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CreatedOn)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.CreatedOn)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

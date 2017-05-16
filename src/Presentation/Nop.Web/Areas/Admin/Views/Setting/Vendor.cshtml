@@ -1,0 +1,154 @@
+﻿@model VendorSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Vendor settings");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Vendor")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
+            @Html.ValidationSummary(false)
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => model.AllowVendorsToEditInfo)").click(toggleAllowVendorsToEditInfo);
+
+                                toggleAllowVendorsToEditInfo();
+                            });
+
+                            function toggleAllowVendorsToEditInfo() {
+                                if ($('#@Html.FieldIdFor(model => model.AllowVendorsToEditInfo)').is(':checked')) {
+                                    $('#pnlNotifyStoreOwnerAboutVendorInformationChange').show();
+                                } else {
+                                    $('#pnlNotifyStoreOwnerAboutVendorInformationChange').hide();
+                                }
+                            }
+                        </script>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, model => model.AllowCustomersToApplyForVendorAccount, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowCustomersToApplyForVendorAccount)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                @Html.ValidationMessageFor(model => model.AllowCustomersToApplyForVendorAccount)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowVendorsToEditInfo_OverrideForStore, model => model.AllowVendorsToEditInfo, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowVendorsToEditInfo)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowVendorsToEditInfo)
+                                @Html.ValidationMessageFor(model => model.AllowVendorsToEditInfo)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting" id="pnlNotifyStoreOwnerAboutVendorInformationChange">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, model => model.NotifyStoreOwnerAboutVendorInformationChange, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                                @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MaximumProductNumber_OverrideForStore, model => model.MaximumProductNumber, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MaximumProductNumber)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.MaximumProductNumber)
+                                @Html.ValidationMessageFor(model => model.MaximumProductNumber)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowVendorsToImportProducts_OverrideForStore, model => model.AllowVendorsToImportProducts, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowVendorsToImportProducts)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowVendorsToImportProducts)
+                                @Html.ValidationMessageFor(model => model.AllowVendorsToImportProducts)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToContactVendors_OverrideForStore, model => model.AllowCustomersToContactVendors, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowCustomersToContactVendors)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowCustomersToContactVendors)
+                                @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowSearchByVendor_OverrideForStore, model => model.AllowSearchByVendor, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowSearchByVendor)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowSearchByVendor)
+                                @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, model => model.ShowVendorOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowVendorOnProductDetailsPage)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowVendorOnProductDetailsPage)
+                                @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.VendorsBlockItemsToDisplay_OverrideForStore, model => model.VendorsBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.VendorsBlockItemsToDisplay)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.VendorsBlockItemsToDisplay)
+                                @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

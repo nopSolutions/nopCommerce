@@ -1,0 +1,164 @@
+﻿@using Nop.Core.Domain.Common
+
+@model CampaignModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel panel-body">
+                        <div class="callout bg-gray-light">
+                            @T("Admin.Promotions.Campaigns.Warning")
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.EmailAccountId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.EmailAccountId, Model.AvailableEmailAccounts)
+                                @Html.ValidationMessageFor(model => model.EmailAccountId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.TestEmail)
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    @Html.NopEditorFor(model => model.TestEmail)
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="send-test-email" class="btn btn-info">
+                                            @T("Admin.Promotions.Campaigns.SendTestEmail")
+                                        </button>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.TestEmail)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <button type="submit" name="send-mass-email" class="btn btn-primary">
+                                    @T("Admin.Promotions.Campaigns.SendMassEmail")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name, required: true)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Subject)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Subject, required: true)
+                            @Html.ValidationMessageFor(model => model.Subject)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Body)
+                        </div>
+                        <div class="col-md-9">
+                            @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                            {
+                                //we use rich editor with BODY tag supported
+                                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
+                                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
+                                //that's why we use this workaround
+                                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
+                                ViewData["nop.RichEditor.EnableFullPage"] = true;
+                                <div class="input-group input-group-required">
+                                    @Html.EditorFor(model => model.Body, "RichEditor")
+                                    <div class="input-group-btn">
+                                        @Html.RequiredHint()
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.NopTextAreaFor(model => model.Body, required: true);
+                                <text>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                        });
+                                    </script>
+                                </text>
+                            }
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.DontSendBeforeDate)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.DontSendBeforeDate)
+                            @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
+                        </div>
+                    </div>
+                    <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.StoreId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                            @Html.ValidationMessageFor(model => model.StoreId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        
+                        <script type="text/javascript">
+                            function toggleLoadedAllowedTokens() {
+                                $('#pnlAllowedTokens').toggle();
+                                if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                                } else {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                                }
+                            }
+                        </script>
+
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AllowedTokens)
+                        </div>
+                        <div class="col-md-9">
+                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                            <div id="pnlAllowedTokens" style="display: none">
+                                @Html.NopDisplayFor(model => model.AllowedTokens)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

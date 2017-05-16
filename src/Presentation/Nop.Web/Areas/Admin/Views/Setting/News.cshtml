@@ -1,0 +1,138 @@
+﻿@model NewsSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News settings");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.News")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
+            @Html.ValidationSummary(false)
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.News.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.Enabled)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Enabled)
+                                @Html.ValidationMessageFor(model => model.Enabled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowNewsOnMainPage)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowNewsOnMainPage)
+                                @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MainPageNewsCount)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.MainPageNewsCount)
+                                @Html.ValidationMessageFor(model => model.MainPageNewsCount)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NewsArchivePageSize)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NewsArchivePageSize)
+                                @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowHeaderRssUrl)
+                                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.News.BlockTitle.NewsComments")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NewsCommentsMustBeApproved_OverrideForStore, model => model.NewsCommentsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NewsCommentsMustBeApproved)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NewsCommentsMustBeApproved)
+                                @Html.ValidationMessageFor(model => model.NewsCommentsMustBeApproved)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewNewsComments_OverrideForStore, model => model.NotifyAboutNewNewsComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NotifyAboutNewNewsComments)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NotifyAboutNewNewsComments)
+                                @Html.ValidationMessageFor(model => model.NotifyAboutNewNewsComments)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShowNewsCommentsPerStore)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowNewsCommentsPerStore)
+                                @Html.ValidationMessageFor(model => model.ShowNewsCommentsPerStore)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

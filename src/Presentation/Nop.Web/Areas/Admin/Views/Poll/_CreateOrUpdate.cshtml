@@ -1,0 +1,258 @@
+﻿@model PollModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('poll-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="poll-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Polls.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-answers", @T("Admin.ContentManagement.Polls.Answers"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-answers", @TabAnswers())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LanguageId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
+                        @Html.ValidationMessageFor(model => model.LanguageId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Name, required: true)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SystemKeyword)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SystemKeyword)
+                        @Html.ValidationMessageFor(model => model.SystemKeyword)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Published)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Published)
+                        @Html.ValidationMessageFor(model => model.Published)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ShowOnHomePage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ShowOnHomePage)
+                        @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AllowGuestsToVote)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AllowGuestsToVote)
+                        @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.StartDate)
+                        @Html.ValidationMessageFor(model => model.StartDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.EndDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EndDate)
+                        @Html.ValidationMessageFor(model => model.EndDate)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabAnswers()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="answers-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#answers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new {pollId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        create: {
+                                            url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new {pollId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                NumberOfVotes: { editable: false, type: "number" },
+                                                DisplayOrder: { editable: true, type: "number" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "NumberOfVotes",
+                                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
+                                        width: 100
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
+                                        //integer format
+                                        format: "{0:0}",
+                                        width: 100
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
+                                    }
+                                ]
+                            });
+                        });
+
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}

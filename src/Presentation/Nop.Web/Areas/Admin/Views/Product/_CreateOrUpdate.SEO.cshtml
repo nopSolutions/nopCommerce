@@ -1,0 +1,113 @@
+﻿@model ProductModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Locales[item].SeName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Locales[item].SeName)
+                        @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                            var parameters = {
+                                entityId: '@Model.Id',
+                                entityName: 'Product',
+                                seName: $(this).val()
+                            };
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                        });
+                    });
+                </script>
+                <div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+            </div>
+    ,
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaKeywords)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.MetaKeywords)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaDescription)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(x => x.MetaDescription)
+                        @Html.ValidationMessageFor(model => model.MetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaTitle)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.MetaTitle)
+                        @Html.ValidationMessageFor(model => model.MetaTitle)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SeName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.SeName)
+                        @Html.ValidationMessageFor(model => model.SeName)
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                            var parameters = {
+                                entityId: '@Model.Id',
+                                entityName: 'Product',
+                                seName: $(this).val()
+                            };
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                        });
+                    });
+                </script>
+            </div>))
+        </div>
+    </div>
+</div>

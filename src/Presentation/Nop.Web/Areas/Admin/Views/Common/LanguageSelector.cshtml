@@ -1,0 +1,20 @@
+﻿@model LanguageSelectorModel
+@using Nop.Core;
+
+@if (Model.AvailableLanguages.Count > 1)
+{
+    <div style="padding: 7px 12px 0 12px;">
+        @{
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+            var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
+            {
+                Text = lang.Name,
+                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = "Admin"}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+                Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
+            });
+
+            @Html.NopDropDownList("customerlanguage", languages, htmlAttributes: new { onchange = "setLocation(this.value);" })
+        }
+    </div>
+}

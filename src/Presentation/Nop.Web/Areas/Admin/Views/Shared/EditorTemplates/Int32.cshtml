@@ -1,0 +1,21 @@
+﻿@model Int32
+
+@Html.TextBoxFor(model => model)
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<script>
+    $(document).ready(function() {
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").TouchSpin({
+            min: @(int.MinValue),
+            max: @(int.MaxValue),
+            decimals: 0,
+            verticalbuttons: true,
+            postfix: "@postfix"
+        });
+    });
+</script>

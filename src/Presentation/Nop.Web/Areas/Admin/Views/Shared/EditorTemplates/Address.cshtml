@@ -1,0 +1,202 @@
+﻿@model AddressModel
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.FirstNameEnabled)
+@Html.HiddenFor(model => model.FirstNameRequired)
+@Html.HiddenFor(model => model.LastNameEnabled)
+@Html.HiddenFor(model => model.LastNameRequired)
+@Html.HiddenFor(model => model.EmailEnabled)
+@Html.HiddenFor(model => model.EmailRequired)
+@Html.HiddenFor(model => model.CompanyEnabled)
+@Html.HiddenFor(model => model.CompanyRequired)
+@Html.HiddenFor(model => model.CountryEnabled)
+@Html.HiddenFor(model => model.CountryRequired)
+@Html.HiddenFor(model => model.StateProvinceEnabled)
+@Html.HiddenFor(model => model.CityEnabled)
+@Html.HiddenFor(model => model.CityRequired)
+@Html.HiddenFor(model => model.StreetAddressEnabled)
+@Html.HiddenFor(model => model.StreetAddressRequired)
+@Html.HiddenFor(model => model.StreetAddress2Enabled)
+@Html.HiddenFor(model => model.StreetAddress2Required)
+@Html.HiddenFor(model => model.ZipPostalCodeEnabled)
+@Html.HiddenFor(model => model.ZipPostalCodeRequired)
+@Html.HiddenFor(model => model.PhoneEnabled)
+@Html.HiddenFor(model => model.PhoneRequired)
+@Html.HiddenFor(model => model.FaxEnabled)
+@Html.HiddenFor(model => model.FaxRequired)
+
+@if (Model.FirstNameEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.FirstName)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.FirstName, required: Model.FirstNameRequired)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+    </div>
+}
+@if (Model.LastNameEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.LastName)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.LastName, required: Model.LastNameRequired)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+    </div>
+}
+@if (Model.EmailEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.Email)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.Email, required: Model.EmailRequired)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+    </div>
+}
+@if (Model.CompanyEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.Company)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.Company, required: Model.CompanyRequired)
+            @Html.ValidationMessageFor(model => model.Company)
+        </div>
+    </div>
+}
+@if (Model.CountryEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.CountryId)
+        </div>
+        <div class="col-md-9">
+            @Html.NopDropDownListFor(model => model.CountryId, Model.AvailableCountries, required: Model.CountryRequired)
+            @Html.ValidationMessageFor(model => model.CountryId)
+        </div>
+    </div>
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.StateProvinceId)
+        </div>
+        <div class="col-md-9">
+            @Html.NopDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+            @Html.ValidationMessageFor(model => model.StateProvinceId)
+        </div>
+    </div>
+}
+@if (Model.CityEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.City)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.City, required: Model.CityRequired)
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+    </div>
+}
+@if (Model.StreetAddressEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.Address1)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.Address1, required: Model.StreetAddressRequired)
+            @Html.ValidationMessageFor(model => model.Address1)
+        </div>
+    </div>
+}
+@if (Model.StreetAddress2Enabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.Address2)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.Address2, required: Model.StreetAddress2Required)
+            @Html.ValidationMessageFor(model => model.Address2)
+        </div>
+    </div>
+}
+@if (Model.ZipPostalCodeEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.ZipPostalCode)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.ZipPostalCode, required: Model.ZipPostalCodeRequired)
+            @Html.ValidationMessageFor(model => model.ZipPostalCode)
+        </div>
+    </div>
+}
+@if (Model.PhoneEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.PhoneNumber)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.PhoneNumber, required: Model.PhoneRequired)
+            @Html.ValidationMessageFor(model => model.PhoneNumber)
+        </div>
+    </div>
+}
+@if (Model.FaxEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            @Html.NopLabelFor(model => model.FaxNumber)
+        </div>
+        <div class="col-md-9">
+            @Html.NopEditorFor(model => model.FaxNumber, required: Model.FaxRequired)
+            @Html.ValidationMessageFor(model => model.FaxNumber)
+        </div>
+    </div>
+}
+@if (Model.CustomAddressAttributes.Count > 0)
+{
+    @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+}

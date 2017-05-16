@@ -1,0 +1,483 @@
+﻿@model VendorModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('vendor-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "vendor-advanced-mode" })
+                </div>
+            </div>
+        </div>
+        <div id="vendor-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Vendors.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"), customCssClass: "advanced-setting")
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-vendor-notes", @TabVendorNotes())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();
+        });
+
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+                      @<div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Locales[item].Name)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.NopEditorFor(model => model.Locales[item].Name)
+                                  @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Locales[item].Description)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                                  @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                              </div>
+                          </div>
+                          @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                      </div>
+    ,
+                      @<div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Name)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.NopEditorFor(model => model.Name, required: true)
+                                  @Html.ValidationMessageFor(model => model.Name)
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="col-md-3">
+                                  @Html.NopLabelFor(model => model.Description)
+                              </div>
+                              <div class="col-md-9">
+                                  @Html.EditorFor(x => x.Description, "RichEditor")
+                                  @Html.ValidationMessageFor(model => model.Description)
+                              </div>
+                          </div>
+                      </div>
+                      ))
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Email)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Email, required: true)
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AssociatedCustomers)
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.AssociatedCustomers.Count > 0)
+                            {
+                                for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                                {
+                                    @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
+                                    if (i != Model.AssociatedCustomers.Count - 1)
+                                    {
+                                        <text>,  </text>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PictureId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PictureId)
+                        @Html.ValidationMessageFor(model => model.PictureId)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AdminComment)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.AdminComment)
+                        @Html.ValidationMessageFor(model => model.AdminComment)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
+                        @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlPageSize">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PageSize)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.PageSize)
+                        @Html.ValidationMessageFor(model => model.PageSize)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlPageSizeOptions">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PageSizeOptions)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.PageSizeOptions)
+                        @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default advanced-setting">
+            <div class="panel-heading">
+                @T("Admin.Vendors.Address")
+            </div>
+            <div class="panel-body">
+                @Html.EditorFor(model => model.Address, "Address")
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabSeo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
+                            @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].SeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].SeName)
+                            @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Vendor',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            });
+                        });
+                    </script>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+    ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaKeywords)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.MetaKeywords)
+                            @Html.ValidationMessageFor(model => model.MetaKeywords)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaDescription)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopTextAreaFor(x => x.MetaDescription)
+                            @Html.ValidationMessageFor(model => model.MetaDescription)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.MetaTitle)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.MetaTitle)
+                            @Html.ValidationMessageFor(model => model.MetaTitle)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SeName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(x => x.SeName)
+                            @Html.ValidationMessageFor(model => model.SeName)
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                                var parameters = {
+                                    entityId: '@Model.Id',
+                                    entityName: 'Vendor',
+                                    seName: $(this).val()
+                                };
+                                warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            });
+                        });
+                    </script>
+                </div>))
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabVendorNotes()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="vendornotes-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#vendornotes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new {vendorId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url:
+                                            "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new {vendorId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            //do not implicitly specify all fields
+                                            //we do it only for fields which implicitly require it
+                                            //otherwise, they'll be formatted wrong way
+                                            CreatedOn: { type: "date" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Note",
+                                    title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
+                                    encoded: false
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Vendors.VendorNotes.AddTitle")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AddVendorNoteMessage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.AddVendorNoteMessage)
+                        @Html.ValidationMessageFor(model => model.AddVendorNoteMessage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addVendorNote" class="btn btn-primary">@T("Admin.Vendors.VendorNotes.AddButton")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#addVendorNote').click(function() {
+                var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+                $('#addVendorNote').attr('disabled', true);
+
+                var postData = {
+                    message: vendorNoteMessage,
+                    vendorId: @Model.Id
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@( Url.Action("VendorNoteAdd", "Vendor"))",
+                    data: postData,
+                    success: function(data) {
+                        var grid = $("#vendornotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addVendorNote').attr('disabled', false);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add vendor note.');
+                        $('#addVendorNote').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+}

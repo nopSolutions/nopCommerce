@@ -1,0 +1,203 @@
+﻿@model SpecificationAttributeModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        bindBootstrapTabSelectEvent('specificationattribute-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="specificationattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.SpecificationAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-options", @T("Admin.Catalog.Attributes.SpecificationAttributes.Options"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-options", @TabOptions())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "specificationattribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+    ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name, required: true)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+                           ))
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabOptions()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="specificationattributeoptions-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#specificationattributeoptions-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new {specificationAttributeId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id"
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        //TODO display localized values here
+                                        field: "Name",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")"
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "NumberOfAssociatedProducts",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")",
+                                        width: 250
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                    }, {
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 100
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new {specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                        @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefresh" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefresh').click(function () {
+                                //refresh grid
+                                var grid = $("#specificationattributeoptions-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}

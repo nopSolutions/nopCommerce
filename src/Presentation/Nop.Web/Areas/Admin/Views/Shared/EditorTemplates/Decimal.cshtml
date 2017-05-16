@@ -1,0 +1,22 @@
+@model Decimal
+
+@Html.TextBoxFor(model => model)
+@{
+    var postfix = "";
+    if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
+    {
+        postfix = ViewData["postfix"].ToString();
+    }
+}
+<script>
+    $(document).ready(function() {
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").TouchSpin({
+            min: @(decimal.MinValue),
+            max: @(decimal.MaxValue),
+            decimals: 4, //always display 4 digits
+            forcestepdivisibility: "none",
+            verticalbuttons: true,
+            postfix: "@postfix"
+        });
+    });
+</script>

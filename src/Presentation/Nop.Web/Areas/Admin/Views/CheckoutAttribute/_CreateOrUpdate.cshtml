@@ -1,0 +1,573 @@
+﻿@model CheckoutAttributeModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('checkoutattribute-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new { modeName = "checkoutattribute-advanced-mode" })
+                </div>
+            </div>
+        </div>
+        <div id="checkoutattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Catalog.Attributes.CheckoutAttributes.Values"))
+                @if (Model.ConditionAllowed)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-condition", @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition"))
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-values", @TabValues())
+                @if (Model.ConditionAllowed)
+                {
+                    @Html.RenderBootstrapTabContent("tab-condition", @TabCondition())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+            $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+
+            toggleTax();
+            toggleAttributeControlType();
+        });
+
+        function toggleTax() {
+            if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
+                $('#pnlTaxCategory').hide();
+            } else {
+                $('#pnlTaxCategory').show();
+            }
+        }
+
+        function toggleAttributeControlType() {
+            var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+            //validation
+            if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
+                $('#pnlValidationMinLength').show();
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                $('#pnlValidationMinLength').show();
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').show();
+                $('#pnlValidationFileAllowedExtensions').show();
+                $('#pnlDefaultValue').hide();
+            } else {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').hide();
+            }
+
+            //values
+            if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ImageSquares).ToString()) ||
+                selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString())) {
+                 $('[data-tab-name=tab-values]').show();
+            } else {
+                $('[data-tab-name=tab-values]').hide();
+            }
+        }
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Locales[item].TextPrompt)
+                            @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+    ,
+                @<div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name, required: true)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.TextPrompt)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.TextPrompt)
+                            @Html.ValidationMessageFor(model => model.TextPrompt)
+                        </div>
+                    </div>
+                </div>
+    ))
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsRequired)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsRequired)
+                        @Html.ValidationMessageFor(model => model.IsRequired)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ShippableProductRequired)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ShippableProductRequired)
+                        @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsTaxExempt)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsTaxExempt)
+                        @Html.ValidationMessageFor(model => model.IsTaxExempt)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlTaxCategory">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TaxCategoryId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                        @Html.ValidationMessageFor(model => model.TaxCategoryId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AttributeControlTypeId)
+                    </div>
+                    <div class="col-md-9">
+                        @{
+                            var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                                .ToSelectList(valuesToExclude:
+                                //these attributes don't support some control types
+                                new[] { (int)AttributeControlType.ImageSquares });
+                        }
+                        @Html.NopDropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
+                        @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationMinLength">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ValidationMinLength)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ValidationMinLength)
+                        @Html.ValidationMessageFor(model => model.ValidationMinLength)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationMaxLength">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ValidationMaxLength)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ValidationMaxLength)
+                        @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationFileAllowedExtensions">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ValidationFileAllowedExtensions)
+                        @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlValidationFileMaximumSize">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.ValidationFileMaximumSize)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ValidationFileMaximumSize)
+                        @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting" id="pnlDefaultValue">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DefaultValue)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DefaultValue)
+                        @Html.ValidationMessageFor(model => model.DefaultValue)
+                    </div>
+                </div>
+                <div class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabValues()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                /*TODO display the following warning if values are not supported by selected attribute control type
+                'Values are not required for this attribute control type'
+                */
+                <div class="panel-body">
+                    <div id="checkoutattributevalues-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#checkoutattributevalues-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id"
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")"
+                                }, {
+                                    field: "PriceAdjustment",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")",
+                                    width: 200
+                                }, {
+                                    field: "WeightAdjustment",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")",
+                                    width: 200
+                                }, {
+                                    field: "IsPreSelected",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                                    width: 100
+                                },{
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 100,
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=checkoutattribute-form', 800, 500, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                }, {
+                                    command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewValue"
+                            onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new {checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form"}))', 800, 500, true); return false;"
+                            class="btn btn-primary">
+                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefresh" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefresh').click(function () {
+                                //refresh grid
+                                var grid = $("#checkoutattributevalues-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+
+}
+
+@helper TabCondition()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#@Html.FieldIdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
+                        toggleEnableCondition();
+                    });
+
+                    function toggleEnableCondition() {
+                        if ($('#@Html.FieldIdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
+                            $('#pnlAttributes').show();
+                        } else {
+                            $('#pnlAttributes').hide();
+                        }
+                    }
+                </script>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ConditionModel.EnableCondition)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ConditionModel.EnableCondition)
+                            @Html.ValidationMessageFor(model => model.ConditionModel.EnableCondition)
+                        </div>
+                    </div>
+
+                    <div id="pnlAttributes">
+                        @if (Model.ConditionModel.ConditionAttributes.Count > 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.ConditionModel.SelectedAttributeId)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopDropDownListFor(model => model.ConditionModel.SelectedAttributeId,
+                                Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }))
+
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").change(toggleConditionAttributes);
+
+                                            toggleConditionAttributes();
+                                        });
+
+                                        function toggleConditionAttributes() {
+                                            var selectedCheckoutAttributeId = $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").val();
+                                            $('[id^="pnl_attribute_values_"]').hide();
+                                            $('#pnl_attribute_values_' + selectedCheckoutAttributeId).show();
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    @for (int i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
+                                    {
+                                        @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Id)
+                                        <div id="@string.Format("pnl_attribute_values_{0}", Model.ConditionModel.ConditionAttributes[i].Id)">
+                                            @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
+                                            {
+                                                case AttributeControlType.DropdownList:
+                                                    @Html.NopDropDownListFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId,
+                                                Model.ConditionModel.ConditionAttributes[i].Values)
+                                                    break;
+                                                case AttributeControlType.RadioList:
+                                                case AttributeControlType.ColorSquares:
+                                                case AttributeControlType.ImageSquares:
+                                                    foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
+                                                    {
+                                                        <div class="radio">
+                                                            <label>
+                                                                @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
+                                                                    value.Selected ? new { @checked = true } : null)
+                                                                @value.Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    break;
+                                                case AttributeControlType.Checkboxes:
+                                                    for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
+                                                    {
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
+                                                                @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
+                                                                @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    break;
+                                                case AttributeControlType.ReadonlyCheckboxes:
+                                                case AttributeControlType.TextBox:
+                                                case AttributeControlType.MultilineTextbox:
+                                                case AttributeControlType.Datepicker:
+                                                case AttributeControlType.FileUpload:
+                                                default:
+                                                    //not supported as conditions
+                                                    break;
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}

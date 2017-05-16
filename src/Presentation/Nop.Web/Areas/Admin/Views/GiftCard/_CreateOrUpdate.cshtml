@@ -1,0 +1,313 @@
+﻿@model GiftCardModel
+
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('giftcard-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="giftcard-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.GiftCards.Info"), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-history", @T("Admin.GiftCards.History"))
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-history", @TabHistory())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "giftcard-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
+            toggleGiftCardType();
+        });
+
+        function toggleGiftCardType() {
+            var selectedGiftCardTypeId = $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").val();
+            if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
+                $('#pnlRecipientEmail').show();
+                $('#pnlSenderEmail').show();
+                $('#pnlNotifyRecipient').show();
+            } else {
+                $('#pnlRecipientEmail').hide();
+                $('#pnlSenderEmail').hide();
+                $('#pnlNotifyRecipient').hide();
+            }
+        }
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.GiftCardTypeId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+                    </div>
+                </div>
+                @if (Model.PurchasedWithOrderId.HasValue)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.PurchasedWithOrderNumber)
+                        </div>
+                        <div class="col-md-9">
+                            <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Amount)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Amount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.Amount)
+                    </div>
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RemainingAmountStr)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.RemainingAmountStr)
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsGiftCardActivated)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsGiftCardActivated)
+                        @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.GiftCardCouponCode)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            @Html.NopEditorFor(model => model.GiftCardCouponCode)
+                            @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
+                            <div class="input-group-btn">
+                                <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $('#generateCouponCode').click(function() {
+                                            var postData = {};
+
+                                            addAntiForgeryToken(postData);
+
+                                            $.ajax({
+                                                cache: false,
+                                                type: "POST",
+                                                url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                                                data: postData,
+                                                success: function(data) {
+                                                    $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                                                },
+                                                error: function(xhr, ajaxOptions, thrownError) {
+                                                    alert('Failed to generate code.');
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.RecipientName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.RecipientName)
+                        @Html.ValidationMessageFor(model => model.RecipientName)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlRecipientEmail">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.RecipientEmail)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.RecipientEmail)
+                        @Html.ValidationMessageFor(model => model.RecipientEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SenderName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SenderName)
+                        @Html.ValidationMessageFor(model => model.SenderName)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlSenderEmail">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SenderEmail)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SenderEmail)
+                        @Html.ValidationMessageFor(model => model.SenderEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Message)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.Message)
+                        @Html.ValidationMessageFor(model => model.Message)
+                    </div>
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group" id="pnlNotifyRecipient">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.IsRecipientNotified)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-group input-group-short">
+                                <div class="input-group-text">
+                                    @Html.NopDisplay(Model.IsRecipientNotified.ToString())
+                                </div>
+                                <div class="input-group-btn">
+                                    <button type="submit" name="notifyRecipient" class="btn btn-info">
+                                        @T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CreatedOn)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.CreatedOn)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabHistory()
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="usagehistory-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#usagehistory-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("UsageHistoryList", "GiftCard", new {giftCardId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "CreatedOn",
+                                title: "@T("Admin.GiftCards.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.GiftCards.History.CustomOrderNumber")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "UsedValue",
+                                title: "@T("Admin.GiftCards.History.UsedValue")",
+                                width: 200
+                            }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}

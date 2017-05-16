@@ -1,0 +1,247 @@
+﻿@model RecurringPaymentModel
+
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('recurringpayment-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="recurringpayment-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.RecurringPayments.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-history", @T("Admin.RecurringPayments.History"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-history", @TabHistory())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.InitialOrderId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CustomerEmail)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CycleLength)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CycleLength)
+                        @Html.ValidationMessageFor(model => model.CycleLength)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CyclePeriodId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CyclePeriodId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.TotalCycles)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.TotalCycles)
+                        @Html.ValidationMessageFor(model => model.TotalCycles)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CyclesRemaining)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDisplayFor(model => model.CyclesRemaining)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.PaymentType)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDisplayFor(model => model.PaymentType)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDisplayFor(model => model.StartDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsActive)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsActive)
+                        @Html.ValidationMessageFor(model => model.IsActive)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabHistory()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model.LastPaymentFailed)
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @T("Admin.RecurringPayments.History.LastPaymentFailed")
+                        </div>
+                    </div>
+                }
+                @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @T("Admin.RecurringPayments.History.NextPaymentDate")
+                            <text>:</text>
+                            @Model.NextPaymentDate
+                        </div>
+                    </div>
+                }
+                @if (!String.IsNullOrEmpty(Model.NextPaymentDate) || Model.CanCancelRecurringPayment)
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
+                            {
+                                <button type="submit" name="processnextpayment" class="btn bg-green">
+                                    @T("Admin.RecurringPayments.History.ProcessNextPayment")
+                                </button>
+                            }
+                            @if (Model.CanCancelRecurringPayment)
+                            {
+                                <button type="submit" name="cancelpayment" class="btn bg-navy">
+                                    @T("Admin.RecurringPayments.History.CancelPayment")
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div id="history-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#history-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new {recurringPaymentId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.RecurringPayments.History.CustomOrderNumber")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderStatus",
+                                title: "@T("Admin.RecurringPayments.History.OrderStatus")",
+                                width: 200
+                            }, {
+                                field: "PaymentStatus",
+                                title: "@T("Admin.RecurringPayments.History.PaymentStatus")",
+                                width: 200
+                            }, {
+                                field: "ShippingStatus",
+                                title: "@T("Admin.RecurringPayments.History.ShippingStatus")",
+                                width: 200
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.RecurringPayments.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}

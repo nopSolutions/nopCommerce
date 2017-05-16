@@ -1,0 +1,111 @@
+﻿@model CheckoutAttributeValueModel
+
+@{
+    Html.AddScriptParts("~/Administration/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Administration/Content/farbtastic/farbtastic.css");
+}
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CheckoutAttributeId)
+@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    @(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Locales[item].Name)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Locales[item].Name)
+                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                            </div>
+                        </div>
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    </div>
+    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Name)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Name, required: true)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+                        </div>
+                    </div>
+    ))
+                    @if (Model.DisplayColorSquaresRgb)
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ColorSquaresRgb)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ColorSquaresRgb)
+                                <div id="color-picker"></div>
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                    });
+                                </script>
+                                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.PriceAdjustment)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.PriceAdjustment, Model.PrimaryStoreCurrencyCode)
+                            @Html.ValidationMessageFor(model => model.PriceAdjustment)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.WeightAdjustment)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.WeightAdjustment, Model.BaseWeightIn)
+                            @Html.ValidationMessageFor(model => model.WeightAdjustment)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.IsPreSelected)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.IsPreSelected)
+                            @Html.ValidationMessageFor(model => model.IsPreSelected)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DisplayOrder)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DisplayOrder)
+                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

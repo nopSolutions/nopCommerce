@@ -1,0 +1,15 @@
+﻿@model OrderAddressModel
+
+@Html.ValidationSummary(true)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @Html.EditorFor(model => model.Address, "Address")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+﻿@using Nop.Core
+@using Nop.Services.Common
+@{
+    const string panelId = "order-incomplete-report-box";
+    const string hidePanelAttributeName = "HideOrderIncompleteReportPanel";
+    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-hourglass-start"></i>
+            @T("Admin.Dashboard.IncompleteOrders")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="incomplete-order-report-grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+
+                $("#incomplete-order-report-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("OrderIncompleteReportList", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false,
+                        @Html.Partial("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Item",
+                        title: "@T("Admin.SalesReport.Incomplete.Item")"
+                    }, {
+                        field: "Total",
+                        title: "@T("Admin.SalesReport.Incomplete.Total")",
+                        width: 150
+                    }, {
+                        field: "Count",
+                        title: "@T("Admin.SalesReport.Incomplete.Count")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<a class="btn btn-xs btn-default" href="#=ViewLink#"><i class="fa fa-eye"></i>#=Count# - @T("Admin.SalesReport.Incomplete.View")</a>'
+                    }]
+                });
+            });
+        </script>
+    </div>
+</div>

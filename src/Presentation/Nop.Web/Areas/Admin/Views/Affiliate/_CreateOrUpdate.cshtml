@@ -1,0 +1,182 @@
+﻿@model AffiliateModel
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('affiliate-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="affiliate-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Affiliates.Info"), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-customers", @T("Admin.Affiliates.Customers"))
+                    @Html.RenderBootstrapTabHeader("tab-orders", @T("Admin.Affiliates.Orders"))
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-customers", @TabCustomers())
+                    @Html.RenderBootstrapTabContent("tab-orders", @TabOrders())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Url)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.Url)
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.EditorFor(model => model.Address, "Address")
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AdminComment)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.AdminComment)
+                        @Html.ValidationMessageFor(model => model.AdminComment)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.FriendlyUrlName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.FriendlyUrlName)
+                        @Html.ValidationMessageFor(model => model.FriendlyUrlName)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabCustomers()
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div id="customers-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#customers-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new {affiliateId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "Id",
+                                title: "ID",
+                                width: 50
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Affiliates.Customers.Name")",
+                                width: 200
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabOrders()
+{
+    @Html.Action("AffiliatedOrderList", new { affiliateId = Model.Id })
+}

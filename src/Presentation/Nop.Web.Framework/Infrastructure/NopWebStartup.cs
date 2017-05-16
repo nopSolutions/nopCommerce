@@ -67,17 +67,27 @@ namespace Nop.Web.Framework.Infrastructure
             //static files
             application.UseStaticFiles();
             //TODO temporary
-            application.UseStaticFiles(new StaticFileOptions()
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Areas/Admin/Content")),
+                RequestPath = new PathString("/Areas/Admin/Content")
+            });
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Areas/Admin/Scripts")),
+                RequestPath = new PathString("/Areas/Admin/Scripts")
+            });
+            application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Content")),
                 RequestPath = new PathString("/Content")
             });
-            application.UseStaticFiles(new StaticFileOptions()
+            application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Scripts")),
                 RequestPath = new PathString("/Scripts")
             });
-            application.UseStaticFiles(new StaticFileOptions()
+            application.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
                 RequestPath = new PathString("/Themes")

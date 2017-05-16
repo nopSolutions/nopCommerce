@@ -1,0 +1,219 @@
+﻿@model NewsItemModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('news-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="news-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.News.NewsItems.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "news-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LanguageId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
+                        @Html.ValidationMessageFor(model => model.LanguageId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Title)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Title, required: true)
+                        @Html.ValidationMessageFor(model => model.Title)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Short)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.Short, required: true)
+                        @Html.ValidationMessageFor(model => model.Short)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Full)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group input-group-required">
+                            @Html.EditorFor(x => x.Full, "RichEditor")
+                            <div class="input-group-btn">
+                                @Html.RequiredHint()
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Full)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AllowComments)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AllowComments)
+                        @Html.ValidationMessageFor(model => model.AllowComments)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.StartDate)
+                        @Html.ValidationMessageFor(model => model.StartDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.EndDate)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EndDate)
+                        @Html.ValidationMessageFor(model => model.EndDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Published)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Published)
+                        @Html.ValidationMessageFor(model => model.Published)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabSeo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaKeywords)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(x => x.MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.MetaKeywords)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaDescription)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopTextAreaFor(model => model.MetaDescription)
+                        @Html.ValidationMessageFor(model => model.MetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MetaTitle)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MetaTitle)
+                        @Html.ValidationMessageFor(model => model.MetaTitle)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SeName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.SeName)
+                        @Html.ValidationMessageFor(model => model.SeName)
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                            var parameters = {
+                                entityId: '@Model.Id',
+                                entityName: 'NewsItem',
+                                seName: $(this).val()
+                            };
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}
+

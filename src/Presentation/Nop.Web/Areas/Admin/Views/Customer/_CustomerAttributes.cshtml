@@ -1,0 +1,82 @@
+﻿@model IList<CustomerModel.CustomerAttributeModel>
+
+@using Nop.Core.Domain.Catalog;
+
+@foreach (var attribute in Model)
+{
+    string controlId = string.Format("customer_attribute_{0}", attribute.Id);
+    string textPrompt = attribute.Name;
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="label-wrapper">
+                <label class="control-label">
+                    @textPrompt
+                </label>
+            </div>
+        </div>
+        <div class="col-md-9">
+            @switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        <select name="@(controlId)" id="@(controlId)" class="form-control">
+                            @if (!attribute.IsRequired)
+                            {
+                                <option value="0">---</option>
+                            }
+                            @foreach (var attributeValue in attribute.Values)
+                            {
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                            }
+                        </select>
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                    {
+                        foreach (var attributeValue in attribute.Values)
+                        {
+                            <div class="radio">
+                                <label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    @attributeValue.Name
+                                </label>
+                            </div>
+                        }
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                case AttributeControlType.ReadonlyCheckboxes:
+                    {
+                        foreach (var attributeValue in attribute.Values)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    @attributeValue.Name
+                                </label>
+                            </div>
+                        }
+                    }
+                    break;
+                case AttributeControlType.TextBox:
+                    {
+                        <input name="@(controlId)" type="text" id="@(controlId)" value="@attribute.DefaultValue" class="form-control"/>
+                    }
+                    break;
+                case AttributeControlType.MultilineTextbox:
+                    {
+                        <textarea id="@(controlId)" class="form-control" name="@(controlId)">@attribute.DefaultValue</textarea>
+                    }
+                    break;
+                case AttributeControlType.Datepicker:
+                case AttributeControlType.FileUpload:
+                case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
+                    {
+                        //not support attribute type
+                    }
+                    break;
+            }
+        </div>
+    </div>
+}

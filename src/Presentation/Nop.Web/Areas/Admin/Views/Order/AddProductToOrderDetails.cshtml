@@ -1,0 +1,142 @@
+﻿@model OrderModel.AddOrderProductModel.ProductDetailsModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
+}
+
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
+@using (Html.BeginForm("AddProductToOrderDetails", "Order",
+                                                    new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
+                                                    FormMethod.Post,
+                                                    new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, {"id", "product-details-form" } }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToList").Text, "AddProductToOrder", new { orderId = Model.OrderId })</small>
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="content">
+        @if (Model.Warnings.Count > 0)
+        {
+            <div class="callout callout-danger">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                    {
+                        <li>@warning</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="form-horizontal">
+            <div class="panel-group">
+                @if (Model.ProductType == ProductType.SimpleProduct)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.UnitPriceInclTax)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.UnitPriceInclTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.UnitPriceExclTax)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.UnitPriceExclTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.Quantity)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.Quantity)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.SubTotalInclTax)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.SubTotalInclTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.SubTotalExclTax)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.SubTotalExclTax)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes, new ViewDataDictionary() {new KeyValuePair<string, object>("productId", Model.ProductId)})
+
+                    var dataDictGiftCard = new ViewDataDictionary();
+                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
+                    @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
+
+                    @Html.Partial("_ProductAddRentalInfo", Model)
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @if (!Model.AutoUpdateOrderTotals)
+                            { 
+                                <div class="form-group">
+                                    <div class="col-md-9 col-md-offset-3">
+                                        <p>
+                                            <strong>@T("Admin.Orders.Products.AddNew.UpdateTotals")</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        @T("Admin.Orders.Products.AddNew")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (Model.ProductType == ProductType.GroupedProduct)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @*TODO add support for grouped products to be added to an existing order*@
+                            Grouped products are not currently supported for adding to an existing order
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            This product type (unknown) is not currently supported for adding to an existing order
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

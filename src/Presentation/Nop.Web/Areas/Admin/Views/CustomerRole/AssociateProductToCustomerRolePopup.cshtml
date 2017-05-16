@@ -1,0 +1,213 @@
+﻿@model CustomerRoleModel.AssociateProductToCustomerRoleModel
+
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+    var popGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().PopupGridPageSize;
+
+    //page title
+    ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
+                window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
+                window.opener.document.getElementById('@(ViewBag.btnId)').click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+    }
+
+    @Html.HiddenFor(model => model.AssociatedToProductId)
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search panel-popup">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchProductName)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopEditorFor(model => model.SearchProductName)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchCategoryId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchVendorId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchStoreId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchProductTypeId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-sm-5">
+                                        @Html.NopLabelFor(model => model.SearchManufacturerId)
+                                    </div>
+                                    <div class="col-sm-7">
+                                        @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="products-grid"></div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#products-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("AssociateProductToCustomerRolePopupList", "CustomerRole"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: additionalData
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(popGridPageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        @Html.Partial("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [{
+                                        field: "Name",
+                                        title: "@T("Admin.Common.Select")",
+                                        width: 50,
+                                        template: '<button type="button" onclick="selectAssociatedProduct(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
+                                    },{
+                                        field: "Name",
+                                        title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                    }, {
+                                        field: "Published",
+                                        title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }]
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" id="save" name="save" class="btn btn-default" style="display: none">
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#search-products').click(function() {
+                            var grid = $('#products-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            return false;
+                        });
+                    });
+
+                    $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function(event) {
+                        if (event.keyCode == 13) {
+                            $("#search-products").click();
+                            return false;
+                        }
+                    });
+
+                    function additionalData() {
+                        var data = {
+                            SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                            SearchCategoryId: $('#SearchCategoryId').val(),
+                            SearchManufacturerId: $('#SearchManufacturerId').val(),
+                            SearchStoreId: $('#SearchStoreId').val(),
+                            SearchVendorId: $('#SearchVendorId').val(),
+                            SearchProductTypeId: $('#SearchProductTypeId').val()
+                        };
+                        addAntiForgeryToken(data);
+                        return data;
+                    }
+
+                    function selectAssociatedProduct(productid) {
+                        $("#@Html.FieldIdFor(model => model.AssociatedToProductId)").val(productid);
+                        $('#save').click();
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,129 @@
+﻿@model CustomerRoleModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        toggleRemoveButton();
+    });
+
+    function toggleRemoveButton() {
+        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() > 0) {
+            $('#purchased-with-product-name-remove').show();
+        } else {
+            $('#purchased-with-product-name-remove').hide();
+        }
+    }
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Name, required: true)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SystemName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.SystemName)
+                            @Html.ValidationMessageFor(model => model.SystemName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.FreeShipping)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.FreeShipping)
+                            @Html.ValidationMessageFor(model => model.FreeShipping)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.TaxExempt)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.TaxExempt)
+                            @Html.ValidationMessageFor(model => model.TaxExempt)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.EnablePasswordLifetime)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.EnablePasswordLifetime)
+                            @Html.ValidationMessageFor(model => model.EnablePasswordLifetime)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Active)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Active)
+                            @Html.ValidationMessageFor(model => model.Active)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.IsSystemRole)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplay(Model.IsSystemRole.ToString())
+                            @Html.HiddenFor(model => model.IsSystemRole)
+                            @Html.ValidationMessageFor(model => model.IsSystemRole)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.PurchasedWithProductId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.HiddenFor(model => model.PurchasedWithProductId)
+                            <span id="purchased-with-product-name">@Model.PurchasedWithProductName</span>
+                            @Html.ValidationMessageFor(model => model.PurchasedWithProductId)
+                            <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCustomerRolePopup", "CustomerRole", new {productIdInput = Html.FieldIdFor(model => model.PurchasedWithProductId), productNameInput = "purchased-with-product-name", btnId = "btnRefreshPurchasedWithProduct"}))', 800, 850, true); return false;" class="btn btn-primary">
+                                @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose")
+                            </button>
+                            <button type="submit" id="purchased-with-product-name-remove" class="btn bg-red">
+                                @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove")
+                            </button>
+                            <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
+                            
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#purchased-with-product-name-remove').click(function () {
+                                        $('#purchased-with-product-name').text('');
+                                        $("#@Html.FieldIdFor(model => model.PurchasedWithProductId)").val(0);
+                                        toggleRemoveButton();
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+
+                                    $('#btnRefreshPurchasedWithProduct').click(function () {
+                                        toggleRemoveButton();
+
+                                        //return false to don't reload a page
+                                        return false;
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
