@@ -3730,7 +3730,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         public virtual IActionResult ProductAttributeConditionPopup(string btnId, string formId,
-            ProductAttributeConditionModel model, FormCollection form)
+            ProductAttributeConditionModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4527,7 +4527,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         [ValidateInput(false)]
         public virtual IActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
-            AddProductAttributeCombinationModel model, FormCollection form)
+            AddProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();

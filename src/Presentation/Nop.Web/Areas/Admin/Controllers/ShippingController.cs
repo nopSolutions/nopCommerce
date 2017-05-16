@@ -952,7 +952,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("Restrictions")]
-        public virtual IActionResult RestrictionSave(FormCollection form)
+        public virtual IActionResult RestrictionSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();

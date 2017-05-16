@@ -97,7 +97,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual IActionResult PermissionsSave(FormCollection form)
+        public virtual IActionResult PermissionsSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();

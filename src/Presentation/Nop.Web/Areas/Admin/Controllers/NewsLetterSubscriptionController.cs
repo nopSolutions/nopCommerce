@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public virtual IActionResult ImportCsv(FormCollection form)
+        public virtual IActionResult ImportCsv(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();

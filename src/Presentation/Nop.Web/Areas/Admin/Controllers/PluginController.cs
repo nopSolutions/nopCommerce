@@ -300,7 +300,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
         [ValidateInput(false)]
-        public virtual IActionResult Install(FormCollection form)
+        public virtual IActionResult Install(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -343,7 +343,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
         [ValidateInput(false)]
-        public virtual IActionResult Uninstall(FormCollection form)
+        public virtual IActionResult Uninstall(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();

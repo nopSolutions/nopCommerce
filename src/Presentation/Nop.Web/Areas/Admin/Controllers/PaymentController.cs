@@ -180,7 +180,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("MethodRestrictions")]
-        public virtual IActionResult MethodRestrictionsSave(FormCollection form)
+        public virtual IActionResult MethodRestrictionsSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();

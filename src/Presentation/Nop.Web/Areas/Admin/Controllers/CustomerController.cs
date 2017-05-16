@@ -404,7 +404,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual string ParseCustomCustomerAttributes( FormCollection form)
+        protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
                 throw new ArgumentNullException("form");
@@ -849,7 +849,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         [ValidateInput(false)]
-        public virtual IActionResult Create(CustomerModel model, bool continueEditing, FormCollection form)
+        public virtual IActionResult Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1066,7 +1066,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         [ValidateInput(false)]
-        public virtual IActionResult Edit(CustomerModel model, bool continueEditing, FormCollection form)
+        public virtual IActionResult Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1771,7 +1771,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual IActionResult AddressCreate(CustomerAddressModel model, FormCollection form)
+        public virtual IActionResult AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1833,7 +1833,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual IActionResult AddressEdit(CustomerAddressModel model, FormCollection form)
+        public virtual IActionResult AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();

@@ -283,7 +283,7 @@ namespace Nop.Admin.Controllers
         /// <param name="errors">Errors</param>
         /// <returns>Parsed attributes</returns>
 	    [NonAction]
-        protected virtual string ParseProductAttributes(Product product, FormCollection form, List<string> errors)
+        protected virtual string ParseProductAttributes(Product product, IFormCollection form, List<string> errors)
         {
             var attributesXml = string.Empty;
 
@@ -429,7 +429,7 @@ namespace Nop.Admin.Controllers
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">End date</param>
         [NonAction]
-        protected virtual void ParseRentalDates(FormCollection form,
+        protected virtual void ParseRentalDates(IFormCollection form,
             out DateTime? startDate, out DateTime? endDate)
         {
             startDate = null;
@@ -1969,7 +1969,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         [ValidateInput(false)]
         public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
-	        FormCollection form)
+	        IFormCollection form)
 	    {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -2138,7 +2138,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         [ValidateInput(false)]
-        public virtual IActionResult EditOrderItem(int id, FormCollection form)
+        public virtual IActionResult EditOrderItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2249,7 +2249,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
         [ValidateInput(false)]
-        public virtual IActionResult DeleteOrderItem(int id, FormCollection form)
+        public virtual IActionResult DeleteOrderItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2332,7 +2332,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
         [ValidateInput(false)]
-        public virtual IActionResult ResetDownloadCount(int id, FormCollection form)
+        public virtual IActionResult ResetDownloadCount(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2372,7 +2372,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
         [ValidateInput(false)]
-        public virtual IActionResult ActivateDownloadItem(int id, FormCollection form)
+        public virtual IActionResult ActivateDownloadItem(int id, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2587,7 +2587,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddProductToOrderDetails(int orderId, int productId, FormCollection form)
+        public virtual IActionResult AddProductToOrderDetails(int orderId, int productId, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2843,7 +2843,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public virtual IActionResult AddressEdit(OrderAddressModel model, FormCollection form)
+        public virtual IActionResult AddressEdit(OrderAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3181,7 +3181,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult AddShipment(int orderId, FormCollection form, bool continueEditing)
+        public virtual IActionResult AddShipment(int orderId, IFormCollection form, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
