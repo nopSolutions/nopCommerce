@@ -252,6 +252,11 @@ namespace Nop.Admin.Controllers
                                                                x => x.Name,
                                                                localized.Name,
                                                                localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(pav,
+                                                               x => x.Description,
+                                                               localized.Description,
+                                                               localized.LanguageId);
             }
         }
 
@@ -550,7 +555,7 @@ namespace Nop.Admin.Controllers
             }
             return result.ToArray();
         }
-        
+
         [NonAction]
         protected virtual void PrepareProductModel(ProductModel model, Product product, bool setPredefinedValues, bool excludeProperties)
         {
@@ -573,7 +578,7 @@ namespace Nop.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
-            
+
             //little performance hack here
             //there's no need to load attributes when creating a new product
             //anyway they're not used (you need to save a product before you map them)
@@ -2836,7 +2841,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
-            
+
             if (_workContext.CurrentVendor != null && !_vendorSettings.AllowVendorsToImportProducts)
                 //a vendor can not import products
                 return AccessDeniedView();
@@ -3461,6 +3466,7 @@ namespace Nop.Admin.Controllers
                     ProductAttributeMappingId = productAttributeMapping.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = predefinedValue.Name,
+                    Description = predefinedValue.Description,
                     PriceAdjustment = predefinedValue.PriceAdjustment,
                     WeightAdjustment = predefinedValue.WeightAdjustment,
                     Cost = predefinedValue.Cost,
@@ -3476,6 +3482,10 @@ namespace Nop.Admin.Controllers
                     var name = predefinedValue.GetLocalized(x => x.Name, lang.Id, false, false);
                     if (!String.IsNullOrEmpty(name))
                         _localizedEntityService.SaveLocalizedValue(pav, x => x.Name, name, lang.Id);
+
+                    var description = predefinedValue.GetLocalized(x => x.Description, lang.Id, false, false);
+                    if (!String.IsNullOrEmpty(description))
+                        _localizedEntityService.SaveLocalizedValue(pav, x => x.Description, description, lang.Id);
                 }
             }
 
@@ -4037,6 +4047,7 @@ namespace Nop.Admin.Controllers
                     AttributeValueTypeId = model.AttributeValueTypeId,
                     AssociatedProductId = model.AssociatedProductId,
                     Name = model.Name,
+                    Description = model.Description,
                     ColorSquaresRgb = model.ColorSquaresRgb,
                     ImageSquaresPictureId = model.ImageSquaresPictureId,
                     PriceAdjustment = model.PriceAdjustment,
@@ -4108,6 +4119,7 @@ namespace Nop.Admin.Controllers
                 AssociatedProductId = pav.AssociatedProductId,
                 AssociatedProductName = associatedProduct != null ? associatedProduct.Name : "",
                 Name = pav.Name,
+                Description = pav.Description,
                 ColorSquaresRgb = pav.ColorSquaresRgb,
                 DisplayColorSquaresRgb = pav.ProductAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
                 ImageSquaresPictureId = pav.ImageSquaresPictureId,
@@ -4129,6 +4141,7 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = pav.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = pav.GetLocalized(x => x.Description, languageId, false, false);
             });
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
@@ -4191,6 +4204,7 @@ namespace Nop.Admin.Controllers
                 pav.AttributeValueTypeId = model.AttributeValueTypeId;
                 pav.AssociatedProductId = model.AssociatedProductId;
                 pav.Name = model.Name;
+                pav.Description = model.Description;
                 pav.ColorSquaresRgb = model.ColorSquaresRgb;
                 pav.ImageSquaresPictureId = model.ImageSquaresPictureId;
                 pav.PriceAdjustment = model.PriceAdjustment;
@@ -4369,7 +4383,7 @@ namespace Nop.Admin.Controllers
 
                     return Json(new { Result = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.HasAttributes") }, JsonRequestBehavior.AllowGet);
                 }
-                
+
                 //gift card
                 if (associatedProduct.IsGiftCard)
                 {
@@ -4780,7 +4794,7 @@ namespace Nop.Admin.Controllers
             //vendors cannot manage these settings
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("List");
-            
+
             var productEditorSettings = _settingService.LoadSetting<ProductEditorSettings>();
             productEditorSettings = model.ProductEditorSettingsModel.ToEntity(productEditorSettings);
             _settingService.SaveSetting(productEditorSettings);

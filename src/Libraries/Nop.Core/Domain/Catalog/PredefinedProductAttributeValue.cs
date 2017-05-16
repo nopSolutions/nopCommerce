@@ -18,6 +18,11 @@ namespace Nop.Core.Domain.Catalog
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the product attribute description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets or sets the price adjustment
         /// </summary>
         public decimal PriceAdjustment { get; set; }

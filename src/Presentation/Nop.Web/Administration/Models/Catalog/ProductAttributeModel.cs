@@ -22,9 +22,7 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
         [AllowHtml]
-        public string Description {get;set;}
-        
-
+        public string Description { get; set; }
 
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
@@ -51,7 +49,7 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
         [AllowHtml]
-        public string Description {get;set;}
+        public string Description { get; set; }
     }
 
 
@@ -68,6 +66,10 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Description")]
+        [AllowHtml]
+        public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
@@ -99,5 +101,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Description")]
+        [AllowHtml]
+        public string Description { get; set; }
     }
 }

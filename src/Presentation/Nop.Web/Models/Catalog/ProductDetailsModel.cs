@@ -285,6 +285,8 @@ namespace Nop.Web.Models.Catalog
 
             public string Name { get; set; }
 
+            public string Description { get; set; }
+
             public string ColorSquaresRgb { get; set; }
 
             //picture model is used with "image square" attribute type

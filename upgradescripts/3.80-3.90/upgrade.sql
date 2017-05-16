@@ -1,4 +1,4 @@
-﻿--upgrade scripts from nopCommerce 3.80 to 3.90
+--upgrade scripts from nopCommerce 3.80 to next version
 
 --new locale resources
 declare @resources xml
@@ -1618,7 +1618,7 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ContactVendor.EmailSubject">
     <Value></Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.CancelledNotification">
     <Value>This order is cancelled</Value>
   </LocaleResource>
@@ -2213,6 +2213,18 @@ set @resources='
   <LocaleResource Name="Forum.TopicSubjectCannotBeEmpty">
     <Value>Topic subject can not be empty</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Description">
+   <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+ 	 <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Description.Hint">
+	<Value>The attribute value description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Description.Hint">
+     <Value>The attribute value description</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -2859,6 +2871,22 @@ GO
 
 ALTER TABLE [ProductAttributeValue] ALTER COLUMN [CustomerEntersQty] bit NOT NULL
 GO
+
+--new column: ProductAttributeValue.Description nvarchar(MAX)
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductAttributeValue]') and NAME='Description')
+BEGIN
+	ALTER TABLE [ProductAttributeValue]
+ 	ADD [Description] nvarchar(max)
+END
+GO
+
+--new column: PredefinedProductAttributeValue.Description nvarchar(MAX)
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[PredefinedProductAttributeValue]') and NAME='Description')
+BEGIN
+	ALTER TABLE PredefinedProductAttributeValue
+	ADD [Description] nvarchar(max)
+END
+GO  
 
 --new or update setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.renderassociatedattributevaluequantity')
