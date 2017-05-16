@@ -1,50 +1,70 @@
-﻿#if NET451
-using System;
-using System.Web.Mvc;
-using Nop.Core.Data;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Security;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class AdminAntiForgeryAttribute : FilterAttribute, IAuthorizationFilter
+    public class AdminAntiForgeryAttribute : TypeFilterAttribute
     {
-        private readonly bool _ignore;
+        /// <summary>
+        /// Create instance of the filter attribute
+        /// </summary>
+        public AdminAntiForgeryAttribute(bool ignore = false) : base(typeof(AdminAntiForgeryFilter))
+        {
+            this.Arguments = new object[] {ignore};
+        }
+
+
+        #region Nested filter
 
         /// <summary>
-        /// Anti-forgery security attribute
+        /// Represents a filter that saves last visited page by customer
         /// </summary>
-        /// <param name="ignore">Pass false in order to ignore this security validation</param>
-        public AdminAntiForgeryAttribute(bool ignore = false)
+        private class AdminAntiForgeryFilter : ValidateAntiforgeryTokenAuthorizationFilter
         {
-            this._ignore = ignore;
+            #region Fields
+
+            private readonly bool _ignore;
+            private readonly SecuritySettings _securitySettings;
+
+            #endregion
+
+            #region Ctor
+
+            public AdminAntiForgeryFilter(bool ignore, SecuritySettings securitySettings, IAntiforgery antiforgery,
+                ILoggerFactory loggerFactory)
+                : base(antiforgery, loggerFactory)
+            {
+                this._ignore = ignore;
+                this._securitySettings = securitySettings;
+            }
+
+            #endregion
+
+            #region Methods
+
+            protected override bool ShouldValidate(AuthorizationFilterContext context)
+            {
+                if (!base.ShouldValidate(context))
+                {
+                    return false;
+                }
+
+                if (_ignore)
+                    return false;
+
+                if (!_securitySettings.EnableXsrfProtectionForAdminArea)
+                    return false;
+
+                return true;
+            }
+
+            #endregion
         }
-        public virtual void OnAuthorization(AuthorizationContext filterContext)
-        {
-            if (filterContext == null)
-                throw new ArgumentNullException("filterContext");
 
-            if (_ignore)
-                return;
-
-            //don't apply filter to child methods
-            if (filterContext.IsChildAction)
-                return;
-
-            //only POST requests
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase))
-                return;
-
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-            var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
-            if (!securitySettings.EnableXsrfProtectionForAdminArea)
-                return;
-            
-            var validator = new ValidateAntiForgeryTokenAttribute();
-            validator.OnAuthorization(filterContext);
-        }
+        #endregion
     }
 }
-#endif
