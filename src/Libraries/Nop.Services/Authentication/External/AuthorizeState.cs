@@ -59,7 +59,7 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Result
         /// </summary>
-        public ActionResult Result { get; set; }
+        public IActionResult Result { get; set; }
 #endif
     }
 }

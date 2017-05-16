@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
         }
 #if NET451
         [ChildActionOnly]
-        public virtual ActionResult NopCommerceNews()
+        public virtual IActionResult NopCommerceNews()
         {
             try
             {
@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult NopCommerceNewsHideAdv()
+        public virtual IActionResult NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
             _settingService.SaveSetting(_adminAreaSettings);

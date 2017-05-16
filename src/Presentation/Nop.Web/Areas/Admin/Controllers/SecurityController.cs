@@ -43,7 +43,7 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        public virtual ActionResult AccessDenied(string pageUrl)
+        public virtual IActionResult AccessDenied(string pageUrl)
         {
             var currentCustomer = _workContext.CurrentCustomer;
             if (currentCustomer == null || currentCustomer.IsGuest())
@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        public virtual ActionResult Permissions()
+        public virtual IActionResult Permissions()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
@@ -97,7 +97,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("Permissions")]
-        public virtual ActionResult PermissionsSave(FormCollection form)
+        public virtual IActionResult PermissionsSave(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();

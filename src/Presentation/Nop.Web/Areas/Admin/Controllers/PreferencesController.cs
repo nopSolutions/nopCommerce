@@ -29,7 +29,7 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         [HttpPost]
-        public virtual ActionResult SavePreference(string name, bool value)
+        public virtual IActionResult SavePreference(string name, bool value)
         {
             //permission validation is not required here
             if (string.IsNullOrEmpty(name))

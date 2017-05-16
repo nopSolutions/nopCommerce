@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         //shopping carts
-        public virtual ActionResult CurrentCarts()
+        public virtual IActionResult CurrentCarts()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -70,7 +70,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult CurrentCarts(DataSourceRequest command)
+        public virtual IActionResult CurrentCarts(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult GetCartDetails(int customerId)
+        public virtual IActionResult GetCartDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
@@ -135,7 +135,7 @@ namespace Nop.Admin.Controllers
 
 
         //wishlists
-        public virtual ActionResult CurrentWishlists()
+        public virtual IActionResult CurrentWishlists()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -144,7 +144,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult CurrentWishlists(DataSourceRequest command)
+        public virtual IActionResult CurrentWishlists(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
@@ -170,7 +170,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual ActionResult GetWishlistDetails(int customerId)
+        public virtual IActionResult GetWishlistDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedKendoGridJson();
