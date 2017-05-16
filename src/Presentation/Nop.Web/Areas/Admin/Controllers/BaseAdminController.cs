@@ -49,17 +49,20 @@ namespace Nop.Admin.Controllers
                 LogException(filterContext.Exception);
             base.OnException(filterContext);
         }
-        
+        #endif
         /// <summary>
         /// Access denied view
         /// </summary>
         /// <returns>Access denied view</returns>
         protected virtual IActionResult AccessDeniedView()
         {
-            //return new UnauthorizedResult();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
-        }
+            var rawUrl = this.Request.Path + this.Request.QueryString;
 
+            //return new UnauthorizedResult();
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+        }
+        
+        #if NET451
         /// <summary>
         /// Access denied json data for kendo grid
         /// </summary>
