@@ -943,7 +943,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return new JsonResult("");
+                return new NullJsonResult();
 
                 var errors = new List<string>();
             string attributeXml = ParseProductAttributes(product, form, errors);

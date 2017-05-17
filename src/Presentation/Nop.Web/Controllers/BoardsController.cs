@@ -1037,11 +1037,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PostVote(int postId, bool isUp)
         {
             if (!_forumSettings.AllowPostVoting)
-                return Json(null);
+                return new NullJsonResult();
 
             var forumPost = _forumService.GetPostById(postId);
             if (forumPost == null)
-                return Json(null);
+                return new NullJsonResult();
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Json(new
