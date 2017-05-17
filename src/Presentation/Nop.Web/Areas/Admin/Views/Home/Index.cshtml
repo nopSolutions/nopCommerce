@@ -48,30 +48,30 @@
                     @if (!Model.IsLoggedInAsVendor && canManageOrders)
                     {
                         <div class="col-md-6">
-                            @await Component.InvokeAsync("OrderStatistics")
+                            @await Html.PartialAsync("_OrderStatistics")
                         </div>
                     }
                     @if (!Model.IsLoggedInAsVendor && canManageCustomers)
                     {
                         <div class="col-md-6">
-                            @await Component.InvokeAsync("CustomerStatistics")
+                            @await Html.PartialAsync("_CustomerStatistics")
                         </div>
                     }
                 </div>
             }
             @Html.Widget("admin_dashboard_customerordercharts_after")
-            @*TODO @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
                 <div class="row">
                     <div class="col-md-8">
-                        @Html.Action("OrderAverageReport", "Order")
+                        @await Html.PartialAsync("_OrderAverageReport")
                     </div>
                     <div class="col-md-4">
-                        @Html.Action("OrderIncompleteReport", "Order")
+                        @await Html.PartialAsync("_OrderIncompleteReport")
                     </div>
                 </div>
             }
-            @Html.Widget("admin_dashboard_orderreports_after")
+            @*TODO @Html.Widget("admin_dashboard_orderreports_after")
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
             {
                 <div class="row">

@@ -62,7 +62,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
         }
         
-        #if NET451
         /// <summary>
         /// Access denied json data for kendo grid
         /// </summary>
@@ -74,6 +73,7 @@ namespace Nop.Admin.Controllers
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
+#if NET451
         /// <summary>
         /// Save selected TAB name
         /// </summary>
