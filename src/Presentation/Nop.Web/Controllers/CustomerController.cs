@@ -234,7 +234,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.MultilineTextbox:
                     {
                         var ctrlAttributes = form[controlId];
-                        if (!String.IsNullOrEmpty(ctrlAttributes))
+                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                         {
                             string enteredText = ctrlAttributes.ToString().Trim();
                             attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,

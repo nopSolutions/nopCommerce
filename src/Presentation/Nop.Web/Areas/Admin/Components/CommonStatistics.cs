@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Factories;
 using System.Threading.Tasks;
 using Nop.Admin.Models.Home;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;

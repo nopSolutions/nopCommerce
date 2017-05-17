@@ -31,7 +31,7 @@ namespace Nop.Admin.Extensions
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
@@ -43,9 +43,9 @@ namespace Nop.Admin.Extensions
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -73,9 +73,9 @@ namespace Nop.Admin.Extensions
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                string enteredText = ctrlAttributes.ToString().Trim();
                                 attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                     attribute, enteredText);
                             }

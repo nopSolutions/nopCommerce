@@ -1,7 +1,5 @@
 ﻿@model DashboardModel
-
 @using Nop.Services.Security
-
 @{
     Html.AppendCssFileParts("~/Areas/Admin/Content/ionicons/css/ionicons-2.0.1.min.css");
 
@@ -44,25 +42,25 @@
                 </div>
             }
             @Html.Widget("admin_dashboard_commonstatistics_after")
-            @*TODO @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
+            @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageCustomers))
             {
                 <div class="row">
                     @if (!Model.IsLoggedInAsVendor && canManageOrders)
                     {
                         <div class="col-md-6">
-                            @Html.Action("OrderStatistics", "Order")
+                            @await Component.InvokeAsync("OrderStatistics")
                         </div>
                     }
                     @if (!Model.IsLoggedInAsVendor && canManageCustomers)
                     {
                         <div class="col-md-6">
-                            @Html.Action("CustomerStatistics", "Customer")
+                            @await Component.InvokeAsync("CustomerStatistics")
                         </div>
                     }
                 </div>
             }
             @Html.Widget("admin_dashboard_customerordercharts_after")
-            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            @*TODO @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
                 <div class="row">
                     <div class="col-md-8">

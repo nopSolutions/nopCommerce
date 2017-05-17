@@ -1,11 +1,16 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Primitives;
+#if NET451
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+#endif
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
@@ -40,16 +45,19 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
+using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
     public partial class CustomerController : BaseAdminController
     {
-        #region Fields
+#region Fields
 
         private readonly ICustomerService _customerService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -95,9 +103,9 @@ namespace Nop.Admin.Controllers
         private readonly IRewardPointService _rewardPointService;
         private readonly IStaticCacheManager _cacheManager;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public CustomerController(ICustomerService customerService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -188,11 +196,10 @@ namespace Nop.Admin.Controllers
             this._cacheManager = cacheManager;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
-
-        [NonAction]
+#region Utilities
+        
         protected virtual string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
         {
             var sb = new StringBuilder();
@@ -207,8 +214,7 @@ namespace Nop.Admin.Controllers
             }
             return sb.ToString();
         }
-
-        [NonAction]
+        
         protected virtual IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
         {
             var report = new List<RegisteredCustomerReportLineModel>();
@@ -236,8 +242,7 @@ namespace Nop.Admin.Controllers
 
             return report;
         }
-
-        [NonAction]
+        
         protected virtual IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
         {
             if (customer == null)
@@ -261,8 +266,7 @@ namespace Nop.Admin.Controllers
 
             return result;
         }
-
-        [NonAction]
+        
         protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
             return new CustomerModel
@@ -280,8 +284,7 @@ namespace Nop.Admin.Controllers
                 LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc),
             };
         }
-
-        [NonAction]
+        
         protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
         {
             if (customerRoles == null)
@@ -299,8 +302,7 @@ namespace Nop.Admin.Controllers
             //no errors
             return "";
         }
-
-        [NonAction]
+        
         protected virtual void PrepareVendorsModel(CustomerModel model)
         {
             if (model == null)
@@ -315,8 +317,6 @@ namespace Nop.Admin.Controllers
             foreach (var v in vendors)
                 model.AvailableVendors.Add(v);
         }
-
-        [NonAction]
         protected virtual void PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
         {
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
@@ -402,8 +402,7 @@ namespace Nop.Admin.Controllers
                 model.CustomerAttributes.Add(attributeModel);
             }
         }
-
-        [NonAction]
+        
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
@@ -420,7 +419,7 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
@@ -432,9 +431,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!StringValues.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -462,9 +461,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                string enteredText = ctrlAttributes.ToString().Trim();
                                 attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -483,7 +482,7 @@ namespace Nop.Admin.Controllers
             return attributesXml;
         }
 
-        [NonAction]
+#if NET451
         protected virtual void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
         {
             var allStores = _storeService.GetAllStores();
@@ -756,9 +755,11 @@ namespace Nop.Admin.Controllers
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
-        #endregion
+#endif
+#endregion
 
-        #region Customers
+#if NET451
+#region Customers
 
         public virtual IActionResult Index()
         {
@@ -1624,9 +1625,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", new { id = customer.Id });
         }
         
-        #endregion
+#endregion
         
-        #region Reward points history
+#region Reward points history
 
         [HttpPost]
         public virtual IActionResult RewardPointsHistorySelect(DataSourceRequest command, int customerId)
@@ -1677,9 +1678,9 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
         
-        #endregion
+#endregion
         
-        #region Addresses
+#region Addresses
 
         [HttpPost]
         public virtual IActionResult AddressesSelect(int customerId, DataSourceRequest command)
@@ -1867,9 +1868,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Orders
+#region Orders
         
         [HttpPost]
         public virtual IActionResult OrderList(int customerId, DataSourceRequest command)
@@ -1906,10 +1907,11 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        #endregion
+#endregion
+#endif
 
-        #region Reports
-
+#region Reports
+#if NET451
         public virtual IActionResult Reports()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2044,21 +2046,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-        [ChildActionOnly]
-	    public virtual IActionResult CustomerStatistics()
-	    {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            //a vendor doesn't have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            return PartialView();
-	    }
-
-        [AcceptVerbs(HttpVerbs.Get)]
+#endif
         public virtual IActionResult LoadCustomerStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2148,12 +2136,13 @@ namespace Nop.Admin.Controllers
                     break;
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
-        #endregion
+#endregion
 
-        #region Current shopping cart/ wishlist
+#if NET451
+#region Current shopping cart/ wishlist
 
         [HttpPost]
         public virtual IActionResult GetCartList(int customerId, int cartTypeId)
@@ -2190,9 +2179,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Activity log
+#region Activity log
 
         [HttpPost]
         public virtual IActionResult ListActivityLog(DataSourceRequest command, int customerId)
@@ -2222,9 +2211,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Back in stock subscriptions
+#region Back in stock subscriptions
 
         [HttpPost]
         public virtual IActionResult BackInStockSubscriptionList(DataSourceRequest command, int customerId)
@@ -2257,9 +2246,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Export / Import
+#region Export / Import
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
@@ -2387,7 +2376,7 @@ namespace Nop.Admin.Controllers
             return new XmlDownloadResult(xml, "customers.xml");
         }
 
-        #endregion
+#endregion
+#endif
     }
 }
-#endif

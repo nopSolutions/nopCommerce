@@ -50,7 +50,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class ProductController : BaseAdminController
     {
-        #region Fields
+#region Fields
 
         private readonly IProductService _productService;
         private readonly IProductTemplateService _productTemplateService;
@@ -97,9 +97,9 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         public ProductController(IProductService productService,
             IProductTemplateService productTemplateService,
@@ -192,9 +192,9 @@ namespace Nop.Admin.Controllers
             this._vendorSettings = vendorSettings;
         }
 
-        #endregion 
+#endregion
 
-        #region Utilities
+#region Utilities
 
         [NonAction]
         protected virtual void UpdateLocales(Product product, ProductModel model)
@@ -906,11 +906,11 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
-        #region Product list / create / edit / delete
+#region Product list / create / edit / delete
 
         //list products
         public virtual IActionResult Index()
@@ -1432,9 +1432,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region Required products
+#region Required products
 
         [HttpPost]
         public virtual IActionResult LoadProductFriendlyNames(string productIds)
@@ -1544,9 +1544,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Related products
+#region Related products
 
         [HttpPost]
         public virtual IActionResult RelatedProductList(DataSourceRequest command, int productId)
@@ -1748,9 +1748,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Cross-sell products
+#region Cross-sell products
 
         [HttpPost]
         public virtual IActionResult CrossSellProductList(DataSourceRequest command, int productId)
@@ -1924,9 +1924,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Associated products
+#region Associated products
 
         [HttpPost]
         public virtual IActionResult AssociatedProductList(DataSourceRequest command, int productId)
@@ -2126,9 +2126,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Product pictures
+#region Product pictures
 
         public virtual IActionResult ProductPictureAdd(int pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
@@ -2286,9 +2286,9 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #endregion
+#endregion
 
-        #region Product specification attributes
+#region Product specification attributes
 
         public virtual IActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage,
@@ -2463,9 +2463,9 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #endregion
+#endregion
 
-        #region Product tags
+#region Product tags
 
         public virtual IActionResult ProductTags()
         {
@@ -2569,9 +2569,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Purchased with order
+#region Purchased with order
 
         [HttpPost]
         public virtual IActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
@@ -2614,9 +2614,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Export / Import
+#region Export / Import
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("download-catalog-pdf")]
@@ -2862,9 +2862,9 @@ namespace Nop.Admin.Controllers
 
         }
 
-        #endregion
+#endregion
 
-        #region Low stock reports
+#region Low stock reports
 
         public virtual IActionResult LowStockReport()
         {
@@ -2925,9 +2925,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #region Bulk editing
+#region Bulk editing
 
         public virtual IActionResult BulkEdit()
         {
@@ -3079,9 +3079,9 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #endregion
+#endregion
 
-        #region Tier prices
+#region Tier prices
 
         [HttpPost]
         public virtual IActionResult TierPriceList(DataSourceRequest command, int productId)
@@ -3323,9 +3323,9 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #endregion
+#endregion
 
-        #region Product attributes
+#region Product attributes
 
         [HttpPost]
         public virtual IActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
@@ -3533,9 +3533,9 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #endregion
+#endregion
 
-        #region Product attributes. Validation rules
+#region Product attributes. Validation rules
 
         public virtual IActionResult ProductAttributeValidationRulesPopup(int id)
         {
@@ -3609,9 +3609,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Product attributes. Condition
+#region Product attributes. Condition
 
         public virtual IActionResult ProductAttributeConditionPopup(string btnId, string formId, int productAttributeMappingId)
         {
@@ -3761,7 +3761,7 @@ namespace Nop.Admin.Controllers
                         case AttributeControlType.ImageSquares:
                             {
                                 var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                                 {
                                     int selectedAttributeId = int.Parse(ctrlAttributes);
                                     if (selectedAttributeId > 0)
@@ -3791,10 +3791,10 @@ namespace Nop.Admin.Controllers
                         case AttributeControlType.Checkboxes:
                             {
                                 var cblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(cblAttributes))
+                                if (!StringValues.IsNullOrEmpty(cblAttributes))
                                 {
                                     bool anyValueSelected = false;
-                                    foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                    foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                     {
                                         int selectedAttributeId = int.Parse(item);
                                         if (selectedAttributeId > 0)
@@ -3843,9 +3843,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #region Product attribute values
+#region Product attribute values
 
         //list
         public virtual IActionResult EditAttributeValues(int productAttributeMappingId)
@@ -4383,9 +4383,9 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
         }
 
-        #endregion
+#endregion
 
-        #region Product attribute combinations
+#region Product attribute combinations
 
         [HttpPost]
         public virtual IActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
@@ -4543,7 +4543,7 @@ namespace Nop.Admin.Controllers
             string attributesXml = "";
             var warnings = new List<string>();
 
-            #region Product attributes
+#region Product attributes
 
             var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
                 //ignore non-combinable attributes for combinations
@@ -4680,7 +4680,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            #endregion
+#endregion
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
@@ -4763,9 +4763,9 @@ namespace Nop.Admin.Controllers
             return Json(new { Success = true });
         }
 
-        #endregion
+#endregion
 
-        #region Product editor settings
+#region Product editor settings
 
         [HttpPost]
         public virtual IActionResult SaveProductEditorSettings(ProductModel model, string returnUrl = "")
@@ -4790,9 +4790,9 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-        #endregion
+#endregion
 
-        #region Stock quantity history
+#region Stock quantity history
 
         [HttpPost]
         public virtual IActionResult StockQuantityHistory(DataSourceRequest command, int productId, int warehouseId)
@@ -4846,9 +4846,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }
 #endif
