@@ -811,16 +811,10 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true });
         }
+        
+#endif
 
 
-        [ChildActionOnly]
-        public virtual IActionResult PopularSearchTermsReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return Content("");
-
-            return PartialView();
-        }
         [HttpPost]
         public virtual IActionResult PopularSearchTermsReport(DataSourceRequest command)
         {
@@ -840,7 +834,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-
+#if NET451
         //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
         [ChildActionOnly]
         public virtual IActionResult MultistoreDisabledWarning()
@@ -909,9 +903,7 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) }, JsonRequestBehavior.AllowGet);
         }
-        
-        #endif
-
-        #endregion
+#endif
+#endregion
     }
 }

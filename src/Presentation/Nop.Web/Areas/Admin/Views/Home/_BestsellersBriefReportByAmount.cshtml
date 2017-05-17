@@ -1,9 +1,10 @@
 ﻿@using Nop.Core
 @using Nop.Services.Common
+@inject IWorkContext workContext
 @{
     const string panelId = "bestsellers-report-amount-box";
     const string hidePanelAttributeName = "HideBestsellersBriefReportByAmountPanel";
-    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
     var gridPageSize = 5;
 }
 

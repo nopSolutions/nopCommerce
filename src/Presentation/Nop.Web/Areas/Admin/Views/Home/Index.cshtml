@@ -1,4 +1,5 @@
 ﻿@model DashboardModel
+@inject IPermissionService permissionService
 @using Nop.Services.Security
 @{
     Html.AppendCssFileParts("~/Areas/Admin/Content/ionicons/css/ionicons-2.0.1.min.css");
@@ -6,20 +7,17 @@
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
 
-    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
     var canManageReturnRequests = permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
 }
-
 @Html.AntiForgeryToken()
 <div class="content-header">
     <h1>
         @T("Admin.Dashboard")
     </h1>
 </div>
-
 <div class="content">
     <div class="row">
         <div class="col-md-12">
@@ -71,20 +69,20 @@
                     </div>
                 </div>
             }
-            @*TODO @Html.Widget("admin_dashboard_orderreports_after")
+            @Html.Widget("admin_dashboard_orderreports_after")
             @if (!Model.IsLoggedInAsVendor && (canManageOrders || canManageProducts))
             {
                 <div class="row">
                     @if (canManageOrders)
                     {
                         <div class="col-md-8">
-                            @Html.Action("LatestOrders", "Order")
+                            @await Html.PartialAsync("_LatestOrders")
                         </div>
                     }
                     <div class="col-md-4">
                         @if (canManageProducts)
                         {
-                            @Html.Action("PopularSearchTermsReport", "Common")
+                            @await Html.PartialAsync("_PopularSearchTermsReport")
                         }
                     </div>
                 </div>
@@ -94,14 +92,14 @@
             {
                 <div class="row">
                     <div class="col-md-6">
-                        @Html.Action("BestsellersBriefReportByQuantity", "Order")
+                        @await Html.PartialAsync("_BestsellersBriefReportByQuantity")
                     </div>
                     <div class="col-md-6">
-                        @Html.Action("BestsellersBriefReportByAmount", "Order")
+                        @await Html.PartialAsync("_BestsellersBriefReportByAmount")
                     </div>
                 </div>
             }
-            @Html.Widget("admin_dashboard_bottom")*@
+            @Html.Widget("admin_dashboard_bottom")
         </div>
     </div>
 </div>

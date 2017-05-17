@@ -1,17 +1,18 @@
 ﻿@using Nop.Core
 @using Nop.Services.Common
+@inject IWorkContext workContext
 @{
-    const string panelId = "bestsellers-report-quantity-box";
-    const string hidePanelAttributeName = "HideBestsellersBriefReportByQuantityPanel";
-    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    const string panelId = "popular-search-terms-box";
+    const string hidePanelAttributeName = "HidePopularSearchTermsReport";
+    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
     var gridPageSize = 5;
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
     <div class="box-header with-border">
         <h3 class="box-title">
-            <i class="fa fa-star"></i>
-            @T("Admin.SalesReport.BestSellers.ByQuantity")
+            <i class="fa fa-search"></i>
+            @T("Admin.SearchTermReport")
         </h3>
         <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse">
@@ -27,7 +28,7 @@
         </div>
     </div>
     <div class="box-body">
-        <div id="bestsellers-byquantity-grid"></div>
+        <div id="search-term-report-grid"></div>
 
         <script>
             $(document).ready(function () {
@@ -36,12 +37,12 @@
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
                 });
 
-                $("#bestsellers-byquantity-grid").kendoGrid({
+                $("#search-term-report-grid").kendoGrid({
                     dataSource: {
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("BestsellersBriefReportByQuantityList", "Order"))",
+                                url: "@Html.Raw(Url.Action("PopularSearchTermsReport", "Common"))",
                                 type: "POST",
                                 dataType: "json",
                                 data: addAntiForgeryToken
@@ -72,21 +73,11 @@
                     },
                     scrollable: false,
                     columns: [{
-                        field: "ProductName",
-                        title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+                        field: "Keyword",
+                        title: "@T("Admin.SearchTermReport.Keyword")"
                     }, {
-                        field: "TotalQuantity",
-                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
-                    }, {
-                        field: "TotalAmount",
-                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
-                    }, {
-                        field: "ProductId",
-                        title: "@T("Admin.Common.View")",
-                        width: 100,
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
-                        template: '<a class="btn btn-xs btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        field: "Count",
+                        title: "@T("Admin.SearchTermReport.Count")"
                     }]
                 });
             });

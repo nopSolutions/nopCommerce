@@ -1023,16 +1023,48 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber);
         }
 
+        protected virtual DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
+            int pageSize, int orderBy)
+        {
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
+            var items = _orderReportService.BestSellersReport(
+                vendorId: vendorId,
+                orderBy: orderBy,
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                showHidden: true);
+            var gridModel = new DataSourceResult
+            {
+                Data = items.Select(x =>
+                {
+                    var m = new BestsellersReportLineModel
+                    {
+                        ProductId = x.ProductId,
+                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
+                        TotalQuantity = x.TotalQuantity,
+                    };
+                    var product = _productService.GetProductById(x.ProductId);
+                    if (product != null)
+                        m.ProductName = product.Name;
+                    return m;
+                }),
+                Total = items.TotalCount
+            };
+            return gridModel;
+        }
         #endregion
 
-#if NET451
         #region Order list
 
+#if NET451
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
         }
-
         public virtual IActionResult List(
             [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> orderStatusIds = null,
             [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> paymentStatusIds = null,
@@ -1107,7 +1139,8 @@ namespace Nop.Admin.Controllers
             
             return View(model);
         }
-
+        
+#endif
         [HttpPost]
 		public virtual IActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
@@ -1222,6 +1255,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+#if NET451
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
         public virtual IActionResult GoToOrderId(OrderListModel model)
@@ -1264,10 +1298,12 @@ namespace Nop.Admin.Controllers
                           .ToList();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        
-        #endregion
-        
-        #region Export / Import
+
+#endif
+#endregion
+
+#if NET451
+#region Export / Import
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
@@ -1429,11 +1465,11 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        #endregion
+#endregion
         
-        #region Order details
+#region Order details
         
-        #region Payments and other order workflow
+#region Payments and other order workflow
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("cancelorder")]
@@ -1805,9 +1841,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+#endregion
 
-        #region Edit, delete
+#region Edit, delete
 
         public virtual IActionResult Edit(int id)
         {
@@ -2621,7 +2657,7 @@ namespace Nop.Admin.Controllers
             //attributes
             var attributesXml = ParseProductAttributes(product, form, warnings);
 
-        #region Gift cards
+#region Gift cards
 
             string recipientName = "";
             string recipientEmail = "";
@@ -2663,9 +2699,9 @@ namespace Nop.Admin.Controllers
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
-        #endregion
+#endregion
 
-        #region Rental product
+#region Rental product
 
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
@@ -2674,7 +2710,7 @@ namespace Nop.Admin.Controllers
                 ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
 
-        #endregion
+#endregion
 
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
@@ -2774,11 +2810,11 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
         
-        #region Addresses
+#region Addresses
 
         public virtual IActionResult AddressEdit(int addressId, int orderId)
         {
@@ -2935,9 +2971,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-        #endregion
+#endregion
         
-        #region Shipments
+#region Shipments
 
         public virtual IActionResult ShipmentList()
         {
@@ -3723,9 +3759,9 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
         
-        #endregion
+#endregion
         
-        #region Order notes
+#region Order notes
         
         [HttpPost]
         public virtual IActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
@@ -3825,52 +3861,10 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         
-        #endregion
+#endregion
 #endif
 
-        #region Reports
-#if NET451
-        [NonAction]
-        protected virtual DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
-            int pageSize, int orderBy)
-        {
-            //a vendor should have access only to his products
-            int vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
-
-            var items = _orderReportService.BestSellersReport(
-                vendorId : vendorId,
-                orderBy: orderBy,
-                pageIndex: pageIndex,
-                pageSize: pageSize,
-                showHidden: true);
-            var gridModel = new DataSourceResult
-            {
-                Data = items.Select(x =>
-                {
-                    var m = new BestsellersReportLineModel
-                    {
-                        ProductId = x.ProductId,
-                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
-                        TotalQuantity = x.TotalQuantity,
-                    };
-                    var product = _productService.GetProductById(x.ProductId);
-                    if (product != null)
-                        m.ProductName = product.Name;
-                    return m;
-                }),
-                Total = items.TotalCount
-            };
-            return gridModel;
-        }
-        public virtual IActionResult BestsellersBriefReportByQuantity()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            return PartialView();
-        }
+#region Reports
         [HttpPost]
         public virtual IActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
@@ -3881,13 +3875,6 @@ namespace Nop.Admin.Controllers
                 command.PageSize, 1);
 
             return Json(gridModel);
-        }
-        public virtual IActionResult BestsellersBriefReportByAmount()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-            
-            return PartialView();
         }
         [HttpPost]
         public virtual IActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
@@ -3902,6 +3889,7 @@ namespace Nop.Admin.Controllers
         }
 
 
+#if NET451
 
         public virtual IActionResult BestsellersReport()
         {
@@ -4329,17 +4317,6 @@ namespace Nop.Admin.Controllers
             return Json(result);
         }
 
-#if NET451
-        [ChildActionOnly]
-        public virtual IActionResult LatestOrders()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            return PartialView();
-        }
-        
-#endif
 #endregion
     }
 }
