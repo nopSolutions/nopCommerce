@@ -408,7 +408,7 @@ namespace Nop.Web.Framework.Extensions
             var hintResource = string.Empty;
             object value;
 
-            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
+            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }).ToHtmlString());
 
 #if NET451
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
@@ -449,11 +449,10 @@ namespace Nop.Web.Framework.Extensions
                 htmlAttributes = new {@class = "form-control"};
 #endif
             if (required)
-                result.AppendFormat(
-                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.EditorFor(expression, new {htmlAttributes, postfix}));
+                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString());
             else
-                result.Append(helper.EditorFor(expression, new {htmlAttributes, postfix}));
+                result.Append(helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString());
 
             return new HtmlString(result.ToString());
         }
@@ -469,11 +468,10 @@ namespace Nop.Web.Framework.Extensions
                 attrs = AddFormControlClassToHtmlAttributes(attrs);
 
             if (required)
-                result.AppendFormat(
-                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownList(name, itemList, attrs));
+                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.DropDownList(name, itemList, attrs).ToHtmlString());
             else
-                result.Append(helper.DropDownList(name, itemList, attrs));
+                result.Append(helper.DropDownList(name, itemList, attrs).ToHtmlString());
 
             return new HtmlString(result.ToString());
         }
@@ -489,11 +487,10 @@ namespace Nop.Web.Framework.Extensions
                 attrs = AddFormControlClassToHtmlAttributes(attrs);
 
             if (required)
-                result.AppendFormat(
-                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownListFor(expression, itemList, attrs));
+                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.DropDownListFor(expression, itemList, attrs).ToHtmlString());
             else
-                result.Append(helper.DropDownListFor(expression, itemList, attrs));
+                result.Append(helper.DropDownListFor(expression, itemList, attrs).ToHtmlString());
 
             return new HtmlString(result.ToString());
         }
@@ -509,11 +506,10 @@ namespace Nop.Web.Framework.Extensions
                 attrs = AddFormControlClassToHtmlAttributes(attrs);
 
             if (required)
-                result.AppendFormat(
-                    "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.TextAreaFor(expression, rows, columns, attrs));
+                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
+                    helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
             else
-                result.Append(helper.TextAreaFor(expression, rows, columns, attrs));
+                result.Append(helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
 
             return new HtmlString(result.ToString());
         }
@@ -537,15 +533,18 @@ namespace Nop.Web.Framework.Extensions
             return new HtmlString(result.ToHtmlString());
         }
 
-        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        public static IDictionary<string, object> AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
         {
+            //TODO test new implementation
+            if (!htmlAttributes.ContainsKey("class"))
+                htmlAttributes.Add("class", null);
             if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
                 htmlAttributes["class"] = "form-control";
             else
                 if (!htmlAttributes["class"].ToString().Contains("form-control"))
                 htmlAttributes["class"] += " form-control";
 
-            return htmlAttributes as RouteValueDictionary;
+            return htmlAttributes;
         }
         
 #endregion
