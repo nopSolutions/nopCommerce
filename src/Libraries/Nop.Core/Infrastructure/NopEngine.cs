@@ -123,6 +123,8 @@ namespace Nop.Core.Infrastructure
                 foreach (var action in configurationActions)
                     action(mapperConfigurationExpression);
             });
+            //register
+            AutoMapperConfiguration.Init(configurationActions.ToList());
         }
 
         #endregion
