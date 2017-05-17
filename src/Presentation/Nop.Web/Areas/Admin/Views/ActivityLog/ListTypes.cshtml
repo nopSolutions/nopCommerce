@@ -1,4 +1,5 @@
-﻿@model List<ActivityLogTypeModel>
+﻿@using System.Text.Encodings.Web
+@model List<ActivityLogTypeModel>
 @{  
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
@@ -37,7 +38,7 @@
                                     <text>
                                         {
                                             Id: @(alt.Id),
-                                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(alt.Name)))",
+                                            Name: "@(Html.Raw(JavaScriptEncoder.Default.Encode(alt.Name)))",
                                             Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
                                         }
                                     </text>
