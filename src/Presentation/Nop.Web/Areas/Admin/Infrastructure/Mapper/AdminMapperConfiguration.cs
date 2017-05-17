@@ -1,5 +1,4 @@
-﻿#if NET451
-using System;
+﻿using System;
 using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
@@ -1031,4 +1030,3 @@ namespace Nop.Admin.Infrastructure.Mapper
         }
     }
 }
-#endif
