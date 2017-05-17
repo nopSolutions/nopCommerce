@@ -21,6 +21,7 @@ using Nop.Web.Framework.Mvc.Models;
 
 #endif
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
@@ -28,19 +29,27 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.Routing;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Extensions
 {
     public static class HtmlExtensions
     {
-#if NET451
         #region Admin area extensions
 
-        public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
+        
+        #if NET451
+        public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this IHtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
             Func<T, HelperResult> standardTemplate,
@@ -121,25 +130,25 @@ namespace Nop.Web.Framework.Extensions
                 }
             });
         }
+#endif
 
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector) where T : BaseNopEntityModel
+        public static IHtmlContent DeleteConfirmation<T>(this IHtmlHelper<T> helper, string buttonsSelector) where T : BaseNopEntityModel
         {
             return DeleteConfirmation(helper, "", buttonsSelector);
         }
 
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName,
+        public static IHtmlContent DeleteConfirmation<T>(this IHtmlHelper<T> helper, string actionName,
             string buttonsSelector) where T : BaseNopEntityModel
         {
             if (String.IsNullOrEmpty(actionName))
                 actionName = "Delete";
 
-            var modalId = MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
-                .ToHtmlString();
+            var modalId = new HtmlString(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation").ToHtmlString();
 
             var deleteConfirmationModel = new DeleteConfirmationModel
             {
                 Id = helper.ViewData.Model.Id,
-                ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
+                ControllerName = helper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = actionName,
                 WindowId = modalId
             };
@@ -154,20 +163,19 @@ namespace Nop.Web.Framework.Extensions
             window.AppendLine(string.Format("$('#{0}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{1}\")", buttonsSelector, modalId));
             window.AppendLine("});");
             window.AppendLine("</script>");
-
-            return MvcHtmlString.Create(window.ToString());
+            return new HtmlString(window.ToString());
         }
 
-        public static MvcHtmlString ActionConfirmation(this HtmlHelper helper, string buttonId, string actionName = "")
+        public static IHtmlContent ActionConfirmation(this IHtmlHelper helper, string buttonId, string actionName = "")
         {
             if (string.IsNullOrEmpty(actionName))
-                actionName = helper.ViewContext.RouteData.GetRequiredString("action");
+                actionName = helper.ViewContext.RouteData.Values["action"].ToString();
 
-            var modalId = MvcHtmlString.Create(buttonId + "-action-confirmation").ToHtmlString();
+            var modalId = new HtmlString(buttonId + "-action-confirmation").ToHtmlString();
 
             var actionConfirmationModel = new ActionConfirmationModel()
             {
-                ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
+                ControllerName = helper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = actionName,
                 WindowId = modalId
             };
@@ -186,10 +194,10 @@ namespace Nop.Web.Framework.Extensions
             window.AppendLine("});");
             window.AppendLine("</script>");
 
-            return MvcHtmlString.Create(window.ToString());
+            return new HtmlString(window.ToString());
         }
 
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
             int activeStoreScopeConfiguration)
@@ -198,7 +206,7 @@ namespace Nop.Web.Framework.Extensions
             dataInputIds.Add(helper.FieldIdFor(forInputExpression));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue1, TValue2>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue1>> forInputExpression1,
             Expression<Func<TModel, TValue2>> forInputExpression2,
@@ -209,7 +217,7 @@ namespace Nop.Web.Framework.Extensions
             dataInputIds.Add(helper.FieldIdFor(forInputExpression2));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue1, TValue2, TValue3>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2, TValue3>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue1>> forInputExpression1,
             Expression<Func<TModel, TValue2>> forInputExpression2,
@@ -222,14 +230,14 @@ namespace Nop.Web.Framework.Extensions
             dataInputIds.Add(helper.FieldIdFor(forInputExpression3));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent OverrideStoreCheckboxFor<TModel>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             string parentContainer,
             int activeStoreScopeConfiguration)
         {
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, parentContainer);
         }
-        private static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
+        private static IHtmlContent OverrideStoreCheckboxFor<TModel>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             int activeStoreScopeConfiguration,
             string parentContainer = null,
@@ -260,9 +268,11 @@ namespace Nop.Web.Framework.Extensions
                     { "data-for-input-selector", dataInputSelector },
                 }));
             }
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToString());
         }
-        
+
+
+        #if NET451
         /// <summary>
         /// Render CSS styles of selected index 
         /// </summary>
@@ -272,7 +282,7 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="isDefaultTab">Indicates that the tab is default</param>
         /// <param name="tabNameToSelect">Tab name to select</param>
         /// <returns>MvcHtmlString</returns>
-        public static MvcHtmlString RenderBootstrapTabContent(this HtmlHelper helper, string currentTabName,
+        public static MvcHtmlString RenderBootstrapTabContent(this IHtmlHelper helper, string currentTabName,
             HelperResult content, bool isDefaultTab = false, string tabNameToSelect = "")
         {
             if (helper == null)
@@ -296,6 +306,7 @@ namespace Nop.Web.Framework.Extensions
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
+#endif
 
         /// <summary>
         /// Render CSS styles of selected index 
@@ -306,8 +317,8 @@ namespace Nop.Web.Framework.Extensions
         /// <param name="isDefaultTab">Indicates that the tab is default</param>
         /// <param name="tabNameToSelect">Tab name to select</param>
         /// <param name="customCssClass">Tab name to select</param>
-        /// <returns>MvcHtmlString</returns>
-        public static MvcHtmlString RenderBootstrapTabHeader(this HtmlHelper helper, string currentTabName,
+        /// <returns>Result</returns>
+        public static IHtmlContent RenderBootstrapTabHeader(this IHtmlHelper helper, string currentTabName,
             LocalizedString title, bool isDefaultTab = false, string tabNameToSelect = "", string customCssClass = "")
         {
             if (helper == null)
@@ -326,9 +337,10 @@ namespace Nop.Web.Framework.Extensions
                     new KeyValuePair<string, string>("data-tab-name", currentTabName),
                     new KeyValuePair<string, string>("href", string.Format("#{0}", currentTabName)),
                     new KeyValuePair<string, string>("data-toggle", "tab"),
-                },
-                InnerHtml = title.Text
+                }
             };
+            a.InnerHtml.AppendHtml(title.Text);
+
             var liClassValue = "";
             if (tabNameToSelect == currentTabName)
             {
@@ -347,17 +359,17 @@ namespace Nop.Web.Framework.Extensions
                 {
                     new KeyValuePair<string, string>("class", liClassValue),
                 },
-                InnerHtml = a.ToString(TagRenderMode.Normal)
             };
+            a.InnerHtml.AppendHtml(a.ToHtmlString());
 
-            return MvcHtmlString.Create(li.ToString(TagRenderMode.Normal));
+            return new HtmlString(li.ToHtmlString());
         }
-
+        
         /// <summary>
         /// Gets a selected tab name (used in admin area to store selected tab name)
         /// </summary>
         /// <returns>Name</returns>
-        public static string GetSelectedTabName(this HtmlHelper helper)
+        public static string GetSelectedTabName(this IHtmlHelper helper)
         {
             //keep this method synchornized with
             //"SaveSelectedTab" method of \Administration\Controllers\BaseAdminController.cs
@@ -367,15 +379,16 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();
 
-            if (helper.ViewContext.Controller.TempData.ContainsKey(dataKey))
-                tabName = helper.ViewContext.Controller.TempData[dataKey].ToString();
+            //TODO test in asp.net core
+            if (helper.ViewContext.TempData.ContainsKey(dataKey))
+                tabName = helper.ViewContext.TempData[dataKey].ToString();
 
             return tabName;
         }
-
+        
         #region Form fields
 
-        public static MvcHtmlString Hint(this HtmlHelper helper, string value)
+        public static IHtmlContent Hint(this IHtmlHelper helper, string value)
         {
             //create tag builder
             var builder = new TagBuilder("div");
@@ -383,24 +396,25 @@ namespace Nop.Web.Framework.Extensions
             builder.MergeAttribute("class", "ico-help");
             var icon = new StringBuilder();
             icon.Append("<i class='fa fa-question-circle'></i>");
-            builder.InnerHtml = icon.ToString();
+            builder.InnerHtml.AppendHtml(icon.ToString());
             //render tag
-            return MvcHtmlString.Create(builder.ToString());
+            return new HtmlString(builder.ToHtmlString());
         }
 
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent NopLabelFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
                 Expression<Func<TModel, TValue>> expression, bool displayHint = true)
         {
             var result = new StringBuilder();
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             var hintResource = string.Empty;
             object value;
 
             result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
 
+#if NET451
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
             {
-                var resourceDisplayName = value as NopResourceDisplayName;
+                var resourceDisplayName = value as NopResourceDisplayNameAttribute;
                 if (resourceDisplayName != null && displayHint)
                 {
                     var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
@@ -412,26 +426,28 @@ namespace Nop.Web.Framework.Extensions
                     }
                 }
             }
+#endif
 
             var laberWrapper = new TagBuilder("div");
             laberWrapper.Attributes.Add("class", "label-wrapper");
-            laberWrapper.InnerHtml = result.ToString();
+            laberWrapper.InnerHtml.AppendHtml(result.ToString());
 
-            return MvcHtmlString.Create(laberWrapper.ToString());
+            return new HtmlString(laberWrapper.ToHtmlString());
         }
 
-        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent NopEditorFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, string postfix = "",
             bool? renderFormControlClass = null, bool required = false)
         {
             var result = new StringBuilder();
 
             object htmlAttributes = null;
+#if NET451
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
                 htmlAttributes = new {@class = "form-control"};
-
+#endif
             if (required)
                 result.AppendFormat(
                     "<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
@@ -439,10 +455,10 @@ namespace Nop.Web.Framework.Extensions
             else
                 result.Append(helper.EditorFor(expression, new {htmlAttributes, postfix}));
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToString());
         }
 
-        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
+        public static IHtmlContent NopDropDownList<TModel>(this IHtmlHelper<TModel> helper, string name,
             IEnumerable<SelectListItem> itemList, object htmlAttributes = null, 
             bool renderFormControlClass = true, bool required = false)
         {
@@ -459,10 +475,10 @@ namespace Nop.Web.Framework.Extensions
             else
                 result.Append(helper.DropDownList(name, itemList, attrs));
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToString());
         }
 
-        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent NopDropDownListFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
             object htmlAttributes = null, bool renderFormControlClass = true, bool required = false)
         {
@@ -479,10 +495,10 @@ namespace Nop.Web.Framework.Extensions
             else
                 result.Append(helper.DropDownListFor(expression, itemList, attrs));
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToString());
         }
 
-        public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+        public static IHtmlContent NopTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
             bool renderFormControlClass = true, int rows = 4, int columns = 20, bool required = false)
         {
@@ -499,26 +515,26 @@ namespace Nop.Web.Framework.Extensions
             else
                 result.Append(helper.TextAreaFor(expression, rows, columns, attrs));
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToString());
         }
 
 
-        public static MvcHtmlString NopDisplayFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        public static IHtmlContent NopDisplayFor<TModel, TValue>(this IHtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
         {
             var result = new TagBuilder("div");
             result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml = helper.DisplayFor(expression).ToString();
+            result.InnerHtml.AppendHtml(helper.DisplayFor(expression).ToString());
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToHtmlString());
         }
 
-        public static MvcHtmlString NopDisplay<TModel>(this HtmlHelper<TModel> helper, string expression)
+        public static IHtmlContent NopDisplay<TModel>(this IHtmlHelper<TModel> helper, string expression)
         {
             var result = new TagBuilder("div");
             result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml = expression;
+            result.InnerHtml.AppendHtml(expression);
 
-            return MvcHtmlString.Create(result.ToString());
+            return new HtmlString(result.ToHtmlString());
         }
 
         public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
@@ -531,13 +547,12 @@ namespace Nop.Web.Framework.Extensions
 
             return htmlAttributes as RouteValueDictionary;
         }
-
-        #endregion
-
-        #endregion
         
-#endif
-        #region Common extensions
+#endregion
+        
+#endregion
+        
+#region Common extensions
 
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
@@ -742,7 +757,6 @@ namespace Nop.Web.Framework.Extensions
             return html.LabelFor(expression, htmlAttributes);
 #endif
         }
-
 #endregion
     }
 }
