@@ -29,12 +29,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <returns></returns>
         public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
         {
+            var builder = services.AddMvcCore();
+
             //create engine
             var engine = EngineContext.Create();
 
             //then initialize
             var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
-            engine.Initialize(hostingEnvironment);
+            engine.Initialize(hostingEnvironment, builder.PartManager);
 
             //and configure it
             var serviceProvider = engine.ConfigureServices(services, configuration);

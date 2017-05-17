@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,8 @@ namespace Nop.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
-        void Initialize(IHostingEnvironment hostingEnvironment);
+        /// <param name="applicationPartManager">Application part manager</param>
+        void Initialize(IHostingEnvironment hostingEnvironment, ApplicationPartManager applicationPartManager);
 
         /// <summary>
         /// Add and configure services
