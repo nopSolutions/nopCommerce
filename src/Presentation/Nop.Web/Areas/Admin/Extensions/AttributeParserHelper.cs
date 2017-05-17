@@ -1,8 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Common;
 
@@ -95,5 +94,3 @@ namespace Nop.Admin.Extensions
         }
     }
 }
-
-#endif
