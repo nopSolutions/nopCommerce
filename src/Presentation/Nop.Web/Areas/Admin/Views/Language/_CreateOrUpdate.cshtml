@@ -89,8 +89,8 @@
                                 $('#FlagImageFileName').kendoDropDownList({
                                     dataTextField: "Text",
                                     dataValueField: "Value",
-                                    valueTemplate: '<span class="image" style="background-image: url(\'@Url.Content("~/Content/Images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                                    template: '<span class="image" style="background-image: url(\'@Url.Content("~/Content/Images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                    valueTemplate: '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                    template: '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
                                     dataSource: {
                                         transport: {
                                             type: "json",

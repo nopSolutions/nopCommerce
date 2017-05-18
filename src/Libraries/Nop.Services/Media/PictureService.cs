@@ -218,7 +218,7 @@ namespace Nop.Services.Media
         {
             string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
             //TODO do not hardcode wwwroot
-            var thumbDirectoryPath = CommonHelper.MapPath("~/wwwroot/content/images/thumbs");
+            var thumbDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -235,7 +235,7 @@ namespace Nop.Services.Media
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
             //TODO do not hardcode wwwroot
-            var thumbsDirectoryPath = CommonHelper.MapPath("~/wwwroot/content/images/thumbs");
+            var thumbsDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -265,7 +265,7 @@ namespace Nop.Services.Media
             storeLocation = !String.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
                                     : _webHelper.GetStoreLocation();
-            var url = storeLocation + "content/images/thumbs/";
+            var url = storeLocation + "images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -289,7 +289,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
-            return Path.Combine(CommonHelper.MapPath("~/wwwroot/content/images/"), fileName);
+            return Path.Combine(CommonHelper.MapPath("~/wwwroot/images/"), fileName);
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Nop.Services.Media
                 string url = (!String.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
-                                 + "content/images/" + defaultImageFileName;
+                                 + "images/" + defaultImageFileName;
                 return url;
             }
             else

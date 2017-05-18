@@ -19,7 +19,7 @@
                     <li>
                         <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
                             <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
-                                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) "/>
+                                 src="@Url.Content("~/images/flags/" + @lang.FlagImageFileName) "/>
                         </a>
                     </li>
                 }

@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
                 return View();
             }
 
-            var directory = "~/content/images/uploaded/";
+            var directory = "~/images/uploaded/";
             var filePath = Path.Combine(CommonHelper.MapPath(directory), fileName);
 
             var fileExtension = Path.GetExtension(filePath);

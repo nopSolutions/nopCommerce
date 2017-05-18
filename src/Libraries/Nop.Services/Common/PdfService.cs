@@ -183,7 +183,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("order");
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = Path.Combine(CommonHelper.MapPath("~/content/files/ExportImport"), fileName);
+            string filePath = Path.Combine(CommonHelper.MapPath("~/files/exportimport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order>();

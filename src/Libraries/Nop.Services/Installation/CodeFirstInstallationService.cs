@@ -43,6 +43,11 @@ namespace Nop.Services.Installation
 {
     public partial class CodeFirstInstallationService : IInstallationService
     {
+        #region Consts
+
+        private const string SAMPLES_PATH = "~/wwwroot/images/samples/";
+        #endregion
+
         #region Fields
 
         private readonly IRepository<Store> _storeRepository;
@@ -6638,7 +6643,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath(SAMPLES_PATH);
 
 
 
@@ -6976,7 +6981,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath(SAMPLES_PATH);
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -7080,11 +7085,11 @@ namespace Nop.Services.Installation
 
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath(SAMPLES_PATH);
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
+            var sampleDownloadsPath = CommonHelper.MapPath(SAMPLES_PATH);
 
             //products
             var allProducts = new List<Product>();
