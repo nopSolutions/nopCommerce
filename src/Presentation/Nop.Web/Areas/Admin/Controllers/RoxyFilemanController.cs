@@ -22,21 +22,21 @@ namespace Nop.Admin.Controllers
     [AdminAntiForgery(true)]
     public class RoxyFilemanController : BaseAdminController
     {
-        #region Fields
+#region Fields
 
         Dictionary<string, string> _settings = null;
         Dictionary<string, string> _lang = null;
         //custom code by nopCommerce team
-        string confFile = "~/wwwroot/Content/Roxy_Fileman/conf.json";
+        string confFile = "~/wwwroot/lib/Roxy_Fileman/conf.json";
         
         //custom code by nopCommerce team
         private readonly IPermissionService _permissionService;
         private readonly HttpContextBase _context;
         private readonly HttpResponseBase _r;
 
-        #endregion
+#endregion
 
-        #region Ctor
+#region Ctor
 
         //custom code by nopCommerce team
         public RoxyFilemanController(IPermissionService permissionService, HttpContextBase context)
@@ -46,9 +46,9 @@ namespace Nop.Admin.Controllers
             this._r = this._context.Response;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         public virtual void ProcessRequest() {
             string action = "DIRLIST";
@@ -133,9 +133,9 @@ namespace Nop.Admin.Controllers
         
         }
         
-        #endregion
+#endregion
 
-        #region Utitlies
+#region Utitlies
 
         private string FixPath(string path)
         {
@@ -761,7 +761,7 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        #endregion
+#endregion
 
     }
 }

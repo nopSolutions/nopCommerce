@@ -8,7 +8,7 @@
 
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
+    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", true);
 
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
 
@@ -40,7 +40,7 @@
     $(document).ready(function() {
         @* wooncherk contribution *@
         function RoxyFileBrowser@(random)(field_name, url, type, win) {
-            var roxyFileman = '@Url.Content("~/Content/Roxy_Fileman/index.html")';
+            var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
             if (roxyFileman.indexOf("?") < 0) {
                 roxyFileman += "?type=" + type;
             } else {
