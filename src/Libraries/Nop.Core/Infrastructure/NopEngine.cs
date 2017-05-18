@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -135,7 +136,8 @@ namespace Nop.Core.Infrastructure
         /// Initialize engine
         /// </summary>
         /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
-        public void Initialize(IHostingEnvironment hostingEnvironment)
+        /// <param name="applicationPartManager">Application part manager</param>
+        public void Initialize(IHostingEnvironment hostingEnvironment, ApplicationPartManager applicationPartManager)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -144,7 +146,7 @@ namespace Nop.Core.Infrastructure
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
 
             //initialize plugins
-            PluginManager.Initialize();
+            PluginManager.Initialize(applicationPartManager);
         }
 
         /// <summary>

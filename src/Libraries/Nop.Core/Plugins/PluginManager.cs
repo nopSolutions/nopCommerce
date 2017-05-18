@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Web;
 using Nop.Core.ComponentModel;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 //Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
 //SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
@@ -48,7 +49,7 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Initialize
         /// </summary>
-        public static void Initialize()
+        public static void Initialize(ApplicationPartManager applicationPartManager)
         {
             using (new WriteLockDisposable(Locker))
             {
@@ -113,13 +114,13 @@ namespace Nop.Core.Plugins
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //shadow copy main plugin file
-                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
+                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile, applicationPartManager);
 
                             //load all other referenced assemblies now
                             foreach (var plugin in pluginFiles
                                 .Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase))
                                 .Where(x => !IsAlreadyLoaded(x)))
-                                    PerformFileDeploy(plugin);
+                                    PerformFileDeploy(plugin, applicationPartManager);
                             
                             //init plugin type (only one plugin per assembly is allowed)
                             foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
@@ -302,8 +303,9 @@ namespace Nop.Core.Plugins
             try
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-                if (fileNameWithoutExt == null)
+                if (string.IsNullOrEmpty(fileNameWithoutExt))
                     throw new Exception(string.Format("Cannot get file extension for {0}", fileInfo.Name));
+
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
@@ -322,15 +324,16 @@ namespace Nop.Core.Plugins
         /// Perform file deply
         /// </summary>
         /// <param name="plug">Plugin file info</param>
+        /// <param name="applicationPartManager">Application part manager</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(FileInfo plug)
+        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager)
         {
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
             FileInfo shadowCopiedPlug;
 
-            if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted)
+            if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted || string.IsNullOrEmpty(AppDomain.CurrentDomain.DynamicDirectory))
             {
                 //all plugins will need to be copied to ~/Plugins/bin/
                 //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
@@ -349,12 +352,8 @@ namespace Nop.Core.Plugins
 
             //we can now register the plugin definition
             var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
-
-#if NET451
-            //add the reference to the build manager
-            Debug.WriteLine("Adding to BuildManager: '{0}'", shadowCopiedAssembly.FullName);
-            BuildManager.AddReferencedAssembly(shadowCopiedAssembly);
-#endif
+            Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
+            applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
 
             return shadowCopiedAssembly;
         }
