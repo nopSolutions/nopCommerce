@@ -24,7 +24,7 @@ namespace Nop.Admin.Helpers
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = string.Format("{0}.js", languageCulture);
-            var path = CommonHelper.MapPath("~/Areas/Admin/Content/tinymce/langs/");
+            var path = CommonHelper.MapPath("~/wwwroot/Content/tinymce/langs/");
             var fileExists = File.Exists(string.Format("{0}{1}", path, langFile));
 
             if (!fileExists)

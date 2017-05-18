@@ -6638,7 +6638,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
 
 
 
@@ -6976,7 +6976,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -7080,11 +7080,11 @@ namespace Nop.Services.Installation
 
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = CommonHelper.MapPath("~/content/samples/");
+            var sampleDownloadsPath = CommonHelper.MapPath("~/wwwroot/content/samples/");
 
             //products
             var allProducts = new List<Product>();
