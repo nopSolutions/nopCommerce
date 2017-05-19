@@ -59,14 +59,18 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context == null || context.HttpContext == null)
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
+                var request = context.HttpContext.Request;
+                if (request == null)
+                    return;
+
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (!request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 //whether SEO friendly URLs are enabled
@@ -74,32 +78,42 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //ensure that there is route and it is registered and localizable
-                //TODO wrong implementation (doesn't work)
+#if NET451
+//TODO wrong implementation (doesn't work)
                 if (context.RouteData == null || context.RouteData.Routers == null|| !context.RouteData.Routers.Any(route => route is LocalizedRoute))
                     return;
-
-                //get request path
-                var path = context.HttpContext.Request.Path.Value;
+#endif
 
                 //check whther it's already localized URL
-                if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, true))
+                //process current URL
+                var pageUrl = request.Path + request.QueryString;
+                
+#if NET451
+                var applicationPath = context.HttpContext.Request.ApplicationPath;
+#else
+                var applicationPath = "/";
+#endif
+
+                if (pageUrl.IsLocalizedUrl(applicationPath, true))
                 {
+                    //already localized URL
                     //let's ensure that this language exists
-                    var seoCode = path.GetLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, true);
+                    var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
+
                     var urlLanguage = _languageService.GetAllLanguages()
                         .FirstOrDefault(language => seoCode.Equals(language.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
                     if (urlLanguage != null && urlLanguage.Published)
                         return;
 
                     //doesn't exist, so redirect (not permanent) to the original page
-                    path = path.RemoveLanguageSeoCodeFromRawUrl(context.HttpContext.Request.PathBase);
-                    context.Result = new RedirectResult(string.Format("{0}{1}", path, context.HttpContext.Request.QueryString));
+                    pageUrl = pageUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+                    context.Result = new RedirectResult(pageUrl);
                     return;
                 }
 
-                //not localized yet, so redirect (permanent) to the page with working language SEO code
-                path = path.AddLanguageSeoCodeToRawUrl(context.HttpContext.Request.PathBase, _workContext.WorkingLanguage);
-                context.Result = new RedirectResult(string.Format("{0}{1}", path, context.HttpContext.Request.QueryString), true);
+                //not localized yet, so redirect to the page with working language SEO code
+                pageUrl = pageUrl.AddLanguageSeoCodeToRawUrl(applicationPath, _workContext.WorkingLanguage);
+                context.Result = new RedirectResult(pageUrl, false);
             }
 
             /// <summary>
@@ -111,9 +125,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //do nothing
             }
 
-            #endregion
+#endregion
         }
 
-        #endregion
+#endregion
     }
 }

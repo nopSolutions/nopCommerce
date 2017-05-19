@@ -59,7 +59,7 @@ namespace Nop.Web.Framework.Localization
         /// <summary>
         /// Adds a route to the route builder with the specified name, template, default values, constraints anddata tokens.
         /// </summary>
-        //// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="routeBuilder">The route builder to add the route to</param>
         /// <param name="name">The name of the route</param>
         /// <param name="template">The URL pattern of the route</param>
         /// <param name="defaults"> An object that contains default values for route parameters. 
@@ -72,7 +72,6 @@ namespace Nop.Web.Framework.Localization
         public static IRouteBuilder MapLocalizedRoute(this IRouteBuilder routeBuilder,
             string name, string template, object defaults, object constraints, object dataTokens)
         {
-#if NET451
             if (routeBuilder.DefaultHandler == null)
                 throw new ArgumentNullException(nameof(routeBuilder));
 
@@ -92,10 +91,6 @@ namespace Nop.Web.Framework.Localization
                 inlineConstraintResolver));
 
             return routeBuilder;
-#else
-            //TODO temporary solution below (no localization)
-            return routeBuilder.MapRoute(name, template, defaults, constraints, dataTokens);
-#endif
         }
 
         /// <summary>

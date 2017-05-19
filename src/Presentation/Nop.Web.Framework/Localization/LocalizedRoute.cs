@@ -42,22 +42,24 @@ namespace Nop.Web.Framework.Localization
         {
             //get base virtual path
             var data = base.GetVirtualPath(context);
-            
             if (data != null && DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //get request path
-                var path = context.HttpContext.Request.Path.Value;
+                var rawUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
 
                 //get application path
-#if NET451
+                #if NET451
                 var applicationPath = context.HttpContext.Request.ApplicationPath;
-#else
+                #else
                 var applicationPath = "/";
-#endif
+                #endif
 
                 //add language code to path in case if it's localized URL
-                if (path.IsLocalizedUrl(applicationPath, true))
-                    data.VirtualPath = string.Format("{0}/{1}", path.GetLanguageSeoCodeFromUrl(applicationPath, true), data.VirtualPath);
+                if (rawUrl.IsLocalizedUrl(applicationPath, true))
+                {
+                    var seoCode = rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
+                    data.VirtualPath = string.Format("/{0}{1}", seoCode, data.VirtualPath);
+                }
             }
 
             return data;
@@ -73,20 +75,20 @@ namespace Nop.Web.Framework.Localization
             if (DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //get request path
-                var path = context.HttpContext.Request.Path.Value;
-
+                var rawUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
+                
                 //get application path
 #if NET451
                 var applicationPath = context.HttpContext.Request.ApplicationPath;
 #else
                 var applicationPath = "/";
-#endif
+                #endif
 
                 //path isn't localized, so no special action required
-                if (path.IsLocalizedUrl(applicationPath, false))
+                if (rawUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     //remove language code from the path
-                    var newVirtualPath = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+                    var newVirtualPath = rawUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
                     if (string.IsNullOrEmpty(newVirtualPath))
                         newVirtualPath = "/";
 
@@ -94,7 +96,7 @@ namespace Nop.Web.Framework.Localization
                     newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
 
                     //get path segments
-                    //TODO test
+                    //TODO doesn't work (we should rewrite URL without specifying of controller and action names) like we did before with "RewritePath"
                     var pathSegments = newVirtualPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                     if (pathSegments == null || pathSegments.Length < 2)
                         return _target.RouteAsync(context);
@@ -109,7 +111,7 @@ namespace Nop.Web.Framework.Localization
                 }
             }
             //route request
-            return _target.RouteAsync(context);
+            return base.RouteAsync(context);
         }
 
         /// <summary>
@@ -119,10 +121,10 @@ namespace Nop.Web.Framework.Localization
         {
             _seoFriendlyUrlsForLanguagesEnabled = null;
         }
-
-#endregion
-
-#region Properties
+        
+        #endregion
+        
+        #region Properties
 
         /// <summary>
         /// Gets value of _seoFriendlyUrlsForLanguagesEnabled settings
@@ -137,7 +139,7 @@ namespace Nop.Web.Framework.Localization
                 return _seoFriendlyUrlsForLanguagesEnabled.Value;
             }
         }
-
-#endregion
+        
+        #endregion
     }
 }
