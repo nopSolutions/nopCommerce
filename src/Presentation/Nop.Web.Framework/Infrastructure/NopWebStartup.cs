@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.Extensions;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -66,6 +68,15 @@ namespace Nop.Web.Framework.Infrastructure
 
             //static files
             application.UseStaticFiles();
+            //add support for backups
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".bak"] = MimeTypes.ApplicationOctetStream;
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "db_backups")),
+                RequestPath = new PathString("/db_backups"),
+                ContentTypeProvider = provider
+            });
             //TODO temporary
             application.UseStaticFiles(new StaticFileOptions
             {

@@ -136,7 +136,7 @@
                             @Html.Widget("admin_header_navbar_before", area: "Admin")
                             <ul class="nav navbar-nav">
                                 <li>
-                                    @*TODO @Html.Action("LanguageSelector", "Common", new { area = "Admin" })*@
+                                    @await Component.InvokeAsync("AdminLanguageSelector")
                                 </li>
                                 @if (currentCustomer.IsRegistered())
                                 {

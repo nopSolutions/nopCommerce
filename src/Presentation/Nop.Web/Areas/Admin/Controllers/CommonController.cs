@@ -10,17 +10,11 @@ using System.Security.Principal;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-#if NET451
-using System.Web.Configuration;
-using System.Web.Mvc;
-using Nop.Admin.Extensions;
-#endif
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -168,10 +162,9 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-#region Methods
-
-#if NET451
+        
+        #region Methods
+        
         public virtual IActionResult SystemInfo()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -198,6 +191,7 @@ namespace Nop.Admin.Controllers
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            #if NET451
             model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
             foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
             {
@@ -209,7 +203,7 @@ namespace Nop.Admin.Controllers
                     Value = _httpContext.Request.ServerVariables[key]
                 });
             }
-            //Environment.GetEnvironmentVariable("USERNAME");
+            #endif
 
             var trustLevel = CommonHelper.GetTrustLevel();
 
@@ -462,6 +456,7 @@ namespace Nop.Admin.Controllers
                 });
 
             //machine key
+            #if NET451
             try
             {
                 var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
@@ -490,6 +485,7 @@ namespace Nop.Admin.Controllers
             {
                 LogException(exc);
             }
+            #endif
 
             return View(model);
         }
@@ -552,7 +548,7 @@ namespace Nop.Admin.Controllers
 
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            string path = Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\exportimport");
+            string path = CommonHelper.MapPath("~/wwwroot/files/exportimport");
             foreach (var fullPath in Directory.GetFiles(path))
             {
                 try
@@ -588,9 +584,9 @@ namespace Nop.Admin.Controllers
             
             var gridModel = new DataSourceResult
             {
-                Data = backupFiles.Select(p=>new {p.Name,
+                Data = backupFiles.Select(p => new {p.Name,
                     Length = string.Format("{0:F2} Mb", p.Length / 1024f / 1024f),
-                    Link = _webHelper.GetStoreLocation(false) + "Administration/db_backups/" + p.Name
+                    Link = _webHelper.GetStoreLocation(false) + "db_backups/" + p.Name
                 }),
                 Total = backupFiles.Count
             };
@@ -654,18 +650,7 @@ namespace Nop.Admin.Controllers
             
             return View(model);
         }
-
-        [ChildActionOnly]
-        public virtual IActionResult LanguageSelector()
-        {
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
-                .Select(x => x.ToModel())
-                .ToList();
-            return PartialView(model);
-        }
+        
         public virtual IActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
@@ -682,7 +667,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
-#endif
 
 
         [HttpPost]
@@ -702,7 +686,6 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-#if NET451
         [HttpPost]
         public virtual IActionResult RestartApplication(string returnUrl = "")
         {
@@ -812,7 +795,6 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
         
-#endif
 
 
         [HttpPost]
@@ -834,25 +816,23 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-#if NET451
-        
 
         //action displaying notification (warning) to a store owner that entered SE URL already exists
         public virtual IActionResult UrlReservedWarning(string entityId, string entityName, string seName)
         {
             if (string.IsNullOrEmpty(seName))
-                return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = string.Empty });
 
             int parsedEntityId;
             int.TryParse(entityId, out parsedEntityId);
             var validatedSeName = SeoExtensions.ValidateSeName(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))
-                return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = string.Empty });
 
-            return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
         }
-#endif
+        
 #endregion
     }
 }

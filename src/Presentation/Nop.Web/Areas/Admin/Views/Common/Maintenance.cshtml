@@ -1,4 +1,5 @@
-﻿@model MaintenanceModel
+﻿@using System.Text.Encodings.Web
+@model MaintenanceModel
 
 @{
     //page title
@@ -185,7 +186,7 @@
 
                     function showProgress() {
                         $("html, body").animate({ scrollTop: 0 }, 400);
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
                     };
 
                     $(document).ready(function () {

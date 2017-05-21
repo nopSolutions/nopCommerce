@@ -647,8 +647,8 @@ namespace Nop.Web.Factories
                 {
                     "/admin",
                     "/bin/",
-                    "/content/files/",
-                    "/content/files/exportimport/",
+                    "/files/",
+                    "/files/exportimport/",
                     "/country/getstatesbycountryid",
                     "/install",
                     "/setproductreviewhelpfulness",
