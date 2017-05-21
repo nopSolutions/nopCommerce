@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Catalog;
@@ -25,12 +25,13 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
     public partial class CategoryController : BaseAdminController
     {
-#region Fields
+        #region Fields
 
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
@@ -54,10 +55,10 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IImportManager _importManager;
         private readonly IStaticCacheManager _cacheManager;
-
-#endregion
-
-#region Constructors
+        
+        #endregion
+        
+        #region Constructors
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 
@@ -103,12 +104,11 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
             this._cacheManager = cacheManager;
         }
-
-#endregion
         
-#region Utilities
-
-        [NonAction]
+        #endregion
+        
+        #region Utilities
+        
         protected virtual void UpdateLocales(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
@@ -143,16 +143,14 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(category, seName, localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected virtual void UpdatePictureSeoNames(Category category)
         {
             var picture = _pictureService.GetPictureById(category.PictureId);
             if (picture != null)
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(category.Name));
         }
-
-        [NonAction]
+        
         protected virtual void PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
@@ -168,7 +166,6 @@ namespace Nop.Admin.Controllers
                 model.AvailableCategories.Add(c);
         }
 
-        [NonAction]
         protected virtual void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
@@ -185,7 +182,6 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        [NonAction]
         protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
@@ -204,8 +200,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
@@ -226,7 +221,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -250,8 +244,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
@@ -271,8 +264,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
@@ -296,10 +288,10 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-#endregion
         
-#region List
+        #endregion
+        
+        #region List
 
         public virtual IActionResult Index()
         {
@@ -338,10 +330,11 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
-#endregion
 
-#region Create / Edit / Delete
+        #endregion
+
+#if NET451
+        #region Create / Edit / Delete
 
         public virtual IActionResult Create()
         {
@@ -570,11 +563,12 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
             return RedirectToAction("List");
         }
-        
 
-#endregion
 
-#region Export / Import
+        #endregion
+#endif
+#if NET451
+        #region Export / Import
 
         public virtual IActionResult ExportXml()
         {
@@ -642,9 +636,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             }
         }
-#endregion
+        #endregion
+#endif
 
-#region Products
+#if NET451
+        #region Products
 
         [HttpPost]
         public virtual IActionResult ProductList(DataSourceRequest command, int categoryId)
@@ -798,7 +794,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-#endregion
+        #endregion
+#endif
     }
 }
-#endif
