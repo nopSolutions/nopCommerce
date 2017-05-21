@@ -164,16 +164,6 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-        [ChildActionOnly]
-        public virtual IActionResult Mode(string modeName = "settings-advanced-mode")
-        {
-            var model = new ModeModel()
-            {
-                ModeName = modeName,
-                Enabled = _workContext.CurrentCustomer.GetAttribute<bool>(modeName)
-            };
-            return PartialView(model);
-        }
 
         [ChildActionOnly]
         public virtual IActionResult StoreScopeConfiguration()

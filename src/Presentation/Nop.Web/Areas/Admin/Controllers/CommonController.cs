@@ -835,58 +835,7 @@ namespace Nop.Admin.Controllers
         }
 
 #if NET451
-        //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
-        [ChildActionOnly]
-        public virtual IActionResult MultistoreDisabledWarning()
-        {
-            //default setting
-            bool enabled = _catalogSettings.IgnoreStoreLimitations;
-            if (!enabled)
-            {
-                //overridden settings
-                var stores = _storeService.GetAllStores();
-                foreach (var store in stores)
-                {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreStoreLimitations;
-                    }
-                }
-            }
-
-            //This setting is disabled. No warnings.
-            if (!enabled)
-                return Content("");
-
-            return PartialView();
-        }
-        //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
-        [ChildActionOnly]
-        public virtual IActionResult AclDisabledWarning()
-        {
-            //default setting
-            bool enabled = _catalogSettings.IgnoreAcl;
-            if (!enabled)
-            {
-                //overridden settings
-                var stores = _storeService.GetAllStores();
-                foreach (var store in stores)
-                {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreAcl;
-                    }
-                }
-            }
-
-            //This setting is disabled. No warnings.
-            if (!enabled)
-                return Content("");
-
-            return PartialView();
-        }
+        
 
         //action displaying notification (warning) to a store owner that entered SE URL already exists
         public virtual IActionResult UrlReservedWarning(string entityId, string entityName, string seName)
