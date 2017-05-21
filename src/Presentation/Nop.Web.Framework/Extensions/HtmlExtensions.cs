@@ -1,42 +1,19 @@
-﻿#if NET451
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using System.Web.Routing;
-using System.Web.WebPages;
-using Microsoft.AspNetCore.Routing;
-using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Services.Localization;
-using Nop.Services.Stores;
-using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc
-using Nop.Web.Framework.Mvc.Models;
-
-#endif
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -406,9 +383,8 @@ namespace Nop.Web.Framework.Extensions
 
             result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }).ToHtmlString());
 
-#if NET451
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
-            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
+            if (metadata.Metadata.AdditionalValues.TryGetValue("NopResourceDisplayNameAttribute", out value))
             {
                 var resourceDisplayName = value as NopResourceDisplayNameAttribute;
                 if (resourceDisplayName != null && displayHint)
@@ -422,7 +398,6 @@ namespace Nop.Web.Framework.Extensions
                     }
                 }
             }
-#endif
 
             var laberWrapper = new TagBuilder("div");
             laberWrapper.Attributes.Add("class", "label-wrapper");
@@ -435,22 +410,20 @@ namespace Nop.Web.Framework.Extensions
             Expression<Func<TModel, TValue>> expression, string postfix = "",
             bool? renderFormControlClass = null, bool required = false)
         {
-            var result = new StringBuilder();
-
             object htmlAttributes = null;
-#if NET451
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
             if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
                 htmlAttributes = new {@class = "form-control"};
-#endif
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString());
-            else
-                result.Append(helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString());
 
-            return new HtmlString(result.ToString());
+            string result = "";
+            var editorHtml = helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString();
+            if (required)
+                result = string.Format("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>", editorHtml);
+            else
+                result = editorHtml;
+
+            return new HtmlString(result);
         }
 
         public static IHtmlContent NopDropDownList<TModel>(this IHtmlHelper<TModel> helper, string name,
@@ -543,11 +516,11 @@ namespace Nop.Web.Framework.Extensions
             return htmlAttributes;
         }
         
-#endregion
+        #endregion
         
-#endregion
+        #endregion
         
-#region Common extensions
+        #region Common extensions
 
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
@@ -582,18 +555,13 @@ namespace Nop.Web.Framework.Extensions
         }
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
-            return html.NameFor(expression);
             //TODO remove this method and use in cshtml files
-
-            //return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
+            return html.NameFor(expression);
         }
         public static string FieldIdFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
-            return html.IdFor(expression);
             //TODO remove this method and use in cshtml files
-            //var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
-            // because "[" and "]" aren't replaced with "_" in GetFullHtmlFieldId
-            //return id.Replace('[', '_').Replace(']', '_');
+            return html.IdFor(expression);
         }
 
         /// <summary>
@@ -728,30 +696,30 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>Label</returns>
         public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
         {
-#if NET451
+            //TODO refactor the way it's implemented in \Microsoft.AspNetCore.Mvc.ViewFeatures\ViewFeatures\HtmlHelperOfT.cs - "IHtmlContent LabelFor<TResult>"
             string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
+
+            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
+            string resolvedLabelText = metadata.Metadata.DisplayName ?? (metadata.Metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
-                return MvcHtmlString.Empty;
+                return new HtmlString("");
             }
             var tag = new TagBuilder("label");
-            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)));
+            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.IdFor(expression), ""));
             if (!String.IsNullOrEmpty(suffix))
             {
                 resolvedLabelText = String.Concat(resolvedLabelText, suffix);
             }
-            tag.SetInnerText(resolvedLabelText);
+            tag.InnerHtml.AppendHtml(resolvedLabelText);
 
             var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             tag.MergeAttributes(dictionary, true);
 
-            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
-#else
-            return html.LabelFor(expression, htmlAttributes);
-#endif
+            return new HtmlString(tag.ToHtmlString());
+
         }
-#endregion
+        
+        #endregion
     }
 }
