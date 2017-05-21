@@ -488,7 +488,7 @@ namespace Nop.Web.Framework.Extensions
         {
             var result = new TagBuilder("div");
             result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml.AppendHtml(helper.DisplayFor(expression).ToString());
+            result.InnerHtml.AppendHtml(helper.DisplayFor(expression).ToHtmlString());
 
             return new HtmlString(result.ToHtmlString());
         }
