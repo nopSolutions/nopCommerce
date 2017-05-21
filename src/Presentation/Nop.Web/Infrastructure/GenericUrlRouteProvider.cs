@@ -19,7 +19,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="routeBuilder">Route builder</param>
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}");
+            routeBuilder.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             //and default one
             routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
