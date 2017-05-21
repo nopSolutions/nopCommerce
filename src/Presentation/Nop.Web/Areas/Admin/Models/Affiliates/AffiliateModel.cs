@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
@@ -10,6 +13,7 @@ namespace Nop.Admin.Models.Affiliates
         public AffiliateModel()
         {
             Address = new AddressModel();
+            AffiliatedOrderList = new AffiliatedOrderListModel();
         }
 
         [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
@@ -26,8 +30,41 @@ namespace Nop.Admin.Models.Affiliates
 
         public AddressModel Address { get; set; }
 
+        public AffiliatedOrderListModel AffiliatedOrderList { get; set; }
+
         #region Nested classes
-        
+
+        public partial class AffiliatedOrderListModel : BaseNopModel
+        {
+            public AffiliatedOrderListModel()
+            {
+                AvailableOrderStatuses = new List<SelectListItem>();
+                AvailablePaymentStatuses = new List<SelectListItem>();
+                AvailableShippingStatuses = new List<SelectListItem>();
+            }
+
+            public int AffliateId { get; set; }
+
+            [NopResourceDisplayName("Admin.Affiliates.Orders.StartDate")]
+            [UIHint("DateNullable")]
+            public DateTime? StartDate { get; set; }
+
+            [NopResourceDisplayName("Admin.Affiliates.Orders.EndDate")]
+            [UIHint("DateNullable")]
+            public DateTime? EndDate { get; set; }
+
+            [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
+            public int OrderStatusId { get; set; }
+            [NopResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
+            public int PaymentStatusId { get; set; }
+            [NopResourceDisplayName("Admin.Affiliates.Orders.ShippingStatus")]
+            public int ShippingStatusId { get; set; }
+
+            public IList<SelectListItem> AvailableOrderStatuses { get; set; }
+            public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
+            public IList<SelectListItem> AvailableShippingStatuses { get; set; }
+        }
+
         public partial class AffiliatedOrderModel : BaseNopEntityModel
         {
             public override int Id { get; set; }

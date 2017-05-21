@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Affiliates;
 using Nop.Core;
@@ -23,6 +23,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -72,10 +73,9 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
+        
         protected virtual void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
-            bool prepareEntireAddressModel = true)
+            bool prepareEntireAddressModel, bool prepareOrderListModel)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -130,8 +130,25 @@ namespace Nop.Admin.Controllers
                 else
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
-        }
 
+            if (prepareOrderListModel)
+            {
+                model.AffiliatedOrderList.AffliateId = model.Id;
+
+                //order statuses
+                model.AffiliatedOrderList.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+                model.AffiliatedOrderList.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+                //payment statuses
+                model.AffiliatedOrderList.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+                model.AffiliatedOrderList.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+                //shipping statuses
+                model.AffiliatedOrderList.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+                model.AffiliatedOrderList.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            }
+        }
+        
         #endregion
 
         #region Methods
@@ -167,7 +184,7 @@ namespace Nop.Admin.Controllers
                 Data = affiliates.Select(x =>
                 {
                     var m = new AffiliateModel();
-                    PrepareAffiliateModel(m, x, false, false);
+                    PrepareAffiliateModel(m, x, false, false, false);
                     return m;
                 }),
                 Total = affiliates.TotalCount,
@@ -182,7 +199,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new AffiliateModel();
-            PrepareAffiliateModel(model, null, false);
+            PrepareAffiliateModel(model, null, false, true, false);
             return View(model);
         }
 
@@ -219,7 +236,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareAffiliateModel(model, null, true);
+            PrepareAffiliateModel(model, null, true, true, false);
             return View(model);
 
         }
@@ -237,7 +254,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = new AffiliateModel();
-            PrepareAffiliateModel(model, affiliate, false);
+            PrepareAffiliateModel(model, affiliate, false, true, true);
             return View(model);
         }
 
@@ -282,7 +299,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareAffiliateModel(model, affiliate, true);
+            PrepareAffiliateModel(model, affiliate, true, true, true);
             return View(model);
         }
 
@@ -306,35 +323,9 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
             return RedirectToAction("List");
         }
-
-        [ChildActionOnly]
-        public virtual IActionResult AffiliatedOrderList(int affiliateId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return Content("");
-
-            if (affiliateId == 0)
-                throw new Exception("Affliate ID cannot be 0");
-
-            var model = new AffiliatedOrderListModel();
-            model.AffliateId = affiliateId;
-
-            //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            
-            //payment statuses
-            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            
-            //shipping statuses
-            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
-            return PartialView(model);
-        }
+        
         [HttpPost]
-        public virtual IActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliatedOrderListModel model)
+        public virtual IActionResult AffiliatedOrderListGrid(DataSourceRequest command, AffiliateModel.AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedKendoGridJson();
@@ -417,4 +408,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif

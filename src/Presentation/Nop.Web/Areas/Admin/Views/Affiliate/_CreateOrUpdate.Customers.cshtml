@@ -1,0 +1,73 @@
+﻿@model AffiliateModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div id="customers-grid"></div>
+
+            <script>
+                $(document).ready(function() {
+                    $("#customers-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new {affiliateId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @Html.Partial("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                        {
+                            field: "Id",
+                            title: "ID",
+                            width: 50
+                        }, {
+                            field: "Name",
+                            title: "@T("Admin.Affiliates.Customers.Name")",
+                            width: 200
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
