@@ -61,10 +61,7 @@
         }
 
         var defaultEditorSettings@(random) = {
-
-            @*TODO valid method temporary commented. wrong one is below. We have to use GetFullHtmlFieldId
-            selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",*@
-            selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)",
+            selector: "#@Html.IdForModel()",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 200,
             width: '100%',

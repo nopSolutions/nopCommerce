@@ -1,5 +1,4 @@
 @model Decimal?
-
 @Html.TextBoxFor(model => model)
 @{
     var postfix = "";
@@ -10,7 +9,7 @@
 }
 <script>
     $(document).ready(function() {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").TouchSpin({
+        $("#@Html.IdForModel()").TouchSpin({
             min: @(decimal.MinValue),
             max: @(decimal.MaxValue),
             decimals: 4, //always display 4 digits

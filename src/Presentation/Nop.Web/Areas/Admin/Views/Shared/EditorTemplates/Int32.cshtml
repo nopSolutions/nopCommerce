@@ -1,5 +1,4 @@
 ﻿@model Int32
-
 @Html.TextBoxFor(model => model)
 @{
     var postfix = "";
@@ -10,9 +9,7 @@
 }
 <script>
     $(document).ready(function() {
-        @*TODO valid method temporary commented. wrong one is below. We have to use GetFullHtmlFieldId
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").TouchSpin({*@
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)").TouchSpin({
+        $("#@Html.IdForModel()").TouchSpin({
             min: @(int.MinValue),
             max: @(int.MaxValue),
             decimals: 0,

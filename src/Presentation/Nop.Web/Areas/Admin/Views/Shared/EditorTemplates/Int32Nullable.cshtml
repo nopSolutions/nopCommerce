@@ -10,7 +10,7 @@
 }
 <script>
     $(document).ready(function() {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").TouchSpin({
+        $("#@Html.IdForModel()").TouchSpin({
             min: @(int.MinValue),
             max: @(int.MaxValue),
             decimals: 0,

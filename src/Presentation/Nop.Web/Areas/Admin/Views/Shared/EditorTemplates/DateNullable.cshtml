@@ -1,15 +1,7 @@
 ﻿@model DateTime?
-
-@*TODO valid method temporary commented. wrong one is below. We have to use GetFullHtmlFieldId
-    <input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToShortDateString() : null)" />
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToShortDateString() : null)" />
 <script>
     $(document).ready(function () {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDatePicker();
-    });
-</script>*@
-<input id="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToShortDateString() : null)" />
-<script>
-    $(document).ready(function () {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)").kendoDatePicker();
+        $("#@Html.IdForModel()").kendoDatePicker();
     });
 </script>
