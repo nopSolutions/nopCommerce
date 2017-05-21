@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
@@ -57,6 +59,13 @@ namespace Nop.Web.Framework.Security
                     return false;
 
                 if (!_securitySettings.EnableXsrfProtectionForPublicStore)
+                    return false;
+
+                //ignore GET requests
+                var request = context.HttpContext.Request;
+                if (request == null)
+                    return false;
+                if (request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
                 return true;
