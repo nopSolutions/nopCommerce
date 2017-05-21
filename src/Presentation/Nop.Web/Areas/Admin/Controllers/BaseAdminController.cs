@@ -17,16 +17,14 @@ namespace Nop.Admin.Controllers
 
     [Area("Admin")]
     [HttpsRequirement(SslRequirement.Yes)]
-    #if NET451
     [AdminAntiForgery]
-    [AdminValidateIpAddress]
-    [AdminAuthorize]
-    [AdminVendorValidation]
-    #endif
+    [ValidateIpAddress]
+    [AuthorizeAdmin]
+    [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
     {
 
-        #if NET451
+#if NET451
         /// <summary>
         /// Initialize controller
         /// </summary>
@@ -49,7 +47,7 @@ namespace Nop.Admin.Controllers
                 LogException(filterContext.Exception);
             base.OnException(filterContext);
         }
-        #endif
+#endif
         /// <summary>
         /// Access denied view
         /// </summary>
