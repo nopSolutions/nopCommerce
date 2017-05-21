@@ -17,8 +17,8 @@
                 @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
             </ul>
             <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info"), true)
-                @Html.RenderBootstrapTabContent("tab-seo", await Html.PartialAsync("_CreateOrUpdate.SEO"))
+                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
+                @Html.RenderBootstrapTabContent("tab-seo", await Html.PartialAsync("_CreateOrUpdate.SEO", Model))
             </div>
         </div>
     </div>
