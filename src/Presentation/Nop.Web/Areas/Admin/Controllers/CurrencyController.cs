@@ -1,8 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Directory;
 using Nop.Core;
@@ -16,6 +17,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -68,7 +70,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateLocales(Currency currency, CurrencyModel model)
         {
             foreach (var localized in model.Locales)
@@ -77,7 +78,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
         {
             if (model == null)
@@ -98,7 +98,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
         {
             currency.LimitedToStores = model.SelectedStoreIds.Any();
@@ -420,4 +419,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif

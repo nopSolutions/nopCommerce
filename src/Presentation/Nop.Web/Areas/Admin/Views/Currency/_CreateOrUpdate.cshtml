@@ -117,7 +117,7 @@
                                     </script>
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.Action("MultistoreDisabledWarning", "Common")
+                                    @await Component.InvokeAsync("MultistoreDisabledWarning")
                                 </div>
                             </div>
                         </div>
