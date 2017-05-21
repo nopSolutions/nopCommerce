@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
@@ -567,7 +569,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 #endif
-#if NET451
+
         #region Export / Import
 
         public virtual IActionResult ExportXml()
@@ -578,7 +580,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var xml = _exportManager.ExportCategoriesToXml();
-                return new XmlDownloadResult(xml, "categories.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "categories.xml");
             }
             catch (Exception exc)
             {
@@ -594,8 +596,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var bytes =_exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p=>!p.Deleted));
-                 
+                var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p => !p.Deleted));
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
             catch (Exception exc)
@@ -606,7 +607,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ImportFromXlsx()
+        public virtual IActionResult ImportFromXlsx(IFormFile importexcelfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -617,10 +618,9 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var file = Request.Files["importexcelfile"];
-                if (file != null && file.ContentLength > 0)
+                if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    _importManager.ImportCategoriesFromXlsx(file.InputStream);
+                    _importManager.ImportCategoriesFromXlsx(importexcelfile.OpenReadStream());
                 }
                 else
                 {
@@ -637,7 +637,6 @@ namespace Nop.Admin.Controllers
             }
         }
         #endregion
-#endif
 
 #if NET451
         #region Products
