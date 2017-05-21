@@ -1,12 +1,8 @@
-﻿#if NET451
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
@@ -15,16 +11,20 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Nop.Core.Domain.Customers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Admin.Controllers
 {
     public partial class BlogController : BaseAdminController
 	{
-#region Fields
+        #region Fields
 
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
@@ -36,10 +36,10 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerActivityService _customerActivityService;
-
-#endregion
-
-#region Ctor
+        
+        #endregion
+        
+        #region Ctor
 
         public BlogController(IBlogService blogService,
             ILanguageService languageService,
@@ -63,12 +63,11 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._customerActivityService = customerActivityService;
         }
-
-#endregion
-
-#region Utilities
-
-        [NonAction]
+        
+        #endregion
+        
+        #region Utilities
+        
         protected virtual void PrepareLanguagesModel(BlogPostModel model)
         {
             if (model == null)
@@ -84,8 +83,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
         {
             if (model == null)
@@ -105,8 +103,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
         {
             blogPost.LimitedToStores = model.SelectedStoreIds.Any();
@@ -130,10 +127,10 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-#endregion
         
-#region Blog posts
+        #endregion
+        
+        #region Blog posts
 
         public virtual IActionResult Index()
         {
@@ -327,10 +324,10 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 			return RedirectToAction("List");
 		}
-
-#endregion
-
-#region Comments
+        
+        #endregion
+        
+        #region Comments
 
         public virtual IActionResult Comments(int? filterByBlogPostId)
         {
@@ -510,8 +507,7 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true });
         }
-
-#endregion
+        
+        #endregion
     }
 }
-#endif
