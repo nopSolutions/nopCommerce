@@ -2,8 +2,10 @@
 
 @Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
 <script>
-    $(document).ready(function() {
-        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoMultiSelect({
+    $(document).ready(function () {
+        @*TODO valid method temporary commented.wrong one is below.We have to use GetFullHtmlFieldId
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoMultiSelect({*@
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)").kendoMultiSelect({
             select: function (e) {
                 var current = this.value();
 

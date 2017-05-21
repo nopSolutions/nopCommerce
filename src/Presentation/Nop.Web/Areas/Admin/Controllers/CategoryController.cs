@@ -334,8 +334,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-#if NET451
+        
         #region Create / Edit / Delete
 
         public virtual IActionResult Create()
@@ -568,7 +567,6 @@ namespace Nop.Admin.Controllers
 
 
         #endregion
-#endif
 
         #region Export / Import
 
@@ -637,8 +635,7 @@ namespace Nop.Admin.Controllers
             }
         }
         #endregion
-
-#if NET451
+        
         #region Products
 
         [HttpPost]
@@ -794,6 +791,5 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-#endif
     }
 }

@@ -71,7 +71,6 @@ namespace Nop.Admin.Controllers
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
-#if NET451
         /// <summary>
         /// Save selected TAB name
         /// </summary>
@@ -100,6 +99,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
+#if NET451
         /// <summary>
         /// Creates a <see cref="T:System.Web.Mvc.JsonResult"/> object that serializes the specified object to JavaScript Object Notation (JSON) format using the content type, content encoding, and the JSON request behavior.
         /// </summary>
