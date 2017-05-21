@@ -1,7 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
@@ -18,6 +18,7 @@ using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -81,8 +82,7 @@ namespace Nop.Admin.Controllers
         #endregion
         
         #region Utilities
-
-        [NonAction]
+        
         protected virtual void UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -98,8 +98,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected virtual void UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -110,8 +109,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
@@ -123,8 +121,7 @@ namespace Nop.Admin.Controllers
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
         }
-
-        [NonAction]
+        
         protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
@@ -144,8 +141,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
@@ -169,8 +165,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
@@ -204,8 +199,7 @@ namespace Nop.Admin.Controllers
                         }).ToList()
             };
         }
-
-        [NonAction]
+        
         protected virtual void SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             string attributesXml = null;
@@ -656,4 +650,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
