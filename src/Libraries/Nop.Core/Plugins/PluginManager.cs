@@ -331,24 +331,27 @@ namespace Nop.Core.Plugins
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
-            FileInfo shadowCopiedPlug;
+            //now asp.net core doesn't init DynamicDirectory in AppContext, that's why we commented the following code
+            //FileInfo shadowCopiedPlug;
+            //if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted || string.IsNullOrEmpty(AppDomain.CurrentDomain.DynamicDirectory))
+            //{
+            //    //all plugins will need to be copied to ~/Plugins/bin/
+            //    //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
 
-            if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted || string.IsNullOrEmpty(AppDomain.CurrentDomain.DynamicDirectory))
-            {
-                //all plugins will need to be copied to ~/Plugins/bin/
-                //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
-                
-                //were running in med trust, so copy to custom bin folder
-                var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-                shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
-            }
-            else
-            {
-                var directory = AppDomain.CurrentDomain.DynamicDirectory;
-                Debug.WriteLine(plug.FullName + " to " + directory);
-                //were running in full trust so copy to standard dynamic folder
-                shadowCopiedPlug = InitializeFullTrust(plug, new DirectoryInfo(directory));
-            }
+            //    //were running in med trust, so copy to custom bin folder
+            //    var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
+            //    shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
+            //}
+            //else
+            //{
+            //    var directory = AppDomain.CurrentDomain.DynamicDirectory;
+            //    Debug.WriteLine(plug.FullName + " to " + directory);
+            //    //were running in full trust so copy to standard dynamic folder
+            //    shadowCopiedPlug = InitializeFullTrust(plug, new DirectoryInfo(directory));
+            //}
+            //but in order to avoid possible issues we still copy libraries into ~/Plugins/bin/ directory
+            var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
+            var shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
 
             //we can now register the plugin definition
             var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
