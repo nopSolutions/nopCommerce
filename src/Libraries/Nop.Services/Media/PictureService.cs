@@ -329,6 +329,12 @@ namespace Nop.Services.Media
         /// <param name="binary">Picture binary</param>
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
+            //ensure \thumb directory exists
+            var thumbsDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
+            if (!System.IO.Directory.Exists(thumbsDirectoryPath))
+                System.IO.Directory.CreateDirectory(thumbsDirectoryPath);
+
+            //save
             File.WriteAllBytes(thumbFilePath, binary);
         }
 
