@@ -1,9 +1,10 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Directory;
 using Nop.Core;
@@ -18,6 +19,7 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -73,7 +75,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
         
-        [NonAction]
         protected virtual void UpdateLocales(Country country, CountryModel model)
         {
             foreach (var localized in model.Locales)
@@ -84,8 +85,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
         {
             foreach (var localized in model.Locales)
@@ -96,8 +96,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
         {
             if (model == null)
@@ -117,8 +116,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void SaveStoreMappings(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();
@@ -504,8 +502,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-        [AcceptVerbs(HttpVerbs.Get)]
+        
         public virtual IActionResult GetStatesByCountryId(string countryId,
             bool? addSelectStateItem, bool? addAsterisk)
         {
@@ -557,7 +554,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
         #endregion
@@ -578,17 +575,16 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ImportCsv(IFormCollection form)
+        public virtual IActionResult ImportCsv(IFormFile importcsvfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             try
             {
-                var file = Request.Files["importcsvfile"];
-                if (file != null && file.ContentLength > 0)
+                if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    int count = _importManager.ImportStatesFromTxt(file.InputStream);
+                    int count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
                     SuccessNotification(String.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
                     return RedirectToAction("List");
                 }
@@ -605,4 +601,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
