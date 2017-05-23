@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Mvc;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
@@ -39,10 +39,10 @@ namespace Nop.Admin.Controllers
                 return View();
             }
 
-            if (Request.Files.Count == 0)
+            if (Request.Form.Files.Count == 0)
                 throw new Exception("No file uploaded");
 
-            var uploadFile = Request.Files[0];
+            var uploadFile = Request.Form.Files.FirstOrDefault();
             if (uploadFile == null)
             {
                 ViewData["resultCode"] = "failed";
@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
                 return View();
             }
 
-            var directory = "~/images/uploaded/";
+            var directory = "~/wwwroot/images/uploaded/";
             var filePath = Path.Combine(CommonHelper.MapPath(directory), fileName);
 
             var fileExtension = Path.GetExtension(filePath);
@@ -69,7 +69,11 @@ namespace Nop.Admin.Controllers
                 return View();
             }
 
-            uploadFile.SaveAs(filePath);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                uploadFile.CopyTo(fileStream);
+            }
 
             ViewData["resultCode"] = "success";
             ViewData["result"] = "success";
@@ -78,4 +82,3 @@ namespace Nop.Admin.Controllers
         }
     }
 }
-#endif
