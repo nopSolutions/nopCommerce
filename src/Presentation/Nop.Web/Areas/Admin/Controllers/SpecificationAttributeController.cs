@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
@@ -12,6 +11,7 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -49,7 +49,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -61,7 +60,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateOptionLocales(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
         {
             foreach (var localized in model.Locales)
@@ -380,7 +378,7 @@ namespace Nop.Admin.Controllers
 
 
         //ajax
-        [AcceptVerbs(HttpVerbs.Get)]
+        [HttpGet]
         public virtual IActionResult GetOptionsByAttributeId(string attributeId)
         {
             //do not make any permission validation here 
@@ -395,10 +393,9 @@ namespace Nop.Admin.Controllers
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(Convert.ToInt32(attributeId));
             var result = (from o in options
                           select new { id = o.Id, name = o.Name }).ToList();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
         #endregion
     }
 }
-#endif
