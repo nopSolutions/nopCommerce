@@ -1,7 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Stores;
 using Nop.Core.Domain.Stores;
@@ -12,6 +12,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -52,7 +53,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareLanguagesModel(StoreModel model)
         {
             if (model == null)
@@ -74,7 +74,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateAttributeLocales(Store store, StoreModel model)
         {
             foreach (var localized in model.Locales)
@@ -269,4 +268,3 @@ namespace Nop.Admin.Controllers
 
     }
 }
-#endif
