@@ -1,0 +1,174 @@
+﻿@model VendorModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+                  @<div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].Name)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.Locales[item].Name)
+                              @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].Description)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                              @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                          </div>
+                      </div>
+                      @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                  </div>
+    ,
+                  @<div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Name)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.Name, required: true)
+                              @Html.ValidationMessageFor(model => model.Name)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Description)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.EditorFor(x => x.Description, "RichEditor")
+                              @Html.ValidationMessageFor(model => model.Description)
+                          </div>
+                      </div>
+                  </div>
+                  ))
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Email)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Email, required: true)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AssociatedCustomers)
+                    </div>
+                    <div class="col-md-9">
+                        @if (Model.AssociatedCustomers.Count > 0)
+                        {
+                            for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                            {
+                                @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
+                                if (i != Model.AssociatedCustomers.Count - 1)
+                                {
+                                    <text>,  </text>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                        }
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Active)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Active)
+                    @Html.ValidationMessageFor(model => model.Active)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PictureId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.PictureId)
+                    @Html.ValidationMessageFor(model => model.PictureId)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.AdminComment)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopTextAreaFor(model => model.AdminComment)
+                    @Html.ValidationMessageFor(model => model.AdminComment)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
+                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div class="form-group advanced-setting" id="pnlPageSize">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PageSize)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.PageSize)
+                    @Html.ValidationMessageFor(model => model.PageSize)
+                </div>
+            </div>
+            <div class="form-group advanced-setting" id="pnlPageSizeOptions">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PageSizeOptions)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.PageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.DisplayOrder)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default advanced-setting">
+        <div class="panel-heading">
+            @T("Admin.Vendors.Address")
+        </div>
+        <div class="panel-body">
+            @Html.EditorFor(model => model.Address, "Address")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hide();
+            $('#pnlPageSizeOptions').show();
+        } else {
+            $('#pnlPageSize').show();
+            $('#pnlPageSizeOptions').hide();
+        }
+    }
+</script>

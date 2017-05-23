@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Directory;
@@ -20,6 +20,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -81,7 +82,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {
             var picture = _pictureService.GetPictureById(vendor.PictureId);
@@ -89,7 +89,6 @@ namespace Nop.Admin.Controllers
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(Vendor vendor, VendorModel model)
         {
             foreach (var localized in model.Locales)
@@ -125,7 +124,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties, bool prepareEntireAddressModel)
         {
             if (model == null)
@@ -440,6 +438,7 @@ namespace Nop.Admin.Controllers
 
         #region Vendor notes
 
+        
         [HttpPost]
         public virtual IActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
         {
@@ -479,7 +478,7 @@ namespace Nop.Admin.Controllers
 
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
-                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+                return Json(new {Result = false});
 
             var vendorNote = new VendorNote
             {
@@ -489,7 +488,7 @@ namespace Nop.Admin.Controllers
             vendor.VendorNotes.Add(vendorNote);
             _vendorService.UpdateVendor(vendor);
 
-            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -511,7 +510,5 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
     }
 }
-#endif
