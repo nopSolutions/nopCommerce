@@ -1,44 +1,44 @@
-﻿#if NET451
-using System;
-using System.ServiceModel.Syndication;
-using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using Nop.Core;
+using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Web.Framework.Mvc
 {
-    public class RssActionResult : ActionResult
+    public class RssActionResult : ContentResult
     {
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="feed">Syndication feed</param>
         /// <param name="feedPageUrl">Feed page url for atom self link</param>
-        public RssActionResult(SyndicationFeed feed, string feedPageUrl)
+        public RssActionResult(RssFeed feed, string feedPageUrl)
         {
+            this.ContentType = "application/atom+xml";
             this.Feed = feed;
+
             //add atom namespace
             XNamespace atom = "http://www.w3.org/2005/Atom";
-            this.Feed.AttributeExtensions.Add(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
+            this.Feed.AttributeExtension = new KeyValuePair<XmlQualifiedName, string>(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
             //add atom:link with rel='self' 
             this.Feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", new Uri(feedPageUrl)), new XAttribute("rel", "self"), new XAttribute("type", "application/rss+xml")));
         }
-        public SyndicationFeed Feed { get; set; }
 
-        public override void ExecuteResult(ControllerContext context)
+        public RssFeed Feed { get; set; }
+
+        public override Task ExecuteResultAsync(ActionContext context)
         {
-            context.HttpContext.Response.ContentType = MimeTypes.ApplicationRssXml;
+            Content = Feed.GetContent();
+            return base.ExecuteResultAsync(context);
+        }
 
-            var rssFormatter = Feed.GetRss20Formatter();
-            //remove a10 namespace
-            rssFormatter.SerializeExtensionsAsAtom = false;
-
-            using (var writer = XmlWriter.Create(context.HttpContext.Response.Output))
-            {
-                rssFormatter.WriteTo(writer);
-            }
+        public override void ExecuteResult(ActionContext context)
+        {
+            Content = Feed.GetContent();
+            base.ExecuteResult(context);
         }
     }
 }
-#endif

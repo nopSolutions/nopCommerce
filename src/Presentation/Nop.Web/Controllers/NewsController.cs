@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 #if NET451
-using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 #endif
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,9 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.News;
@@ -97,30 +98,29 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-#if NET451
+
         public virtual IActionResult ListRss(int languageId)
         {
-            var feed = new SyndicationFeed(
+            var feed = new RssFeed(
                 string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                 "News",
                 new Uri(_webHelper.GetStoreLocation(false)),
-                string.Format("urn:store:{0}:news", _storeContext.CurrentStore.Id),
                 DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
-            var items = new List<SyndicationItem>();
+            var items = new List<RssItem>();
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
+                items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-#endif
+
 
         public virtual IActionResult NewsItem(int newsItemId)
         {
