@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Customers;
 using Nop.Core;
@@ -10,9 +9,9 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -52,8 +51,7 @@ namespace Nop.Admin.Controllers
         #endregion
         
         #region Utilities
-
-        [NonAction]
+        
         protected virtual void UpdateAttributeLocales(CustomerAttribute customerAttribute, CustomerAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -64,8 +62,7 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
-
-        [NonAction]
+        
         protected  virtual void UpdateValueLocales(CustomerAttributeValue customerAttributeValue, CustomerAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -408,4 +405,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
