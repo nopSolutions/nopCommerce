@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Templates;
 using Nop.Core.Domain.Catalog;
@@ -92,7 +91,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryTemplateAdd([Bind(Exclude = "Id")] CategoryTemplateModel model)
+        public virtual IActionResult CategoryTemplateAdd(CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -175,7 +174,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ManufacturerTemplateAdd([Bind(Exclude = "Id")] ManufacturerTemplateModel model)
+        public virtual IActionResult ManufacturerTemplateAdd(ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -258,7 +257,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductTemplateAdd([Bind(Exclude = "Id")] ProductTemplateModel model)
+        public virtual IActionResult ProductTemplateAdd(ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -341,7 +340,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult TopicTemplateAdd([Bind(Exclude = "Id")] TopicTemplateModel model)
+        public virtual IActionResult TopicTemplateAdd(TopicTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -376,4 +375,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
