@@ -1,36 +1,34 @@
-﻿#if NET451
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Nop.Web.Framework.Kendoui
 {
     public static class ModelStateExtensions
     {
-        private static string GetErrorMessage(ModelError error, ModelState modelState)
+        public static object SerializeErrors(this ModelStateDictionary modelStateDictionary)
         {
-            if (!string.IsNullOrEmpty(error.ErrorMessage))
-            {
-                return error.ErrorMessage;
-            }
-            if (modelState.Value == null)
-            {
-                return error.ErrorMessage;
-            }
-            var args = new object[] { modelState.Value.AttemptedValue };
-            return string.Format("ValueNotValidForProperty=The value '{0}' is invalid", args);
-        }
-
-        public static object SerializeErrors(this ModelStateDictionary modelState)
-        {
-            return modelState.Where(entry => entry.Value.Errors.Any())
+            return modelStateDictionary.Where(entry => entry.Value.Errors.Any())
                 .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
         }
 
-        private static Dictionary<string, object> SerializeModelState(ModelState modelState)
+        private static Dictionary<string, object> SerializeModelState(ModelStateEntry modelState)
         {
+            var errors = new List<string>();
+            for (var i = 0; i < modelState.Errors.Count; i++)
+            {
+                var modelError = modelState.Errors[i];
+                var errorText = ValidationHelpers.GetModelErrorMessageOrDefault(modelError);
+
+                if (!string.IsNullOrEmpty(errorText))
+                {
+                    errors.Add(errorText);
+                }
+            }
+
             var dictionary = new Dictionary<string, object>();
-            dictionary["errors"] = modelState.Errors.Select(x => GetErrorMessage(x, modelState)).ToArray();
+            dictionary["errors"] = errors.ToArray();
             return dictionary;
         }
 
@@ -44,4 +42,3 @@ namespace Nop.Web.Framework.Kendoui
         }
     }
 }
-#endif
