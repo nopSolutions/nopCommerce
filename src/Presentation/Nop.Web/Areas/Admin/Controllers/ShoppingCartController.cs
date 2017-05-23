@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Models.ShoppingCart;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -130,10 +129,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-
-
-
-
         //wishlists
         public virtual IActionResult CurrentWishlists()
         {
@@ -207,4 +202,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
