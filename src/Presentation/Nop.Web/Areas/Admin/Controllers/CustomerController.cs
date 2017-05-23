@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Primitives;
-#if NET451
-using System.Web.Mvc;
 using Nop.Admin.Extensions;
-#endif
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
@@ -57,7 +55,7 @@ namespace Nop.Admin.Controllers
 {
     public partial class CustomerController : BaseAdminController
     {
-#region Fields
+        #region Fields
 
         private readonly ICustomerService _customerService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -102,10 +100,10 @@ namespace Nop.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IStaticCacheManager _cacheManager;
-
-#endregion
-
-#region Constructors
+        
+        #endregion
+        
+        #region Constructors
 
         public CustomerController(ICustomerService customerService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
@@ -195,10 +193,10 @@ namespace Nop.Admin.Controllers
             this._rewardPointService = rewardPointService;
             this._cacheManager = cacheManager;
         }
-
-#endregion
-
-#region Utilities
+        
+        #endregion
+        
+        #region Utilities
         
         protected virtual string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
         {
@@ -481,8 +479,7 @@ namespace Nop.Admin.Controllers
 
             return attributesXml;
         }
-
-#if NET451
+        
         protected virtual void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
         {
             var allStores = _storeService.GetAllStores();
@@ -755,11 +752,10 @@ namespace Nop.Admin.Controllers
 
             return customers.Any(c => c.Active && c.Id != customer.Id);
         }
-#endif
-#endregion
-
-#if NET451
-#region Customers
+        
+        #endregion
+        
+        #region Customers
 
         public virtual IActionResult Index()
         {
@@ -797,8 +793,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
+        public virtual IActionResult CustomerList(DataSourceRequest command, CustomerListModel model, int[] searchCustomerRoleIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1625,9 +1620,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", new { id = customer.Id });
         }
         
-#endregion
+        #endregion
         
-#region Reward points history
+        #region Reward points history
 
         [HttpPost]
         public virtual IActionResult RewardPointsHistorySelect(DataSourceRequest command, int customerId)
@@ -1670,17 +1665,17 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = false });
 
             _rewardPointService.AddRewardPointsHistoryEntry(customer,
                 addRewardPointsValue, storeId, addRewardPointsMessage);
 
-            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true });
         }
         
-#endregion
-        
-#region Addresses
+        #endregion
+       
+        #region Addresses
 
         [HttpPost]
         public virtual IActionResult AddressesSelect(int customerId, DataSourceRequest command)
@@ -1700,19 +1695,19 @@ namespace Nop.Admin.Controllers
                     var model = x.ToModel();
                     var addressHtmlSb = new StringBuilder("<div>");
                     if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(model.Company))
-                        addressHtmlSb.AppendFormat("{0}<br />", Server.HtmlEncode(model.Company));
+                        addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
                     if (_addressSettings.StreetAddressEnabled && !String.IsNullOrEmpty(model.Address1))
-                        addressHtmlSb.AppendFormat("{0}<br />", Server.HtmlEncode(model.Address1));
+                        addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
                     if (_addressSettings.StreetAddress2Enabled && !String.IsNullOrEmpty(model.Address2))
-                        addressHtmlSb.AppendFormat("{0}<br />", Server.HtmlEncode(model.Address2));
+                        addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
                     if (_addressSettings.CityEnabled && !String.IsNullOrEmpty(model.City))
-                        addressHtmlSb.AppendFormat("{0},", Server.HtmlEncode(model.City));
+                        addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
                     if (_addressSettings.StateProvinceEnabled && !String.IsNullOrEmpty(model.StateProvinceName))
-                        addressHtmlSb.AppendFormat("{0},", Server.HtmlEncode(model.StateProvinceName));
+                        addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
                     if (_addressSettings.ZipPostalCodeEnabled && !String.IsNullOrEmpty(model.ZipPostalCode))
-                        addressHtmlSb.AppendFormat("{0}<br />", Server.HtmlEncode(model.ZipPostalCode));
+                        addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
                     if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(model.CountryName))
-                        addressHtmlSb.AppendFormat("{0}", Server.HtmlEncode(model.CountryName));
+                        addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
                     var customAttributesFormatted = _addressAttributeFormatter.FormatAttributes(x.CustomAttributes);
                     if (!String.IsNullOrEmpty(customAttributesFormatted))
                     {
@@ -1867,10 +1862,10 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+        
+        #endregion
 
-#endregion
-
-#region Orders
+        #region Orders
         
         [HttpPost]
         public virtual IActionResult OrderList(int customerId, DataSourceRequest command)
@@ -1907,11 +1902,9 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-#endregion
-#endif
+        #endregion
 
-#region Reports
-#if NET451
+        #region Reports
         public virtual IActionResult Reports()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2022,15 +2015,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        [ChildActionOnly]
-        public virtual IActionResult ReportRegisteredCustomers()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
-            return PartialView();
-        }
-
         [HttpPost]
         public virtual IActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
@@ -2046,7 +2030,6 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-#endif
         public virtual IActionResult LoadCustomerStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2140,9 +2123,8 @@ namespace Nop.Admin.Controllers
         }
 
 #endregion
-
-#if NET451
-#region Current shopping cart/ wishlist
+        
+        #region Current shopping cart/ wishlist
 
         [HttpPost]
         public virtual IActionResult GetCartList(int customerId, int cartTypeId)
@@ -2178,10 +2160,10 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-#endregion
-
-#region Activity log
+        
+        #endregion
+        
+        #region Activity log
 
         [HttpPost]
         public virtual IActionResult ListActivityLog(DataSourceRequest command, int customerId)
@@ -2210,10 +2192,10 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-#endregion
-
-#region Back in stock subscriptions
+        
+        #endregion
+        
+        #region Back in stock subscriptions
 
         [HttpPost]
         public virtual IActionResult BackInStockSubscriptionList(DataSourceRequest command, int customerId)
@@ -2245,10 +2227,10 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-#endregion
-
-#region Export / Import
+        
+        #endregion
+        
+        #region Export / Import
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportexcel-all")]
@@ -2347,7 +2329,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var xml = _exportManager.ExportCustomersToXml(customers);
-                return new XmlDownloadResult(xml, "customers.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
             }
             catch (Exception exc)
             {
@@ -2373,10 +2355,9 @@ namespace Nop.Admin.Controllers
             }
 
             var xml = _exportManager.ExportCustomersToXml(customers);
-            return new XmlDownloadResult(xml, "customers.xml");
+            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
         }
-
-#endregion
-#endif
+        
+        #endregion
     }
 }

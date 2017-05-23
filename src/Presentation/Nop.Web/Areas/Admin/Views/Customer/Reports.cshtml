@@ -33,14 +33,20 @@
                 @Html.RenderBootstrapTabHeader("tab-registeredcustomers", @T("Admin.Customers.Reports.RegisteredCustomers"))
             </ul>
             <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-ordertotal", @TabBestByOrderTotal(), true)
-                @Html.RenderBootstrapTabContent("tab-numberoforders", @TabBestByNumberOfOrders())
-                @Html.RenderBootstrapTabContent("tab-registeredcustomers", @TabRegisteredCustomers())
+                @{
+                    var dataDictAttributesByTotal = new ViewDataDictionary(ViewData);
+                    dataDictAttributesByTotal.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
+
+                    var dataDictAttributesByNumber = new ViewDataDictionary(ViewData);
+                    dataDictAttributesByNumber.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
+                }
+                @Html.RenderBootstrapTabContent("tab-ordertotal", await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal), true)
+                @Html.RenderBootstrapTabContent("tab-numberoforders", await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber))
+                @Html.RenderBootstrapTabContent("tab-registeredcustomers", await Html.PartialAsync("_ReportRegisteredCustomers"))
             </div>
         </div>
     </div>
 </div>
-
 
 @{
     //custom tabs
@@ -50,30 +56,4 @@
     {
         @eventBlock
     }
-}
-
-
-@helper TabBestByOrderTotal()
-{
-    var dataDictAttributes = new ViewDataDictionary();
-    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
-    @Html.Partial("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributes)
-}
-
-@helper TabBestByNumberOfOrders()
-{
-    var dataDictAttributes = new ViewDataDictionary();
-    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
-    @Html.Partial("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributes)
-}
-
-@helper TabRegisteredCustomers()
-{
-    <div class="panel-group">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @Html.Action("ReportRegisteredCustomers")
-            </div>
-        </div>
-    </div>
 }
