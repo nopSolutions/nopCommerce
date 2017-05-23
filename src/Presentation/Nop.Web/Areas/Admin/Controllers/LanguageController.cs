@@ -60,8 +60,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
+        
         protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
         {
             if (model == null)
@@ -81,8 +80,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
@@ -104,8 +102,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
-
-        [NonAction]
+        
         protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
             language.LimitedToStores = model.SelectedStoreIds.Any();

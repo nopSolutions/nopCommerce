@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Models.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
@@ -164,4 +164,3 @@ namespace Nop.Admin.Controllers
         }
     }
 }
-#endif
