@@ -1,8 +1,8 @@
 ﻿@model DiscountListModel
-
+@inject AdminAreaSettings adminAreaSetting
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSetting.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSetting.GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts").Text;

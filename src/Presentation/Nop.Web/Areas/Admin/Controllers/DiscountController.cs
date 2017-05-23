@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Discounts;
@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Extensions;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -24,8 +25,10 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -98,8 +101,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
+        
         protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
         {
             if (discountRequirementRule == null)
@@ -111,8 +113,7 @@ namespace Nop.Admin.Controllers
             string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
             return url;
         }
-
-        [NonAction]
+        
         protected virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
         {
             if (model == null)
@@ -136,8 +137,7 @@ namespace Nop.Admin.Controllers
             model.AvailableRequirementGroups = requirementGroups.Select(requirement => 
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
         }
-
-        [NonAction]
+        
         protected IList<DiscountModel.DiscountRequirementMetaInfo> GetReqirements(IEnumerable<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Discount discount)
         {
@@ -178,8 +178,7 @@ namespace Nop.Admin.Controllers
                 return requirementModel;
             }).ToList();
         }
-
-        [NonAction]
+        
         protected void DeleteRequirement(ICollection<DiscountRequirement> requirements)
         {
             //recursively delete child requirements
@@ -405,7 +404,6 @@ namespace Nop.Admin.Controllers
 
         #region Discount requirements
 
-        [AcceptVerbs(HttpVerbs.Get)]
         public virtual IActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
@@ -423,7 +421,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
-            return Json(new { url = url }, JsonRequestBehavior.AllowGet);
+            return Json(new { url = url });
         }
 
         public virtual IActionResult GetDiscountRequirements(int discountId, int discountRequirementId, 
@@ -436,7 +434,7 @@ namespace Nop.Admin.Controllers
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
-                return Json(requirements, JsonRequestBehavior.AllowGet);
+                return Json(requirements);
 
             var discountRequirement = discount.DiscountRequirements.FirstOrDefault(requirement => requirement.Id == discountRequirementId);
             if (discountRequirement != null)
@@ -501,7 +499,7 @@ namespace Nop.Admin.Controllers
             var availableRequirementGroups = requirementGroups.Select(requirement =>
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
-            return Json(new { Requirements = requirements, AvailableGroups = availableRequirementGroups }, JsonRequestBehavior.AllowGet);
+            return Json(new { Requirements = requirements, AvailableGroups = availableRequirementGroups });
         }
 
         public virtual IActionResult AddNewGroup(int discountId, string name)
@@ -542,7 +540,7 @@ namespace Nop.Admin.Controllers
                 _discountService.UpdateDiscount(discount);
             }
 
-            return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
         }
 
         #endregion
@@ -979,4 +977,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif

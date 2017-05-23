@@ -817,11 +817,14 @@ namespace Nop.Web.Factories
                 var discount = _discountService.GetAllDiscountsForCaching(couponCode: couponCode)
                     .FirstOrDefault(d => d.RequiresCouponCode && _discountService.ValidateDiscount(d, _workContext.CurrentCustomer).IsValid);
 
-                model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
+                if (discount != null)
                 {
-                    Id = discount.Id,
-                    CouponCode = discount.CouponCode
-                });
+                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
+                    {
+                        Id = discount.Id,
+                        CouponCode = discount.CouponCode
+                    });
+                }
             }
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 

@@ -1,9 +1,10 @@
 ﻿@model DiscountModel.AddManufacturerToDiscountModel
+@inject AdminAreaSettings adminAreaSetting
 
 @{
     Layout = "_AdminPopupLayout";
 
-    var popupGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().PopupGridPageSize;
+    var popupGridPageSize = adminAreaSetting.PopupGridPageSize;
 
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
