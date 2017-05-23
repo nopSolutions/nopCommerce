@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Customers;
@@ -20,6 +20,7 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -72,7 +73,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
@@ -340,4 +340,3 @@ namespace Nop.Admin.Controllers
 		#endregion
     }
 }
-#endif
