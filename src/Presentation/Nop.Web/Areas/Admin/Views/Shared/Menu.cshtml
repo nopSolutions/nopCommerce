@@ -1,4 +1,8 @@
-﻿@using Nop.Web.Framework.Menu
+﻿@using Nop.Core.Plugins
+@using Nop.Services.Security
+@using Nop.Web.Framework.Menu
+@inject IPluginFinder pluginFinder
+@inject IPermissionService permissionService
 @{
     //load sitemap
     var siteMap = new XmlSiteMap();
@@ -10,9 +14,7 @@
         var rootNode = siteMap.RootNode;
 
         //plugins
-        var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
-            .GetPlugins<IAdminMenuPlugin>()
-            .ToList();
+        var adminMenuPlugins = pluginFinder.GetPlugins<IAdminMenuPlugin>().ToList();
         foreach (var adminMenuPlugin in adminMenuPlugins)
         {
             adminMenuPlugin.ManageSiteMap(rootNode);
@@ -21,8 +23,7 @@
         var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
         if (pluginNode != null && pluginNode.Visible)
         {
-            var permissionService = EngineContext.Current.Resolve<Nop.Services.Security.IPermissionService>();
-            var hasManagePluginsPermission = permissionService.Authorize(Nop.Services.Security.StandardPermissionProvider.ManagePlugins);
+            var hasManagePluginsPermission = permissionService.Authorize(StandardPermissionProvider.ManagePlugins);
             pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
         }
     }
