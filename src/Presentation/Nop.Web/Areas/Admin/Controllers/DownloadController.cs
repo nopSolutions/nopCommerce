@@ -1,8 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.IO;
-using System.Web;
-using System.Web.Mvc;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
@@ -57,7 +56,7 @@ namespace Nop.Admin.Controllers
               };
             _downloadService.InsertDownload(download);
 
-            return Json(new { downloadId = download.Id }, JsonRequestBehavior.AllowGet);
+            return Json(new { downloadId = download.Id });
         }
 
         [HttpPost]
@@ -65,34 +64,33 @@ namespace Nop.Admin.Controllers
         [AdminAntiForgery(true)]
         public virtual IActionResult AsyncUpload()
         {
-            //we process it distinct ways based on a browser
-            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
-            Stream stream = null;
-            var fileName = "";
-            var contentType = "";
-            if (String.IsNullOrEmpty(Request["qqfile"]))
+
+            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            if (httpPostedFile == null)
             {
-                // IE
-                HttpPostedFileBase httpPostedFile = Request.Files[0];
-                if (httpPostedFile == null)
-                    throw new ArgumentException("No file uploaded");
-                stream = httpPostedFile.InputStream;
-                fileName = Path.GetFileName(httpPostedFile.FileName);
-                contentType = httpPostedFile.ContentType;
-            }
-            else
-            {
-                //Webkit, Mozilla
-                stream = Request.InputStream;
-                fileName = Request["qqfile"];
+                return Json(new
+                {
+                    success = false,
+                    message = "No file uploaded",
+                    downloadGuid = Guid.Empty,
+                });
             }
 
-            var fileBinary = new byte[stream.Length];
-            stream.Read(fileBinary, 0, fileBinary.Length);
+            var fileBinary = httpPostedFile.GetDownloadBits();
+
+            var qqFileNameParameter = "qqfilename";
+            var fileName = httpPostedFile.FileName;
+            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+                fileName = Request.Form[qqFileNameParameter].ToString();
+            //remove path (passed in IE)
+            fileName = Path.GetFileName(fileName);
+
+            var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
+
 
             var download = new Download
             {
@@ -112,9 +110,7 @@ namespace Nop.Admin.Controllers
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, 
                 downloadId = download.Id, 
-                downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) },
-                MimeTypes.TextPlain);
+                downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) });
         }
     }
 }
-#endif
