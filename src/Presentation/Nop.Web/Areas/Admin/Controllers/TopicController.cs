@@ -1,7 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
@@ -12,8 +12,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -69,7 +69,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareTemplatesModel(TopicModel model)
         {
             if (model == null)
@@ -86,7 +85,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
@@ -122,7 +120,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
@@ -143,7 +140,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveTopicAcl(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -168,7 +164,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
@@ -189,7 +184,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveStoreMappings(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();
@@ -452,4 +446,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
