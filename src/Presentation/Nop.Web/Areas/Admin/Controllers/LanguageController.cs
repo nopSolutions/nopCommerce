@@ -1,9 +1,10 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Localization;
 using Nop.Core;
@@ -15,8 +16,10 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
@@ -223,10 +226,7 @@ namespace Nop.Admin.Controllers
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
-
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-
+            
             var model = language.ToModel();
             //Stores
             PrepareStoresMappingModel(model, language, false);
@@ -327,7 +327,7 @@ namespace Nop.Admin.Controllers
                 return Json("Access denied");
 
             var flagNames = Directory
-                .EnumerateFiles(CommonHelper.MapPath("~/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(CommonHelper.MapPath("~/wwwroot/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
 
@@ -416,7 +416,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ResourceAdd(int languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
+        public virtual IActionResult ResourceAdd(int languageId,LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -478,7 +478,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var xml = _localizationService.ExportResourcesToXml(language);
-                return new XmlDownloadResult(xml, "language_pack.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "language_pack.xml");
             }
             catch (Exception exc)
             {
@@ -488,7 +488,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ImportXml(int id, IFormCollection form)
+        public virtual IActionResult ImportXml(int id, IFormFile importxmlfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -498,15 +498,16 @@ namespace Nop.Admin.Controllers
                 //No language found with the specified id
                 return RedirectToAction("List");
 
-            //set page timeout to 5 minutes
+#if NET451
+//set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
+#endif
 
             try
             {
-                var file = Request.Files["importxmlfile"];
-                if (file != null && file.ContentLength > 0)
+                if (importxmlfile != null && importxmlfile.Length > 0)
                 {
-                    using (var sr = new StreamReader(file.InputStream, Encoding.UTF8))
+                    using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
                         string content = sr.ReadToEnd();
                         _localizationService.ImportResourcesFromXml(language, content);
@@ -533,4 +534,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
