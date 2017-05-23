@@ -1,4 +1,6 @@
 ﻿@model AffiliateModel
+@inject IEventPublisher eventPublisher
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -34,7 +36,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

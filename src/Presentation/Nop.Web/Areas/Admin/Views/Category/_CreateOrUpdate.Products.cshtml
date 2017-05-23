@@ -1,15 +1,14 @@
 ﻿@model CategoryModel
-
+@inject AdminAreaSettings adminAreaSettings
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
 <div class="panel-group">
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
             <div class="panel-body">
-                @{
-                    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-                    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-                }
-
                 <div id="products-grid"></div>
 
                 <script>

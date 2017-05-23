@@ -1,6 +1,7 @@
 ﻿@model AddressAttributeModel
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services
+@inject IEventPublisher eventPublisher
 
 <script>
     $(document).ready(function () {
@@ -28,7 +29,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "addressattribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

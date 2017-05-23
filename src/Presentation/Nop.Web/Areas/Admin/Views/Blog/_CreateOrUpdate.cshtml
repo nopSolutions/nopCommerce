@@ -1,4 +1,5 @@
 ﻿@model BlogPostModel
+@inject IEventPublisher eventPublisher
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
@@ -27,7 +28,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "blog-post-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

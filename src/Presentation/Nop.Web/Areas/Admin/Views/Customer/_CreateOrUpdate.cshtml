@@ -1,6 +1,5 @@
-﻿@using Nop.Core.Domain.Orders;
-@using Nop.Services.Stores
-@model CustomerModel
+﻿@model CustomerModel
+@inject IEventPublisher eventPublisher
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
@@ -55,7 +54,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

@@ -1,4 +1,5 @@
 ﻿@model CustomerReportsModel
+@inject IEventPublisher eventPublisher
 
 @{
     //page title
@@ -51,7 +52,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
