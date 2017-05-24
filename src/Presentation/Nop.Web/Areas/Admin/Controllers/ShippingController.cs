@@ -1,9 +1,11 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Shipping;
@@ -19,9 +21,9 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -83,7 +85,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
         {
             foreach (var localized in model.Locales)
@@ -93,7 +94,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
         {
             foreach (var localized in model.Locales)
@@ -102,7 +102,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(ProductAvailabilityRange productAvailabilityRange, ProductAvailabilityRangeModel model)
         {
             foreach (var localized in model.Locales)
@@ -149,7 +148,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] ShippingRateComputationMethodModel model)
+        public virtual IActionResult ProviderUpdate(ShippingRateComputationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -183,6 +182,8 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+#if NET451
+
         public virtual IActionResult ConfigureProvider(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -203,9 +204,11 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endif
 
-        #region Pickup point providers
+#endregion
+
+#region Pickup point providers
 
         public virtual IActionResult PickupPointProviders()
         {
@@ -241,7 +244,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult PickupPointProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] PickupPointProviderModel model)
+        public virtual IActionResult PickupPointProviderUpdate(PickupPointProviderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -274,6 +277,8 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+#if NET451
+
         public virtual IActionResult ConfigurePickupPointProvider(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -294,9 +299,11 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+#endif
 
-        #region Shipping methods
+#endregion
+
+#region Shipping methods
 
         public virtual IActionResult Methods()
         {
@@ -421,9 +428,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Methods");
         }
 
-        #endregion
+#endregion
 
-        #region Dates and ranges
+#region Dates and ranges
 
         public virtual IActionResult DatesAndRanges()
         {
@@ -433,7 +440,7 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        #region Delivery dates
+#region Delivery dates
 
         [HttpPost]
         public virtual IActionResult DeliveryDates(DataSourceRequest command)
@@ -555,9 +562,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-        #endregion
+#endregion
 
-        #region Product availability ranges
+#region Product availability ranges
 
         [HttpPost]
         public virtual IActionResult ProductAvailabilityRanges(DataSourceRequest command)
@@ -678,11 +685,11 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Warehouses
+#region Warehouses
 
         public virtual IActionResult Warehouses()
         {
@@ -910,9 +917,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Warehouses");
         }
 
-        #endregion
+#endregion
         
-        #region Restrictions
+#region Restrictions
 
         public virtual IActionResult Restrictions()
         {
@@ -964,8 +971,8 @@ namespace Nop.Admin.Controllers
             foreach (var shippingMethod in shippingMethods)
             {
                 string formKey = "restrict_" + shippingMethod.Id;
-                var countryIdsToRestrict = form[formKey] != null 
-                    ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                var countryIdsToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
+                    ? form[formKey].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
                     .ToList() 
                     : new List<int>();
@@ -997,7 +1004,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Restrictions");
         }
 
-        #endregion
+#endregion
     }
 }
-#endif
