@@ -1,12 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-#if NET451
-using System.ServiceModel.Syndication;
-#endif
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -14,9 +10,9 @@ using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Web.Factories;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 
@@ -82,7 +78,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        #if NET451
         public virtual IActionResult ActiveDiscussionsRss(int forumId = 0)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -101,14 +96,13 @@ namespace Nop.Web.Controllers
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
-            var feed = new SyndicationFeed(
+            var feed = new RssFeed(
                                     string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     feedDescription,
                                     new Uri(url),
-                                    string.Format("urn:store:{0}:activeDiscussions", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
-            var items = new List<SyndicationItem>();
+            var items = new List<RssItem>();
 
             var viewsText = _localizationService.GetResource("Forum.Views");
             var repliesText = _localizationService.GetResource("Forum.Replies");
@@ -118,14 +112,13 @@ namespace Nop.Web.Controllers
                 string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
-                items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl),
-                    String.Format("urn:store:{0}:activeDiscussions:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), (topic.LastPostTime ?? topic.UpdatedOnUtc)));
+                items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
+                    String.Format("urn:store:{0}:activeDiscussions:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), topic.LastPostTime ?? topic.UpdatedOnUtc));
             }
             feed.Items = items;
 
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-        #endif
 
         public virtual IActionResult ForumGroup(int id)
         {
@@ -159,7 +152,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-#if NET451
         public virtual IActionResult ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -186,14 +178,13 @@ namespace Nop.Web.Controllers
                 var feedTitle = _localizationService.GetResource("Forum.ForumFeedTitle");
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
-                var feed = new SyndicationFeed(
+                var feed = new RssFeed(
                                         string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
                                         feedDescription,
                                         new Uri(url),
-                                        string.Format("urn:store:{0}:forum", _storeContext.CurrentStore.Id),
                                         DateTime.UtcNow);
 
-                var items = new List<SyndicationItem>();
+                var items = new List<RssItem>();
 
                 var viewsText = _localizationService.GetResource("Forum.Views");
                 var repliesText = _localizationService.GetResource("Forum.Replies");
@@ -201,10 +192,9 @@ namespace Nop.Web.Controllers
                 foreach (var topic in topics)
                 {
                     string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                    string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
+                    string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies, topic.Views, repliesText, viewsText);
 
-                    items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id),
-                        (topic.LastPostTime ?? topic.UpdatedOnUtc)));
+                    items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), topic.LastPostTime ?? topic.UpdatedOnUtc));
                 }
 
                 feed.Items = items;
@@ -212,9 +202,8 @@ namespace Nop.Web.Controllers
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
             }
 
-            return new RssActionResult(new SyndicationFeed(), _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(new RssFeed(new Uri(_webHelper.GetStoreLocation())), _webHelper.GetThisPageUrl(false));
         }
-#endif
 
         [HttpPost]
         public virtual IActionResult ForumWatch(int id)

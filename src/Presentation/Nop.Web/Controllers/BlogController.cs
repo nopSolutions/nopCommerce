@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET451
-using System.ServiceModel.Syndication;
-#endif
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -17,9 +14,10 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Blogs;
@@ -111,31 +109,29 @@ namespace Nop.Web.Controllers
             var model = _blogModelFactory.PrepareBlogPostListModel(command);
             return View("List", model);
         }
-#if NET451
 
         public virtual IActionResult ListRss(int languageId)
         {
-            var feed = new SyndicationFeed(
+            var feed = new RssFeed(
                 string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                 "Blog",
                 new Uri(_webHelper.GetStoreLocation(false)),
-                string.Format("urn:store:{0}:blog", _storeContext.CurrentStore.Id),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
-            var items = new List<SyndicationItem>();
+            var items = new List<RssItem>();
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
                 string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
+                items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-#endif
+
         public virtual IActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)

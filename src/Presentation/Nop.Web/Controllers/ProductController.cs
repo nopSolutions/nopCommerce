@@ -1,10 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 #if NET451
-using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 #endif
 using Nop.Core;
@@ -25,7 +23,9 @@ using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
@@ -230,20 +230,18 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-#if NET451
         public virtual IActionResult NewProductsRss()
         {
-            var feed = new SyndicationFeed(
+            var feed = new RssFeed(
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    string.Format("urn:store:{0}:newProducts", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
                 return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
 
-            var items = new List<SyndicationItem>();
+            var items = new List<RssItem>();
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
@@ -256,21 +254,20 @@ namespace Nop.Web.Controllers
                 string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 string productName = product.GetLocalized(x => x.Name);
                 string productDescription = product.GetLocalized(x => x.ShortDescription);
-                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("urn:store:{0}:newProducts:product:{1}", _storeContext.CurrentStore.Id, product.Id), product.CreatedOnUtc);
+                var item = new RssItem(productName, productDescription, new Uri(productUrl), String.Format("urn:store:{0}:newProducts:product:{1}", _storeContext.CurrentStore.Id, product.Id), product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures
                 //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                 //if (picture != null)
                 //{
                 //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
-                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl)).CreateReader());
+                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl), new XAttribute("length", picture.PictureBinary.Length)));
                 //}
 
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-#endif
 
         #endregion
 
