@@ -83,11 +83,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult ListBlock()
-        {
-            return PartialView("ListBlock");
-        }
-
         public virtual IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))

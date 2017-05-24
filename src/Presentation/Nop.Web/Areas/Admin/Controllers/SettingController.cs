@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
@@ -38,11 +38,11 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
@@ -136,7 +136,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateLocales(ReturnRequestReason rrr, ReturnRequestReasonModel model)
         {
             foreach (var localized in model.Locales)
@@ -148,7 +147,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(ReturnRequestAction rra, ReturnRequestActionModel model)
         {
             foreach (var localized in model.Locales)
@@ -164,27 +162,6 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
-
-        [ChildActionOnly]
-        public virtual IActionResult StoreScopeConfiguration()
-        {
-            var allStores = _storeService.GetAllStores();
-            if (allStores.Count < 2)
-                return Content("");
-
-            var model = new StoreScopeConfigurationModel();
-            foreach (var s in allStores)
-            {
-                model.Stores.Add(new StoreModel
-                {
-                    Id = s.Id,
-                    Name = s.Name
-                });
-            }
-            model.StoreId = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-
-            return PartialView(model);
-        }
         public virtual IActionResult ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
         {
             var store = _storeService.GetStoreById(storeid);
@@ -259,9 +236,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Blog");
         }
 
-
-
-
         public virtual IActionResult Vendor()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -287,6 +261,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Vendor(VendorSettingsModel model)
         {
@@ -320,10 +295,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Vendor");
         }
-
-
-
-
+        
         public virtual IActionResult Forum()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -370,7 +342,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
@@ -413,9 +384,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Forum");
         }
 
-
-
-
         public virtual IActionResult News()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -439,6 +407,7 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult News(NewsSettingsModel model)
         {
@@ -466,17 +435,13 @@ namespace Nop.Admin.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("News");
         }
-
-
-
-
+        
         public virtual IActionResult Shipping()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -536,12 +501,12 @@ namespace Nop.Admin.Controllers
             
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Shipping(ShippingSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
 
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -590,28 +555,22 @@ namespace Nop.Admin.Controllers
             }
             else if (storeScope > 0)
                 _settingService.DeleteSetting(shippingSettings, x => x.ShippingOriginAddressId, storeScope);
-
-
+            
             //now clear settings cache
             _settingService.ClearCache();
-
-
+            
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Shipping");
         }
-
-
-
-
+        
         public virtual IActionResult Tax()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-
+            
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
@@ -690,6 +649,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Tax(TaxSettingsModel model)
         {
@@ -716,8 +676,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.DefaultTaxCategoryId, model.DefaultTaxCategoryId_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.TaxBasedOn, model.TaxBasedOn_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(taxSettings, x => x.TaxBasedOnPickupPointAddress, model.TaxBasedOnPickupPointAddress_OverrideForStore, storeScope, false);
-
-
+            
             if (model.DefaultTaxAddress_OverrideForStore || storeScope == 0)
             {
                 //update address
@@ -764,16 +723,12 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Tax");
         }
-
-
-
-
+        
         public virtual IActionResult Catalog()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-
+            
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
@@ -838,13 +793,13 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Catalog(CatalogSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-
+            
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
@@ -915,7 +870,6 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreStoreLimitations, 0, false);
             _settingService.SaveSetting(catalogSettings, x => x.CacheProductPrices, 0, false);
 
-
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -983,8 +937,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-
+            
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
@@ -1010,6 +963,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult RewardPoints(RewardPointsSettingsModel model)
         {
@@ -1058,17 +1012,12 @@ namespace Nop.Admin.Controllers
             }
             return RedirectToAction("RewardPoints");
         }
-
-
-
-
+        
         public virtual IActionResult Order()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-
-
+            
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
@@ -1107,6 +1056,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Order(OrderSettingsModel model)
         {
@@ -1197,6 +1147,7 @@ namespace Nop.Admin.Controllers
             SaveSelectedTabName("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
+
         [HttpPost]
         public virtual IActionResult ReturnRequestReasonList(DataSourceRequest command)
         {
@@ -1211,6 +1162,7 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
+
         //create
         public virtual IActionResult ReturnRequestReasonCreate()
         {
@@ -1222,6 +1174,7 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
         {
@@ -1242,6 +1195,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
+
         //edit
         public virtual IActionResult ReturnRequestReasonEdit(int id)
         {
@@ -1261,6 +1215,7 @@ namespace Nop.Admin.Controllers
             });
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
         {
@@ -1293,6 +1248,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
+
         //delete
         [HttpPost]
         public virtual IActionResult ReturnRequestReasonDelete(int id)
@@ -1322,6 +1278,7 @@ namespace Nop.Admin.Controllers
             SaveSelectedTabName("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
+
         [HttpPost]
         public virtual IActionResult ReturnRequestActionList(DataSourceRequest command)
         {
@@ -1336,6 +1293,7 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
+
         //create
         public virtual IActionResult ReturnRequestActionCreate()
         {
@@ -1347,6 +1305,7 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
         {
@@ -1367,6 +1326,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
+
         //edit
         public virtual IActionResult ReturnRequestActionEdit(int id)
         {
@@ -1386,6 +1346,7 @@ namespace Nop.Admin.Controllers
             });
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
         {
@@ -1418,6 +1379,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
+
         //delete
         [HttpPost]
         public virtual IActionResult ReturnRequestActionDelete(int id)
@@ -1433,11 +1395,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-
-
-
-
-
+        
         public virtual IActionResult ShoppingCart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1471,6 +1429,7 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
@@ -1507,16 +1466,12 @@ namespace Nop.Admin.Controllers
             //now clear settings cache
             _settingService.ClearCache();
             
-
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("ShoppingCart");
         }
-
-
-
 
         public virtual IActionResult Media()
         {
@@ -1549,6 +1504,7 @@ namespace Nop.Admin.Controllers
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult Media(MediaSettingsModel model)
@@ -1589,6 +1545,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
         }
+
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
         public virtual IActionResult ChangePictureStorage()
@@ -1604,9 +1561,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Media");
         }
-
-
-
+        
         public virtual IActionResult CustomerUser()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1639,6 +1594,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult CustomerUser(CustomerUserSettingsModel model)
         {
@@ -1675,19 +1631,18 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("CustomerUser");
         }
-
-
-
-
-
-
+        
         public virtual IActionResult GeneralCommon()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            #if NET451
+
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
+
+            #endif
 
             var model = new GeneralCommonSettingsModel();
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -1710,6 +1665,7 @@ namespace Nop.Admin.Controllers
                     Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
                 })
                 .ToList();
+
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;
             model.StoreInformationSettings.LogoPictureId = storeInformationSettings.LogoPictureId;
             //EU Cookie law
@@ -1854,16 +1810,15 @@ namespace Nop.Admin.Controllers
             model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayForumsMenuItem, storeScope);
             model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore = _settingService.SettingExists(displayDefaultMenuItemSettings, x => x.DisplayContactUsMenuItem, storeScope);
 
-
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult GeneralCommon(GeneralCommonSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
 
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -1894,7 +1849,6 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.StoreClosed, model.StoreInformationSettings.StoreClosed_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.DefaultStoreTheme, model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(storeInformationSettings, x => x.AllowCustomerToSelectTheme, model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, storeScope, false);
@@ -1913,8 +1867,6 @@ namespace Nop.Admin.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
-
-
 
             //seo settings
             var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
@@ -1953,8 +1905,6 @@ namespace Nop.Admin.Controllers
             
             //now clear settings cache
             _settingService.ClearCache();
-
-
 
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
@@ -2002,17 +1952,17 @@ namespace Nop.Admin.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-
-
-
             //localization settings
             var localizationSettings = _settingService.LoadSetting<LocalizationSettings>(storeScope);
             localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-                //clear cached values of routes
-                System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
+
+                #if NET451
+                                //clear cached values of routes
+                                System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
+                #endif
             }
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
             localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
@@ -2056,6 +2006,7 @@ namespace Nop.Admin.Controllers
             
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
         public virtual IActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
@@ -2063,8 +2014,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            #if NET451
+                //set page timeout to 5 minutes
+                this.Server.ScriptTimeout = 300;
+            #endif
 
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
@@ -2136,6 +2089,7 @@ namespace Nop.Admin.Controllers
             }
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
         public virtual IActionResult ToggleFullText(GeneralCommonSettingsModel model)
@@ -2176,10 +2130,7 @@ namespace Nop.Admin.Controllers
             
             return RedirectToAction("GeneralCommon");
         }
-
-
-
-
+        
         //all settings
         public virtual IActionResult AllSettings()
         {
@@ -2188,6 +2139,7 @@ namespace Nop.Admin.Controllers
             
             return View();
         }
+
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
@@ -2237,6 +2189,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
         [HttpPost]
         public virtual IActionResult SettingUpdate(SettingModel model)
         {
@@ -2274,7 +2227,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
-        public virtual IActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model)
+        public virtual IActionResult SettingAdd(SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2296,6 +2249,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
+
         [HttpPost]
         public virtual IActionResult SettingDelete(int id)
         {
@@ -2319,12 +2273,15 @@ namespace Nop.Admin.Controllers
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
             if (_config.RedisCachingEnabled && loadAllLocaleRecordsOnStartup)
-                return Json(new { Result = _localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning") }, JsonRequestBehavior.AllowGet);
+                return Json(new
+                {
+                    Result = _localizationService.GetResource(
+                        "Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Warning")
+                });
 
-            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = string.Empty });
         }
 
-        #endregion
+#endregion
     }
 }
-#endif

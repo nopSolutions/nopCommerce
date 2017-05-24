@@ -221,7 +221,7 @@ namespace Nop.Web.Framework.Extensions
             if (String.IsNullOrEmpty(parentContainer) && datainputIds == null)
                 throw new ArgumentException("Specify at least one selector");
 
-            var result = new StringBuilder();
+            IHtmlContent result = null;
             if (activeStoreScopeConfiguration > 0)
             {
                 //render only when a certain store is chosen
@@ -236,14 +236,15 @@ namespace Nop.Web.Framework.Extensions
                     dataInputSelector = "#" + String.Join(", #", datainputIds);
                 }
                 var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
-                result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
+                result = helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
                     { "onclick", onClick },
                     { "data-for-input-selector", dataInputSelector },
-                }));
+                });
             }
-            return new HtmlString(result.ToString());
+
+            return result;
         }
 
         

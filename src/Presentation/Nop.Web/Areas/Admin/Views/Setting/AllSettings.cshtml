@@ -1,10 +1,12 @@
 ﻿@model AllSettingsListModel
+@inject AdminAreaSettings adminAreaSettings
 
+@using System.Text.Encodings.Web
 @using Nop.Services.Stores
 
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
@@ -193,7 +195,7 @@
                                 <text>
                                 , {
                                     Id: @(store.Id),
-                                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                                    Name: "@(Html.Raw(JavaScriptEncoder.Default.Encode(store.Name)))"
                                 }
                                 </text>
                             }

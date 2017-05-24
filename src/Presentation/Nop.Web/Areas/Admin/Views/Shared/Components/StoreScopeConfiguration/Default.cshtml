@@ -1,20 +1,26 @@
 ﻿@model StoreScopeConfigurationModel
+@inject IHttpContextAccessor httpContextAccessor
 
+@using System.Net
+@using Microsoft.AspNetCore.Http
 @using Nop.Core
 
 @{
+    var request = httpContextAccessor.HttpContext.Request;
+    var rawUrl = request.Path + request.QueryString;
+
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     var stores = Model.Stores.Select(store => new SelectListItem
     {
         Text = store.Name,
-        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = store.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = store.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
         Selected = store.Id.Equals(Model.StoreId)
     })
         .ToList();
     stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
-        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = 0 }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = 0 }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
         Selected = 0.Equals(Model.StoreId)
     });
 }

@@ -1,7 +1,6 @@
 ﻿@model RewardPointsSettingsModel
 
 @using Nop.Core.Domain.Customers
-@using Nop.Core.Domain.Orders
 @using Nop.Services
 
 @{
@@ -28,8 +27,8 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @Html.Action("StoreScopeConfiguration", "Setting")
-            @Html.Action("Mode", "Setting")
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
             @Html.ValidationSummary(false)
 
             <div class="panel-group">

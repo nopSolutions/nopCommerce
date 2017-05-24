@@ -24,8 +24,8 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @Html.Action("StoreScopeConfiguration", "Setting")
-            @Html.Action("Mode", "Setting")
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
             @Html.ValidationSummary(false)
 
             <script type="text/javascript">
