@@ -24,7 +24,7 @@ namespace Nop.Services.Catalog
         /// {1} : allow filtering
         /// {2} : show on product page
         /// </remarks>
-        private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
+        private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -292,7 +292,7 @@ namespace Nop.Services.Catalog
         {
             string allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             string showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            string key = string.Format(PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY, productId, allowFilteringCacheStr, showOnProductPageCacheStr);
+            string key = string.Format(PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY, productId, allowFilteringCacheStr, showOnProductPageCacheStr, specificationAttributeOptionId);
             
             return _cacheManager.Get(key, () =>
             {
