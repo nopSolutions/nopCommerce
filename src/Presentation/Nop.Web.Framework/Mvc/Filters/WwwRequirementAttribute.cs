@@ -91,14 +91,12 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
-#if NET451
-                //ignore this rule for localhost
-                if (filterContext.HttpContext.Request.IsLocal)
-                    return;
-#endif
-
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
                 if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                //ignore this rule for localhost
+                if (_webHelper.IsLocalRequest(filterContext.HttpContext.Request))
                     return;
 
                 switch (_seoSettings.WwwRequirement)
