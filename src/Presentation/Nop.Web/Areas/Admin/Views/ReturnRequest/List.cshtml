@@ -1,8 +1,9 @@
 ﻿@model ReturnRequestListModel
+@inject AdminAreaSettings adminAreaSettings
 
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.ReturnRequests").Text;
@@ -19,14 +20,11 @@
         &nbsp;
     </div>
 </div>
-
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

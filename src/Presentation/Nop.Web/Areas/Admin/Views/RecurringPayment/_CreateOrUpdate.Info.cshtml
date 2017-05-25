@@ -1,0 +1,86 @@
+﻿@using Nop.Core.Domain.Catalog
+@using Nop.Services
+@model RecurringPaymentModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.InitialOrderId)
+                </div>
+                <div class="col-md-9">
+                    @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.CustomerEmail)
+                </div>
+                <div class="col-md-9">
+                    @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.CycleLength)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.CycleLength)
+                    @Html.ValidationMessageFor(model => model.CycleLength)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.CyclePeriodId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.CyclePeriodId)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.TotalCycles)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.TotalCycles)
+                    @Html.ValidationMessageFor(model => model.TotalCycles)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.CyclesRemaining)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDisplayFor(model => model.CyclesRemaining)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PaymentType)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDisplayFor(model => model.PaymentType)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.StartDate)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDisplayFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.IsActive)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

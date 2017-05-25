@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -14,8 +14,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -59,7 +59,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewAndReplyText)
         {
@@ -397,10 +396,9 @@ namespace Nop.Admin.Controllers
                     productid = p.Id
                 })
                 .ToList();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
         #endregion
     }
 }
-#endif
