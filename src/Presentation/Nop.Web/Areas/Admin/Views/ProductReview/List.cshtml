@@ -1,10 +1,12 @@
 ﻿@using Nop.Services.Stores
 @model ProductReviewListModel
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
 
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
 
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
