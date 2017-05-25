@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -13,6 +12,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -50,7 +50,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareRecurringPaymentModel(RecurringPaymentModel model, 
             RecurringPayment recurringPayment)
         {
@@ -78,7 +77,6 @@ namespace Nop.Admin.Controllers
             model.LastPaymentFailed = recurringPayment.LastPaymentFailed;
         }
 
-        [NonAction]
         protected virtual void PrepareRecurringPaymentHistoryModel(RecurringPaymentModel.RecurringPaymentHistoryModel model,
             RecurringPaymentHistory history)
         {
@@ -324,4 +322,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
