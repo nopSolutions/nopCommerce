@@ -10,7 +10,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Admin.Components
@@ -21,16 +20,19 @@ namespace Nop.Admin.Components
         private readonly IStoreContext _storeContext;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
 
         public NopCommerceNewsViewComponent(IStoreContext storeContext,
             AdminAreaSettings adminAreaSettings,
             ISettingService settingService,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            IWebHelper webHelper)
         {
             this._storeContext = storeContext;
             this._adminAreaSettings = adminAreaSettings;
             this._settingService = settingService;
             this._cacheManager = cacheManager;
+            this._webHelper = webHelper;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -41,7 +43,7 @@ namespace Nop.Admin.Components
                     .Format(
                         "http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
                         NopVersion.CurrentVersion,
-                        Request.IsLocal(),
+                        _webHelper.IsLocalRequest(Request),
                         _adminAreaSettings.HideAdvertisementsOnAdminArea,
                         _storeContext.CurrentStore.Url)
                     .ToLowerInvariant();
