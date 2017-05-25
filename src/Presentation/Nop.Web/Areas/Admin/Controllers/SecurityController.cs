@@ -1,8 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Security;
 using Nop.Core;
@@ -109,7 +110,9 @@ namespace Nop.Admin.Controllers
             foreach (var cr in customerRoles)
             {
                 string formKey = "allow_" + cr.Id;
-                var permissionRecordSystemNamesToRestrict = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+                var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
+                    ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
+                    : new List<string>();
 
                 foreach (var pr in permissionRecords)
                 {
@@ -141,4 +144,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
