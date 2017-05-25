@@ -107,25 +107,28 @@ namespace Nop.Core.Infrastructure
         protected virtual void AddAutoMapper(IServiceCollection services, ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperConfiguration>();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperConfiguration)Activator.CreateInstance(mapperConfiguration))
+                    .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)
+                        .Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
-            //get all configuration actions
-            var configurationActions = instances.Select(mapperConfiguration => mapperConfiguration.GetConfiguration());
-
-            //register AutoMapper with provided configurations
-            services.AddAutoMapper(mapperConfigurationExpression =>
-            {
-                foreach (var action in configurationActions)
-                    action(mapperConfigurationExpression);
+            //create AutoMapper configuration
+            var config = new MapperConfiguration(cfg => {
+                foreach (var instance in instances)
+                {
+                    cfg.AddProfile(instance.GetType());
+                }
             });
+
+            //register AutoMapper
+            services.AddAutoMapper();
+
             //register
-            AutoMapperConfiguration.Init(configurationActions.ToList());
+            AutoMapperConfiguration.Init(config);
         }
 
         #endregion
@@ -169,7 +172,7 @@ namespace Nop.Core.Infrastructure
 
             //configure services
             foreach (var instance in instances)
-                instance.ConfigureServices(services,configuration);
+                instance.ConfigureServices(services, configuration);
 
             //register mapper configurations
             AddAutoMapper(services, typeFinder);
