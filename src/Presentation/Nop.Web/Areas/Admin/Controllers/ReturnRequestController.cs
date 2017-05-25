@@ -1,8 +1,8 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -18,6 +18,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -67,7 +68,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
@@ -246,7 +246,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit",  new {id = returnRequest.Id});
         }
 
-        //delete
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
@@ -270,4 +269,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
