@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Text.Encodings.Web
+@{
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
     //active menu item (system name)
@@ -18,7 +19,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
-            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
         });
     });
 </script>

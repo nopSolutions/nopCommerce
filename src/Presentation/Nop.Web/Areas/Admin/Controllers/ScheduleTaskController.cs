@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Models.Tasks;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Helpers;
@@ -44,7 +43,6 @@ namespace Nop.Admin.Controllers
 
         #region Utility
 
-        [NonAction]
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
             var model = new ScheduleTaskModel
@@ -137,8 +135,7 @@ namespace Nop.Admin.Controllers
                 var task = new Task(scheduleTask);
                 //ensure that the task is enabled
                 task.Enabled = true;
-                //do not dispose. otherwise, we can get exception that DbContext is disposed
-                task.Execute(true, false, false);
+                task.Execute(true, false);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)
@@ -151,4 +148,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
