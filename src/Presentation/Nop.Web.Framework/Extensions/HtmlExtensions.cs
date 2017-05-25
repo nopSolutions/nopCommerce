@@ -595,13 +595,11 @@ namespace Nop.Web.Framework.Extensions
             daysList.Attributes.Add("name", dayName);
             monthsList.Attributes.Add("name", monthName);
             yearsList.Attributes.Add("name", yearName);
-
-#if NET451
-            //var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            //daysList.MergeAttributes(htmlAttributesDictionary, true);
-            //monthsList.MergeAttributes(htmlAttributesDictionary, true);
-            //yearsList.MergeAttributes(htmlAttributesDictionary, true);
-#endif
+            
+            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            daysList.MergeAttributes(htmlAttributesDictionary, true);
+            monthsList.MergeAttributes(htmlAttributesDictionary, true);
+            yearsList.MergeAttributes(htmlAttributesDictionary, true);
 
             var days = new StringBuilder();
             var months = new StringBuilder();

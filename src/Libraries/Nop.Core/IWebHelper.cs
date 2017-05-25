@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core
 {
@@ -101,5 +102,12 @@ namespace Nop.Core
         /// Gets or sets a value that indicates whether the client is being redirected to a new location using POST
         /// </summary>
         bool IsPostBeingDone { get; set; }
+
+        /// <summary>
+        /// Gets whether the specified http request uri references the local host.
+        /// </summary>
+        /// <param name="req">Http request</param>
+        /// <returns>True, if http request uri references to the local host</returns>
+        bool IsLocalRequest(HttpRequest req);
     }
 }

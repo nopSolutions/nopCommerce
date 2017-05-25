@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -16,6 +17,12 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
+        #region Const
+
+        private const string NullIpAddress = "::1";
+
+        #endregion
+
         #region Fields 
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -55,6 +62,11 @@ namespace Nop.Core
             }
 
             return true;
+        }
+
+        protected virtual bool IsIPAddressSet(IPAddress address)
+        {
+            return address != null && address.ToString() != NullIpAddress;
         }
 
         #endregion
@@ -540,6 +552,28 @@ namespace Nop.Core
             {
                 _httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
             }
+        }
+
+        /// <summary>
+        /// Gets whether the specified http request uri references the local host.
+        /// </summary>
+        /// <param name="req">Http request</param>
+        /// <returns>True, if http request uri references to the local host</returns>
+        public  virtual bool IsLocalRequest(HttpRequest req)
+        {
+            //source: https://stackoverflow.com/a/41242493/7860424
+            var connection = req.HttpContext.Connection;
+            if (IsIPAddressSet(connection.RemoteIpAddress))
+            {
+                //We have a remote address set up
+                return IsIPAddressSet(connection.LocalIpAddress)
+                    //Is local is same as remote, then we are local
+                    ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
+                    //else we are remote if the remote IP address is not a loopback address
+                    : IPAddress.IsLoopback(connection.RemoteIpAddress);
+            }
+
+            return true;
         }
 
         #endregion

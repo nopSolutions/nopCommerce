@@ -117,18 +117,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add custom model binder provider (to the top of the provider list)
             mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
-#if NET451
-            //whether database is already installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //add themeable view engine
-                mvcBuilder.AddViewOptions(options =>
-                {
-                    options.ViewEngines.Clear();
-                    options.ViewEngines.Add(new ThemeableRazorViewEngine());
-                });
-            }
-#endif
             //add global exception filter
             mvcBuilder.AddMvcOptions(options => options.Filters.Add(new ExceptionFilter()));
 
