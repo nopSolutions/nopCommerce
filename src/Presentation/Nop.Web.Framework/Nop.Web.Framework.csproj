@@ -6,7 +6,11 @@
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
     <Version>4.0.0.0</Version>
-    <Description />
+    <Description>Nop.Web.Framework is a class library project containing some common presentation things for Nop.Web project</Description>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl> 
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>    
   </PropertyGroup>
 
   <ItemGroup>
