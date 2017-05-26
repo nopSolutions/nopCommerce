@@ -753,16 +753,25 @@ namespace Nop.Services.Tax
             if (!String.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
                 twoLetterIsoCode = twoLetterIsoCode.ToUpper();
-#if NET451
 
-            EuropaCheckVatService.checkVatService s = null;
+            EuropaCheckVatService.checkVatPortTypeClient s = null;
 
             try
             {
-                bool valid;
+                s = new EuropaCheckVatService.checkVatPortTypeClient();
+                var task = s.checkVatAsync(new EuropaCheckVatService.checkVatRequest
+                {
+                    vatNumber = vatNumber,
+                    countryCode = twoLetterIsoCode
+                });
+                task.Wait();
 
-                s = new EuropaCheckVatService.checkVatService();
-                s.checkVat(ref twoLetterIsoCode, ref vatNumber, out valid, out name, out address);
+                var result = task.Result;
+
+                var valid = result.valid;
+                name = result.name;
+                address = result.address;
+
                 exception = null;
                 return valid ? VatNumberStatus.Valid : VatNumberStatus.Invalid;
             }
@@ -779,14 +788,8 @@ namespace Nop.Services.Tax
 
                 if (address == null)
                     address = string.Empty;
-
-                if (s != null)
-                    s.Dispose();
             }
-#else
-            exception = null;
-            return VatNumberStatus.Empty;
-#endif
+
         }
 
         #endregion
