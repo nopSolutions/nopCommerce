@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
@@ -9,9 +8,9 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -52,7 +51,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -69,7 +67,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateLocales(PredefinedProductAttributeValue ppav, PredefinedProductAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -444,4 +441,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif

@@ -1,4 +1,5 @@
-﻿@model AddProductAttributeCombinationModel
+﻿@using Microsoft.AspNetCore.Routing
+@model AddProductAttributeCombinationModel
 
 @{
     Layout = "_AdminPopupLayout";
@@ -19,10 +20,9 @@
 }
 
     @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-    @using (Html.BeginForm(null, null,
-                                        new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
-                                        FormMethod.Post,
-                                        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+    @using (Html.BeginForm(null, null, new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                                                FormMethod.Post, null,
+                                                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
     {
         @Html.AntiForgeryToken()
         <div class="content-header clearfix">

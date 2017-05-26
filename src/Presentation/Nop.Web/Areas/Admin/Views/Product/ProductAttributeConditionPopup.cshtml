@@ -1,5 +1,6 @@
 ﻿@model ProductAttributeConditionModel
 
+@using Microsoft.AspNetCore.Routing
 @using Nop.Core.Domain.Catalog
 
 @{
@@ -22,9 +23,9 @@
 
     @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
     @using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
-                        new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
-                        FormMethod.Post,
-                        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+                new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                FormMethod.Post, null,
+                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
     {
         @Html.AntiForgeryToken()
         <div class="content-header clearfix">
@@ -88,13 +89,16 @@
 
                                             <script type="text/javascript">
                                                 $(document).ready(function() {
-                                                    $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
+                                                    $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)")
+                                                        .change(toggleProductAttributes);
 
                                                     toggleProductAttributes();
                                                 });
 
                                                 function toggleProductAttributes() {
-                                                    var selectedProductAttributeId = $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").val();
+                                                    var selectedProductAttributeId =
+                                                        $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)")
+                                                            .val();
                                                     $('[id^="pnl_attribute_values_"]').hide();
                                                     $('#pnl_attribute_values_' + selectedProductAttributeId).show();
                                                 }

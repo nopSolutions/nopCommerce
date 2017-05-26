@@ -41,11 +41,13 @@
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("product-delete")
+
 @if (!Model.IsLoggedInAsVendor)
 {
     //product editor settings modal
     @Html.Partial("_ProductEditorSettingsModal", Model)
 }
+
 @*copy product form*@
 <div id="copyproduct-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copyproduct-window-title">
     <div class="modal-dialog">

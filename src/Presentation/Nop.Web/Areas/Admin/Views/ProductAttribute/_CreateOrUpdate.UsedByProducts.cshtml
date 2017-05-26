@@ -1,4 +1,4 @@
-﻿@model ProductModel
+﻿@model ProductAttributeModel
 @inject AdminAreaSettings adminAreaSettings
 
 @{
@@ -7,22 +7,21 @@
 }
 
 <div class="panel-group">
-    <p>
-        @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
-    </p>
-
     <div class="panel panel-default">
         <div class="panel-body">
-            <div id="purchased-with-orders-grid"></div>
+            <p>
+                @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
+            </p>
+            <div id="used-by-products-grid"></div>
 
             <script>
-                $(document).ready(function() {
-                    $("#purchased-with-orders-grid").kendoGrid({
+                $(document).ready(function () {
+                    $("#used-by-products-grid").kendoGrid({
                         dataSource: {
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new {productId = Model.Id}))",
+                                    url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
@@ -53,49 +52,26 @@
                             mode: "inline"
                         },
                         scrollable: false,
-                        columns: [
-                            {
-                                field: "CustomOrderNumber",
-                                title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
-                                width: 200
+                        columns: [{
+                                field: "ProductName",
+                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
+                                width: 400
                             }, {
-                                field: "CustomerEmail",
-                                title: "@T("Admin.Orders.Fields.CustomerEmail")",
-                                width: 200
-                            },
-                            @if (!Model.IsLoggedInAsVendor)
-                            {
-                                <text>{
-                                field: "OrderStatus",
-                                title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                width: 100
-                            },{
-                                field: "PaymentStatus",
-                                title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                                width: 100
-                            },{
-                                field: "ShippingStatus",
-                                title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                                width: 100
-                            },</text>
-                            }
-
-                            {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Orders.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
+                                field: "Published",
+                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                             },
                             {
                                 field: "Id",
                                 title: "@T("Admin.Common.View")",
-                                width: 200,
+                                width: 100,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                            }
-                        ]
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                            }]
                     });
                 });
             </script>
