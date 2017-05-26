@@ -1,13 +1,15 @@
 ﻿@model ProductModel
+@inject IStoreService storeService
 
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services.Catalog;
 @using System.Text;
+@using System.Text.Encodings.Web
 @using Nop.Services
 @using Nop.Services.Stores
 
 @{
-    var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
+    var stores = storeService.GetAllStores();
 
     //resources for product tags input
     Html.AppendCssFileParts("~/lib/tagEditor/jquery.tag-editor.css");
@@ -105,7 +107,7 @@
             <text>productTypeSupportedValues['@(kvp.Key)'] = {};</text>
             foreach (var item in kvp.Value)
             {
-                <text>productTypeSupportedValues['@(kvp.Key)']['@(item.Value)'] = '@Html.Raw(HttpUtility.JavaScriptStringEncode((item.Text)))';</text>
+                <text>productTypeSupportedValues['@(kvp.Key)']['@(item.Value)'] = '@Html.Raw(JavaScriptEncoder.Default.Encode((item.Text)))';</text>
             }
         }
         var productTemplateDropddown = $("#@Html.FieldIdFor(model => model.ProductTemplateId)");
@@ -382,7 +384,7 @@
         {
             var tag = productTags[i];
             productTagsSb.Append("'");
-            productTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
+            productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
             productTagsSb.Append("'");
             if (i != productTags.Count - 1)
             {

@@ -1,4 +1,11 @@
-﻿@model ProductModel
+﻿@using Microsoft.AspNetCore.Http
+@model ProductModel
+@inject IHttpContextAccessor httpContextAccessor
+
+@{
+    var request = httpContextAccessor.HttpContext.Request;
+    var rawUrl = request.Path + request.QueryString;
+}
 
 <div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
     <div class="modal-dialog editor-settings-modal-dialog">
@@ -13,7 +20,7 @@
                 @using (Html.BeginForm("SaveProductEditorSettings", "Product"))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.Hidden("returnurl", HttpContext.Current.Request.RawUrl)
+                    @Html.Hidden("returnurl", rawUrl)
                     <div class="row">
                         <div class="col-md-12">
                             @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")

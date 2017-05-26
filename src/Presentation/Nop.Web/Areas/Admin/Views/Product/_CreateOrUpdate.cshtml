@@ -1,4 +1,5 @@
 ﻿@model ProductModel
+@inject IEventPublisher eventPublisher
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
@@ -14,7 +15,7 @@
         <div class="row">
             <div class="col-md-12 clearfix">
                 <div class="pull-left">
-                    @Html.Action("Mode", "Setting", new {modeName = "product-advanced-mode"})
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "product-advanced-mode" })
                 </div>
                 @if (!Model.IsLoggedInAsVendor)
                 {
@@ -39,15 +40,15 @@
                 }
             </ul>
             <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
-                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
-                @Html.RenderBootstrapTabContent("tab-pictures", @TabPictures())
-                @Html.RenderBootstrapTabContent("tab-specification-attributes", @TabSpecificationAttributes())
-                @Html.RenderBootstrapTabContent("tab-product-attributes", @TabProductAttributes())
+                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
+                @Html.RenderBootstrapTabContent("tab-seo", await Html.PartialAsync("_CreateOrUpdate.SEO", Model))
+                @Html.RenderBootstrapTabContent("tab-pictures", await Html.PartialAsync("_CreateOrUpdate.Pictures", Model))
+                @Html.RenderBootstrapTabContent("tab-specification-attributes", await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model))
+                @Html.RenderBootstrapTabContent("tab-product-attributes", await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model))
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
-                    @Html.RenderBootstrapTabContent("tab-stock-quantity-history", @TabStockQuantityHistory())
+                    @Html.RenderBootstrapTabContent("tab-purchased-with-orders", await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model))
+                    @Html.RenderBootstrapTabContent("tab-stock-quantity-history", await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model))
                 }
             </div>
         </div>
@@ -57,7 +58,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
@@ -66,38 +67,3 @@
 
 @*save selected tab name*@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-
-@helper TabInfo()
-{
-    @Html.Partial("_CreateOrUpdate.Info", Model)
-}
-
-@helper TabSeo()
-{
-    @Html.Partial("_CreateOrUpdate.SEO", Model)
-}
-
-@helper TabPictures()
-{
-    @Html.Partial("_CreateOrUpdate.Pictures", Model)
-}
-
-@helper TabProductAttributes()
-{
-    @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
-}
-
-@helper TabSpecificationAttributes()
-{
-    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
-}
-
-@helper TabPurchasedWithOrders()
-{
-    @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
-}
-
-@helper TabStockQuantityHistory()
-{
-    @Html.Partial("_CreateOrUpdate._StockQuantityHistory", Model)
-}

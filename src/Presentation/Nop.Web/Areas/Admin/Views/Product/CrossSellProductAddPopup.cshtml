@@ -1,9 +1,10 @@
 ﻿@model ProductModel.AddCrossSellProductModel
+@inject AdminAreaSettings adminAreaSettings
 
 @{
     Layout = "_AdminPopupLayout";
 
-    var popupGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().PopupGridPageSize;
+    var popupGridPageSize = adminAreaSettings.PopupGridPageSize;
 
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
