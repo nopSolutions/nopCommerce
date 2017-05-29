@@ -1,7 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Polls;
 using Nop.Core.Domain.Polls;
@@ -9,9 +9,9 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -44,7 +44,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual void PrepareLanguagesModel(PollModel model)
         {
             if (model == null)
@@ -249,8 +248,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
+        
         [HttpPost]
         public virtual IActionResult PollAnswerUpdate(PollAnswerModel model)
         {
@@ -274,7 +272,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult PollAnswerAdd(int pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
+        public virtual IActionResult PollAnswerAdd(int pollId, PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -297,8 +295,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-
+        
         [HttpPost]
         public virtual IActionResult PollAnswerDelete(int id)
         {
@@ -318,4 +315,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif

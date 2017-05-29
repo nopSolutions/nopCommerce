@@ -1,0 +1,89 @@
+﻿@model PollModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.LanguageId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
+                    @Html.ValidationMessageFor(model => model.LanguageId)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Name)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Name, required: true)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.SystemKeyword)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.SystemKeyword)
+                    @Html.ValidationMessageFor(model => model.SystemKeyword)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Published)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.ShowOnHomePage)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.ShowOnHomePage)
+                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.AllowGuestsToVote)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.AllowGuestsToVote)
+                    @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.DisplayOrder)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.StartDate)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.StartDate)
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.EndDate)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
