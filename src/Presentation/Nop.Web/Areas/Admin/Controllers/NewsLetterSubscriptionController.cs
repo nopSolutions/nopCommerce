@@ -1,8 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
@@ -119,7 +120,7 @@ namespace Nop.Admin.Controllers
 					var m = x.ToModel();
 				    var store = _storeService.GetStoreById(x.StoreId);
 				    m.StoreName = store != null ? store.Name : "Unknown store";
-					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToLongTimeString();
 					return m;
 				}),
                 Total = newsletterSubscriptions.TotalCount
@@ -129,7 +130,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public virtual IActionResult SubscriptionUpdate([Bind(Exclude = "CreatedOn")] NewsLetterSubscriptionModel model)
+        public virtual IActionResult SubscriptionUpdate(NewsLetterSubscriptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -196,6 +197,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                #if NET451
+
                 var file = Request.Files["importcsvfile"];
                 if (file != null && file.ContentLength > 0)
                 {
@@ -203,6 +206,9 @@ namespace Nop.Admin.Controllers
                     SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
                     return RedirectToAction("List");
                 }
+
+                #endif
+
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                 return RedirectToAction("List");
             }
@@ -214,4 +220,3 @@ namespace Nop.Admin.Controllers
         }
 	}
 }
-#endif

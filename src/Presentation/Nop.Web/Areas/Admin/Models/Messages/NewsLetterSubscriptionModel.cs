@@ -1,8 +1,6 @@
 ﻿using System;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Messages;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
@@ -21,6 +19,6 @@ namespace Nop.Admin.Models.Messages
         public string StoreName { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
-        public DateTime CreatedOn { get; set; }
+        public string CreatedOn { get; set; }
     }
 }
