@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Directory;
 using Nop.Core.Domain.Directory;
@@ -100,7 +99,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public virtual IActionResult WeightAdd([Bind(Exclude="Id")] MeasureWeightModel model)
+        public virtual IActionResult WeightAdd(MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -205,7 +204,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult DimensionAdd([Bind(Exclude = "Id")] MeasureDimensionModel model)
+        public virtual IActionResult DimensionAdd(MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -269,4 +268,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
