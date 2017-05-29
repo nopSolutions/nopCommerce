@@ -1,0 +1,239 @@
+﻿@model ManufacturerModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlPageSize').hide();
+            $('#pnlPageSizeOptions').show();
+        } else {
+            $('#pnlPageSize').show();
+            $('#pnlPageSizeOptions').hide();
+        }
+    }
+</script>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.NopLabelFor(model => model.Locales[item].Name)
+            </div>
+            <div class="col-md-9">
+                @Html.NopEditorFor(model => model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.NopLabelFor(model => model.Locales[item].Description)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Locales[item].Description)
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+    </div>
+    ,
+    @<div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.NopLabelFor(model => model.Name)
+            </div>
+            <div class="col-md-9">
+                @Html.NopEditorFor(model => model.Name, required: true)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.NopLabelFor(model => model.Description)
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(x => x.Description, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+    </div>
+      ))
+            <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.ManufacturerTemplateId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopDropDownListFor(model => model.ManufacturerTemplateId, Model.AvailableManufacturerTemplates)
+                    @Html.ValidationMessageFor(model => model.ManufacturerTemplateId)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PictureId)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.PictureId)
+                    @Html.ValidationMessageFor(model => model.PictureId)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PriceRanges)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.PriceRanges)
+                    @Html.ValidationMessageFor(model => model.PriceRanges)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
+                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div id="pnlPageSize" class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PageSize)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.PageSize)
+                    @Html.ValidationMessageFor(model => model.PageSize)
+                </div>
+            </div>
+            <div id="pnlPageSizeOptions" class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.PageSizeOptions)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.PageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.SelectedDiscountIds)
+                </div>
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.SelectedDiscountIds, new { SelectList = Model.AvailableDiscounts })
+                    <script>
+            $(document).ready(function() {
+                var discountsIdsInput = $('#@Html.FieldIdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
+                discountsIdsInput.setOptions({
+                    autoClose: false
+                });
+
+                @if (Model.AvailableDiscounts.Count == 0)
+                {
+                    <text>
+                        discountsIdsInput.setOptions({
+                            enable: false,
+                            placeholder: '@T("Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts")'
+                        });
+                        discountsIdsInput._placeholder();
+                        discountsIdsInput._enable();
+                    </text>
+                }
+            });
+                    </script>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                            <script>
+                    $(document).ready(function() {
+                        var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        rolesIdsInput.setOptions({
+                            autoClose: false
+                        });
+
+                        @if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>
+                                rolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No customer roles available'
+                                });
+                                rolesIdsInput._placeholder();
+                                rolesIdsInput._enable();
+                            </text>
+                        }
+                    });
+                            </script>
+                        </div>
+                        <div class="col-md-8">
+                            @await Component.InvokeAsync("AclDisabledWarning")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.SelectedStoreIds)
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
+                            <script>
+                    $(document).ready(function() {
+                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                        storesIdsInput.setOptions({
+                            autoClose: false
+                        });
+
+                        @if (Model.AvailableStores.Count == 0)
+                        {
+                            <text>
+                                storesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No stores available'
+                                });
+                                storesIdsInput._placeholder();
+                                storesIdsInput._enable();
+                            </text>
+                        }
+                    });
+                            </script>
+                        </div>
+                        <div class="col-md-8">
+                            @await Component.InvokeAsync("MultistoreDisabledWarning")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.Published)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(x => x.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.NopLabelFor(model => model.DisplayOrder)
+                </div>
+                <div class="col-md-9">
+                    @Html.NopEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

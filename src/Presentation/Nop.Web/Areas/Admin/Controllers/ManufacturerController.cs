@@ -1,8 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Catalog;
@@ -25,6 +26,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -110,7 +112,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
         {
             foreach (var localized in model.Locales)
@@ -146,7 +147,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdatePictureSeoNames(Manufacturer manufacturer)
         {
             var picture = _pictureService.GetPictureById(manufacturer.PictureId);
@@ -154,7 +154,6 @@ namespace Nop.Admin.Controllers
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(manufacturer.Name));
         }
 
-        [NonAction]
         protected virtual void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
@@ -171,7 +170,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
@@ -191,7 +189,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
@@ -212,7 +209,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
@@ -237,7 +233,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
@@ -258,7 +253,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
@@ -559,7 +553,7 @@ namespace Nop.Admin.Controllers
             {
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
                 var xml = _exportManager.ExportManufacturersToXml(manufacturers);
-                return new XmlDownloadResult(xml, "manufacturers.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "manufacturers.xml");
             }
             catch (Exception exc)
             {
@@ -598,6 +592,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                #if NET451
+
                 var file = Request.Files["importexcelfile"];
                 if (file != null && file.ContentLength > 0)
                 {
@@ -608,6 +604,9 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
+
+                #endif
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
@@ -618,9 +617,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        #endregion
+    #endregion
 
-        #region Products
+    #region Products
 
         [HttpPost]
         public virtual IActionResult ProductList(DataSourceRequest command, int manufacturerId)
@@ -776,12 +775,10 @@ namespace Nop.Admin.Controllers
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
+
             return View(model);
         }
 
-        #endregion
-
-        
+    #endregion
     }
 }
-#endif
