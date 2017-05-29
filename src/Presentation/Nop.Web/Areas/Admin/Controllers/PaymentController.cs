@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Payments;
 using Nop.Core;
@@ -93,7 +95,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult MethodUpdate([Bind(Exclude = "ConfigurationRouteValues")] PaymentMethodModel model)
+        public virtual IActionResult MethodUpdate(PaymentMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -191,7 +193,9 @@ namespace Nop.Admin.Controllers
             foreach (var pm in paymentMethods)
             {
                 string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
-                var countryIdsToRestrict = (form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
+                var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
+                        ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
+                        : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 
                 var newCountryIds = new List<int>();
