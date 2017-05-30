@@ -1,8 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Tax;
 using Nop.Core.Domain.Tax;
@@ -73,6 +72,8 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        #if NET451
+
         public virtual IActionResult ConfigureProvider(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -92,6 +93,8 @@ namespace Nop.Admin.Controllers
             model.ConfigurationRouteValues = routeValues;
             return View(model);
         }
+
+        #endif
 
         public virtual IActionResult MarkAsPrimaryProvider(string systemName)
         {
@@ -162,7 +165,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult CategoryAdd([Bind(Exclude = "Id")] TaxCategoryModel model)
+        public virtual IActionResult CategoryAdd(TaxCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -194,6 +197,6 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
     }
 }
-#endif
