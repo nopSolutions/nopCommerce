@@ -3,6 +3,7 @@
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
     var stores = EngineContext.Current.Resolve<IStoreService>().GetAllStores();
 }
+@using Microsoft.AspNetCore.Routing
 @using Nop.Core.Infrastructure
 @using Nop.Services.Stores
 @using Nop.Web.Framework

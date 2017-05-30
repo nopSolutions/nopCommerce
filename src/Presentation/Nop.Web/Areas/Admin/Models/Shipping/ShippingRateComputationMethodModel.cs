@@ -28,8 +28,7 @@ namespace Nop.Admin.Models.Shipping
 
 
 
-        public string ConfigurationActionName { get; set; }
-        public string ConfigurationControllerName { get; set; }
-        public RouteValueDictionary ConfigurationRouteValues { get; set; }
+        public string ConfigurationViewComponentName { get; set; }
+        public object ConfigurationViewComponentArguments { get; set; }
     }
 }

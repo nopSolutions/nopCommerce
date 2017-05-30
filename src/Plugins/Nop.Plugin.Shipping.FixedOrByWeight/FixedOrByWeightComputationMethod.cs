@@ -241,14 +241,12 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetConfigurationRoute(out string viewComponentName, out object viewComponentArguments)
         {
-            actionName = "Configure";
-            controllerName = "FixedOrByWeight";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }, { "area", null } };
+            viewComponentName = "FixedOrByWeightConfigure";
+            viewComponentArguments = null;
         }
 
         /// <summary>

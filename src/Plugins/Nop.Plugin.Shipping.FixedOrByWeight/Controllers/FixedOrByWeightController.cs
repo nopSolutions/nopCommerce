@@ -1,9 +1,9 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.FixedOrByWeight.Domain;
@@ -18,11 +18,12 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
     public class FixedOrByWeightController : BasePluginController
     {
         private readonly IShippingService _shippingService;
@@ -68,6 +69,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             this._measureSettings = measureSettings;
         }
 
+#if NET451
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {
             //little hack here
@@ -76,17 +78,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 
             base.Initialize(requestContext);
         }
-
-        [ChildActionOnly]
-        public IActionResult Configure()
-        {
-            var model = new ConfigurationModel
-            {
-                LimitMethodsToCreated = _fixedOrByWeightSettings.LimitMethodsToCreated,
-                ShippingByWeightEnabled = _fixedOrByWeightSettings.ShippingByWeightEnabled
-            };
-            return View("~/Plugins/Shipping.FixedOrByWeight/Views/Configure.cshtml", model);
-        }
+#endif
 
         [HttpPost]
         [AdminAntiForgery]
@@ -115,7 +107,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             return Json(new
             {
                 Result = true
-            }, JsonRequestBehavior.AllowGet);
+            });
         }
 
         #region Fixed rate
@@ -243,12 +235,14 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult AddRateByWeighPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+            {
+                var rawUrl = this.Request.Path + this.Request.QueryString;
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+            }
 
             var model = new ShippingByWeightModel
             {
-                PrimaryStoreCurrencyCode =
-                    _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
+                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
                 BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name,
                 To = 1000000
             };
@@ -284,7 +278,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult AddRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+            {
+                var rawUrl = this.Request.Path + this.Request.QueryString;
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+            }
 
             var sbw = new ShippingByWeightRecord
             {
@@ -313,7 +310,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult EditRateByWeighPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+            {
+                var rawUrl = this.Request.Path + this.Request.QueryString;
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+            }
 
             var sbw = _shippingByWeightService.GetById(id);
             if (sbw == null)
@@ -378,7 +378,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult EditRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+            {
+                var rawUrl = this.Request.Path + this.Request.QueryString;
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+            }
 
             var sbw = _shippingByWeightService.GetById(model.Id);
             if (sbw == null)
@@ -423,4 +426,3 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         #endregion
     }
 }
-#endif

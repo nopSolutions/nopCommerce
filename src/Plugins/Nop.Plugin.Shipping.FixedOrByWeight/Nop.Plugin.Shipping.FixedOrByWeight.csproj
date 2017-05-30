@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\FixedOrByWeightConfigure.cs" />
     <Compile Include="Controllers\FixedOrByWeightController.cs" />
     <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="Data\ShippingByWeightObjectContext.cs" />
@@ -41,6 +42,7 @@
     <Compile Include="Domain\ShippingByWeightRecord.cs" />
     <Compile Include="FixedOrByWeightComputationMethod.cs" />
     <Compile Include="FixedOrByWeightSettings.cs" />
+    <Compile Include="Infrastructure\Startup.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\FixedRateModel.cs" />
     <Compile Include="Models\ShippingByWeightModel.cs" />
@@ -52,12 +54,27 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Views\AddRateByWeightPopup.cshtml" />
-    <None Include="Views\Configure.cshtml" />
-    <None Include="Views\EditRateByWeightPopup.cshtml" />
-    <None Include="Views\_ByWeight.cshtml" />
-    <None Include="Views\_CreateOrUpdateRateByWeight.cshtml" />
-    <None Include="Views\_FixedRate.cshtml" />
+    <Content Include="Views\AddRateByWeightPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\EditRateByWeightPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ByWeight.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_CreateOrUpdateRateByWeight.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_FixedRate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Description.txt">
@@ -65,7 +82,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="logo.jpg" />
+    <None Include="logo.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Notes.txt" />
@@ -284,6 +303,10 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Composite, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.FileProviders.Composite.1.1.1\lib\netstandard1.0\Microsoft.Extensions.FileProviders.Composite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Embedded, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.FileProviders.Embedded.1.1.1\lib\net451\Microsoft.Extensions.FileProviders.Embedded.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">

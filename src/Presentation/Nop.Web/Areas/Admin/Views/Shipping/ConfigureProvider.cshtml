@@ -19,9 +19,9 @@
 
 <div class="content">
     <div class="form-horizontal">
-        @if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+        @if (!String.IsNullOrEmpty(Model.ConfigurationViewComponentName))
         {
-            @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+            @await Component.InvokeAsync(Model.ConfigurationViewComponentName, Model.ConfigurationViewComponentArguments)
         }
         else
         {

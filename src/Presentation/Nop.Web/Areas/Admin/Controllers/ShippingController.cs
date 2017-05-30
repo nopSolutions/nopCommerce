@@ -182,7 +182,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-#if NET451
 
         public virtual IActionResult ConfigureProvider(string systemName)
         {
@@ -195,16 +194,14 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Providers");
 
             var model = srcm.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            srcm.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
+            string viewComponentName;
+            object viewComponentArguments;
+            srcm.GetConfigurationRoute( out viewComponentName, out viewComponentArguments);
+            model.ConfigurationViewComponentName = viewComponentName;
+            model.ConfigurationViewComponentArguments = viewComponentArguments;
             return View(model);
         }
 
-#endif
 
 #endregion
 
