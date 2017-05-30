@@ -1,7 +1,6 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Common;
 using Nop.Core;
@@ -10,9 +9,9 @@ using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Admin.Controllers
 {
@@ -53,7 +52,6 @@ namespace Nop.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
         protected virtual void UpdateAttributeLocales(AddressAttribute addressAttribute, AddressAttributeModel model)
         {
             foreach (var localized in model.Locales)
@@ -65,7 +63,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void UpdateValueLocales(AddressAttributeValue addressAttributeValue, AddressAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -97,7 +94,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //we just redirect a user to the address settings page
-            
+             
             //select "address form fields" tab
             SaveSelectedTabName("tab-addressformfields");
             return RedirectToAction("CustomerUser", "Setting");
@@ -407,4 +404,3 @@ namespace Nop.Admin.Controllers
         #endregion
     }
 }
-#endif
