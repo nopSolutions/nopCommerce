@@ -144,6 +144,7 @@ namespace Nop.Admin.Controllers
 
         #endif
 
+        #if NET451
         [ChildActionOnly]
         public virtual IActionResult WidgetsByZone(string widgetZone)
         {
@@ -168,7 +169,8 @@ namespace Nop.Admin.Controllers
 
             return PartialView(model);
         }
+        #endif
 
-#endregion
+	    #endregion
     }
 }
