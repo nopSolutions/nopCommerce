@@ -22,6 +22,8 @@ namespace Nop.Admin.Controllers
 {
 	public partial class CampaignController : BaseAdminController
 	{
+	    #region Fields
+
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
@@ -34,6 +36,10 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
 	    private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
+
+        #endregion
+
+	    #region Ctor
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, 
@@ -62,7 +68,10 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
 		}
 
-        [NonAction]
+        #endregion
+
+	    #region Utilities
+
         protected virtual void PrepareStoresModel(CampaignModel model)
         {
             if (model == null)
@@ -84,7 +93,6 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        [NonAction]
         protected virtual void PrepareCustomerRolesModel(CampaignModel model)
 	    {
             if (model == null)
@@ -106,7 +114,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        [NonAction]
         protected virtual void PrepareEmailAccountsModel(CampaignModel model)
         {
             if (model == null)
@@ -119,7 +126,6 @@ namespace Nop.Admin.Controllers
             }).ToList();
         }
 
-        [NonAction]
         protected virtual EmailAccount GetEmailAccount(int emailAccountId)
         {
             var emailAccount = _emailAccountService.GetEmailAccountById(emailAccountId)
@@ -130,6 +136,10 @@ namespace Nop.Admin.Controllers
 
             return emailAccount;
         }
+
+        #endregion
+
+	    #region Methods
 
         public virtual IActionResult Index()
         {
@@ -418,5 +428,7 @@ namespace Nop.Admin.Controllers
 
 			return RedirectToAction("List");
 		}
-	}
+
+	    #endregion
+    }
 }

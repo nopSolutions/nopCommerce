@@ -11,12 +11,22 @@ namespace Nop.Admin.Controllers
 {
     public partial class DownloadController : BaseAdminController
     {
+        #region Fields
+
         private readonly IDownloadService _downloadService;
+
+        #endregion
+
+        #region Ctor
 
         public DownloadController(IDownloadService downloadService)
         {
             this._downloadService = downloadService;
         }
+
+        #endregion
+
+        #region Methods
 
         public virtual IActionResult DownloadFile(Guid downloadGuid)
         {
@@ -112,5 +122,7 @@ namespace Nop.Admin.Controllers
                 downloadId = download.Id, 
                 downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) });
         }
+
+        #endregion
     }
 }

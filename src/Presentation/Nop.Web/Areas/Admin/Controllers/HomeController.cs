@@ -38,15 +38,15 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             return View(model);
         }
-#if NET451
+
         [HttpPost]
         public virtual IActionResult NopCommerceNewsHideAdv()
         {
             _adminAreaSettings.HideAdvertisementsOnAdminArea = !_adminAreaSettings.HideAdvertisementsOnAdminArea;
             _settingService.SaveSetting(_adminAreaSettings);
+
             return Content("Setting changed");
         }
-#endif
 
         #endregion
     }

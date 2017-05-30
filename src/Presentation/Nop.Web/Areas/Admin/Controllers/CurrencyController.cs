@@ -151,6 +151,7 @@ namespace Nop.Admin.Controllers
                     ErrorNotification(exc, false);
                 }
             }
+
             ViewBag.ExchangeRateProviders = new List<SelectListItem>();
             foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
             {

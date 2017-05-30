@@ -26,7 +26,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public OnlineCustomerController(ICustomerService customerService,
             IGeoLookupService geoLookupService, IDateTimeHelper dateTimeHelper,

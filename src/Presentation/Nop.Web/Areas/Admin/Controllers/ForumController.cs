@@ -14,10 +14,16 @@ namespace Nop.Admin.Controllers
 {
     public partial class ForumController : BaseAdminController
     {
+        #region Fields
+
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+
+        #endregion
+
+        #region Ctor
 
         public ForumController(IForumService forumService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
@@ -28,6 +34,10 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
         }
+
+        #endregion
+
+        #region Methods
 
         #region List
 
@@ -293,6 +303,8 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
             return RedirectToAction("List");
         }
+
+        #endregion
 
         #endregion
     }

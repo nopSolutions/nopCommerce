@@ -36,7 +36,7 @@ namespace Nop.Admin.Controllers
 
         #endregion Fields
 
-        #region Constructors
+        #region Ctor
 
         public MessageTemplateController(IMessageTemplateService messageTemplateService, 
             IEmailAccountService emailAccountService,

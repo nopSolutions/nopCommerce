@@ -44,7 +44,6 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Extensions;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
@@ -315,6 +314,7 @@ namespace Nop.Admin.Controllers
             foreach (var v in vendors)
                 model.AvailableVendors.Add(v);
         }
+
         protected virtual void PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
         {
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
@@ -1905,6 +1905,7 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Reports
+
         public virtual IActionResult Reports()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1973,6 +1974,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
         [HttpPost]
         public virtual IActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
@@ -2030,6 +2032,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
         public virtual IActionResult LoadCustomerStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2122,7 +2125,7 @@ namespace Nop.Admin.Controllers
             return Json(result);
         }
 
-#endregion
+        #endregion
         
         #region Current shopping cart/ wishlist
 

@@ -14,8 +14,6 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -38,7 +36,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public LanguageController(ILanguageService languageService,
             ILocalizationService localizationService,
@@ -495,10 +493,10 @@ namespace Nop.Admin.Controllers
                 //No language found with the specified id
                 return RedirectToAction("List");
 
-#if NET451
-//set page timeout to 5 minutes
+            #if NET451
+            //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
-#endif
+            #endif
 
             try
             {

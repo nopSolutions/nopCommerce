@@ -135,7 +135,6 @@ namespace Nop.Admin.Controllers
 
         #endif
 
-    #endregion
-
+        #endregion
     }
 }

@@ -18,6 +18,8 @@ namespace Nop.Admin.Controllers
 {
 	public partial class EmailAccountController : BaseAdminController
 	{
+	    #region Fields
+
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
@@ -26,6 +28,10 @@ namespace Nop.Admin.Controllers
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
+
+        #endregion
+
+	    #region Ctor
 
         public EmailAccountController(IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService,
@@ -43,7 +49,11 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
         }
 
-		public virtual IActionResult List()
+        #endregion
+
+	    #region Methods
+
+        public virtual IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -246,5 +256,7 @@ namespace Nop.Admin.Controllers
 	            return RedirectToAction("Edit", new {id = emailAccount.Id});
 	        }
 	    }
-	}
+
+	    #endregion
+    }
 }

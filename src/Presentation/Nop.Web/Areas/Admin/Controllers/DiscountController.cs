@@ -23,7 +23,6 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;

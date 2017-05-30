@@ -668,7 +668,6 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
         [HttpPost]
         public virtual IActionResult ClearCache(string returnUrl = "")
         {
@@ -796,7 +795,6 @@ namespace Nop.Admin.Controllers
         }
         
 
-
         [HttpPost]
         public virtual IActionResult PopularSearchTermsReport(DataSourceRequest command)
         {
@@ -815,8 +813,7 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-
-
+        
         //action displaying notification (warning) to a store owner that entered SE URL already exists
         public virtual IActionResult UrlReservedWarning(string entityId, string entityName, string seName)
         {
@@ -833,6 +830,6 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.Reserved"), validatedSeName) });
         }
         
-#endregion
+        #endregion
     }
 }

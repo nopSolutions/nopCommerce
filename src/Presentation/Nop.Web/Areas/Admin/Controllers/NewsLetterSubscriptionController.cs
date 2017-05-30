@@ -22,7 +22,9 @@ namespace Nop.Admin.Controllers
 {
 	public partial class NewsLetterSubscriptionController : BaseAdminController
 	{
-		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+	    #region Fields
+
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 		private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -31,7 +33,11 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
-		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
+        #endregion
+
+	    #region Ctor
+
+        public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
 			IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -50,7 +56,11 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
 		}
 
-		public virtual IActionResult Index()
+        #endregion
+
+	    #region Methods
+
+        public virtual IActionResult Index()
 		{
 			return RedirectToAction("List");
 		}
@@ -218,5 +228,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             }
         }
-	}
+
+	    #endregion
+    }
 }

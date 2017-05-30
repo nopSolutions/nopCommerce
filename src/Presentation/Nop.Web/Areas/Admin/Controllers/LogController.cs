@@ -18,11 +18,17 @@ namespace Nop.Admin.Controllers
 {
     public partial class LogController : BaseAdminController
     {
+        #region Fields
+
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPermissionService _permissionService;
+
+        #endregion
+
+        #region Ctor
 
         public LogController(ILogger logger, IWorkContext workContext,
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
@@ -34,6 +40,10 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._permissionService = permissionService;
         }
+
+        #endregion
+
+        #region Ctor
 
         public virtual IActionResult Index()
         {
@@ -160,7 +170,9 @@ namespace Nop.Admin.Controllers
                 _logger.DeleteLogs(_logger.GetLogByIds(selectedIds.ToArray()).ToList());
             }
 
-            return Json(new { Result = true});
+            return Json(new {Result = true});
         }
+
+        #endregion
     }
 }

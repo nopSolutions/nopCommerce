@@ -56,7 +56,6 @@ namespace Nop.Admin.Controllers
 
         #region Weights
 
-
         [HttpPost]
         public virtual IActionResult Weights(DataSourceRequest command)
         {

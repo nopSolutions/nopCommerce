@@ -238,8 +238,6 @@ namespace Nop.Admin.Controllers
 
 		}
 
-
-
         public virtual IActionResult AssociateProductToCustomerRolePopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
