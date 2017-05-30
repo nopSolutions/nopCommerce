@@ -1,5 +1,4 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -22,17 +21,17 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Controllers
 {
     public partial class PaymentController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly IPaymentService _paymentService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
-	    private readonly ICountryService _countryService;
+        private readonly ICountryService _countryService;
         private readonly IPluginFinder _pluginFinder;
-	    private readonly IWebHelper _webHelper;
-	    private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -40,13 +39,13 @@ namespace Nop.Admin.Controllers
 
         public PaymentController(IPaymentService paymentService,
             PaymentSettings paymentSettings,
-            ISettingService settingService, 
+            ISettingService settingService,
             IPermissionService permissionService,
             ICountryService countryService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
             ILocalizationService localizationService)
-		{
+        {
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
             this._settingService = settingService;
@@ -57,7 +56,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
         }
 
-		#endregion 
+        #endregion
 
         #region Methods
 
@@ -129,6 +128,8 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        #if NET451
+
         public virtual IActionResult ConfigureMethod(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -148,6 +149,8 @@ namespace Nop.Admin.Controllers
             model.ConfigurationRouteValues = routeValues;
             return View(model);
         }
+
+        #endif
 
         public virtual IActionResult MethodRestrictions()
         {
@@ -209,11 +212,12 @@ namespace Nop.Admin.Controllers
                 _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+            SuccessNotification(
+                _localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
             return RedirectToAction("MethodRestrictions");
         }
 
         #endregion
+
     }
 }
-#endif
