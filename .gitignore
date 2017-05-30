@@ -164,3 +164,4 @@ src/Presentation/Nop.Web/App_Data/Settings.txt
 src/Presentation/Nop.Web/App_Data/browscap.crawlersonly.xml
 src/Presentation/Nop.Web/wwwroot/images/thumbs/*
 src/Presentation/Nop.Web/wwwroot/db_backups/*.bak
+src/packages/*
