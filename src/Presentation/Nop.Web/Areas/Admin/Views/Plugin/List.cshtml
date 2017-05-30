@@ -1,4 +1,5 @@
-﻿@model PluginListModel
+﻿@using System.Text.Encodings.Web
+@model PluginListModel
 
 @{
     //page title
@@ -19,7 +20,7 @@
             <script type="text/javascript">
                 $(document).ready(function() {
                     $("button[name='plugin-reload-grid']").on("click", function (e) {
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
                     });
                 });
             </script>
@@ -33,14 +34,14 @@
                     //install a plugin
                     $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
                         $("html, body").animate({ scrollTop: 0 }, 400);
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
                         return true;
                     });
 
                     //uninstall a plugin
                     $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
                         $("html, body").animate({ scrollTop: 0 }, 400);
-                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
                         return true;
                     });
                 });

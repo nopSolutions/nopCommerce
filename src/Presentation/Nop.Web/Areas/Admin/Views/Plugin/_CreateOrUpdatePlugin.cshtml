@@ -123,7 +123,7 @@
                                     </script>
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.Action("MultistoreDisabledWarning", "Common")
+                                    @Component.InvokeAsync("MultistoreDisabledWarning")
                                 </div>
                             </div>
                         </div>

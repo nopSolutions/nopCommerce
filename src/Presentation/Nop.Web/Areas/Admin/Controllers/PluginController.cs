@@ -1,9 +1,10 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Plugins;
 using Nop.Core;
@@ -93,7 +94,6 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor, 
             bool prepareLocales = true, bool prepareStores = true, bool prepareAcl = true)
         {
@@ -232,7 +232,6 @@ namespace Nop.Admin.Controllers
             return pluginModel;
         }
 
-        [NonAction]
         protected static string GetCategoryBreadCrumbName(OfficialFeedCategory category,
             IList<OfficialFeedCategory> allCategories)
         {
@@ -279,6 +278,7 @@ namespace Nop.Admin.Controllers
                 model.AvailableGroups.Add(new SelectListItem { Text = g, Value = g });
             return View(model);
         }
+
 	    [HttpPost]
         public virtual IActionResult ListSelect(DataSourceRequest command, PluginListModel model)
 	    {
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
             {
                 //get plugin system name
                 string systemName = null;
-                foreach (var formValue in form.AllKeys)
+                foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("install-plugin-link-".Length);
 
@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
             {
                 //get plugin system name
                 string systemName = null;
-                foreach (var formValue in form.AllKeys)
+                foreach (var formValue in form.Keys)
                     if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
                         systemName = formValue.Substring("uninstall-plugin-link-".Length);
 
@@ -393,7 +393,9 @@ namespace Nop.Admin.Controllers
             _webHelper.RestartAppDomain();
             return RedirectToAction("List");
         }
-        
+
+        #if NET451
+
         public virtual IActionResult ConfigureMiscPlugin(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -417,6 +419,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        #endif
+
         //edit
         public virtual IActionResult EditPopup(string systemName)
         {
@@ -432,6 +436,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult EditPopup(string btnId, string formId, PluginModel model)
         {
@@ -641,6 +646,7 @@ namespace Nop.Admin.Controllers
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial"), Value = "20" });
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult OfficialFeedSelect(DataSourceRequest command, OfficialFeedListModel model)
         {
@@ -668,7 +674,6 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        #endregion
+#endregion
     }
 }
-#endif
