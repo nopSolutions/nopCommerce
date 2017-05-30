@@ -1,8 +1,7 @@
-﻿#if NET451
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.ExternalAuthentication;
 using Nop.Core.Domain.Customers;
@@ -79,7 +78,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult MethodUpdate([Bind(Exclude = "ConfigurationRouteValues")] AuthenticationMethodModel model)
+        public virtual IActionResult MethodUpdate(AuthenticationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
@@ -112,6 +111,8 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        #if NET451
+
         public virtual IActionResult ConfigureMethod(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
@@ -132,7 +133,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endregion
+        #endif
+
+    #endregion
+
     }
 }
-#endif
