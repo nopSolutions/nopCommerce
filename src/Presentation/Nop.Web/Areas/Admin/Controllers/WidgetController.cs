@@ -1,8 +1,7 @@
-﻿#if NET451
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Cms;
 using Nop.Core.Domain.Cms;
@@ -84,7 +83,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult WidgetUpdate([Bind(Exclude = "ConfigurationRouteValues")] WidgetModel model)
+        public virtual IActionResult WidgetUpdate(WidgetModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -108,16 +107,21 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_widgetSettings);
                 }
             }
+
             var pluginDescriptor = widget.PluginDescriptor;
+
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
             PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 
             return new NullJsonResult();
         }
-        
+
+        #if NET451
+
         public virtual IActionResult ConfigureWidget(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
@@ -137,6 +141,8 @@ namespace Nop.Admin.Controllers
             model.ConfigurationRouteValues = routeValues;
             return View(model);
         }
+
+        #endif
 
         [ChildActionOnly]
         public virtual IActionResult WidgetsByZone(string widgetZone)
@@ -163,7 +169,6 @@ namespace Nop.Admin.Controllers
             return PartialView(model);
         }
 
-        #endregion
+#endregion
     }
 }
-#endif
