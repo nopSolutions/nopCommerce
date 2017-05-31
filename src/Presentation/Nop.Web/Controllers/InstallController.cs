@@ -1,11 +1,11 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -20,26 +20,26 @@ using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {
-    public partial class InstallController : BasePublicController
+    public partial class InstallController : Controller
     {
-#region Fields
+        #region Fields
 
         private readonly IInstallationLocalizationService _locService;
         private readonly NopConfig _config;
-
-#endregion
-
-#region Ctor
+        
+        #endregion
+        
+        #region Ctor
 
         public InstallController(IInstallationLocalizationService locService, NopConfig config)
         {
             this._locService = locService;
             this._config = config;
         }
-
-#endregion
-
-#region Utilities
+        
+        #endregion
+        
+        #region Utilities
 
         /// <summary>
         /// A value indicating whether we use MARS (Multiple Active Result Sets)
@@ -168,19 +168,20 @@ namespace Nop.Web.Controllers
             }
             return builder.ConnectionString;
         }
-
-#endregion
-
-#region Methods
+        
+        #endregion
+        
+        #region Methods
 
         public virtual IActionResult Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-
+            
+            #if NET451
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
-
+            #endif
 
             var model = new InstallModel
             {
@@ -215,9 +216,11 @@ namespace Nop.Web.Controllers
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-
+            
+            #if NET451
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
+            #endif
 
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
@@ -397,7 +400,9 @@ namespace Nop.Web.Controllers
                     {
                         if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
                             continue;
+#if NET451
                         plugin.Install();
+#endif
                     }
 
                     //register default permissions
@@ -420,9 +425,11 @@ namespace Nop.Web.Controllers
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
-
+                    
+#if NET451
                     var cacheManager = EngineContext.Current.ContainerManager.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
+#endif
 
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings
@@ -461,8 +468,7 @@ namespace Nop.Web.Controllers
             //Redirect to home page
             return RedirectToRoute("HomePage");
         }
-
-#endregion
+        
+        #endregion
     }
 }
-#endif

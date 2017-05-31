@@ -135,7 +135,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //themes
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
+                if (DataSettingsHelper.DatabaseIsInstalled())
+                {
+                    options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
+                }
             });
 
         }
