@@ -34,6 +34,8 @@ namespace Nop.Core.Http
         /// <returns>Task</returns>
         public async Task Invoke(Microsoft.AspNetCore.Http.HttpContext context, IWebHelper webHelper)
         {
+            //TODO test. ensure that no guest record is created
+
             //keep alive page requested (we ignore it to prevent creating a guest customer records)
             var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))

@@ -1,4 +1,5 @@
 ﻿@model InstallModel
+@using System.Text.Encodings.Web
 @using Nop.Web.Models.Install
 @using Nop.Web.Infrastructure.Installation
 @*localization service for installation service
@@ -67,7 +68,7 @@ locale resources for installation process are stored into \App_Data\Localization
                         $('#installation-form').submit(function () {
                             if ($('#installation-form').valid()) {
                                 $("html, body").animate({ scrollTop: 0 }, 400);
-                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(ILS.GetResource("Installing")))');
+                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
                                 $('input[type=submit]', this).attr('disabled', 'disabled');
                             }
                         });
@@ -76,7 +77,7 @@ locale resources for installation process are stored into \App_Data\Localization
                     $(document).ready(function () {
                         $('#restart-form').submit(function () {
                             $("html, body").animate({ scrollTop: 0 }, 400);
-                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode("Restarting..."))');
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
                             $('input[type=submit]', this).attr('disabled', 'disabled');
                         });
                     });

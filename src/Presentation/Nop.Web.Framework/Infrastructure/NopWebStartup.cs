@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.Extensions;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -57,15 +58,6 @@ namespace Nop.Web.Framework.Infrastructure
                 CookieHttpOnly = true
             });
 
-            //set request culture
-            application.UseCulture();
-
-            //use HTTP session
-            application.UseSession();
-
-            //handle 404 errors
-            application.UsePageNotFound();
-
             //static files
             application.UseStaticFiles();
             //add support for backups
@@ -83,6 +75,22 @@ namespace Nop.Web.Framework.Infrastructure
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
                 RequestPath = new PathString("/Themes")
             });
+
+            //set request culture
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //TODO move "DatabaseIsInstalled" validation to CultureMiddleware (an exception is thrown now for some reasons when on the installation page)
+                application.UseCulture();
+            }
+
+            //use HTTP session
+            application.UseSession();
+
+            //handle 404 errors
+            application.UsePageNotFound();
+
+            //check whether database is installed
+            application.UseInstallUrl();
 
             //MVC routing
             application.UseNopMvc();
