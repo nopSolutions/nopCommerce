@@ -30,6 +30,6 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateDeliveryDate", Model)
+    @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)
 }
 @Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")

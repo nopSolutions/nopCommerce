@@ -38,14 +38,14 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("product-delete")
 
 @if (!Model.IsLoggedInAsVendor)
 {
     //product editor settings modal
-    @Html.Partial("_ProductEditorSettingsModal", Model)
+    @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
 }
 
 @*copy product form*@

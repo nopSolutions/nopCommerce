@@ -49,7 +49,7 @@
                                 </div>
                             }
 
-                            @Html.Partial("_ProductAttributes", Model.ProductAttributes)
+                            @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
                             <div class="form-group">
                                 <div class="col-sm-4">
                                     @Html.NopLabelFor(model => model.StockQuantity)

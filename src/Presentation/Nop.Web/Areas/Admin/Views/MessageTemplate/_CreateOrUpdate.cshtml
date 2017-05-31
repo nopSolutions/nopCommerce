@@ -1,4 +1,5 @@
 ﻿@model MessageTemplateModel
+@inject AdminAreaSettings adminAreaSettings
 
 @using Nop.Core.Domain.Messages;
 @using Nop.Services
@@ -62,7 +63,7 @@
                                 @Html.NopLabelFor(model => model.Locales[item].Body)
                             </div>
                             <div class="col-md-9">
-                                @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                                @if (adminAreaSettings.UseRichEditorInMessageTemplates)
                                 {
                                     @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
                                 }
@@ -129,7 +130,7 @@
                                 @Html.NopLabelFor(model => model.Body)
                             </div>
                             <div class="col-md-9">
-                                @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                                @if (adminAreaSettings.UseRichEditorInMessageTemplates)
                                 {
                                     <div class="input-group input-group-required">
                                         @Html.EditorFor(model => model.Body, "RichEditor")

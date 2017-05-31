@@ -2,6 +2,8 @@
 @using System.Text.Encodings.Web
 @using Nop.Services.Blogs
 @model BlogPostModel
+@inject IBlogService blogService
+
 @{
     //resources for product tags input
     Html.AppendCssFileParts("~/lib/tagEditor/jquery.tag-editor.css");
@@ -11,7 +13,7 @@
 <script type="text/javascript">
     @{
         //TODO move to Model
-        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags(0, 0, true);
+        var blogTags = blogService.GetAllBlogPostTags(0, 0, true);
         var blogTagsSb = new StringBuilder();
         blogTagsSb.Append("var initialBlogTags = [");
         for (int i = 0; i < blogTags.Count; i++)

@@ -14,7 +14,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PreferencesController(IGenericAttributeService genericAttributeService,
             IWorkContext workContext)

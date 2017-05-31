@@ -30,6 +30,6 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateProductAvailabilityRange", Model)
+    @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)
 }
 @Html.DeleteConfirmation("DeleteProductAvailabilityRange", "product-availability-range-delete")

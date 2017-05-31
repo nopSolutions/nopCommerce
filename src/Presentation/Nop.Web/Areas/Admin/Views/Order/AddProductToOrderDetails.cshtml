@@ -91,13 +91,13 @@
                     </div>
 
                     var dataDict = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("productId", Model.ProductId) };
-                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes, dataDict)
+                    @await Html.PartialAsync("_ProductAddAttributes", Model.ProductAttributes, dataDict)
 
                     var dataDictGiftCard = new ViewDataDictionary(ViewData);
                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
-                    @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                    @await Html.PartialAsync("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
 
-                    @Html.Partial("_ProductAddRentalInfo", Model)
+                    @await Html.PartialAsync("_ProductAddRentalInfo", Model)
 
                     <div class="panel panel-default">
                         <div class="panel-body">

@@ -7,7 +7,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
@@ -22,7 +23,7 @@ namespace Nop.Admin.Controllers
     [AdminAntiForgery(true)]
     public class RoxyFilemanController : BaseAdminController
     {
-#region Fields
+        #region Fields
 
         Dictionary<string, string> _settings = null;
         Dictionary<string, string> _lang = null;
@@ -31,90 +32,88 @@ namespace Nop.Admin.Controllers
         
         //custom code by nopCommerce team
         private readonly IPermissionService _permissionService;
-        private readonly HttpContextBase _context;
-        private readonly HttpResponseBase _r;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-#endregion
+        #endregion
 
-#region Ctor
+        #region Ctor
 
         //custom code by nopCommerce team
-        public RoxyFilemanController(IPermissionService permissionService, HttpContextBase context)
+        public RoxyFilemanController(IPermissionService permissionService, IHttpContextAccessor httpContextAccessor)
         {
             this._permissionService = permissionService;
-            this._context = context;
-            this._r = this._context.Response;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         public virtual void ProcessRequest() {
             string action = "DIRLIST";
 
             //custom code by nopCommerce team
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
-                _r.Write(GetErrorRes("You don't have required permission"));
+                _httpContextAccessor.HttpContext.Response.WriteAsync(GetErrorRes("You don't have required permission"));
 
             try{
-                if (_context.Request["a"] != null)
-                    action = (string)_context.Request["a"];
+                if (!StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Form["a"]))
+                    action = _httpContextAccessor.HttpContext.Request.Form["a"];
 
                 //custom code by nopCommerce team
                 //VerifyAction(action);
                 switch (action.ToUpper())
                 {
                     case "DIRLIST":
-                        ListDirTree(_context.Request["type"]);
+                        ListDirTree(_httpContextAccessor.HttpContext.Request.Form["type"]);
                         break;
                     case "FILESLIST":
-                        ListFiles(_context.Request["d"], _context.Request["type"]);
+                        ListFiles(_httpContextAccessor.HttpContext.Request.Form["d"], _httpContextAccessor.HttpContext.Request.Form["type"]);
                         break;
                     case "COPYDIR":
-                        CopyDir(_context.Request["d"], _context.Request["n"]);
+                        CopyDir(_httpContextAccessor.HttpContext.Request.Form["d"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "COPYFILE":
-                        CopyFile(_context.Request["f"], _context.Request["n"]);
+                        CopyFile(_httpContextAccessor.HttpContext.Request.Form["f"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "CREATEDIR":
-                        CreateDir(_context.Request["d"], _context.Request["n"]);
+                        CreateDir(_httpContextAccessor.HttpContext.Request.Form["d"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "DELETEDIR":
-                        DeleteDir(_context.Request["d"]);
+                        DeleteDir(_httpContextAccessor.HttpContext.Request.Form["d"]);
                         break;
                     case "DELETEFILE":
-                        DeleteFile(_context.Request["f"]);
+                        DeleteFile(_httpContextAccessor.HttpContext.Request.Form["f"]);
                         break;
                     case "DOWNLOAD":
-                        DownloadFile(_context.Request["f"]);
+                        DownloadFile(_httpContextAccessor.HttpContext.Request.Form["f"]);
                         break;
                     case "DOWNLOADDIR":
-                        DownloadDir(_context.Request["d"]);
+                        DownloadDir(_httpContextAccessor.HttpContext.Request.Form["d"]);
                         break;
                     case "MOVEDIR":
-                        MoveDir(_context.Request["d"], _context.Request["n"]);
+                        MoveDir(_httpContextAccessor.HttpContext.Request.Form["d"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "MOVEFILE":
-                        MoveFile(_context.Request["f"], _context.Request["n"]);
+                        MoveFile(_httpContextAccessor.HttpContext.Request.Form["f"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "RENAMEDIR":
-                        RenameDir(_context.Request["d"], _context.Request["n"]);
+                        RenameDir(_httpContextAccessor.HttpContext.Request.Form["d"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "RENAMEFILE":
-                        RenameFile(_context.Request["f"], _context.Request["n"]);
+                        RenameFile(_httpContextAccessor.HttpContext.Request.Form["f"], _httpContextAccessor.HttpContext.Request.Form["n"]);
                         break;
                     case "GENERATETHUMB":
                         int w = 140, h = 0;
-                        int.TryParse(_context.Request["width"].Replace("px", ""), out w);
-                        int.TryParse(_context.Request["height"].Replace("px", ""), out h);
-                        ShowThumbnail(_context.Request["f"], w, h);
+                        int.TryParse(_httpContextAccessor.HttpContext.Request.Form["width"].ToString().Replace("px", ""), out w);
+                        int.TryParse(_httpContextAccessor.HttpContext.Request.Form["height"].ToString().Replace("px", ""), out h);
+                        ShowThumbnail(_httpContextAccessor.HttpContext.Request.Form["f"], w, h);
                         break;
                     case "UPLOAD":
-                        Upload(_context.Request["d"]);
+                        Upload(_httpContextAccessor.HttpContext.Request.Form["d"]);
                         break;
                     default:
-                        _r.Write(GetErrorRes("This action is not implemented."));
+                        _httpContextAccessor.HttpContext.Response.WriteAsync(GetErrorRes("This action is not implemented."));
                         break;
                 }
         
@@ -122,20 +121,20 @@ namespace Nop.Admin.Controllers
             catch(Exception ex){
                 if (action == "UPLOAD" && !IsAjaxUpload())
                 {
-                    _r.Write("<script>");
-                    _r.Write("parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles")) + ");");
-                    _r.Write("</script>");
+                    _httpContextAccessor.HttpContext.Response.WriteAsync("<script>");
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(
+                        "parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles")) + ");");
+                    _httpContextAccessor.HttpContext.Response.WriteAsync("</script>");
                 }
                 else{
-                    _r.Write(GetErrorRes(ex.Message));
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetErrorRes(ex.Message));
                 }
             }
-        
         }
         
-#endregion
+        #endregion
 
-#region Utitlies
+        #region Utitlies
 
         private string FixPath(string path)
         {
@@ -154,14 +153,16 @@ namespace Nop.Admin.Controllers
             if (!path.ToLowerInvariant().Contains(rootDirectory.ToLowerInvariant()))
                 path = rootDirectory;
 
-            return _context.Server.MapPath(path);
+            return CommonHelper.MapPath(path);
         }
+
         private string GetLangFile(){
             string filename = "../lang/" + GetSetting("LANG") + ".json";
-            if (!System.IO.File.Exists(_context.Server.MapPath(filename)))
+            if (!System.IO.File.Exists(CommonHelper.MapPath(filename)))
                 filename = "../lang/en.json";
             return filename;
         }
+
         protected virtual string LangRes(string name)
         {
             string ret = name;
@@ -172,6 +173,7 @@ namespace Nop.Admin.Controllers
 
             return ret;
         }
+
         protected virtual string GetFileType(string ext){
             string ret = "file";
             ext = ext.ToLower();
@@ -181,6 +183,7 @@ namespace Nop.Admin.Controllers
                 ret = "flash";
             return ret;
         }
+
         protected virtual bool CanHandleFile(string filename)
         {
             bool ret = false;
@@ -205,11 +208,12 @@ namespace Nop.Admin.Controllers
         
             return ret;
         }
+
         protected virtual Dictionary<string, string> ParseJSON(string file){
             Dictionary<string, string> ret = new Dictionary<string,string>();
             string json = "";
             try{
-                json = System.IO.File.ReadAllText(_context.Server.MapPath(file), System.Text.Encoding.UTF8);
+                json = System.IO.File.ReadAllText(CommonHelper.MapPath(file), System.Text.Encoding.UTF8);
             }
             catch{}
 
@@ -233,21 +237,25 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
+
         protected virtual string GetFilesRoot(){
             string ret = GetSetting("FILES_ROOT");
-            if (GetSetting("SESSION_PATH_KEY") != "" && _context.Session[GetSetting("SESSION_PATH_KEY")] != null)
-                ret = (string)_context.Session[GetSetting("SESSION_PATH_KEY")];
+            if (GetSetting("SESSION_PATH_KEY") != "" &&
+                _httpContextAccessor.HttpContext.Session.GetString(GetSetting("SESSION_PATH_KEY")) != null)
+                ret = _httpContextAccessor.HttpContext.Session.GetString(GetSetting("SESSION_PATH_KEY"));
         
             if(ret == "")
-                ret = _context.Server.MapPath("../Uploads");
+                ret = CommonHelper.MapPath("../Uploads");
             else
                 ret = FixPath(ret);
             return ret;
         }
+
         protected virtual void LoadConf(){
             if(_settings == null)
                 _settings = ParseJSON(confFile);
         }
+
         protected virtual string GetSetting(string name){
             string ret = "";
             LoadConf();
@@ -256,6 +264,7 @@ namespace Nop.Admin.Controllers
         
             return ret;
         }
+
         protected virtual void CheckPath(string path)
         {
             if (FixPath(path).IndexOf(GetFilesRoot()) != 0)
@@ -263,6 +272,7 @@ namespace Nop.Admin.Controllers
                 throw new Exception("Access to " + path + " is denied");
             }
         }
+
         protected virtual void VerifyAction(string action)
         {
             string setting = GetSetting(action);
@@ -272,25 +282,30 @@ namespace Nop.Admin.Controllers
                 setting = "/" + setting;
             setting = ".." + setting;
         
-            if (_context.Server.MapPath(setting) != _context.Server.MapPath(_context.Request.Url.LocalPath))
+            if (CommonHelper.MapPath(setting) != CommonHelper.MapPath(_httpContextAccessor.HttpContext.Request.Path))
                 throw new Exception(LangRes("E_ActionDisabled"));
         }
+
         protected virtual string GetResultStr(string type, string msg)
         {
             return "{\"res\":\"" + type + "\",\"msg\":\"" + msg.Replace("\"","\\\"") + "\"}";
         }
+
         protected virtual string GetSuccessRes(string msg)
         {
             return GetResultStr("ok", msg);
         }
+
         protected virtual string GetSuccessRes()
         {
             return GetSuccessRes("");
         }
+
         protected virtual string GetErrorRes(string msg)
         {
             return GetResultStr("error", msg);
         }
+
         private void _copyDir(string path, string dest){
             if(!Directory.Exists(dest))
                 Directory.CreateDirectory(dest);
@@ -307,6 +322,7 @@ namespace Nop.Admin.Controllers
                 _copyDir(d, Path.Combine(dest, dir.Name));
             }
         }
+
         protected virtual void CopyDir(string path, string newPath)
         {
             CheckPath(path);
@@ -325,8 +341,9 @@ namespace Nop.Admin.Controllers
             else{
                 _copyDir(dir.FullName, newDir.FullName);
             }
-            _r.Write(GetSuccessRes());
+            _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
         }
+
         protected virtual string MakeUniqueFilename(string dir, string filename){
             string ret = filename;
             int i = 0;
@@ -337,6 +354,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
+
         protected virtual void CopyFile(string path, string newPath)
         {
             CheckPath(path);
@@ -348,13 +366,14 @@ namespace Nop.Admin.Controllers
                 string newName = MakeUniqueFilename(newPath, file.Name);
                 try{
                     System.IO.File.Copy(file.FullName, Path.Combine(newPath, newName));
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch{
                     throw new Exception(LangRes("E_CopyFile"));
                 }
             }
         }
+
         protected virtual void CreateDir(string path, string name)
         {
             CheckPath(path);
@@ -367,7 +386,7 @@ namespace Nop.Admin.Controllers
                     path = Path.Combine(path, name);
                     if(!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch
                 {
@@ -375,6 +394,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         protected virtual void DeleteDir(string path)
         {
             CheckPath(path);
@@ -390,7 +410,7 @@ namespace Nop.Admin.Controllers
                 try
                 {
                     Directory.Delete(path);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch
                 {
@@ -398,6 +418,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         protected virtual void DeleteFile(string path)
         {
             CheckPath(path);
@@ -409,7 +430,7 @@ namespace Nop.Admin.Controllers
                 try
                 {
                     System.IO.File.Delete(path);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch
                 {
@@ -417,6 +438,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         private List<string> GetFiles(string path, string type){
             List<string> ret = new List<string>();
             if(type == "#")
@@ -428,6 +450,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
+
         private ArrayList ListDirs(string path){
             string[] dirs = Directory.GetDirectories(path);
             ArrayList ret = new ArrayList();
@@ -437,6 +460,7 @@ namespace Nop.Admin.Controllers
             }
             return ret;
         }
+
         protected virtual void ListDirTree(string type)
         {
             DirectoryInfo d = new DirectoryInfo(GetFilesRoot());
@@ -446,16 +470,20 @@ namespace Nop.Admin.Controllers
             ArrayList dirs = ListDirs(d.FullName);
             dirs.Insert(0, d.FullName);
         
-            string localPath = _context.Server.MapPath("~/");
-            _r.Write("[");
+            string localPath = CommonHelper.MapPath("~/");
+            _httpContextAccessor.HttpContext.Response.WriteAsync("[");
             for(int i = 0; i <dirs.Count; i++){
                 string dir = (string) dirs[i];
-                _r.Write("{\"p\":\"/" + dir.Replace(localPath, "").Replace("\\", "/") + "\",\"f\":\"" + GetFiles(dir, type).Count.ToString() + "\",\"d\":\"" + Directory.GetDirectories(dir).Length.ToString() + "\"}");
+                _httpContextAccessor.HttpContext.Response.WriteAsync(
+                    "{\"p\":\"/" + dir.Replace(localPath, "").Replace("\\", "/") + "\",\"f\":\"" +
+                    GetFiles(dir, type).Count + "\",\"d\":\"" +
+                    Directory.GetDirectories(dir).Length + "\"}");
                 if(i < dirs.Count -1)
-                    _r.Write(",");
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(",");
             }
-            _r.Write("]");
+            _httpContextAccessor.HttpContext.Response.WriteAsync("]");
         }
+
         protected virtual double LinuxTimestamp(DateTime d){
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0).ToLocalTime();
             TimeSpan timeSpan = (d.ToLocalTime() - epoch);
@@ -463,12 +491,13 @@ namespace Nop.Admin.Controllers
             return timeSpan.TotalSeconds;
 
         }
+
         protected virtual void ListFiles(string path, string type)
         {
             CheckPath(path);
             string fullPath = FixPath(path);
             List<string> files = GetFiles(fullPath, type);
-            _r.Write("[");
+            _httpContextAccessor.HttpContext.Response.WriteAsync("[");
             for(int i = 0; i < files.Count; i++){
                 FileInfo f = new FileInfo(files[i]);
                 int w = 0, h = 0;
@@ -485,36 +514,38 @@ namespace Nop.Admin.Controllers
                     }
                     catch(Exception ex){throw ex;}
                 }
-                _r.Write("{");
-                _r.Write("\"p\":\""+path + "/" + f.Name+"\"");
-                _r.Write(",\"t\":\"" + Math.Ceiling(LinuxTimestamp(f.LastWriteTime)).ToString() + "\"");
-                _r.Write(",\"s\":\""+f.Length.ToString()+"\"");
-                _r.Write(",\"w\":\""+w.ToString()+"\"");
-                _r.Write(",\"h\":\""+h.ToString()+"\"");
-                _r.Write("}");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("{");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("\"p\":\"" + path + "/" + f.Name + "\"");
+                _httpContextAccessor.HttpContext.Response.WriteAsync(",\"t\":\"" + Math.Ceiling(LinuxTimestamp(f.LastWriteTime)) + "\"");
+                _httpContextAccessor.HttpContext.Response.WriteAsync(",\"s\":\"" + f.Length + "\"");
+                _httpContextAccessor.HttpContext.Response.WriteAsync(",\"w\":\"" + w + "\"");
+                _httpContextAccessor.HttpContext.Response.WriteAsync(",\"h\":\"" + h + "\"");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("}");
                 if (i < files.Count - 1)
-                    _r.Write(",");
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(",");
             }
-            _r.Write("]");
+            _httpContextAccessor.HttpContext.Response.WriteAsync("]");
         }
+
         public virtual void DownloadDir(string path)
         {
             path = FixPath(path);
             if(!Directory.Exists(path))
                 throw new Exception(LangRes("E_CreateArchive"));
             string dirName = new FileInfo(path).Name;
-            string tmpZip = _context.Server.MapPath("../tmp/" + dirName + ".zip");
+            string tmpZip = CommonHelper.MapPath("../tmp/" + dirName + ".zip");
             if (System.IO.File.Exists(tmpZip))
                 System.IO.File.Delete(tmpZip);
             ZipFile.CreateFromDirectory(path, tmpZip,CompressionLevel.Fastest, true);
-            _r.Clear();
-            _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + dirName + ".zip\"");
-            _r.ContentType = MimeTypes.ApplicationForceDownload;
+            _httpContextAccessor.HttpContext.Response.Clear();
+            _httpContextAccessor.HttpContext.Response.Headers.Add("Content-Disposition", "attachment; filename=\"" + dirName + ".zip\"");
+            _httpContextAccessor.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
             _r.TransmitFile(tmpZip);
             _r.Flush();
             System.IO.File.Delete(tmpZip);
             _r.End();
         }
+
         protected virtual void DownloadFile(string path)
         {
             CheckPath(path);
@@ -528,6 +559,7 @@ namespace Nop.Admin.Controllers
                 _r.End();
             }
         }
+
         protected virtual void MoveDir(string path, string newPath)
         {
             CheckPath(path);
@@ -543,7 +575,7 @@ namespace Nop.Admin.Controllers
             else{
                 try{
                     source.MoveTo(dest.FullName);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch{
                     throw new Exception(LangRes("E_MoveDir") + " \"" + path + "\"");
@@ -551,6 +583,7 @@ namespace Nop.Admin.Controllers
             }
         
         }
+
         protected virtual void MoveFile(string path, string newPath)
         {
             CheckPath(path);
@@ -566,7 +599,7 @@ namespace Nop.Admin.Controllers
                 try
                 {
                     source.MoveTo(dest.FullName);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch
                 {
@@ -574,6 +607,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         protected virtual void RenameDir(string path, string name)
         {
             CheckPath(path);
@@ -590,7 +624,7 @@ namespace Nop.Admin.Controllers
                 try
                 {
                     source.MoveTo(dest.FullName);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch
                 {
@@ -598,6 +632,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         protected virtual void RenameFile(string path, string name)
         {
             CheckPath(path);
@@ -612,7 +647,7 @@ namespace Nop.Admin.Controllers
                 try
                 {
                     source.MoveTo(dest.FullName);
-                    _r.Write(GetSuccessRes());
+                    _httpContextAccessor.HttpContext.Response.WriteAsync(GetSuccessRes());
                 }
                 catch (Exception ex)
                 {
@@ -620,6 +655,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
         public virtual bool ThumbnailCallback()
         {
             return false;
@@ -669,7 +705,7 @@ namespace Nop.Admin.Controllers
             img.Dispose();
             Image.GetThumbnailImageAbort imgCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
 
-            _r.AddHeader("Content-Type", MimeTypes.ImagePng);
+            _httpContextAccessor.HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
             cropImg.GetThumbnailImage(width, height, imgCallback, IntPtr.Zero).Save(_r.OutputStream, ImageFormat.Png);
             _r.OutputStream.Close();
             cropImg.Dispose();
@@ -712,7 +748,8 @@ namespace Nop.Admin.Controllers
         }
         protected virtual bool IsAjaxUpload()
         {
-            return (_context.Request["method"] != null && _context.Request["method"].ToString() == "ajax");
+            return !StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Form["method"]) &&
+                   _httpContextAccessor.HttpContext.Request.Form["method"].ToString() == "ajax";
         }
         protected virtual void Upload(string path)
         {
@@ -721,13 +758,13 @@ namespace Nop.Admin.Controllers
             string res = GetSuccessRes();
             bool hasErrors = false;
             try{
-                for(int i = 0; i < Request.Files.Count; i++){
-                    if (CanHandleFile(Request.Files[i].FileName))
+                for(int i = 0; i < _httpContextAccessor.HttpContext.Request.Form.Files.Count; i++){
+                    if (CanHandleFile(_httpContextAccessor.HttpContext.Request.Form.Files[i].FileName))
                     {
-                        FileInfo f = new FileInfo(Request.Files[i].FileName);
+                        FileInfo f = new FileInfo(_httpContextAccessor.HttpContext.Request.Form.Files[i].FileName);
                         string filename = MakeUniqueFilename(path, f.Name);
                         string dest = Path.Combine(path, filename);
-                        Request.Files[i].SaveAs(dest);
+                        _httpContextAccessor.HttpContext.Request.Form.Files[i].SaveAs(dest);
                         if (GetFileType(new FileInfo(filename).Extension) == "image")
                         {
                             int w = 0;
@@ -751,18 +788,17 @@ namespace Nop.Admin.Controllers
             {
                 if(hasErrors)
                     res = GetErrorRes(LangRes("E_UploadNotAll"));
-                _r.Write(res);
+                _httpContextAccessor.HttpContext.Response.WriteAsync(res);
             }
             else
             {
-                _r.Write("<script>");
-                _r.Write("parent.fileUploaded(" + res + ");");
-                _r.Write("</script>");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("<script>");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("parent.fileUploaded(" + res + ");");
+                _httpContextAccessor.HttpContext.Response.WriteAsync("</script>");
             }
         }
         
-#endregion
-
+        #endregion
     }
 }
 #endif

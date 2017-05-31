@@ -25,7 +25,6 @@ namespace Nop.Admin.Controllers
             //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
             //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
-
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
@@ -51,8 +50,6 @@ namespace Nop.Admin.Controllers
             var fileExtension = Path.GetExtension(fileName);
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
-
-
 
             //contentType is not always available 
             //that's why we manually update it here

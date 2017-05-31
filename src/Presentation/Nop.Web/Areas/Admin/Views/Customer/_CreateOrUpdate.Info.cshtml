@@ -130,7 +130,7 @@
                                         numeric: false,
                                         previousNext: false,
                                         info: false,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
                                     columns: [
@@ -366,7 +366,7 @@
             }
             @if (Model.CustomerAttributes.Count > 0)
             {
-                @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
             }
             <div class="form-group">
                 <div class="col-md-3">

@@ -23,7 +23,6 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
         }
 
-        [NonAction]
         protected virtual IList<string> GetAllowedFileTypes()
         {
             return new List<string> {".gif", ".jpg", ".jpeg", ".png", ".bmp"};

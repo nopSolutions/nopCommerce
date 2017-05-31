@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Plugins;
 using Nop.Core;
@@ -186,9 +185,7 @@ namespace Nop.Admin.Controllers
                     configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName });
                 }
                 pluginModel.ConfigurationUrl = configurationUrl;
-
-
-
+                
 
                 //enabled/disabled (only for some plugin types)
                 if (pluginInstance is IPaymentMethod)
@@ -339,6 +336,7 @@ namespace Nop.Admin.Controllers
              
             return RedirectToAction("List");
         }
+
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
         public virtual IActionResult Uninstall(IFormCollection form)
@@ -674,6 +672,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-#endregion
+
+        #endregion
     }
 }

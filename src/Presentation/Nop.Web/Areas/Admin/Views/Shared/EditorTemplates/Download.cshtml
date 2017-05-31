@@ -1,6 +1,10 @@
 ﻿@model int
+@inject IDownloadService downloadService
+
 @using Nop.Core;
+@using Nop.Services.Media
 @using Nop.Web.Framework.UI;
+
 @{
     //register CSS and JS
     Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
@@ -9,7 +13,6 @@
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
-    var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
     var download = downloadService.GetDownloadById(Model);
 
     var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);

@@ -294,7 +294,6 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-
         //edit
         public virtual IActionResult Edit(int id)
         {
@@ -438,7 +437,6 @@ namespace Nop.Admin.Controllers
 
         #region Vendor notes
 
-        
         [HttpPost]
         public virtual IActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
         {

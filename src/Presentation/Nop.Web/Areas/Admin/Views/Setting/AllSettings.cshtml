@@ -1,5 +1,6 @@
 ﻿@model AllSettingsListModel
 @inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
 
 @using System.Text.Encodings.Web
 @using Nop.Services.Stores
@@ -137,7 +138,7 @@
                                 pageable: {
                                     refresh: true,
                                     pageSizes: [@(gridPageSizes)],
-                                    @Html.Partial("_GridPagerMessages")
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                                 editable: {
@@ -187,7 +188,6 @@
                                 Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
                             }
                             @{
-                                var storeService = EngineContext.Current.Resolve<IStoreService>();
                                 var allStores = storeService.GetAllStores();
                             }
                             @foreach (var store in allStores)

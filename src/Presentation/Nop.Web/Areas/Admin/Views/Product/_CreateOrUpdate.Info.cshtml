@@ -1,5 +1,6 @@
 ﻿@model ProductModel
 @inject IStoreService storeService
+@inject IProductTagService productTagService
 
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services.Catalog;
@@ -377,7 +378,7 @@
 
     @{
         //TODO move to Model
-        var productTags = EngineContext.Current.Resolve<IProductTagService>().GetAllProductTags();
+        var productTags = productTagService.GetAllProductTags();
         var productTagsSb = new StringBuilder();
         productTagsSb.Append("var initialProductTags = [");
         for (int i = 0; i < productTags.Count; i++)
@@ -1206,7 +1207,7 @@
                                         numeric: false,
                                         previousNext: false,
                                         info: false,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -1362,7 +1363,7 @@
                                         numeric: false,
                                         previousNext: false,
                                         info: false,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -2025,7 +2026,7 @@
                                         numeric: false,
                                         previousNext: false,
                                         info: false,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -2148,7 +2149,7 @@
                                         numeric: false,
                                         previousNext: false,
                                         info: false,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

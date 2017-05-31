@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
-using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -77,6 +76,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly NopConfig _config;
+
         #endregion
 
         #region Ctor
@@ -190,6 +190,7 @@ namespace Nop.Admin.Controllers
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             var model = blogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
+
             if (storeScope > 0)
             {
                 model.Enabled_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.Enabled, storeScope);
@@ -336,6 +337,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Forum(ForumSettingsModel model)
         {
@@ -642,6 +644,7 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+
             model.DefaultTaxAddress.CountryEnabled = true;
             model.DefaultTaxAddress.StateProvinceEnabled = true;
             model.DefaultTaxAddress.ZipPostalCodeEnabled = true;
@@ -791,6 +794,7 @@ namespace Nop.Admin.Controllers
                 model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x=> x.ProductReviewsPageSizeOnAccountPage, storeScope);
                 model.ExportImportProductAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductAttributes, storeScope);
             }
+
             return View(model);
         }
 
@@ -907,6 +911,7 @@ namespace Nop.Admin.Controllers
                 Data = model.OrderBy(option => option.DisplayOrder),
                 Total = model.Count
             };
+
             return Json(gridModel);
         }
 
@@ -1502,6 +1507,7 @@ namespace Nop.Admin.Controllers
                 model.DefaultPictureZoomEnabled_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultPictureZoomEnabled, storeScope);
             }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
+
             return View(model);
         }
 
@@ -1960,8 +1966,10 @@ namespace Nop.Admin.Controllers
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
 
                 #if NET451
-                                //clear cached values of routes
-                                System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
+
+                //clear cached values of routes
+                System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
+
                 #endif
             }
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
@@ -2087,6 +2095,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
+
             return RedirectToAction("GeneralCommon");
         }
 
@@ -2282,6 +2291,6 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = string.Empty });
         }
 
-#endregion
+        #endregion
     }
 }

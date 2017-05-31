@@ -61,7 +61,7 @@
                                 pageable: {
                                     refresh: true,
                                     pageSizes: [@(gridPageSizes)],
-                                    @Html.Partial("_GridPagerMessages")
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 //details grid
                                 detailInit: detailInit,
@@ -114,7 +114,7 @@
                                     numeric: false,
                                     previousNext: false,
                                     info: false,
-                                    @Html.Partial("_GridPagerMessages")
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 columns: [
                                     {

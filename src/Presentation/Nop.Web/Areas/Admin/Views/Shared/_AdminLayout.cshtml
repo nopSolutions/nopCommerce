@@ -1,25 +1,31 @@
-﻿@using System.Globalization
+﻿@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject IDateTimeHelper dateTimeHelper
+@inject IPermissionService permissionService
+@inject IHttpContextAccessor httpContextAccessor
+@inject CommonSettings commonSettings
+@inject LocalizationSettings localizationSettings
+@inject StoreInformationSettings storeInformationSettings
+
+@using System.Globalization
 @using System.Text.Encodings.Web
-@using System.Web
 @using Microsoft.AspNetCore.Http
 @using Nop.Core.Domain.Customers
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Common
 @using Nop.Services.Customers
+@using Nop.Services.Helpers
 @using Nop.Services.Security;
-@inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
+
 @{
     var request = httpContextAccessor.HttpContext.Request;
     var rawUrl = request.Path + request.QueryString;
-
+    
     var kendoVersion = "2014.1.318";
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
-        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
     if (supportRtl)
@@ -65,11 +71,9 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
-    var canManageMaintenance = EngineContext.Current.Resolve<IPermissionService>()
-        .Authorize(StandardPermissionProvider.ManageMaintenance);
+    var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
 
     //X-UA-Compatible tag
-    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
     if (commonSettings.RenderXuaCompatible)
     {
         Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
@@ -77,10 +81,10 @@
 
     //sidebar
     const string hideSidebarAttributeName = "HideSidebar";
-    var hideSidebar = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
+    var hideSidebar = workContext.CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
 
     //avatar
-    var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+    var currentCustomer = workContext.CurrentCustomer;
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
@@ -219,18 +223,18 @@
                             });
                         </script>
                         @Html.Widget("admin_menu_before", area: "Admin")
-                        @Html.Partial("Menu")
+                        @await Html.PartialAsync("Menu")
                     </div>
                 </div>
             }
             <div class="content-wrapper">
-                @Html.Partial("Notifications")
+                @await Html.PartialAsync("Notifications")
                 <div>
                     @RenderBody()
                 </div>
             </div>
             <div class="main-footer clearfix">
-                @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
+                @if (!storeInformationSettings.HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
                         Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
@@ -243,8 +247,6 @@
                 </div>
                 <div class="text-center">
                     @{
-                        var dateTimeHelper = EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>();
-                        var workContext = EngineContext.Current.Resolve<IWorkContext>();
                         var currentCulture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
                     }
                     @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)

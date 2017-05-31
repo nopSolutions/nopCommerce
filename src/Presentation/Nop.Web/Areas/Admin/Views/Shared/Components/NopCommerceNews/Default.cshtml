@@ -1,11 +1,13 @@
-﻿@using Nop.Core
+﻿@model NopCommerceNewsModel
+@inject IWorkContext workContext
+
+@using Nop.Core
 @using Nop.Services.Common
-@model NopCommerceNewsModel
 
 @{
     const string panelId = "nopcommerce-news-box";
     const string hidePanelAttributeName = "HideNopCommerceNewsPanel";
-    var hidePanel = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">

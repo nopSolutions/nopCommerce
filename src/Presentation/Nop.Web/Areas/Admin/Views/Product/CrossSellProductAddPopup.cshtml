@@ -134,7 +134,7 @@
                                     },
                                     pageable: {
                                         refresh: true,
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

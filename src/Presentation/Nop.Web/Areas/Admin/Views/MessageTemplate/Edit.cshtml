@@ -38,6 +38,6 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("message-template-delete")

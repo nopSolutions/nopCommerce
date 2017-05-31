@@ -687,7 +687,6 @@ namespace Nop.Admin.Controllers
                 !customer.Active;
         }
 
-        [NonAction]
         protected virtual void PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties)
         {
             if (customer == null)
@@ -745,7 +744,6 @@ namespace Nop.Admin.Controllers
             model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
-        [NonAction]
         private bool SecondAdminAccountExists(Customer customer)
         {
             var customers = _customerService.GetAllCustomers(customerRoleIds: new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Administrators).Id});

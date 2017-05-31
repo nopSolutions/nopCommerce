@@ -1,12 +1,14 @@
-﻿@using Nop.Web.Framework.UI;
+﻿@inject IWorkContext workContext
+@inject LocalizationSettings localizationSettings
+@inject CommonSettings commonSettings
+
+@using Nop.Web.Framework.UI;
 @using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Localization
 
 @{
     var kendoVersion = "2014.1.318";
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
-        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
     if (supportRtl)
@@ -47,7 +49,6 @@
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //X-UA-Compatible tag
-    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
     if (commonSettings.RenderXuaCompatible)
     {
         Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
@@ -66,7 +67,7 @@
 <body class="hold-transition skin-blue sidebar-collapse">
     <div class="wrapper">
         <div class="content-wrapper">
-            @Html.Partial("Notifications")
+            @await Html.PartialAsync("Notifications")
             @RenderBody()
         </div>
     </div>
@@ -74,4 +75,3 @@
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
 </html>
-

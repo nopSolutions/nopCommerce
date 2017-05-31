@@ -1,6 +1,10 @@
 ﻿@model int
+@inject IPictureService pictureService
+
 @using Nop.Core;
+@using Nop.Services.Media
 @using Nop.Web.Framework.UI;
+
 @{
     //register CSS and JS
     Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
@@ -9,11 +13,11 @@
     //other variables
     var random = CommonHelper.GenerateRandomInteger();
     var clientId = "picture" + random;
-    var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
     var picture = pictureService.GetPictureById(Model);
 
     const int pictureSize = 100;
 }
+
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>

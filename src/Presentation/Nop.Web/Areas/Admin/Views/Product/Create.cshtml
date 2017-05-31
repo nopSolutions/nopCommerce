@@ -26,10 +26,10 @@
             </button>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
 }
 @if (!Model.IsLoggedInAsVendor)
 {
     //product editor settings modal
-    @Html.Partial("_ProductEditorSettingsModal", Model)
+    @await Html.PartialAsync("_ProductEditorSettingsModal", Model)
 }

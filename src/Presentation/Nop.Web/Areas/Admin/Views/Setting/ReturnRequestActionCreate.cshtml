@@ -29,7 +29,7 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @Html.Partial("_CreateOrUpdate.ReturnRequestAction", Model)
+            @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
         </div>
     </div>
 }

@@ -60,7 +60,7 @@
                                     numeric: false,
                                     previousNext: false,
                                     info: false,
-                                    @Html.Partial("_GridPagerMessages")
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -138,7 +138,7 @@
                                     numeric: false,
                                     previousNext: false,
                                     info: false,
-                                    @Html.Partial("_GridPagerMessages")
+                                    @await Html.PartialAsync("_GridPagerMessages")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",

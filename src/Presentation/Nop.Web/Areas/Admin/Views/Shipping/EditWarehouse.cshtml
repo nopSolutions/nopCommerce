@@ -30,6 +30,6 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateWarehouse", Model)
+    @await Html.PartialAsync("_CreateOrUpdateWarehouse", Model)
 }
 @Html.DeleteConfirmation("DeleteWarehouse", "warehouse-delete")

@@ -1,5 +1,6 @@
 ﻿@model StoreScopeConfigurationModel
 @inject IHttpContextAccessor httpContextAccessor
+@inject IWebHelper webHelper
 
 @using System.Net
 @using Microsoft.AspNetCore.Http
@@ -9,7 +10,6 @@
     var request = httpContextAccessor.HttpContext.Request;
     var rawUrl = request.Path + request.QueryString;
 
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     var stores = Model.Stores.Select(store => new SelectListItem
     {
         Text = store.Name,

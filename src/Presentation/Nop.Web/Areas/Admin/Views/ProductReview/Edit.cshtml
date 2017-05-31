@@ -34,7 +34,7 @@
             }
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
 }
 @if (!Model.IsLoggedInAsVendor)
 {

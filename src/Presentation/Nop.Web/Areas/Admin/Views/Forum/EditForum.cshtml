@@ -30,6 +30,6 @@
             </span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateForum", Model)
+    @await Html.PartialAsync("_CreateOrUpdateForum", Model)
 }
 @Html.DeleteConfirmation("DeleteForum", "forum-delete")

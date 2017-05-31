@@ -1,10 +1,11 @@
 ﻿@model CustomerListModel
+@inject AdminAreaSettings adminAreaSettings
 
 @using System.Globalization;
 
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.Customers.Customers").Text;
@@ -257,7 +258,7 @@
                                     pageable: {
                                         refresh: true,
                                         pageSizes: [@(gridPageSizes)],
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("_GridPagerMessages")
                                     },
                                     scrollable: false,
                                     dataBound: onDataBound,

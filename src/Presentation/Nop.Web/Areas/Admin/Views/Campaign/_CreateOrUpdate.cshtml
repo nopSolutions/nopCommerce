@@ -1,6 +1,5 @@
-﻿@using Nop.Core.Domain.Common
-
-@model CampaignModel
+﻿@model CampaignModel
+@inject AdminAreaSettings adminAreaSettings
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
@@ -78,7 +77,7 @@
                             @Html.NopLabelFor(model => model.Body)
                         </div>
                         <div class="col-md-9">
-                            @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                            @if (adminAreaSettings.UseRichEditorInMessageTemplates)
                             {
                                 //we use rich editor with BODY tag supported
                                 //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
