@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
-using Microsoft.AspNetCore.Builder;
 
 namespace Nop.Plugin.Shipping.FixedOrByWeight
 {
@@ -18,36 +18,22 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.Configure",
                  "Plugins/FixedOrByWeight/Configure",
                  new { controller = "FixedOrByWeight", action = "Configure", }
-                 #if NET451
-                 ,
-                 new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
-                 #endif
             );
 
             routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup",
                  "Plugins/FixedOrByWeight/AddRateByWeighPopup",
-                 new { controller = "FixedOrByWeight", action = "AddRateByWeighPopup" }
-#if NET451
-                 ,
-                 new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
-#endif
+                 new { controller = "FixedOrByWeight", action = "AddRateByWeighPopup", area = "Admin" }
             );
 
             routeBuilder.MapRoute("Plugin.Shipping.FixedOrByWeight.EditRateByWeighPopup",
                  "Plugins/FixedOrByWeight/EditRateByWeighPopup",
-                 new { controller = "FixedOrByWeight", action = "EditRateByWeighPopup" }
-#if NET451
-                 ,
-                 new[] { "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }
-#endif
+                 new { controller = "FixedOrByWeight", action = "EditRateByWeighPopup", area = "Admin" }
             );
         }
+
         public int Priority
         {
-            get
-            {
-                return 0;
-            }
+            get { return 0; }
         }
     }
 }

@@ -125,10 +125,10 @@
                 </script>
             </div>
             <div class="panel-footer">
-                @{
-                    var addNewUrl = Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
-                }
-                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Shipping.FixedOrByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 800, true); return false;"/>
+                <button type="submit" id="btnAddNewRecord" class="btn btn-primary"
+                        onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.Shipping.FixedOrByWeight.AddRateByWeighPopup", new { btnId = "btnRefresh", formId = "shipping-byweight-form" }))', 800, 800, true); return false;">
+                    @T("Plugins.Shipping.FixedOrByWeight.AddRecord")
+                </button>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none"/>
             </div>
             <script type="text/javascript">
