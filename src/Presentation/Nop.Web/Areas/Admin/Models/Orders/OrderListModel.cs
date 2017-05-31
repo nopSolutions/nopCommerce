@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
@@ -13,9 +11,6 @@ namespace Nop.Admin.Models.Orders
     {
         public OrderListModel()
         {
-            OrderStatusIds = new List<int>();
-            PaymentStatusIds = new List<int>();
-            ShippingStatusIds = new List<int>();
             AvailableOrderStatuses = new List<SelectListItem>();
             AvailablePaymentStatuses = new List<SelectListItem>();
             AvailableShippingStatuses = new List<SelectListItem>();
@@ -36,15 +31,15 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.List.OrderStatus")]
         [UIHint("MultiSelect")]
-        public List<int> OrderStatusIds { get; set; }
+        public int[] OrderStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.PaymentStatus")]
         [UIHint("MultiSelect")]
-        public List<int> PaymentStatusIds { get; set; }
+        public int[] PaymentStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.ShippingStatus")]
         [UIHint("MultiSelect")]
-        public List<int> ShippingStatusIds { get; set; }
+        public int[] ShippingStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.PaymentMethod")]
         public string PaymentMethodSystemName { get; set; }

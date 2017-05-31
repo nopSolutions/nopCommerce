@@ -1,5 +1,6 @@
 ﻿@model OrderModel.AddOrderProductModel.ProductDetailsModel
 
+@using Microsoft.AspNetCore.Routing
 @using Nop.Core.Domain.Catalog
 
 @{
@@ -12,7 +13,7 @@
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
                                                     new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
-                                                    FormMethod.Post,
+                                                    FormMethod.Post, null,
                                                     new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, {"id", "product-details-form" } }))
 {
     @Html.AntiForgeryToken()
@@ -89,9 +90,10 @@
                         </div>
                     </div>
 
-                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes, new ViewDataDictionary() {new KeyValuePair<string, object>("productId", Model.ProductId)})
+                    var dataDict = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("productId", Model.ProductId) };
+                    @Html.Partial("_ProductAddAttributes", Model.ProductAttributes, dataDict)
 
-                    var dataDictGiftCard = new ViewDataDictionary();
+                    var dataDictGiftCard = new ViewDataDictionary(ViewData);
                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
                     @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
 

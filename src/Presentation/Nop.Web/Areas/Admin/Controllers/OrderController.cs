@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Primitives;
-#if NET451
-using System.Web.Mvc;
 using Nop.Admin.Extensions;
-#endif
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
@@ -290,7 +289,7 @@ namespace Nop.Admin.Controllers
         {
             var attributesXml = string.Empty;
 
-#region Product attributes
+            #region Product attributes
 
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
@@ -420,7 +419,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-#endregion
+            #endregion
 
             return attributesXml;
         }
@@ -450,7 +449,6 @@ namespace Nop.Admin.Controllers
             }
         }
 
-#if NET451
         protected virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
@@ -487,7 +485,7 @@ namespace Nop.Admin.Controllers
             //custom values
             model.CustomValues = order.DeserializeCustomValues();
             
-#region Order totals
+            #region Order totals
 
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
@@ -590,9 +588,9 @@ namespace Nop.Admin.Controllers
                 model.Profit = _priceFormatter.FormatPrice(profit, true, false);
             }
 
-#endregion
+            #endregion
 
-#region Payment info
+            #region Payment info
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -620,8 +618,7 @@ namespace Nop.Admin.Controllers
                 if (!String.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
                     model.CardNumber = maskedCreditCardNumberDecrypted;
             }
-
-
+            
             //payment transaction info
             model.AuthorizationTransactionId = order.AuthorizationTransactionId;
             model.CaptureTransactionId = order.CaptureTransactionId;
@@ -652,9 +649,10 @@ namespace Nop.Admin.Controllers
             {
                 model.RecurringPaymentId = recurringPayment.Id;
             }
-#endregion
 
-#region Billing & shipping info
+            #endregion
+
+            #region Billing & shipping info
 
             model.BillingAddress = order.BillingAddress.ToModel();
             model.BillingAddress.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
@@ -716,16 +714,27 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                     model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
-                    model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
+                    model.ShippingAddressGoogleMapsUrl =
+                        string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
+                            WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " +
+                                                 order.ShippingAddress.ZipPostalCode + " " +
+                                                 order.ShippingAddress.City + " " +
+                                                 (order.ShippingAddress.Country != null
+                                                     ? order.ShippingAddress.Country.Name
+                                                     : "")));
                 }
                 else
                 {
                     if (order.PickupAddress != null)
                     {
                         model.PickupAddress = order.PickupAddress.ToModel();
-                        model.PickupAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
-                            Server.UrlEncode(string.Format("{0} {1} {2} {3}", order.PickupAddress.Address1, order.PickupAddress.ZipPostalCode, order.PickupAddress.City,
-                                order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)));
+                        model.PickupAddressGoogleMapsUrl =
+                            string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
+                                WebUtility.UrlEncode(string.Format("{0} {1} {2} {3}", order.PickupAddress.Address1,
+                                    order.PickupAddress.ZipPostalCode, order.PickupAddress.City,
+                                    order.PickupAddress.Country != null
+                                        ? order.PickupAddress.Country.Name
+                                        : string.Empty)));
                     }
                 }
                 model.ShippingMethod = order.ShippingMethod;
@@ -733,9 +742,9 @@ namespace Nop.Admin.Controllers
                 model.CanAddNewShipments = order.HasItemsToAddToShipment();
             }
 
-#endregion
+            #endregion
 
-#region Products
+            #region Products
 
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
             bool hasDownloadableItems = false;
@@ -777,6 +786,7 @@ namespace Nop.Admin.Controllers
                         orderItemModel.LicenseDownloadGuid = licenseDownload.DownloadGuid;
                     }
                 }
+
                 //vendor
                 var vendor = _vendorService.GetVendorById(orderItem.Product.VendorId);
                 orderItemModel.VendorName = vendor != null ? vendor.Name : "";
@@ -786,11 +796,13 @@ namespace Nop.Admin.Controllers
                 orderItemModel.UnitPriceExclTaxValue = orderItem.UnitPriceExclTax;
                 orderItemModel.UnitPriceInclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
                 orderItemModel.UnitPriceExclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                
                 //discounts
                 orderItemModel.DiscountInclTaxValue = orderItem.DiscountAmountInclTax;
                 orderItemModel.DiscountExclTaxValue = orderItem.DiscountAmountExclTax;
                 orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
                 orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                
                 //subtotal
                 orderItemModel.SubTotalInclTaxValue = orderItem.PriceInclTax;
                 orderItemModel.SubTotalExclTaxValue = orderItem.PriceExclTax;
@@ -800,6 +812,7 @@ namespace Nop.Admin.Controllers
                 orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                 if (orderItem.Product.IsRecurring)
                     orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.Product.RecurringCycleLength, orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                
                 //rental info
                 if (orderItem.Product.IsRental)
                 {
@@ -825,9 +838,10 @@ namespace Nop.Admin.Controllers
                 model.Items.Add(orderItemModel);
             }
             model.HasDownloadableProducts = hasDownloadableItems;
-#endregion
+
+            #endregion
         }
-#endif
+
         protected virtual OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -907,12 +921,14 @@ namespace Nop.Admin.Controllers
                 model.ProductAttributes.Add(attributeModel);
             }
             model.HasCondition = model.ProductAttributes.Any(a => a.HasCondition);
+
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;
             if (model.GiftCard.IsGiftCard)
             {
                 model.GiftCard.GiftCardType = product.GiftCardType;
             }
+
             //rental
             model.IsRental = product.IsRental;
             return model;
@@ -1023,8 +1039,7 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), order.CustomOrderNumber);
         }
 
-        protected virtual DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
-            int pageSize, int orderBy)
+        protected virtual DataSourceResult GetBestsellersBriefReportModel(int pageIndex, int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
             int vendorId = 0;
@@ -1056,19 +1071,18 @@ namespace Nop.Admin.Controllers
             };
             return gridModel;
         }
+
         #endregion
 
         #region Order list
 
-#if NET451
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
         }
-        public virtual IActionResult List(
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> orderStatusIds = null,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> paymentStatusIds = null,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> shippingStatusIds = null)
+
+        public virtual IActionResult List(List<string> orderStatusIds = null, List<string> paymentStatusIds = null, 
+                                                                                List<string> shippingStatusIds = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1139,8 +1153,7 @@ namespace Nop.Admin.Controllers
             
             return View(model);
         }
-        
-#endif
+
         [HttpPost]
 		public virtual IActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
@@ -1153,17 +1166,23 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            DateTime? startDateValue = model.StartDate == null ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null 
+            DateTime? endDateValue = model.EndDate == null ? null
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
-            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
-            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
+            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
+                ? model.OrderStatusIds.ToList()
+                : null;
+            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
+                ? model.PaymentStatusIds.ToList()
+                : null;
+            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
+                ? model.ShippingStatusIds.ToList()
+                : null;
 
-		    var filterByProductId = 0;
+            var filterByProductId = 0;
 		    var product = _productService.GetProductById(model.ProductId);
 		    if (product != null && HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
@@ -1185,6 +1204,7 @@ namespace Nop.Admin.Controllers
                 orderNotes: model.OrderNotes,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
+
             var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>
@@ -1240,6 +1260,7 @@ namespace Nop.Admin.Controllers
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
+
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
@@ -1255,7 +1276,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-#if NET451
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
         public virtual IActionResult GoToOrderId(OrderListModel model)
@@ -1296,14 +1316,12 @@ namespace Nop.Admin.Controllers
                               productid = p.Id
                           })
                           .ToList();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
         }
 
-#endif
-#endregion
+        #endregion
 
-#if NET451
-#region Export / Import
+        #region Export / Import
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportxml-all")]
@@ -1324,9 +1342,15 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
-            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
-            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
+            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
+                ? model.OrderStatusIds.ToList()
+                : null;
+            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
+                ? model.PaymentStatusIds.ToList()
+                : null;
+            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
+                ? model.ShippingStatusIds.ToList()
+                : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1352,7 +1376,8 @@ namespace Nop.Admin.Controllers
             try
             {
                 var xml = _exportManager.ExportOrdersToXml(orders);
-                return new XmlDownloadResult(xml, "orders.xml");
+
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
             }
             catch (Exception exc)
             {
@@ -1378,7 +1403,8 @@ namespace Nop.Admin.Controllers
             }
 
             var xml = _exportManager.ExportOrdersToXml(orders);
-            return new XmlDownloadResult(xml, "orders.xml");
+
+            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "orders.xml");
         }
 
         [HttpPost, ActionName("List")]
@@ -1400,9 +1426,15 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
-            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
-            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
+            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
+                ? model.OrderStatusIds.ToList()
+                : null;
+            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
+                ? model.PaymentStatusIds.ToList()
+                : null;
+            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
+                ? model.ShippingStatusIds.ToList()
+                : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1465,11 +1497,11 @@ namespace Nop.Admin.Controllers
             }
         }
         
-#endregion
-        
-#region Order details
-        
-#region Payments and other order workflow
+        #endregion
+
+        #region Order details
+
+        #region Payments and other order workflow
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("cancelorder")]
@@ -1841,9 +1873,9 @@ namespace Nop.Admin.Controllers
             }
         }
 
-#endregion
+        #endregion
 
-#region Edit, delete
+        #region Edit, delete
 
         public virtual IActionResult Edit(int id)
         {
@@ -1935,9 +1967,15 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
-            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
-            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
+            var orderStatusIds = model.OrderStatusIds != null && !model.OrderStatusIds.Contains(0)
+                ? model.OrderStatusIds.ToList()
+                : null;
+            var paymentStatusIds = model.PaymentStatusIds != null && !model.PaymentStatusIds.Contains(0)
+                ? model.PaymentStatusIds.ToList()
+                : null;
+            var shippingStatusIds = model.ShippingStatusIds != null && !model.ShippingStatusIds.Contains(0)
+                ? model.ShippingStatusIds.ToList()
+                : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1952,7 +1990,7 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                osIds: orderStatusIds,
+                osIds: orderStatusIds.ToList(),
                 psIds: paymentStatusIds,
                 ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
@@ -2196,7 +2234,7 @@ namespace Nop.Admin.Controllers
 
             //get order item identifier
             int orderItemId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnSaveOrderItem".Length));
 
@@ -2306,7 +2344,7 @@ namespace Nop.Admin.Controllers
 
             //get order item identifier
             int orderItemId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnDeleteOrderItem".Length));
 
@@ -2384,7 +2422,7 @@ namespace Nop.Admin.Controllers
 
             //get order item identifier
             int orderItemId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
 
@@ -2423,7 +2461,7 @@ namespace Nop.Admin.Controllers
 
             //get order item identifier
             int orderItemId = 0;
-            foreach (var formValue in form.AllKeys)
+            foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
 
@@ -2657,7 +2695,7 @@ namespace Nop.Admin.Controllers
             //attributes
             var attributesXml = ParseProductAttributes(product, form, warnings);
 
-#region Gift cards
+            #region Gift cards
 
             string recipientName = "";
             string recipientEmail = "";
@@ -2666,7 +2704,7 @@ namespace Nop.Admin.Controllers
             string giftCardMessage = "";
             if (product.IsGiftCard)
             {
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                 {
                     if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -2699,9 +2737,9 @@ namespace Nop.Admin.Controllers
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
-#endregion
+            #endregion
 
-#region Rental product
+            #region Rental product
 
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
@@ -2710,7 +2748,7 @@ namespace Nop.Admin.Controllers
                 ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
             }
 
-#endregion
+            #endregion
 
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
@@ -2810,11 +2848,11 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
         
-#region Addresses
+        #region Addresses
 
         public virtual IActionResult AddressEdit(int addressId, int orderId)
         {
@@ -2971,9 +3009,9 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-#endregion
+        #endregion
         
-#region Shipments
+        #region Shipments
 
         public virtual IActionResult ShipmentList()
         {
@@ -3254,7 +3292,7 @@ namespace Nop.Admin.Controllers
                     continue;
 
                 int qtyToAdd = 0; //parse quantity
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                     if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
@@ -3267,7 +3305,7 @@ namespace Nop.Admin.Controllers
                 {
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner
-                    foreach (string formKey in form.AllKeys)
+                    foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("warehouse_{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
                             int.TryParse(form[formKey], out warehouseId);
@@ -3280,7 +3318,7 @@ namespace Nop.Admin.Controllers
                     warehouseId = orderItem.Product.WarehouseId;
                 }
 
-                foreach (string formKey in form.AllKeys)
+                foreach (string formKey in form.Keys)
                     if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
@@ -3759,9 +3797,9 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
         
-#endregion
+        #endregion
         
-#region Order notes
+        #region Order notes
         
         [HttpPost]
         public virtual IActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
@@ -3811,11 +3849,11 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = false });
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = false });
 
             var orderNote = new OrderNote
             {
@@ -3836,7 +3874,7 @@ namespace Nop.Admin.Controllers
 
             }
 
-            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+            return Json(new {Result = true});
         }
 
         [HttpPost]
@@ -3861,10 +3899,10 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         
-#endregion
-#endif
+        #endregion
 
-#region Reports
+        #region Reports
+
         [HttpPost]
         public virtual IActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
@@ -3887,9 +3925,6 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
-#if NET451
 
         public virtual IActionResult BestsellersReport()
         {
@@ -3938,6 +3973,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
@@ -3994,8 +4030,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-
-
         public virtual IActionResult NeverSoldReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -4032,6 +4066,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
@@ -4073,7 +4108,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-#endif
         [HttpPost]
         public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
         {
@@ -4107,7 +4141,6 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
 
         [HttpPost]
         public virtual IActionResult OrderIncompleteReportList(DataSourceRequest command)
@@ -4165,7 +4198,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-#if NET451
         public virtual IActionResult CountryReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
@@ -4223,8 +4255,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        
-#endif
         public virtual IActionResult LoadOrderStatistics(string period)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -4317,6 +4347,6 @@ namespace Nop.Admin.Controllers
             return Json(result);
         }
 
-#endregion
+        #endregion
     }
 }

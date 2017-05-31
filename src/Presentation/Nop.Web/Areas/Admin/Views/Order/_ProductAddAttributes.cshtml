@@ -1,8 +1,8 @@
 ﻿@model IList<OrderModel.AddOrderProductModel.ProductAttributeModel>
 
 @using System.Text
-@using Nop.Web.Framework;
 @using Nop.Core.Domain.Catalog;
+
 @if (Model.Count > 0)
 {
     //dynamic update support
@@ -39,11 +39,11 @@
                                     {
                                         <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onchange=\"showHideDropdownQuantity('{0}')\"", controlId)) : null)>
                                             @if (!attribute.IsRequired)
-                                {
+                                            {
                                                 <option value="0">---</option>
                                             }
                                             @foreach (var attributeValue in attribute.Values)
-                                {
+                                            {
                                                 <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
                                                     @getAttributeValueName(attributeValue)
                                                 </option>
@@ -57,9 +57,9 @@
                                             </div>
                                         }
                                         <script>
-                                            $(document).ready(function() {
-                                                showHideDropdownQuantity("@controlId");
-                                            });
+                        $(document).ready(function() {
+                            showHideDropdownQuantity("@controlId");
+                        });
                                         </script>
                                     }
                                     break;
@@ -77,7 +77,7 @@
                                                 </label>
 
                                                 @if (attributeValue.CustomerEntersQty)
-                                    {
+                                                {
                                                     <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display: none">
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
@@ -85,9 +85,9 @@
                                                 }
                                             </div>
                                             <script>
-                                                $(document).ready(function() {
-                                                    showHideRadioQuantity("@controlId");
-                                                });
+                            $(document).ready(function() {
+                                showHideRadioQuantity("@controlId");
+                            });
                                             </script>
                                         }
                                     }
@@ -105,14 +105,14 @@
                                                 </label>
 
                                                 @if (attributeValue.CustomerEntersQty)
-                                    {
+                                                {
                                                     <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display: none">
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                         <script>
-                                                            $(document).ready(function() {
-                                                                showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
-                                                            })
+                                        $(document).ready(function() {
+                                            showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
+                                        })
                                                         </script>
                                                     </div>
                                                 }
@@ -182,41 +182,41 @@
                                             </div>
                                         </script>
                                         <script type="text/javascript">
-                                            $(document).ready(function() {
-                                                $("#@(controlId)uploader").fineUploader({
-                                                    request: {
-                                                        endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
-                                                    },
-                                                    template: "@(controlId)-qq-template",
-                                                    multiple: false,
-                                                    validation: {
-                                                        @{
-                                                if (!string.IsNullOrEmpty(allowedFileExtensions))
-                                                {
-                                                    @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
-                                                    ;
-                                                }
-                                            }
+                        $(document).ready(function() {
+                            $("#@(controlId)uploader").fineUploader({
+                                request: {
+                                    endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
+                                },
+                                template: "@(controlId)-qq-template",
+                                multiple: false,
+                                validation: {
+                                    @{
+                                        if (!string.IsNullOrEmpty(allowedFileExtensions))
+                                        {
+                                            @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
+                                            ;
+                                        }
+                                    }
 
 
-                                                    }
-                                                }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                                    $("#@(controlId)").val(responseJSON.downloadGuid);
-                                                    if (responseJSON.success) {
-                                                        $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                                        $("#@(controlId + "remove")").show();
-                                                    }
-                                                    if (responseJSON.message) {
-                                                        alert(responseJSON.message);
-                                                    }
-                                                });
+                                }
+                            }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                $("#@(controlId)").val(responseJSON.downloadGuid);
+                                if (responseJSON.success) {
+                                    $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                    $("#@(controlId + "remove")").show();
+                                }
+                                if (responseJSON.message) {
+                                    alert(responseJSON.message);
+                                }
+                            });
 
-                                                $("#@(controlId + "remove")").click(function(e) {
-                                                    $("#@(controlId + "downloadurl")").html("");
-                                                    $("#@(controlId)").val('');
-                                                    $(this).hide();
-                                                });
-                                            });
+                            $("#@(controlId + "remove")").click(function(e) {
+                                $("#@(controlId + "downloadurl")").html("");
+                                $("#@(controlId)").val('');
+                                $(this).hide();
+                            });
+                        });
                                         </script>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -279,46 +279,47 @@
 
             @*render scripts*@
             <script type="text/javascript">
-                function @(attributeChangeHandlerFuncName)() {
-                    $.ajax({
-                        cache: false,
-                        url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
-                        data: $('#product-details-form').serialize(),
-                        type: 'post',
-                        success: function(data) {
-                            if (data.enabledattributemappingids) {
-                                for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                                    $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
-                                }
-                            }
-                            if (data.disabledattributemappingids) {
-                                for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                                    $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
-                                }
-                            }
-                            if (data.message) {
-                                alert(data.message);
-                            }
+        function @(attributeChangeHandlerFuncName)() {
+            $.ajax({
+                cache: false,
+                url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                data: $('#product-details-form').serialize(),
+                type: 'post',
+                success: function(data) {
+                    if (data.enabledattributemappingids) {
+                        for (var i = 0; i < data.enabledattributemappingids.length; i++) {
+                            $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
                         }
-                    });
+                    }
+                    if (data.disabledattributemappingids) {
+                        for (var i = 0; i < data.disabledattributemappingids.length; i++) {
+                            $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
+                        }
+                    }
+                    if (data.message) {
+                        alert(data.message);
+                    }
                 }
+            });
+        }
 
-                $(document).ready(function() {
-                    @(attributeChangeHandlerFuncName)();
-                    @Html.Raw(attributeChangeScriptsBuilder.ToString())
-                });
+        $(document).ready(function() {
+            @(attributeChangeHandlerFuncName)();
+            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+        });
             </script>
         </div>
+
         <script>
             function showHideDropdownQuantity(id) {
-                $('select[name=' + id + '] > option').each(function() {
+                $('select[name=' + id + '] > option').each(function () {
                     $('#' + id + '_' + this.value + '_qty_box').hide();
                 });
                 $('#' + id + '_' + $('select[name=' + id + '] > option:selected').val() + '_qty_box').css('display', 'inline-block');
             };
 
             function showHideRadioQuantity(id) {
-                $('input[name=' + id + ']:radio').each(function() {
+                $('input[name=' + id + ']:radio').each(function () {
                     $('#' + $(this).attr('id') + '_qty_box').hide();
                 });
                 $('#' + id + '_' + $('input[name=' + id + ']:radio:checked').val() + '_qty_box').css('display', 'inline-block');

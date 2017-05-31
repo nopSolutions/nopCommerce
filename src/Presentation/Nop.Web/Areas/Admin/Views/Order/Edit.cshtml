@@ -1,4 +1,5 @@
 ﻿@model OrderModel
+@inject IEventPublisher eventPublisher
 
 @{
     //page title
@@ -72,13 +73,13 @@
                     }
                 </ul>
                 <div class="tab-content">
-                    @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
-                    @Html.RenderBootstrapTabContent("tab-billing-info", @TabBillingInfo())
-                    @Html.RenderBootstrapTabContent("tab-shipping-info", @TabShippingInfo())
-                    @Html.RenderBootstrapTabContent("tab-products", @TabProducts())
+                    @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_OrderDetails.Info"), true)
+                    @Html.RenderBootstrapTabContent("tab-billing-info", await Html.PartialAsync("_OrderDetails.Billing"))
+                    @Html.RenderBootstrapTabContent("tab-shipping-info", await Html.PartialAsync("_OrderDetails.Shipping"))
+                    @Html.RenderBootstrapTabContent("tab-products", await Html.PartialAsync("_OrderDetails.Products"))
                     @if (!Model.IsLoggedInAsVendor)
                     {
-                        @Html.RenderBootstrapTabContent("tab-order-notes", @TabOrderNotes())
+                        @Html.RenderBootstrapTabContent("tab-order-notes", await Html.PartialAsync("_OrderDetails.Notes"))
                     }
                 </div>
             </div>
@@ -88,8 +89,7 @@
     {
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
-        EngineContext.Current.Resolve<IEventPublisher>
-            ().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock
@@ -100,24 +100,3 @@
     <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 }
 @Html.DeleteConfirmation("order-delete")
-
-@helper TabInfo()
-{
-    @Html.Partial("_OrderDetails.Info", Model)
-}
-@helper TabBillingInfo()
-{
-    @Html.Partial("_OrderDetails.Billing", Model)
-}
-@helper TabShippingInfo()
-{
-    @Html.Partial("_OrderDetails.Shipping", Model)
-}
-@helper TabProducts()
-{
-    @Html.Partial("_OrderDetails.Products", Model)
-}
-@helper TabOrderNotes()
-{
-    @Html.Partial("_OrderDetails.Notes", Model)
-}
