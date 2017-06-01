@@ -8,7 +8,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -138,18 +137,19 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Initialize engine
         /// </summary>
-        /// <param name="hostingEnvironment">Web hosting environment an application is running in</param>
-        /// <param name="applicationPartManager">Application part manager</param>
-        public void Initialize(IHostingEnvironment hostingEnvironment, ApplicationPartManager applicationPartManager)
+        /// <param name="services">Collection of service descriptors</param>
+        public void Initialize(IServiceCollection services)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //set base application path
+            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
 
             //initialize plugins
-            PluginManager.Initialize(applicationPartManager);
+            var mvcCoreBuilder = services.AddMvcCore();
+            PluginManager.Initialize(mvcCoreBuilder.PartManager);
         }
 
         /// <summary>
@@ -162,13 +162,13 @@ namespace Nop.Core.Infrastructure
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
-            var startupConfigurations = typeFinder.FindClassesOfType<IStartup>();
+            var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startupConfiguration => PluginManager.FindPlugin(startupConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(startupConfiguration => (IStartup)Activator.CreateInstance(startupConfiguration))
-                .OrderBy(startupConfiguration => startupConfiguration.Order);
+                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(startup => (INopStartup)Activator.CreateInstance(startup))
+                .OrderBy(startup => startup.Order);
 
             //configure services
             foreach (var instance in instances)
@@ -196,13 +196,13 @@ namespace Nop.Core.Infrastructure
         {
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();
-            var startupConfigurations = typeFinder.FindClassesOfType<IStartup>();
+            var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startupConfiguration => PluginManager.FindPlugin(startupConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(startupConfiguration => (IStartup)Activator.CreateInstance(startupConfiguration))
-                .OrderBy(startupConfiguration => startupConfiguration.Order);
+                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Select(startup => (INopStartup)Activator.CreateInstance(startup))
+                .OrderBy(startup => startup.Order);
 
             //configure request pipeline
             foreach (var instance in instances)

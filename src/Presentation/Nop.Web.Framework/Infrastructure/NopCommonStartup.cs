@@ -1,23 +1,22 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.Extensions;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
 {
     /// <summary>
-    /// Represents object for the configuring web services and middleware on application startup
+    /// Represents object for the configuring common features and middleware on application startup
     /// </summary>
-    public class NopWebStartup : IStartup
+    public class NopCommonStartup : INopStartup
     {
         /// <summary>
         /// Add and configure any of the middleware
@@ -26,8 +25,31 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
-            //add theme support
-            services.AddThemes();
+            //add options feature
+            services.AddOptions();
+
+            //add NopConfig configuration parameters
+            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+
+            //add hosting configuration parameters
+            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+
+            if (nopConfig.RedisCachingEnabled)
+            {
+                //add Redis distributed cache
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = nopConfig.RedisCachingConnectionString;
+                });
+            }
+            else
+                services.AddDistributedMemoryCache();
+
+            //add memory cache
+            services.AddMemoryCache();
+
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
 
             //add HTTP sesion state feature
             services.AddHttpSession();
@@ -35,11 +57,8 @@ namespace Nop.Web.Framework.Infrastructure
             //add localization
             services.AddLocalization();
 
-            //add and configure MVC feature
-            services.AddNopMvc();
-
-            //add MiniProfiler services
-            services.AddMiniProfiler();
+            //add theme support
+            services.AddThemes();
         }
 
         /// <summary>
@@ -48,18 +67,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //use request localization
-            application.UseRequestLocalization();
-
-            //enable cookie authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = "NopCookie",
-                CookieHttpOnly = true
-            });
-
             //static files
             application.UseStaticFiles();
+
             //add support for backups
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".bak"] = MimeTypes.ApplicationOctetStream;
@@ -69,6 +79,7 @@ namespace Nop.Web.Framework.Infrastructure
                 RequestPath = new PathString("/db_backups"),
                 ContentTypeProvider = provider
             });
+
             //TODO temporary
             application.UseStaticFiles(new StaticFileOptions
             {
@@ -76,27 +87,20 @@ namespace Nop.Web.Framework.Infrastructure
                 RequestPath = new PathString("/Themes")
             });
 
-            //set request culture
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //TODO move "DatabaseIsInstalled" validation to CultureMiddleware (an exception is thrown now for some reasons when on the installation page)
-                application.UseCulture();
-            }
-
-            //use HTTP session
-            application.UseSession();
-
-            //handle 404 errors
-            application.UsePageNotFound();
+            //check whether requested page is keep alive page
+            application.UseKeepAlive();
 
             //check whether database is installed
             application.UseInstallUrl();
 
-            //MVC routing
-            application.UseNopMvc();
+            //use HTTP session
+            application.UseSession();
 
-            //add MiniProfiler
-            application.UseMiniProfiler();
+            //use request localization
+            application.UseRequestLocalization();
+
+            //set request culture
+            application.UseCulture();
         }
 
         /// <summary>
@@ -104,8 +108,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         public int Order
         {
-            //web services should be loaded last
-            get { return 1000; }
+            //common services should be loaded after error handlers
+            get { return 100; }
         }
     }
 }

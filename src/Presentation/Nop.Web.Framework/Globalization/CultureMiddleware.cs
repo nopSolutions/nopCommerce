@@ -39,11 +39,6 @@ namespace Nop.Web.Framework.Globalization
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            //keep alive page requested (we ignore it to prevent creation of guest customer records)
-            var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
-            if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
-                return;
-
             var adminAreaUrl = string.Format("{0}admin", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {

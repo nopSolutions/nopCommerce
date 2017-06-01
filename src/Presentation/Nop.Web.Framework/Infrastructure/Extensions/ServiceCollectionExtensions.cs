@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,19 +26,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
-        /// <returns></returns>
+        /// <returns>Configured service provider</returns>
         public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            var builder = services.AddMvcCore();
-
-            //create engine
+            //create, initialize and configure the engine
             var engine = EngineContext.Create();
-
-            //then initialize
-            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
-            engine.Initialize(hostingEnvironment, builder.PartManager);
-
-            //and configure it
+            engine.Initialize(services);
             var serviceProvider = engine.ConfigureServices(services, configuration);
 
             if (DataSettingsHelper.DatabaseIsInstalled())
@@ -64,6 +57,42 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             return serviceProvider;
+        }
+
+        /// <summary>
+        /// Create, bind and register as service the specified configuration parameters 
+        /// </summary>
+        /// <typeparam name="TConfig">Configuration parameters</typeparam>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Set of key/value application configuration properties</param>
+        /// <returns>Instance of configuration parameters</returns>
+        public static TConfig ConfigureStartupConfig<TConfig>(this IServiceCollection services, IConfiguration configuration) where TConfig : class, new()
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            //create instance of config
+            var config = new TConfig();
+
+            //bind it to the appropriate section of configuration
+            configuration.Bind(config);
+
+            //and register it as a service
+            services.AddSingleton(config);
+
+            return config;
+        }
+
+        /// <summary>
+        /// Register HttpContextAccessor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddHttpContextAccessor(this IServiceCollection services)
+        {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         /// <summary>
@@ -99,6 +128,22 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds services required for themes support
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddThemes(this IServiceCollection services)
+        {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            //themes support
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
+            });
+        }
+
+        /// <summary>
         /// Add and configure MVC for the application
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -106,10 +151,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc()
-                //MVC now serializes JSON with camel case names by default
-                //Use this code to avoid camel case names by default
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()); ;
+            var mvcBuilder = services.AddMvc();
+
+            //MVC now serializes JSON with camel case names by default, use this code to avoid it
+            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
@@ -125,23 +170,5 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             return mvcBuilder;
         }
-
-        /// <summary>
-        /// Adds services required for themes support
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddThemes(this IServiceCollection services)
-        {
-            //themes
-            services.Configure<RazorViewEngineOptions>(options =>
-            {
-                if (DataSettingsHelper.DatabaseIsInstalled())
-                {
-                    options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
-                }
-            });
-
-        }
-
     }
 }
