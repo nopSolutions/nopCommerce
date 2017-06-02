@@ -48,12 +48,12 @@
                     checkAdvancedSettingsMode($(this).is(':checked'));
                     $.ajax({
                         cache: false,
-                        url: '@Url.Action("SaveMode", "FixedOrByWeight")',
+                        url: '@Url.Action("SaveMode", "FixedOrByWeight", new { area = "" })',
                         type: 'post',
                         data: { value: $(this).is(':checked') },
                         dataType: 'json',
                         error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to save preferences.');
+                            alert('Failed to save provider mode.');
                         }
                     });
                 });

@@ -1,5 +1,6 @@
 ﻿@model Nop.Plugin.Shipping.FixedOrByWeight.Models.ShippingByWeightModel
-@using Nop.Web.Framework;
+@using Microsoft.AspNetCore.Routing
+@using Nop.Web.Framework.Extensions
 
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)

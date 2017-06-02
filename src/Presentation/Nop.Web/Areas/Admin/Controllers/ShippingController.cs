@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
             IStateProvinceService stateProvinceService,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService,
+             ILocalizedEntityService localizedEntityService,
             ILanguageService languageService,
             IDateRangeService dateRangeService,
             IPluginFinder pluginFinder,
@@ -182,7 +182,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #if NET451
 
         public virtual IActionResult ConfigureProvider(string systemName)
         {
@@ -195,20 +194,18 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Providers");
 
             var model = srcm.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            srcm.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
+            string viewComponentName;
+            object viewComponentArguments;
+            srcm.GetConfigurationRoute( out viewComponentName, out viewComponentArguments);
+            model.ConfigurationViewComponentName = viewComponentName;
+            model.ConfigurationViewComponentArguments = viewComponentArguments;
             return View(model);
         }
 
-        #endif
 
-        #endregion
+#endregion
 
-        #region Pickup point providers
+#region Pickup point providers
 
         public virtual IActionResult PickupPointProviders()
         {
@@ -277,7 +274,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #if NET451
+#if NET451
 
         public virtual IActionResult ConfigurePickupPointProvider(string systemName)
         {
@@ -299,11 +296,11 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        #endif
+#endif
 
-        #endregion
+#endregion
 
-        #region Shipping methods
+#region Shipping methods
 
         public virtual IActionResult Methods()
         {
@@ -330,6 +327,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
 
         public virtual IActionResult CreateMethod()
         {
@@ -427,9 +425,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Methods");
         }
 
-        #endregion
+#endregion
 
-        #region Dates and ranges
+#region Dates and ranges
 
         public virtual IActionResult DatesAndRanges()
         {
@@ -439,7 +437,7 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        #region Delivery dates
+#region Delivery dates
 
         [HttpPost]
         public virtual IActionResult DeliveryDates(DataSourceRequest command)
@@ -456,7 +454,8 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+
         public virtual IActionResult CreateDeliveryDate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -560,9 +559,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-        #endregion
+#endregion
 
-        #region Product availability ranges
+#region Product availability ranges
 
         [HttpPost]
         public virtual IActionResult ProductAvailabilityRanges(DataSourceRequest command)
@@ -683,11 +682,11 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Warehouses
+#region Warehouses
 
         public virtual IActionResult Warehouses()
         {
@@ -723,7 +722,8 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+
         public virtual IActionResult CreateWarehouse()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -914,9 +914,9 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Warehouses");
         }
 
-        #endregion
+#endregion
         
-        #region Restrictions
+#region Restrictions
 
         public virtual IActionResult Restrictions()
         {
@@ -1001,6 +1001,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Restrictions");
         }
 
-        #endregion
+#endregion
     }
 }
