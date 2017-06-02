@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -44,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ILogger _logger;
 
         private readonly TaxSettings _taxSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -70,6 +72,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
             IWorkflowMessageService workflowMessageService,
+            ILogger logger,
             TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings,
             EmailAccountSettings emailAccountSettings,
@@ -91,6 +94,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
             this._workflowMessageService = workflowMessageService;
+            this._logger = logger;
 
             this._taxSettings = taxSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -108,10 +112,13 @@ namespace Nop.Web.Controllers
         //page not found
         public virtual IActionResult PageNotFound()
         {
-#if NET451
             if (_commonSettings.Log404Errors)
-                _logger.Log();
-#endif
+            {
+                var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
+                //TODO add locale resource
+                _logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath), 
+                    customer: _workContext.CurrentCustomer);
+            }
 
             this.Response.StatusCode = 404;
             this.Response.ContentType = "text/html";

@@ -44,9 +44,7 @@ namespace Nop.Web.Framework.Seo
         public override Task RouteAsync(RouteContext context)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
-            {
                 return Task.CompletedTask;
-            }
 
             //get current route data
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
@@ -71,31 +69,18 @@ namespace Nop.Web.Framework.Seo
             //comment the line above and uncomment the line below in order to disable this performance "workaround"
             //var urlRecord = urlRecordService.GetBySlug(slug);
 
+            //no URL record found
             if (urlRecord == null)
-            {
-                //no URL record found
-                currentRouteData.Values["controller"] = "Common";
-                currentRouteData.Values["action"] = "PageNotFound";
-                context.RouteData = currentRouteData;
-
-                //route request
-                return _target.RouteAsync(context);
-            }
+                return Task.CompletedTask;
 
             if (!urlRecord.IsActive)
             {
                 //URL record is not active. let's find the latest one
                 var activeSlug = urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
-                if (string.IsNullOrEmpty(activeSlug))
-                {
-                    //no active slug found
-                    currentRouteData.Values["controller"] = "Common";
-                    currentRouteData.Values["action"] = "PageNotFound";
-                    context.RouteData = currentRouteData;
 
-                    //route request
-                    return _target.RouteAsync(context);
-                }
+                //no active slug found
+                if (string.IsNullOrEmpty(activeSlug))
+                    return Task.CompletedTask;
 
                 //the active one is found
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
@@ -174,6 +159,6 @@ namespace Nop.Web.Framework.Seo
             return _target.RouteAsync(context);
         }
 
-#endregion
+        #endregion
     }
 }
