@@ -42,7 +42,6 @@
     <Compile Include="Domain\ShippingByWeightRecord.cs" />
     <Compile Include="FixedOrByWeightComputationMethod.cs" />
     <Compile Include="FixedOrByWeightSettings.cs" />
-    <Compile Include="Infrastructure\Startup.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\FixedRateModel.cs" />
     <Compile Include="Models\ShippingByWeightModel.cs" />

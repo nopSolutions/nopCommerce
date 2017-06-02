@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -150,6 +151,21 @@ namespace Nop.Core.Infrastructure
 
             //initialize plugins
             PluginManager.Initialize(applicationPartManager);
+
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            //check for assembly already loaded
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            if (assembly != null)
+                return assembly;
+
+            //get assembly fron TypeFinder
+            var tf = Resolve<ITypeFinder>();
+            assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            return assembly;
         }
 
         /// <summary>
