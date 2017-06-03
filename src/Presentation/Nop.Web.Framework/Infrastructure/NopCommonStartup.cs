@@ -9,6 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
@@ -69,7 +70,18 @@ namespace Nop.Web.Framework.Infrastructure
         {
             //static files
             application.UseStaticFiles();
-
+            //themes
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
+                RequestPath = new PathString("/Themes")
+            });
+            //plugins
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Plugins")),
+                RequestPath = new PathString("/Plugins")
+            });
             //add support for backups
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".bak"] = MimeTypes.ApplicationOctetStream;
@@ -78,13 +90,6 @@ namespace Nop.Web.Framework.Infrastructure
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "db_backups")),
                 RequestPath = new PathString("/db_backups"),
                 ContentTypeProvider = provider
-            });
-
-            //TODO temporary
-            application.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
-                RequestPath = new PathString("/Themes")
             });
 
             //check whether requested page is keep alive page
