@@ -60,7 +60,9 @@ namespace Nop.Core.Plugins
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
-                
+
+                //TODO move to settings
+                var _clearShadowDirectoryOnStartup = true;
 
                 try
                 {
@@ -70,9 +72,30 @@ namespace Nop.Core.Plugins
                     //ensure folders are created
                     Directory.CreateDirectory(pluginFolder.FullName);
                     Directory.CreateDirectory(_shadowCopyFolder.FullName);
-
+                    
                     //get list of all files in bin
                     var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
+                    if (_clearShadowDirectoryOnStartup)
+                    {
+                        //clear out shadow copied plugins
+                        foreach (var f in binFiles)
+                        {
+                            Debug.WriteLine("Deleting " + f.Name);
+                            try
+                            {
+                                //ignore index.htm
+                                var fileName = Path.GetFileName(f.FullName);
+                                if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
+                                    continue;
+
+                                File.Delete(f.FullName);
+                            }
+                            catch (Exception exc)
+                            {
+                                Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                            }
+                        }
+                    }
 
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
@@ -331,6 +354,7 @@ namespace Nop.Core.Plugins
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
+            //TODO
             //now asp.net core doesn't init DynamicDirectory in AppContext, that's why we commented the following code
             //FileInfo shadowCopiedPlug;
             //if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted || string.IsNullOrEmpty(AppDomain.CurrentDomain.DynamicDirectory))
