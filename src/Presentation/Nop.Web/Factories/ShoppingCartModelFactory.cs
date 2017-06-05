@@ -15,6 +15,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -659,13 +660,9 @@ namespace Nop.Web.Factories
                 : "";
 
             //custom values
-#if NET451
-            var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+            var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
             if (processPaymentRequest != null)
-            {
                 model.CustomValues = processPaymentRequest.CustomValues;
-            }
-#endif
 
             return model;
         }

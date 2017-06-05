@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -780,10 +781,10 @@ namespace Nop.Web.Controllers
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
+
                 //session save
-#if NET451
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
-#endif
+                _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);
+
                 return RedirectToRoute("CheckoutConfirm");
             }
 
@@ -837,8 +838,9 @@ namespace Nop.Web.Controllers
             {
                 //get payment info
                 var paymentInfo = paymentController.GetPaymentInfo(form);
+
                 //session save
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+                _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
             }
 #endif
@@ -891,11 +893,7 @@ namespace Nop.Web.Controllers
             var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
             try
             {
-#if NET451
-                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
-#else
-                ProcessPaymentRequest processPaymentRequest  = null;
-#endif
+                var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -918,9 +916,7 @@ namespace Nop.Web.Controllers
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-#if NET451
-                    _httpContext.Session["OrderPaymentInfo"] = null;
-#endif
+                    _httpContextAccessor.HttpContext?.Session?.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder
@@ -1059,10 +1055,9 @@ namespace Nop.Web.Controllers
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
+
                 //session save
-#if NET451
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
-#endif
+                _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);
 
                 var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
                 return Json(new
@@ -1575,10 +1570,10 @@ namespace Nop.Web.Controllers
                 {
                     //get payment info
                     var paymentInfo = paymentController.GetPaymentInfo(form);
+
                     //session save
-#if NET451
-                    _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
-#endif
+                    _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);
+
                     var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
                     return Json(new
                     {
@@ -1632,11 +1627,7 @@ namespace Nop.Web.Controllers
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
-#if NET451
-                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
-#else
-                ProcessPaymentRequest processPaymentRequest = null;
-#endif
+                var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -1656,9 +1647,7 @@ namespace Nop.Web.Controllers
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-#if NET451
-                    _httpContext.Session["OrderPaymentInfo"] = null;
-#endif
+                    _httpContextAccessor.HttpContext?.Session?.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
                     var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder

@@ -1,7 +1,8 @@
 //Contributor:  Nicholas Mayne
 
 using System.Collections.Generic;
-using System.Web;
+using Microsoft.AspNetCore.Http;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Authentication.External
@@ -12,25 +13,24 @@ namespace Nop.Services.Authentication.External
     public static partial class ExternalAuthorizerHelper
     {
 #if NET451
-        private static HttpSessionStateBase GetSession()
+        private static ISession GetSession()
         {
-            var session = EngineContext.Current.Resolve<HttpSessionStateBase>();
-            return session;
+            return EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
         }
 
         public static void StoreParametersForRoundTrip(OpenAuthenticationParameters parameters)
         {
             var session = GetSession();
-            session["nop.externalauth.parameters"] = parameters;
+            session.Set("nop.externalauth.parameters", parameters);
         }
         public static OpenAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
         {
             var session = GetSession();
-            var parameters = session["nop.externalauth.parameters"];
+            var parameters = session.Get<OpenAuthenticationParameters>("nop.externalauth.parameters");
             if (parameters != null && removeOnRetrieval)
                 RemoveParameters();
 
-            return parameters as OpenAuthenticationParameters;
+            return parameters;
         }
 
         public static void RemoveParameters()
@@ -42,11 +42,11 @@ namespace Nop.Services.Authentication.External
         public static void AddErrorsToDisplay(string error)
         {
             var session = GetSession();
-            var errors = session["nop.externalauth.errors"] as IList<string>;
+            var errors = session.Get<IList<string>>("nop.externalauth.errors");
             if (errors == null)
             {
                 errors = new List<string>();
-                session.Add("nop.externalauth.errors", errors);
+                session.Set("nop.externalauth.errors", errors);
             }
             errors.Add(error);
         }
@@ -54,7 +54,7 @@ namespace Nop.Services.Authentication.External
         public static IList<string> RetrieveErrorsToDisplay(bool removeOnRetrieval)
         {
             var session = GetSession();
-            var errors = session["nop.externalauth.errors"] as IList<string>;
+            var errors = session.Get<IList<string>>("nop.externalauth.errors");
             if (errors != null && removeOnRetrieval)
                 session.Remove("nop.externalauth.errors");
             return errors;
