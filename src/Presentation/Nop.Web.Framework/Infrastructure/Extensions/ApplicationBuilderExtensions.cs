@@ -127,7 +127,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             application.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationScheme = "NopCookie",
-                CookieHttpOnly = true
+                CookieHttpOnly = true,
+                LoginPath = new PathString("/login/"),
+                AutomaticChallenge = true 
             });
         }
 

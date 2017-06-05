@@ -68,10 +68,8 @@ namespace Nop.Services.Authentication
             };
 
             //sign in
-            Task.Run(async () =>
-            {
-                await _httpContextAccessor.HttpContext.Authentication.SignInAsync("NopCookie", userPrincipal, authenticationProperties);
-            });
+            var signInTask = _httpContextAccessor.HttpContext.Authentication.SignInAsync("NopCookie", userPrincipal, authenticationProperties);
+            signInTask.Wait();
 
             //cache authenticated customer
             _cachedCustomer = customer;
@@ -89,10 +87,8 @@ namespace Nop.Services.Authentication
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            Task.Run(async () =>
-            {
-                await _httpContextAccessor.HttpContext.Authentication.SignOutAsync("NopCookie");
-            });
+            var signOutTask = _httpContextAccessor.HttpContext.Authentication.SignOutAsync("NopCookie");
+            signOutTask.Wait();
         }
 
         /// <summary>

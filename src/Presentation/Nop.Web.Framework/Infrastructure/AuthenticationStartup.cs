@@ -28,6 +28,9 @@ namespace Nop.Web.Framework.Infrastructure
         {
             //configure authentication
             application.UseAuthentication();
+
+            //set request culture
+            application.UseCulture();
         }
 
         /// <summary>

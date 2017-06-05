@@ -103,9 +103,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseRequestLocalization();
-
-            //set request culture
-            application.UseCulture();
         }
 
         /// <summary>
