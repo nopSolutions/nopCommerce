@@ -46,7 +46,6 @@
     <Compile Include="Models\FixedRateModel.cs" />
     <Compile Include="Models\ShippingByWeightModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="Services\IShippingByWeightService.cs" />
     <Compile Include="Services\ShippingByWeightService.cs" />
   </ItemGroup>

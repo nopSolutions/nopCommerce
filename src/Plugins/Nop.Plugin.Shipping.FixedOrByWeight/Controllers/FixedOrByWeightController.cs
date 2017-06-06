@@ -24,6 +24,7 @@ using Nop.Web.Framework.Security;
 namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 {
     [AuthorizeAdmin]
+    [Area("Admin")]
     public class FixedOrByWeightController : BasePluginController
     {
         private readonly IShippingService _shippingService;
@@ -232,7 +233,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             return Json(gridModel);
         }
 
-        [Area("Admin")]
         public IActionResult AddRateByWeighPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -276,7 +276,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         
         [HttpPost]
         [AdminAntiForgery]
-        [Area("Admin")]
         public IActionResult AddRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -308,8 +307,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 
             return View("~/Plugins/Shipping.FixedOrByWeight/Views/AddRateByWeightPopup.cshtml", model);
         }
-
-        [Area("Admin")]
+        
         public IActionResult EditRateByWeighPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -378,7 +376,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        [Area("Admin")]
         public IActionResult EditRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

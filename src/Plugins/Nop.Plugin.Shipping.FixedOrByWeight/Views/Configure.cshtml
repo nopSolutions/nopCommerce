@@ -17,11 +17,11 @@
     </div>
     <div class="col-md-9">
         <div class="pull-right">
-            <a href="@Url.Action("Methods", "Shipping", new {area = "Admin"})" class="btn bg-blue">
+            <a href="@Url.Action("Methods", "Shipping")" class="btn bg-blue">
                 <i class="fa fa-truck"></i>
                 @T("Admin.Configuration.Shipping.Methods.Manage")
             </a>
-            <a href="@Url.Action("Restrictions", "Shipping", new {area = "Admin"})" class="btn bg-blue">
+            <a href="@Url.Action("Restrictions", "Shipping")" class="btn bg-blue">
                 <i class="fa fa-globe"></i>
                 @T("Admin.Configuration.Shipping.Restrictions.Manage")
             </a>
@@ -48,7 +48,7 @@
                     checkAdvancedSettingsMode($(this).is(':checked'));
                     $.ajax({
                         cache: false,
-                        url: '@Url.Action("SaveMode", "FixedOrByWeight", new { area = "" })',
+                        url: '@Url.Action("SaveMode", "FixedOrByWeight")',
                         type: 'post',
                         data: { value: $(this).is(':checked') },
                         dataType: 'json',

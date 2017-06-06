@@ -1,10 +1,6 @@
-﻿
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Nop.Core;
-using Nop.Plugin.Shipping.FixedOrByWeight;
 using Nop.Plugin.Shipping.FixedOrByWeight.Models;
-using Nop.Services.Localization;
 
 namespace Nop.Plugin.Shipping.FixedOrByWeight.Components
 {

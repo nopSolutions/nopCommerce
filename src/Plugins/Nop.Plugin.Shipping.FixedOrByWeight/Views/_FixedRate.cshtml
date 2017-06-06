@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Routing
-<div class="panel-group basic-setting">
+﻿<div class="panel-group basic-setting">
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="shipping-rate-grid"></div>
@@ -13,15 +12,13 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url:
-                                                "@Html.Raw(Url.Action("FixedShippingRateList", "FixedOrByWeight", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers"}, {"area", ""}}))",
+                                            url: "@Html.Raw(Url.Action("FixedShippingRateList", "FixedOrByWeight"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         },
                                         update: {
-                                            url:
-                                                "@Html.Raw(Url.Action("UpdateFixedShippingRate", "FixedOrByWeight", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers"}, {"area", ""}}))",
+                                            url: "@Html.Raw(Url.Action("UpdateFixedShippingRate", "FixedOrByWeight"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -59,7 +56,7 @@
                                     numeric: false,
                                     previousNext: false,
                                     info: false,
-                                    @Html.Partial("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
+                                    @Html.Partial("_GridPagerMessages")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
