@@ -268,7 +268,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void InsertProduct(Product product)
+        public virtual Product InsertProduct(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -281,6 +281,7 @@ namespace Nop.Services.Catalog
             
             //event notification
             _eventPublisher.EntityInserted(product);
+            return product;
         }
 
         /// <summary>

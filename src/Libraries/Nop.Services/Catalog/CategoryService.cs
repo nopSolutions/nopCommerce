@@ -405,7 +405,7 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        public virtual void InsertCategory(Category category)
+        public virtual Category InsertCategory(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -418,6 +418,7 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityInserted(category);
+            return category;
         }
 
         /// <summary>

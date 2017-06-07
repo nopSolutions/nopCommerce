@@ -41,7 +41,7 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        void InsertManufacturer(Manufacturer manufacturer);
+        Manufacturer InsertManufacturer(Manufacturer manufacturer);
 
         /// <summary>
         /// Updates the manufacturer

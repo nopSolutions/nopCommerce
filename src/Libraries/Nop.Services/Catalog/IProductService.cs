@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        void InsertProduct(Product product);
+        Product InsertProduct(Product product);
 
         /// <summary>
         /// Updates the product
