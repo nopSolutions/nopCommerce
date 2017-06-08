@@ -33,6 +33,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly ILanguageService _languageService;
+            private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly LocalizationSettings _localizationSettings;
 
@@ -41,10 +42,12 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Ctor
 
             public CheckLanguageSeoCodeFilter(ILanguageService languageService,
+                IWebHelper webHelper,
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
                 this._languageService = languageService;
+                this._webHelper = webHelper;
                 this._workContext = workContext;
                 this._localizationSettings = localizationSettings;
             }
@@ -84,10 +87,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 #endif
 
-                //check whther it's already localized URL
+                //check whether it's already localized URL
                 //process current URL
-                var pageUrl = request.Path + request.QueryString;
-                
+                var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
+
 #if NET451
                 var applicationPath = context.HttpContext.Request.ApplicationPath;
 #else

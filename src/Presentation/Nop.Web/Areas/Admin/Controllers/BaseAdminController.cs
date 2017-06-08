@@ -54,10 +54,10 @@ namespace Nop.Admin.Controllers
         /// <returns>Access denied view</returns>
         protected virtual IActionResult AccessDeniedView()
         {
-            var rawUrl = this.Request.Path + this.Request.QueryString;
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return new UnauthorizedResult();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
         }
         
         /// <summary>

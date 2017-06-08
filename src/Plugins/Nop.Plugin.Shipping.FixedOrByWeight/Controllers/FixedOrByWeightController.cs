@@ -40,6 +40,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
+        private readonly IWebHelper _webHelper;
 
         public FixedOrByWeightController(IShippingService shippingServicee,
             ISettingService settingService,
@@ -53,7 +54,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            FixedOrByWeightSettings fixedOrByWeightSettings)
+            FixedOrByWeightSettings fixedOrByWeightSettings,
+            IWebHelper webHelper)
         {
             this._shippingService = shippingServicee;
             this._settingService = settingService;
@@ -68,6 +70,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
+            this._webHelper = webHelper;
         }
 
 #if NET451
@@ -236,10 +239,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult AddRateByWeighPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-            {
-                var rawUrl = this.Request.Path + this.Request.QueryString;
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
-            }
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
 
             var model = new ShippingByWeightModel
             {
@@ -279,10 +279,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult AddRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-            {
-                var rawUrl = this.Request.Path + this.Request.QueryString;
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
-            }
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
 
             var sbw = new ShippingByWeightRecord
             {
@@ -311,10 +308,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult EditRateByWeighPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-            {
-                var rawUrl = this.Request.Path + this.Request.QueryString;
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
-            }
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
 
             var sbw = _shippingByWeightService.GetById(id);
             if (sbw == null)
@@ -379,10 +373,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         public IActionResult EditRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-            {
-                var rawUrl = this.Request.Path + this.Request.QueryString;
-                return RedirectToAction("AccessDenied", "Security", new { pageUrl = rawUrl });
-            }
+                return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
 
             var sbw = _shippingByWeightService.GetById(model.Id);
             if (sbw == null)

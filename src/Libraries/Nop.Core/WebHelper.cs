@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
@@ -158,11 +159,11 @@ namespace Nop.Core
                 return string.Empty;
 
             //get the host considering using SSL
-            var host = GetStoreHost(useSsl).TrimEnd('/');
+            var url = GetStoreHost(useSsl).TrimEnd('/');
 
             //get full URL with or without query string
-            var url = string.Format("{0}{1}{2}", host, _httpContextAccessor.HttpContext.Request.Path,
-                includeQueryString ? _httpContextAccessor.HttpContext.Request.QueryString.Value : string.Empty);
+            url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request) 
+                : $"{_httpContextAccessor.HttpContext.Request.PathBase}{_httpContextAccessor.HttpContext.Request.Path}";
 
             return url.ToLowerInvariant();
         }
@@ -574,6 +575,24 @@ namespace Nop.Core
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the raw path and full query of request
+        /// </summary>
+        /// <param name="request">Http request</param>
+        /// <returns>Raw URL</returns>
+        public virtual string GetRawUrl(HttpRequest request)
+        {
+            //first try to get the raw target from request feature
+            //note: value has not been UrlDecoded
+            var rawUrl = request.HttpContext.Features.Get<IHttpRequestFeature>()?.RawTarget;
+
+            //or compose raw URL manually
+            if (string.IsNullOrEmpty(rawUrl))
+                rawUrl = $"{request.PathBase}{request.Path}{request.QueryString}";
+
+            return rawUrl;
         }
 
         #endregion

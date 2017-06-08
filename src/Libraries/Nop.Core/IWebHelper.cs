@@ -109,5 +109,12 @@ namespace Nop.Core
         /// <param name="req">Http request</param>
         /// <returns>True, if http request uri references to the local host</returns>
         bool IsLocalRequest(HttpRequest req);
+
+        /// <summary>
+        /// Get the raw path and full query of request
+        /// </summary>
+        /// <param name="request">Http request</param>
+        /// <returns>Raw URL</returns>
+        string GetRawUrl(HttpRequest request);
     }
 }

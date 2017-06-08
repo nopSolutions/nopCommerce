@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
@@ -44,20 +45,21 @@ namespace Nop.Web.Framework.Localization
             var data = base.GetVirtualPath(context);
             if (data != null && DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
-                //get request path
-                var rawUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
+                //get requested page URL
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
 
                 //get application path
-                #if NET451
+#if NET451
                 var applicationPath = context.HttpContext.Request.ApplicationPath;
-                #else
+#else
                 var applicationPath = "/";
-                #endif
+#endif
 
-                //add language code to path in case if it's localized URL
-                if (rawUrl.IsLocalizedUrl(applicationPath, true))
+                //add language code to page URL in case if it's localized URL
+                if (pageUrl.IsLocalizedUrl(applicationPath, true))
                 {
-                    var seoCode = rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
+                    var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
                     data.VirtualPath = string.Format("/{0}{1}", seoCode, data.VirtualPath);
                 }
             }
@@ -74,9 +76,10 @@ namespace Nop.Web.Framework.Localization
         {
             if (DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
             {
-                //get request path
-                var rawUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
-                
+                //get requested page URL
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
+
                 //get application path
 #if NET451
                 var applicationPath = context.HttpContext.Request.ApplicationPath;
@@ -84,11 +87,11 @@ namespace Nop.Web.Framework.Localization
                 var applicationPath = "/";
                 #endif
 
-                //path isn't localized, so no special action required
-                if (rawUrl.IsLocalizedUrl(applicationPath, true))
+                //page isn't localized, so no special action required
+                if (pageUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     //remove language code from the path
-                    var newVirtualPath = rawUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+                    var newVirtualPath = pageUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
                     if (string.IsNullOrEmpty(newVirtualPath))
                         newVirtualPath = "/";
 
