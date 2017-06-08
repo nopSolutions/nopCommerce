@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Framework.Localization
 {
@@ -76,18 +74,11 @@ namespace Nop.Web.Framework.Localization
                 throw new ArgumentNullException(nameof(routeBuilder));
 
             //get registered InlineConstraintResolver
-            var inlineConstraintResolver = routeBuilder
-                .ServiceProvider
-                .GetRequiredService<IInlineConstraintResolver>();
+            var inlineConstraintResolver = routeBuilder.ServiceProvider.GetRequiredService<IInlineConstraintResolver>();
 
             //create new generic route
-            routeBuilder.Routes.Add(new LocalizedRoute(
-                routeBuilder.DefaultHandler,
-                name,
-                template,
-                new RouteValueDictionary(defaults),
-                new RouteValueDictionary(constraints),
-                new RouteValueDictionary(dataTokens),
+            routeBuilder.Routes.Add(new LocalizedRoute(routeBuilder.DefaultHandler, name, template,
+                new RouteValueDictionary(defaults), new RouteValueDictionary(constraints), new RouteValueDictionary(dataTokens),
                 inlineConstraintResolver));
 
             return routeBuilder;
@@ -103,11 +94,7 @@ namespace Nop.Web.Framework.Localization
                 throw new ArgumentNullException(nameof(routes));
 
             //clear cached settings
-            foreach (var route in routes)
-            {
-                if (route is LocalizedRoute)
-                    ((LocalizedRoute)route).ClearSeoFriendlyUrlsCachedValue();
-            }
+            routes.OfType<LocalizedRoute>().ToList().ForEach(route => route.ClearSeoFriendlyUrlsCachedValue());
         }
     }
 }

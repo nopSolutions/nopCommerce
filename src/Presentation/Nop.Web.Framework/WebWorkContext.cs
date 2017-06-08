@@ -48,6 +48,7 @@ namespace Nop.Web.Framework
         private readonly IVendorService _vendorService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly IWebHelper _webHelper;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -72,7 +73,8 @@ namespace Nop.Web.Framework
             IUserAgentHelper userAgentHelper,
             IVendorService vendorService,
             LocalizationSettings localizationSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            IWebHelper webHelper)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._currencySettings = currencySettings;
@@ -87,6 +89,7 @@ namespace Nop.Web.Framework
             this._vendorService = vendorService;
             this._localizationSettings = localizationSettings;
             this._taxSettings = taxSettings;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -144,12 +147,14 @@ namespace Nop.Web.Framework
                 return null;
 
             //whether the requsted URL is localized
-            var path = _httpContextAccessor.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false))
+            var pageUrl = _webHelper.GetRawUrl(_httpContextAccessor.HttpContext.Request);
+            var applicationPath = _httpContextAccessor.HttpContext.Request.PathBase.HasValue ?
+                _httpContextAccessor.HttpContext.Request.PathBase.Value : "/";
+            if (!pageUrl.IsLocalizedUrl(applicationPath, true))
                 return null;
 
             //get language code from the URL
-            var seoCode = path.GetLanguageSeoCodeFromUrl(_httpContextAccessor.HttpContext.Request.PathBase, false);
+            var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
             if (string.IsNullOrEmpty(seoCode))
                 return null;
 

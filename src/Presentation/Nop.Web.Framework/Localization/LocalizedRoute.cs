@@ -43,25 +43,23 @@ namespace Nop.Web.Framework.Localization
         {
             //get base virtual path
             var data = base.GetVirtualPath(context);
-            if (data != null && DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
+            if (data == null)
+                return null;
+
+            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+                return data;
+
+            //get requested page URL
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
+            var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
+                context.HttpContext.Request.PathBase.Value : "/";
+
+            //add language code to page URL in case if it's localized URL
+            if (pageUrl.IsLocalizedUrl(applicationPath, true))
             {
-                //get requested page URL
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
-
-                //get application path
-#if NET451
-                var applicationPath = context.HttpContext.Request.ApplicationPath;
-#else
-                var applicationPath = "/";
-#endif
-
-                //add language code to page URL in case if it's localized URL
-                if (pageUrl.IsLocalizedUrl(applicationPath, true))
-                {
-                    var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
-                    data.VirtualPath = string.Format("/{0}{1}", seoCode, data.VirtualPath);
-                }
+                var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
+                data.VirtualPath = string.Format("/{0}{1}", seoCode, data.VirtualPath);
             }
 
             return data;
@@ -74,47 +72,32 @@ namespace Nop.Web.Framework.Localization
         /// <returns>Task of the routing</returns>
         public override Task RouteAsync(RouteContext context)
         {
-            if (DataSettingsHelper.DatabaseIsInstalled() && SeoFriendlyUrlsForLanguagesEnabled)
-            {
-                //get requested page URL
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
+            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+                return base.RouteAsync(context);
 
-                //get application path
-#if NET451
-                var applicationPath = context.HttpContext.Request.ApplicationPath;
-#else
-                var applicationPath = "/";
-                #endif
+            //get request path
+            var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
+                context.HttpContext.Request.PathBase.Value : "/";
+            var path = context.HttpContext.Request.PathBase.Value + context.HttpContext.Request.Path.Value;
 
-                //page isn't localized, so no special action required
-                if (pageUrl.IsLocalizedUrl(applicationPath, true))
-                {
-                    //remove language code from the path
-                    var newVirtualPath = pageUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-                    if (string.IsNullOrEmpty(newVirtualPath))
-                        newVirtualPath = "/";
+            //path isn't localized, so no special action required
+            if (!path.IsLocalizedUrl(applicationPath, true))
+                return base.RouteAsync(context);
 
-                    //and application path
-                    newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
+            //remove language code and application path from the path
+            var newPath = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+            if (string.IsNullOrEmpty(newPath))
+                newPath = "/";
+            newPath = newPath.RemoveApplicationPathFromRawUrl(applicationPath);
 
-                    //get path segments
-                    //TODO doesn't work (we should rewrite URL without specifying of controller and action names) like we did before with "RewritePath"
-                    var pathSegments = newVirtualPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (pathSegments == null || pathSegments.Length < 2)
-                        return _target.RouteAsync(context);
+            //set new request path and try to get route handler
+            var originalPath = context.HttpContext.Request.Path;
+            context.HttpContext.Request.Path = newPath;
+            base.RouteAsync(context).Wait();
 
-                    //create new route data
-                    var newRouteData = new RouteData(context.RouteData);
-                    newRouteData.Values["controller"] = pathSegments[0];
-                    newRouteData.Values["action"] = pathSegments[1];
-                    context.RouteData = newRouteData;
-                    //route request
-                    return _target.RouteAsync(context);
-                }
-            }
-            //route request
-            return base.RouteAsync(context);
+            //then return the original request path
+            context.HttpContext.Request.Path = originalPath;
+            return _target.RouteAsync(context);
         }
 
         /// <summary>

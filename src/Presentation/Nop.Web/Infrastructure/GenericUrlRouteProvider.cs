@@ -23,7 +23,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
 
             //generic URLs
-            routeBuilder.MapGenericPathRoute("GenericUrl", "{generic_se_name}",
+            routeBuilder.MapGenericPathRoute("GenericUrl", "{GenericSeName}",
                 new { controller = "Common", action = "GenericUrl" });
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
@@ -47,11 +47,6 @@ namespace Nop.Web.Infrastructure
 
             routeBuilder.MapLocalizedRoute("Topic", "{SeName}", 
                 new { controller = "Topic", action = "TopicDetails" });
-
-            //the last route. it's used when none of registered routes could be used for the current request
-            //but in this case we cannot process non-registered routes (/controller/action)
-            //routeBuilder.MapLocalizedRoute("PageNotFound-Wildchar", "{*url}",
-            //    new { controller = "Common", action = "PageNotFound" });
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Seo
 {
@@ -73,18 +72,11 @@ namespace Nop.Web.Framework.Seo
                 throw new ArgumentNullException(nameof(routeBuilder));
 
             //get registered InlineConstraintResolver
-            var inlineConstraintResolver = routeBuilder
-                .ServiceProvider
-                .GetRequiredService<IInlineConstraintResolver>();
+            var inlineConstraintResolver = routeBuilder.ServiceProvider.GetRequiredService<IInlineConstraintResolver>();
 
             //create new generic route
-            routeBuilder.Routes.Add(new GenericPathRoute(
-                routeBuilder.DefaultHandler,
-                name,
-                template,
-                new RouteValueDictionary(defaults),
-                new RouteValueDictionary(constraints),
-                new RouteValueDictionary(dataTokens),
+            routeBuilder.Routes.Add(new GenericPathRoute(routeBuilder.DefaultHandler, name, template, 
+                new RouteValueDictionary(defaults), new RouteValueDictionary(constraints), new RouteValueDictionary(dataTokens), 
                 inlineConstraintResolver));
 
             return routeBuilder;
