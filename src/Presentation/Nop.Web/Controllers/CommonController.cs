@@ -145,19 +145,18 @@ namespace Nop.Web.Controllers
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
-#if NET451
+
             //language part in URL
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                string applicationPath = HttpContext.Request.ApplicationPath;
-                if (returnUrl.IsLocalizedUrl(applicationPath, true))
-                {
-                    //already localized URL
-                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-                }
-                returnUrl = returnUrl.AddLanguageSeoCodeToRawUrl(applicationPath, _workContext.WorkingLanguage);
+                //remove current language code if it's already localized URL
+                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, false, out Language urlLanguage))
+                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, false);
+
+                //and add code of passed language
+                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, false, _workContext.WorkingLanguage);
             }
-#endif
+
             return Redirect(returnUrl);
         }
 

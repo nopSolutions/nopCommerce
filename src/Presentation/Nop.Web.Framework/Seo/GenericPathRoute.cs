@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -44,21 +45,10 @@ namespace Nop.Web.Framework.Seo
         /// <returns>Route values</returns>
         protected RouteValueDictionary GetRouteValues(RouteContext context)
         {
-            //get request path
-            var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
-                context.HttpContext.Request.PathBase.Value : "/";
-            var path = context.HttpContext.Request.PathBase.Value + context.HttpContext.Request.Path.Value;
-
-            //remove language code from the path
-            if (path.IsLocalizedUrl(applicationPath, true))
-            {
-                path = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-                if (string.IsNullOrEmpty(path))
-                    path = "/";
-            }
-
-            //remove application path
-            path = path.RemoveApplicationPathFromRawUrl(applicationPath);
+            //remove language code from the path if it's localized URL
+            var path = context.HttpContext.Request.Path.Value;
+            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+                path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
             //parse route data
             var routeValues = new RouteValueDictionary(this.ParsedTemplate.Parameters
@@ -102,21 +92,18 @@ namespace Nop.Web.Framework.Seo
             if (urlRecord == null)
                 return Task.CompletedTask;
 
+            //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
             {
-                //URL record is not active. let's find the latest one
                 var activeSlug = urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
-
-                //no active slug found
                 if (string.IsNullOrEmpty(activeSlug))
                     return Task.CompletedTask;
 
-                //the active one is found, redirect to it
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
-                context.HttpContext.Response.Redirect(location, true);
-
-                return Task.CompletedTask;
+                //redirect to active slug if found
+#if NET451
+                context.HttpContext.Request.Path = $"/{activeSlug}";
+                return this.RouteAsync(context);
+#endif
             }
 
             //ensure that the slug is the same for the current language, 
@@ -128,11 +115,10 @@ namespace Nop.Web.Framework.Seo
                 //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
 
                 //redirect to the page for current language
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var location = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
-                context.HttpContext.Response.Redirect(location, false);
-
-                return Task.CompletedTask;
+#if NET451
+                context.HttpContext.Request.Path = $"/{slugForCurrentLanguage}";
+                return this.RouteAsync(context);
+#endif
             }
 
             //since we are here, all is ok with the slug, so process URL

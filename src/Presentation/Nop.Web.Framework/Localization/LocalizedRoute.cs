@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
@@ -49,18 +48,10 @@ namespace Nop.Web.Framework.Localization
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return data;
 
-            //get requested page URL
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            var pageUrl = webHelper.GetRawUrl(context.HttpContext.Request);
-            var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
-                context.HttpContext.Request.PathBase.Value : "/";
-
             //add language code to page URL in case if it's localized URL
-            if (pageUrl.IsLocalizedUrl(applicationPath, true))
-            {
-                var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
-                data.VirtualPath = string.Format("/{0}{1}", seoCode, data.VirtualPath);
-            }
+            var path = context.HttpContext.Request.Path.Value;
+            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+                data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
 
             return data;
         }
@@ -75,28 +66,20 @@ namespace Nop.Web.Framework.Localization
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return base.RouteAsync(context);
 
-            //get request path
-            var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
-                context.HttpContext.Request.PathBase.Value : "/";
-            var path = context.HttpContext.Request.PathBase.Value + context.HttpContext.Request.Path.Value;
-
-            //path isn't localized, so no special action required
-            if (!path.IsLocalizedUrl(applicationPath, true))
+            //if path isn't localized no special action required
+            var path = context.HttpContext.Request.Path.Value;
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
                 return base.RouteAsync(context);
 
             //remove language code and application path from the path
-            var newPath = path.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-            if (string.IsNullOrEmpty(newPath))
-                newPath = "/";
-            newPath = newPath.RemoveApplicationPathFromRawUrl(applicationPath);
+            var newPath = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
             //set new request path and try to get route handler
-            var originalPath = context.HttpContext.Request.Path;
             context.HttpContext.Request.Path = newPath;
             base.RouteAsync(context).Wait();
 
             //then return the original request path
-            context.HttpContext.Request.Path = originalPath;
+            context.HttpContext.Request.Path = path;
             return _target.RouteAsync(context);
         }
 

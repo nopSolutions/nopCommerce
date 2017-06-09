@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Extensions;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 
@@ -81,30 +80,13 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.RouteData == null || context.RouteData.Routers == null || !context.RouteData.Routers.OfType<LocalizedRoute>().Any())
                     return;
 
-                //get current page URL
+                //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
-                var applicationPath = context.HttpContext.Request.PathBase.HasValue ?
-                    context.HttpContext.Request.PathBase.Value : "/";
-
-                //check whether it's already localized URL
-                if (pageUrl.IsLocalizedUrl(applicationPath, true))
-                {
-                    //let's ensure that this language exists and published
-                    var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
-                    if (!_languageService.GetAllLanguages()
-                        .FirstOrDefault(language => seoCode.Equals(language.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase))
-                        .Return(language => language.Published, false))
-                    {
-                        //if doesn't exist, redirect (not permanent) to the original page
-                        pageUrl = pageUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
-                        context.Result = new RedirectResult(pageUrl);
-                    }
-
+                if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language language))
                     return;
-                }
 
                 //not localized yet, so redirect to the page with working language SEO code
-                pageUrl = pageUrl.AddLanguageSeoCodeToRawUrl(applicationPath, _workContext.WorkingLanguage);
+                pageUrl = pageUrl.AddLanguageSeoCodeToUrl(context.HttpContext.Request.PathBase, true, _workContext.WorkingLanguage);
                 context.Result = new RedirectResult(pageUrl, false);
             }
 

@@ -48,7 +48,6 @@ namespace Nop.Web.Framework
         private readonly IVendorService _vendorService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly IWebHelper _webHelper;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -73,8 +72,7 @@ namespace Nop.Web.Framework
             IUserAgentHelper userAgentHelper,
             IVendorService vendorService,
             LocalizationSettings localizationSettings,
-            TaxSettings taxSettings,
-            IWebHelper webHelper)
+            TaxSettings taxSettings)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._currencySettings = currencySettings;
@@ -89,7 +87,6 @@ namespace Nop.Web.Framework
             this._vendorService = vendorService;
             this._localizationSettings = localizationSettings;
             this._taxSettings = taxSettings;
-            this._webHelper = webHelper;
         }
 
         #endregion
@@ -147,26 +144,15 @@ namespace Nop.Web.Framework
                 return null;
 
             //whether the requsted URL is localized
-            var pageUrl = _webHelper.GetRawUrl(_httpContextAccessor.HttpContext.Request);
-            var applicationPath = _httpContextAccessor.HttpContext.Request.PathBase.HasValue ?
-                _httpContextAccessor.HttpContext.Request.PathBase.Value : "/";
-            if (!pageUrl.IsLocalizedUrl(applicationPath, true))
+            var path = _httpContextAccessor.HttpContext.Request.Path.Value;
+            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out Language language))
                 return null;
-
-            //get language code from the URL
-            var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
-            if (string.IsNullOrEmpty(seoCode))
-                return null;
-
-            //try to get language by language code
-            var urlLanguage = _languageService.GetAllLanguages().FirstOrDefault(language =>
-                language.UniqueSeoCode.Equals(seoCode, StringComparison.InvariantCultureIgnoreCase));
 
             //check language availability
-            if (urlLanguage == null || !urlLanguage.Published || !_storeMappingService.Authorize(urlLanguage))
+            if (!_storeMappingService.Authorize(language))
                 return null;
 
-            return urlLanguage;
+            return language;
         }
 
         /// <summary>
