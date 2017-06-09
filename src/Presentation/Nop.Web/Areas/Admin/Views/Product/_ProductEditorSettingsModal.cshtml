@@ -1,11 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Nop.Core
 @model ProductModel
+@inject IWebHelper webHelper
 @inject IHttpContextAccessor httpContextAccessor
-
-@{
-    var request = httpContextAccessor.HttpContext.Request;
-    var rawUrl = request.Path + request.QueryString;
-}
 
 <div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
     <div class="modal-dialog editor-settings-modal-dialog">
@@ -20,7 +17,7 @@
                 @using (Html.BeginForm("SaveProductEditorSettings", "Product"))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.Hidden("returnurl", rawUrl)
+                    @Html.Hidden("returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request))
                     <div class="row">
                         <div class="col-md-12">
                             @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")

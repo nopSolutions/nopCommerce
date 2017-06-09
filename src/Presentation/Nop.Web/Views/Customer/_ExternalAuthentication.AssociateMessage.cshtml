@@ -9,11 +9,9 @@
 @inject IHttpContextAccessor httpContextAccessor
 @if (openAuthParameters != null)
 {
-    var request = httpContextAccessor.HttpContext.Request;
-    var rawUrl = request.Path + request.QueryString;
     <div class="external-auth-association">
         <label>@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo")</label>
         <span class="identifier">@CommonHelper.EnsureMaximumLength(openAuthParameters.ExternalIdentifier, 40, "...")</span>
-        <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = WebUtility.UrlEncode(rawUrl) })" class="remove">@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove")</a>
+        <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)) })" class="remove">@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove")</a>
     </div>
 }

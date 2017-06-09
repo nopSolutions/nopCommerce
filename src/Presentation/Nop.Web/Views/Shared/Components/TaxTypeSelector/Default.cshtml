@@ -6,8 +6,7 @@
 @inject IWebHelper webHelper
 @inject IHttpContextAccessor httpContextAccessor
 @{
-    var request = httpContextAccessor.HttpContext.Request;
-    var rawUrl = request.Path + request.QueryString;
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
 
     var taxTypes = new List<SelectListItem>();
     taxTypes.Add(new SelectListItem

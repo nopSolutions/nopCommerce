@@ -8,13 +8,10 @@
 {
     <div style="padding: 7px 12px 0 12px;">
         @{
-            var request = httpContextAccessor.HttpContext.Request;
-            var rawUrl = request.Path + request.QueryString;
-
             var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
             {
                 Text = lang.Name,
-                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = "Admin"}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+                Value = webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new {langid = lang.Id, area = "Admin"}), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
                 Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
             });
 

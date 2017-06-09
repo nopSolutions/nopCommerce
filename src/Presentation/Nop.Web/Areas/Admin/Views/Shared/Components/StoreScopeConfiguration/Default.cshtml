@@ -7,8 +7,7 @@
 @using Nop.Core
 
 @{
-    var request = httpContextAccessor.HttpContext.Request;
-    var rawUrl = request.Path + request.QueryString;
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
 
     var stores = Model.Stores.Select(store => new SelectListItem
     {

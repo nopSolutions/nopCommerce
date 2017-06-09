@@ -21,8 +21,7 @@
 @using Nop.Services.Security;
 
 @{
-    var request = httpContextAccessor.HttpContext.Request;
-    var rawUrl = request.Path + request.QueryString;
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
     
     var kendoVersion = "2014.1.318";
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
