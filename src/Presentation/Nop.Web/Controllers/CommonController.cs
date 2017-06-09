@@ -133,10 +133,8 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
-            if (language != null && language.Published)
-            {
-                _workContext.WorkingLanguage = language;
-            }
+            if (!language.Return(lang => lang.Published, false))
+                language = _workContext.WorkingLanguage;
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
@@ -150,12 +148,14 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, false, out Language urlLanguage))
-                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, false);
+                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language urlLanguage))
+                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, true);
 
                 //and add code of passed language
-                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, false, _workContext.WorkingLanguage);
+                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
             }
+
+            _workContext.WorkingLanguage = language;
 
             return Redirect(returnUrl);
         }
