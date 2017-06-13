@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web.Routing;
 using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -325,14 +324,12 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetConfigurationRoute(out string viewComponentName, out object viewComponentArguments)
         {
-            actionName = "Configure";
-            controllerName = "ShippingAustraliaPost";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
+            viewComponentName = "AustraliaPostConfigure";
+            viewComponentArguments = null;
         }
 
         /// <summary>
@@ -341,11 +338,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         public override void Install()
         {
             //settings
-            var settings = new AustraliaPostSettings
-            {
-                AdditionalHandlingCharge = 0
-            };
-            _settingService.SaveSetting(settings);
+            _settingService.SaveSetting(new AustraliaPostSettings());
 
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey", "Australia Post API Key");
@@ -381,10 +374,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
-            get
-            {
-                return ShippingRateComputationMethodType.Realtime;
-            }
+            get { return ShippingRateComputationMethodType.Realtime; }
         }
 
         /// <summary>

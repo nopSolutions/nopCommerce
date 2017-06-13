@@ -1,45 +1,56 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Shipping.AustraliaPost.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
     public class ShippingAustraliaPostController : BasePluginController
     {
+        #region Fields
+
         private readonly AustraliaPostSettings _australiaPostSettings;
-        private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly ISettingService _settingService;
+
+        #endregion
+
+        #region Ctor
 
         public ShippingAustraliaPostController(AustraliaPostSettings australiaPostSettings,
-            ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ISettingService settingService)
         {
             this._australiaPostSettings = australiaPostSettings;
-            this._settingService = settingService;
             this._localizationService = localizationService;
+            this._settingService = settingService;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
-            var model = new AustraliaPostShippingModel();
-            model.ApiKey = _australiaPostSettings.ApiKey;
-            model.AdditionalHandlingCharge = _australiaPostSettings.AdditionalHandlingCharge;
+            var model = new AustraliaPostShippingModel()
+            {
+                ApiKey = _australiaPostSettings.ApiKey,
+                AdditionalHandlingCharge = _australiaPostSettings.AdditionalHandlingCharge
+            };
 
             return View("~/Plugins/Shipping.AustraliaPost/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(AustraliaPostShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(AustraliaPostShippingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
             
             //save settings
             _australiaPostSettings.ApiKey = model.ApiKey;
@@ -51,5 +62,6 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             return Configure();
         }
 
+        #endregion
     }
 }
