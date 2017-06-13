@@ -11,6 +11,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
