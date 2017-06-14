@@ -34,7 +34,6 @@ namespace Nop.Web.Controllers
             return Redirect(returnUrl);
         }
 
-        [ChildActionOnly]
         public virtual IActionResult ExternalMethods()
         {
             var model = _externalAuthenticationModelFactory.PrepareExternalMethodsModel();

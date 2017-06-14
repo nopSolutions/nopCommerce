@@ -127,7 +127,6 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        [NonAction]
         protected virtual bool IsMinimumOrderPlacementIntervalValid(Customer customer)
         {
             //prevent 2 orders being placed within an X seconds time frame
@@ -949,7 +948,6 @@ namespace Nop.Web.Controllers
 
         #region Methods (one page checkout)
         
-        [NonAction]
         protected virtual JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
         {
             var shippingMethodModel = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
@@ -978,7 +976,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [NonAction]
         protected virtual JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
         {
             //Check whether payment workflow is required
@@ -1047,7 +1044,6 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [NonAction]
         protected virtual JsonResult OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, List<ShoppingCartItem> cart)
         {
             if (paymentMethod.SkipPaymentInfo ||

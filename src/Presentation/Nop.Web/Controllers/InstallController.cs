@@ -54,7 +54,6 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Returns true if the database exists.</returns>
-        [NonAction]
         protected virtual bool SqlServerDatabaseExists(string connectionString)
         {
             try
@@ -83,7 +82,6 @@ namespace Nop.Web.Controllers
         /// Pass 0 to skip this validation.
         /// </param>
         /// <returns>Error</returns>
-        [NonAction]
         protected virtual string CreateDatabase(string connectionString, string collation, int triesToConnect = 10)
         {
             try
@@ -143,7 +141,6 @@ namespace Nop.Web.Controllers
         /// <param name="password">The password for the SQL Server account</param>
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
-        [NonAction]
         protected virtual string CreateConnectionString(bool trustedConnection,
             string serverName, string databaseName,
             string userName, string password, int timeout = 0)

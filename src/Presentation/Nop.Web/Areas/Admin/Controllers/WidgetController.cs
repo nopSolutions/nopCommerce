@@ -145,7 +145,6 @@ namespace Nop.Admin.Controllers
         #endif
 
         #if NET451
-        [ChildActionOnly]
         public virtual IActionResult WidgetsByZone(string widgetZone)
         {
             //model
