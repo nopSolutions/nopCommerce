@@ -32,10 +32,5 @@ namespace Nop.Services.Shipping
         /// Gets a shipment tracker
         /// </summary>
         IShipmentTracker ShipmentTracker { get; }
-
-        /// <summary>
-        /// Gets a configuration page URL
-        /// </summary>
-        string GetConfigurationPageUrl();
     }
 }

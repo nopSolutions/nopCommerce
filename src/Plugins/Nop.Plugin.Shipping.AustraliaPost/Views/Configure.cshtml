@@ -1,8 +1,8 @@
 ﻿@model Nop.Plugin.Shipping.AustraliaPost.Models.AustraliaPostShippingModel
 @{
-    Layout = "/Areas/Admin/Views/Shipping/ConfigureProvider.cshtml";
+    Layout = "_ConfigurePlugin";
 }
-@using (Html.BeginForm("Configure", "ShippingAustraliaPost", new { area = "Admin" }))
+@using (Html.BeginForm("Configure", "ShippingAustraliaPost"))
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">

@@ -1,0 +1,133 @@
+﻿@using Nop.Core
+@using Nop.Core.Plugins
+@using Nop.Services.Authentication.External
+@using Nop.Services.Cms
+@using Nop.Services.Common
+@using Nop.Services.Payments
+@using Nop.Services.Shipping
+@using Nop.Services.Shipping.Pickup
+@using Nop.Services.Tax
+@inject IPluginFinder pluginFinder
+@inject IWebHelper webHelper
+@{
+    var thisPageUrl = webHelper.GetThisPageUrl(false);
+    var plugins = pluginFinder.GetPluginDescriptors(LoadPluginsMode.All).Select(x => x.Instance()).ToList();
+
+    var plugin = plugins.FirstOrDefault(x =>
+    {
+        var configurationUrl = x.GetConfigurationPageUrl();
+        if (String.IsNullOrEmpty(configurationUrl))
+            return false;
+
+        return configurationUrl.IndexOf(thisPageUrl, StringComparison.InvariantCultureIgnoreCase) >= 0;
+    });
+
+    Layout = "_AdminLayout";
+
+    var activeMenuSystemName = "";
+    //TODO add a generic "configure" locale
+    var configureLocale = "";
+    //TODO add a generic "back to plugins" locale
+    var backToLocale = "";
+    var listActionMethodName = "";
+    var listControllerName = "";
+    if (plugin is IPaymentMethod)
+    {
+        //payment plugin
+        activeMenuSystemName = "Payment methods";
+        configureLocale = "Admin.Configuration.Payment.Methods.Configure";
+        backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
+        listActionMethodName = "Methods";
+        listControllerName = "Payment";
+    }
+    else if (plugin is IShippingRateComputationMethod)
+    {
+        //shipping rate computation method
+        activeMenuSystemName = "Shipping providers";
+        configureLocale = "Admin.Configuration.Shipping.Providers.Configure";
+        backToLocale = "Admin.Configuration.Shipping.Providers.BackToList";
+        listActionMethodName = "Providers";
+        listControllerName = "Shipping";
+    }
+    else if (plugin is IPickupPointProvider)
+    {
+        //pickup point provider
+        activeMenuSystemName = "Pickup points";
+        configureLocale = "Admin.Configuration.Shipping.PickupPointProviders.Configure";
+        backToLocale = "Admin.Configuration.Shipping.PickupPointProviders.BackToList";
+        listActionMethodName = "PickupPointProviders";
+        listControllerName = "Shipping";
+    }
+    else if (plugin is ITaxProvider)
+    {
+        //tax provider
+        activeMenuSystemName = "Tax providers";
+        configureLocale = "Admin.Configuration.Tax.Providers.Configure";
+        backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
+        listActionMethodName = "Providers";
+        listControllerName = "Tax";
+    }
+    else if (plugin is IExternalAuthenticationMethod)
+    {
+        //external auth method
+        activeMenuSystemName = "External authentication methods";
+        configureLocale = "Admin.Configuration.ExternalAuthenticationMethods.Configure";
+        backToLocale = "Admin.Configuration.ExternalAuthenticationMethods.BackToList";
+        listActionMethodName = "Methods";
+        listControllerName = "ExternalAuthentication";
+    }
+    else if (plugin is IWidgetPlugin)
+    {
+        //widgets
+        activeMenuSystemName = "Widgets";
+        configureLocale = "Admin.ContentManagement.Widgets.Configure";
+        backToLocale = "Admin.ContentManagement.Widgets.BackToList";
+        listActionMethodName = "List";
+        listControllerName = "Widget";
+    }
+    else if (plugin is IMiscPlugin)
+    {
+        //Misc plugins
+        activeMenuSystemName = "Local plugins";
+        configureLocale = "Admin.Configuration.Plugins.Misc.Configure";
+        backToLocale = "Admin.Configuration.Plugins.Misc.BackToList";
+        listActionMethodName = "List";
+        listControllerName = "Plugin";
+    }
+
+
+    //friendly name
+    var friendlyName = plugin?.PluginDescriptor.FriendlyName;
+    //page title
+    ViewBag.Title = T(configureLocale).Text + " - " + friendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName(activeMenuSystemName);
+
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T(configureLocale) - @friendlyName
+        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T(backToLocale).Text, listActionMethodName, listControllerName)</small>
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        @*@if (plugin != null)
+        {*@
+            @RenderBody()
+        @*}
+        else
+        {
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Common.ConfigurationNotRequired")
+                    </div>
+                </div>
+            </div>
+        }*@
+    </div>
+</div>

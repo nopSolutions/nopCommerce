@@ -176,7 +176,7 @@ namespace Nop.Admin.Controllers
                 }
                 else if (pluginInstance is IWidgetPlugin)
                 {
-                    //Misc plugins
+                    //widgets
                     configurationUrl = Url.Action("ConfigureWidget", "Widget", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IMiscPlugin)
