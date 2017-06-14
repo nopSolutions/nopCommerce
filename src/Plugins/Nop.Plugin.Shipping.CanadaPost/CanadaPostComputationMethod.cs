@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -28,6 +27,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         private readonly IMeasureService _measureService;
         private readonly ISettingService _settingService;
         private readonly IShippingService _shippingService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -38,7 +38,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
             ILogger logger,
             IMeasureService measureService,
             ISettingService settingService,
-            IShippingService shippingService)
+            IShippingService shippingService,
+            IWebHelper webHelper)
         {
             this._canadaPostSettings = canadaPostSettings;
             this._currencyService = currencyService;
@@ -46,6 +47,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             this._measureService = measureService;
             this._settingService = settingService;
             this._shippingService = shippingService;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -57,10 +59,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
-            get
-            {
-                return ShippingRateComputationMethodType.Realtime;
-            }
+            get { return ShippingRateComputationMethodType.Realtime; }
         }
 
         /// <summary>
@@ -68,10 +67,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// </summary>
         public IShipmentTracker ShipmentTracker
         {
-            get
-            {
-                return new CanadaPostShipmentTracker(_canadaPostSettings, _logger);
-            }
+            get { return new CanadaPostShipmentTracker(_canadaPostSettings, _logger); }
         }
 
         #endregion
@@ -360,18 +356,13 @@ namespace Nop.Plugin.Shipping.CanadaPost
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "ShippingCanadaPost";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.CanadaPost.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/ShippingCanadaPost/Configure";
         }
-        
+
         /// <summary>
         /// Install the plugin
         /// </summary>

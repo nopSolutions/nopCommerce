@@ -1,12 +1,15 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Shipping.CanadaPost.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingCanadaPostController : BasePluginController
     {
         #region Fields
@@ -32,10 +35,9 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
         #region Methods
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
-            var model = new CanadaPostShippingModel
+            var model = new CanadaPostShippingModel()
             {
                 CustomerNumber = _canadaPostSettings.CustomerNumber,
                 ContractId = _canadaPostSettings.ContractId,
@@ -47,8 +49,8 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(CanadaPostShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(CanadaPostShippingModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -65,7 +67,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
+            return Configure();
         }
 
         #endregion

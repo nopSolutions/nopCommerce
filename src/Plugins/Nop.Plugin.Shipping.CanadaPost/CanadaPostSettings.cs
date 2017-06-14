@@ -1,8 +1,10 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Shipping.CanadaPost
 {
+    /// <summary>
+    /// Represents settings of Canada Post shipping plugin
+    /// </summary>
     public class CanadaPostSettings : ISettings
     {
         /// <summary>
