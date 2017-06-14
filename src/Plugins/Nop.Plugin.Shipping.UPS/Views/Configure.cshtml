@@ -1,17 +1,15 @@
 ﻿@{
-    Layout = "";
+    Layout = "_ConfigurePlugin";
 }
+
 @model Nop.Plugin.Shipping.UPS.Models.UPSShippingModel
-@using Nop.Web.Framework;
 @using Nop.Plugin.Shipping.UPS;
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Configure", "ShippingUPS"))
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#PackingType").change(togglePackingType);
-
             togglePackingType();
         });
 
@@ -169,10 +167,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-md-offset-3">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>

@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -52,6 +51,7 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILogger _logger;
         private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
 
         private readonly StringBuilder _traceMessages;
 
@@ -67,7 +67,8 @@ namespace Nop.Plugin.Shipping.UPS
             CurrencySettings currencySettings,
             IOrderTotalCalculationService orderTotalCalculationService,
             ILogger logger,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWebHelper webHelper)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
@@ -79,6 +80,7 @@ namespace Nop.Plugin.Shipping.UPS
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._logger = logger;
             this._localizationService = localizationService;
+            this._webHelper = webHelper;
 
             this._traceMessages = new StringBuilder();
         }
@@ -835,16 +837,11 @@ namespace Nop.Plugin.Shipping.UPS
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "ShippingUPS";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.UPS.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/ShippingUPS/Configure";
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
@@ -8,15 +9,24 @@ using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingUPSController : BasePluginController
     {
+        #region Fields
+
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+
+        #endregion
+
+        #region Ctor
 
         public ShippingUPSController(UPSSettings upsSettings,
             ISettingService settingService,
@@ -27,8 +37,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             this._localizationService = localizationService;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
             var model = new UPSShippingModel();
             model.Url = _upsSettings.Url;
@@ -45,11 +58,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
                 model.AvailableCustomerClassifications.Add(new SelectListItem
-                    {
-                        Text = CommonHelper.ConvertEnum(customerClassification.ToString()),
-                        Value = customerClassification.ToString(),
-                        Selected = customerClassification == _upsSettings.CustomerClassification
-                    });
+                {
+                    Text = CommonHelper.ConvertEnum(customerClassification.ToString()),
+                    Value = customerClassification.ToString(),
+                    Selected = customerClassification == _upsSettings.CustomerClassification
+                });
             }
             foreach (UPSPickupType pickupType in Enum.GetValues(typeof(UPSPickupType)))
             {
@@ -91,13 +104,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(UPSShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(UPSShippingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
 
             //save settings
             _upsSettings.Url = model.Url;
@@ -144,5 +155,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             return Configure();
         }
 
+        #endregion
     }
 }
