@@ -193,13 +193,9 @@ namespace Nop.Admin.Controllers
                 //No shipping rate computation method found with the specified id
                 return RedirectToAction("Providers");
 
-            var model = srcm.ToModel();
-            string viewComponentName;
-            object viewComponentArguments;
-            srcm.GetConfigurationRoute( out viewComponentName, out viewComponentArguments);
-            model.ConfigurationViewComponentName = viewComponentName;
-            model.ConfigurationViewComponentArguments = viewComponentArguments;
-            return View(model);
+            var url = srcm.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
 
 

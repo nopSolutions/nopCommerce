@@ -412,8 +412,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
                 .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationViewComponentName, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationViewComponentArguments, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             //pickup point providers
             CreateMap<IPickupPointProvider, PickupPointProviderModel>()

@@ -1,37 +1,41 @@
-﻿@model ShippingRateComputationMethodModel
-
+﻿@using Nop.Core
+@using Nop.Services.Shipping
+@inject IShippingService shippingService
+@inject IWebHelper webHelper
 @{
+    //find current plugin name
+    //TODO refactor
+    var thisPageUrl = webHelper.GetThisPageUrl(false);
+    var plugins = shippingService.LoadAllShippingRateComputationMethods();
+    var srcm = plugins.FirstOrDefault(x =>
+    {
+        var configurationUrl = x.GetConfigurationPageUrl();
+        if (String.IsNullOrEmpty(configurationUrl))
+            return false;
+
+        return configurationUrl.IndexOf(thisPageUrl, StringComparison.InvariantCultureIgnoreCase) >= 0;
+    });
+
+
+    var friendlyName = srcm?.PluginDescriptor.FriendlyName;
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Providers.Configure").Text + " - " + Model.FriendlyName;
+    ViewBag.Title = T("Admin.Configuration.Shipping.Providers.Configure").Text + " - " + friendlyName;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipping providers");
-}
 
+    Layout = "_AdminLayout";
+}
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Configuration.Shipping.Providers.Configure") - @Model.FriendlyName
-        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.Providers.BackToList").Text, "Providers")</small>
+        @T("Admin.Configuration.Shipping.Providers.Configure") - @friendlyName
+        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.Providers.BackToList").Text, "Providers", "Shipping")</small>
     </h1>
     <div class="pull-right">
         &nbsp;
     </div>
 </div>
-
 <div class="content">
     <div class="form-horizontal">
-        @if (!String.IsNullOrEmpty(Model.ConfigurationViewComponentName))
-        {
-            @await Component.InvokeAsync(Model.ConfigurationViewComponentName, Model.ConfigurationViewComponentArguments)
-        }
-        else
-        {
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Common.ConfigurationNotRequired")
-                    </div>
-                </div>
-            </div>
-        }
+        @RenderBody()
     </div>
 </div>

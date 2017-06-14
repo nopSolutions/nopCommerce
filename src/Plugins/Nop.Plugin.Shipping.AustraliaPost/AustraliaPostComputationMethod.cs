@@ -45,19 +45,23 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         private readonly IMeasureService _measureService;
         private readonly IShippingService _shippingService;
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
         private readonly AustraliaPostSettings _australiaPostSettings;
 
         #endregion
 
         #region Ctor
         public AustraliaPostComputationMethod(ICurrencyService currencyService, 
-            IMeasureService measureService, IShippingService shippingService, 
-            ISettingService settingService, AustraliaPostSettings australiaPostSettings)
+            IMeasureService measureService,
+            IShippingService shippingService, 
+            ISettingService settingService, 
+            IWebHelper webHelper, AustraliaPostSettings australiaPostSettings)
         {
             this._currencyService = currencyService;
             this._measureService = measureService;
             this._shippingService = shippingService;
             this._settingService = settingService;
+            this._webHelper = webHelper;
             this._australiaPostSettings = australiaPostSettings;
         }
         #endregion
@@ -322,14 +326,11 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        public void GetConfigurationRoute(out string viewComponentName, out object viewComponentArguments)
+        public string GetConfigurationPageUrl()
         {
-            viewComponentName = "AustraliaPostConfigure";
-            viewComponentArguments = null;
+            return _webHelper.GetStoreLocation() + "Admin/ShippingAustraliaPost/Configure";
         }
 
         /// <summary>

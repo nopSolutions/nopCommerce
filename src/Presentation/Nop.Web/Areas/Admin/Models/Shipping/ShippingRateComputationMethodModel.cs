@@ -22,13 +22,5 @@ namespace Nop.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.Logo")]
         public string LogoUrl { get; set; }
-        
-
-
-
-
-
-        public string ConfigurationViewComponentName { get; set; }
-        public object ConfigurationViewComponentArguments { get; set; }
     }
 }

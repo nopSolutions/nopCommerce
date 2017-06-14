@@ -34,10 +34,8 @@ namespace Nop.Services.Shipping
         IShipmentTracker ShipmentTracker { get; }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        void GetConfigurationRoute(out string viewComponentName, out object viewComponentArguments);
+        string GetConfigurationPageUrl();
     }
 }

@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="AustraliaPostComputationMethod.cs" />
     <Compile Include="AustraliaPostExtensions.cs" />
-    <Compile Include="Components\AustraliaPostConfigure.cs" />
     <Compile Include="Controllers\ShippingAustraliaPostController.cs" />
     <Compile Include="Models\AustraliaPostShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

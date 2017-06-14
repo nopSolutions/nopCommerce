@@ -9,6 +9,7 @@ using Nop.Web.Framework.Security;
 namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 {
     [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingAustraliaPostController : BasePluginController
     {
         #region Fields
