@@ -1,17 +1,15 @@
 ﻿@{
-    Layout = "";
+    Layout = "_ConfigurePlugin";
 }
+
 @model Nop.Plugin.Shipping.Fedex.Models.FedexShippingModel
-@using Nop.Web.Framework;
 @using Nop.Plugin.Shipping.Fedex;
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Configure", "ShippingFedex"))
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#PackingType").change(togglePackingType);
-
             togglePackingType();
         });
 
@@ -159,11 +157,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
             </div>
