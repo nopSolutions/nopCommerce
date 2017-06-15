@@ -4,7 +4,7 @@
 @inject AdminAreaSettings adminAreaSettings
 
 @{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
 }
 
 @{
@@ -126,7 +126,7 @@
                                     },
                                     pageable: {
                                         refresh: true,
-                                        @await Html.PartialAsync("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                                        @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

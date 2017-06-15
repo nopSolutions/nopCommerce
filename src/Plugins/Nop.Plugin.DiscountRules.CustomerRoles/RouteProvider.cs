@@ -10,8 +10,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         {
             routeBuilder.MapRoute("Plugin.DiscountRules.CustomerRoles.Configure",
                  "Plugins/DiscountRulesCustomerRoles/Configure",
-                 new { controller = "DiscountRulesCustomerRoles", action = "Configure" },
-                 new[] { "Nop.Plugin.DiscountRules.CustomerRoles.Controllers" }
+                 new { controller = "DiscountRulesCustomerRoles", action = "Configure" }
             );
         }
         public int Priority
