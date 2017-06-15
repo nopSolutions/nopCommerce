@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -29,6 +28,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ShippingByWeightObjectContext _objectContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -40,7 +40,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             IShippingByWeightService shippingByWeightService,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
-        ShippingByWeightObjectContext objectContext)
+            ShippingByWeightObjectContext objectContext,
+            IWebHelper webHelper)
         {
             this._settingService = settingService;
             this._shippingService = shippingService;
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
             this._objectContext = objectContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -239,14 +241,11 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        public void GetConfigurationRoute(out string viewComponentName, out object viewComponentArguments)
+        public override string GetConfigurationPageUrl()
         {
-            viewComponentName = "FixedOrByWeightConfigure";
-            viewComponentArguments = null;
+            return $"{_webHelper.GetStoreLocation()}Admin/FixedOrByWeight/Configure";
         }
 
         /// <summary>
@@ -359,10 +358,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
-            get
-            {
-                return ShippingRateComputationMethodType.Offline;
-            }
+            get { return ShippingRateComputationMethodType.Offline; }
         }
         
         /// <summary>

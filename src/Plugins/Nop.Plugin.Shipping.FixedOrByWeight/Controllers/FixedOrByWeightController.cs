@@ -83,6 +83,15 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             base.Initialize(requestContext);
         }
 #endif
+        public IActionResult Configure()
+        {
+            var model = new ConfigurationModel
+            {
+                LimitMethodsToCreated = _fixedOrByWeightSettings.LimitMethodsToCreated,
+                ShippingByWeightEnabled = _fixedOrByWeightSettings.ShippingByWeightEnabled
+            };
+            return View("~/Plugins/Shipping.FixedOrByWeight/Views/Configure.cshtml", model);
+        }
 
         [HttpPost]
         [AdminAntiForgery]
@@ -108,10 +117,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             _fixedOrByWeightSettings.ShippingByWeightEnabled = value;
             _settingService.SaveSetting(_fixedOrByWeightSettings);
 
-            return Json(new
-            {
-                Result = true
-            });
+            return Json(new { Result = true });
         }
 
         #region Fixed rate
