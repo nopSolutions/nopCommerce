@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -46,6 +45,7 @@ namespace Nop.Plugin.Shipping.USPS
         private readonly USPSSettings _uspsSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -53,7 +53,8 @@ namespace Nop.Plugin.Shipping.USPS
         public USPSComputationMethod(IMeasureService measureService,
             IShippingService shippingService, ISettingService settingService,
             USPSSettings uspsSettings, MeasureSettings measureSettings,
-            IPriceCalculationService priceCalculationService)
+            IPriceCalculationService priceCalculationService,
+            IWebHelper webHelper)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
@@ -61,6 +62,7 @@ namespace Nop.Plugin.Shipping.USPS
             this._uspsSettings = uspsSettings;
             this._measureSettings = measureSettings;
             this._priceCalculationService = priceCalculationService;
+            this._webHelper = webHelper;
         }
         #endregion
 
@@ -665,18 +667,13 @@ namespace Nop.Plugin.Shipping.USPS
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "ShippingUSPS";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.USPS.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/ShippingUSPS/Configure";
         }
-        
+
         /// <summary>
         /// Install plugin
         /// </summary>

@@ -1,20 +1,29 @@
 ﻿using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Shipping.USPS.Domain;
 using Nop.Plugin.Shipping.USPS.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.USPS.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingUSPSController : BasePluginController
     {
+        #region Fields
+
         private readonly USPSSettings _uspsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+
+        #endregion
+
+        #region Ctor
 
         public ShippingUSPSController(USPSSettings uspsSettings,
             ISettingService settingService,
@@ -25,8 +34,11 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             this._localizationService = localizationService;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
             var model = new USPSShippingModel();
             model.Url = _uspsSettings.Url;
@@ -73,13 +85,11 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(USPSShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(USPSShippingModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
             
             //save settings
             _uspsSettings.Url = model.Url;
@@ -159,5 +169,6 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             return Configure();
         }
 
+        #endregion
     }
 }
