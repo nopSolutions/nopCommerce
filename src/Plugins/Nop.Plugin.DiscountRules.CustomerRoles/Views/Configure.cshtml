@@ -1,8 +1,7 @@
-﻿@{
+﻿@model Nop.Plugin.DiscountRules.CustomerRoles.Models.RequirementModel
+@{
     Layout = "";
 }
-@model Nop.Plugin.DiscountRules.CustomerRoles.Models.RequirementModel
-@using Nop.Web.Framework;
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -32,7 +31,7 @@
                     }
                 },
                 error:function (xhr, ajaxOptions, thrownError){
-                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
                 }
             });
         });
