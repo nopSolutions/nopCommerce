@@ -192,7 +192,11 @@
                         <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
                                 onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
                             {{each AvailableInteractionTypes}}
-                                <option value="${Value}" ${Selected == true ? 'selected' : '' }>${Text}</option>
+                                {{if Selected}}
+                                    <option value="${Value}" selected>${Text}</option>
+                                {{else}}
+                                    <option value="${Value}">${Text}</option>
+                                {{/if}}
                             {{/each}}
                         </select>
                     </div>
