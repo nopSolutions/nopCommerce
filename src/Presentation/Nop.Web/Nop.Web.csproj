@@ -26,6 +26,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="1.1.1" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
