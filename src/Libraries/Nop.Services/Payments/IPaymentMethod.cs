@@ -83,14 +83,6 @@ namespace Nop.Services.Payments
         bool CanRePostProcessPayment(Order order);
 
         /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-
-        /// <summary>
         /// Gets a route for payment info
         /// </summary>
         /// <param name="actionName">Action name</param>

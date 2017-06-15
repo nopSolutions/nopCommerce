@@ -433,9 +433,6 @@ namespace Nop.Admin.Infrastructure.Mapper
                     mo => mo.MapFrom(src => src.RecurringPaymentType.ToString()))
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
                 .ForMember(dest => dest.LogoUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationActionName, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationControllerName, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             //external authentication methods
             CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()

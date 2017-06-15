@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Payments;
@@ -128,8 +127,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #if NET451
-
         public virtual IActionResult ConfigureMethod(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -140,17 +137,10 @@ namespace Nop.Admin.Controllers
                 //No payment method found with the specified id
                 return RedirectToAction("Methods");
 
-            var model = pm.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            pm.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = pm.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
-
-        #endif
 
         public virtual IActionResult MethodRestrictions()
         {

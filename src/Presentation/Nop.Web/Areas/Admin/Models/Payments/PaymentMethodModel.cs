@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Payments
@@ -37,12 +34,5 @@ namespace Nop.Admin.Models.Payments
 
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")]
         public string RecurringPaymentType { get; set; }
-        
-
-
-
-        public string ConfigurationActionName { get; set; }
-        public string ConfigurationControllerName { get; set; }
-        public RouteValueDictionary ConfigurationRouteValues { get; set; }
     }
 }
