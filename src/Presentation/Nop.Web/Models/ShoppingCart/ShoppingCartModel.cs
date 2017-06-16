@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
@@ -19,9 +18,8 @@ namespace Nop.Web.Models.ShoppingCart
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodActionNames = new List<string>();
-            ButtonPaymentMethodControllerNames = new List<string>();
-            ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
+            ButtonPaymentMethodViewComponentNames = new List<string>();
+            ButtonPaymentMethodViewComponentArguments = new List<object>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -43,9 +41,8 @@ namespace Nop.Web.Models.ShoppingCart
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<string> ButtonPaymentMethodActionNames { get; set; }
-        public IList<string> ButtonPaymentMethodControllerNames { get; set; }
-        public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
+        public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
+        public IList<object> ButtonPaymentMethodViewComponentArguments { get; set; }
 
         public bool HideCheckoutButton { get; set; }
 

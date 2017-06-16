@@ -818,31 +818,25 @@ namespace Nop.Web.Controllers
             }
 
             //load payment method
-            var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                SystemCustomerAttributeNames.SelectedPaymentMethod,
-                _genericAttributeService, _storeContext.CurrentStore.Id);
+            var paymentMethodSystemName = _workContext.CurrentCustomer
+                .GetAttribute<string>(SystemCustomerAttributeNames.SelectedPaymentMethod, _genericAttributeService, _storeContext.CurrentStore.Id);
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
-#if NET451
-            var paymentControllerType = paymentMethod.GetControllerType();
-            var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
-            if (paymentController == null)
-                throw new Exception("Payment controller cannot be loaded");
 
-            var warnings = paymentController.ValidatePaymentForm(form);
+            var warnings = paymentMethod.ValidatePaymentForm(form);
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);
             if (ModelState.IsValid)
             {
                 //get payment info
-                var paymentInfo = paymentController.GetPaymentInfo(form);
+                var paymentInfo = paymentMethod.GetPaymentInfo(form);
 
                 //session save
                 _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);
                 return RedirectToRoute("CheckoutConfirm");
             }
-#endif
+
             //If we got this far, something failed, redisplay form
             //model
             var model = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
@@ -1544,28 +1538,19 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod,
-                    _genericAttributeService, _storeContext.CurrentStore.Id);
+                var paymentMethodSystemName = _workContext.CurrentCustomer
+                    .GetAttribute<string>(SystemCustomerAttributeNames.SelectedPaymentMethod, _genericAttributeService, _storeContext.CurrentStore.Id);
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
                 if (paymentMethod == null)
                     throw new Exception("Payment method is not selected");
-
-                var paymentControllerType = paymentMethod.GetControllerType();
-#if NET451
-                var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
-                if (paymentController == null)
-                    throw new Exception("Payment controller cannot be loaded");
-#else
-                BasePaymentController paymentController = null;
-#endif
-                var warnings = paymentController.ValidatePaymentForm(form);
+                
+                var warnings = paymentMethod.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
                     ModelState.AddModelError("", warning);
                 if (ModelState.IsValid)
                 {
                     //get payment info
-                    var paymentInfo = paymentController.GetPaymentInfo(form);
+                    var paymentInfo = paymentMethod.GetPaymentInfo(form);
 
                     //session save
                     _httpContextAccessor.HttpContext?.Session?.Set("OrderPaymentInfo", paymentInfo);

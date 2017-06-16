@@ -3,7 +3,7 @@
     @Html.Widget("op_checkout_payment_info_top")
     <div class="section payment-info">
         <div class="info">
-            @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
+            @await Component.InvokeAsync(Model.PaymentViewComponentName, Model.PaymentViewComponentArguments)
         </div>
         @{
             var validationSummary = Html.ValidationSummary(false);
@@ -17,7 +17,7 @@
     @if (Model.DisplayOrderTotals)
     {
         <div class="section order-summary">
-            @Html.Action("OrderSummary", "ShoppingCart")
+            @*TODO @Html.Action("OrderSummary", "ShoppingCart")*@
         </div>
     }
 </div>

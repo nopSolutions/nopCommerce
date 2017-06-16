@@ -431,15 +431,15 @@ namespace Nop.Web.Factories
         /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
-            var model = new CheckoutPaymentInfoModel();
-            string actionName;
-            string controllerName;
-            RouteValueDictionary routeValues;
-            paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
-            model.PaymentInfoActionName = actionName;
-            model.PaymentInfoControllerName = controllerName;
-            model.PaymentInfoRouteValues = routeValues;
-            model.DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab;
+            paymentMethod.GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments);
+
+            var model = new CheckoutPaymentInfoModel
+            {
+                PaymentViewComponentName = viewComponentName,
+                PaymentViewComponentArguments = viewComponentArguments,
+                DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
+            };
+            
             return model;
         }
 

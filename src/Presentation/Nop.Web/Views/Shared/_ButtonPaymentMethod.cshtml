@@ -1,8 +1,8 @@
 ﻿@model ShoppingCartModel
-@if (Model.ButtonPaymentMethodActionNames != null && Model.ButtonPaymentMethodActionNames.Count > 0)
+@if (Model.ButtonPaymentMethodViewComponentNames != null && Model.ButtonPaymentMethodViewComponentNames.Count > 0)
 {
-    for (int i = 0; i < Model.ButtonPaymentMethodActionNames.Count; i++)
+    for (int i = 0; i < Model.ButtonPaymentMethodViewComponentNames.Count; i++)
     {
-        @*TODO @Html.Action(Model.ButtonPaymentMethodActionNames[i], Model.ButtonPaymentMethodControllerNames[i], Model.ButtonPaymentMethodRouteValues[i])*@
+        @await Component.InvokeAsync(Model.ButtonPaymentMethodViewComponentNames[i], Model.ButtonPaymentMethodViewComponentArguments[i])
     }
 }

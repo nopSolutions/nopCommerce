@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Checkout
 {
     public partial class CheckoutPaymentInfoModel : BaseNopModel
     {
-        public string PaymentInfoActionName { get; set; }
-        public string PaymentInfoControllerName { get; set; }
-        public RouteValueDictionary PaymentInfoRouteValues { get; set; }
+        public string PaymentViewComponentName { get; set; }
+        public object PaymentViewComponentArguments { get; set; }
 
         /// <summary>
         /// Used on one-page checkout page

@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 
@@ -83,14 +82,25 @@ namespace Nop.Services.Payments
         bool CanRePostProcessPayment(Order order);
 
         /// <summary>
+        /// Validate payment form
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        IList<string> ValidatePaymentForm(IFormCollection form);
+
+        /// <summary>
+        /// Get payment information
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        ProcessPaymentRequest GetPaymentInfo(IFormCollection form);
+
+        /// <summary>
         /// Gets a route for payment info
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-
-        Type GetControllerType();
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        void GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments);
 
         #endregion
 
