@@ -41,7 +41,14 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         public static IEngine Current
         {
-            get { return Singleton<IEngine>.Instance; }
+            get
+            {
+                if (Singleton<IEngine>.Instance == null)
+                {
+                    Create();
+                }
+
+                return Singleton<IEngine>.Instance; }
         }
 
         #endregion
