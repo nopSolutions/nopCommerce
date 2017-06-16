@@ -13,7 +13,7 @@ namespace Nop.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(ICacheManager cacheManager, 
+        public ConfigFileSettingService(IStaticCacheManager cacheManager, 
             IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository):
             base (cacheManager, eventPublisher, settingRepository)

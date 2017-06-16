@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿
+#if NET451
+using Autofac;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Infrastructure;
@@ -66,3 +68,4 @@ namespace Nop.Services.Tests.Catalog
         }
     }
 }
+#endif

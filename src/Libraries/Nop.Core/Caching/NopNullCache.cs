@@ -4,7 +4,7 @@ namespace Nop.Core.Caching
     /// <summary>
     /// Represents a null cache (caches nothing)
     /// </summary>
-    public partial class NopNullCache : ICacheManager
+    public partial class NopNullCache : IStaticCacheManager
     {
         /// <summary>
         /// Gets or sets the value associated with the specified key.

@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+#if NET451
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -194,3 +196,4 @@ namespace Nop.Services.Tests.Catalog
         }
     }
 }
+#endif

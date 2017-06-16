@@ -1,11 +1,12 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
-using Nop.Core.Fakes;
+using Nop.Core.Http;
 using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests
 {
+    #if NET451
     [TestFixture]
     public class WebHelperTests
     {
@@ -166,4 +167,5 @@ namespace Nop.Core.Tests
                 .ShouldEqual("http://www.example.com/?param1=value3&param2=value2#test2");
         }
     }
+    #endif
 }

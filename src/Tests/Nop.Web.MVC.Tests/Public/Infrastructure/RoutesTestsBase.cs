@@ -1,4 +1,5 @@
-﻿using System.Web.Routing;
+﻿#if NET451
+using System.Web.Routing;
 using Nop.Web.Infrastructure;
 using NUnit.Framework;
 
@@ -24,3 +25,4 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         }
     }
 }
+#endif

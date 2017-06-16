@@ -7,6 +7,7 @@ namespace Nop.Core.Tests.Caching
     [TestFixture]
     public class MemoryCacheManagerTests
     {
+        #if NET451
         [Test]
         public void Can_set_and_get_object_from_cache()
         {
@@ -37,5 +38,6 @@ namespace Nop.Core.Tests.Caching
 
             cacheManager.IsSet("some_key_1").ShouldEqual(false);
         }
+        #endif
     }
 }

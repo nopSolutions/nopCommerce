@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿#if NET451
+using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Fakes;
 using Nop.Web.Framework.Controllers;
@@ -110,3 +111,4 @@ namespace Nop.Web.MVC.Tests.Framework.Controllers
         }
     }
 }
+#endif

@@ -1,5 +1,5 @@
 ﻿//Contributor: MvcContrib.TestHelper
-
+#if NET451
 using System;
 using System.Collections.Specialized;
 using System.Linq.Expressions;
@@ -366,3 +366,4 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         #endregion 
     }
 }
+#endif

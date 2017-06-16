@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping;
@@ -56,7 +55,7 @@ namespace Nop.Services.Tests.Shipping
         }
 
         #region Properties
-        
+
 
         /// <summary>
         /// Gets a shipping rate computation method type
@@ -67,19 +66,6 @@ namespace Nop.Services.Tests.Shipping
             {
                 return ShippingRateComputationMethodType.Offline;
             }
-        }
-
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = null;
-            controllerName = null;
-            routeValues = null;
         }
 
         /// <summary>
