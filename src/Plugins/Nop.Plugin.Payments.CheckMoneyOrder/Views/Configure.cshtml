@@ -1,13 +1,13 @@
-﻿@{
-    Layout = "";
+﻿@model ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model ConfigurationModel
+
 @using Nop.Plugin.Payments.CheckMoneyOrder.Models
-@using Nop.Web.Framework;
 
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@await Component.InvokeAsync("StoreScopeConfiguration")
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Configure", "PaymentCheckMoneyOrder"))
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">
@@ -27,7 +27,7 @@
                     </div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-    ,
+                ,
                 @<div>
                     <div class="form-group">
                         <div class="col-md-3">
@@ -40,10 +40,10 @@
                         </div>
                     </div>
                 </div>
-    ,
-    //localizable settings per store (overrriden store settings) are not supported yet
-    true
-    ))
+                ,
+                //localizable settings per store (overrriden store settings) are not supported yet
+                true
+                ))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
@@ -75,10 +75,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-md-offset-3">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
