@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.PurchaseOrder.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -22,6 +21,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
         private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
 
         #endregion
@@ -31,12 +31,14 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         public PurchaseOrderPaymentProcessor(ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
+            IWebHelper webHelper,
             PurchaseOrderPaymentSettings purchaseOrderPaymentSettings)
         {
             this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
             this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -50,9 +52,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Pending;
-            return result;
+            return new ProcessPaymentResult();
         }
 
         /// <summary>
@@ -88,9 +88,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            return this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
                 _purchaseOrderPaymentSettings.AdditionalFee, _purchaseOrderPaymentSettings.AdditionalFeePercentage);
-            return result;
         }
 
         /// <summary>
@@ -100,9 +99,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Capture payment result</returns>
         public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            var result = new CapturePaymentResult();
-            result.AddError("Capture method not supported");
-            return result;
+            return new CapturePaymentResult { Errors = new[] { "Capture method not supported" } };
         }
 
         /// <summary>
@@ -112,9 +109,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            var result = new RefundPaymentResult();
-            result.AddError("Refund method not supported");
-            return result;
+            return new RefundPaymentResult { Errors = new[] { "Refund method not supported" } };
         }
 
         /// <summary>
@@ -124,9 +119,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            var result = new VoidPaymentResult();
-            result.AddError("Void method not supported");
-            return result;
+            return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
         }
 
         /// <summary>
@@ -136,9 +129,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
+            return new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
         /// <summary>
@@ -148,9 +139,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            var result = new CancelRecurringPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
+            return new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
         /// <summary>
@@ -168,38 +157,48 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = "Configure";
-            controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Get payment information
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        {
+            return new ProcessPaymentRequest
+            {
+                CustomValues = new Dictionary<string, object>
+                {
+                    [_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber")] = form["PurchaseOrderNumber"]
+                }
+            };
+        }
+
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentPurchaseOrder/Configure";
         }
 
         /// <summary>
         /// Gets a route for payment info
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments)
         {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
-        }
-
-        /// <summary>
-        /// Get type of controller
-        /// </summary>
-        /// <returns>Type</returns>
-        public Type GetControllerType()
-        {
-            return typeof(PaymentPurchaseOrderController);
+            viewComponentName = "PaymentPurchaseOrder";
+            viewComponentArguments = null;
         }
 
         /// <summary>
