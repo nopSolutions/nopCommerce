@@ -1,3 +1,4 @@
+
 namespace Nop.Plugin.Payments.Manual
 {
     /// <summary>
@@ -9,10 +10,12 @@ namespace Nop.Plugin.Payments.Manual
         /// Pending
         /// </summary>
         Pending = 0,
+
         /// <summary>
         /// Authorize
         /// </summary>
         Authorize = 1,
+
         /// <summary>
         /// Authorize and capture
         /// </summary>

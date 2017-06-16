@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.Manual.Controllers;
+using Nop.Plugin.Payments.Manual.Models;
+using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -22,6 +25,7 @@ namespace Nop.Plugin.Payments.Manual
         private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
         private readonly ManualPaymentSettings _manualPaymentSettings;
 
         #endregion
@@ -31,11 +35,13 @@ namespace Nop.Plugin.Payments.Manual
         public ManualPaymentProcessor(ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
             ISettingService settingService,
+            IWebHelper webHelper,
             ManualPaymentSettings manualPaymentSettings)
         {
             this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._settingService = settingService;
+            this._webHelper = webHelper;
             this._manualPaymentSettings = manualPaymentSettings;
         }
 
@@ -65,10 +71,8 @@ namespace Nop.Plugin.Payments.Manual
                     result.NewPaymentStatus = PaymentStatus.Paid;
                     break;
                 default:
-                    {
-                        result.AddError("Not supported transaction type");
-                        return result;
-                    }
+                    result.AddError("Not supported transaction type");
+                    break;
             }
 
             return result;
@@ -102,9 +106,8 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService,  cart,
+            return this.CalculateAdditionalFee(_orderTotalCalculationService,  cart,
                 _manualPaymentSettings.AdditionalFee, _manualPaymentSettings.AdditionalFeePercentage);
-            return result;
         }
 
         /// <summary>
@@ -114,9 +117,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Capture payment result</returns>
         public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            var result = new CapturePaymentResult();
-            result.AddError("Capture method not supported");
-            return result;
+            return new CapturePaymentResult { Errors = new[] { "Capture method not supported" } };
         }
 
         /// <summary>
@@ -126,9 +127,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Result</returns>
         public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            var result = new RefundPaymentResult();
-            result.AddError("Refund method not supported");
-            return result;
+            return new RefundPaymentResult { Errors = new[] { "Refund method not supported" } };
         }
 
         /// <summary>
@@ -138,9 +137,7 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Result</returns>
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            var result = new VoidPaymentResult();
-            result.AddError("Void method not supported");
-            return result;
+            return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
         }
 
         /// <summary>
@@ -165,10 +162,8 @@ namespace Nop.Plugin.Payments.Manual
                     result.NewPaymentStatus = PaymentStatus.Paid;
                     break;
                 default:
-                    {
-                        result.AddError("Not supported transaction type");
-                        return result;
-                    }
+                    result.AddError("Not supported transaction type");
+                    break;
             }
 
             return result;
@@ -200,38 +195,66 @@ namespace Nop.Plugin.Payments.Manual
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = "Configure";
-            controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+            var warnings = new List<string>();
+
+            //validate
+            var validator = new PaymentInfoValidator(_localizationService);
+            var model = new PaymentInfoModel
+            {
+                CardholderName = form["CardholderName"],
+                CardNumber = form["CardNumber"],
+                CardCode = form["CardCode"],
+                ExpireMonth = form["ExpireMonth"],
+                ExpireYear = form["ExpireYear"]
+            };
+            var validationResult = validator.Validate(model);
+            if (!validationResult.IsValid)
+                warnings.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
+
+            return warnings;
+        }
+
+        /// <summary>
+        /// Get payment information
+        /// </summary>
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        {
+            return new ProcessPaymentRequest
+            {
+                CreditCardType = form["CreditCardType"],
+                CreditCardName = form["CardholderName"],
+                CreditCardNumber = form["CardNumber"],
+                CreditCardExpireMonth = int.Parse(form["ExpireMonth"]),
+                CreditCardExpireYear = int.Parse(form["ExpireYear"]),
+                CreditCardCvv2 = form["CardCode"]
+            };
+        }
+
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentManual/Configure";
         }
 
         /// <summary>
         /// Gets a route for payment info
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments)
         {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
-        }
-
-        /// <summary>
-        /// Get the type of controller
-        /// </summary>
-        /// <returns>Type</returns>
-        public Type GetControllerType()
-        {
-            return typeof(PaymentManualController);
+            viewComponentName = "PaymentManual";
+            viewComponentArguments = null;
         }
 
         /// <summary>

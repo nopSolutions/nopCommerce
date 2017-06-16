@@ -1,52 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.Manual.Models;
-using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.Manual.Controllers
 {
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class PaymentManualController : BasePaymentController
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
-        private readonly ISettingService _settingService;
-        private readonly ILocalizationService _localizationService;
-
-        public PaymentManualController(IWorkContext workContext,
-            IStoreService storeService, 
-            ISettingService settingService, 
-            ILocalizationService localizationService)
-        {
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._localizationService = localizationService;
-        }
+        #region Fields
         
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+        private readonly ILocalizationService _localizationService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public PaymentManualController(ILocalizationService localizationService,
+            ISettingService settingService,
+            IStoreService storeService,
+            IWorkContext workContext)
+        {
+            this._localizationService = localizationService;
+            this._settingService = settingService;
+            this._storeService = storeService;
+            this._workContext = workContext;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var manualPaymentSettings = _settingService.LoadSetting<ManualPaymentSettings>(storeScope);
 
-            var model = new ConfigurationModel();
-            model.TransactModeId = Convert.ToInt32(manualPaymentSettings.TransactMode);
-            model.AdditionalFee = manualPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = manualPaymentSettings.AdditionalFeePercentage;
-            model.TransactModeValues = manualPaymentSettings.TransactMode.ToSelectList();
-
-            model.ActiveStoreScopeConfiguration = storeScope;
+            var model = new ConfigurationModel
+            {
+                TransactModeId = Convert.ToInt32(manualPaymentSettings.TransactMode),
+                AdditionalFee = manualPaymentSettings.AdditionalFee,
+                AdditionalFeePercentage = manualPaymentSettings.AdditionalFeePercentage,
+                TransactModeValues = manualPaymentSettings.TransactMode.ToSelectList(),
+                ActiveStoreScopeConfiguration = storeScope
+            };
             if (storeScope > 0)
             {
                 model.TransactModeId_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.TransactMode, storeScope);
@@ -58,9 +67,8 @@ namespace Nop.Plugin.Payments.Manual.Controllers
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -90,106 +98,6 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var model = new PaymentInfoModel();
-            
-            //CC types
-            model.CreditCardTypes.Add(new SelectListItem
-                {
-                    Text = "Visa",
-                    Value = "Visa",
-                });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Master card",
-                Value = "MasterCard",
-            });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Discover",
-                Value = "Discover",
-            });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Amex",
-                Value = "Amex",
-            });
-            
-            //years
-            for (int i = 0; i < 15; i++)
-            {
-                string year = Convert.ToString(DateTime.Now.Year + i);
-                model.ExpireYears.Add(new SelectListItem
-                {
-                    Text = year,
-                    Value = year,
-                });
-            }
-
-            //months
-            for (int i = 1; i <= 12; i++)
-            {
-                string text = (i < 10) ? "0" + i : i.ToString();
-                model.ExpireMonths.Add(new SelectListItem
-                {
-                    Text = text,
-                    Value = i.ToString(),
-                });
-            }
-
-            //set postback values
-            var form = this.Request.Form;
-            model.CardholderName = form["CardholderName"];
-            model.CardNumber = form["CardNumber"];
-            model.CardCode = form["CardCode"];
-            var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedCcType != null)
-                selectedCcType.Selected = true;
-            var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedMonth != null)
-                selectedMonth.Selected = true;
-            var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedYear != null)
-                selectedYear.Selected = true;
-
-            return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-
-            //validate
-            var validator = new PaymentInfoValidator(_localizationService);
-            var model = new PaymentInfoModel
-            {
-                CardholderName = form["CardholderName"],
-                CardNumber = form["CardNumber"],
-                CardCode = form["CardCode"],
-                ExpireMonth = form["ExpireMonth"],
-                ExpireYear = form["ExpireYear"]
-            };
-            var validationResult = validator.Validate(model);
-            if (!validationResult.IsValid)
-                foreach (var error in validationResult.Errors)
-                    warnings.Add(error.ErrorMessage);
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.CreditCardType = form["CreditCardType"];
-            paymentInfo.CreditCardName = form["CardholderName"];
-            paymentInfo.CreditCardNumber = form["CardNumber"];
-            paymentInfo.CreditCardExpireMonth = int.Parse(form["ExpireMonth"]);
-            paymentInfo.CreditCardExpireYear = int.Parse(form["ExpireYear"]);
-            paymentInfo.CreditCardCvv2 = form["CardCode"];
-            return paymentInfo;
-        }
+        #endregion
     }
 }
