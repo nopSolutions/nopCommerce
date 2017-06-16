@@ -1,11 +1,9 @@
-﻿@{
-    Layout = "";
+﻿@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model ConfigurationModel
-@using Nop.Plugin.Payments.PayPalStandard.Models;
-@using Nop.Web.Framework;
 
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@await Component.InvokeAsync("StoreScopeConfiguration")
 
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -31,13 +29,14 @@
     }
 </script>
 
-@using (Html.BeginForm())
+
+@using (Html.BeginForm("Configure", "PaymentPayPalStandard"))
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Plugins.Payments.PayPalStandard.Instructions")
+                @Html.Raw(T("Plugins.Payments.PayPalStandard.Instructions"))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
@@ -150,11 +149,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
             </div>

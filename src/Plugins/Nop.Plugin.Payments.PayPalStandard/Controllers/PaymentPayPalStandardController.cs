@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -16,11 +17,15 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
     public class PaymentPayPalStandardController : BasePaymentController
     {
+        #region Fields
+
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
@@ -35,6 +40,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+
+        #endregion
+
+        #region Ctor
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService, 
@@ -66,29 +75,34 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
-        
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+
+        #endregion
+
+        #region Methods
+
+        [AuthorizeAdmin]
+        [Area("Admin")]
+        public IActionResult Configure()
         {
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
-            var model = new ConfigurationModel();
-            model.UseSandbox = payPalStandardPaymentSettings.UseSandbox;
-            model.BusinessEmail = payPalStandardPaymentSettings.BusinessEmail;
-            model.PdtToken = payPalStandardPaymentSettings.PdtToken;
-            model.PdtValidateOrderTotal = payPalStandardPaymentSettings.PdtValidateOrderTotal;
-            model.AdditionalFee = payPalStandardPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage;
-            model.PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals;
-            model.EnableIpn = payPalStandardPaymentSettings.EnableIpn;
-            model.IpnUrl = payPalStandardPaymentSettings.IpnUrl;
-            model.AddressOverride = payPalStandardPaymentSettings.AddressOverride;
-            model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
-
-            model.ActiveStoreScopeConfiguration = storeScope;
+            var model = new ConfigurationModel
+            {
+                UseSandbox = payPalStandardPaymentSettings.UseSandbox,
+                BusinessEmail = payPalStandardPaymentSettings.BusinessEmail,
+                PdtToken = payPalStandardPaymentSettings.PdtToken,
+                PdtValidateOrderTotal = payPalStandardPaymentSettings.PdtValidateOrderTotal,
+                AdditionalFee = payPalStandardPaymentSettings.AdditionalFee,
+                AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage,
+                PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals,
+                EnableIpn = payPalStandardPaymentSettings.EnableIpn,
+                IpnUrl = payPalStandardPaymentSettings.IpnUrl,
+                AddressOverride = payPalStandardPaymentSettings.AddressOverride,
+                ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage,
+                ActiveStoreScopeConfiguration = storeScope
+            };
             if (storeScope > 0)
             {
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
@@ -108,9 +122,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [AuthorizeAdmin]
+        [AdminAntiForgery]
+        [Area("Admin")]
+        public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
@@ -156,38 +171,18 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         }
 
         //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
-        [ValidateInput(false)]
-        public ActionResult RoundingWarning(bool passProductNamesAndTotals)
+        [AuthorizeAdmin]
+        [Area("Admin")]
+        public IActionResult RoundingWarning(bool passProductNamesAndTotals)
         {
             //prices and total aren't rounded, so display warning
             if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
-                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") }, JsonRequestBehavior.AllowGet);
+                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") });
 
-            return Json(new { Result = string.Empty }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = string.Empty });
         }
-
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentInfo.cshtml");
-        }
-
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            return paymentInfo;
-        }
-
-        [ValidateInput(false)]
-        public ActionResult PDTHandler(FormCollection form)
+        
+        public IActionResult PDTHandler()
         {
             var tx = _webHelper.QueryString<string>("tx");
             Dictionary<string, string> values;
@@ -334,12 +329,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
         }
-
-        [ValidateInput(false)]
-        public ActionResult IPNHandler()
+        
+        public IActionResult IPNHandler()
         {
-            byte[] param = Request.BinaryRead(Request.ContentLength);
-            string strRequest = Encoding.ASCII.GetString(param);
+            byte[] parameters;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                this.Request.Body.CopyTo(stream);
+                parameters = stream.ToArray();
+            }
+            string strRequest = Encoding.ASCII.GetString(parameters);
             Dictionary<string, string> values;
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
@@ -628,7 +627,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return Content("");
         }
 
-        public ActionResult CancelOrder(FormCollection form)
+        public IActionResult CancelOrder()
         {
             if (_payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
             {
@@ -643,5 +642,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             return RedirectToAction("Index", "Home", new { area = "" });
         }
+
+        #endregion
     }
 }
