@@ -1,19 +1,18 @@
-﻿@{
-    Layout = "";
+﻿@model Nop.Plugin.Payments.PayPalDirect.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model ConfigurationModel
-@using Nop.Plugin.Payments.PayPalDirect.Models;
-@using Nop.Web.Framework;
+@inject Nop.Core.IWebHelper _webHelper
 
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@await Component.InvokeAsync("StoreScopeConfiguration")
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Configure", "PaymentPayPalDirect"))
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Plugins.Payments.PayPalDirect.Instructions")
+                @Html.Raw(T("Plugins.Payments.PayPalDirect.Instructions"))
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ClientId_OverrideForStore, model => model.ClientId, Model.ActiveStoreScopeConfiguration)
@@ -39,7 +38,7 @@
                         @Html.NopLabelFor(model => model.WebhookId)
                     </div>
                     <div class="col-md-9">
-                        @if (Request.IsLocal)
+                        @if (_webHelper.IsLocalRequest(this.Context.Request))
                         {
                             @Html.NopEditorFor(model => model.WebhookId)
                         }
@@ -49,7 +48,7 @@
                                 @Html.NopEditorFor(model => model.WebhookId)
                                 <div class="input-group-btn">
                                     <button type="submit" name="createwebhook" class="btn btn-info">
-                                        @T("Plugins.Payments.PayPalDirect.WebhookCreate")
+                                        @Html.Raw(T("Plugins.Payments.PayPalDirect.WebhookCreate"))
                                     </button>
                                 </div>
                             </div>
