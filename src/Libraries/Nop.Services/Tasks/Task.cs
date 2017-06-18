@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;

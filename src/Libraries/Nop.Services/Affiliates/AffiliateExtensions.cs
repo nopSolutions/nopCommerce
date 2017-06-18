@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Infrastructure;

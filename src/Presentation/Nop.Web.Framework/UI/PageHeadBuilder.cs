@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
+using Nop.Core.Domain.Seo;
 #if NET451
 using System.Web.Mvc;
 using System.Web.Optimization;
 #endif
-using Nop.Core;
-using Nop.Core.Domain.Seo;
-using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {

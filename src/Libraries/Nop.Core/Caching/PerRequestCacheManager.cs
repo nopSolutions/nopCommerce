@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Nop.Core.Http;
 
 namespace Nop.Core.Caching
 {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -13,7 +14,6 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
 using Nop.Services.Catalog;
 using Nop.Services.Topics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Services.Seo
 {

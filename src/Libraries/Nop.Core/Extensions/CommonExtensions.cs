@@ -1,5 +1,5 @@
 ﻿﻿using System;
-﻿using System.Xml;
+ using System.Xml;
 
 namespace Nop.Core.Extensions
 {

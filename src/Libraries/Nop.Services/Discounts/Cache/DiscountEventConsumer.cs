@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 
 namespace Nop.Services.Discounts.Cache

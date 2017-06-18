@@ -1,10 +1,5 @@
 //Contributor:  Nicholas Mayne
 
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Nop.Core.Http.Extensions;
-using Nop.Core.Infrastructure;
-
 namespace Nop.Services.Authentication.External
 {
     /// <summary>

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Http;
 using Nop.Services.Stores;
 
 namespace Nop.Web.Framework

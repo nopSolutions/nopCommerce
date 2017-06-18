@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Web;
 using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;

@@ -1,6 +1,6 @@
-using Microsoft.Extensions.Caching.Memory;
-using System.Threading;
 using System.Linq;
+using System.Threading;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Nop.Core.Caching
 {

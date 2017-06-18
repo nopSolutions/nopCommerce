@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Services.Logging;
-using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;

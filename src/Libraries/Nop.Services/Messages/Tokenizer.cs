@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Web;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
