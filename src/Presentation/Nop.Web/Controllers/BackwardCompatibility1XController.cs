@@ -1,7 +1,7 @@
-﻿#if NET451
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Nop.Core;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -25,16 +25,19 @@ namespace Nop.Web.Controllers
         private readonly ITopicService _topicService;
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
+        private readonly IWebHelper _webHelper;
         #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public BackwardCompatibility1XController(IProductService productService,
+        public BackwardCompatibility1XController(IWebHelper webHelper,
+            IProductService productService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IProductTagService productTagService, INewsService newsService,
             IBlogService blogService, ITopicService topicService,
             IForumService forumService, ICustomerService customerService)
         {
+            this._webHelper = webHelper;
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -56,7 +59,8 @@ namespace Nop.Web.Controllers
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
-            var aspxfileName = regex.Match(Request.RawUrl).Value.ToLowerInvariant();
+            var rawUrl = _webHelper.GetRawUrl(this.HttpContext.Request);
+            var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
 
 
             switch (aspxfileName)
@@ -64,35 +68,35 @@ namespace Nop.Web.Controllers
                 //URL without rewriting
                 case "product":
                     {
-                        return RedirectProduct(Request.QueryString["productid"], false);
+                        return RedirectProduct(_webHelper.QueryString<string>("productid"), false);
                     }
                 case "category":
                     {
-                        return RedirectCategory(Request.QueryString["categoryid"], false);
+                        return RedirectCategory(_webHelper.QueryString<string>("categoryid"), false);
                     }
                 case "manufacturer":
                     {
-                        return RedirectManufacturer(Request.QueryString["manufacturerid"], false);
+                        return RedirectManufacturer(_webHelper.QueryString<string>("manufacturerid"), false);
                     }
                 case "producttag":
                     {
-                        return RedirectProductTag(Request.QueryString["tagid"], false);
+                        return RedirectProductTag(_webHelper.QueryString<string>("tagid"), false);
                     }
                 case "news":
                     {
-                        return RedirectNewsItem(Request.QueryString["newsid"], false);
+                        return RedirectNewsItem(_webHelper.QueryString<string>("newsid"), false);
                     }
                 case "blog":
                     {
-                        return RedirectBlogPost(Request.QueryString["blogpostid"], false);
+                        return RedirectBlogPost(_webHelper.QueryString<string>("blogpostid"), false);
                     }
                 case "topic":
                     {
-                        return RedirectTopic(Request.QueryString["topicid"], false);
+                        return RedirectTopic(_webHelper.QueryString<string>("topicid"), false);
                     }
                 case "profile":
                     {
-                        return RedirectUserProfile(Request.QueryString["UserId"]);
+                        return RedirectUserProfile(_webHelper.QueryString<string>("UserId"));
                     }
                 case "compareproducts":
                     {
@@ -270,4 +274,3 @@ namespace Nop.Web.Controllers
         #endregion
     }
 }
-#endif
