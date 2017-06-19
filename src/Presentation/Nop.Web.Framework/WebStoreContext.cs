@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Stores;
@@ -14,15 +15,13 @@ namespace Nop.Web.Framework
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStoreService _storeService;
-        private readonly IWebHelper _webHelper;
 
         private Store _cachedStore;
 
-        public WebStoreContext(IHttpContextAccessor httpContextAccessor, IStoreService storeService, IWebHelper webHelper)
+        public WebStoreContext(IHttpContextAccessor httpContextAccessor, IStoreService storeService)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._storeService = storeService;
-            this._webHelper = webHelper;
         }
 
         /// <summary>
@@ -36,11 +35,8 @@ namespace Nop.Web.Framework
                     return _cachedStore;
 
                 //try to determine the current store by HOST header
-#if NET451
-                var host = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
-#else
-                var host = "";
-#endif
+                string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
+
                 var allStores = _storeService.GetAllStores();
                 var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
 
