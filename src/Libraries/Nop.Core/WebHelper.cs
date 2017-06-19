@@ -527,13 +527,10 @@ namespace Nop.Core
         {
             get
             {
-#if NET451
                 var response = _httpContextAccessor.HttpContext.Response;
-
-                return response.IsRequestBeingRedirected;
-#else 
-                return false;
-#endif
+                //ASP.NET 4 style - return response.IsRequestBeingRedirected;
+                int[] redirectionStatusCodes = {301, 302};
+                return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
 
