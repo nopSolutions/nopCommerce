@@ -941,11 +941,9 @@ namespace Nop.Services.Orders
                     shippingAddress = customer.ShippingAddress;
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-#if NET451
-                //temporary disabled until we support plugins
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
                     throw new NopException("Shipping rate computation method could not be loaded");
-#endif
+
                 if (shippingRateComputationMethods.Count == 1)
                 {
                     var shippingRateComputationMethod = shippingRateComputationMethods[0];
