@@ -227,7 +227,6 @@ namespace Nop.Web.Controllers
             };
             _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-            //TODO test this behaviour in asp.net core
             if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
             {
                 //redirection or POST has been done in PostProcessPayment
