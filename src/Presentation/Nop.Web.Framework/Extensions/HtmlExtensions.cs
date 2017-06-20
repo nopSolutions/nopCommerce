@@ -7,12 +7,18 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
@@ -674,12 +680,60 @@ namespace Nop.Web.Framework.Extensions
 
         }
 
-
-        public static IHtmlContent Widget(this IHtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
+        public static async Task<IHtmlContent> Widget(this IHtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
         {
+            ////fetching required services for invocation
+            //var currentHttpContext = helper.ViewContext != null ? helper.ViewContext.HttpContext : null;
+
+            //var httpContextFactory = currentHttpContext.RequestServices.GetService(typeof(IHttpContextFactory)) as IHttpContextFactory;
+            //if (httpContextFactory == null)
+            //    throw new Exception("IHttpContextFactory cannot be resolved");
+
+            //var actionInvokerFactory = currentHttpContext.RequestServices.GetService(typeof(IActionInvokerFactory)) as IActionInvokerFactory;
+            //if (actionInvokerFactory == null)
+            //    throw new Exception("IActionInvokerFactory cannot be resolved");
+
+            //var actionSelector = currentHttpContext.RequestServices.GetService(typeof(IActionSelectorDecisionTreeProvider)) as IActionSelectorDecisionTreeProvider;
+            //if (actionSelector == null)
+            //    throw new Exception("IActionSelectorDecisionTreeProvider cannot be resolved");
+
+            //EngineContext.Current.Resolve<IHttpContextFactory>();
+
+            ////creating new action invocation context
+            //var routeData = new RouteData();
+            //var routeParams = new RouteValueDictionary(new { widgetZone = widgetZone, additionalData = additionalData, area = area });
+            //var routeValues = new RouteValueDictionary(new { area = "", controller = "Widget", action = "WidgetsByZone" });
+            //var newHttpContext = httpContextFactory.Create(currentHttpContext.Features);
+
+            //newHttpContext.Response.Body = new MemoryStream();
+
+            //foreach (var router in helper.ViewContext.RouteData.Routers)
+            //    routeData.PushState(router, null, null);
+
+            //routeData.PushState(null, routeValues, null);
+            //routeData.PushState(null, routeParams, null);
+
+            //var actionDescriptor = actionSelector.DecisionTree.Select(routeValues).First();
+            //var actionContext = new ActionContext(newHttpContext, routeData, actionDescriptor);
+
+            //// invoke action and retreive the response body
+            //var invoker = actionInvokerFactory.CreateInvoker(actionContext);
+            //string content = null;
+
+            //await invoker.InvokeAsync().ContinueWith(task => {
+            //    if (task.IsFaulted)
+            //    {
+            //        content = task.Exception.Message;
+            //    }
+            //    else if (task.IsCompleted)
+            //    {
+            //        newHttpContext.Response.Body.Position = 0;
+            //        using (var reader = new StreamReader(newHttpContext.Response.Body))
+            //            content = reader.ReadToEnd();
+            //    }
+            //});
+
             return new HtmlString("");
-            //TODO implement
-            //return ViewComponent("WidgetsByZone", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
         
         /// <summary>

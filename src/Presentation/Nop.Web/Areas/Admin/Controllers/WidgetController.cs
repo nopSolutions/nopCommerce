@@ -120,8 +120,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #if NET451
-
         public virtual IActionResult ConfigureWidget(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
@@ -132,19 +130,11 @@ namespace Nop.Admin.Controllers
                 //No widget found with the specified id
                 return RedirectToAction("List");
 
-            var model = widget.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            widget.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = widget.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
 
-        #endif
-
-        #if NET451
         public virtual IActionResult WidgetsByZone(string widgetZone)
         {
             //model
@@ -153,22 +143,19 @@ namespace Nop.Admin.Controllers
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                var widgetModel = new RenderWidgetModel();
+                widget.GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments);
 
-                string actionName;
-                string controllerName;
-                RouteValueDictionary routeValues;
-                widget.GetDisplayWidgetRoute(widgetZone, out actionName, out controllerName, out routeValues);
-                widgetModel.ActionName = actionName;
-                widgetModel.ControllerName = controllerName;
-                widgetModel.RouteValues = routeValues;
+                var widgetModel = new RenderWidgetModel
+                {
+                    WidgetViewComponentName = viewComponentName,
+                    WidgetViewComponentArguments = viewComponentArguments,
+                };
 
                 model.Add(widgetModel);
             }
 
             return PartialView(model);
         }
-        #endif
 
 	    #endregion
     }

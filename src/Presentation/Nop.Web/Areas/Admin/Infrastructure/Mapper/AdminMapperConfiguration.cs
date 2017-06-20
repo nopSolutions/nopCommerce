@@ -450,9 +450,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
                 .ForMember(dest => dest.IsActive, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationActionName, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationControllerName, mo => mo.Ignore())
-                .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore())
+                .ForMember(dest => dest.WidgetViewComponentName, mo => mo.Ignore())
+                .ForMember(dest => dest.WidgetViewComponentArguments, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             //plugins
             CreateMap<PluginDescriptor, PluginModel>()

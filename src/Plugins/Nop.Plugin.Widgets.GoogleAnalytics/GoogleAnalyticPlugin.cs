@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Routing;
+using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -8,15 +9,19 @@ using Nop.Services.Localization;
 namespace Nop.Plugin.Widgets.GoogleAnalytics
 {
     /// <summary>
-    /// Live person provider
+    /// Google Analytic plugin
     /// </summary>
     public class GoogleAnalyticPlugin : BasePlugin, IWidgetPlugin
     {
+        private readonly IWebHelper _webHelper;
         private readonly ISettingService _settingService;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
-        public GoogleAnalyticPlugin(ISettingService settingService, GoogleAnalyticsSettings googleAnalyticsSettings)
+
+        public GoogleAnalyticPlugin(IWebHelper webHelper, ISettingService settingService, 
+            GoogleAnalyticsSettings googleAnalyticsSettings)
         {
+            this._webHelper = webHelper;
             this._settingService = settingService;
             this._googleAnalyticsSettings = googleAnalyticsSettings;
         }
@@ -33,35 +38,22 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null } };
+            return _webHelper.GetStoreLocation() + "Admin/WidgetsGoogleAnalytics/Configure";
         }
 
         /// <summary>
         /// Gets a route for displaying widget
         /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments)
         {
-            actionName = "PublicInfo";
-            controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary
-            {
-                {"Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
+            viewComponentName = "WidgetsGoogleAnalytics";
+            viewComponentArguments = null;
         }
 
         /// <summary>
@@ -73,22 +65,21 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             {
                 GoogleId = "UA-0000000-0",
                 TrackingScript = @"<!-- Google code for Analytics tracking -->
-<script type=""text/javascript"">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '{GOOGLEID}']);
-_gaq.push(['_trackPageview']);
-{ECOMMERCE}
-(function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>",
+                    <script type=""text/javascript"">
+                    var _gaq = _gaq || [];
+                    _gaq.push(['_setAccount', '{GOOGLEID}']);
+                    _gaq.push(['_trackPageview']);
+                    {ECOMMERCE}
+                    (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                    })();
+                    </script>",
                 EcommerceScript = @"_gaq.push(['_addTrans', '{ORDERID}', '{SITE}', '{TOTAL}', '{TAX}', '{SHIP}', '{CITY}', '{STATEPROVINCE}', '{COUNTRY}']);
-{DETAILS} 
-_gaq.push(['_trackTrans']); ",
-                EcommerceDetailScript = @"_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); ",
-
+                    {DETAILS} 
+                    _gaq.push(['_trackTrans']); ",
+                EcommerceDetailScript = @"_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); "
             };
             _settingService.SaveSetting(settings);
 

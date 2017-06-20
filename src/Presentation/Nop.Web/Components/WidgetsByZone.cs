@@ -16,7 +16,7 @@ namespace Nop.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
         {
-            var model = _widgetModelFactory.GetRenderWidgetModels(widgetZone, additionalData);
+            var model = _widgetModelFactory.PrepareRenderWidgetModel(widgetZone, additionalData);
 
             //no data?
             if (!model.Any())

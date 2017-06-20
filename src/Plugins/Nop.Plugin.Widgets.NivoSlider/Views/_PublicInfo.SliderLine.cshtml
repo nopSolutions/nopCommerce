@@ -1,0 +1,22 @@
+﻿@model Nop.Plugin.Widgets.NivoSlider.Models.PublicInfoModel
+
+@{
+    var pictureUrl = ViewData["pictureUrl"]?.ToString() ?? "";
+    var link = ViewData["link"]?.ToString() ?? "";
+    var dataTransition = ViewData["dataTransition"]?.ToString() ?? "";
+    var text = ViewData["text"]?.ToString() ?? "";
+
+    if (!string.IsNullOrEmpty(pictureUrl))
+    {
+        if (!string.IsNullOrEmpty(link))
+        {
+            <a href="@link">
+                <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+            </a>
+        }
+        else
+        {
+            <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+        }
+    }
+}

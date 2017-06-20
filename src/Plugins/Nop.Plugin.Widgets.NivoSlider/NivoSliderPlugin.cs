@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
@@ -37,35 +37,22 @@ namespace Nop.Plugin.Widgets.NivoSlider
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "WidgetsNivoSlider";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Widgets.NivoSlider.Controllers" }, { "area", null } };
+            return _webHelper.GetStoreLocation() + "Admin/WidgetsNivoSlider/Configure";
         }
 
         /// <summary>
         /// Gets a route for displaying widget
         /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        public void GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments)
         {
-            actionName = "PublicInfo";
-            controllerName = "WidgetsNivoSlider";
-            routeValues = new RouteValueDictionary
-            {
-                {"Namespaces", "Nop.Plugin.Widgets.NivoSlider.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
+            viewComponentName = "WidgetsNivoSlider";
+            viewComponentArguments = null;
         }
 
         /// <summary>
@@ -75,8 +62,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         {
             //pictures
             var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
-
-
+            
             //settings
             var settings = new NivoSliderSettings
             {

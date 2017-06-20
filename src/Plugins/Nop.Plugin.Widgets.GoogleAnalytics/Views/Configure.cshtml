@@ -1,14 +1,13 @@
-﻿@{
-    Layout = "";
+﻿@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
-@using Nop.Web.Framework;
 
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@await Component.InvokeAsync("StoreScopeConfiguration")
 
 @{
     //default values
-    var googleAnalytics_trackingScript = Html.Raw(HttpUtility.JavaScriptStringEncode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+    var googleAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
         "<script type=\"text/javascript\">" + "\r\n" +
         "var _gaq = _gaq || [];" + "\r\n" +
         "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
@@ -20,14 +19,14 @@
         "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" + "\r\n" +
         "})();" + "\r\n" +
         "</script>"));
-    var googleAnalytics_EcommerceScript = Html.Raw(HttpUtility.JavaScriptStringEncode("_gaq.push(['_addTrans', '{ORDERID}', '{SITE}', '{TOTAL}', '{TAX}', '{SHIP}', '{CITY}', '{STATEPROVINCE}', '{COUNTRY}']);" + "\r\n" +
+    var googleAnalytics_EcommerceScript = Html.Raw(JavaScriptEncoder.Default.Encode("_gaq.push(['_addTrans', '{ORDERID}', '{SITE}', '{TOTAL}', '{TAX}', '{SHIP}', '{CITY}', '{STATEPROVINCE}', '{COUNTRY}']);" + "\r\n" +
         "{DETAILS}" + "\r\n" +
         "_gaq.push(['_trackTrans']); "));
-    var googleAnalytics_EcommerceDetailScript = Html.Raw(HttpUtility.JavaScriptStringEncode("_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); "));
+    var googleAnalytics_EcommerceDetailScript = Html.Raw(JavaScriptEncoder.Default.Encode("_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); "));
 
 
 
-    var universalAnalytics_trackingScript = Html.Raw(HttpUtility.JavaScriptStringEncode("<!-- Google code for Analytics tracking -->" + "\r\n" +
+    var universalAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
         "<script>" + "\r\n" +
         "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" + "\r\n" +
         "(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," + "\r\n" +
@@ -37,7 +36,7 @@
         "ga('send', 'pageview');" + "\r\n" +
         "{ECOMMERCE}" + "\r\n" +
         "</script>"));
-    var universalAnalytics_EcommerceScript = Html.Raw(HttpUtility.JavaScriptStringEncode("ga('require', 'ecommerce', 'ecommerce.js');" + "\r\n" +
+    var universalAnalytics_EcommerceScript = Html.Raw(JavaScriptEncoder.Default.Encode("ga('require', 'ecommerce', 'ecommerce.js');" + "\r\n" +
         "ga('ecommerce:addTransaction', {" + "\r\n" +
         "'id': '{ORDERID}'," + "\r\n" +
         "'affiliation': '{SITE}'," + "\r\n" +
@@ -47,7 +46,7 @@
         "});" + "\r\n" +
         "{DETAILS} " + "\r\n" +
         "ga('ecommerce:send');"));
-    var universalAnalytics_EcommerceDetailScript = Html.Raw(HttpUtility.JavaScriptStringEncode("ga('ecommerce:addItem', {" + "\r\n" +
+    var universalAnalytics_EcommerceDetailScript = Html.Raw(JavaScriptEncoder.Default.Encode("ga('ecommerce:addItem', {" + "\r\n" +
         "'id': '{ORDERID}'," + "\r\n" +
         "'name': '{PRODUCTNAME}'," + "\r\n" +
         "'sku': '{PRODUCTSKU}'," + "\r\n" +
@@ -56,8 +55,6 @@
         "'quantity': '{QUANTITY}'" + "\r\n" +
         "});"));
 }
-
-
 
 @using (Html.BeginForm())
 {

@@ -7,6 +7,9 @@
 <div class="page home-page">
     <div class="page-body">
         @Html.Widget("home_page_top")
+
+        @await Component.InvokeAsync("WidgetsByZone", new { widgetZone = "home_page_top" })
+
         @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
         @Html.Widget("home_page_before_categories")
         @await Component.InvokeAsync("HomepageCategories")

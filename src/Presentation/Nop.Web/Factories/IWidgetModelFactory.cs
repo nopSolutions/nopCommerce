@@ -14,6 +14,6 @@ namespace Nop.Web.Factories
         /// <param name="widgetZone">Name of widget zone</param>
         /// <param name="additionalData">Additional data object</param>
         /// <returns>List of the render widget models</returns>
-        List<RenderWidgetModel> GetRenderWidgetModels(string widgetZone, object additionalData = null);
+        List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null);
     }
 }

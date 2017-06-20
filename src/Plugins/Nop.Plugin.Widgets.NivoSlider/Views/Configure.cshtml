@@ -1,12 +1,12 @@
-﻿@{
-    Layout = "";
+﻿@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
 }
-@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
-@using Nop.Web.Framework;
 
-@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+@await Component.InvokeAsync("StoreScopeConfiguration")
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Configure", "WidgetsNivoSlider"))
 {
     @Html.AntiForgeryToken()
     <div class="panel-group">
@@ -198,10 +198,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-md-offset-3">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
