@@ -200,25 +200,19 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public virtual IActionResult ImportCsv(IFormCollection form)
+        public virtual IActionResult ImportCsv(IFormFile importcsvfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
             try
             {
-                #if NET451
-
-                var file = Request.Files["importcsvfile"];
-                if (file != null && file.ContentLength > 0)
+                if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    int count = _importManager.ImportNewsletterSubscribersFromTxt(file.InputStream);
+                    int count = _importManager.ImportNewsletterSubscribersFromTxt(importcsvfile.OpenReadStream());
                     SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
                     return RedirectToAction("List");
                 }
-
-                #endif
-
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                 return RedirectToAction("List");
             }
