@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
@@ -582,7 +583,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ImportFromXlsx()
+        public virtual IActionResult ImportFromXlsx(IFormFile importexcelfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -593,21 +594,15 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                #if NET451
-
-                var file = Request.Files["importexcelfile"];
-                if (file != null && file.ContentLength > 0)
+                if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    _importManager.ImportManufacturersFromXlsx(file.InputStream);
+                    _importManager.ImportManufacturersFromXlsx(importexcelfile.OpenReadStream());
                 }
                 else
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-
-                #endif
-
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Imported"));
                 return RedirectToAction("List");
             }
