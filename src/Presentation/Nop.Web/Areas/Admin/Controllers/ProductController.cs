@@ -2818,7 +2818,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ImportExcel()
+        public virtual IActionResult ImportExcel(IFormFile importexcelfile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2829,18 +2829,15 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                #if NET451
-                var file = Request.Form.Files["importexcelfile"];
-                if (file != null && file.Length > 0)
+                if (importexcelfile != null && importexcelfile.Length > 0)
                 {
-                    _importManager.ImportProductsFromXlsx(file.InputStream);
+                    _importManager.ImportProductsFromXlsx(importexcelfile.OpenReadStream());
                 }
                 else
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
-                #endif
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Imported"));
                 return RedirectToAction("List");
