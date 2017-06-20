@@ -27,12 +27,6 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("HomePage", "",
 				new { controller = "Home", action = "Index" });
 
-            //widgets
-            //we have this route for performance optimization because named routes are MUCH faster than usual Html.Action(...)
-            //and this route is highly used
-            routeBuilder.MapRoute("WidgetsByZone", "widgetsbyzone/",
-				new { controller = "Widget", action = "WidgetsByZone" });
-
             //login
             routeBuilder.MapLocalizedRoute("Login", "login/",
 				new { controller = "Customer", action = "Login" });

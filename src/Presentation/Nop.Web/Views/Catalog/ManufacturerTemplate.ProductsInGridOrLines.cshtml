@@ -23,7 +23,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("manufacturerdetails_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_top", additionalData = Model.Id })
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -31,7 +31,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }
-        @Html.Widget("manufacturerdetails_before_featured_products", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_featured_products", additionalData = Model.Id })
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
@@ -49,18 +49,18 @@
                 </div>
             </div>
         }
-        @Html.Widget("manufacturerdetails_after_featured_products", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_after_featured_products", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @Html.Widget("manufacturerdetails_before_filters", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_filters", additionalData = Model.Id })
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
             @await Html.PartialAsync("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
         }
-        @Html.Widget("manufacturerdetails_before_product_list", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model.Id })
 
         @if (Model.Products.Count > 0)
         {
@@ -84,6 +84,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("manufacturerdetails_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
     </div>
 </div>

@@ -135,28 +135,6 @@ namespace Nop.Admin.Controllers
             return Redirect(url);
         }
 
-        public virtual IActionResult WidgetsByZone(string widgetZone)
-        {
-            //model
-            var model = new List<RenderWidgetModel>();
-
-            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
-            foreach (var widget in widgets)
-            {
-                widget.GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments);
-
-                var widgetModel = new RenderWidgetModel
-                {
-                    WidgetViewComponentName = viewComponentName,
-                    WidgetViewComponentArguments = viewComponentArguments,
-                };
-
-                model.Add(widgetModel);
-            }
-
-            return PartialView(model);
-        }
-
 	    #endregion
     }
 }

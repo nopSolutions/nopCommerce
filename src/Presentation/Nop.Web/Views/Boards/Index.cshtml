@@ -10,12 +10,12 @@
 <div class="page forums-main-page">
     @await Component.InvokeAsync("TopicBlock", new { systemName = "ForumWelcomeMessage" })
     @await Html.PartialAsync("_ForumHeader")
-    @Html.Widget("boards_main_after_header")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_main_after_header" })
     @foreach (var forumGroup in Model.ForumGroups)
     {
         Html.RenderPartial("_ForumGroup", forumGroup);
     }
-    @Html.Widget("boards_main_before_activediscussions")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_main_before_activediscussions" })
     @await Component.InvokeAsync("ForumActiveDiscussionsSmall")
-    @Html.Widget("boards_main_after_activediscussions")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_main_after_activediscussions" })
 </div>

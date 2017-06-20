@@ -1,6 +1,6 @@
 ﻿@model TopMenuModel
 <ul class="top-menu">
-    @Html.Widget("header_menu_before")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
     @if (Model.DisplayHomePageMenuItem)
     {
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
@@ -44,7 +44,7 @@
     {
         <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     }
-    @Html.Widget("header_menu_after")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
 </ul>
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
@@ -52,7 +52,7 @@
     var responsiveMenuTitle = Model.HasOnlyCategories ? T("Categories") : T("Menu");
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
-        @Html.Widget("mob_header_menu_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "mob_header_menu_before" })
         @if (Model.DisplayHomePageMenuItem)
         {
             <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
@@ -94,7 +94,7 @@
         {
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
         }
-        @Html.Widget("mob_header_menu_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "mob_header_menu_after" })
     </ul>
     <script type="text/javascript">
         $(document).ready(function () {

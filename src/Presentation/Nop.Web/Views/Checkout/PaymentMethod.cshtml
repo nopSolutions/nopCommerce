@@ -14,7 +14,7 @@
         <h1>@T("Checkout.SelectPaymentMethod")</h1>
     </div>
     <div class="page-body checkout-data">
-        @Html.Widget("checkout_payment_method_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_method_top" })
         <div class="section payment-method">
             @using (Html.BeginRouteForm("CheckoutPaymentMethod", FormMethod.Post))
             {
@@ -86,7 +86,7 @@
                 }
             }
         </div>
-        @Html.Widget("checkout_payment_method_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_method_bottom" })
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>

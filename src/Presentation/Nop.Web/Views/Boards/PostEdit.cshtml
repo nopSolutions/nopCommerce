@@ -4,6 +4,6 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
 }
-@Html.Widget("boards_postedit_before", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_postedit_before", additionalData = Model.Id })
 @await Html.PartialAsync("_CreateUpdatePost", Model)
-@Html.Widget("boards_postedit_after", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_postedit_after", additionalData = Model.Id })

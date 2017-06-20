@@ -1,7 +1,7 @@
 ﻿@model CheckoutShippingMethodModel
 <div class="checkout-data">
     <div class="section shipping-method">
-        @Html.Widget("op_checkout_shipping_method_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_top" })
         @if (Model.Warnings.Count == 0)
         {
             <ul class="method-list">
@@ -40,6 +40,6 @@
                 </ul>
             </div>
         }
-        @Html.Widget("op_checkout_shipping_method_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_bottom" })
     </div>
 </div>

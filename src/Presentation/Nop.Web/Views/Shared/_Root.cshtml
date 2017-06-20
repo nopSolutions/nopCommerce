@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "_Root.Head";
 }
-@Html.Widget("body_start_html_tag_after")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
 @await Html.PartialAsync("_Notifications")
 @await Html.PartialAsync("_JavaScriptDisabledWarning")
 @await Html.PartialAsync("_OldInternetExplorerWarning")
@@ -15,7 +15,7 @@
         @await Component.InvokeAsync("TopMenu")
     </div>
     <div class="master-wrapper-content">
-        @Html.Widget("content_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
 
         @if (IsSectionDefined("Breadcrumb"))
         {
@@ -24,9 +24,9 @@
         <div class="master-column-wrapper">
             @RenderBody()
         </div>
-        @Html.Widget("content_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
     </div>
     @await Component.InvokeAsync("Footer")
 </div>
 @await Component.InvokeAsync("EuCookieLaw")
-@Html.Widget("body_end_html_tag_before")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

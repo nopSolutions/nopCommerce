@@ -50,7 +50,7 @@
                 }
             </ul>
         </div>
-        @Html.Widget("categorydetails_after_breadcrumb", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_breadcrumb", additionalData = Model.Id })
     }
 }
 <div class="page category-page">
@@ -58,7 +58,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("categorydetails_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_top", additionalData = Model.Id })
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -66,7 +66,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }
-        @Html.Widget("categorydetails_before_subcategories", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_subcategories", additionalData = Model.Id })
         @*subcategories*@
         @if (Model.SubCategories.Count > 0)
         {
@@ -92,7 +92,7 @@
                 </div>
             </div>
         }
-        @Html.Widget("categorydetails_before_featured_products", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_featured_products", additionalData = Model.Id })
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
@@ -110,12 +110,12 @@
                 </div>
             </div>
         }
-        @Html.Widget("categorydetails_after_featured_products", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_featured_products", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @Html.Widget("categorydetails_before_filters", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })
         <div class="product-filters">
             @*filtering*@
             @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
@@ -128,7 +128,7 @@
                 @await Html.PartialAsync("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter)
             }
         </div>
-        @Html.Widget("categorydetails_before_product_list", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })
 
         @if (Model.Products.Count > 0)
         {
@@ -152,6 +152,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("categorydetails_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_bottom", additionalData = Model.Id })
     </div>
 </div>

@@ -62,12 +62,11 @@ namespace Nop.Web.Factories
                 var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 foreach (var widget in widgets)
                 {
-                    widget.GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments);
+                    widget.GetDisplayWidgetRoute(out string viewComponentName);
 
                     var widgetModel = new RenderWidgetModel
                     {
-                        WidgetViewComponentName = viewComponentName,
-                        WidgetViewComponentArguments = viewComponentArguments,
+                        WidgetViewComponentName = viewComponentName
                     };
 
                     model.Add(widgetModel);
@@ -94,7 +93,7 @@ namespace Nop.Web.Factories
                     if (clonedWidgetModel.WidgetViewComponentArguments == null)
                         clonedWidgetModel.WidgetViewComponentArguments = new RouteValueDictionary();
 
-                    clonedWidgetModel.WidgetViewComponentArguments.Add("additionalData", additionalData);
+                    clonedWidgetModel.WidgetViewComponentArguments = additionalData;
                 }
 
                 clonedModel.Add(clonedWidgetModel);

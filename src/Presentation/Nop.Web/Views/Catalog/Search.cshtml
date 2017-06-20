@@ -40,7 +40,7 @@
                                 @Html.LabelFor(model => model.q, new { }, ":")
                                 @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
                             </div>
-                            @Html.Widget("productsearch_page_basic")
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
                             <div class="inputs reversed">
                                 @Html.CheckBoxFor(model => model.adv)
                                 @Html.LabelFor(model => model.adv)
@@ -85,7 +85,7 @@
                                 @Html.CheckBoxFor(model => model.sid)
                                 @Html.LabelFor(model => model.sid)
                             </div>
-                            @Html.Widget("productsearch_page_advanced")
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_advanced" })
                         </div>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @Html.Widget("productsearch_page_before_results")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
         <div class="search-results">
             @if (!String.IsNullOrEmpty(Model.Warning))
             {
@@ -136,6 +136,6 @@
                 </div>
             }
         </div>
-        @Html.Widget("productsearch_page_after_results")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_after_results" })
     </div>
 </div>

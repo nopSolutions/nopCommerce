@@ -23,7 +23,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("vendordetails_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -65,6 +65,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("vendordetails_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_bottom", additionalData = Model.Id })
     </div>
 </div>

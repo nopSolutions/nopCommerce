@@ -14,7 +14,7 @@ using Nop.Services.Orders;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 {
-    [ViewComponent(Name = "WidgetGoogleAnalytics")]
+    [ViewComponent(Name = "WidgetsGoogleAnalytics")]
     public class WidgetsGoogleAnalyticsViewComponent : ViewComponent
     {
         private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";

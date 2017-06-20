@@ -56,7 +56,7 @@
             @Html.Raw(Model.ShortDescription)
         </div>
         <div class="add-info">
-            @Html.Widget("productbox_addinfo_before", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
             <div class="prices">
                 @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
@@ -79,7 +79,7 @@
                     </div>
                 }
             </div>
-            @Html.Widget("productbox_addinfo_middle", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
             <div class="buttons">
                 @*<input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />*@
                 @if (!Model.ProductPrice.DisableBuyButton)
@@ -104,7 +104,7 @@
                     <input type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
                 }
             </div>
-            @Html.Widget("productbox_addinfo_after", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
         </div>
     </div>
 </div>

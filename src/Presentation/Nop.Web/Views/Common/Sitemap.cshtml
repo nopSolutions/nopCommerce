@@ -15,7 +15,7 @@
         <div class="description">
             @T("Sitemap.Description")
         </div>
-        @Html.Widget("sitemap_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_before" })
         <div class="entity">
             <div class="entity-title">
                 <h2>@T("Sitemap.General")</h2>
@@ -96,6 +96,6 @@
                 </div>
             </div>
         }
-        @Html.Widget("sitemap_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_after" })
     </div>
 </div>

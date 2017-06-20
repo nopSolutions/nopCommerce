@@ -17,7 +17,7 @@
         <div class="section shipping-method">
             @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
             {
-                @Html.Widget("checkout_shipping_method_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
                 if (Model.Warnings.Count == 0)
                 {
                 <ul class="method-list">
@@ -59,7 +59,7 @@
                     </ul>
                 </div>
                 }
-                @Html.Widget("checkout_shipping_method_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
             }
         </div>
         <div class="section order-summary">

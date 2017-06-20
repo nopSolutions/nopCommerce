@@ -10,7 +10,7 @@
 <div class="page forum-topic-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @Html.Widget("boards_topic_after_header", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
     @Html.AntiForgeryToken()
     <div class="topic-name">
         <h1>@Model.Subject</h1>
@@ -90,7 +90,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @Html.Widget("boards_topic_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_top", additionalData = Model.Id })
         @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
@@ -144,7 +144,7 @@
             </div>
         }
     </div>
-    @Html.Widget("boards_topic_bottom", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_bottom", additionalData = Model.Id })
 </div>
 <script type="text/javascript">
     function deletepost(postId) {

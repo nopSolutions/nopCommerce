@@ -19,7 +19,6 @@ namespace Nop.Services.Cms
         /// Gets a route for displaying widget
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        void GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments);
+        void GetDisplayWidgetRoute(out string viewComponentName);
     }
 }

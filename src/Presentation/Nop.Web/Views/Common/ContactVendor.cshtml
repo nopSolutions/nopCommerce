@@ -12,7 +12,7 @@
         <h1>@T("PageTitle.ContactVendor", Model.VendorName)</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("contactvendor_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_top" })
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -71,6 +71,6 @@
                 </div>
             }
         }
-        @Html.Widget("contactvendor_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactvendor_bottom" })
     </div>
 </div>

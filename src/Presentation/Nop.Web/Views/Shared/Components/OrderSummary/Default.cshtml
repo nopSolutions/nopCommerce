@@ -4,7 +4,7 @@
 @inject IWebHelper webHelper;
 @inject IWorkContext workContext;
 <div class="order-summary-content">
-   @Html.Widget("order_summary_content_before")
+   @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
    @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
    @if (Model.Items.Count > 0)
    {
@@ -226,14 +226,14 @@
            }
        </div>
        <div class="cart-footer">
-           @Html.Widget("order_summary_cart_footer")
+           @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_cart_footer" })
            @if (Model.IsEditable)
            {
                <div class="cart-collaterals">
                    <div class="deals">
                        @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
                        @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                       @Html.Widget("order_summary_content_deals")
+                       @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
                    </div>
                    @await Component.InvokeAsync("EstimateShipping")
                </div>
@@ -315,5 +315,5 @@
            @T("ShoppingCart.CartIsEmpty")
        </div>
    }
-   @Html.Widget("order_summary_content_after")
+   @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
 </div>

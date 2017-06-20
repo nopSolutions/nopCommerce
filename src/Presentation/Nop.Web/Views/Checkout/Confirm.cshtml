@@ -14,7 +14,7 @@
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
     <div class="page-body checkout-data">
-        @Html.Widget("checkout_confirm_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
         <div class="section confirm-order">
             @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
             {
@@ -92,7 +92,7 @@
                 }
             }
         </div>
-        @Html.Widget("checkout_confirm_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
         <div class="section order-summary">
             @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>

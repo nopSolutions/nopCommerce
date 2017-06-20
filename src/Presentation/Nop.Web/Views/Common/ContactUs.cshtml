@@ -13,7 +13,7 @@
     </div>
     <div class="page-body">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
-        @Html.Widget("contactus_top")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_top" })
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -72,6 +72,6 @@
                 </div>
             }
         }
-        @Html.Widget("contactus_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_bottom" })
     </div>
 </div>

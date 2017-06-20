@@ -41,19 +41,19 @@
     }
     else
     {
-        @Html.Widget("left_side_column_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
         @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-        @Html.Widget("left_side_column_after_category_navigation")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
         @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
         @await Component.InvokeAsync("VendorNavigation")
         @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
         @await Component.InvokeAsync("PopularProductTags")
         @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
-        @Html.Widget("left_side_column_after")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
     }
 </div>
 <div class="center-2">
-    @Html.Widget("main_column_before")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
     @RenderBody()
-    @Html.Widget("main_column_after")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
 </div>

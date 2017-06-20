@@ -47,18 +47,18 @@
 {
     @await Html.PartialAsync("_ProductBreadcrumb", Model.Breadcrumb)
 }
-@Html.Widget("productdetails_after_breadcrumb", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <div class="page product-details-page">
     <div class="page-body">
-        @Html.Widget("productdetails_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, null, new { id = "product-details-form" }))
         {
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
-                    @Html.Widget("productdetails_before_pictures", Model.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                     <!--product pictures-->
                     @await Html.PartialAsync("_ProductDetailsPictures", Model)
-                    @Html.Widget("productdetails_after_pictures", Model.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
                     <div class="overview">
                         @await Html.PartialAsync("_Discontinued", Model)
                         <div class="product-name">
@@ -72,20 +72,20 @@
                                 @Html.Raw(Model.ShortDescription)
                             </div>
                         }
-                        @Html.Widget("productdetails_overview_top", Model.Id)
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                         <!--product reviews-->
                         @await Html.PartialAsync("_ProductReviewOverview", Model.ProductReviewOverview)
                         <!--product manufacturers-->
                         @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
                         <!--compare, email a friend-->
                         <div class="overview-buttons">
-                            @Html.Widget("productdetails_inside_overview_buttons_before", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
                             @await Html.PartialAsync("_CompareProductsButton", Model)
                             @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
-                            @Html.Widget("productdetails_inside_overview_buttons_after", Model.Id)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
                         </div>
                         @await Html.PartialAsync("_ShareButton", Model)
-                        @Html.Widget("productdetails_overview_bottom", Model.Id)
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
                     </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
@@ -94,7 +94,7 @@
                         </div>
                     }
                 </div>
-                @Html.Widget("productdetails_before_collateral", Model.Id)
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
                 <div class="product-collateral">
                     <!--associated products-->
                     <div class="product-variant-list">
@@ -184,6 +184,6 @@
                 @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
             </div>
         }
-        @Html.Widget("productdetails_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
     </div>
 </div>

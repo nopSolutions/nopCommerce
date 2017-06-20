@@ -17,7 +17,7 @@
         @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
         {
             <div class="billing-addresses">
-                @Html.Widget("checkout_billing_address_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_top" })
                 @if (Model.ShipToSameAddressAllowed)
                 {
                     <div class="section ship-to-same-address">
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                 }
-                @Html.Widget("checkout_billing_address_middle")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_middle" })
                 <div class="section new-billing-address">
                     <div class="title">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -155,7 +155,7 @@
                         }
                     </div>
                 </div>
-                @Html.Widget("checkout_billing_address_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_bottom" })
             </div>
             <div class="buttons">
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Nop.Web.Components
 {
-    public class WidgetsByZoneViewComponent : ViewComponent
+    public class WidgetViewComponent : ViewComponent
     {
         private readonly IWidgetModelFactory _widgetModelFactory;
 
-        public WidgetsByZoneViewComponent(IWidgetModelFactory widgetModelFactory)
+        public WidgetViewComponent(IWidgetModelFactory widgetModelFactory)
         {
             this._widgetModelFactory = widgetModelFactory;
         }

@@ -207,7 +207,7 @@
             if (!Model.PickUpInStoreOnly)
             {
                 <div class="shipping-addresses" id="shipping-addresses-form">
-                    @Html.Widget("checkout_shipping_address_top")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-shipping-address">
@@ -300,7 +300,7 @@
                             </div>
                         </div>
                     }
-                    @Html.Widget("checkout_shipping_address_middle")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_middle" })
                     <div class="section new-shipping-address">
                         <div class="title">
                             @if (Model.ExistingAddresses.Count > 0)
@@ -327,7 +327,7 @@
                             }
                         </div>
                     </div>
-                    @Html.Widget("checkout_shipping_address_bottom")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
                 </div>
             }
             <div class="buttons">

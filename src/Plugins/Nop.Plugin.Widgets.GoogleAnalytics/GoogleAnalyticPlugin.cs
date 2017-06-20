@@ -49,11 +49,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// Gets a route for displaying widget
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        public void GetDisplayWidgetRoute(out string viewComponentName, out RouteValueDictionary viewComponentArguments)
+        public void GetDisplayWidgetRoute(out string viewComponentName)
         {
             viewComponentName = "WidgetsGoogleAnalytics";
-            viewComponentArguments = null;
         }
 
         /// <summary>

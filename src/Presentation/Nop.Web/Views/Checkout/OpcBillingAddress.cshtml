@@ -1,6 +1,6 @@
 ﻿@model CheckoutBillingAddressModel
 <div class="checkout-data">
-    @Html.Widget("op_checkout_billing_address_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_top" })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
@@ -50,7 +50,7 @@
             </div>
         </div>
     }
-    @Html.Widget("op_checkout_billing_address_middle")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
     <div class="section new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
             @{
@@ -67,5 +67,5 @@
             }
         </div>
     </div>
-    @Html.Widget("op_checkout_billing_address_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
 </div>

@@ -10,7 +10,7 @@
 <div class="page active-discussions-page">
     @await Component.InvokeAsync("ForumBreadcrumb")
     @await Html.PartialAsync("_ForumHeader")
-    @Html.Widget("boards_activediscussions_after_header")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_header" })
     @await Html.PartialAsync("_ActiveTopics", Model)
-    @Html.Widget("boards_activediscussions_after_topics")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_topics" })
 </div>

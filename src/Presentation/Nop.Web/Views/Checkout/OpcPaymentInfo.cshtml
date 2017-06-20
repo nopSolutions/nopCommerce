@@ -1,6 +1,6 @@
 ﻿@model CheckoutPaymentInfoModel
 <div class="checkout-data">
-    @Html.Widget("op_checkout_payment_info_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_info_top" })
     <div class="section payment-info">
         <div class="info">
             @await Component.InvokeAsync(Model.PaymentViewComponentName, Model.PaymentViewComponentArguments)
@@ -13,7 +13,7 @@
             <div class="message-error">@validationSummary</div>
         }
     </div>
-    @Html.Widget("op_checkout_payment_info_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_info_bottom" })
     @if (Model.DisplayOrderTotals)
     {
         <div class="section order-summary">

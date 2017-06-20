@@ -13,7 +13,7 @@
         <h1>@T("News")</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("newslist_page_before_items")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items" })
         <div class="news-items">
             @foreach (var item in Model.NewsItems)
             {
@@ -28,7 +28,7 @@
                     <div class="buttons">
                         <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">@T("News.MoreInfo")</a>
                     </div>
-                    @Html.Widget("newslist_page_inside_item", item.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_inside_item", additionalData = item.Id })
                 </div>
             }
         </div>
@@ -41,6 +41,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("newslist_page_after_items")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_after_items" })
     </div>
 </div>

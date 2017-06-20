@@ -4,6 +4,6 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);
 }
-@Html.Widget("boards_topiccreate_before", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_topiccreate_before", additionalData = Model.Id })
 @await Html.PartialAsync("_CreateUpdateTopic", Model)
-@Html.Widget("boards_topiccreate_after", Model.Id)
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_topiccreate_after", additionalData = Model.Id })

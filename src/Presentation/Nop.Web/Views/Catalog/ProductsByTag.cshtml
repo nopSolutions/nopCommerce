@@ -21,12 +21,12 @@
         <h1>@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("productsbytag_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
-        @Html.Widget("productsbytag_before_product_list", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
             <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
@@ -49,6 +49,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("productsbytag_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
     </div>
 </div>

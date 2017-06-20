@@ -18,11 +18,11 @@
         <div class="news-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @Html.Widget("newsitem_page_before_body", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_body", additionalData = Model.Id })
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
-        @Html.Widget("newsitem_page_before_comments", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment" id="comments">
@@ -121,13 +121,13 @@
                                         <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                                     </div>
                                 </div>
-                                @Html.Widget("newsitem_page_inside_comment", comment.Id)
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_inside_comment", additionalData = comment.Id })
                             </div>
                         }
                     </div>
                 </div>
             }
         }
-        @Html.Widget("newsitem_page_after_comments", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_after_comments", additionalData = Model.Id })
     </div>
 </div>

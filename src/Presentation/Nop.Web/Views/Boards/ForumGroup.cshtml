@@ -10,7 +10,7 @@
 <div class="page forum-group-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumGroupId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @Html.Widget("boards_forumgroup_after_header")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forumgroup_after_header" })
     @await Html.PartialAsync("_ForumGroup", Model)
-    @Html.Widget("boards_forumgroup_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forumgroup_bottom" })
 </div>

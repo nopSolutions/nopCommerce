@@ -8,11 +8,11 @@
     Html.AppendPageCssClassParts("html-blog-page");
 }
 @section left {
-    @Html.Widget("left_side_column_blog_before")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
     @await Component.InvokeAsync("BlogMonths")
-    @Html.Widget("left_side_column_after_blog_archive")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_blog_archive" })
     @await Component.InvokeAsync("BlogTags")
-    @Html.Widget("left_side_column_blog_after")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
 }
 <div class="page blog-page">
     <div class="page-title">
@@ -36,21 +36,21 @@
         </h1>
     </div>
     <div class="page-body">
-        @Html.Widget("bloglist_page_before_posts")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_posts" })
         <div class="blog-posts">
             @foreach (var item in Model.BlogPosts)
             {
-                @Html.Widget("bloglist_page_before_post", item.Id)
+                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post", additionalData = item.Id })
                 <div class="post">
                     <div class="post-head">
                         <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
                         <span class="post-date">-@item.CreatedOn.ToString("D")</span>
                     </div>
-                    @Html.Widget("bloglist_page_before_post_body", item.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
                     <div class="post-body">
                         @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
-                    @Html.Widget("bloglist_page_after_post_body", item.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
                     <div class="blog-details">
                         @if (item.Tags.Count > 0)
                         {
@@ -77,9 +77,9 @@
                             <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
-                    @Html.Widget("bloglist_page_inside_post", item.Id)
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item.Id })
                 </div>
-                @Html.Widget("bloglist_page_after_post", item.Id)
+                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
             }
         </div>
         @{
@@ -91,6 +91,6 @@
                 @pager
             </div>
         }
-        @Html.Widget("bloglist_page_after_posts")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_posts" })
     </div>
 </div>
