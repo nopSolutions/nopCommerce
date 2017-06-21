@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -34,12 +35,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-#if NET451
                 //implement schedule tasks
                 //database is already installed, so start scheduled tasks
-                //TaskManager.Instance.Initialize();
-                //TaskManager.Instance.Start();
-#endif
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
 #if NET451
                 try
                 {

@@ -48,7 +48,15 @@ namespace Nop.Services.Tasks
             if (type == null)
                 return null;
 
-            var instance = EngineContext.Current.Resolve(type);
+            object instance = null;
+            try
+            {
+                instance = EngineContext.Current.Resolve(type);
+            }
+            catch
+            {
+                //try resolve
+            }
             if (instance == null)
             {
                 //not resolved

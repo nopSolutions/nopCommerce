@@ -197,8 +197,8 @@ namespace Nop.Web.Framework
 
                 Customer customer = null;
 
-                //check whether request is made by a background task
-                if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext is FakeHttpContext)
+                //check whether request is made by a background (schedule) task
+                if (_httpContextAccessor.HttpContext == null)
                 {
                     //in this case return built-in customer record for background task
                     customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
