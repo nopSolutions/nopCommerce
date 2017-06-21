@@ -290,8 +290,10 @@ namespace Nop.Core
             string path = _httpContextAccessor.HttpContext.Request.Path;
 
             //a little workaround. FileExtensionContentTypeProvider contains most of static file extensions. So we can use it
+            //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
+            //if it can return content type, then it's a static file
             var contentTypeProvider = new FileExtensionContentTypeProvider();
-            return contentTypeProvider.TryGetContentType(path, out string contentType));
+            return contentTypeProvider.TryGetContentType(path, out string contentType);
         }
 
         /// <summary>
