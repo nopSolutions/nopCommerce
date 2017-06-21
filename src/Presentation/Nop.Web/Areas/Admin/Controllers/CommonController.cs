@@ -10,6 +10,7 @@ using System.Security.Principal;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -191,8 +192,8 @@ namespace Nop.Admin.Controllers
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            #if NET451
-            model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
+            model.HttpHost = HttpContext.Request.Headers[HeaderNames.Host];
+#if NET451
             foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
             {
                 if (key.StartsWith("ALL_")) continue;
@@ -203,7 +204,7 @@ namespace Nop.Admin.Controllers
                     Value = _httpContext.Request.ServerVariables[key]
                 });
             }
-            #endif
+#endif
 
             var trustLevel = CommonHelper.GetTrustLevel();
 
