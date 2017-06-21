@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Http;
@@ -58,33 +59,37 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //handle 404 Not Found
                 if (context.HttpContext.Response.StatusCode == 404)
                 {
-                    //get original path and query
-                    var originalPath = context.HttpContext.Request.Path;
-                    var originalQueryString = context.HttpContext.Request.QueryString;
-
-                    //store the original paths in special feature, so we can use it later
-                    context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
+                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    if (!webHelper.IsStaticResource())
                     {
-                        OriginalPathBase = context.HttpContext.Request.PathBase.Value,
-                        OriginalPath = originalPath.Value,
-                        OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
-                    });
+                        //get original path and query
+                        var originalPath = context.HttpContext.Request.Path;
+                        var originalQueryString = context.HttpContext.Request.QueryString;
 
-                    //get new path
-                    context.HttpContext.Request.Path = "/page-not-found";
-                    context.HttpContext.Request.QueryString = QueryString.Empty;
+                        //store the original paths in special feature, so we can use it later
+                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
+                        {
+                            OriginalPathBase = context.HttpContext.Request.PathBase.Value,
+                            OriginalPath = originalPath.Value,
+                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
+                        });
 
-                    try
-                    {
-                        //re-execute request with new path
-                        await context.Next(context.HttpContext);
-                    }
-                    finally
-                    {
-                        //return original path to request
-                        context.HttpContext.Request.QueryString = originalQueryString;
-                        context.HttpContext.Request.Path = originalPath;
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
+                        //get new path
+                        context.HttpContext.Request.Path = "/page-not-found";
+                        context.HttpContext.Request.QueryString = QueryString.Empty;
+
+                        try
+                        {
+                            //re-execute request with new path
+                            await context.Next(context.HttpContext);
+                        }
+                        finally
+                        {
+                            //return original path to request
+                            context.HttpContext.Request.QueryString = originalQueryString;
+                            context.HttpContext.Request.Path = originalPath;
+                            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
+                        }
                     }
                 }
             });

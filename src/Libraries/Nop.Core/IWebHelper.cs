@@ -61,6 +61,12 @@ namespace Nop.Core
         string GetStoreLocation(bool useSsl);
 
         /// <summary>
+        /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
+        /// </summary>
+        /// <returns>True if the request targets a static resource file.</returns>
+        bool IsStaticResource();
+
+        /// <summary>
         /// Modifies query string
         /// </summary>
         /// <param name="url">Url to modify</param>

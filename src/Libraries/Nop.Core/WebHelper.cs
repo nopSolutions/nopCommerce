@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
@@ -276,7 +277,22 @@ namespace Nop.Core
 
             return host.ToLowerInvariant();
         }
+        
+        /// <summary>
+        /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
+        /// </summary>
+        /// <returns>True if the request targets a static resource file.</returns>
+        public virtual bool IsStaticResource()
+        {
+            if (!IsRequestAvailable())
+                return false;
 
+            string path = _httpContextAccessor.HttpContext.Request.Path;
+
+            //a little workaround. FileExtensionContentTypeProvider contains most of static file extensions. So we can use it
+            var contentTypeProvider = new FileExtensionContentTypeProvider();
+            return contentTypeProvider.TryGetContentType(path, out string contentType));
+        }
 
         /// <summary>
         /// Modifies query string
