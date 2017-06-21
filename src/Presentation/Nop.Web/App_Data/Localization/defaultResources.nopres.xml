@@ -12846,6 +12846,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
     <Value>Current user time (based on specified datetime and timezone settings).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Headers">
+    <Value>Headers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Headers.Hint">
+    <Value>A list of headers.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST">
     <Value>HTTP_HOST</Value>
   </LocaleResource>
@@ -12887,12 +12893,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ServerTimeZone.Hint">
     <Value>Server time zone.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables">
-    <Value>Server variables</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables.Hint">
-    <Value>A list of server variables.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
     <Value>Coordinated Universal Time (UTC)</Value>

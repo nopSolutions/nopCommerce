@@ -27,13 +27,13 @@
         }
     }
 
-    function toggleLoadedServerVariables() {
-        $('#pnlServerVariables').toggle();
-        if ($('#pnlServerVariables').css('display') == 'none') {
-            $('#serverVariablesShowHide').html('@T("Admin.Common.Show")');
+    function toggleLoadedHeaders() {
+        $('#pnlHeaders').toggle();
+        if ($('#pnlHeaders').css('display') == 'none') {
+            $('#headersShowHide').html('@T("Admin.Common.Show")');
         }
         else {
-            $('#serverVariablesShowHide').html('@T("Admin.Common.Hide")');
+            $('#headersShowHide').html('@T("Admin.Common.Hide")');
         }
     }
 </script>
@@ -117,16 +117,16 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ServerVariables)
+                            @Html.NopLabelFor(model => model.Headers)
                         </div>
                         <div class="col-md-9">
-                            <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
-                            <div id="pnlServerVariables" style="display: none; word-break: break-all">
+                            <a id="headersShowHide" href="javascript:toggleLoadedHeaders();">@T("Admin.Common.Show")</a>
+                            <div id="pnlHeaders" style="display: none; word-break: break-all">
                                 <ul>
-                                    @foreach (var serverVariable in Model.ServerVariables)
+                                    @foreach (var header in Model.Headers)
                                     {
                                         <li>
-                                            <strong>@serverVariable.Name</strong>: @serverVariable.Value
+                                            <strong>@header.Name</strong>: @header.Value
                                         </li>
                                     }
                                 </ul>

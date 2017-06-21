@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Common
     {
         public SystemInfoModel()
         {
-            this.ServerVariables = new List<ServerVariableModel>();
+            this.Headers = new List<HeaderModel>();
             this.LoadedAssemblies = new List<LoadedAssembly>();
         }
 
@@ -42,13 +42,13 @@ namespace Nop.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
         public string HttpHost { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.ServerVariables")]
-        public IList<ServerVariableModel> ServerVariables { get; set; }
+        [NopResourceDisplayName("Admin.System.SystemInfo.Headers")]
+        public IList<HeaderModel> Headers { get; set; }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-        public partial class ServerVariableModel : BaseNopModel
+        public partial class HeaderModel : BaseNopModel
         {
             public string Name { get; set; }
             public string Value { get; set; }

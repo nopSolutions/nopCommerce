@@ -5,9 +5,18 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
+  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables">
     <Value></Value>
-  </LocaleResource> 
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Headers">
+    <Value>Headers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Headers.Hint">
+    <Value>A list of headers.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -193,18 +193,15 @@ namespace Nop.Admin.Controllers
             model.UtcTime = DateTime.UtcNow;
             model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             model.HttpHost = HttpContext.Request.Headers[HeaderNames.Host];
-#if NET451
-            foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
-            {
-                if (key.StartsWith("ALL_")) continue;
 
-                model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel
+            foreach (var header in HttpContext.Request.Headers)
+            {
+                model.Headers.Add(new SystemInfoModel.HeaderModel
                 {
-                    Name = key,
-                    Value = _httpContext.Request.ServerVariables[key]
+                    Name = header.Key,
+                    Value = header.Value
                 });
             }
-#endif
 
             var trustLevel = CommonHelper.GetTrustLevel();
 
