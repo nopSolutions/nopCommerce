@@ -104,7 +104,7 @@ namespace Nop.Core
                 {
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
-                    var forwardedHttpHeaderKey = "X-FORWARDED-FOR";
+                    var forwardedHttpHeaderKey = "X-FORWARD-FOR";
                     if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
@@ -177,17 +177,11 @@ namespace Nop.Core
             if (!IsRequestAvailable())
                 return false;
 
-#if NET451
-            //check whehter hosting uses a load balancer on their server
-            //1. use HTTP_CLUSTER_HTTPS?
-            if (_hostingConfig.UseHttpClusterHttps.HasValue && _hostingConfig.UseHttpClusterHttps.Value)
-                return ServerVariables("HTTP_CLUSTER_HTTPS").Equals("on", StringComparison.InvariantCultureIgnoreCase);
-
-            //2. use HTTP_X_FORWARDED_PROTO?
+            //check whether hosting uses a load balancer
+            //use HTTP_X_FORWARDED_PROTO?
             if (_hostingConfig.UseHttpXForwardedProto.HasValue && _hostingConfig.UseHttpXForwardedProto.Value)
-                return ServerVariables("HTTP_X_FORWARDED_PROTO").Equals("https", StringComparison.OrdinalIgnoreCase);
+                return _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
 
-#endif
             return _httpContextAccessor.HttpContext.Request.IsHttps;
         }
 
