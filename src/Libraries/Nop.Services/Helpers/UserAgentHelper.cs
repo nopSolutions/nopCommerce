@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
@@ -21,7 +22,7 @@ namespace Nop.Services.Helpers
         #endregion
 
         #region Ctor
-        
+
         public UserAgentHelper(NopConfig nopConfig, IHttpContextAccessor httpContextAccessor)
         {
             this._nopConfig = nopConfig;
@@ -50,8 +51,9 @@ namespace Nop.Services.Helpers
                     return Singleton<BrowscapXmlHelper>.Instance;
 
                 var userAgentStringsPath = CommonHelper.MapPath(_nopConfig.UserAgentStringsPath);
-                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_nopConfig.CrawlerOnlyUserAgentStringsPath) ?
-                    CommonHelper.MapPath(_nopConfig.CrawlerOnlyUserAgentStringsPath) : string.Empty;
+                var crawlerOnlyUserAgentStringsPath = !string.IsNullOrEmpty(_nopConfig.CrawlerOnlyUserAgentStringsPath)
+                    ? CommonHelper.MapPath(_nopConfig.CrawlerOnlyUserAgentStringsPath)
+                    : string.Empty;
 
                 var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
                 Singleton<BrowscapXmlHelper>.Instance = browscapXmlHelper;
@@ -86,11 +88,28 @@ namespace Nop.Services.Helpers
                 var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
                 return bowscapXmlHelper.IsCrawler(userAgent);
             }
-            catch { }
+            catch
+            {
+            }
 
             return false;
         }
 
+        /// <summary>
+        /// Get a value indicating whether the request is made by IE8 browser
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsIe8()
+        {
+            if (_httpContextAccessor == null || _httpContextAccessor.HttpContext == null)
+                return false;
+
+            //https://blogs.msdn.microsoft.com/ie/2009/01/09/the-internet-explorer-8-user-agent-string-updated-edition/
+
+            var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent].ToString();
+            return !string.IsNullOrEmpty(userAgent) && userAgent.IndexOf("MSIE 8.0", StringComparison.InvariantCultureIgnoreCase) >= 0;
+        }
+        
         #endregion
     }
 }
