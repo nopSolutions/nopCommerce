@@ -65,7 +65,7 @@ namespace Nop.Core
             return true;
         }
 
-        protected virtual bool IsIPAddressSet(IPAddress address)
+        protected virtual bool IsIpAddressSet(IPAddress address)
         {
             return address != null && address.ToString() != NullIpAddress;
         }
@@ -555,10 +555,10 @@ namespace Nop.Core
         {
             //source: https://stackoverflow.com/a/41242493/7860424
             var connection = req.HttpContext.Connection;
-            if (IsIPAddressSet(connection.RemoteIpAddress))
+            if (IsIpAddressSet(connection.RemoteIpAddress))
             {
                 //We have a remote address set up
-                return IsIPAddressSet(connection.LocalIpAddress)
+                return IsIpAddressSet(connection.LocalIpAddress)
                     //Is local is same as remote, then we are local
                     ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress)
                     //else we are remote if the remote IP address is not a loopback address
