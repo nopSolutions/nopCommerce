@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -91,7 +91,7 @@ namespace Nop.Web.Framework.UI
 
         protected virtual IItemTransform GetCssTranform()
         {
-            return new CssRewriteUrlTransform();
+            return new CssRewriteUrlTransformFixed();
         }
 #endif
 
