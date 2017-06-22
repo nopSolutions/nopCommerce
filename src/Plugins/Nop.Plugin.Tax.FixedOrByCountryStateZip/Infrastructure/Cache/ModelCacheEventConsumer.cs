@@ -35,7 +35,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public ModelCacheEventConsumer(ICountryStateZipService taxRateService, ISettingService settingService)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            this._cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
             this._taxRateService = taxRateService;
             this._settingService = settingService;

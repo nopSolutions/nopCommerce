@@ -1,12 +1,13 @@
-﻿@{
+﻿@using Nop.Core.Domain.Common
+@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
     Layout = "";
 
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
-@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
-@using Nop.Web.Framework;
-@using Nop.Core.Infrastructure;
 
 <div class="panel-group advanced-setting">
     <div class="panel panel-default">
@@ -22,21 +23,21 @@
                                     transport: {
                                         read: {
                                             url:
-                                                "@Html.Raw(Url.Action("RatesByCountryStateZipList", "FixedOrByCountryStateZip", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers"}, {"area", ""}}))",
+                                                "@Html.Raw(Url.Action("RatesByCountryStateZipList", "FixedOrByCountryStateZip"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         },
                                         update: {
                                             url:
-                                                "@Html.Raw(Url.Action("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers"}, {"area", ""}}))",
+                                                "@Html.Raw(Url.Action("UpdateRateByCountryStateZip", "FixedOrByCountryStateZip"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         },
                                         destroy: {
                                             url:
-                                                "@Html.Raw(Url.Action("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers"}, {"area", ""}}))",
+                                                "@Html.Raw(Url.Action("DeleteRateByCountryStateZip", "FixedOrByCountryStateZip"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -77,7 +78,7 @@
                                 pageable: {
                                     refresh: true,
                                     pageSizes: [@(gridPageSizes)],
-                                    @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -160,7 +161,7 @@
                                         cache: false,
                                         type: "GET",
                                         url:
-                                            "@(Url.Action("GetStatesByCountryId", "Country", new RouteValueDictionary {{"area", "Admin"}}))",
+                                            "@(Url.Action("GetStatesByCountryId", "Country"))",
                                         data: { "countryId": selectedItem, "addAsterisk": "true" },
                                         success: function(data) {
                                             ddlStates.html('');
@@ -249,7 +250,7 @@
                                             $.ajax({
                                                 cache: false,
                                                 type: 'POST',
-                                                url: '@Url.RouteUrl("Plugin.Tax.FixedOrByCountryStateZip.AddRateByCountryStateZip")',
+                                                url: '@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")',
                                                 data: postData,
                                                 dataType: 'json',
                                                 success: function(data) {
