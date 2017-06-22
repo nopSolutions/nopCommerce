@@ -17,7 +17,7 @@
     @if (Model.DisplayOrderTotals)
     {
         <div class="section order-summary">
-            @*TODO @Html.Action("OrderSummary", "ShoppingCart")*@
+            @await Component.InvokeAsync("OrderSummary")
         </div>
     }
 </div>
