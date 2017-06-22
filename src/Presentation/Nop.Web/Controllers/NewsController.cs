@@ -28,7 +28,7 @@ namespace Nop.Web.Controllers
     [HttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
-#region Fields
+        #region Fields
 
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
@@ -45,10 +45,10 @@ namespace Nop.Web.Controllers
         private readonly NewsSettings _newsSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-
-#endregion
-
-#region Ctor
+        
+        #endregion
+        
+        #region Ctor
 
         public NewsController(INewsModelFactory newsModelFactory,
             INewsService newsService,
@@ -81,10 +81,10 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
         }
-
-#endregion
         
-#region Methods
+        #endregion
+        
+        #region Methods
 
         public virtual IActionResult List(NewsPagingFilteringModel command)
         {
