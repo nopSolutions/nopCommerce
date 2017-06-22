@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Template;
 using Nop.Core;
@@ -84,7 +85,6 @@ namespace Nop.Web.Framework.Seo
             //performance optimization, we load a cached verion here. It reduces number of SQL requests for each page load
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             var urlRecord = urlRecordService.GetBySlugCached(slug);
-
             //comment the line above and uncomment the line below in order to disable this performance "workaround"
             //var urlRecord = urlRecordService.GetBySlug(slug);
 
@@ -100,10 +100,14 @@ namespace Nop.Web.Framework.Seo
                     return Task.CompletedTask;
 
                 //redirect to active slug if found
-#if NET451
-                context.HttpContext.Request.Path = $"/{activeSlug}";
-                return this.RouteAsync(context);
-#endif
+                var redirectionRouteData = new RouteData(context.RouteData);
+                redirectionRouteData.Values["controller"] = "Common";
+                redirectionRouteData.Values["action"] = "InternalRedirect";
+                redirectionRouteData.Values["url"] = $"/{activeSlug}"; //TODO support virtual directories
+                redirectionRouteData.Values["permanentRedirect"] = true;
+                context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
+                context.RouteData = redirectionRouteData;
+                return _target.RouteAsync(context);
             }
 
             //ensure that the slug is the same for the current language, 
@@ -115,10 +119,14 @@ namespace Nop.Web.Framework.Seo
                 //we should make validation above because some entities does not have SeName for standard (Id = 0) language (e.g. news, blog posts)
 
                 //redirect to the page for current language
-#if NET451
-                context.HttpContext.Request.Path = $"/{slugForCurrentLanguage}";
-                return this.RouteAsync(context);
-#endif
+                var redirectionRouteData = new RouteData(context.RouteData);
+                redirectionRouteData.Values["controller"] = "Common";
+                redirectionRouteData.Values["action"] = "InternalRedirect";
+                redirectionRouteData.Values["url"] = $"/{slugForCurrentLanguage}"; //TODO support virtual directories
+                redirectionRouteData.Values["permanentRedirect"] = false;
+                context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
+                context.RouteData = redirectionRouteData;
+                return _target.RouteAsync(context);
             }
 
             //since we are here, all is ok with the slug, so process URL

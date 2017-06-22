@@ -374,7 +374,38 @@ namespace Nop.Web.Controllers
         {
             return View();
         }
-        
+
+        //helper method to redirect users. Workaround for GenericPathRoute class where we're not allowed to do it
+        public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
+        {
+            //ensure it's invoked from our GenericPathRoute class
+            if (HttpContext.Items["nop.RedirectFromGenericPathRoute"] == null ||
+                !Convert.ToBoolean(HttpContext.Items["nop.RedirectFromGenericPathRoute"]))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //home page
+            if (String.IsNullOrEmpty(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            if (permanentRedirect)
+                return RedirectPermanent(url);
+            else
+                return Redirect(url);
+        }
+
         #endregion
     }
 }
