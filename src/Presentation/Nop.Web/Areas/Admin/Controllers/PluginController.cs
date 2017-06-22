@@ -392,8 +392,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        #if NET451
-
         public virtual IActionResult ConfigureMiscPlugin(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -406,18 +404,10 @@ namespace Nop.Admin.Controllers
 
             var plugin  = descriptor.Instance<IMiscPlugin>();
 
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            plugin.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            var model = new MiscPluginModel();
-            model.FriendlyName = descriptor.FriendlyName;
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = plugin.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
-
-        #endif
 
         //edit
         public virtual IActionResult EditPopup(string systemName)

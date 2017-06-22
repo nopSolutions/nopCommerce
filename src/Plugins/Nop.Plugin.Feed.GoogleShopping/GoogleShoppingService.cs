@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Web;
-using System.Web.Routing;
 using System.Xml;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -45,6 +45,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly GoogleProductObjectContext _objectContext;
+        private readonly IWebHelper _webHelper;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -65,7 +67,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
-            GoogleProductObjectContext objectContext)
+            GoogleProductObjectContext objectContext,
+            IWebHelper webHelper,
+            IHostingEnvironment hostingEnvironment
+            )
         {
             this._googleService = googleService;
             this._priceCalculationService = priceCalculationService;
@@ -83,6 +88,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this._googleShoppingSettings = googleShoppingSettings;
             this._currencySettings = currencySettings;
             this._objectContext = objectContext;
+            this._webHelper = webHelper;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -107,7 +114,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             //http://www.atensoftware.com/p90.php?q=182
 
             if (isHtmlEncoded)
-                input = HttpUtility.HtmlDecode(input);
+                input = WebUtility.HtmlDecode(input);
 
             input = input.Replace("¼", "");
             input = input.Replace("½", "");
@@ -122,7 +129,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             //input = input.Replace("°", "");
             
             if (isHtmlEncoded)
-                input = HttpUtility.HtmlEncode(input);
+                input = WebUtility.HtmlEncode(input);
 
             return input;
         }
@@ -139,16 +146,11 @@ namespace Nop.Plugin.Feed.GoogleShopping
         #region Methods
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "FeedGoogleShopping";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.GoogleShopping.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/FeedGoogleShopping/Configure";
         }
 
         /// <summary>
@@ -644,7 +646,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
         {
             if (store == null)
                 throw new ArgumentNullException("store");
-            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _googleShoppingSettings.StaticFileName);
+            string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "content\\files\\exportimport", store.Id + "-" + _googleShoppingSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs, store);
