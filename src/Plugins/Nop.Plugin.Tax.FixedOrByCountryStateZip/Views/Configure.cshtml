@@ -1,8 +1,8 @@
-﻿@{
-    Layout = "";
-}
+﻿@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
 
-@model Nop.Plugin.Tax.FixedOrByCountryStateZip.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
 
 <div class="form-group">
     <div class="col-md-12">
@@ -45,5 +45,5 @@
             });
 </script>
 
-@Html.Partial("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
-@Html.Partial("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)
+@await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
+@await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)

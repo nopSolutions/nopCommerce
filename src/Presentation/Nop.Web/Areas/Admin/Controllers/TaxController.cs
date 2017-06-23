@@ -72,8 +72,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        #if NET451
-
         public virtual IActionResult ConfigureProvider(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -84,17 +82,10 @@ namespace Nop.Admin.Controllers
                 //No tax provider found with the specified id
                 return RedirectToAction("Providers");
 
-            var model = taxProvider.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            taxProvider.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = taxProvider.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
-
-        #endif
 
         public virtual IActionResult MarkAsPrimaryProvider(string systemName)
         {

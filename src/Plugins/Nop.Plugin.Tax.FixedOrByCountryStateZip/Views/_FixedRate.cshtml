@@ -12,14 +12,14 @@
                                     transport: {
                                         read: {
                                             url:
-                                                "@Html.Raw(Url.Action("FixedRatesList", "FixedOrByCountryStateZip", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers" }, {"area", ""}}))",
+                                                "@Html.Raw(Url.Action("FixedRatesList", "FixedOrByCountryStateZip"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
                                         },
                                         update: {
                                             url:
-                                                "@Html.Raw(Url.Action("FixedRateUpdate", "FixedOrByCountryStateZip", new RouteValueDictionary {{"Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers" }, {"area", ""}}))",
+                                                "@Html.Raw(Url.Action("FixedRateUpdate", "FixedOrByCountryStateZip"))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -57,7 +57,7 @@
                                     numeric: false,
                                     previousNext: false,
                                     info: false,
-                                    @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                                    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
                                 },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",

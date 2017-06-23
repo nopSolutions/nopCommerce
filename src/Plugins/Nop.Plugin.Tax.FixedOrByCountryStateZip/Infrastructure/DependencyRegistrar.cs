@@ -9,7 +9,8 @@ using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
-using Nop.Web.Framework.Mvc;
+using Nop.Services.Tax;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure
 {
@@ -27,8 +28,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //we cache presentation models between requests
-            builder.RegisterType<FixedOrByCountryStateZipTaxProvider>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+            builder.RegisterType<FixedOrByCountryStateZipTaxProvider>().As<ITaxProvider>().InstancePerLifetimeScope();
 
             builder.RegisterType<CountryStateZipService>().As<ICountryStateZipService>().InstancePerLifetimeScope();
 
