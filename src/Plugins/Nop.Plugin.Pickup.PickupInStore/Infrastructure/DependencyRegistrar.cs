@@ -8,7 +8,7 @@ using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 using Nop.Plugin.Pickup.PickupInStore.Services;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Infrastructure
 {

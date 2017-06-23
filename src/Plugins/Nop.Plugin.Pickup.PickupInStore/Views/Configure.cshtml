@@ -1,5 +1,8 @@
-﻿
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "pickup-instore-form" }))
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+
+@using (Html.BeginForm(null, null, new { id = "pickup-instore-form" }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -15,13 +18,13 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("List", "PickupInStore", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Pickup.PickupInStore.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("List", "PickupInStore"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("Delete", "PickupInStore", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Pickup.PickupInStore.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("Delete", "PickupInStore"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -54,7 +57,7 @@
                                 numeric: false,
                                 previousNext: false,
                                 info: false,
-                                @Html.Partial("~/Administration/Views/Shared/_GridPagerMessages.cshtml")
+                                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
                             },
                             editable: {
                                 confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -83,7 +86,7 @@
                                 width: 100,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: "<button onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Pickup.PickupInStore.Edit")?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                template: "<button onclick=\"javascript:OpenWindow('@(Url.Action("Edit", "PickupInStore"))?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
@@ -96,7 +99,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.Pickup.PickupInStore.Create") + "?btnId=btnRefresh&formId=pickup-instore-form")', 800, 800, true); return false;"/>
+                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore", new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
 
@@ -113,7 +116,6 @@
                     });
                 });
             </script>
-
         </div>
     </div>
 }
