@@ -19,12 +19,12 @@ namespace Nop.Web.Framework.UI
         void AppendMetaKeywordParts(string part);
         string GenerateMetaKeywords();
 
-        void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync);
-        void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync);
+        void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAync);
+        void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync);
         string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
-        void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
-        void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false);
+        void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false);
+        void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false);
         string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
         void AddCanonicalUrlParts(string part);

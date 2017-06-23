@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
-#if NET451
-using System.Web.Mvc;
-using System.Web.Optimization;
-#endif
 
 namespace Nop.Web.Framework.UI
 {
@@ -18,10 +15,10 @@ namespace Nop.Web.Framework.UI
     public partial class PageHeadBuilder : IPageHeadBuilder
     {
         #region Fields
-
-        private static readonly object s_lock = new object();
-
+        
         private readonly SeoSettings _seoSettings;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
@@ -41,9 +38,12 @@ namespace Nop.Web.Framework.UI
         /// Constuctor
         /// </summary>
         /// <param name="seoSettings">SEO settings</param>
-        public PageHeadBuilder(SeoSettings seoSettings)
+        /// <param name="hostingEnvironment">Hosting environment</param>
+        public PageHeadBuilder(SeoSettings seoSettings, IHostingEnvironment hostingEnvironment)
         {
             this._seoSettings = seoSettings;
+            this._hostingEnvironment = hostingEnvironment;
+
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
@@ -55,49 +55,7 @@ namespace Nop.Web.Framework.UI
         }
 
         #endregion
-
-        #region Utilities
-#if NET451
-        protected virtual string GetBundleVirtualPath(string prefix, string extension, string[] parts)
-        {
-            if (parts == null || parts.Length == 0)
-                throw new ArgumentException("parts");
-
-            //calculate hash
-            var hash = "";
-            using (SHA256 sha = new SHA256Managed())
-            {
-                // string concatenation
-                var hashInput = "";
-                foreach (var part in parts)
-                {
-                    hashInput += part;
-                    hashInput += ",";
-                }
-
-                byte[] input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
-                hash = HttpServerUtility.UrlTokenEncode(input);
-            }
-            //ensure only valid chars
-            hash = SeoExtensions.GetSeName(hash);
-
-            var sb = new StringBuilder(prefix);
-            sb.Append(hash);
-            //we used "extension" when we had "runAllManagedModulesForAllRequests" set to "true" in web.config
-            //now we disabled it. hence we should not use "extension"
-            //sb.Append(extension);
-            return sb.ToString();
-        }
-
-        protected virtual IItemTransform GetCssTranform()
-        {
-            return new CssRewriteUrlTransform();
-        }
-#endif
-
-
-        #endregion
-
+        
         #region Methods
 
         public virtual void AddTitleParts(string part)
@@ -198,34 +156,42 @@ namespace Nop.Web.Framework.UI
         }
     
 
-        public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync)
+        public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
-            if (string.IsNullOrEmpty(part))
+            if (string.IsNullOrEmpty(src))
                 return;
+
+            if (String.IsNullOrEmpty(debugSrc))
+                debugSrc = src;
 
             _scriptParts[location].Add(new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                Part = part
+                Src = src,
+                DebugSrc = debugSrc
             });
         }
-        public virtual void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAsync)
+        public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
-            if (string.IsNullOrEmpty(part))
+            if (string.IsNullOrEmpty(src))
                 return;
+
+            if (String.IsNullOrEmpty(debugSrc))
+                debugSrc = src;
 
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 IsAsync = isAsync,
-                Part = part
+                Src = src,
+                DebugSrc = debugSrc
             });
         }
         
@@ -238,63 +204,46 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.Any())
                 return "";
 
-#if NET451
+            var debugModel = _hostingEnvironment.IsDevelopment();
+            
+            #if NET451
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableJsBundling && BundleTable.EnableOptimizations;
             }
-#else
+            #else
             bundleFiles = false;
-#endif
+            #endif
 
             if (bundleFiles.Value)
             {
                 var partsToBundle = _scriptParts[location]
                     .Where(x => !x.ExcludeFromBundle)
-                    .Select(x => x.Part)
                     .Distinct()
                     .ToArray();
                 var partsToDontBundle = _scriptParts[location]
                     .Where(x => x.ExcludeFromBundle)
-                    .Select(x => new  { x.Part, x.IsAsync})
                     .Distinct()
                     .ToArray();
 
 
                 var result = new StringBuilder();
-
-#if NET451
-                if (partsToBundle.Length > 0)
+                //parts to  bundle
+                //TODO implement bundling
+                foreach (var item in partsToBundle)
                 {
-                    string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", partsToBundle);
-                    //create bundle
-                    lock (s_lock)
-                    {
-                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
-                        if (bundleFor == null)
-                        {
-                            var bundle = new ScriptBundle(bundleVirtualPath);
-                            //bundle.Transforms.Clear();
-
-                            //"As is" ordering
-                            bundle.Orderer = new AsIsBundleOrderer();
-                            //disable file extension replacements. renders scripts which were specified by a developer
-                            bundle.EnableFileExtensionReplacements = false;
-                            bundle.Include(partsToBundle);
-                            BundleTable.Bundles.Add(bundle);
-                        }
-                    }
-
-                    //parts to bundle
-                    result.AppendLine(Scripts.Render(bundleVirtualPath).ToString());
+                    var src = debugModel ? item.DebugSrc : item.Src;
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
+                    result.Append(Environment.NewLine);
                 }
-#endif
 
-                //parts to do not bundle
+
+                //parts to not bundle
                 foreach (var item in partsToDontBundle)
                 {
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(item.Part), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
+                    var src = debugModel ? item.DebugSrc : item.Src;
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -303,41 +252,50 @@ namespace Nop.Web.Framework.UI
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var item in _scriptParts[location].Select(x => new { x.Part, x.IsAsync}).Distinct())
+                foreach (var item in _scriptParts[location].Distinct())
                 {
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(item.Part), MimeTypes.TextJavascript, item.IsAsync ? "async ":"");
+                    var src = debugModel ? item.DebugSrc : item.Src;
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async ":"");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
             }
         }
         
-        public virtual void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
+        public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
 
-            if (string.IsNullOrEmpty(part))
+            if (string.IsNullOrEmpty(src))
                 return;
+
+            if (String.IsNullOrEmpty(debugSrc))
+                debugSrc = src;
 
             _cssParts[location].Add(new CssReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
-                Part = part
+                Src = src,
+                DebugSrc = debugSrc
             });
         }
-        public virtual void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
+        public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<CssReferenceMeta>());
 
-            if (string.IsNullOrEmpty(part))
+            if (string.IsNullOrEmpty(src))
                 return;
-            
+
+            if (String.IsNullOrEmpty(debugSrc))
+                debugSrc = src;
+
             _cssParts[location].Insert(0, new CssReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
-                Part = part
+                Src = src,
+                DebugSrc = debugSrc
             });
         }
  
@@ -348,6 +306,9 @@ namespace Nop.Web.Framework.UI
 
             if (!_cssParts.Any())
                 return "";
+
+
+            var debugModel = _hostingEnvironment.IsDevelopment();
 
 #if NET451
             if (!bundleFiles.HasValue)
@@ -363,54 +324,21 @@ namespace Nop.Web.Framework.UI
             {
                 var partsToBundle = _cssParts[location]
                     .Where(x => !x.ExcludeFromBundle)
-                    .Select(x => x.Part)
                     .Distinct()
                     .ToArray();
                 var partsToDontBundle = _cssParts[location]
                     .Where(x => x.ExcludeFromBundle)
-                    .Select(x =>x.Part)
                     .Distinct()
                     .ToArray();
 
 
                 var result = new StringBuilder();
 
-#if NET451
-                if (partsToBundle.Length > 0)
-                {
-                    //IMPORTANT: Do not use CSS bundling in virtual directories
-                    string bundleVirtualPath = GetBundleVirtualPath("~/bundles/styles/", ".css", partsToBundle);
-
-                    //create bundle
-                    lock (s_lock)
-                    {
-                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
-                        if (bundleFor == null)
-                        {
-                            var bundle = new StyleBundle(bundleVirtualPath);
-                            //bundle.Transforms.Clear();
-
-                            //"As is" ordering
-                            bundle.Orderer = new AsIsBundleOrderer();
-                            //disable file extension replacements. renders scripts which were specified by a developer
-                            bundle.EnableFileExtensionReplacements = false;
-                            foreach (var ptb in partsToBundle)
-                            {
-                                bundle.Include(ptb, GetCssTranform());
-                            }
-                            BundleTable.Bundles.Add(bundle);
-                        }
-                    }
-
-                    //parts to bundle
-                    result.AppendLine(Styles.Render(bundleVirtualPath).ToString());
-                }
-#endif
-
-                //parts to do not bundle
+                //parts not to bundle
                 foreach (var item in partsToDontBundle)
                 {
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(item), MimeTypes.TextCss);
+                    var src = debugModel ? item.DebugSrc : item.Src;
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
                     result.Append(Environment.NewLine);
                 }
 
@@ -420,9 +348,10 @@ namespace Nop.Web.Framework.UI
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var path in _cssParts[location].Select(x =>  x.Part).Distinct())
+                foreach (var item in _cssParts[location].Distinct())
                 {
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(path), MimeTypes.TextCss);
+                    var src = debugModel ? item.DebugSrc : item.Src;
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), MimeTypes.TextCss);
                     result.AppendLine();
                 }
                 return result.ToString();
@@ -542,9 +471,9 @@ namespace Nop.Web.Framework.UI
             return _activeAdminMenuSystemName;
         }
 
-#endregion
-
-#region Nested classes
+        #endregion
+        
+        #region Nested classes
 
         private class ScriptReferenceMeta
         {
@@ -552,16 +481,19 @@ namespace Nop.Web.Framework.UI
 
             public bool IsAsync { get; set; }
 
-            public string Part { get; set; }
+            public string Src { get; set; }
+
+            public string DebugSrc { get; set; }
         }
 
         private class CssReferenceMeta
         {
             public bool ExcludeFromBundle { get; set; }
 
-            public string Part { get; set; }
-        }
-#endregion
+            public string Src { get; set; }
 
+            public string DebugSrc { get; set; }
+        }
+        #endregion
     }
 }
