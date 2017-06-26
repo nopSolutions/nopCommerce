@@ -35,9 +35,7 @@ namespace Nop.Core.Infrastructure
 
         protected IServiceProvider GetServiceProvider()
         {
-            var accessor = _serviceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : _serviceProvider;
+            return _serviceProvider?.GetService<IHttpContextAccessor>()?.HttpContext?.RequestServices ?? _serviceProvider;
         }
 
         /// <summary>
@@ -79,7 +77,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                //.Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
@@ -100,8 +98,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                    .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)
-                        .Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
@@ -140,6 +137,7 @@ namespace Nop.Core.Infrastructure
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
             PluginManager.Initialize(mvcCoreBuilder.PartManager);
+
             //resolve assemblies here. otherwise, plugins can thrown exceptions when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
@@ -151,10 +149,10 @@ namespace Nop.Core.Infrastructure
             if (assembly != null)
                 return assembly;
 
-            //get assembly fron TypeFinder
-            var tf = Resolve<ITypeFinder>();
+            //get assembly from TypeFinder
+            var tf = Resolve<ITypeFinder>() ?? new WebAppTypeFinder();
             assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
-            return assembly;
+            return assembly;                
         }
 
         /// <summary>
@@ -221,8 +219,8 @@ namespace Nop.Core.Infrastructure
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
-		{
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
+        {
+            return (T)GetServiceProvider()?.GetRequiredService(typeof(T));
         }
 
         /// <summary>
@@ -232,7 +230,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider().GetRequiredService(type);
+            return GetServiceProvider()?.GetRequiredService(type);
         }
 
         /// <summary>
@@ -242,7 +240,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Collection of resolved services</returns>
         public IEnumerable<T> ResolveAll<T>()
         {
-            return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
+            return (IEnumerable<T>)GetServiceProvider()?.GetServices(typeof(T));
         }
 
         /// <summary>
