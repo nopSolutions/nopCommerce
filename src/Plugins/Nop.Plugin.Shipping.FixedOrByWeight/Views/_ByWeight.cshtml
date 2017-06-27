@@ -63,7 +63,7 @@
                                     pageable: {
                                         refresh: true,
                                         pageSizes: [@(adminAreaSettings.GridPageSizes)],
-                                        @Html.Partial("_GridPagerMessages")
+                                        @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
                                     },
                                     editable: {
                                         confirmation: "@T("Admin.Common.DeleteConfirmation")",

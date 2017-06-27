@@ -60,5 +60,5 @@
         });
 </script>
 
-@Html.Partial("~/Plugins/Shipping.FixedOrByWeight/Views/_FixedRate.cshtml")
-@Html.Partial("~/Plugins/Shipping.FixedOrByWeight/Views/_ByWeight.cshtml", Model)
+@await Html.PartialAsync("~/Plugins/Shipping.FixedOrByWeight/Views/_FixedRate.cshtml")
+@await Html.PartialAsync("~/Plugins/Shipping.FixedOrByWeight/Views/_ByWeight.cshtml", Model)
