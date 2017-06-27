@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -153,22 +152,13 @@ namespace Nop.Services.Authentication.External
             }
 
             //or try to auto register new user
-            var details = new
-            {
-                EmailAddress = parameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value,
-                UserName = parameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value,
-                FirstName = parameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Name)?.Value,
-                LastName = parameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Surname)?.Value,
-            };
-
             //registration is approved if validation isn't required
             var registrationIsApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
 
             //create registration request
             var registrationRequest = new CustomerRegistrationRequest(_workContext.CurrentCustomer,
-                details.EmailAddress,
-                _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress,
+                parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
                 PasswordFormat.Clear,
                 _storeContext.CurrentStore.Id,
@@ -179,18 +169,15 @@ namespace Nop.Services.Authentication.External
             if (!registrationResult.Success)
                 return Error(registrationResult.Errors, returnUrl);
 
-            //store some of other form fields
-            if (!string.IsNullOrEmpty(details.FirstName))
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.FirstName, details.FirstName);
-            if (!string.IsNullOrEmpty(details.LastName))
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastName, details.LastName);
+            //allow to save other customer values by consuming this event
+            _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
+
+            //raise vustomer registered event
+            _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
 
             //store owner notifications
             if (_customerSettings.NotifyNewCustomerRegistration)
                 _workflowMessageService.SendCustomerRegisteredNotificationMessage(_workContext.CurrentCustomer, _localizationSettings.DefaultAdminLanguageId);
-
-            //raise event       
-            _eventPublisher.Publish(new CustomerRegisteredEvent(_workContext.CurrentCustomer));
 
             //associate external account with registered user
             AssociateExternalAccountWithUser(_workContext.CurrentCustomer, parameters);
@@ -366,7 +353,7 @@ namespace Nop.Services.Authentication.External
             var externalAuthenticationRecord = new ExternalAuthenticationRecord
             {
                 CustomerId = customer.Id,
-                Email = parameters.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value,
+                Email = parameters.Email,
                 ExternalIdentifier = parameters.ExternalIdentifier,
                 ExternalDisplayIdentifier = parameters.ExternalDisplayIdentifier,
                 OAuthAccessToken = parameters.AccessToken,

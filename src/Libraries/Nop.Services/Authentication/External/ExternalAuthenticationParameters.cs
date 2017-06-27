@@ -35,6 +35,11 @@ namespace Nop.Services.Authentication.External
         public string AccessToken { get; set; }
 
         /// <summary>
+        /// Gets or sets user email
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
         /// Gets or sets the additional user info as a list of a custom claims
         /// </summary>
         public IList<ExternalAuthenticationClaim> Claims { get; set; }
