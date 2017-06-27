@@ -2,7 +2,7 @@
     Layout = "_ConfigurePlugin";
 }
 
-@using (Html.BeginForm(null, null, new { id = "pickup-instore-form" }, FormMethod.Post))
+@using (Html.BeginForm(null, null, null, FormMethod.Post, null, new { id = "pickup-instore-form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -86,7 +86,7 @@
                                 width: 100,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: "<button onclick=\"javascript:OpenWindow('@(Url.Action("Edit", "PickupInStore"))?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/PickupInStore/Edit/")?id=#=Id#&btnId=btnRefresh&formId=pickup-instore-form', 800, 800, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
@@ -99,7 +99,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore", new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
+                <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
 
