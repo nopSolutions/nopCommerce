@@ -21,8 +21,8 @@
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
-    @*TODO @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
-    @await Html.PartialAsync("_ExternalAuthentication.Errors")*@
+    @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
         <div class="customer-blocks">
             @if (Model.CheckoutAsGuest)
@@ -107,9 +107,9 @@
                 }
             </div>
         </div>
-        @*TODO <div class="external-authentication">
-            @Html.Action("ExternalMethods", "ExternalAuthentication")
-        </div>*@
+        <div class="external-authentication">
+            @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+        </div>
         @await Component.InvokeAsync("TopicBlock", new { systemName = "LoginRegistrationInfo" })
     </div>
 </div>

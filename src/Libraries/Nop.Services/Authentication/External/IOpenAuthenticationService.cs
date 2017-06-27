@@ -1,12 +1,11 @@
-//Contributor:  Nicholas Mayne
-
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
-    /// Open authentication service
+    /// External authentication service
     /// </summary>
     public partial interface IOpenAuthenticationService
     {
@@ -35,46 +34,51 @@ namespace Nop.Services.Authentication.External
         /// <returns>External authentication methods</returns>
         IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(Customer customer = null, int storeId = 0);
 
+        /// <summary>
+        /// Check whether authentication by the passed external authentication method is available 
+        /// </summary>
+        /// <param name="systemName">System name of the external authentication method</param>
+        /// <returns>True if authentication is available; otherwise false</returns>
+        bool ExternalAuthenticationMethodIsAvailable(string systemName);
+
+        #endregion
+
+        #region Authentication
+
+        /// <summary>
+        /// Authenticate user by passed parameters
+        /// </summary>
+        /// <param name="parameters">External authentication parameters</param>
+        /// <param name="returnUrl">URL to which the user will return after authentication</param>
+        /// <returns>Result of an authentication</returns>
+        IActionResult Authenticate(OpenAuthenticationParameters parameters, string returnUrl = null);
+
         #endregion
 
         /// <summary>
         /// Accociate external account with customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="parameters">Open authentication parameters</param>
+        /// <param name="parameters">External authentication parameters</param>
         void AssociateExternalAccountWithUser(Customer customer, OpenAuthenticationParameters parameters);
-
-        /// <summary>
-        /// Check that account exists
-        /// </summary>
-        /// <param name="parameters">Open authentication parameters</param>
-        /// <returns>True if it exists; otherwise false</returns>
-        bool AccountExists(OpenAuthenticationParameters parameters);
 
         /// <summary>
         /// Get the particular user with specified parameters
         /// </summary>
-        /// <param name="parameters">Open authentication parameters</param>
+        /// <param name="parameters">External authentication parameters</param>
         /// <returns>Customer</returns>
-        Customer GetUser(OpenAuthenticationParameters parameters);
+        Customer GetUserByExternalAuthenticationParameters(OpenAuthenticationParameters parameters);
 
         /// <summary>
-        /// Get external authentication records for the specified customer
+        /// Remove the association
         /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>List of external authentication records</returns>
-        IList<ExternalAuthenticationRecord> GetExternalIdentifiersFor(Customer customer);
+        /// <param name="parameters">External authentication parameters</param>
+        void RemoveAssociation(OpenAuthenticationParameters parameters);
 
         /// <summary>
         /// Delete the external authentication record
         /// </summary>
         /// <param name="externalAuthenticationRecord">External authentication record</param>
         void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord);
-
-        /// <summary>
-        /// Remove the association
-        /// </summary>
-        /// <param name="parameters">Open authentication parameters</param>
-        void RemoveAssociation(OpenAuthenticationParameters parameters);
     }
 }

@@ -1,4 +1,7 @@
-//Contributor:  Nicholas Mayne
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Nop.Core.Http.Extensions;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Authentication.External
 {
@@ -7,21 +10,32 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public static partial class ExternalAuthorizerHelper
     {
-#if NET451
-        private static ISession GetSession()
-        {
-            return EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
-        }
+        #region Constants
+
+        /// <summary>
+        /// Key for store external authentication parameters to session
+        /// </summary>
+        private const string EXTERNAL_AUTHENTICATION_PARAMETERS = "nop.externalauth.parameters";
+
+        /// <summary>
+        /// Key for store external authentication errors to session
+        /// </summary>
+        private const string EXTERNAL_AUTHENTICATION_ERRORS = "nop.externalauth.errors";
+
+        #endregion
+
+        #region Methods
 
         public static void StoreParametersForRoundTrip(OpenAuthenticationParameters parameters)
         {
-            var session = GetSession();
-            session.Set("nop.externalauth.parameters", parameters);
+            EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Set(EXTERNAL_AUTHENTICATION_PARAMETERS, parameters);
         }
+
         public static OpenAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
         {
-            var session = GetSession();
-            var parameters = session.Get<OpenAuthenticationParameters>("nop.externalauth.parameters");
+            var parameters = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?
+                .Get<OpenAuthenticationParameters>(EXTERNAL_AUTHENTICATION_PARAMETERS);
+
             if (parameters != null && removeOnRetrieval)
                 RemoveParameters();
 
@@ -30,30 +44,28 @@ namespace Nop.Services.Authentication.External
 
         public static void RemoveParameters()
         {
-            var session = GetSession();
-            session.Remove("nop.externalauth.parameters");
+            EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Remove(EXTERNAL_AUTHENTICATION_PARAMETERS);
         }
 
         public static void AddErrorsToDisplay(string error)
         {
-            var session = GetSession();
-            var errors = session.Get<IList<string>>("nop.externalauth.errors");
-            if (errors == null)
-            {
-                errors = new List<string>();
-                session.Set("nop.externalauth.errors", errors);
-            }
+            var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
+            var errors = session?.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS) ?? new List<string>();
             errors.Add(error);
+            session?.Set(EXTERNAL_AUTHENTICATION_ERRORS, errors);
         }
 
         public static IList<string> RetrieveErrorsToDisplay(bool removeOnRetrieval)
         {
-            var session = GetSession();
-            var errors = session.Get<IList<string>>("nop.externalauth.errors");
+            var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
+            var errors = session?.Get<IList<string>>(EXTERNAL_AUTHENTICATION_ERRORS);
+
             if (errors != null && removeOnRetrieval)
-                session.Remove("nop.externalauth.errors");
+                session.Remove(EXTERNAL_AUTHENTICATION_ERRORS);
+
             return errors;
         }
-#endif
+
+        #endregion
     }
 }

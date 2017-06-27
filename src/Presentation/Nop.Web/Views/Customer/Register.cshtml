@@ -53,7 +53,7 @@
             {
                 <div class="message-error">@validationSummary</div>
             }
-            @*TODO @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")*@
+            @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -389,9 +389,9 @@
             <div class="buttons">
                 <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
             </div>
-            @*TODO <div class="external-authentication">
-                @Html.Action("ExternalMethods", "ExternalAuthentication")
-            </div>*@
+            <div class="external-authentication">
+                @await Component.InvokeAsync("ExternalMethods", "ExternalAuthentication")
+            </div>
         </div>
     </div>
 }

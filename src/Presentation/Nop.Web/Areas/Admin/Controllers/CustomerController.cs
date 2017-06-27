@@ -87,7 +87,7 @@ namespace Nop.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly ForumSettings _forumSettings;
         private readonly IForumService _forumService;
-        private readonly IOpenAuthenticationService _openAuthenticationService;
+        private readonly IOpenAuthenticationService _externalAuthenticationService;
         private readonly AddressSettings _addressSettings;
         private readonly IStoreService _storeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
@@ -134,8 +134,8 @@ namespace Nop.Admin.Controllers
             EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService, 
             ForumSettings forumSettings,
-            IForumService forumService, 
-            IOpenAuthenticationService openAuthenticationService,
+            IForumService forumService,
+            IOpenAuthenticationService externalAuthenticationService,
             AddressSettings addressSettings,
             IStoreService storeService,
             ICustomerAttributeParser customerAttributeParser,
@@ -179,7 +179,7 @@ namespace Nop.Admin.Controllers
             this._emailAccountService = emailAccountService;
             this._forumSettings = forumSettings;
             this._forumService = forumService;
-            this._openAuthenticationService = openAuthenticationService;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._addressSettings = addressSettings;
             this._storeService = storeService;
             this._customerAttributeParser = customerAttributeParser;
@@ -246,9 +246,9 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("customer");
 
             var result = new List<CustomerModel.AssociatedExternalAuthModel>();
-            foreach (var record in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var method = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
+                var method = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
                 if (method == null)
                     continue;
 

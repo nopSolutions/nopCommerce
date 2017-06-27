@@ -18,6 +18,7 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
+            services.AddNopAuthentication();
         }
 
         /// <summary>

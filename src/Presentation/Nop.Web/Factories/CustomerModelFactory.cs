@@ -57,7 +57,7 @@ namespace Nop.Web.Factories
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOpenAuthenticationService _openAuthenticationService;
+        private readonly IOpenAuthenticationService _externalAuthenticationService;
         private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
 
@@ -93,7 +93,7 @@ namespace Nop.Web.Factories
             IOrderService orderService,
             IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IOpenAuthenticationService openAuthenticationService,
+            IOpenAuthenticationService externalAuthenticationService,
             IDownloadService downloadService,
             IReturnRequestService returnRequestService,
             MediaSettings mediaSettings,
@@ -124,7 +124,7 @@ namespace Nop.Web.Factories
             this._orderService = orderService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._openAuthenticationService = openAuthenticationService;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._downloadService = downloadService;
             this._returnRequestService = returnRequestService;
             this._mediaSettings = mediaSettings;
@@ -371,11 +371,11 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
-            model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
+            model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
-            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            foreach (var ear in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 

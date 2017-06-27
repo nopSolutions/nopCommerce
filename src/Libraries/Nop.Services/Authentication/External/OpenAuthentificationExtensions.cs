@@ -4,12 +4,17 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
-    /// Open authentication extensions
+    /// Extensions of external authentication method 
     /// </summary>
     public static class OpenAuthenticationExtensions
     {
-        public static bool IsMethodActive(this IExternalAuthenticationMethod method,
-            ExternalAuthenticationSettings settings)
+        /// <summary>
+        /// Check whether external authentication method is active
+        /// </summary>
+        /// <param name="method">External authentication method</param>
+        /// <param name="settings">External authentication settings</param>
+        /// <returns>True if method is active; otherwise false</returns>
+        public static bool IsMethodActive(this IExternalAuthenticationMethod method, ExternalAuthenticationSettings settings)
         {
             if (method == null)
                 throw new ArgumentNullException("method");
@@ -19,9 +24,11 @@ namespace Nop.Services.Authentication.External
 
             if (settings.ActiveAuthenticationMethodSystemNames == null)
                 return false;
+
             foreach (string activeMethodSystemName in settings.ActiveAuthenticationMethodSystemNames)
                 if (method.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
+
             return false;
         }
     }

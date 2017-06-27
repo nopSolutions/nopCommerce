@@ -18,7 +18,7 @@ namespace Nop.Admin.Controllers
 	{
 		#region Fields
 
-        private readonly IOpenAuthenticationService _openAuthenticationService;
+        private readonly IOpenAuthenticationService _externalAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
@@ -28,13 +28,13 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService, 
+        public ExternalAuthenticationController(IOpenAuthenticationService externalAuthenticationService, 
             ExternalAuthenticationSettings externalAuthenticationSettings,
             ISettingService settingService,
             IPermissionService permissionService,
             IPluginFinder pluginFinder)
 		{
-            this._openAuthenticationService = openAuthenticationService;
+            this._externalAuthenticationService = externalAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
@@ -60,7 +60,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedKendoGridJson();
 
             var methodsModel = new List<AuthenticationMethodModel>();
-            var methods = _openAuthenticationService.LoadAllExternalAuthenticationMethods();
+            var methods = _externalAuthenticationService.LoadAllExternalAuthenticationMethods();
             foreach (var method in methods)
             {
                 var tmp1 = method.ToModel();
@@ -83,7 +83,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var eam = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(model.SystemName);
+            var eam = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(model.SystemName);
             if (eam.IsMethodActive(_externalAuthenticationSettings))
             {
                 if (!model.IsActive)
@@ -111,29 +111,20 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        #if NET451
-
         public virtual IActionResult ConfigureMethod(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var eam = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(systemName);
-            if (eam == null)
+            var authenticationMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(systemName);
+            if (authenticationMethod == null)
                 //No authentication method found with the specified id
                 return RedirectToAction("Methods");
 
-            var model = eam.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            eam.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = authenticationMethod.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
-
-        #endif
 
         #endregion
     }

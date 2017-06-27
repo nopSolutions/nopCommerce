@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.ExternalAuthentication
@@ -19,11 +16,5 @@ namespace Nop.Admin.Models.ExternalAuthentication
 
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive")]
         public bool IsActive { get; set; }
-
-
-
-        public string ConfigurationActionName { get; set; }
-        public string ConfigurationControllerName { get; set; }
-        public RouteValueDictionary ConfigurationRouteValues { get; set; }
     }
 }

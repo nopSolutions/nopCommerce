@@ -1,28 +1,17 @@
-using Microsoft.AspNetCore.Routing;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
-    /// Provides an interface for creating external authentication methods
+    /// Represents method for the external authentication
     /// </summary>
     public partial interface IExternalAuthenticationMethod : IPlugin
     {
         /// <summary>
-        /// Gets a route for plugin configuration
+        /// Gets a view component for displaying plugin in public store
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-        
-
-        /// <summary>
-        /// Gets a route for displaying plugin in public store
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetPublicInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+        /// <param name="viewComponentName">View component name</param>
+        /// <param name="viewComponentArguments">View component arguments</param>
+        void GetPublicViewComponent(out string viewComponentName, out object viewComponentArguments);
     }
 }

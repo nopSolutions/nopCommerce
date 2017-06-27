@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Services.Authentication;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
@@ -110,6 +111,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
+            });
+        }
+
+        /// <summary>
+        /// Adds authentication service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopAuthentication(this IServiceCollection services)
+        {
+            //set the authentication scheme corresponding to the default middleware
+            services.AddAuthentication(options =>
+            {
+                options.SignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
         }
 

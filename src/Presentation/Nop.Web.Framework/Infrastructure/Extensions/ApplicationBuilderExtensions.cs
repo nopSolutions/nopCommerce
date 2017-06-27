@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.Authentication;
 using Nop.Services.Security;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -128,13 +129,28 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseAuthentication(this IApplicationBuilder application)
         {
-            //enable cookie authentication
+            //enable main cookie authentication
             application.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationScheme = "NopCookie",
+                AuthenticationScheme = NopCookieAuthenticationDefaults.AuthenticationScheme,
+                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme,
+                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
+                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
                 CookieHttpOnly = true,
-                LoginPath = new PathString("/login/"),
-                AutomaticChallenge = true 
+                AutomaticAuthenticate = false,
+                AutomaticChallenge = true
+            });
+
+            //enable external authentication
+            application.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
+                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
+                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
+                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
+                CookieHttpOnly = true,
+                AutomaticAuthenticate = false,
+                AutomaticChallenge = false
             });
         }
 

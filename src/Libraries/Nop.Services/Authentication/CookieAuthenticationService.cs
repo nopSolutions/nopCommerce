@@ -45,18 +45,19 @@ namespace Nop.Services.Authentication
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
         public virtual void SignIn(Customer customer, bool isPersistent)
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Authentication == null)
+            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            if (authenticationManager == null)
                 return;
 
             //create claims for username and email of the customer
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, "nopCommerce"),
-                new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, "nopCommerce")
+                new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, NopCookieAuthenticationDefaults.ClaimsIssuer),
+                new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopCookieAuthenticationDefaults.ClaimsIssuer)
             };
 
             //create principal for the current authentication scheme
-            var userIdentity = new ClaimsIdentity(claims, "NopCookie");
+            var userIdentity = new ClaimsIdentity(claims, NopCookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = new ClaimsPrincipal(userIdentity);
 
             //set value indicating whether session is persisted and the time at which the authentication was issued
@@ -67,7 +68,7 @@ namespace Nop.Services.Authentication
             };
 
             //sign in
-            var signInTask = _httpContextAccessor.HttpContext.Authentication.SignInAsync("NopCookie", userPrincipal, authenticationProperties);
+            var signInTask = authenticationManager.SignInAsync(NopCookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
             signInTask.Wait();
 
             //cache authenticated customer
@@ -79,14 +80,15 @@ namespace Nop.Services.Authentication
         /// </summary>
         public virtual void SignOut()
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Authentication == null)
+            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            if (authenticationManager == null)
                 return;
 
             //reset cached customer
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            var signOutTask = _httpContextAccessor.HttpContext.Authentication.SignOutAsync("NopCookie");
+            var signOutTask = authenticationManager.SignOutAsync(NopCookieAuthenticationDefaults.AuthenticationScheme);
             signOutTask.Wait();
         }
 
@@ -100,41 +102,33 @@ namespace Nop.Services.Authentication
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null || httpContext.User == null || httpContext.User.Identities == null)
+            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            if (authenticationManager == null)
                 return null;
 
-            //try to get identity for the nop authentication scheme
-            var nopIdentity = httpContext.User.Identities.FirstOrDefault(identity =>
-                identity.IsAuthenticated && !string.IsNullOrEmpty(identity.AuthenticationType) &&
-                identity.AuthenticationType.Equals("NopCookie", StringComparison.InvariantCultureIgnoreCase));
-
-            //whether there is authenticated identity
-            if (nopIdentity == null)
+            //try to get authenticated user identity
+            var authenticateTask = authenticationManager.AuthenticateAsync(NopCookieAuthenticationDefaults.AuthenticationScheme);
+            var userPrincipal = authenticateTask.Result;
+            var userIdentity = userPrincipal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
+            if (userIdentity == null)
                 return null;
 
             Customer customer = null;
             if (_customerSettings.UsernamesEnabled)
             {
-                //try to get claim with username
-                var usernameClaim = nopIdentity.Claims.FirstOrDefault(claim =>
-                    claim.Type == ClaimTypes.Name && claim.Issuer.Equals("nopCommerce", StringComparison.InvariantCultureIgnoreCase));
-                if (usernameClaim == null)
-                    return null;
-
-                //get customer by username
-                customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
+                //try to get customer by username
+                var usernameClaim = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Name
+                    && claim.Issuer.Equals(NopCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                if (usernameClaim != null)
+                    customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
             }
             else
             {
-                //try to get claim with email
-                var emailClaim = nopIdentity.Claims.FirstOrDefault(claim =>
-                    claim.Type == ClaimTypes.Email && claim.Issuer.Equals("nopCommerce", StringComparison.InvariantCultureIgnoreCase));
-                if (emailClaim == null)
-                    return null;
-
-                //get customer by email
-                customer = _customerService.GetCustomerByEmail(emailClaim.Value);
+                //try to get customer by email
+                var emailClaim = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Email 
+                    && claim.Issuer.Equals(NopCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
+                if (emailClaim != null)
+                    customer = _customerService.GetCustomerByEmail(emailClaim.Value);
             }
 
             //whether the found customer is available
