@@ -22,7 +22,7 @@ namespace Nop.Services.Authentication.External
     /// <summary>
     /// Represents external authentication service implementation
     /// </summary>
-    public partial class OpenAuthenticationService : IOpenAuthenticationService
+    public partial class ExternalAuthenticationService : IExternalAuthenticationService
     {
         #region Fields
 
@@ -48,7 +48,7 @@ namespace Nop.Services.Authentication.External
 
         #region Ctor
 
-        public OpenAuthenticationService(CustomerSettings customerSettings,
+        public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IAuthenticationService authenticationService,
             ICustomerActivityService customerActivityService,
@@ -118,7 +118,7 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult AuthenticateNewUser(Customer currentLoggedInUser, OpenAuthenticationParameters parameters, string returnUrl)
+        protected virtual IActionResult AuthenticateNewUser(Customer currentLoggedInUser, ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //associate external account with logged-in user
             if (currentLoggedInUser != null)
@@ -142,7 +142,7 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">Authentication parameters received from external authentication method</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult RegisterNewUser(OpenAuthenticationParameters parameters, string returnUrl)
+        protected virtual IActionResult RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
             //if auto registration is disabled redirect to login page
             //TODO remove this setting
@@ -330,7 +330,7 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">External authentication parameters</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        public virtual IActionResult Authenticate(OpenAuthenticationParameters parameters, string returnUrl = null)
+        public virtual IActionResult Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
@@ -358,7 +358,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
-        public virtual void AssociateExternalAccountWithUser(Customer customer, OpenAuthenticationParameters parameters)
+        public virtual void AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -381,7 +381,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
         /// <returns>Customer</returns>
-        public virtual Customer GetUserByExternalAuthenticationParameters(OpenAuthenticationParameters parameters)
+        public virtual Customer GetUserByExternalAuthenticationParameters(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
@@ -398,7 +398,7 @@ namespace Nop.Services.Authentication.External
         /// Remove the association
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
-        public virtual void RemoveAssociation(OpenAuthenticationParameters parameters)
+        public virtual void RemoveAssociation(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");

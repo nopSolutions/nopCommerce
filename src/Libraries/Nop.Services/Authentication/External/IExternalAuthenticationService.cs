@@ -7,7 +7,7 @@ namespace Nop.Services.Authentication.External
     /// <summary>
     /// External authentication service
     /// </summary>
-    public partial interface IOpenAuthenticationService
+    public partial interface IExternalAuthenticationService
     {
         #region External authentication methods
 
@@ -51,7 +51,7 @@ namespace Nop.Services.Authentication.External
         /// <param name="parameters">External authentication parameters</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        IActionResult Authenticate(OpenAuthenticationParameters parameters, string returnUrl = null);
+        IActionResult Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null);
 
         #endregion
 
@@ -60,20 +60,20 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
-        void AssociateExternalAccountWithUser(Customer customer, OpenAuthenticationParameters parameters);
+        void AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters);
 
         /// <summary>
         /// Get the particular user with specified parameters
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
         /// <returns>Customer</returns>
-        Customer GetUserByExternalAuthenticationParameters(OpenAuthenticationParameters parameters);
+        Customer GetUserByExternalAuthenticationParameters(ExternalAuthenticationParameters parameters);
 
         /// <summary>
         /// Remove the association
         /// </summary>
         /// <param name="parameters">External authentication parameters</param>
-        void RemoveAssociation(OpenAuthenticationParameters parameters);
+        void RemoveAssociation(ExternalAuthenticationParameters parameters);
 
         /// <summary>
         /// Delete the external authentication record

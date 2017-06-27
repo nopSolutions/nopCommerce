@@ -26,15 +26,15 @@ namespace Nop.Services.Authentication.External
 
         #region Methods
 
-        public static void StoreParametersForRoundTrip(OpenAuthenticationParameters parameters)
+        public static void StoreParametersForRoundTrip(ExternalAuthenticationParameters parameters)
         {
             EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Set(EXTERNAL_AUTHENTICATION_PARAMETERS, parameters);
         }
 
-        public static OpenAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
+        public static ExternalAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
         {
             var parameters = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?
-                .Get<OpenAuthenticationParameters>(EXTERNAL_AUTHENTICATION_PARAMETERS);
+                .Get<ExternalAuthenticationParameters>(EXTERNAL_AUTHENTICATION_PARAMETERS);
 
             if (parameters != null && removeOnRetrieval)
                 RemoveParameters();

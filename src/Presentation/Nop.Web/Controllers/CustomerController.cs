@@ -68,7 +68,7 @@ namespace Nop.Web.Controllers
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IOpenAuthenticationService _externalAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressAttributeParser _addressAttributeParser;
@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IShoppingCartService shoppingCartService,
-            IOpenAuthenticationService externalAuthenticationService,
+            IExternalAuthenticationService externalAuthenticationService,
             IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
             IAddressAttributeParser addressAttributeParser,

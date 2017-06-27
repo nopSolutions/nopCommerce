@@ -13,7 +13,7 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly IOpenAuthenticationService _externalAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
@@ -21,7 +21,7 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public ExternalAuthenticationModelFactory(IOpenAuthenticationService externalAuthenticationService,
+        public ExternalAuthenticationModelFactory(IExternalAuthenticationService externalAuthenticationService,
             IStoreContext storeContext,
             IWorkContext workContext)
         {

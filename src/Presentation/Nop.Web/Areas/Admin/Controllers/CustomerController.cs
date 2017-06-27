@@ -87,7 +87,7 @@ namespace Nop.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly ForumSettings _forumSettings;
         private readonly IForumService _forumService;
-        private readonly IOpenAuthenticationService _externalAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly AddressSettings _addressSettings;
         private readonly IStoreService _storeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
@@ -135,7 +135,7 @@ namespace Nop.Admin.Controllers
             IEmailAccountService emailAccountService, 
             ForumSettings forumSettings,
             IForumService forumService,
-            IOpenAuthenticationService externalAuthenticationService,
+            IExternalAuthenticationService externalAuthenticationService,
             AddressSettings addressSettings,
             IStoreService storeService,
             ICustomerAttributeParser customerAttributeParser,

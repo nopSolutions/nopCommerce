@@ -18,7 +18,7 @@ namespace Nop.Admin.Controllers
 	{
 		#region Fields
 
-        private readonly IOpenAuthenticationService _externalAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
@@ -28,7 +28,7 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public ExternalAuthenticationController(IOpenAuthenticationService externalAuthenticationService, 
+        public ExternalAuthenticationController(IExternalAuthenticationService externalAuthenticationService, 
             ExternalAuthenticationSettings externalAuthenticationSettings,
             ISettingService settingService,
             IPermissionService permissionService,

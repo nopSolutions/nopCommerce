@@ -57,7 +57,7 @@ namespace Nop.Web.Factories
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IOpenAuthenticationService _externalAuthenticationService;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IDownloadService _downloadService;
         private readonly IReturnRequestService _returnRequestService;
 
@@ -93,7 +93,7 @@ namespace Nop.Web.Factories
             IOrderService orderService,
             IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IOpenAuthenticationService externalAuthenticationService,
+            IExternalAuthenticationService externalAuthenticationService,
             IDownloadService downloadService,
             IReturnRequestService returnRequestService,
             MediaSettings mediaSettings,
