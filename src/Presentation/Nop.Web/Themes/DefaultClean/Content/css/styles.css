@@ -250,6 +250,7 @@ label, label + * {
 	margin: 0 0 15px;
 	text-align: center;
 	white-space: nowrap; /*fix for 'required' elements*/
+    font-size: 0;
 }
 .inputs:after {
 	content: "";
@@ -261,6 +262,7 @@ label, label + * {
 	width: 100%;
 	margin: 0 0 10px;
 	text-align: center;
+    font-size: 14px; /*reset zeroing*/
 	color: #444;
 }
 .inputs input[type="text"],
@@ -2774,8 +2776,7 @@ label, label + * {
 
 
 .gender {
-    display: inline-block;
-    margin-left: 10px;
+	display: inline-block;
 }
 .gender span {
 	display: inline-block;
@@ -4730,7 +4731,7 @@ label, label + * {
 .forum-edit-page .inputs strong {
 	display: inline-block;
 	max-width: 400px;
-	font-size: 22px;
+	font-size: 22px; /*reset zeroing*/
 	font-weight: normal;
 	color: #444;
 	white-space: normal;
@@ -6019,18 +6020,13 @@ pre {
 .inputs label {
 	display: inline-block;
 	width: 265px;
-	margin: 0;
+	margin: 0 10px 0 0;
 	text-align: right;
 }
 .inputs input[type="text"],
 .inputs input[type="password"],
 .inputs select {
 	min-height: 40px;
-}
-.inputs label + input,
-.inputs label + textarea,
-.inputs label + select {
-    margin-left: 10px;
 }
 .inputs .option-list li {
 	margin: 0 10px 0 0;
