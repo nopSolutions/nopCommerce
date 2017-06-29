@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
@@ -39,18 +40,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //database is already installed, so start scheduled tasks
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
-#if NET451
-                try
-                {
-                    //TODO why try-catch? test and remove
-                    //and log application start
-                    EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
-                }
-                catch (Exception exc)
-                {
-                    
-                }
-#endif
+
+                //log application start
+                EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
             }
 
             return serviceProvider;
