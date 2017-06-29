@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Plugins\Bin\" />
-    <Folder Include="Plugins\Bin\" />
   </ItemGroup>
 
 </Project>
