@@ -1,13 +1,13 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Web;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -61,6 +61,7 @@ namespace Nop.Admin.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMaintenanceService _maintenanceService;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
 
         #endregion
@@ -88,7 +89,8 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             CatalogSettings catalogSettings,
             IHttpContextAccessor httpContextAccessor,
-            IMaintenanceService maintenanceService, 
+            IMaintenanceService maintenanceService,
+            IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager)
         {
             this._paymentService = paymentService;
@@ -113,6 +115,7 @@ namespace Nop.Admin.Controllers
             this._catalogSettings = catalogSettings;
             this._httpContextAccessor = httpContextAccessor;
             this._maintenanceService = maintenanceService;
+            this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;
         }
 
@@ -546,7 +549,7 @@ namespace Nop.Admin.Controllers
 
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            string path = CommonHelper.MapPath("~/wwwroot/files/exportimport");
+            string path = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport");
             foreach (var fullPath in Directory.GetFiles(path))
             {
                 try

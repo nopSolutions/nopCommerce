@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
@@ -41,7 +42,8 @@ namespace Nop.Services.Media
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             NopConfig config,
-            IDataProvider dataProvider)
+            IDataProvider dataProvider,
+            IHostingEnvironment hostingEnvironment)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
@@ -50,7 +52,8 @@ namespace Nop.Services.Media
                 dbContext,
                 eventPublisher,
                 mediaSettings,
-                dataProvider)
+                dataProvider,
+                hostingEnvironment)
         {
             this._mediaSettings = mediaSettings;
             this._config = config;

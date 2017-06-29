@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using ImageResizer;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -39,6 +40,7 @@ namespace Nop.Services.Media
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly IDataProvider _dataProvider;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -56,6 +58,7 @@ namespace Nop.Services.Media
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         /// <param name="dataProvider">Data provider</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
@@ -64,7 +67,8 @@ namespace Nop.Services.Media
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
-            IDataProvider dataProvider)
+            IDataProvider dataProvider,
+            IHostingEnvironment hostingEnvironment)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
@@ -75,6 +79,7 @@ namespace Nop.Services.Media
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._dataProvider = dataProvider;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -217,8 +222,7 @@ namespace Nop.Services.Media
         protected virtual void DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
-            //TODO do not hardcode wwwroot
-            var thumbDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
+            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -234,8 +238,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            //TODO do not hardcode wwwroot
-            var thumbsDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -289,7 +292,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
-            return Path.Combine(CommonHelper.MapPath("~/wwwroot/images/"), fileName);
+            return Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
         }
 
         /// <summary>
@@ -330,7 +333,7 @@ namespace Nop.Services.Media
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //ensure \thumb directory exists
-            var thumbsDirectoryPath = CommonHelper.MapPath("~/wwwroot/images/thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             if (!System.IO.Directory.Exists(thumbsDirectoryPath))
                 System.IO.Directory.CreateDirectory(thumbsDirectoryPath);
 

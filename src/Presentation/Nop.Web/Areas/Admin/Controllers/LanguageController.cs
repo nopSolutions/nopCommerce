@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,6 +34,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -44,7 +46,8 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService,
+            IHostingEnvironment hostingEnvironment)
         {
             this._localizationService = localizationService;
             this._languageService = languageService;
@@ -53,6 +56,7 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -322,7 +326,7 @@ namespace Nop.Admin.Controllers
                 return Json("Access denied");
 
             var flagNames = Directory
-                .EnumerateFiles(CommonHelper.MapPath("~/wwwroot/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(Path.Combine(_hostingEnvironment.WebRootPath, "images\\flags"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
 

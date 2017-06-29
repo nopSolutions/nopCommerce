@@ -51,7 +51,7 @@ namespace Nop.Services.Common
 
         protected virtual string GetBackupDirectoryPath()
         {
-            return CommonHelper.MapPath("~/wwwroot/db_backups/");
+            return Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
         }
 
         protected virtual void CheckBackupSupported()
