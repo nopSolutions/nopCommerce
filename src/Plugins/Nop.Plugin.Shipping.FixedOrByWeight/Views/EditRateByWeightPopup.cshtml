@@ -16,7 +16,7 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @Html.Partial("~/Plugins/Shipping.FixedOrByWeight/Views/_CreateOrUpdateRateByWeight.cshtml", Model)
+            @await Html.PartialAsync("~/Plugins/Shipping.FixedOrByWeight/Views/_CreateOrUpdateRateByWeight.cshtml", Model)
         </div>
     </div>
 }

@@ -270,7 +270,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-#if NET451
 
         public virtual IActionResult ConfigurePickupPointProvider(string systemName)
         {
@@ -279,20 +278,13 @@ namespace Nop.Admin.Controllers
 
             var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(systemName);
             if (pickupPointProvider == null)
+                //No shipping rate computation method found with the specified id
                 return RedirectToAction("PickupPointProviders");
 
-            var model = pickupPointProvider.ToModel();
-            string actionName;
-            string controllerName;
-            RouteValueDictionary routeValues;
-            pickupPointProvider.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
+            var url = pickupPointProvider.GetConfigurationPageUrl();
+            //TODO implement logic when configuration page is not required
+            return Redirect(url);
         }
-
-#endif
 
 #endregion
 

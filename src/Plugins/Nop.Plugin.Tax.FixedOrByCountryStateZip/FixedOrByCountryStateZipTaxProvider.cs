@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
@@ -24,13 +23,15 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
+        private readonly IWebHelper _webHelper;
 
         public FixedOrByCountryStateZipTaxProvider(ICountryStateZipService taxRateService,
             IStoreContext storeContext,
             CountryStateZipObjectContext objectContext,
             ICacheManager cacheManager,
             ISettingService settingService,
-            FixedOrByCountryStateZipTaxSettings countryStateZipSettings)
+            FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
+            IWebHelper webHelper)
         {
             this._taxRateService = taxRateService;
             this._storeContext = storeContext;
@@ -38,6 +39,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             this._cacheManager = cacheManager;
             this._settingService = settingService;
             this._countryStateZipSettings = countryStateZipSettings;
+            this._webHelper = webHelper;
         }
 
         /// <summary>
@@ -129,16 +131,11 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         }
       
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "FixedOrByCountryStateZip";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/FixedOrByCountryStateZip/Configure";
         }
 
         /// <summary>
