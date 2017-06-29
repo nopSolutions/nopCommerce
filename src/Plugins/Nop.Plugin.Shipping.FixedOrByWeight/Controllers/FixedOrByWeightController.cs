@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -73,16 +74,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             this._webHelper = webHelper;
         }
 
-#if NET451
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            //little hack here
-            //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-            CommonHelper.SetTelerikCulture();
-
-            base.Initialize(requestContext);
-        }
-#endif
         public IActionResult Configure()
         {
             var model = new ConfigurationModel

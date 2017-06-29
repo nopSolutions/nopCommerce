@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Models;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
@@ -48,19 +50,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             this._settingService = settingService;
             this._countryStateZipSettings = countryStateZipSettings;
         }
-
-        #if NET451
-
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            //little hack here
-            //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-            CommonHelper.SetTelerikCulture();
-
-            base.Initialize(requestContext);
-        }
-
-        #endif
 
         public IActionResult Configure()
         {
