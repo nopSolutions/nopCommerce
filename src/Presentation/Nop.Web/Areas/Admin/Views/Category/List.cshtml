@@ -11,7 +11,7 @@
     Html.SetActiveMenuItemSystemName("Categories");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Categories.Manage")
@@ -61,18 +61,18 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchCategoryName)
+                                    <nop-label asp-for="SearchCategoryName" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchCategoryName)
+                                    <nop-editor asp-for="SearchCategoryName" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                    <nop-label asp-for="SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -166,7 +166,7 @@
                                 return false;
                             });
 
-                            $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function(event) {
+                            $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function(event) {
                                 if (event.keyCode == 13) {
                                     $("#search-categories").click();
                                     return false;
@@ -176,7 +176,7 @@
 
                         function additionalData() {
                             var data = {
-                                SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val(),
+                                SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val(),
                                 SearchStoreId: $('#SearchStoreId').val()
                             };
                             addAntiForgeryToken(data);
@@ -197,11 +197,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
             </div>
-            @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
+            <form asp-controller="Category" asp-action="ImportFromXlsx" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        @Html.AntiForgeryToken()
                         <ul class="common-list">
                             <li>
                                 <em>@T("Admin.Catalog.Categories.List.ImportFromExcelTip")</em>
@@ -229,7 +227,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>

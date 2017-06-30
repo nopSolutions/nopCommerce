@@ -1,6 +1,5 @@
 ﻿@model Int32?
-
-@Html.TextBoxFor(model => model)
+<input asp-for="@Model" />
 @{
     var postfix = "";
     if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)

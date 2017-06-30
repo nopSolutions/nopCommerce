@@ -93,13 +93,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
         
         //store mapping
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
@@ -109,7 +107,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         //discounts
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Discounts")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }
 

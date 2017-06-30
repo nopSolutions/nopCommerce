@@ -1,5 +1,5 @@
 ﻿@model List<int>
-@Html.ListBoxFor(model => model, (IEnumerable<SelectListItem>)ViewData["SelectList"])
+<select asp-for="@Model" asp-items="@((IEnumerable<SelectListItem>)ViewData["SelectList"])"></select>
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoMultiSelect({

@@ -75,21 +75,21 @@
             @if (allowJavaScript)
             {
                 <text>
-            valid_elements: "*[*]",
+                    valid_elements: "*[*]",
                 </text>
             }
             @if (allowRoxyFileman)
             {
                 <text>
-            //picture manager
-            file_browser_callback: RoxyFileBrowser@(random),
+                    //picture manager
+                    file_browser_callback: RoxyFileBrowser@(random),
                 </text>
             }
             @if (!string.IsNullOrEmpty(language))
             {
                 <text>
-            //language
-            language: "@language",
+                    //language
+                    language: "@language",
                 </text>
             }
             //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
@@ -109,6 +109,4 @@
     });
 </script>
 
-@Html.TextArea(string.Empty, /* Name suffix */
-    ViewData.TemplateInfo.FormattedModelValue /* Initial value */
-)
+<textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
