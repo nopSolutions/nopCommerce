@@ -9,7 +9,7 @@
 
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
-    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", true);
+    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
 
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();

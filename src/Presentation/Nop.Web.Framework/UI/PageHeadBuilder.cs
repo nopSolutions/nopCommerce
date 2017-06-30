@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
 using System.Text;
+using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {
@@ -15,9 +21,12 @@ namespace Nop.Web.Framework.UI
     public partial class PageHeadBuilder : IPageHeadBuilder
     {
         #region Fields
-        
+
+        private static readonly object s_lock = new object();
+
         private readonly SeoSettings _seoSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -43,6 +52,7 @@ namespace Nop.Web.Framework.UI
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
+            this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
@@ -55,7 +65,37 @@ namespace Nop.Web.Framework.UI
         }
 
         #endregion
-        
+
+        #region Utilities
+
+        protected virtual string GetBundleFileName(string[] parts)
+        {
+            if (parts == null || parts.Length == 0)
+                throw new ArgumentException("parts");
+
+            //calculate hash
+            var hash = "";
+            using (SHA256 sha = new SHA256Managed())
+            {
+                // string concatenation
+                var hashInput = "";
+                foreach (var part in parts)
+                {
+                    hashInput += part;
+                    hashInput += ",";
+                }
+
+                byte[] input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+                hash = WebEncoders.Base64UrlEncode(input);
+            }
+            //ensure only valid chars
+            hash = SeoExtensions.GetSeName(hash);
+            
+            return hash;
+        }
+
+        #endregion
+
         #region Methods
 
         public virtual void AddTitleParts(string part)
@@ -194,8 +234,6 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
-        
-
         public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
@@ -206,15 +244,11 @@ namespace Nop.Web.Framework.UI
 
             var debugModel = _hostingEnvironment.IsDevelopment();
             
-            #if NET451
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableJsBundling && BundleTable.EnableOptimizations;
+                bundleFiles = _seoSettings.EnableJsBundling;
             }
-            #else
-            bundleFiles = false;
-            #endif
 
             if (bundleFiles.Value)
             {
@@ -227,14 +261,47 @@ namespace Nop.Web.Framework.UI
                     .Distinct()
                     .ToArray();
 
-
                 var result = new StringBuilder();
+
                 //parts to  bundle
-                //TODO implement bundling
-                foreach (var item in partsToBundle)
+                if (partsToBundle.Any())
                 {
-                    var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), MimeTypes.TextJavascript, item.IsAsync ? "async " : "");
+
+                    var bundle = new Bundle();
+                    foreach (var item in partsToBundle)
+                    {
+                        var src = debugModel ? item.DebugSrc : item.Src;
+                        src = urlHelper.Content(src);
+                        //check whether this file exists. 
+                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        if (File.Exists(srcPath))
+                        {
+                            //remove starting /
+                            src = src.Remove(0, 1);
+                        }
+                        else
+                        {
+                            //if not, it should be stored into /wwwroot directory
+                            src = "wwwroot/" + src;
+                        }
+                        bundle.InputFiles.Add(src);
+                    }
+                    //output file
+                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+                    bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
+                    //save
+                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    bundle.FileName = configFilePath;
+                    lock (s_lock)
+                    {
+                        //store json file to see a generated config file (for debugging purposes)
+                        //BundleHandler.AddBundle(configFilePath, bundle);
+
+                        //process
+                        _processor.Process(configFilePath, new List<Bundle> {bundle});
+                    }
+                    //render
+                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), MimeTypes.TextJavascript);
                     result.Append(Environment.NewLine);
                 }
 
@@ -298,7 +365,6 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
- 
         public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
@@ -309,16 +375,12 @@ namespace Nop.Web.Framework.UI
 
 
             var debugModel = _hostingEnvironment.IsDevelopment();
-
-#if NET451
+            
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableCssBundling && BundleTable.EnableOptimizations;
+                bundleFiles = _seoSettings.EnableCssBundling;
             }
-#else
-            bundleFiles = false;
-#endif
 
             if (bundleFiles.Value)
             {
@@ -331,8 +393,50 @@ namespace Nop.Web.Framework.UI
                     .Distinct()
                     .ToArray();
 
-
                 var result = new StringBuilder();
+
+
+                //parts to  bundle
+                if (partsToBundle.Any())
+                {
+
+                    var bundle = new Bundle();
+                    foreach (var item in partsToBundle)
+                    {
+                        var src = debugModel ? item.DebugSrc : item.Src;
+                        src = urlHelper.Content(src);
+                        //check whether this file exists 
+                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        if (File.Exists(srcPath))
+                        {
+                            //remove starting /
+                            src = src.Remove(0, 1);
+                        }
+                        else
+                        {
+                            //if not, it should be stored into /wwwroot directory
+                            src = "wwwroot/" + src;
+                        }
+                        bundle.InputFiles.Add(src);
+                    }
+                    //output file
+                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+                    bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
+                    //save
+                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    bundle.FileName = configFilePath;
+                    lock (s_lock)
+                    {
+                        //store json file to see a generated config file (for debugging purposes)
+                        //BundleHandler.AddBundle(configFilePath, bundle);
+
+                        //process
+                        _processor.Process(configFilePath, new List<Bundle> { bundle });
+                    }
+                    //render
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), MimeTypes.TextCss);
+                    result.Append(Environment.NewLine);
+                }
 
                 //parts not to bundle
                 foreach (var item in partsToDontBundle)
