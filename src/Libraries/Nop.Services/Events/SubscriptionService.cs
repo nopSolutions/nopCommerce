@@ -16,7 +16,15 @@ namespace Nop.Services.Events
         /// <returns>Event consumers</returns>
         public IList<IConsumer<T>> GetSubscriptions<T>()
         {
-            return EngineContext.Current.ResolveAll<IConsumer<T>>().ToList();
+            var typeFinder = EngineContext.Current.Resolve<ITypeFinder>();
+            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<T>)).ToList();
+            var result = new List<IConsumer<T>>();
+            foreach (var c in consumers)
+            {
+                var inst = EngineContext.Current.ResolveUnregistered(c) as IConsumer<T>;
+                result.Add(inst);
+            }
+            return result;
         }
     }
 }

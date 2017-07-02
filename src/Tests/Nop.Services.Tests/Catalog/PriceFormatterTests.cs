@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Autofac;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;

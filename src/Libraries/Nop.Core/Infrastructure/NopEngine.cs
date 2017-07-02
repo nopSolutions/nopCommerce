@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,20 +61,18 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Register dependencies using Autofac
+        /// Register dependencies
         /// </summary>
         /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual IServiceProvider RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
+        protected virtual void RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
         {
-            var containerBuilder = new ContainerBuilder();
-
             //register engine
-            containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+            services.AddSingleton<IEngine>(this);
 
             //register type finder
-            containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+            services.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
@@ -89,14 +85,7 @@ namespace Nop.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfiguration);
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
-
-            //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-            return _serviceProvider;
+                dependencyRegistrar.Register(services, typeFinder, nopConfiguration);
         }
 
         /// <summary>
@@ -196,6 +185,7 @@ namespace Nop.Core.Infrastructure
             //register dependencies
             var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
             RegisterDependencies(nopConfig, services, typeFinder);
+            _serviceProvider = services.BuildServiceProvider();
 
             //run startup tasks
             if (!nopConfig.IgnoreStartupTasks)

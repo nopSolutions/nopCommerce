@@ -2,7 +2,6 @@
 #if NET451
 using System;
 using System.Collections.Generic;
-using Autofac;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;

@@ -36,7 +36,6 @@
     <Compile Include="Components\WidgetsNivoSliderViewComponent.cs" />
     <Compile Include="Controllers\WidgetsNivoSliderController.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
-    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="NivoSliderPlugin.cs" />
     <Compile Include="NivoSliderSettings.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
@@ -169,10 +168,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.6.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.4.6.0\lib\net45\Autofac.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.AspNetCore.Mvc.Abstractions">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Mvc.Abstractions.1.1.3\lib\net451\Microsoft.AspNetCore.Mvc.Abstractions.dll</HintPath>
       <Private>False</Private>
