@@ -38,22 +38,14 @@
         });
     </script>
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <div class="page registration-page">
-        <div class="page-title">
-            <h1>@T("Account.Register")</h1>
-        </div>
-        <div class="page-body">
-            @{
-                var validationSummary = Html.ValidationSummary(true);
-            }
-            @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-            {
-                <div class="message-error">@validationSummary</div>
-            }
-            @*TODO @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")*@
+<div class="page registration-page">
+    <div class="page-title">
+        <h1>@T("Account.Register")</h1>
+    </div>
+    <div class="page-body">
+        @*TODO @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")*@
+        <form asp-controller="Customer" asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -76,60 +68,60 @@
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.FirstName, new { }, ":")
-                        @Html.EditorFor(model => model.FirstName)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.FirstName)
+                        <label asp-for="FirstName">@T("Account.Fields.FirstName"):</label>
+                        <input asp-for="FirstName" />
+                        <nop-required />
+                        <span asp-validation-for="FirstName"></span>
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.LastName, new { }, ":")
-                        @Html.EditorFor(model => model.LastName)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.LastName)
+                        <label asp-for="LastName">@T("Account.Fields.LastName"):</label>
+                        <input asp-for="LastName" />
+                        <nop-required />
+                        <span asp-validation-for="LastName"></span>
                     </div>
                     @if (Model.DateOfBirthEnabled)
                     {
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
                             @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                Html.FieldNameFor(x => x.DateOfBirthYear),
-                                DateTime.Now.Year - 110,
-                                DateTime.Now.Year,
-                                Model.DateOfBirthDay,
-                                Model.DateOfBirthMonth,
-                                Model.DateOfBirthYear)
+                            Html.FieldNameFor(x => x.DateOfBirthMonth),
+                            Html.FieldNameFor(x => x.DateOfBirthYear),
+                            DateTime.Now.Year - 110,
+                            DateTime.Now.Year,
+                            Model.DateOfBirthDay,
+                            Model.DateOfBirthMonth,
+                            Model.DateOfBirthYear)
                             @if (Model.DateOfBirthRequired)
                             {
                                 @Html.RequiredHint()
                             }
-                            @Html.ValidationMessageFor(model => model.DateOfBirthDay)
-                            @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
-                            @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                            <span asp-validation-for="DateOfBirthDay"></span>
+                            <span asp-validation-for="DateOfBirthMonth"></span>
+                            <span asp-validation-for="DateOfBirthYear"></span>
                         </div>
                     }
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Email, new { }, ":")
-                        @Html.EditorFor(model => model.Email)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.Email)
+                        <label asp-for="Email">@T("Account.Fields.Email"):</label>
+                        <input asp-for="Email" />
+                        <nop-required />
+                        <span asp-validation-for="Email"></span>
                     </div>
                     @if (Model.EnteringEmailTwice)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
-                            @Html.EditorFor(model => model.ConfirmEmail)
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
+                            <label asp-for="ConfirmEmail">@T("Account.Fields.ConfirmEmail"):</label>
+                            <input asp-for="ConfirmEmail" />
+                            <nop-required />
+                            <span asp-validation-for="ConfirmEmail"></span>
                         </div>
                     }
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Username, new { }, ":")
-                            @Html.EditorFor(model => model.Username)
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Username)
+                            <label asp-for="Username">@T("Account.Fields.Username"):</label>
+                            <input asp-for="Username" />
+                            <nop-required />
+                            <span asp-validation-for="Username"></span>
                             @if (Model.CheckUsernameAvailabilityEnabled)
                             {
                                 @await Html.PartialAsync("_CheckUsernameAvailability")
@@ -149,20 +141,20 @@
                         @if (Model.CompanyEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Company, new { }, ":")
-                                @Html.EditorFor(model => model.Company)
+                                <label asp-for="Company">@T("Account.Fields.Company"):</label>
+                                <input asp-for="Company" />
                                 @if (Model.CompanyRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.Company)
+                                <span asp-validation-for="Company"></span>
                             </div>
                         }
                         @if (Model.DisplayVatNumber)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.VatNumber, new { }, ":")
-                                @Html.EditorFor(model => model.VatNumber)
+                                <label asp-for="VatNumber">@T("Account.Fields.VatNumber"):</label>
+                                <input asp-for="VatNumber" />
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
                         }
@@ -170,7 +162,7 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled || Model.StreetAddress2Enabled || Model.ZipPostalCodeEnabled
-            || Model.CityEnabled || Model.CountryEnabled)
+             || Model.CityEnabled || Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -180,73 +172,73 @@
                         @if (Model.StreetAddressEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress, new { }, ":")
-                                @Html.EditorFor(model => model.StreetAddress)
+                                <label asp-for="StreetAddress">@T("Account.Fields.StreetAddress"):</label>
+                                <input asp-for="StreetAddress" />
                                 @if (Model.StreetAddressRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.StreetAddress)
+                                <span asp-validation-for="StreetAddress"></span>
                             </div>
                         }
                         @if (Model.StreetAddress2Enabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StreetAddress2, new { }, ":")
-                                @Html.EditorFor(model => model.StreetAddress2)
+                                <label asp-for="StreetAddress2">@T("Account.Fields.StreetAddress2"):</label>
+                                <input asp-for="StreetAddress2" />
                                 @if (Model.StreetAddress2Required)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.StreetAddress2)
+                                <span asp-validation-for="StreetAddress2"></span>
                             </div>
                         }
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
-                                @Html.EditorFor(model => model.ZipPostalCode)
+                                <label asp-for="ZipPostalCode">@T("Account.Fields.ZipPostalCode"):</label>
+                                <input asp-for="ZipPostalCode" />
                                 @if (Model.ZipPostalCodeRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                <span asp-validation-for="ZipPostalCode"></span>
                             </div>
                         }
                         @if (Model.CityEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.City, new { }, ":")
-                                @Html.EditorFor(model => model.City)
+                                <label asp-for="City">@T("Account.Fields.City"):</label>
+                                <input asp-for="City" />
                                 @if (Model.CityRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.City)
+                                <span asp-validation-for="City"></span>
                             </div>
                         }
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.CountryId, new { }, ":")
-                                @Html.DropDownList("CountryId", Model.AvailableCountries)
+                                <label asp-for="CountryId">@T("Account.Fields.Country"):</label>
+                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
                                 @if (Model.CountryRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.CountryId)
+                                <span asp-validation-for="CountryId"></span>
                             </div>
                         }
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
-                                @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                <label asp-for="StateProvinceId">@T("Account.Fields.StateProvince"):</label>
+                                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
                                 @if (Model.StateProvinceRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.StateProvinceId)
+                                <span asp-validation-for="StateProvinceId"></span>
                                 <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                             </div>
                         }
@@ -263,25 +255,25 @@
                         @if (Model.PhoneEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Phone, new { }, ":")
-                                @Html.EditorFor(model => model.Phone)
+                                <label asp-for="Phone">@T("Account.Fields.Phone"):</label>
+                                <input asp-for="Phone" />
                                 @if (Model.PhoneRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.Phone)
+                                <span asp-validation-for="Phone"></span>
                             </div>
                         }
                         @if (Model.FaxEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Fax, new { }, ":")
-                                @Html.EditorFor(model => model.Fax)
+                                <label asp-for="Fax">@T("Account.Fields.Fax"):</label>
+                                <input asp-for="Fax" />
                                 @if (Model.FaxRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
-                                @Html.ValidationMessageFor(model => model.Fax)
+                                <span asp-validation-for="Fax"></span>
                             </div>
                         }
                     </div>
@@ -297,9 +289,9 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Newsletter, new { }, ":")
-                                @Html.EditorFor(model => model.Newsletter)
-                                @Html.ValidationMessageFor(model => model.Newsletter)
+                                <label asp-for="Newsletter">@T("Account.Fields.Newsletter"):</label>
+                                <input asp-for="Newsletter" />
+                                <span asp-validation-for="Newsletter"></span>
                             </div>
                         }
                         @if (Model.CustomerAttributes.Count > 0)
@@ -319,9 +311,9 @@
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.TimeZoneId, new { }, ":")
-                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
-                                @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                <label asp-for="TimeZoneId">@T("Account.Fields.TimeZone"):</label>
+                                <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
+                                <span asp-validation-for="TimeZoneId"></span>
                             </div>
                         }
                     </div>
@@ -333,65 +325,70 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Password, new { }, ":")
-                        @Html.EditorFor(model => model.Password)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.Password)
-                    </div>
-                    <div class="inputs">
-                        @Html.LabelFor(model => model.ConfirmPassword, new { }, ":")
-                        @Html.EditorFor(model => model.ConfirmPassword)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
-                    </div>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <div class="captcha-box">
-                            @Html.Raw(Html.GenerateCaptcha())
+                        <div class="inputs">
+                            <label asp-for="Password">@T("Account.Fields.Password"):</label>
+                            <input asp-for="Password" />
+                            <nop-required />
+                            <span asp-validation-for="Password"></span>
                         </div>
-                    }
-                    @if (Model.HoneypotEnabled)
-                    {
-                        @Html.Raw(Html.GenerateHoneypotInput())
-                    }
+                        <div class="inputs">
+                            <label asp-for="ConfirmPassword">@T("Account.Fields.ConfirmPassword"):</label>
+                            <input asp-for="ConfirmPassword" />
+                            <nop-required />
+                            <span asp-validation-for="ConfirmPassword"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                        @if (Model.HoneypotEnabled)
+                        {
+                            @Html.Raw(Html.GenerateHoneypotInput())
+                        }
+                    </div>
                 </div>
-            </div>
-            @if (Model.AcceptPrivacyPolicyEnabled)
+                @if (Model.AcceptPrivacyPolicyEnabled)
             {
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#register-button').click(function () {
+                    <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#register-button').click(function() {
                             if ($('#accept-privacy-policy').is(':checked')) {
                                 //do some stuff
                                 return true;
-                            }
-                            else {
+                            } else {
                                 //just show validation errors, dont post
-                                alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                alert(
+                                    '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
                                 return false;
                             }
                         });
                     });
-                </script>
-                <div class="accept-privacy-policy">
-                    <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
-                    <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                    <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                    <script>
-                        $(document).ready(function() {
-                            $('#read-privacyinfo').on('click', function (e) {
-                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', '@T("Account.Fields.AcceptPrivacyPolicy")');
-                            });
-                        });
                     </script>
+                    <div class="accept-privacy-policy">
+                        <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
+                        <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
+                        <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                        <script>
+                        $(document).ready(function() {
+                            $('#read-privacyinfo').on('click',
+                                function(e) {
+                                    displayPopupContentFromUrl(
+                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "privacyinfo"})',
+                                        '@T("Account.Fields.AcceptPrivacyPolicy")');
+                                });
+                        });
+                        </script>
+                    </div>
+                }
+                <div class="buttons">
+                    <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
                 </div>
-            }
-            <div class="buttons">
-                <input type="submit" id="register-button" class="button-1 register-next-step-button" value="@T("Account.Register.Button")" name="register-button" />
+                @*TODO <div class="external-authentication">
+                        @Html.Action("ExternalMethods", "ExternalAuthentication")
+                    </div>*@
             </div>
-            @*TODO <div class="external-authentication">
-                @Html.Action("ExternalMethods", "ExternalAuthentication")
-            </div>*@
-        </div>
+        </form>
     </div>
-}
+</div>
