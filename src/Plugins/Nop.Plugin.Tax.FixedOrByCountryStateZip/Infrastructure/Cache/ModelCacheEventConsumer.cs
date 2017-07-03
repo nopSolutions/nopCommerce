@@ -28,17 +28,17 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         public const string TAXRATE_ALL_KEY = "Nop.plugins.tax.fixedorbycountrystateziptaxrate.all-{0}-{1}";
         public const string TAXRATE_PATTERN_KEY = "Nop.plugins.tax.fixedorbycountrystateziptaxrate.";
 
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly ICountryStateZipService _taxRateService;
         private readonly ISettingService _settingService;
 
-        public ModelCacheEventConsumer(ICountryStateZipService taxRateService, ISettingService settingService)
+        public ModelCacheEventConsumer(ICountryStateZipService taxRateService, 
+            ISettingService settingService, 
+            IStaticCacheManager cacheManager)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-
             this._taxRateService = taxRateService;
             this._settingService = settingService;
+            this._cacheManager = cacheManager;
         }
 
         //tax rates

@@ -22,15 +22,14 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         /// </remarks>
         public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivosrlider.pictureurl-{0}";
         public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivosrlider";
-
-        private readonly ICacheManager _cacheManager;
-
-        public ModelCacheEventConsumer()
+        
+        private readonly IStaticCacheManager _cacheManager;
+        
+        public ModelCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+            this._cacheManager = cacheManager;
         }
-
+        
         public void HandleEvent(EntityInserted<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);

@@ -20,7 +20,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         private readonly ICountryStateZipService _taxRateService;
         private readonly IStoreContext _storeContext;
         private readonly CountryStateZipObjectContext _objectContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
         private readonly IWebHelper _webHelper;
@@ -28,7 +28,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         public FixedOrByCountryStateZipTaxProvider(ICountryStateZipService taxRateService,
             IStoreContext storeContext,
             CountryStateZipObjectContext objectContext,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             ISettingService settingService,
             FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
             IWebHelper webHelper)

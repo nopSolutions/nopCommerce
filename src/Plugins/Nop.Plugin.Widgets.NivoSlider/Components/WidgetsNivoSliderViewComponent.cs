@@ -13,12 +13,14 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
     public class WidgetsNivoSliderViewComponent : ViewComponent
     {
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly IPictureService _pictureService;
 
-        public WidgetsNivoSliderViewComponent(IStoreContext storeContext, ICacheManager cacheManager, 
-            ISettingService settingService, IPictureService pictureService)
+        public WidgetsNivoSliderViewComponent(IStoreContext storeContext, 
+            IStaticCacheManager cacheManager, 
+            ISettingService settingService, 
+            IPictureService pictureService)
         {
             this._storeContext = storeContext;
             this._cacheManager = cacheManager;
@@ -67,7 +69,6 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             {
                 //little hack here. nulls aren't cacheable so set it to ""
                 var url = _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false) ?? "";
-
                 return url;
             });
         }
