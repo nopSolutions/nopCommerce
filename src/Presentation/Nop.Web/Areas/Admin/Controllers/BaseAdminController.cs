@@ -23,19 +23,6 @@ namespace Nop.Admin.Controllers
     [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
     {
-
-#if NET451
-        /// <summary>
-        /// On exception
-        /// </summary>
-        /// <param name="filterContext">Filter context</param>
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            if (filterContext.Exception != null)
-                LogException(filterContext.Exception);
-            base.OnException(filterContext);
-        }
-#endif
         /// <summary>
         /// Access denied view
         /// </summary>
