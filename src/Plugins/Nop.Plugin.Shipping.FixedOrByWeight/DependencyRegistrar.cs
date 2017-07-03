@@ -1,4 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -19,16 +20,21 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="services">Services</param>
+        /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
-            services.AddScoped<IShippingByWeightService, ShippingByWeightService>();
+            builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerLifetimeScope();
 
-            //data context and repository
-            this.RegisterPluginDataContext<ShippingByWeightObjectContext>(services);
-            this.RegisterPluginRepository<ShippingByWeightRecord, ShippingByWeightObjectContext>(services);
+            //data context
+            this.RegisterPluginDataContext<ShippingByWeightObjectContext>(builder, "nop_object_context_shipping_weight_zip");
+
+            //override required repository with our custom context
+            builder.RegisterType<EfRepository<ShippingByWeightRecord>>()
+                .As<IRepository<ShippingByWeightRecord>>()
+                .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_zip"))
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>

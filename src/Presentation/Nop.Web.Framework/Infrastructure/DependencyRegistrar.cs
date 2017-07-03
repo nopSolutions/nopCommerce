@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Autofac;
+using Autofac.Builder;
+using Autofac.Core;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -58,217 +62,199 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="services">Services</param>
+        /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //web helper
-            services.AddScoped<IWebHelper, WebHelper>();
+            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
             //user agent helper
-            services.AddScoped<IUserAgentHelper, UserAgentHelper>();
+            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
+            builder.Register(c => dataSettingsManager.LoadSettings()).As<DataSettings>();
+            builder.Register(x => new EfDataProviderManager(x.Resolve<DataSettings>())).As<BaseDataProviderManager>().InstancePerDependency();
 
-            //TODO test data services injection
-            services.AddTransient<DataSettings>(c => dataSettingsManager.LoadSettings());
-            services.AddTransient<BaseDataProviderManager>(x => new EfDataProviderManager(x.GetRequiredService<DataSettings>()));
-            services.AddTransient<IDataProvider>(x => x.GetRequiredService<BaseDataProviderManager>().LoadDataProvider());
+            builder.Register(x => x.Resolve<BaseDataProviderManager>().LoadDataProvider()).As<IDataProvider>().InstancePerDependency();
 
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
-                //application is already installed
                 var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = efDataProviderManager.LoadDataProvider();
                 dataProvider.InitConnectionFactory();
 
-                services.AddScoped<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString));
+                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
             }
             else
-            {
-                //application is not installed yet
-                services.AddScoped<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString));
-            }
+                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerLifetimeScope();
 
             //repositories
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
-            services.AddScoped<IPluginFinder, PluginFinder>();
-            services.AddScoped<IOfficialFeedManager, OfficialFeedManager>();
+            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
+            builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
 
             //cache manager
-            services.AddScoped<ICacheManager, PerRequestCacheManager>();
+            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
 
             //static cache manager
             if (config.RedisCachingEnabled)
-                services.AddScoped<IStaticCacheManager, RedisCacheManager>();
+                builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             else
-                services.AddScoped<IStaticCacheManager, MemoryCacheManager>();
+                builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
 
             //machine name provider
             if (config.RunOnAzureWebApps)
-                services.AddSingleton<IMachineNameProvider, AzureWebAppsMachineNameProvider>();
+                builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
             else
-                services.AddSingleton<IMachineNameProvider, DefaultMachineNameProvider>();
+                builder.RegisterType<DefaultMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
 
             //work context
-            services.AddScoped<IWorkContext, WebWorkContext>();
+            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
 
             //store context
-            services.AddScoped<IStoreContext, WebStoreContext>();
+            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerLifetimeScope();
 
             //services
-            services.AddScoped<IBackInStockSubscriptionService, BackInStockSubscriptionService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<ICompareProductsService, CompareProductsService>();
-            services.AddScoped<IRecentlyViewedProductsService, RecentlyViewedProductsService>();
-            services.AddScoped<IManufacturerService, ManufacturerService>();
-            services.AddScoped<IPriceFormatter, PriceFormatter>();
-            services.AddScoped<IProductAttributeFormatter, ProductAttributeFormatter>();
-            services.AddScoped<IProductAttributeParser, ProductAttributeParser>();
-            services.AddScoped<IProductAttributeService, ProductAttributeService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ICopyProductService, CopyProductService>();
-            services.AddScoped<ISpecificationAttributeService, SpecificationAttributeService>();
-            services.AddScoped<IProductTemplateService, ProductTemplateService>();
-            services.AddScoped<ICategoryTemplateService, CategoryTemplateService>();
-            services.AddScoped<IManufacturerTemplateService, ManufacturerTemplateService>();
-            services.AddScoped<ITopicTemplateService, TopicTemplateService>();
-            services.AddScoped<IProductTagService, ProductTagService>();
-            services.AddScoped<IAddressAttributeFormatter, AddressAttributeFormatter>();
-            services.AddScoped<IAddressAttributeParser, AddressAttributeParser>();
-            services.AddScoped<IAddressAttributeService, AddressAttributeService>();
-            services.AddScoped<IAddressService, AddressService>();
-            services.AddScoped<IAffiliateService, AffiliateService>();
-            services.AddScoped<IVendorService, VendorService>();
-            services.AddScoped<ISearchTermService, SearchTermService>();
-            services.AddScoped<IGenericAttributeService, GenericAttributeService>();
-            services.AddScoped<IFulltextService, FulltextService>();
-            services.AddScoped<IMaintenanceService, MaintenanceService>();
-            services.AddScoped<ICustomerAttributeFormatter, CustomerAttributeFormatter>();
-            services.AddScoped<ICustomerAttributeParser, CustomerAttributeParser>();
-            services.AddScoped<ICustomerAttributeService, CustomerAttributeService>();
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<ICustomerRegistrationService, CustomerRegistrationService>();
-            services.AddScoped<ICustomerReportService, CustomerReportService>();
-            services.AddScoped<IPermissionService, PermissionService>();
-            services.AddScoped<IAclService, AclService>();
-            services.AddScoped<IPriceCalculationService, PriceCalculationService>();
-            services.AddScoped<IGeoLookupService, GeoLookupService>();
-            services.AddScoped<ICountryService, CountryService>();
-            services.AddScoped<ICurrencyService, CurrencyService>();
-            services.AddScoped<IMeasureService, MeasureService>();
-            services.AddScoped<IStateProvinceService, StateProvinceService>();
-            services.AddScoped<IStoreService, StoreService>();
-            services.AddScoped<IStoreMappingService, StoreMappingService>();
-            services.AddScoped<IDiscountService, DiscountService>();
-            services.AddScoped<ILocalizationService, LocalizationService>();
-            services.AddScoped<ILocalizedEntityService, LocalizedEntityService>();
-            services.AddScoped<ILanguageService, LanguageService>();
-            services.AddScoped<IDownloadService, DownloadService>();
-            services.AddScoped<IMessageTemplateService, MessageTemplateService>();
-            services.AddScoped<IQueuedEmailService, QueuedEmailService>();
-            services.AddScoped<INewsLetterSubscriptionService, NewsLetterSubscriptionService>();
-            services.AddScoped<ICampaignService, CampaignService>();
-            services.AddScoped<IEmailAccountService, EmailAccountService>();
-            services.AddScoped<IWorkflowMessageService, WorkflowMessageService>();
-            services.AddScoped<IMessageTokenProvider, MessageTokenProvider>();
-            services.AddScoped<ITokenizer, Tokenizer>();
-            services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<ICheckoutAttributeFormatter, CheckoutAttributeFormatter>();
-            services.AddScoped<ICheckoutAttributeParser, CheckoutAttributeParser>();
-            services.AddScoped<ICheckoutAttributeService, CheckoutAttributeService>();
-            services.AddScoped<IGiftCardService, GiftCardService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IOrderReportService, OrderReportService>();
-            services.AddScoped<IOrderProcessingService, OrderProcessingService>();
-            services.AddScoped<IOrderTotalCalculationService, OrderTotalCalculationService>();
-            services.AddScoped<IReturnRequestService, ReturnRequestService>();
-            services.AddScoped<IRewardPointService, RewardPointService>();
-            services.AddScoped<IShoppingCartService, ShoppingCartService>();
-            services.AddScoped<ICustomNumberFormatter, CustomNumberFormatter>();
-            services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IEncryptionService, EncryptionService>();
-            services.AddScoped<IAuthenticationService, CookieAuthenticationService>();
-            services.AddScoped<IUrlRecordService, UrlRecordService>();
-            services.AddScoped<IShipmentService, ShipmentService>();
-            services.AddScoped<IShippingService, ShippingService>();
-            services.AddScoped<IDateRangeService, DateRangeService>();
-            services.AddScoped<ITaxCategoryService, TaxCategoryService>();
-            services.AddScoped<ITaxService, TaxService>();
-            services.AddScoped<ILogger, DefaultLogger>();
-            services.AddScoped<ICustomerActivityService, CustomerActivityService>();
-            services.AddScoped<IForumService, ForumService>();
-            services.AddScoped<IPollService, PollService>();
-            services.AddScoped<IBlogService, BlogService>();
-            services.AddScoped<IWidgetService, WidgetService>();
-            services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<INewsService, NewsService>();
-            services.AddScoped<IDateTimeHelper, DateTimeHelper>();
-            services.AddScoped<ISitemapGenerator, SitemapGenerator>();
-            services.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
-            services.AddScoped<IScheduleTaskService, ScheduleTaskService>();
-            services.AddScoped<IExportManager, ExportManager>();
-            services.AddScoped<IImportManager, ImportManager>();
-            services.AddScoped<IPdfService, PdfService>();
-            services.AddScoped<IThemeProvider, ThemeProvider>();
-            services.AddScoped<IThemeContext, ThemeContext>();
-            services.AddScoped<IExternalAuthorizer, ExternalAuthorizer>();
-            services.AddScoped<IOpenAuthenticationService, OpenAuthenticationService>();
-            services.AddScoped<IRoutePublisher, RoutePublisher>();
-            services.AddScoped<IEventPublisher, EventPublisher>();
-            services.AddScoped<ISubscriptionService, SubscriptionService>();
-            services.AddScoped<ISettingService, SettingService>();
-            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
+            builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerLifetimeScope();
+            builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerLifetimeScope();
+            builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerLifetimeScope();
+            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerLifetimeScope();
+            builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
+            builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
+            builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductTemplateService>().As<IProductTemplateService>().InstancePerLifetimeScope();
+            builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerLifetimeScope();
+            builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerLifetimeScope();
+            builder.RegisterType<TopicTemplateService>().As<ITopicTemplateService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressAttributeFormatter>().As<IAddressAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressAttributeParser>().As<IAddressAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressAttributeService>().As<IAddressAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressService>().As<IAddressService>().InstancePerLifetimeScope();
+            builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorService>().As<IVendorService>().InstancePerLifetimeScope();
+            builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerLifetimeScope();
+            builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerLifetimeScope();
+            builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerAttributeFormatter>().As<ICustomerAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerAttributeParser>().As<ICustomerAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerAttributeService>().As<ICustomerAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerLifetimeScope();
+            builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerLifetimeScope();
+            builder.RegisterType<AclService>().As<IAclService>().InstancePerLifetimeScope();
+            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerLifetimeScope();
+            builder.RegisterType<GeoLookupService>().As<IGeoLookupService>().InstancePerLifetimeScope();
+            builder.RegisterType<CountryService>().As<ICountryService>().InstancePerLifetimeScope();
+            builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerLifetimeScope();
+            builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerLifetimeScope();
+            builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerLifetimeScope();
+            builder.RegisterType<StoreService>().As<IStoreService>().InstancePerLifetimeScope();
+            builder.RegisterType<StoreMappingService>().As<IStoreMappingService>().InstancePerLifetimeScope();
+            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerLifetimeScope();
+            builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerLifetimeScope();
+            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
+            builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
+            builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerLifetimeScope();
+            builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerLifetimeScope();
+            builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerLifetimeScope();
+            builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerLifetimeScope();
+            builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerLifetimeScope();
+            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerLifetimeScope();
+            builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderService>().As<IOrderService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderReportService>().As<IOrderReportService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerLifetimeScope();
+            builder.RegisterType<ReturnRequestService>().As<IReturnRequestService>().InstancePerLifetimeScope();
+            builder.RegisterType<RewardPointService>().As<IRewardPointService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomNumberFormatter>().As<ICustomNumberFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerLifetimeScope();
+            builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CookieAuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
+            builder.RegisterType<UrlRecordService>().As<IUrlRecordService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerLifetimeScope();
+            builder.RegisterType<DateRangeService>().As<IDateRangeService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
+            builder.RegisterType<TaxService>().As<ITaxService>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerLifetimeScope();
+            builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
+            builder.RegisterType<PollService>().As<IPollService>().InstancePerLifetimeScope();
+            builder.RegisterType<BlogService>().As<IBlogService>().InstancePerLifetimeScope();
+            builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerLifetimeScope();
+            builder.RegisterType<TopicService>().As<ITopicService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsService>().As<INewsService>().InstancePerLifetimeScope();
+            builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerLifetimeScope();
+            builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerLifetimeScope();
+            builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerLifetimeScope();
+            builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerLifetimeScope();
+            builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerLifetimeScope();
+            builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerLifetimeScope();
+            builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+            builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
+            builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
-            //register settings
-            var settings = typeFinder.FindClassesOfType<ISettings>();
-            foreach (var setting in settings)
-            {
-                services.AddScoped(setting, c =>
-                {
-                    var currentStoreId = c.GetRequiredService<IStoreContext>().CurrentStore.Id;
-                    //uncomment the code below if you want load settings per store only when you have two stores installed.
-                    //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
-                    //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
 
-                    //although it's better to connect to your database and execute the following SQL:
-                    //DELETE FROM [Setting] WHERE [StoreId] > 0
-                    return c.GetRequiredService<ISettingService>().LoadSetting(setting, currentStoreId);
-                });
-            }
+            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
+
+            //register all settings
+            builder.RegisterSource(new SettingsSource());
 
             //picture service
             if (!string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
-                services.AddScoped<IPictureService, AzurePictureService>();
+                builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
             else
-                services.AddScoped<IPictureService, PictureService>();
+                builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
 
             //installation service
             if (!DataSettingsHelper.DatabaseIsInstalled())
             {
                 if (config.UseFastInstallationService)
-                    services.AddScoped<IInstallationService, SqlFileInstallationService>();
+                    builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
                 else
-                    services.AddScoped<IInstallationService, CodeFirstInstallationService>();
+                    builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
             }
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)
             {
-                services.AddScoped(consumer, c =>
-                {
-                    return consumer.FindInterfaces((type, criteria) =>
+                builder.RegisterType(consumer)
+                    .As(consumer.FindInterfaces((type, criteria) =>
                     {
-                        var isMatch = type.IsGenericType && ((Type) criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                        var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
                         return isMatch;
-                    }, typeof(IConsumer<>));
-                });
+                    }, typeof(IConsumer<>)))
+                    .InstancePerLifetimeScope();
             }
         }
 
@@ -280,4 +266,45 @@ namespace Nop.Web.Framework.Infrastructure
             get { return 0; }
         }
     }
+
+
+    public class SettingsSource : IRegistrationSource
+    {
+        static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
+            "BuildRegistration",
+            BindingFlags.Static | BindingFlags.NonPublic);
+
+        public IEnumerable<IComponentRegistration> RegistrationsFor(
+            Service service,
+            Func<Service, IEnumerable<IComponentRegistration>> registrations)
+        {
+            var ts = service as TypedService;
+            if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
+            {
+                var buildMethod = BuildMethod.MakeGenericMethod(ts.ServiceType);
+                yield return (IComponentRegistration)buildMethod.Invoke(null, null);
+            }
+        }
+
+        static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
+        {
+            return RegistrationBuilder
+                .ForDelegate((c, p) =>
+                {
+                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    //uncomment the code below if you want load settings per store only when you have two stores installed.
+                    //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
+                    //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
+
+                    //although it's better to connect to your database and execute the following SQL:
+                    //DELETE FROM [Setting] WHERE [StoreId] > 0
+                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                })
+                .InstancePerLifetimeScope()
+                .CreateRegistration();
+        }
+
+        public bool IsAdapterForIndividualComponents { get { return false; } }
+    }
+
 }

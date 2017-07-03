@@ -1,6 +1,5 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Nop.Core;
+using Autofac;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
@@ -17,9 +16,10 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <typeparam name="T">Class implementing IDbContext</typeparam>
         /// <param name="dependencyRegistrar">Dependency registrar</param>
-        /// <param name="services">Services</param>
+        /// <param name="builder">Builder</param>
+        /// <param name="contextName">Context name</param>
         public static void RegisterPluginDataContext<T>(this IDependencyRegistrar dependencyRegistrar,
-            IServiceCollection services) where T: IDbContext
+            ContainerBuilder builder, string contextName) where T : IDbContext
         {
             //data layer
             var dataSettingsManager = new DataSettingsManager();
@@ -28,25 +28,23 @@ namespace Nop.Web.Framework.Infrastructure
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 //register named context
-                services.AddScoped(typeof(T), c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }));
+                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                    .Named<IDbContext>(contextName)
+                    .InstancePerLifetimeScope();
+
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                    .InstancePerLifetimeScope();
             }
             else
             {
                 //register named context
-                services.AddScoped(typeof(T), c => (T)Activator.CreateInstance(typeof(T), new object[] { c.GetService<DataSettings>().DataConnectionString }));
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                    .Named<IDbContext>(contextName)
+                    .InstancePerLifetimeScope();
+
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                    .InstancePerLifetimeScope();
             }
-        }
-        /// <summary>
-        /// Register custom repository for a plugin
-        /// </summary>
-        /// <typeparam name="T">Entity class</typeparam>
-        /// <typeparam name="K">Class implementing IDbContext</typeparam>
-        /// <param name="dependencyRegistrar">Dependency registrar</param>
-        /// <param name="services">Services</param>
-        public static void RegisterPluginRepository<T, K>(this IDependencyRegistrar dependencyRegistrar,
-            IServiceCollection services) where T : BaseEntity where K: IDbContext
-        {
-            services.AddScoped<IRepository<T>, EfRepository<T>>(c => (EfRepository<T>)Activator.CreateInstance(typeof(EfRepository<T>), new object[] { c.GetService<K>() }));
         }
     }
 }

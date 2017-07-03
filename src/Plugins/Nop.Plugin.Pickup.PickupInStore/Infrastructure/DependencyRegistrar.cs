@@ -1,4 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -19,16 +20,21 @@ namespace Nop.Plugin.Pickup.PickupInStore.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="services">Services</param>
+        /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
-            services.AddScoped<IStorePickupPointService, StorePickupPointService>();
+            builder.RegisterType<StorePickupPointService>().As<IStorePickupPointService>().InstancePerLifetimeScope();
 
-            //data context and repository
-            this.RegisterPluginDataContext<StorePickupPointObjectContext>(services);
-            this.RegisterPluginRepository<StorePickupPoint, StorePickupPointObjectContext>(services);
+            //data context
+            this.RegisterPluginDataContext<StorePickupPointObjectContext>(builder, "nop_object_context_pickup_in_store-pickup");
+
+            //override required repository with our custom context
+            builder.RegisterType<EfRepository<StorePickupPoint>>()
+                .As<IRepository<StorePickupPoint>>()
+                .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_pickup_in_store-pickup"))
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>

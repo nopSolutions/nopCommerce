@@ -1,14 +1,10 @@
-using System;
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Services.Events;
 using Nop.Web.Factories;
-using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Infrastructure.Installation;
 
 namespace Nop.Web.Infrastructure
@@ -21,36 +17,36 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="services">Services</param>
+        /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //installation localization service
-            services.AddSingleton<IInstallationLocalizationService, InstallationLocalizationService>();
+            builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
             //factories
-            services.AddSingleton<IAddressModelFactory, AddressModelFactory>();
-            services.AddSingleton<IBlogModelFactory, BlogModelFactory>();
-            services.AddSingleton<ICatalogModelFactory, CatalogModelFactory>();
-            services.AddSingleton<ICheckoutModelFactory, CheckoutModelFactory>();
-            services.AddSingleton<ICommonModelFactory, CommonModelFactory>();
-            services.AddSingleton<ICountryModelFactory, CountryModelFactory>();
-            services.AddSingleton<ICustomerModelFactory, CustomerModelFactory>();
-            services.AddSingleton<IForumModelFactory, ForumModelFactory>();
-            services.AddSingleton<IExternalAuthenticationModelFactory, ExternalAuthenticationModelFactory>();
-            services.AddSingleton<INewsModelFactory, NewsModelFactory>();
-            services.AddSingleton<INewsletterModelFactory, NewsletterModelFactory>();
-            services.AddSingleton<IOrderModelFactory, OrderModelFactory>();
-            services.AddSingleton<IPollModelFactory, PollModelFactory>();
-            services.AddSingleton<IPrivateMessagesModelFactory, PrivateMessagesModelFactory>();
-            services.AddSingleton<IProductModelFactory, ProductModelFactory>();
-            services.AddSingleton<IProfileModelFactory, ProfileModelFactory>();
-            services.AddSingleton<IReturnRequestModelFactory, ReturnRequestModelFactory>();
-            services.AddSingleton<IShoppingCartModelFactory, ShoppingCartModelFactory>();
-            services.AddSingleton<ITopicModelFactory, TopicModelFactory>();
-            services.AddSingleton<IVendorModelFactory, VendorModelFactory>();
-            services.AddSingleton<IWidgetModelFactory, WidgetModelFactory>();
+            builder.RegisterType<AddressModelFactory>().As<IAddressModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<BlogModelFactory>().As<IBlogModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CatalogModelFactory>().As<ICatalogModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutModelFactory>().As<ICheckoutModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CommonModelFactory>().As<ICommonModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CountryModelFactory>().As<ICountryModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerModelFactory>().As<ICustomerModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ForumModelFactory>().As<IForumModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ExternalAuthenticationModelFactory>().As<IExternalAuthenticationModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsModelFactory>().As<INewsModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsletterModelFactory>().As<INewsletterModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderModelFactory>().As<IOrderModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<PollModelFactory>().As<IPollModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<PrivateMessagesModelFactory>().As<IPrivateMessagesModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductModelFactory>().As<IProductModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ProfileModelFactory>().As<IProfileModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ReturnRequestModelFactory>().As<IReturnRequestModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<ShoppingCartModelFactory>().As<IShoppingCartModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<TopicModelFactory>().As<ITopicModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorModelFactory>().As<IVendorModelFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<WidgetModelFactory>().As<IWidgetModelFactory>().InstancePerLifetimeScope();
         }
 
         /// <summary>
