@@ -45,6 +45,9 @@ namespace Nop.Web.Framework.Globalization
                 //we set culture of admin area to 'en-US' because current implementation of Telerik grid doesn't work well in other cultures
                 //e.g., editing decimal value in russian culture
                 CommonHelper.SetTelerikCulture();
+
+                //set work context to admin mode
+                workContext.IsAdmin = true;
             }
             else
             {

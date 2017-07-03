@@ -26,18 +26,6 @@ namespace Nop.Admin.Controllers
 
 #if NET451
         /// <summary>
-        /// Initialize controller
-        /// </summary>
-        /// <param name="requestContext">Request context</param>
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            //set work context to admin mode
-            EngineContext.Current.Resolve<IWorkContext>().IsAdmin = true;
-
-            base.Initialize(requestContext);
-        }
-
-        /// <summary>
         /// On exception
         /// </summary>
         /// <param name="filterContext">Filter context</param>
