@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Localization
             if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
                 return base.RouteAsync(context);
 
-            //if path isn't localized no special action required
+            //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
             if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
                 return base.RouteAsync(context);

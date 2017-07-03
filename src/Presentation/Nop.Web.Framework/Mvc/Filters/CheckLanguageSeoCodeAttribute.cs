@@ -76,10 +76,6 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     return;
 
-                //ensure that there is route and it is registered and localizable
-                if (context.RouteData == null || context.RouteData.Routers == null || !context.RouteData.Routers.OfType<LocalizedRoute>().Any())
-                    return;
-
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language language))

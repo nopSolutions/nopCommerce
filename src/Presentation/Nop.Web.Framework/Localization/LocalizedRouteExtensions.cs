@@ -87,14 +87,25 @@ namespace Nop.Web.Framework.Localization
         /// <summary>
         /// Clear _seoFriendlyUrlsForLanguagesEnabled cached value for the routes
         /// </summary>
-        /// <param name="routes">Collection of routes</param>
-        public static void ClearSeoFriendlyUrlsCachedValueForRoutes(this IEnumerable<IRouter> routes)
+        /// <param name="routers">Routers</param>
+        public static void ClearSeoFriendlyUrlsCachedValueForRoutes(this IEnumerable<IRouter> routers)
         {
-            if (routes == null)
-                throw new ArgumentNullException(nameof(routes));
+            if (routers == null)
+                throw new ArgumentNullException(nameof(routers));
 
             //clear cached settings
-            routes.OfType<LocalizedRoute>().ToList().ForEach(route => route.ClearSeoFriendlyUrlsCachedValue());
+            foreach (var router in routers)
+            {
+                var routeCollection = router as RouteCollection;
+                if (routeCollection == null)
+                    continue;
+
+                for (int i = 0; i < routeCollection.Count; i++)
+                {
+                    var route = routeCollection[i];
+                    (route as LocalizedRoute)?.ClearSeoFriendlyUrlsCachedValue();
+                }
+            }
         }
     }
 }
