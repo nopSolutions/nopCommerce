@@ -256,7 +256,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = record.Id,
                     Email = record.Email,
-                    ExternalIdentifier = record.ExternalIdentifier,
+                    ExternalIdentifier = record.ExternalDisplayIdentifier,
                     AuthMethodName = method.PluginDescriptor.FriendlyName
                 });
             }

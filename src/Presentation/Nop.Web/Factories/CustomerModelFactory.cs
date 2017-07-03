@@ -383,7 +383,7 @@ namespace Nop.Web.Factories
                 {
                     Id = ear.Id,
                     Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalIdentifier,
+                    ExternalIdentifier = ear.ExternalDisplayIdentifier,
                     AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
                 });
             }
