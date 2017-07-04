@@ -45,10 +45,10 @@ namespace Nop.Plugin.Widgets.NivoSlider
         }
 
         /// <summary>
-        /// Gets a route for displaying widget
+        /// Gets a view component for displaying plugin in public store
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        public void GetDisplayWidgetRoute(out string viewComponentName)
+        public void GetPublicViewComponent(out string viewComponentName)
         {
             viewComponentName = "WidgetsNivoSlider";
         }

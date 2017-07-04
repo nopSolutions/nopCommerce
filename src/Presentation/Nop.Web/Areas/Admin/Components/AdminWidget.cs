@@ -23,7 +23,7 @@ namespace Nop.Admin.Components
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                widget.GetDisplayWidgetRoute(out string viewComponentName);
+                widget.GetPublicViewComponent(out string viewComponentName);
 
                 var widgetModel = new RenderWidgetModel
                 {

@@ -431,7 +431,7 @@ namespace Nop.Web.Factories
         /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
-            paymentMethod.GetPaymentInfoRoute(out string viewComponentName);
+            paymentMethod.GetPublicViewComponent(out string viewComponentName);
 
             var model = new CheckoutPaymentInfoModel
             {

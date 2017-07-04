@@ -62,7 +62,7 @@ namespace Nop.Web.Factories
                 var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 foreach (var widget in widgets)
                 {
-                    widget.GetDisplayWidgetRoute(out string viewComponentName);
+                    widget.GetPublicViewComponent(out string viewComponentName);
 
                     var widgetModel = new RenderWidgetModel
                     {
