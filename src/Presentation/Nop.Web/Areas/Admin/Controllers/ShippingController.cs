@@ -198,10 +198,9 @@ namespace Nop.Admin.Controllers
             return Redirect(url);
         }
 
-
-#endregion
-
-#region Pickup point providers
+        #endregion
+        
+        #region Pickup point providers
 
         public virtual IActionResult PickupPointProviders()
         {
@@ -285,10 +284,10 @@ namespace Nop.Admin.Controllers
             //TODO implement logic when configuration page is not required
             return Redirect(url);
         }
-
-#endregion
-
-#region Shipping methods
+        
+        #endregion
+        
+        #region Shipping methods
 
         public virtual IActionResult Methods()
         {
@@ -412,10 +411,10 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
             return RedirectToAction("Methods");
         }
-
-#endregion
-
-#region Dates and ranges
+        
+        #endregion
+        
+        #region Dates and ranges
 
         public virtual IActionResult DatesAndRanges()
         {
@@ -425,7 +424,9 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-#region Delivery dates
+	    #endregion
+
+        #region Delivery dates
 
         [HttpPost]
         public virtual IActionResult DeliveryDates(DataSourceRequest command)
@@ -548,8 +549,8 @@ namespace Nop.Admin.Controllers
         }
 
 #endregion
-
-#region Product availability ranges
+        
+        #region Product availability ranges
 
         [HttpPost]
         public virtual IActionResult ProductAvailabilityRanges(DataSourceRequest command)
@@ -671,10 +672,8 @@ namespace Nop.Admin.Controllers
         }
 
 #endregion
-
-#endregion
-
-#region Warehouses
+        
+        #region Warehouses
 
         public virtual IActionResult Warehouses()
         {
@@ -904,7 +903,7 @@ namespace Nop.Admin.Controllers
 
 #endregion
         
-#region Restrictions
+        #region Restrictions
 
         public virtual IActionResult Restrictions()
         {
@@ -988,7 +987,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
             return RedirectToAction("Restrictions");
         }
-
-#endregion
+        
+        #endregion
     }
 }
