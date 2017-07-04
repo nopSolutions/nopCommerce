@@ -497,11 +497,6 @@ namespace Nop.Admin.Controllers
                 //No language found with the specified id
                 return RedirectToAction("List");
 
-            #if NET451
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-            #endif
-
             try
             {
                 if (importxmlfile != null && importxmlfile.Length > 0)
