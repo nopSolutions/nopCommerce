@@ -154,11 +154,9 @@ namespace Nop.Services.Tests.Payments
         /// Gets a route for payment info
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        public void GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments)
+        public void GetPaymentInfoRoute(out string viewComponentName)
         {
             viewComponentName = null;
-            viewComponentArguments = null;
         }
 
 

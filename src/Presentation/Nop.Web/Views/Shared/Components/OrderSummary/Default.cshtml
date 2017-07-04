@@ -301,13 +301,10 @@
                        </div>
                        <div class="addon-buttons">
                            @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-                           @if (Model.ButtonPaymentMethodViewComponentNames != null && Model.ButtonPaymentMethodViewComponentNames.Count > 0)
-                           {
-                               for (int i = 0; i < Model.ButtonPaymentMethodViewComponentNames.Count; i++)
-                               {
-                                   @await Component.InvokeAsync(Model.ButtonPaymentMethodViewComponentNames[i], Model.ButtonPaymentMethodViewComponentArguments[i])
-                               }
-                           }
+                            @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)
+                            {
+                                @await Component.InvokeAsync(pm)
+                            }
                        </div>
                    }
                </div>

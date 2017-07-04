@@ -5,7 +5,6 @@ namespace Nop.Web.Models.Checkout
     public partial class CheckoutPaymentInfoModel : BaseNopModel
     {
         public string PaymentViewComponentName { get; set; }
-        public object PaymentViewComponentArguments { get; set; }
 
         /// <summary>
         /// Used on one-page checkout page

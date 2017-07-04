@@ -861,9 +861,8 @@ namespace Nop.Web.Factories
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
-                pm.GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments);
+                pm.GetPaymentInfoRoute(out string viewComponentName);
                 model.ButtonPaymentMethodViewComponentNames.Add(viewComponentName);
-                model.ButtonPaymentMethodViewComponentArguments.Add(viewComponentArguments);
             }
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponentNames.Any();

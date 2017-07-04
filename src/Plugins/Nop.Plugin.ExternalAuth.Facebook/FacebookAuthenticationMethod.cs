@@ -43,11 +43,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// Gets a view component for displaying plugin in public store
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        public void GetPublicViewComponent(out string viewComponentName, out object viewComponentArguments)
+        public void GetPublicViewComponent(out string viewComponentName)
         {
             viewComponentName = "FacebookAuthentication";
-            viewComponentArguments = null;
         }
 
         /// <summary>

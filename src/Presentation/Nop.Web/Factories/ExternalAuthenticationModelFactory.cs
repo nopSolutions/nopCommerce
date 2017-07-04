@@ -44,12 +44,11 @@ namespace Nop.Web.Factories
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Select(authenticationMethod =>
                 {
-                    authenticationMethod.GetPublicViewComponent(out string viewComponentName, out object viewComponentArguments);
+                    authenticationMethod.GetPublicViewComponent(out string viewComponentName);
 
                     return new ExternalAuthenticationMethodModel
                     {
-                        ViewComponentName = viewComponentName,
-                        ViewComponentArguments = viewComponentArguments
+                        ViewComponentName = viewComponentName
                     };
                 }).ToList();
 

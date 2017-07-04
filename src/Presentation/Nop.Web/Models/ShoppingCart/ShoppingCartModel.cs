@@ -19,7 +19,6 @@ namespace Nop.Web.Models.ShoppingCart
             OrderReviewData = new OrderReviewDataModel();
 
             ButtonPaymentMethodViewComponentNames = new List<string>();
-            ButtonPaymentMethodViewComponentArguments = new List<object>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -42,7 +41,6 @@ namespace Nop.Web.Models.ShoppingCart
         public OrderReviewDataModel OrderReviewData { get; set; }
 
         public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
-        public IList<object> ButtonPaymentMethodViewComponentArguments { get; set; }
 
         public bool HideCheckoutButton { get; set; }
 

@@ -3,7 +3,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_info_top" })
     <div class="section payment-info">
         <div class="info">
-            @await Component.InvokeAsync(Model.PaymentViewComponentName, Model.PaymentViewComponentArguments)
+            @await Component.InvokeAsync(Model.PaymentViewComponentName)
         </div>
         @{
             var validationSummary = Html.ValidationSummary(false);

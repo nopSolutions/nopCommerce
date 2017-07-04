@@ -11,7 +11,6 @@ namespace Nop.Services.Authentication.External
         /// Gets a view component for displaying plugin in public store
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        void GetPublicViewComponent(out string viewComponentName, out object viewComponentArguments);
+        void GetPublicViewComponent(out string viewComponentName);
     }
 }

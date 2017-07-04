@@ -99,8 +99,7 @@ namespace Nop.Services.Payments
         /// Gets a route for payment info
         /// </summary>
         /// <param name="viewComponentName">View component name</param>
-        /// <param name="viewComponentArguments">View component arguments</param>
-        void GetPaymentInfoRoute(out string viewComponentName, out object viewComponentArguments);
+        void GetPaymentInfoRoute(out string viewComponentName);
 
         #endregion
 
