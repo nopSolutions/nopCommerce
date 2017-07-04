@@ -22,34 +22,28 @@
         }
         else
         {
-            using (Html.BeginForm(FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                var validationSummary = Html.ValidationSummary(true);
-                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                {
-                    <div class="message-error">@validationSummary</div> 
-                }
+            <form asp-route="ApplyVendorAccount" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Name)
-                            @Html.TextBoxFor(model => model.Name, new { @class = "name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Name)
+                            <label asp-for="Name">@T("Vendors.ApplyAccount.Name"):</label>
+                            <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")"/>
+                            <nop-required />
+                            <span asp-validation-for="Name"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Email)
+                            <label asp-for="Email">@T("Vendors.ApplyAccount.Email"):</label>
+                            <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")"/>
+                            <nop-required />
+                            <span asp-validation-for="Email"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Description)
-                            @Html.TextAreaFor(model => model.Description, new { @class = "description" })
+                            <label asp-for="Description">@T("Vendors.ApplyAccount.Description"):</label>
+                            <textarea asp-for="Description" class="description"></textarea>
                         </div>
                         <div class="inputs">
-                            @Html.Label(T("Vendors.ApplyAccount.Picture").Text)
+                            <label>@T("Vendors.ApplyAccount.Picture"):</label>
                             <input name="uploadedFile" type="file"/>
                         </div>
                         @if (Model.DisplayCaptcha)
@@ -63,7 +57,7 @@
                 <div class="buttons">
                     <input type="submit" name="send-email" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                 </div>
-            }
+            </form>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
     </div>
