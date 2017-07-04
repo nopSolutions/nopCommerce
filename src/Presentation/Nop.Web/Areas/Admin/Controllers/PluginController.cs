@@ -142,50 +142,10 @@ namespace Nop.Admin.Controllers
             //configuration URLs
             if (pluginDescriptor.Installed)
             {
-                //specify configuration URL only when a plugin is already installed
-
-                //plugins do not provide a general URL for configuration
-                //because some of them have some custom URLs for configuration
-                //for example, discount requirement plugins require additional parameters and attached to a certain discount
+                //display configuration URL only when a plugin is already installed
                 var pluginInstance = pluginDescriptor.Instance();
-                string configurationUrl = null;
-                if (pluginInstance is IPaymentMethod)
-                {
-                    //payment plugin
-                    configurationUrl = Url.Action("ConfigureMethod", "Payment", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IShippingRateComputationMethod)
-                {
-                    //shipping rate computation method
-                    configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IPickupPointProvider)
-                {
-                    //pickup point provider
-                    configurationUrl = Url.Action("ConfigurePickupPointProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is ITaxProvider)
-                {
-                    //tax provider
-                    configurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IExternalAuthenticationMethod)
-                {
-                    //external auth method
-                    configurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IWidgetPlugin)
-                {
-                    //widgets
-                    configurationUrl = Url.Action("ConfigureWidget", "Widget", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IMiscPlugin)
-                {
-                    //Misc plugins
-                    configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName });
-                }
-                pluginModel.ConfigurationUrl = configurationUrl;
-                
+                pluginModel.ConfigurationUrl = pluginInstance.GetConfigurationPageUrl();
+
 
                 //enabled/disabled (only for some plugin types)
                 if (pluginInstance is IPaymentMethod)
@@ -392,23 +352,21 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public virtual IActionResult ConfigureMiscPlugin(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
 
+	    public virtual IActionResult Configure(string systemName)
+	    {
+	        if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+	            return AccessDeniedView();
 
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IMiscPlugin>(systemName);
-            if (descriptor == null || !descriptor.Installed)
-                return Redirect("List");
+	        var descriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName);
+	        if (descriptor == null || !descriptor.Installed)
+	            return Redirect("List");
 
-            var plugin  = descriptor.Instance<IMiscPlugin>();
-
-            var url = plugin.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
+	        var url = descriptor.Instance().GetConfigurationPageUrl();
+	        //TODO implement logic when configuration page is not required
+	        return Redirect(url);
+	    }
+        
         //edit
         public virtual IActionResult EditPopup(string systemName)
         {

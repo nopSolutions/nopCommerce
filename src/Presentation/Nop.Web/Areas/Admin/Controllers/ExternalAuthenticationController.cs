@@ -110,22 +110,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-        public virtual IActionResult ConfigureMethod(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedView();
-
-            var authenticationMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(systemName);
-            if (authenticationMethod == null)
-                //No authentication method found with the specified id
-                return RedirectToAction("Methods");
-
-            var url = authenticationMethod.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
+        
         #endregion
     }
 }

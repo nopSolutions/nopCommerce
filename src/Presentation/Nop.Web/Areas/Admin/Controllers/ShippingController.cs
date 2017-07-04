@@ -182,22 +182,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-
-        public virtual IActionResult ConfigureProvider(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(systemName);
-            if (srcm == null)
-                //No shipping rate computation method found with the specified id
-                return RedirectToAction("Providers");
-
-            var url = srcm.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
         #endregion
         
         #region Pickup point providers
@@ -269,22 +253,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-
-        public virtual IActionResult ConfigurePickupPointProvider(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
-            var pickupPointProvider = _shippingService.LoadPickupPointProviderBySystemName(systemName);
-            if (pickupPointProvider == null)
-                //No shipping rate computation method found with the specified id
-                return RedirectToAction("PickupPointProviders");
-
-            var url = pickupPointProvider.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-        
         #endregion
         
         #region Shipping methods

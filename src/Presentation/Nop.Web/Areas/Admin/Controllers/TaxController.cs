@@ -71,22 +71,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-
-        public virtual IActionResult ConfigureProvider(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
-            if (taxProvider == null)
-                //No tax provider found with the specified id
-                return RedirectToAction("Providers");
-
-            var url = taxProvider.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
+        
         public virtual IActionResult MarkAsPrimaryProvider(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))

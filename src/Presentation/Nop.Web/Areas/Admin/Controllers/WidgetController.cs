@@ -119,22 +119,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-        public virtual IActionResult ConfigureWidget(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
-
-            var widget = _widgetService.LoadWidgetBySystemName(systemName);
-            if (widget == null)
-                //No widget found with the specified id
-                return RedirectToAction("List");
-
-            var url = widget.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
+        
 	    #endregion
     }
 }

@@ -150,7 +150,7 @@
                                     field: "SystemName",
                                     title: "@T("Admin.Configuration.Payment.Methods.Configure")",
                                     width: 150,
-                                    template: '<a class="btn btn-default" href="ConfigureMethod?systemName=#=SystemName#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Payment.Methods.Configure")</a>'
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Plugin/Configure/")?systemName=#=SystemName#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Payment.Methods.Configure")</a>'
                                 }, {
                                     command: {
                                         name: "edit",

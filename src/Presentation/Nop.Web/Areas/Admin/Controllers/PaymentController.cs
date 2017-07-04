@@ -127,21 +127,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public virtual IActionResult ConfigureMethod(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
-            var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
-            if (pm == null)
-                //No payment method found with the specified id
-                return RedirectToAction("Methods");
-
-            var url = pm.GetConfigurationPageUrl();
-            //TODO implement logic when configuration page is not required
-            return Redirect(url);
-        }
-
         public virtual IActionResult MethodRestrictions()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

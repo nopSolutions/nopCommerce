@@ -107,7 +107,7 @@
                                     field: "SystemName",
                                     title: "@T("Admin.ContentManagement.Widgets.Configure")",
                                     width: 150,
-                                    template: '<a href="ConfigureWidget?systemName=#=SystemName#">@T("Admin.ContentManagement.Widgets.Configure")</a>'
+                                    template: '<a href="@Url.Content("~/Admin/Plugin/Configure/")?systemName=#=SystemName#">@T("Admin.ContentManagement.Widgets.Configure")</a>'
                                 }, {
                                     command: {
                                         name: "edit",
