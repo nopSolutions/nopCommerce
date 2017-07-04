@@ -51,9 +51,8 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
     </div>
     <div class="page-body">
-        <form asp-controller="Customer" asp-action="Info" method="post">
+        <form asp-route="CustomerInfo" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
