@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nop.Core.Data;
 
 namespace Nop.Core.Http
 {
@@ -36,11 +37,14 @@ namespace Nop.Core.Http
         {
             //TODO test. ensure that no guest record is created
 
-            //keep alive page requested (we ignore it to prevent creating a guest customer records)
-            var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
-            if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
-                return;
-
+            //whether database is installed
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //keep alive page requested (we ignore it to prevent creating a guest customer records)
+                var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
+                if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+            }
             //or call the next middleware in the request pipeline
             await _next(context);
         }
