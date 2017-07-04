@@ -93,7 +93,7 @@
                             Model.DateOfBirthYear)
                             @if (Model.DateOfBirthRequired)
                             {
-                                @Html.RequiredHint()
+                                <nop-required />
                             }
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
