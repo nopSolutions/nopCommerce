@@ -2,6 +2,7 @@
 using Nop.Plugin.Shipping.AustraliaPost.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -16,6 +17,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 
         private readonly AustraliaPostSettings _australiaPostSettings;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -24,10 +26,12 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 
         public ShippingAustraliaPostController(AustraliaPostSettings australiaPostSettings,
             ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService)
         {
             this._australiaPostSettings = australiaPostSettings;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
         }
 
@@ -37,6 +41,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new AustraliaPostShippingModel()
             {
                 ApiKey = _australiaPostSettings.ApiKey,
@@ -50,6 +57,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(AustraliaPostShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
             

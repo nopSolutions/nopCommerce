@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Plugin.Payments.PurchaseOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -17,6 +18,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         #region Fields
 
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
@@ -26,11 +28,13 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         #region Ctor
 
         public PaymentPurchaseOrderController(ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService,
             IStoreService storeService,
             IWorkContext workContext)
         {
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeService = storeService;
             this._workContext = workContext;
@@ -42,6 +46,9 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var purchaseOrderPaymentSettings = _settingService.LoadSetting<PurchaseOrderPaymentSettings>(storeScope);
@@ -67,6 +74,9 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 

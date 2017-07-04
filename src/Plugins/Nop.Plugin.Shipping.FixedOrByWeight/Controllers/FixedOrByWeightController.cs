@@ -76,6 +76,9 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new ConfigurationModel
             {
                 LimitMethodsToCreated = _fixedOrByWeightSettings.LimitMethodsToCreated,

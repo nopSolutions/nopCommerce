@@ -11,6 +11,7 @@ using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -25,6 +26,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
@@ -36,6 +38,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public FacebookAuthenticationController(FacebookExternalAuthSettings facebookExternalAuthSettings,
             IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService,
             IStoreService storeService,
             IWorkContext workContext)
@@ -43,6 +46,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             this._facebookExternalAuthSettings = facebookExternalAuthSettings;
             this._externalAuthenticationService = externalAuthenticationService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeService = storeService;
             this._workContext = workContext;
@@ -56,6 +60,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [Area("Admin")]
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
@@ -81,6 +88,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [Area("Admin")]
         public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 

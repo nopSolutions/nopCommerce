@@ -53,6 +53,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
             if (!taxCategories.Any())
                 return Content("No tax categories can be loaded");

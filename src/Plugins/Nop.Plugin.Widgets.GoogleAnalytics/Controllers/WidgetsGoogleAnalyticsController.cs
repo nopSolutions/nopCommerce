@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -17,22 +18,28 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         public WidgetsGoogleAnalyticsController(IWorkContext workContext,
             IStoreContext storeContext, 
             IStoreService storeService,
             ISettingService settingService, 
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         [AuthorizeAdmin]
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
@@ -64,6 +71,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         [AuthorizeAdmin]
         public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);

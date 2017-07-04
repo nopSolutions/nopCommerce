@@ -63,6 +63,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml");
@@ -100,7 +103,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var model = new StorePickupPointModel();
 
@@ -131,7 +134,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Create(string btnId, string formId, StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var address = new Address
             {
@@ -165,7 +168,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(id);
             if (pickupPoint == null)
@@ -221,7 +224,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Edit(string btnId, string formId, StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(model.Id);
             if (pickupPoint == null)
@@ -258,7 +261,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(id);
             if (pickupPoint == null)

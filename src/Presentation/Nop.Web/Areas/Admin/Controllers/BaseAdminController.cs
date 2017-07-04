@@ -23,28 +23,6 @@ namespace Nop.Admin.Controllers
     [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
     {
-        /// <summary>
-        /// Access denied view
-        /// </summary>
-        /// <returns>Access denied view</returns>
-        protected virtual IActionResult AccessDeniedView()
-        {
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-
-            //return new UnauthorizedResult();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
-        }
-        
-        /// <summary>
-        /// Access denied json data for kendo grid
-        /// </summary>
-        /// <returns>Access denied json data</returns>
-        protected JsonResult AccessDeniedKendoGridJson()
-        {
-            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            
-            return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
-        }
 
         /// <summary>
         /// Save selected TAB name
@@ -73,8 +51,8 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
-#if NET451
+        
+        #if NET451
         /// <summary>
         /// Creates a <see cref="T:System.Web.Mvc.JsonResult"/> object that serializes the specified object to JavaScript Object Notation (JSON) format using the content type, content encoding, and the JSON request behavior.
         /// </summary>
@@ -107,7 +85,7 @@ namespace Nop.Admin.Controllers
             return result;
             //return base.Json(data, contentType, contentEncoding, behavior);
         }
-
-#endif
+        
+        #endif
     }
 }

@@ -6,6 +6,7 @@ using Nop.Plugin.Shipping.Fedex.Models;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -20,6 +21,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
         private readonly FedexSettings _fedexSettings;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -28,10 +30,12 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
         
         public ShippingFedexController(FedexSettings fedexSettings,
             ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService)
         {
             this._fedexSettings = fedexSettings;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
         }
 
@@ -41,6 +45,9 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new FedexShippingModel()
             {
                 Url = _fedexSettings.Url,
@@ -79,6 +86,9 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(FedexShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 

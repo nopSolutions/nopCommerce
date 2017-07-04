@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -31,6 +32,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         private readonly ILogger _logger;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             ILogger logger,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
+            IPermissionService permissionService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -55,6 +58,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             this._logger = logger;
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
+            this._permissionService = permissionService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._storeService = storeService;
@@ -123,8 +127,11 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
         [AuthorizeAdmin]
         [Area("Admin")]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
@@ -161,8 +168,11 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [AuthorizeAdmin]
         [AdminAntiForgery]
         [Area("Admin")]
-        public ActionResult Configure(ConfigurationModel model)
+        public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 
@@ -205,8 +215,11 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [AuthorizeAdmin]
         [AdminAntiForgery]
         [Area("Admin")]
-        public ActionResult GetWebhookId(ConfigurationModel model)
+        public IActionResult GetWebhookId(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>();
             payPalDirectPaymentSettings.WebhookId = CreateWebHook();
             _settingService.SaveSetting(payPalDirectPaymentSettings);
@@ -218,7 +231,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         }
 
         [HttpPost]
-        public ActionResult WebhookEventsHandler()
+        public IActionResult WebhookEventsHandler()
         {
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);

@@ -5,6 +5,7 @@ using Nop.Plugin.Shipping.USPS.Domain;
 using Nop.Plugin.Shipping.USPS.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -20,6 +21,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
         private readonly USPSSettings _uspsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -27,11 +29,13 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
         public ShippingUSPSController(USPSSettings uspsSettings,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._uspsSettings = uspsSettings;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -40,13 +44,14 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new USPSShippingModel();
             model.Url = _uspsSettings.Url;
             model.Username = _uspsSettings.Username;
             model.Password = _uspsSettings.Password;
             model.AdditionalHandlingCharge = _uspsSettings.AdditionalHandlingCharge;
-
-
 
             // Load Domestic service names
             string carrierServicesOfferedDomestic = _uspsSettings.CarrierServicesOfferedDomestic;
@@ -88,6 +93,9 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(USPSShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
             

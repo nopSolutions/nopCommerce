@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -32,6 +33,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IPermissionService _permissionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
@@ -51,6 +53,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService, 
             IOrderService orderService, 
             IOrderProcessingService orderProcessingService,
+            IPermissionService permissionService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
@@ -66,6 +69,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._permissionService = permissionService;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._storeContext = storeContext;
@@ -84,6 +88,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [Area("Admin")]
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
@@ -127,6 +134,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [Area("Admin")]
         public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 
@@ -175,6 +185,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [Area("Admin")]
         public IActionResult RoundingWarning(bool passProductNamesAndTotals)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //prices and total aren't rounded, so display warning
             if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
                 return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") });

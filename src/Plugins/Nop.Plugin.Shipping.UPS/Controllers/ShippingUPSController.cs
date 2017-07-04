@@ -8,6 +8,7 @@ using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -23,6 +24,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -30,11 +32,13 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
         public ShippingUPSController(UPSSettings upsSettings,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._upsSettings = upsSettings;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -43,6 +47,9 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new UPSShippingModel();
             model.Url = _upsSettings.Url;
             model.AccessKey = _upsSettings.AccessKey;
@@ -107,6 +114,9 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(UPSShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 

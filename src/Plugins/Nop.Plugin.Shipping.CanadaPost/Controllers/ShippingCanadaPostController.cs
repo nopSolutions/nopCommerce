@@ -2,6 +2,7 @@
 using Nop.Plugin.Shipping.CanadaPost.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -16,6 +17,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
         private readonly CanadaPostSettings _canadaPostSettings;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
 
         #endregion
@@ -24,10 +26,12 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
         public ShippingCanadaPostController(CanadaPostSettings canadaPostSettings,
             ILocalizationService localizationService,
+            IPermissionService permissionService,
             ISettingService settingService)
         {
             this._canadaPostSettings = canadaPostSettings;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
             this._settingService = settingService;            
         }
 
@@ -37,6 +41,9 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new CanadaPostShippingModel()
             {
                 CustomerNumber = _canadaPostSettings.CustomerNumber,
@@ -52,6 +59,9 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
         [AdminAntiForgery]
         public IActionResult Configure(CanadaPostShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 

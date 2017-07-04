@@ -6,6 +6,7 @@ using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 
@@ -16,13 +17,14 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
+        private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
 
         public WidgetsNivoSliderController(IWorkContext workContext,
-            IStoreContext storeContext,
-            IStoreService storeService, 
+            IStoreService storeService,
+            IPermissionService permissionService, 
             IPictureService pictureService,
             ISettingService settingService,
             ICacheManager cacheManager,
@@ -30,6 +32,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
         {
             this._workContext = workContext;
             this._storeService = storeService;
+            this._permissionService = permissionService;
             this._pictureService = pictureService;
             this._settingService = settingService;
             this._localizationService = localizationService;
@@ -37,6 +40,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);
@@ -83,6 +89,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
         [HttpPost]
         public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);

@@ -71,6 +71,9 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
 
         public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             var model = new FeedGoogleShoppingModel();
             model.ProductPictureSize = _googleShoppingSettings.ProductPictureSize;
             model.PassShippingInfoWeight = _googleShoppingSettings.PassShippingInfoWeight;
@@ -110,6 +113,9 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
         [FormValueRequired("save")]
         public IActionResult Configure(FeedGoogleShoppingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return Configure();
@@ -135,6 +141,9 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
         [FormValueRequired("generate")]
         public IActionResult GenerateFeed(FeedGoogleShoppingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             try
             {
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
