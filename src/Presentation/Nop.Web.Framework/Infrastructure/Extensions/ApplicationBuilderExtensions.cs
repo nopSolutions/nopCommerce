@@ -120,6 +120,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseCulture(this IApplicationBuilder application)
         {
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             application.UseMiddleware<CultureMiddleware>();
         }
 
@@ -128,7 +132,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseAuthentication(this IApplicationBuilder application)
-        {
+        {                    
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             //enable main cookie authentication
             application.UseCookieAuthentication(new CookieAuthenticationOptions
             {
