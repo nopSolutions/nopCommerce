@@ -24,32 +24,27 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                var validationSummary = Html.ValidationSummary(true);
-                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                {
-                    <div class="message-error">@validationSummary</div>
-                }
+            <form asp-route="ProductEmailAFriend" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.FriendEmail)
-                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email", placeholder = T("Products.EmailAFriend.FriendEmail.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.FriendEmail)
+                            <label asp-for="FriendEmail">@T("Products.EmailAFriend.FriendEmail"):</label>
+                            <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Products.EmailAFriend.FriendEmail.Hint")"/>
+                            <nop-required />
+                            <span asp-validation-for="FriendEmail"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.YourEmailAddress)
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email", placeholder = T("Products.EmailAFriend.YourEmailAddress.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                            <label asp-for="YourEmailAddress">@T("Products.EmailAFriend.YourEmailAddress"):</label>
+                            <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Products.EmailAFriend.YourEmailAddress.Hint")"/>
+                            <nop-required />
+                            <span asp-validation-for="YourEmailAddress"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.PersonalMessage)
-                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message", placeholder = T("Products.EmailAFriend.PersonalMessage.Hint") })
-                            @Html.ValidationMessageFor(model => model.PersonalMessage)
+                            <label asp-for="PersonalMessage">@T("Products.EmailAFriend.PersonalMessage"):</label>
+                            <textarea asp-for="PersonalMessage" class="your-email" placeholder="@T("Products.EmailAFriend.PersonalMessage.Hint")"></textarea>
+                            <nop-required />
+                            <span asp-validation-for="PersonalMessage"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
@@ -62,7 +57,7 @@
                 <div class="buttons">
                     <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
                 </div>
-            }
+            </form>
         }
     </div>
 </div>

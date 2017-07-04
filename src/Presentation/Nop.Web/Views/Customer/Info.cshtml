@@ -51,9 +51,8 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
     </div>
     <div class="page-body">
-        <form asp-controller="Customer" asp-action="Info" method="post">
+        <form asp-route="CustomerInfo" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -78,13 +77,13 @@
                     <div class="inputs">
                         <label asp-for="FirstName">@T("Account.Fields.FirstName"):</label>
                         <input asp-for="FirstName" />
-                        @Html.RequiredHint()
+                        <nop-required/>
                         <span asp-validation-for="FirstName"></span>
                     </div>
                     <div class="inputs">
                         <label asp-for="LastName">@T("Account.Fields.LastName"):</label>
                         <input asp-for="LastName" />
-                        @Html.RequiredHint()
+                        <nop-required />
                         <span asp-validation-for="LastName"></span>
                     </div>
                     @if (Model.DateOfBirthEnabled)
@@ -102,7 +101,7 @@
 
                             @if (Model.DateOfBirthRequired)
                             {
-                                @Html.RequiredHint()
+                                <nop-required />
                             }
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
@@ -112,7 +111,7 @@
                     <div class="inputs">
                         <label asp-for="Email">@T("Account.Fields.Email"):</label>
                         <input asp-for="Email" />
-                        @Html.RequiredHint()
+                        <nop-required />
                         <span asp-validation-for="Email"></span>
                     </div>
                     @if (!String.IsNullOrEmpty(Model.EmailToRevalidate))
@@ -132,7 +131,7 @@
                             <div class="inputs">
                                 <label asp-for="Username">@T("Account.Fields.Username"):</label>
                                 <input asp-for="Username" />
-                                @Html.RequiredHint()
+                                <nop-required />
                                 <span asp-validation-for="Username"></span>
                                 @if (Model.CheckUsernameAvailabilityEnabled)
                                 {
@@ -164,7 +163,7 @@
                                 <input asp-for="Company" />
                                 @if (Model.CompanyRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="Company"></span>
                             </div>
@@ -201,7 +200,7 @@
                                 <input asp-for="StreetAddress" />
                                 @if (Model.StreetAddressRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="StreetAddress"></span>
                             </div>
@@ -213,7 +212,7 @@
                                 <input asp-for="StreetAddress2" />
                                 @if (Model.StreetAddress2Required)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="StreetAddress2"></span>
                             </div>
@@ -225,7 +224,7 @@
                                 <input asp-for="ZipPostalCode" />
                                 @if (Model.ZipPostalCodeRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="ZipPostalCode"></span>
                             </div>
@@ -237,7 +236,7 @@
                                 <input asp-for="City" />
                                 @if (Model.CityRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="City"></span>
                             </div>
@@ -249,7 +248,7 @@
                                 <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
                                 @if (Model.CountryRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="CountryId"></span>
                             </div>
@@ -261,7 +260,7 @@
                                 <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
                                 @if (Model.StateProvinceRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="StateProvinceId"></span>
                                 <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
@@ -284,7 +283,7 @@
                                 <input asp-for="Phone" />
                                 @if (Model.PhoneRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="Phone"></span>
                             </div>
@@ -296,7 +295,7 @@
                                 <input asp-for="Fax" />
                                 @if (Model.FaxRequired)
                                 {
-                                    @Html.RequiredHint()
+                                    <nop-required />
                                 }
                                 <span asp-validation-for="Fax"></span>
                             </div>
