@@ -352,12 +352,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-
 	    public virtual IActionResult Configure(string systemName)
 	    {
-	        if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-	            return AccessDeniedView();
-
 	        var descriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName);
 	        if (descriptor == null || !descriptor.Installed)
 	            return Redirect("List");
