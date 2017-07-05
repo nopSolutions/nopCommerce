@@ -266,6 +266,8 @@ namespace Nop.Web.Framework.UI
                 //parts to  bundle
                 if (partsToBundle.Any())
                 {
+                    //ensure \bundles directory exists
+                    Directory.CreateDirectory(Path.Combine(_hostingEnvironment.WebRootPath, "bundles"));
 
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
@@ -399,6 +401,8 @@ namespace Nop.Web.Framework.UI
                 //parts to  bundle
                 if (partsToBundle.Any())
                 {
+                    //ensure \bundles directory exists
+                    Directory.CreateDirectory(Path.Combine(_hostingEnvironment.WebRootPath, "bundles"));
 
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)

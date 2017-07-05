@@ -71,13 +71,12 @@
                         <div class="result">@result</div>
                     }
                 </div>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
+                
+                <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
                             @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new {@class = "enter-comment-text"})
+                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
                             @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
@@ -88,9 +87,9 @@
                         }
                     </div>
                     <div class="buttons">
-                        <input type="submit" name="add-comment" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")"/>
+                        <input type="submit" name="add-comment" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
                     </div>
-                }
+                </form>
             </div>
             if (Model.Comments.Count > 0)
             {

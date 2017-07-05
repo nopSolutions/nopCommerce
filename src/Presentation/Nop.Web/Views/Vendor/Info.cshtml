@@ -12,47 +12,40 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
 }
-@using (Html.BeginRouteForm("CustomerVendorInfo", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-    <div class="page account-page vendorinfo-page">
-        <div class="page-title">
-            <h1>@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
-        </div>
-        <div class="page-body">
-            @{
-                var validationSummary = Html.ValidationSummary(true);
-            }
-            @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-            {
-                <div class="message-error">@validationSummary</div>
-            }
+
+<div class="page account-page vendorinfo-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.VendorInfo")</h1>
+    </div>
+    <div class="page-body">
+        <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Name, new {}, ":")
-                        @Html.EditorFor(model => model.Name)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.Name)
+                        <label asp-for="Name">@T("Account.VendorInfo.Name"):</label>
+                        <input asp-for="Name"/>
+                        <nop-required />
+                        <span asp-validation-for="Name"></span>
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Email, new {}, ":")
-                        @Html.EditorFor(model => model.Email)
-                        @Html.RequiredHint()
-                        @Html.ValidationMessageFor(model => model.Email)
+                        <label asp-for="Email">@T("Account.VendorInfo.Email"):</label>
+                        <input asp-for="Email"/>
+                        <nop-required />
+                        <span asp-validation-for="Email"></span>
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Description, new {}, ":")
-                        @Html.TextAreaFor(model => model.Description)
-                        @Html.ValidationMessageFor(model => model.Description)
+                        <label asp-for="Description">@T("Account.VendorInfo.Description"):</label>
+                        <textarea asp-for="Description"></textarea>
+                        <span asp-validation-for="Description"></span>
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.PictureUrl, new { }, ":")
+                        <label asp-for="PictureUrl">@T("Account.VendorInfo.Picture"):</label>
                         <input name="uploadedFile" type="file" />
                         @if (!String.IsNullOrEmpty(Model.PictureUrl))
                         {
                             <div class="vendor-picture">
-                                <img src="@(Model.PictureUrl)" alt="picture"/>
+                                <img src="@(Model.PictureUrl)" alt="picture" />
                                 <input type="submit" name="remove-picture" class="button-2 remove-picture-button" value="@T("Account.VendorInfo.Picture.Remove")" />
                             </div>
                         }
@@ -62,6 +55,6 @@
             <div class="buttons">
                 <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-vendorinfo-button" />
             </div>
-        </div>
+        </form>
     </div>
-                }
+</div>

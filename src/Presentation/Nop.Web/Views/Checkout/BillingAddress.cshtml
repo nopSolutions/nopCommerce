@@ -14,16 +14,15 @@
         <h1>@T("Checkout.BillingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
-        {
+        <form asp-route="CheckoutBillingAddress" method="post">
             <div class="billing-addresses">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_top" })
+                @await Component.InvokeAsync("Widget", new {widgetZone = "checkout_billing_address_top"})
                 @if (Model.ShipToSameAddressAllowed)
                 {
                     <div class="section ship-to-same-address">
                         <div class="selector">
-                            @Html.CheckBoxFor(x => x.ShipToSameAddress)
-                            <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                            <input asp-for="ShipToSameAddress"/>
+                            <label asp-for="ShipToSameAddress">@T("Checkout.ShipToSameAddress")</label>
                         </div>
                     </div>
                 }
@@ -115,10 +114,13 @@
                                         <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()"/>
                                         <script type="text/javascript">
                                             function selectBillingAddress@(item.Id)() {
-                                                if ($('#@Html.FieldIdFor(model => model.ShipToSameAddress)').is(':checked')) {
-                                                    setLocation('@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
+                                                if ($('#@Html.FieldIdFor(model => model.ShipToSameAddress)')
+                                                    .is(':checked')) {
+                                                    setLocation(
+                                                        '@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
                                                 } else {
-                                                    setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id })');
+                                                    setLocation(
+                                                        '@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id})');
                                                 }
                                             }
                                         </script>
@@ -128,7 +130,7 @@
                         </div>
                     </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_middle" })
+                @await Component.InvokeAsync("Widget", new {widgetZone = "checkout_billing_address_middle"})
                 <div class="section new-billing-address">
                     <div class="title">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -155,12 +157,12 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_bottom" })
+                @await Component.InvokeAsync("Widget", new {widgetZone = "checkout_billing_address_bottom"})
             </div>
             <div class="buttons">
-                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
+                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button"/>
             </div>
-        }
+        </form>
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
