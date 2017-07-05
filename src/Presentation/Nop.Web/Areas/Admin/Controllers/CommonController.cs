@@ -59,7 +59,6 @@ namespace Nop.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStaticCacheManager _cacheManager;
@@ -88,7 +87,6 @@ namespace Nop.Admin.Controllers
             ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
-            IHttpContextAccessor httpContextAccessor,
             IMaintenanceService maintenanceService,
             IHostingEnvironment hostingEnvironment,
             IStaticCacheManager cacheManager)
@@ -113,7 +111,6 @@ namespace Nop.Admin.Controllers
             this._settingService = settingService;
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
-            this._httpContextAccessor = httpContextAccessor;
             this._maintenanceService = maintenanceService;
             this._hostingEnvironment = hostingEnvironment;
             this._cacheManager = cacheManager;

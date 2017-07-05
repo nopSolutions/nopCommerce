@@ -337,8 +337,8 @@ namespace Nop.Web.Factories
         }
 
 #endregion
-
-#region Categories
+        
+        #region Categories
 
         /// <summary>
         /// Prepare category model
@@ -760,10 +760,10 @@ namespace Nop.Web.Factories
 
             return result;
         }
-
-#endregion
-
-#region Manufacturers
+        
+        #endregion
+        
+        #region Manufacturers
 
         /// <summary>
         /// Prepare manufacturer model
@@ -977,10 +977,10 @@ namespace Nop.Web.Factories
             
             return cachedModel;
         }
-
-#endregion
-
-#region Vendors
+        
+        #endregion
+        
+        #region Vendors
 
         /// <summary>
         /// Prepare vendor model
@@ -1105,10 +1105,10 @@ namespace Nop.Web.Factories
             
             return cachedModel;
         }
-
-#endregion
-
-#region Product tags
+        
+        #endregion
+        
+        #region Product tags
 
         /// <summary>
         /// Prepare popular product tags model
@@ -1223,10 +1223,10 @@ namespace Nop.Web.Factories
                 .ToList();
             return model;
         }
-
-#endregion
-
-#region Searching
+        
+        #endregion
+        
+        #region Searching
 
         /// <summary>
         /// Prepare search model
@@ -1471,7 +1471,7 @@ namespace Nop.Web.Factories
             };
             return model;
         }
-
-#endregion
+        
+        #endregion
     }
 }
