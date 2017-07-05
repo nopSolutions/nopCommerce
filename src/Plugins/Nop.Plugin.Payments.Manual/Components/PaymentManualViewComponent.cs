@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +14,7 @@ namespace Nop.Plugin.Payments.Manual.Components
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = new PaymentInfoModel
+            var model = new PaymentInfoModel()
             {
                 CreditCardTypes = new List<SelectListItem>
                 {
@@ -37,19 +38,22 @@ namespace Nop.Plugin.Payments.Manual.Components
                 model.ExpireMonths.Add(new SelectListItem { Text = i.ToString("D2"), Value = i.ToString(), });
             }
 
-            //set postback values
-            var form = this.Request.Form;
-            model.CardNumber = form["CardNumber"];
-            model.CardCode = form["CardCode"];
-            var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedCcType != null)
-                selectedCcType.Selected = true;
-            var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedMonth != null)
-                selectedMonth.Selected = true;
-            var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedYear != null)
-                selectedYear.Selected = true;
+            //set postback values (we cannot access "Form" with "GET" requests)
+            if (this.Request.Method != WebRequestMethods.Http.Get)
+            {
+                var form = this.Request.Form;
+                model.CardNumber = form["CardNumber"];
+                model.CardCode = form["CardCode"];
+                var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
+                if (selectedCcType != null)
+                    selectedCcType.Selected = true;
+                var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
+                if (selectedMonth != null)
+                    selectedMonth.Selected = true;
+                var selectedYear = model.ExpireYears.FirstOrDefault(x => x.Value.Equals(form["ExpireYear"], StringComparison.InvariantCultureIgnoreCase));
+                if (selectedYear != null)
+                    selectedYear.Selected = true;
+            }
 
             return View("~/Plugins/Payments.Manual/Views/PaymentInfo.cshtml", model);
         }
