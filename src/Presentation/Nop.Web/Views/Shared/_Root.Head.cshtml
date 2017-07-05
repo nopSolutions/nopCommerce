@@ -1,9 +1,12 @@
-﻿@using StackExchange.Profiling
+﻿@using Nop.Core.Domain
+@using StackExchange.Profiling
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
+@using Nop.Services.Security
 @inject CommonSettings commonSettings
+@inject IPermissionService permissionService
 @inject SeoSettings seoSettings
-
+@inject StoreInformationSettings storeInformationSettings
 @{
     Html.AppendScriptParts("~/js/public.ajaxcart.js");
     Html.AppendScriptParts("~/js/public.common.js");
@@ -23,6 +26,9 @@
     {
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
+
+    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
+        && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
 }
 <!DOCTYPE html>
 <html@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
@@ -44,8 +50,10 @@
     @await Component.InvokeAsync("BlogRssHeaderLink")
     @*Favicon - upload favicon.ico file to the root directory*@
     @await Component.InvokeAsync("Favicon")
-    @*TODO add condition (only when enabled) - add mini profiler*@
-    <mini-profiler position="@RenderPosition.Left" />
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
 </head>
 <body>
