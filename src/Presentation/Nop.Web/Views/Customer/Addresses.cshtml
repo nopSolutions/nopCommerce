@@ -17,11 +17,9 @@
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="page-body">
+        @Html.AntiForgeryToken()
         @if (Model.Addresses.Count > 0)
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
                 <div class="address-list">
                     @for (int i = 0; i < Model.Addresses.Count; i++)
                     {
@@ -35,20 +33,20 @@
                                     @address.FirstName @address.LastName
                                 </li>
                                 <li class="email">
-                                    @Html.LabelFor(model => model.Addresses[i].Email, new {}, ":")
+                                    <label>@T("Address.Fields.Email"):</label>
                                     @address.Email
                                 </li>
                                 @if (address.PhoneEnabled)
                                 {
                                     <li class="phone">
-                                        @Html.LabelFor(model => model.Addresses[i].PhoneNumber, new {}, ":")
+                                        <label>@T("Address.Fields.PhoneNumber"):</label>
                                         @address.PhoneNumber
                                     </li>
                                 }
                                 @if (address.FaxEnabled)
                                 {
                                     <li class="fax">
-                                        @Html.LabelFor(model => model.Addresses[i].FaxNumber, new {}, ":")
+                                        <label>@T("Address.Fields.FaxNumber"):</label>
                                         @address.FaxNumber
                                     </li>
                                 }
@@ -144,7 +142,6 @@
                         }
                     }
                 </script>
-            }
         }
         else
         {

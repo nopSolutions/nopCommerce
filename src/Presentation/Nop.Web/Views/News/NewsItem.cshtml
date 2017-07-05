@@ -30,13 +30,7 @@
                     <strong>@T("News.Comments.LeaveYourComment")</strong>
                 </div>
                 <div class="notifications">
-                    @{
-                        var validationSummary = Html.ValidationSummary(true);
-                    }
-                    @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     @{
                         var result = TempData["nop.news.addcomment.result"] as string;
                     }
@@ -45,19 +39,17 @@
                         <div class="result">@result</div>
                     }
                 </div>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
+                <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentTitle)
-                            @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "enter-comment-title" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                            <label asp-for="AddNewComment.CommentTitle">@T("News.Comments.CommentTitle"):</label>
+                            <input asp-for="AddNewComment.CommentTitle" class="enter-comment-title"/>
+                            <span asp-validation-for="AddNewComment.CommentTitle"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                            <label asp-for="AddNewComment.CommentText">@T("News.Comments.CommentText"):</label>
+                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
+                            <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
@@ -69,7 +61,7 @@
                     <div class="buttons">
                         <input type="submit" name="add-comment" class="button-1 news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
                     </div>
-                }
+                </form>
             </div>
             if (Model.Comments.Count > 0)
             {

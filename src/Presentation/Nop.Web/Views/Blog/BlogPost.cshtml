@@ -54,15 +54,8 @@
                 <div class="title">
                     <strong>@T("Blog.Comments.LeaveYourComment")</strong>
                 </div>
-                @{
-                    var validationSummary = Html.ValidationSummary(true);
-                }
                 <div class="notifications">
-                    @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
-
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     @{
                         var result = TempData["nop.blog.addcomment.result"] as string;
                     }
@@ -75,9 +68,9 @@
                 <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                            <label asp-for="AddNewComment.CommentText">@T("Blog.Comments.CommentText"):</label>
+                            <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
+                            <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
