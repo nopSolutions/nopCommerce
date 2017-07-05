@@ -152,8 +152,6 @@ namespace Nop.Core.Infrastructure
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
             PluginManager.Initialize(mvcCoreBuilder.PartManager);
-            //resolve assemblies here. otherwise, plugins can thrown exceptions when rendering views
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -201,6 +199,9 @@ namespace Nop.Core.Infrastructure
             //run startup tasks
             if (!nopConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
+
+            //resolve assemblies here. otherwise, plugins can thrown exceptions when rendering views
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             return _serviceProvider;
         }
