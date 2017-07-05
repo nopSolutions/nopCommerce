@@ -9,7 +9,7 @@
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     //meta
     Html.AddMetaDescriptionParts(Model.MetaDescription);
-    Html.AddMetaKeywordParts(Model.MetaKeywords);
+    Html.AddHeadCustomParts(Model.MetaKeywords);
     //page class
     Html.AppendPageCssClassParts("html-product-details-page");
 
@@ -51,8 +51,7 @@
 <div class="page product-details-page">
     <div class="page-body">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
-        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, null, new { id = "product-details-form" }))
-        {
+        <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
@@ -168,7 +167,7 @@
                                     }
                                 </div>
                             </div>
-                        }
+                                        }
                         @if (Model.AssociatedProducts.Count == 0)
                         {
                             <div class="no-associated-products">
@@ -180,10 +179,10 @@
                     @await Html.PartialAsync("_ProductTags", Model.ProductTags)
                 </div>
                 @*we do not display "also purchased" for grouped products
-                @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })*@
+                    @await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })*@
                 @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
             </div>
-        }
+        </form>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
     </div>
 </div>
