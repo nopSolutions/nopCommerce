@@ -43,10 +43,9 @@
         <h1>@T("Account.Register")</h1>
     </div>
     <div class="page-body">
-        <form asp-route="Register" method="post">
+        <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
-
+            @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
