@@ -16,20 +16,15 @@
     <div class="page-body checkout-data">
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_info_top" })
         <div class="section payment-info">
-            @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
-            {
-                var validationSummary = Html.ValidationSummary(false);
-                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                {
-                    <div class="message-error">@validationSummary</div>
-                }
+            <form asp-route="CheckoutPaymentInfo" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="info">
                     @await Component.InvokeAsync(Model.PaymentViewComponentName)
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button" />
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button"/>
                 </div>
-            }
+            </form>
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_info_bottom" })
         <div class="section order-summary">
