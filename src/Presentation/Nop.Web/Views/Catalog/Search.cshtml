@@ -31,68 +31,67 @@
     </div>
     <div class="page-body">
         <div class="search-input">
-            @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
-            {
+            <form asp-route="ProductSearch" method="get">
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="basic-search">
                             <div class="inputs">
-                                @Html.LabelFor(model => model.q, new { }, ":")
-                                @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
+                                <label asp-for="q">@T("Search.SearchTerm"):</label>
+                                <input asp-for="q" class="search-text"/>
                             </div>
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
+                            @await Component.InvokeAsync("Widget", new {widgetZone = "productsearch_page_basic"})
                             <div class="inputs reversed">
-                                @Html.CheckBoxFor(model => model.adv)
-                                @Html.LabelFor(model => model.adv)
+                                <input asp-for="adv"/>
+                                <label asp-for="adv">@T("Search.AdvancedSearch")</label>
                             </div>
                         </div>
                         <div class="advanced-search" id="advanced-search-block">
                             @if (Model.AvailableCategories.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.cid, new { }, ":")
-                                    @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
+                                    <label asp-for="cid">@T("Search.Category"):</label>
+                                    <select asp-for="cid" asp-items="Model.AvailableCategories"></select>
                                 </div>
                                 <div class="inputs reversed">
-                                    @Html.CheckBoxFor(model => model.isc)
-                                    @Html.LabelFor(model => model.isc)
+                                    <input asp-for="isc"/>
+                                    <label asp-for="isc">@T("Search.IncludeSubCategories")</label>
                                 </div>
                             }
                             @if (Model.AvailableManufacturers.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.mid, new { }, ":")
-                                    @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
+                                    <label asp-for="mid">@T("Search.Manufacturer"):</label>
+                                    <select asp-for="mid" asp-items="Model.AvailableManufacturers"></select>
                                 </div>
                             }
                             @if (Model.asv && Model.AvailableVendors.Count > 0)
                             {
                                 <div class="inputs">
-                                    @Html.LabelFor(model => model.vid, new { }, ":")
-                                    @Html.DropDownListFor(model => model.vid, Model.AvailableVendors)
+                                    <label asp-for="vid">@T("Search.Vendor"):</label>
+                                    <select asp-for="vid" asp-items="Model.AvailableVendors"></select>
                                 </div>
                             }
                             <div class="inputs">
                                 <label>@T("Search.PriceRange"):</label>
                                 <span class="price-range">
                                     @T("Search.PriceRange.From")
-                                    @Html.TextBoxFor(model => model.pf, new { @class = "price-from" })
+                                    <input asp-for="pf" class="price-from"/>
                                     @T("Search.PriceRange.To")
-                                    @Html.TextBoxFor(model => model.pt, new { @class = "price-to" })
+                                    <input asp-for="pt" class="price-to" />
                                 </span>
                             </div>
                             <div class="inputs reversed">
-                                @Html.CheckBoxFor(model => model.sid)
-                                @Html.LabelFor(model => model.sid)
+                                <input asp-for="sid" />
+                                <label asp-for="sid">@T("Search.SearchInDescriptions")</label>
                             </div>
-                            @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_advanced" })
+                            @await Component.InvokeAsync("Widget", new {widgetZone = "productsearch_page_advanced"})
                         </div>
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" class="button-1 search-button" value="@T("Search.Button")" />
+                    <input type="submit" class="button-1 search-button" value="@T("Search.Button")"/>
                 </div>
-            }
+            </form>
         </div>
         @if (Model.Products.Count > 0)
         {

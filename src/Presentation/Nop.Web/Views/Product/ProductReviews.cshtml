@@ -26,38 +26,32 @@
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
-                    var validationSummary = Html.ValidationSummary(true);
-                    if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
+                <form asp-route="ProductReviews" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
                             <div class="inputs">
-                                @Html.LabelFor(model => model.AddProductReview.Title, new { }, ":")
-                                @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                                <label asp-for="AddProductReview.Title">@T("Reviews.Fields.Title"):</label>
+                                <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
+                                <nop-required />
+                                <span asp-validation-for="AddProductReview.Title"></span>
                             </div>
                             <div class="inputs">
-                                @Html.LabelFor(model => model.AddProductReview.ReviewText, new { }, ":")
-                                @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                                <label asp-for="AddProductReview.ReviewText">@T("Reviews.Fields.ReviewText"):</label>
+                                <textarea asp-for="AddProductReview.ReviewText" class="review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
+                                <nop-required />
+                                <span asp-validation-for="AddProductReview.ReviewText"></span>
                             </div>
                             <div class="review-rating">
                                 @Html.LabelFor(model => model.AddProductReview.Rating, new { }, ":")
                                 <ul>
                                     <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li class="rating-options">
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { id = "addproductrating_1" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { id = "addproductrating_2" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { id = "addproductrating_3" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { id = "addproductrating_4" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { id = "addproductrating_5" })
+                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" />
+                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" />
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" />
+                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" />
+                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5"/>
                                     </li>
                                     <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
                                 </ul>
@@ -73,7 +67,7 @@
                     <div class="buttons">
                         <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
                     </div>
-                }
+                </form>
             </div>
         }
         @if (Model.Items.Count > 0)

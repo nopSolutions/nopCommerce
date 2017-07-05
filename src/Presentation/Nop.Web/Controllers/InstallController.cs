@@ -174,11 +174,6 @@ namespace Nop.Web.Controllers
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-            
-            #if NET451
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-            #endif
 
             var model = new InstallModel
             {
@@ -213,11 +208,6 @@ namespace Nop.Web.Controllers
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-            
-            #if NET451
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-            #endif
 
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();

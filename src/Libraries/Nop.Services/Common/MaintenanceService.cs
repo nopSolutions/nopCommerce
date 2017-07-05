@@ -49,9 +49,12 @@ namespace Nop.Services.Common
 
         #region Utilities
 
-        protected virtual string GetBackupDirectoryPath()
+        protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
+            var path = Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
+            if (ensureFolderCreated)
+                System.IO.Directory.CreateDirectory(path);
+            return path;
         }
 
         protected virtual void CheckBackupSupported()

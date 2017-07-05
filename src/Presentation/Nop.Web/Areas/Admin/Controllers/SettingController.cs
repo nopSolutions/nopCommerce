@@ -1647,13 +1647,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            #if NET451
-
-            //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
-
-            #endif
-
             var model = new GeneralCommonSettingsModel();
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -2021,11 +2014,6 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-            #if NET451
-                //set page timeout to 5 minutes
-                this.Server.ScriptTimeout = 300;
-            #endif
 
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);

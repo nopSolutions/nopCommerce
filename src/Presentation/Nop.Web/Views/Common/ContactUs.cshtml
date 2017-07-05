@@ -22,42 +22,36 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                var validationSummary = Html.ValidationSummary(true);
-                if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                {
-                    <div class="message-error">@validationSummary</div> 
-                }
+            <form asp-route="ContactUs" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.FullName)
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.FullName)
+                            <label asp-for="FullName">@T("ContactUs.FullName"):</label>
+                            <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname" />
+                            <nop-required />
+                            <span asp-validation-for="FullName"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Email)
+                            <label asp-for="Email">@T("ContactUs.Email"):</label>
+                            <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email"/>
+                            <nop-required />
+                            <span asp-validation-for="Email"></span>
                         </div>
                         @if (Model.SubjectEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Subject)
-                                @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactUs.Subject.Hint") })
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.Subject)
+                                <label asp-for="Subject">@T("ContactUs.Subject"):</label>
+                                <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="subject" />
+                                <nop-required />
+                                <span asp-validation-for="Subject"></span>
                             </div>
                         }
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Enquiry)
-                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Enquiry)
+                            <label asp-for="Enquiry">@T("ContactUs.Enquiry"):</label>
+                            <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="enquiry"></textarea>
+                            <nop-required />
+                            <span asp-validation-for="Enquiry"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
@@ -70,7 +64,7 @@
                 <div class="buttons">
                     <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
-            }
+            </form>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_bottom" })
     </div>
