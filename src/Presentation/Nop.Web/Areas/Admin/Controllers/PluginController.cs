@@ -356,11 +356,13 @@ namespace Nop.Admin.Controllers
 	    {
 	        var descriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName);
 	        if (descriptor == null || !descriptor.Installed)
-	            return Redirect("List");
+	            return RedirectToAction("List");
 
 	        var url = descriptor.Instance().GetConfigurationPageUrl();
-	        //TODO implement logic when configuration page is not required
-	        return Redirect(url);
+	        if (String.IsNullOrEmpty(url))
+	            return RedirectToAction("List");
+
+            return Redirect(url);
 	    }
         
         //edit
