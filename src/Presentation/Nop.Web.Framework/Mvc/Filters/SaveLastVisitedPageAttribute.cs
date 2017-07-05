@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
                     return;
 
                 //whether is need to store last visited page URL

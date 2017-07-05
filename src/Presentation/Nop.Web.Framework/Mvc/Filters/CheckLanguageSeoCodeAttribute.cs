@@ -67,9 +67,9 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
-
+                
                 //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
                     return;
 
                 //whether SEO friendly URLs are enabled

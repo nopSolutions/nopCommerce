@@ -92,7 +92,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly
-                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                if (filterContext.HttpContext.Request.Method != WebRequestMethods.Http.Get)
                     return;
 
                 //whether all pages will be forced to use SSL no matter of the passed value
