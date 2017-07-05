@@ -31,7 +31,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             var serializerRequest = new XmlSerializer(typeof(mailingscenario));
             serializerRequest.Serialize(xmlWriter, mailingScenario);
 
-            var method = "POST";
+            var method = WebRequestMethods.Http.Post;
             var acceptType = "application/vnd.cpc.ship.rate-v3+xml";
             var url = string.Format("{0}/rs/ship/price", GetBaseUrl(isSandbox));
             var response = Request(parameters.ToString(), apiKey, method, acceptType, url, out errors);
@@ -186,7 +186,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 request.Headers.Add(HttpRequestHeader.Authorization, string.Format("Basic {0}", authorization));
                 request.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-CA");
 
-                if (method == "POST")
+                if (method == WebRequestMethods.Http.Post)
                 {
                     var postData = Encoding.Default.GetBytes(parameters);
                     request.ContentLength = postData.Length;

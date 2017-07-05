@@ -19,7 +19,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <summary>
         /// Cookie name to language for the installation page
         /// </summary>
-        private const string LanguageCookieName = "nop.installation.lang";
+        private const string LANGUAGE_COOKIE_NAME = ".Nop.Installation.Lang";
 
         /// <summary>
         /// Available languages
@@ -56,9 +56,8 @@ namespace Nop.Web.Infrastructure.Installation
             var httpContextAccessor = EngineContext.Current.Resolve<IHttpContextAccessor>();
             var httpContext = httpContextAccessor.HttpContext;
 
-            var cookieLanguageCode = "";
             //try to get cookie
-            httpContext.Request.Cookies.TryGetValue(LanguageCookieName, out cookieLanguageCode);
+            httpContext.Request.Cookies.TryGetValue(LANGUAGE_COOKIE_NAME, out string cookieLanguageCode);
 
             //ensure it's available (it could be delete since the previous installation)
             var availableLanguages = GetAvailableLanguages();
@@ -103,11 +102,11 @@ namespace Nop.Web.Infrastructure.Installation
 #if NET451
             var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
 
-            var cookie = new HttpCookie(LanguageCookieName);
+            var cookie = new HttpCookie(LANGUAGE_COOKIE_NAME);
             cookie.HttpOnly = true;
             cookie.Value = languageCode;
             cookie.Expires = DateTime.Now.AddHours(24);
-            httpContext.Response.Cookies.Remove(LanguageCookieName);
+            httpContext.Response.Cookies.Remove(LANGUAGE_COOKIE_NAME);
             httpContext.Response.Cookies.Add(cookie);
 #endif
         }

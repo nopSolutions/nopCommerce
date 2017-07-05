@@ -135,6 +135,7 @@ namespace Nop.Admin.Controllers
                 var tmp1 = shippingProvider.ToModel();
                 tmp1.IsActive = shippingProvider.IsShippingRateComputationMethodActive(_shippingSettings);
                 tmp1.LogoUrl = shippingProvider.PluginDescriptor.GetLogoUrl(_webHelper);
+                tmp1.ConfigurationUrl = shippingProvider.GetConfigurationPageUrl();
                 shippingProvidersModel.Add(tmp1);
             }
             shippingProvidersModel = shippingProvidersModel.ToList();
@@ -207,6 +208,7 @@ namespace Nop.Admin.Controllers
                 var model = provider.ToModel();
                 model.IsActive = provider.IsPickupPointProviderActive(_shippingSettings);
                 model.LogoUrl = provider.PluginDescriptor.GetLogoUrl(_webHelper);
+                model.ConfigurationUrl = provider.GetConfigurationPageUrl();
                 pickupPointProviderModel.Add(model);
             }
 

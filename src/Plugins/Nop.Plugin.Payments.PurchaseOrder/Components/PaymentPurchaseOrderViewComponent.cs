@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Payments.PurchaseOrder.Models;
 
@@ -9,11 +10,12 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Components
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            //set postback values
-            var model = new PaymentInfoModel
+            var model = new PaymentInfoModel();
+            //set postback values (we cannot access "Form" with "GET" requests)
+            if (this.Request.Method != WebRequestMethods.Http.Get)
             {
-                PurchaseOrderNumber = this.HttpContext?.Request?.Form?["PurchaseOrderNumber"]
-            };
+                model.PurchaseOrderNumber = this.HttpContext.Request.Form["PurchaseOrderNumber"];
+            }
 
             return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentInfo.cshtml", model);
         }

@@ -412,10 +412,8 @@ namespace Nop.Web.Controllers
                     //reset cache
                     DataSettingsHelper.ResetCache();
                     
-#if NET451
-                    var cacheManager = EngineContext.Current.ContainerManager.Resolve<IStaticCacheManager>();
+                    var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
                     cacheManager.Clear();
-#endif
 
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings

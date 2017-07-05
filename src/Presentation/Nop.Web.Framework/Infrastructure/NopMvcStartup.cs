@@ -18,11 +18,11 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
-            //add and configure MVC feature
-            services.AddNopMvc();
-
             //add MiniProfiler services
             services.AddMiniProfiler();
+
+            //add and configure MVC feature
+            services.AddNopMvc();
         }
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //MVC routing
-            application.UseNopMvc();
-
             //add MiniProfiler
             application.UseMiniProfiler();
+
+            //MVC routing
+            application.UseNopMvc();
         }
 
         /// <summary>

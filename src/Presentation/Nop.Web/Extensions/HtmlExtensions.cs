@@ -19,7 +19,6 @@ namespace Nop.Web.Extensions
 {
     public static class HtmlExtensions
     {
-        //TODO move to \Nop.Web.Framework\Extensions\HtmlExtensions.cs (except GetTopicSeName)
         /// <summary>
         /// BBCode editor
         /// </summary>

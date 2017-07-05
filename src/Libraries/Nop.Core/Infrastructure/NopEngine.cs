@@ -152,8 +152,6 @@ namespace Nop.Core.Infrastructure
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
             PluginManager.Initialize(mvcCoreBuilder.PartManager);
-            //resolve assemblies here. otherwise, plugins can thrown exceptions when rendering views
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -201,6 +199,12 @@ namespace Nop.Core.Infrastructure
             //run startup tasks
             if (!nopConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
+
+            //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+            //set App_Data path as base data directory (required to create and save SQL Server Compact database file in App_Data folder)
+            AppDomain.CurrentDomain.SetData("DataDirectory", CommonHelper.MapPath("~/App_Data/"));
 
             return _serviceProvider;
         }

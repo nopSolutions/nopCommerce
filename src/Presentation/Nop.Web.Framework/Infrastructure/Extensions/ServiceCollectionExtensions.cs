@@ -86,6 +86,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds services required for anti-forgery support
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddAntiForgery(this IServiceCollection services)
+        {
+            //override cookie name
+            services.AddAntiforgery(options =>
+            {
+                options.CookieName = ".Nop.Antiforgery";
+            });
+        }
+
+        /// <summary>
         /// Adds services required for application session state
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>

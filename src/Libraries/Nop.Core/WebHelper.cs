@@ -196,7 +196,6 @@ namespace Nop.Core
             var result = string.Empty;
 
             //try to get host from the request HOST header
-            //TODO test (it's better to yuse server variables)
             var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
             if (!StringValues.IsNullOrEmpty(hostHeader))
                 result = "http://" + hostHeader.FirstOrDefault();
