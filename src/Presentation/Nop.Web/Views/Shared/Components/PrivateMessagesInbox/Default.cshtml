@@ -2,7 +2,6 @@
 <div class="private-messages-box">
     <script type="text/javascript">
         $(document).ready(function () {
-
             $('#select-all-inbox').click(function () {
                 $('#pm-inbox-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
@@ -16,18 +15,16 @@
     </script>
     @if (Model.Messages.Count > 0)
     {
-        using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-        <div class="table-wrapper">
-            <table class="data-table" id="pm-inbox-table">
-                <colgroup>
-                    <col width="1" />
-                    <col />
-                    <col />
-                    <col width="1" />
-                </colgroup>
-                <thead>
+        <form asp-route="PrivateMessagesInbox" method="post">
+            <div class="table-wrapper">
+                <table class="data-table" id="pm-inbox-table">
+                    <colgroup>
+                        <col width="1" />
+                        <col />
+                        <col />
+                        <col width="1" />
+                    </colgroup>
+                    <thead>
                     <tr>
                         <th class="select">
                             <input type="checkbox" id="select-all-inbox" />
@@ -42,8 +39,8 @@
                             @T("PrivateMessages.Inbox.DateColumn")
                         </th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @for (int i = 0; i < Model.Messages.Count; i++)
                     {
                         var item = Model.Messages[i];
@@ -69,20 +66,22 @@
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
-        var pager = Html.Pager(Model.PagerModel);
-        if (!String.IsNullOrEmpty(pager.ToHtmlString()))
-        {
+                    </tbody>
+                </table>
+            </div>
+            @{
+                var pager = Html.Pager(Model.PagerModel);
+            }
+            @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+            {
             <div class="pager">
                 @pager
             </div>
-        }
-        <div class="buttons">
-            <input class="button-1 delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
-            <input class="button-2 mark-unread-pm-button" name="mark-unread" type="submit" value="@T("PrivateMessages.Inbox.MarkAsUnread")" />
-        </div>
-        }
+            }
+            <div class="buttons">
+                <input class="button-1 delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
+                <input class="button-2 mark-unread-pm-button" name="mark-unread" type="submit" value="@T("PrivateMessages.Inbox.MarkAsUnread")" />
+            </div>
+        </form>
     }
 </div>
