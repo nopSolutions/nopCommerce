@@ -203,6 +203,9 @@ namespace Nop.Core.Infrastructure
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
+            //set App_Data path as base data directory
+            AppDomain.CurrentDomain.SetData("DataDirectory", CommonHelper.MapPath("~/App_Data/"));
+
             return _serviceProvider;
         }
 
