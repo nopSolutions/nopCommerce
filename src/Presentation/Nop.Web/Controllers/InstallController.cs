@@ -397,9 +397,8 @@ namespace Nop.Web.Controllers
                     {
                         if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
                             continue;
-#if NET451
+
                         plugin.Install();
-#endif
                     }
 
                     //register default permissions

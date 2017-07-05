@@ -52,8 +52,9 @@ namespace Nop.Core.Infrastructure
             var startupTasks = typeFinder.FindClassesOfType<IStartupTask>();
 
             //create and sort instances of startup tasks
+            //we startup this interface even for not installed plugins. 
+            //otherwise, DbContext initializers won't run and a plugin installation won't work
             var instances = startupTasks
-                .Where(startupTask => PluginManager.FindPlugin(startupTask).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
                 .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
                 .OrderBy(startupTask => startupTask.Order);
 
