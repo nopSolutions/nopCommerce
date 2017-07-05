@@ -23,11 +23,10 @@
                 <div class="title">
                     <strong>@T("Account.CustomerOrders.RecurringOrders")</strong>
                 </div>
-                @using (Html.BeginForm())
-                {
-                    var canRetryRecurringOrders = Model.RecurringOrders.Any(recurring => recurring.CanRetryLastPayment);
-
-                    @Html.AntiForgeryToken()
+                <form asp-route="CustomerOrders" method="post">
+                    @{
+                        var canRetryRecurringOrders = Model.RecurringOrders.Any(recurring => recurring.CanRetryLastPayment);
+                    }
                     <div class="table-wrapper">
                         <table class="data-table">
                             <colgroup>
@@ -37,7 +36,9 @@
                                 <col />
                                 <col />
                                 <col />
-                                @if (canRetryRecurringOrders) { <col /> }
+                                @if (canRetryRecurringOrders)
+                                {
+                                    <col /> }
                                 <col />
                             </colgroup>
                             <thead>
@@ -113,43 +114,43 @@
                             </tbody>
                         </table>
                     </div>
-                }
+                </form>
             </div>
-            if (Model.RecurringPaymentErrors.Any())
-            {
-                <div class="message-error">
-                    <ul>
-                        @foreach (var error in Model.RecurringPaymentErrors)
+                        if (Model.RecurringPaymentErrors.Any())
                         {
-                            <li>@error</li>
+                            <div class="message-error">
+                                <ul>
+                                    @foreach (var error in Model.RecurringPaymentErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            </div>
+                            }
                         }
-                    </ul>
-                </div>
-            }
-        }
-        
+
         @if (Model.Orders.Count > 0)
         {
             <div class="order-list">
                 @foreach (var order in Model.Orders)
                 {
-                <div class="section order-item">
-                    <div class="title">
-                        <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
+                    <div class="section order-item">
+                        <div class="title">
+                            <strong>@T("Account.CustomerOrders.OrderNumber"): @order.CustomOrderNumber</strong>
+                        </div>
+                        <ul class="info">
+                            <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
+                            <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
+                            <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
+                        </ul>
+                        <div class="buttons">
+                            @if (order.IsReturnRequestAllowed)
+                            {
+                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
+                            }
+                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
+                        </div>
                     </div>
-                    <ul class="info">
-                        <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
-                        <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
-                        <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
-                    </ul>
-                    <div class="buttons">
-                        @if (order.IsReturnRequestAllowed)
-                        {
-                            <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
-                        }
-                        <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
-                    </div>
-                </div>
                 }
             </div>
         }
