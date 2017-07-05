@@ -55,43 +55,38 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                @using (Html.BeginForm())
-                {
-                    var validationSummary = Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text);
+                <form asp-route="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
                     </div>
-                    //TODO if (!HtmlString.IsNullOrEmpty(validationSummary))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
                     <div class="form-fields">
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Username, new { }, ":")
-                                @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
-                                @Html.ValidationMessageFor(m => m.Username)
+                                <label asp-for="Username">@T("Account.Login.Fields.UserName"):</label>
+                                <input asp-for="Username" class="username" autofocus="autofocus"/>
+                                <span asp-validation-for="Username"></span>
                             </div>
                         }
                         else
                         {
                             <div class="inputs">
-                                @Html.LabelFor(m => m.Email, new { }, ":")
-                                @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
-                                @Html.ValidationMessageFor(m => m.Email)
+                                <label asp-for="Email">@T("Account.Login.Fields.Email"):</label>
+                                <input asp-for="Email" class="email" autofocus="autofocus"/>
+                                <span asp-validation-for="Email"></span>
                             </div>
                         }
                         <div class="inputs">
-                            @Html.LabelFor(m => m.Password, new { }, ":")
-                            @Html.PasswordFor(m => m.Password, new { @class = "password" })
-                            @Html.ValidationMessageFor(m => m.Password)
+                            <label asp-for="Password">@T("Account.Login.Fields.Password"):</label>
+                            <input asp-for="Password" class="password" />
+                            <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs reversed">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                            <input asp-for="RememberMe" />
+                            <label asp-for="RememberMe">@T("Account.Login.Fields.RememberMe")</label>
                             <span class="forgot-password">
-                                @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                                <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                             </span>
                         </div>
                         @if (Model.DisplayCaptcha)
@@ -102,9 +97,9 @@
                         }
                     </div>
                     <div class="buttons">
-                        <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                        <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")"/>
                     </div>
-                }
+                </form>
             </div>
         </div>
         <div class="external-authentication">
