@@ -17,6 +17,9 @@ namespace Nop.Admin.Models.Payments
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.IsActive")]
         public bool IsActive { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Configure")]
+        public string ConfigurationUrl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.Logo")]
         public string LogoUrl { get; set; }
 
