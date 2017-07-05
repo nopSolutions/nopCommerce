@@ -57,6 +57,9 @@ namespace Nop.Web.Framework.Infrastructure
             //add HTTP sesion state feature
             services.AddHttpSession();
 
+            //add anti-forgery
+            services.AddAntiForgery();
+
             //add localization
             services.AddLocalization();
 
