@@ -14,26 +14,25 @@
         <h1>@T("Checkout.ShippingAddress")</h1>
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
-        {
-            if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
+        <form asp-route="CheckoutShippingAddress" method="post">
+            @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
             {
-                    <div class="section pickup-in-store">
+                <div class="section pickup-in-store">
                     <div class="selector">
-                        @Html.CheckBoxFor(x => x.PickUpInStore)
-                        <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@T("Checkout.PickupPoints").Text</label>
+                        <input asp-for="PickUpInStore"/>
+                        <label asp-for="PickUpInStore">@T("Checkout.PickupPoints")</label>
                     </div>
                     <div class="description">
                         @T("Checkout.PickupPoints.Description")
                     </div>
                     <script type="text/javascript">
-                        $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                        $(document).ready(function() {
+                            $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
                             togglePickUpInStore();
                         });
 
                         function togglePickUpInStore() {
-                            if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                                 $('#pickup-points-form').show();
                                 $('#shipping-addresses-form').hide();
                             } else {
@@ -45,20 +44,20 @@
                 </div>
             }
 
-            if (Model.AllowPickUpInStore)
+            @if (Model.AllowPickUpInStore)
             {
                 <div class="section pickup-points" id="pickup-points-form">
                     @if (Model.PickupPoints.Any())
                     {
                         if (Model.PickUpInStoreOnly)
-                        { 
-                            @Html.HiddenFor(x => x.PickUpInStore)
+                        {
+                            <input asp-for="PickUpInStore" type="hidden"/>
                         }
                         <div class="select-pickup-point">
                             @if (Model.PickupPoints.Count == 1)
                             {
                                 var point = Model.PickupPoints.First();
-                                @Html.Hidden("pickup-points-id", string.Format("{0}___{1}", point.Id, point.ProviderSystemName))
+                                <input name="pickup-points-id" id="pickup-points-id" type="hidden" value="@($"{point.Id}___{point.ProviderSystemName}")"/>
                                 <ul>
                                     <li class="single-pickup-point name">@point.Name</li>
                                     <li class="single-pickup-point address">@(string.Format("{0} {1} {2} {3}", point.Address, point.City, point.StateName, point.CountryName))</li>
@@ -100,95 +99,106 @@
                                         }
                                         <option value="@(string.Format("{0}___{1}", point.Id, point.ProviderSystemName))">@(addressLine)</option>
                                     }
-                                </select> 
+                                </select>
                             }
                         </div>
-                        if(Model.DisplayPickupPointsOnMap)
+                        if (Model.DisplayPickupPointsOnMap)
                         {
                             var src = string.Format("https://maps.googleapis.com/maps/api/js{0}", string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : string.Format("?key={0}", Model.GoogleMapsApiKey));
                             <div class="pickup-points-map" id="map">
                                 <script type="text/javascript">
-                                    var markers = new Map();
-                                    var googleMap = null;
-                                    $(document).ready(function () {
-                                        $.getScript("@src", function( data, textStatus, jqxhr ) {
-                                            google.maps.visualRefresh = true;
-                                            googleMap = new google.maps.Map(document.getElementById("map"), {
-                                                zoom: 15,
-                                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                                            });
-                                            var geocoder = new google.maps.Geocoder();
-                                            var infowindow = new google.maps.InfoWindow();
-                                            @for (var i = 0; i < Model.PickupPoints.Count; i++)
-                                            {
-                                                var point = Model.PickupPoints[i];
-                                                var value = string.Format("{0}___{1}", point.Id, point.ProviderSystemName);
-                                                var pickupPointInfo = Html.Raw(string.Format(@"<div class='pickup-point-info'><ul><li><strong>{0}</strong></li><li>{1}</li><li>{2}</li></ul></div>",
-                                                    point.Name, point.OpeningHours, point.PickupFee));
-                                                if (point.Latitude != null && point.Longitude != null)
+                    var markers = new Map();
+                    var googleMap = null;
+                    $(document).ready(function() {
+                        $.getScript("@src",
+                            function(data, textStatus, jqxhr) {
+                                google.maps.visualRefresh = true;
+                                googleMap = new google.maps.Map(document.getElementById("map"),
+                                    {
+                                        zoom: 15,
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                    });
+                                var geocoder = new google.maps.Geocoder();
+                                var infowindow = new google.maps.InfoWindow();
+                                @for (var i = 0; i < Model.PickupPoints.Count; i++)
+                                {
+                                    var point = Model.PickupPoints[i];
+                                    var value = string.Format("{0}___{1}", point.Id, point.ProviderSystemName);
+                                    var pickupPointInfo = Html.Raw(string.Format(@"<div class='pickup-point-info'><ul><li><strong>{0}</strong></li><li>{1}</li><li>{2}</li></ul></div>",
+                                        point.Name, point.OpeningHours, point.PickupFee));
+                                    if (point.Latitude != null && point.Longitude != null)
+                                    {
+                                        <text>
+                                            (function() {
+                                                var marker = new google.maps.Marker({
+                                                    map: googleMap,
+                                                    title: "@point.Name",
+                                                    position: new google.maps.LatLng(@point.Latitude,
+                                                        @point.Longitude),
+                                                    icon:
+                                                        "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                });
+                                                markers.set("@value", marker);
+                                                google.maps.event.addListener(marker,
+                                                    'click',
+                                                    function() {
+                                                        $('#pickup-points-select').val("@value")
+                                                        infowindow.setContent("@pickupPointInfo");
+                                                        infowindow.open(googleMap, marker);
+                                                    });
+                                                @if (i == 0)
                                                 {
-                                                    <text>
-                                                        (function() {
-                                                            var marker = new google.maps.Marker({
-                                                                map: googleMap,
-                                                                title: "@point.Name",
-                                                                position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
-                                                                icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                            });
-                                                            markers.set("@value", marker);
-                                                            google.maps.event.addListener(marker, 'click', function () {
+                                                    <text>googleMap.setCenter(marker.getPosition())</text>
+                                                }
+                                            }());
+                                        </text>
+                                    }
+                                    else
+                                    {
+                                        var address = string.Format("{0} {1} {2} {3}", point.Address, point.City, point.ZipPostalCode, point.CountryName);
+                                        <text>
+                                            geocoder.geocode({ 'address': "@address" },
+                                                function(results, status) {
+                                                    if (status === google.maps.GeocoderStatus.OK) {
+                                                        var marker = new google.maps.Marker({
+                                                            map: googleMap,
+                                                            title: "@point.Name",
+                                                            position: results[0].geometry.location,
+                                                            icon:
+                                                                "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                        });
+                                                        markers.set("@value", marker);
+                                                        google.maps.event.addListener(marker,
+                                                            'click',
+                                                            function() {
                                                                 $('#pickup-points-select').val("@value")
                                                                 infowindow.setContent("@pickupPointInfo");
                                                                 infowindow.open(googleMap, marker);
                                                             });
-                                                            @if (i == 0)
-                                                            {
-                                                                <text>googleMap.setCenter(marker.getPosition())</text>
-                                                            }
-                                                        }());
-                                                    </text>
-                                                }
-                                                else
-                                                {
-                                                    var address = string.Format("{0} {1} {2} {3}", point.Address, point.City, point.ZipPostalCode, point.CountryName);
-                                                    <text>
-                                                        geocoder.geocode({'address': "@address"}, function(results, status) {
-                                                            if (status === google.maps.GeocoderStatus.OK) {
-                                                                var marker = new google.maps.Marker({
-                                                                    map: googleMap,
-                                                                    title: "@point.Name",
-                                                                    position: results[0].geometry.location,
-                                                                    icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                                });
-                                                                markers.set("@value", marker);
-                                                                google.maps.event.addListener(marker, 'click', function () {
-                                                                    $('#pickup-points-select').val("@value")
-                                                                    infowindow.setContent("@pickupPointInfo");
-                                                                    infowindow.open(googleMap, marker);
-                                                                });
-                                                                @if (i == 0)
-                                                                {
-                                                                    <text>googleMap.setCenter(marker.getPosition())</text>
-                                                                }
-                                                            };
-                                                        });
-                                                    </text>
-                                                }
-                                            }
-                                        
-                                            $('#pickup-points-select').change(function() {
-                                                new google.maps.event.trigger(markers.get(this.value), 'click' );
-                                            });
+                                                        @if (i == 0)
+                                                        {
+                                                            <text>googleMap.setCenter(marker
+                                                            .getPosition())</text>
+                                                        }
+                                                    };
+                                                });
+                                        </text>
+                                    }
+                                }
 
-                                            $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(function() {
-                                                if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
-                                                    var center = googleMap.getCenter();
-                                                    google.maps.event.trigger(googleMap, 'resize');
-                                                    googleMap.setCenter(center);
-                                                }
-                                            })
-                                        })
-                                    })
+                                $('#pickup-points-select').change(function() {
+                                    new google.maps.event.trigger(markers.get(this.value), 'click');
+                                });
+
+                                $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
+                                    if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
+                                        var center = googleMap.getCenter();
+                                        google.maps.event.trigger(googleMap, 'resize');
+                                        googleMap.setCenter(center);
+                                    }
+                                })
+                            })
+                    })
                                 </script>
                             </div>
                         }
@@ -204,7 +214,7 @@
                 </div>
             }
 
-            if (!Model.PickUpInStoreOnly)
+            @if (!Model.PickUpInStoreOnly)
             {
                 <div class="shipping-addresses" id="shipping-addresses-form">
                     @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
@@ -293,7 +303,7 @@
                                             }
                                         </ul>
                                         <div class="select-button">
-                                            <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id })') " />
+                                            <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new {addressid = item.Id})') " />
                                         </div>
                                     </div>
                                 }
@@ -313,13 +323,7 @@
                             }
                         </div>
                         <div class="enter-address">
-                            @{
-                                var validationSummary = Html.ValidationSummary(true);
-                            }
-                            @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                            {
-                                <div class="message-error">@validationSummary</div>
-                            }
+                            <div asp-validation-summary="ModelOnly" class="message-error"></div>
                             @{
                                 var dataDictAddress = new ViewDataDictionary(ViewData);
                                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
@@ -329,11 +333,12 @@
                     </div>
                     @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
                 </div>
-            }
+                                }
             <div class="buttons">
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
-        }
+
+        </form>
         <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
