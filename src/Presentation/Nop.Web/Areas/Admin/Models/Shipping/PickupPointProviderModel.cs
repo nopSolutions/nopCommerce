@@ -22,7 +22,10 @@ namespace Nop.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo")]
         public string LogoUrl { get; set; }
-        
+
+        [NopResourceDisplayName("Admin.Configuration.Shipping.PickupPointProviders.Configure")]
+        public string ConfigurationUrl { get; set; }
+
         public string ConfigurationActionName { get; set; }
         public string ConfigurationControllerName { get; set; }
         public RouteValueDictionary ConfigurationRouteValues { get; set; }

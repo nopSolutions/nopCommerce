@@ -80,6 +80,7 @@ namespace Nop.Admin.Controllers
                 var tmp1 = paymentMethod.ToModel();
                 tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
                 tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
+                tmp1.ConfigurationUrl = paymentMethod.GetConfigurationPageUrl();
                 paymentMethodsModel.Add(tmp1);
             }
             paymentMethodsModel = paymentMethodsModel.ToList();

@@ -18,6 +18,9 @@ namespace Nop.Admin.Models.Cms
         [NopResourceDisplayName("Admin.ContentManagement.Widgets.Fields.IsActive")]
         public bool IsActive { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Widgets.Configure")]
+        public string ConfigurationUrl { get; set; }
+
         public string WidgetViewComponentName { get; set; }
         public RouteValueDictionary WidgetViewComponentArguments { get; set; }
     }

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Admin.Models.Tax
@@ -16,13 +13,8 @@ namespace Nop.Admin.Models.Tax
 
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")]
         public bool IsPrimaryTaxProvider { get; set; }
-
-
-
-
-
-        public string ConfigurationActionName { get; set; }
-        public string ConfigurationControllerName { get; set; }
-        public RouteValueDictionary ConfigurationRouteValues { get; set; }
+        
+        [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Configure")]
+        public string ConfigurationUrl { get; set; }
     }
 }

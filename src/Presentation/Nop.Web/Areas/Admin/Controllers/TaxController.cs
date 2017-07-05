@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -58,11 +59,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedKendoGridJson();
 
-            var taxProvidersModel = _taxService.LoadAllTaxProviders()
-                .Select(x => x.ToModel())
-                .ToList();
-            foreach (var tpm in taxProvidersModel)
-                tpm.IsPrimaryTaxProvider = tpm.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+            var taxProvidersModel = new List<TaxProviderModel>();
+            var taxProviders = _taxService.LoadAllTaxProviders();
+            foreach (var taxProvider in taxProviders)
+            {
+                var tmp1 = taxProvider.ToModel();
+                tmp1.IsPrimaryTaxProvider = tmp1.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                tmp1.ConfigurationUrl = taxProvider.GetConfigurationPageUrl();
+                taxProvidersModel.Add(tmp1);
+            }
+                
             var gridModel = new DataSourceResult
             {
                 Data = taxProvidersModel,

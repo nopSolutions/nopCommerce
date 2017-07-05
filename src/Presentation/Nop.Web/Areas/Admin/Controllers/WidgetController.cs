@@ -70,6 +70,7 @@ namespace Nop.Admin.Controllers
             {
                 var tmp1 = widget.ToModel();
                 tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
+                tmp1.ConfigurationUrl = widget.GetConfigurationPageUrl();
                 widgetsModel.Add(tmp1);
             }
             widgetsModel = widgetsModel.ToList();

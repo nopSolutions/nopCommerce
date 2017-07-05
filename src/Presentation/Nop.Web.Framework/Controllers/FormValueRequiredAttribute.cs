@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
@@ -35,7 +36,7 @@ namespace Nop.Web.Framework.Controllers
 
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            if (routeContext.HttpContext.Request.Method != "POST")
+            if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
                 return false;
 
             foreach (string buttonName in _submitButtonNames)

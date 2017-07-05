@@ -351,17 +351,6 @@ namespace Nop.Admin.Controllers
             _webHelper.RestartAppDomain();
             return RedirectToAction("List");
         }
-
-	    public virtual IActionResult Configure(string systemName)
-	    {
-	        var descriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName);
-	        if (descriptor == null || !descriptor.Installed)
-	            return Redirect("List");
-
-	        var url = descriptor.Instance().GetConfigurationPageUrl();
-	        //TODO implement logic when configuration page is not required
-	        return Redirect(url);
-	    }
         
         //edit
         public virtual IActionResult EditPopup(string systemName)

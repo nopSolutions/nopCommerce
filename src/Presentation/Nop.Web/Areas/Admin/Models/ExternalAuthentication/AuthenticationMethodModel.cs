@@ -16,5 +16,8 @@ namespace Nop.Admin.Models.ExternalAuthentication
 
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive")]
         public bool IsActive { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Configure")]
+        public string ConfigurationUrl { get; set; }
     }
 }

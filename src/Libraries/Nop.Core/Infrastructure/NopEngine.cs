@@ -200,7 +200,7 @@ namespace Nop.Core.Infrastructure
             if (!nopConfig.IgnoreStartupTasks)
                 RunStartupTasks(typeFinder);
 
-            //resolve assemblies here. otherwise, plugins can thrown exceptions when rendering views
+            //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             //set App_Data path as base data directory
