@@ -3,8 +3,8 @@
 @using Nop.Web.Models.Install
 @using Nop.Web.Infrastructure.Installation
 @*localization service for installation service
-we do not use standard nopCommerce localization because database is not installed yet
-locale resources for installation process are stored into \App_Data\Localization\Installation directory*@
+    we do not use standard nopCommerce localization because database is not installed yet
+    locale resources for installation process are stored into \App_Data\Localization\Installation directory*@
 @inject IInstallationLocalizationService ILS
 @{
     Layout = null;
@@ -36,7 +36,7 @@ locale resources for installation process are stored into \App_Data\Localization
         <div class="content-header clearfix">
             <div class="row">
                 <div class="col-xs-offset-9 col-xs-3">
-                    @Html.NopDropDownList("language", Model.AvailableLanguages, htmlAttributes: new { onchange = "window.location.href = this.value;", @class = "language-selector" })
+                    <select name="language" id="language" class="language-selector" onchange="window.location.href=this.value;" asp-items="Model.AvailableLanguages"></select>
                 </div>
             </div>
             <div class="row">
@@ -47,92 +47,90 @@ locale resources for installation process are stored into \App_Data\Localization
                 </div>
             </div>
         </div>
-        @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
-            {
+        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
             <div class="content">
-                @Html.ValidationSummary(false)
+                <div asp-validation-summary="All" class="message-error"></div>
 
                 @*<p>@ILS.GetResource("Tooltip1")</p>*@
                 <p>@ILS.GetResource("Tooltip2")</p>
                 <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
 
                 <script type="text/javascript">
-                    function showThrobber(message) {
-                        $('.throbber-header').html(message);
-                        window.setTimeout(function () {
-                            $(".throbber").show();
-                        }, 1000);
-                    }
+    function showThrobber(message) {
+        $('.throbber-header').html(message);
+        window.setTimeout(function () {
+            $(".throbber").show();
+        }, 1000);
+    }
 
-                    $(document).ready(function () {
-                        $('#installation-form').submit(function () {
-                            if ($('#installation-form').valid()) {
-                                $("html, body").animate({ scrollTop: 0 }, 400);
-                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
-                                $('input[type=submit]', this).attr('disabled', 'disabled');
-                            }
-                        });
-                    });
+    $(document).ready(function () {
+        $('#installation-form').submit(function () {
+            if ($('#installation-form').valid()) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
+                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
+                $('input[type=submit]', this).attr('disabled', 'disabled');
+            }
+        });
+    });
 
-                    $(document).ready(function () {
-                        $('#restart-form').submit(function () {
-                            $("html, body").animate({ scrollTop: 0 }, 400);
-                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
-                            $('input[type=submit]', this).attr('disabled', 'disabled');
-                        });
-                    });
+    $(document).ready(function () {
+        $('#restart-form').submit(function () {
+            $("html, body").animate({ scrollTop: 0 }, 400);
+            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
+            $('input[type=submit]', this).attr('disabled', 'disabled');
+        });
+    });
 
-                    $(document).ready(function () {
-                        $('input:radio[name=DataProvider]').click(toggleProvider);
-                        $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
-                        $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
-                        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
+    $(document).ready(function () {
+        $('input:radio[name=DataProvider]').click(toggleProvider);
+        $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
+        $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
+        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
 
-                        toggleProvider();
-                        toggleSqlConnectionInfo();
-                        toggleSqlAuthenticationType();
-                        toggleCollation();
-                    });
-
-
-                    function toggleProvider() {
-                        var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
-                        if (selectedProvider == 'provider_sqlce') {
-                            $('#sqlConnectionInfo').hide();
-                        } else if (selectedProvider == 'provider_sqlserver') {
-                            $('#sqlConnectionInfo').show();
-                        }
-                    }
-
-                    function toggleSqlConnectionInfo() {
-                        var selectedProvider = $("input[name=SqlConnectionInfo]:checked").attr('id');
-                        if (selectedProvider == 'sqlconnectioninfo_values') {
-                            $('#sqlDatabaseInfo').show();
-                            $('#sqlDatabaseConnectionString').hide();
-                        } else if (selectedProvider == 'sqlconnectioninfo_raw') {
-                            $('#sqlDatabaseInfo').hide();
-                            $('#sqlDatabaseConnectionString').show();
-                        }
-                    }
-
-                    function toggleSqlAuthenticationType() {
-                        var selectedProvider = $("input[name=SqlAuthenticationType]:checked").attr('id');
-                        if (selectedProvider == 'sqlauthenticationtype_sql') {
-                            $('#pnlSqlServerCredentials').show();
-                        } else if (selectedProvider == 'sqlauthenticationtype_windows') {
-                            $('#pnlSqlServerCredentials').hide();
-                        }
-                    }
+        toggleProvider();
+        toggleSqlConnectionInfo();
+        toggleSqlAuthenticationType();
+        toggleCollation();
+    });
 
 
-                    function toggleCollation() {
-                        if ($('#UseCustomCollation').is(':checked')) {
-                            $('#Collation').show();
-                        } else {
-                            $('#Collation').hide();
-                        }
-                    }
+    function toggleProvider() {
+        var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
+        if (selectedProvider == 'provider_sqlce') {
+            $('#sqlConnectionInfo').hide();
+        } else if (selectedProvider == 'provider_sqlserver') {
+            $('#sqlConnectionInfo').show();
+        }
+    }
 
+    function toggleSqlConnectionInfo() {
+        var selectedProvider = $("input[name=SqlConnectionInfo]:checked").attr('id');
+        if (selectedProvider == 'sqlconnectioninfo_values') {
+            $('#sqlDatabaseInfo').show();
+            $('#sqlDatabaseConnectionString').hide();
+        } else if (selectedProvider == 'sqlconnectioninfo_raw') {
+            $('#sqlDatabaseInfo').hide();
+            $('#sqlDatabaseConnectionString').show();
+        }
+    }
+
+    function toggleSqlAuthenticationType() {
+        var selectedProvider = $("input[name=SqlAuthenticationType]:checked").attr('id');
+        if (selectedProvider == 'sqlauthenticationtype_sql') {
+            $('#pnlSqlServerCredentials').show();
+        } else if (selectedProvider == 'sqlauthenticationtype_windows') {
+            $('#pnlSqlServerCredentials').hide();
+        }
+    }
+
+
+    function toggleCollation() {
+        if ($('#UseCustomCollation').is(':checked')) {
+            $('#Collation').show();
+        } else {
+            $('#Collation').hide();
+        }
+    }
                 </script>
 
                 <div class="form-horizontal">
@@ -152,7 +150,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @Html.NopEditorFor(x => x.AdminEmail)
+                                    <input asp-for="AdminEmail" class="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -162,7 +160,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @Html.PasswordFor(x => x.AdminPassword, new { @class = "form-control" })
+                                    <input asp-for="AdminPassword" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -172,7 +170,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                                    <input asp-for="ConfirmPassword" class="form-control" />
                                 </div>
                             </div>
                             @if (!Model.DisableSampleDataOption)
@@ -181,7 +179,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                     <div class="col-xs-7 col-xs-offset-4">
                                         <div class="checkbox">
                                             <label>
-                                                @Html.CheckBoxFor(x => x.InstallSampleData)
+                                                <input asp-for="InstallSampleData" />
                                                 @ILS.GetResource("CreateSampleData")
                                             </label>
                                         </div>
@@ -211,14 +209,14 @@ locale resources for installation process are stored into \App_Data\Localization
                                     {
                                         <div class="radio">
                                             <label>
-                                                @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
+                                                <input asp-for="DataProvider" value="sqlce" type="radio" checked="@(Model.DataProvider == "sqlce")" id="provider_sqlce"/>
                                                 @ILS.GetResource("SqlCompact")
                                             </label>
                                         </div>
                                     }
                                     <div class="radio">
                                         <label>
-                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
+                                            <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == "sqlserver")" id="provider_sqlserver" />
                                             @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
                                         </label>
                                     </div>
@@ -231,7 +229,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                     <div class="col-xs-7 col-xs-offset-4">
                                         <div class="checkbox">
                                             <label>
-                                                @Html.CheckBoxFor(x => x.SqlServerCreateDatabase)
+                                                <input asp-for="SqlServerCreateDatabase"/>
                                                 @ILS.GetResource("CreateDatabaseIfDoesNotExist")
                                             </label>
                                         </div>
@@ -246,13 +244,13 @@ locale resources for installation process are stored into \App_Data\Localization
                                     <div class="col-xs-7">
                                         <div class="radio">
                                             <label>
-                                                @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_values", (Model.SqlConnectionInfo == "sqlconnectioninfo_values"), new { id = "sqlconnectioninfo_values" })
+                                                <input asp-for="SqlConnectionInfo" value="sqlconnectioninfo_values" type="radio" checked="@(Model.SqlConnectionInfo == "sqlconnectioninfo_values")" id="sqlconnectioninfo_values" />
                                                 @ILS.GetResource("ConnectionStringValues")
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_raw", (Model.SqlConnectionInfo == "sqlconnectioninfo_raw"), new { id = "sqlconnectioninfo_raw" })
+                                                <input asp-for="SqlConnectionInfo" value="sqlconnectioninfo_raw" type="radio" checked="@(Model.SqlConnectionInfo == "sqlconnectioninfo_raw")" id="sqlconnectioninfo_raw" />
                                                 @ILS.GetResource("RawConnectionString")
                                             </label>
                                         </div>
@@ -267,7 +265,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                                 </label>
                                             </div>
                                             <div class="col-xs-7">
-                                                @Html.TextBoxFor(x => x.SqlServerName, new { @class = "form-control" })
+                                                <input asp-for="SqlServerName" class="form-control"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -277,7 +275,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                                 </label>
                                             </div>
                                             <div class="col-xs-7">
-                                                @Html.TextBoxFor(x => x.SqlDatabaseName, new { @class = "form-control" })
+                                                <input asp-for="SqlDatabaseName" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -290,13 +288,13 @@ locale resources for installation process are stored into \App_Data\Localization
                                         <div class="col-xs-7">
                                             <div class="radio">
                                                 <label>
-                                                    @Html.RadioButton("SqlAuthenticationType", "sqlauthentication", (Model.SqlAuthenticationType == "sqlauthentication"), new { id = "sqlauthenticationtype_sql" })
+                                                    <input asp-for="SqlAuthenticationType" value="sqlauthentication" type="radio" checked="@(Model.SqlAuthenticationType == "sqlauthentication")" id="sqlauthenticationtype_sql" />
                                                     @ILS.GetResource("SqlAuthentication")
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
-                                                    @Html.RadioButton("SqlAuthenticationType", "windowsauthentication", (Model.SqlAuthenticationType == "windowsauthentication"), new { id = "sqlauthenticationtype_windows" })
+                                                    <input asp-for="SqlAuthenticationType" value="windowsauthentication" type="radio" checked="@(Model.SqlAuthenticationType == "windowsauthentication")" id="sqlauthenticationtype_windows" />
                                                     @ILS.GetResource("WindowsAuthentication")
                                                 </label>
                                             </div>
@@ -310,7 +308,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                                 </label>
                                             </div>
                                             <div class="col-xs-7">
-                                                @Html.TextBoxFor(x => x.SqlServerUsername, new { @class = "form-control" })
+                                                <input asp-for="SqlServerUsername" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -320,7 +318,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                                 </label>
                                             </div>
                                             <div class="col-xs-7">
-                                                @Html.PasswordFor(x => x.SqlServerPassword, new { @class = "form-control" })
+                                                <input asp-for="SqlServerPassword" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -332,7 +330,7 @@ locale resources for installation process are stored into \App_Data\Localization
                                         </label>
                                     </div>
                                     <div class="col-xs-7">
-                                        @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "form-control" })
+                                        <input asp-for="DatabaseConnectionString" class="form-control" />
                                         <span class="hint">
                                             @ILS.GetResource("Example"):<br />
                                             Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
@@ -346,10 +344,10 @@ locale resources for installation process are stored into \App_Data\Localization
                                     <div class="col-xs-7 col-xs-offset-4">
                                         <div class="checkbox">
                                             <label>
-                                                @Html.CheckBoxFor(x => x.UseCustomCollation)
+                                                <input asp-for="UseCustomCollation" />
                                                 @ILS.GetResource("CustomCollation")
                                             </label>
-                                            @Html.TextBoxFor(x => x.Collation, new { @class = "form-control margin-t-10" })
+                                            <input asp-for="Collation" class="form-control margin-t-10"/>
                                         </div>
                                     </div>
                                 </div>
@@ -363,16 +361,16 @@ locale resources for installation process are stored into \App_Data\Localization
                     </div>
                 </div>
             </div>
-        }
+        </form>
+
         <div class="content-footer">
-            @using (Html.BeginForm("RestartInstall", "Install", FormMethod.Post, new { id = "restart-form" }))
-            {
+            <form asp-action="RestartInstall" asp-controller="Install" id="restart-form" method="post">
                 <div class="row">
                     <div class="col-xs-12 text-center">
                         <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
         <div class="throbber">
             <div class="curtain">
