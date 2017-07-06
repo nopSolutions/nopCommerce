@@ -56,7 +56,6 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ISearchTermService _searchTermService;
-        private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMaintenanceService _maintenanceService;
@@ -84,7 +83,6 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             ILocalizationService localizationService,
             ISearchTermService searchTermService,
-            ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
             IMaintenanceService maintenanceService,
@@ -108,7 +106,6 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._searchTermService = searchTermService;
-            this._settingService = settingService;
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
             this._maintenanceService = maintenanceService;

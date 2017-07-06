@@ -66,7 +66,6 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHostingEnvironment _hostingEnvironment; 
 
         private readonly CatalogSettings _catalogSettings;
@@ -102,7 +101,6 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IPageHeadBuilder pageHeadBuilder,
             IPictureService pictureService,
-            IHttpContextAccessor httpContextAccessor,
             IHostingEnvironment hostingEnvironment,
             CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings,
@@ -133,7 +131,6 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
-            this._httpContextAccessor = httpContextAccessor;
             this._hostingEnvironment = hostingEnvironment;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;

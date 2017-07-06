@@ -73,7 +73,6 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IStoreService _storeService;
         private readonly IEventPublisher _eventPublisher;
 
         private readonly MediaSettings _mediaSettings;
@@ -114,7 +113,6 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            IStoreService storeService,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService,
@@ -150,7 +148,6 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
-            this._storeService = storeService;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
