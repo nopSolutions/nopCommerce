@@ -7,7 +7,6 @@ using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Extensions;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -18,7 +17,7 @@ namespace Nop.Web.Infrastructure.Installation
     {
         #region Fields
 
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -137,69 +136,80 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Available installation languages</returns>
         public virtual IList<InstallationLanguage> GetAvailableLanguages()
         {
-            if (_availableLanguages == null)
+            if (_availableLanguages != null)
+                return _availableLanguages;
+
+            _availableLanguages = new List<InstallationLanguage>();
+            foreach (var filePath in Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
             {
-                _availableLanguages = new List<InstallationLanguage>();
-                foreach (var filePath in Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(filePath);
+
+                //get language code
+                var languageCode = "";
+                //we file name format: installation.{languagecode}.xml
+                var r = new Regex(Regex.Escape("installation.") + "(.*?)" + Regex.Escape(".xml"));
+                var matches = r.Matches(Path.GetFileName(filePath));
+                foreach (Match match in matches)
+                    languageCode = match.Groups[1].Value;
+
+                var languageNode = xmlDocument.SelectSingleNode(@"//Language");
+
+                if (languageNode == null || languageNode.Attributes == null)
+                    continue;
+
+                //get language friendly name
+                var languageName = languageNode.Attributes["Name"].InnerText.Trim();
+
+                //is default
+                var isDefaultAttribute = languageNode.Attributes["IsDefault"];
+                var isDefault = isDefaultAttribute != null && Convert.ToBoolean(isDefaultAttribute.InnerText.Trim());
+
+                //is default
+                var isRightToLeftAttribute = languageNode.Attributes["IsRightToLeft"];
+                var isRightToLeft = isRightToLeftAttribute != null && Convert.ToBoolean(isRightToLeftAttribute.InnerText.Trim());
+
+                //create language
+                var language = new InstallationLanguage
                 {
-                    var xmlDocument = new XmlDocument();
-                    xmlDocument.Load(filePath);
+                    Code = languageCode,
+                    Name = languageName,
+                    IsDefault = isDefault,
+                    IsRightToLeft = isRightToLeft,
+                };
 
+                //load resources
+                var resources = xmlDocument.SelectNodes(@"//Language/LocaleResource");
+                if (resources == null)
+                    continue;
+                foreach (XmlNode resNode in resources)
+                {
+                    if (resNode.Attributes == null)
+                        continue;
 
-                    //get language code
-                    var languageCode = "";
-                    //we file name format: installation.{languagecode}.xml
-                    var r = new Regex(Regex.Escape("installation.") + "(.*?)" + Regex.Escape(".xml"));
-                    var matches = r.Matches(Path.GetFileName(filePath));
-                    foreach (Match match in matches)
-                        languageCode = match.Groups[1].Value;
+                    var resNameAttribute = resNode.Attributes["Name"];
+                    var resValueNode = resNode.SelectSingleNode("Value");
 
-                    //get language friendly name
-                    var languageName = xmlDocument.SelectSingleNode(@"//Language").Attributes["Name"].InnerText.Trim();
+                    if (resNameAttribute == null)
+                        throw new NopException("All installation resources must have an attribute Name=\"Value\".");
+                    var resourceName = resNameAttribute.Value.Trim();
+                    if (string.IsNullOrEmpty(resourceName))
+                        throw new NopException("All installation resource attributes 'Name' must have a value.'");
 
-                    //is default
-                    var isDefaultAttribute = xmlDocument.SelectSingleNode(@"//Language").Attributes["IsDefault"];
-                    var isDefault = isDefaultAttribute != null && Convert.ToBoolean(isDefaultAttribute.InnerText.Trim());
+                    if (resValueNode == null)
+                        throw new NopException("All installation resources must have an element \"Value\".");
+                    var resourceValue = resValueNode.InnerText.Trim();
 
-                    //is default
-                    var isRightToLeftAttribute = xmlDocument.SelectSingleNode(@"//Language").Attributes["IsRightToLeft"];
-                    var isRightToLeft = isRightToLeftAttribute != null && Convert.ToBoolean(isRightToLeftAttribute.InnerText.Trim());
-
-                    //create language
-                    var language = new InstallationLanguage
+                    language.Resources.Add(new InstallationLocaleResource
                     {
-                        Code = languageCode,
-                        Name = languageName,
-                        IsDefault = isDefault,
-                        IsRightToLeft = isRightToLeft,
-                    };
-                    //load resources
-                    foreach (XmlNode resNode in xmlDocument.SelectNodes(@"//Language/LocaleResource"))
-                    {
-                        var resNameAttribute = resNode.Attributes["Name"];
-                        var resValueNode = resNode.SelectSingleNode("Value");
-
-                        if (resNameAttribute == null)
-                            throw new NopException("All installation resources must have an attribute Name=\"Value\".");
-                        var resourceName = resNameAttribute.Value.Trim();
-                        if (string.IsNullOrEmpty(resourceName))
-                            throw new NopException("All installation resource attributes 'Name' must have a value.'");
-
-                        if (resValueNode == null)
-                            throw new NopException("All installation resources must have an element \"Value\".");
-                        var resourceValue = resValueNode.InnerText.Trim();
-
-                        language.Resources.Add(new InstallationLocaleResource
-                        {
-                            Name = resourceName,
-                            Value = resourceValue
-                        });
-                    }
-
-                    _availableLanguages.Add(language);
-                    _availableLanguages = _availableLanguages.OrderBy(l => l.Name).ToList();
-
+                        Name = resourceName,
+                        Value = resourceValue
+                    });
                 }
+
+                _availableLanguages.Add(language);
+                _availableLanguages = _availableLanguages.OrderBy(l => l.Name).ToList();
+
             }
             return _availableLanguages;
         }
