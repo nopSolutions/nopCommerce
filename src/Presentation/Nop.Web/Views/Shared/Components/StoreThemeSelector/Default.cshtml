@@ -13,6 +13,6 @@
         Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
     });
     <div class="theme-selector">
-        @Html.DropDownList("store-theme", themes, new { onchange = "setLocation(this.value);" })
+        <select id="store-theme" name="store-theme" asp-items="@themes" onchange="setLocation(this.value);"></select>
     </div>
 }
