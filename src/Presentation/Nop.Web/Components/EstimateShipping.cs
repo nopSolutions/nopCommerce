@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Factories;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Orders;
-using Nop.Web.Models.ShoppingCart;
+using Nop.Web.Factories;
 
 namespace Nop.Web.Components
 {

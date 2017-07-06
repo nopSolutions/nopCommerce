@@ -1,14 +1,12 @@
 ﻿
 using System;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Extensions;
@@ -19,7 +17,6 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;

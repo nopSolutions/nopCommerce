@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 
 namespace Nop.Web.Framework.Localization
 {

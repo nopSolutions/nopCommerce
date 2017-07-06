@@ -1,7 +1,5 @@
 ﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Templates;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 

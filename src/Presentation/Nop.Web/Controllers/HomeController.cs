@@ -1,6 +1,6 @@
-﻿using Nop.Web.Framework.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Web.Controllers
 {

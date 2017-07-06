@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Messages;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;

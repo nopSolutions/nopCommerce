@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Threading.Tasks;
-using Nop.Core.Domain.Customers;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
-using System;
 
 namespace Nop.Web.Components
 {

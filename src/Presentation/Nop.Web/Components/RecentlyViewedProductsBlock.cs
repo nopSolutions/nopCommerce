@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
-using System.Linq;
-using System.Threading.Tasks;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Components

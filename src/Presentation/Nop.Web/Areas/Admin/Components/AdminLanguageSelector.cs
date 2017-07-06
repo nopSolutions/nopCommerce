@@ -1,7 +1,7 @@
 ﻿
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Common;
 using Nop.Core;

@@ -2,18 +2,18 @@
 using System;
 using System.Text;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Extensions
 {
