@@ -1,5 +1,5 @@
 {
-"FILES_ROOT":          "~/images/uploaded",
+"FILES_ROOT":          "/images/uploaded",
 "RETURN_URL_PREFIX":   "",
 "SESSION_PATH_KEY":    "",
 "THUMBS_VIEW_WIDTH":   "140",
