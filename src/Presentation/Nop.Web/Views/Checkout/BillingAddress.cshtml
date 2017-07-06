@@ -114,7 +114,7 @@
                                         <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button" onclick="selectBillingAddress@(item.Id)()"/>
                                         <script type="text/javascript">
                                             function selectBillingAddress@(item.Id)() {
-                                                if ($('#@Html.FieldIdFor(model => model.ShipToSameAddress)')
+                                                if ($('#@Html.IdFor(model => model.ShipToSameAddress)')
                                                     .is(':checked')) {
                                                     setLocation(
                                                         '@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
@@ -143,13 +143,7 @@
                         }
                     </div>
                     <div class="enter-address">
-                        @{
-                            var validationSummary = Html.ValidationSummary(true);
-                        }
-                        @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                        {
-                            <div class="message-error">@validationSummary</div>
-                        }
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
                         @{
                             var dataDictAddress = new ViewDataDictionary(ViewData);
                             dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
