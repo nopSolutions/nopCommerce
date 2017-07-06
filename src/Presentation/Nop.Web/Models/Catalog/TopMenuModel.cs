@@ -9,11 +9,11 @@ namespace Nop.Web.Models.Catalog
         public TopMenuModel()
         {
             Categories = new List<CategorySimpleModel>();
-            Topics = new List<TopMenuTopicModel>();
+            Topics = new List<TopicModel>();
         }
 
         public IList<CategorySimpleModel> Categories { get; set; }
-        public IList<TopMenuTopicModel> Topics { get; set; }
+        public IList<TopicModel> Topics { get; set; }
 
         public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
@@ -44,9 +44,8 @@ namespace Nop.Web.Models.Catalog
         }
 
         #region Nested classes
-
-        //TODO rename to TopicModel
-        public class TopMenuTopicModel : BaseNopEntityModel
+        
+        public class TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

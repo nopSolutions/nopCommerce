@@ -601,7 +601,7 @@ namespace Nop.Web.Factories
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
                 _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                 .Where(t => t.IncludeInTopMenu)
-                .Select(t => new TopMenuModel.TopMenuTopicModel
+                .Select(t => new TopMenuModel.TopicModel
                 {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title),
