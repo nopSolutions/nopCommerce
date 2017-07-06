@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Extensions;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Infrastructure.Installation
@@ -67,18 +68,16 @@ namespace Nop.Web.Infrastructure.Installation
                 return language;
 
             //let's find by current browser culture
-#if NET451
-            if (httpContext.Request.UserLanguages != null)
+            if (httpContext.Request.Headers.TryGetValue("Accept-Language", out var userLanguages))
             {
-                var userLanguage = httpContext.Request.UserLanguages.FirstOrDefault();
-                if (!String.IsNullOrEmpty(userLanguage))
+                var userLanguage = userLanguages.FirstOrDefault().Return(l => l.Split(',')[0], string.Empty);
+                if (!string.IsNullOrEmpty(userLanguage))
                 {
                     //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)
-                    language = availableLanguages
-                        .FirstOrDefault(l => userLanguage.StartsWith(l.Code, StringComparison.InvariantCultureIgnoreCase));
+                    language = availableLanguages.FirstOrDefault(l => userLanguage.StartsWith(l.Code, StringComparison.InvariantCultureIgnoreCase));
                 }
             }
-#endif
+
             if (language != null)
                 return language;
 
@@ -98,16 +97,15 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
-#if NET451
-            var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
-
-            var cookie = new HttpCookie(LANGUAGE_COOKIE_NAME);
-            cookie.HttpOnly = true;
-            cookie.Value = languageCode;
-            cookie.Expires = DateTime.Now.AddHours(24);
-            httpContext.Response.Cookies.Remove(LANGUAGE_COOKIE_NAME);
-            httpContext.Response.Cookies.Add(cookie);
-#endif
+            var httpContextAccessor = EngineContext.Current.Resolve<IHttpContextAccessor>();
+            var httpContext = httpContextAccessor.HttpContext;
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.Now.AddHours(24),
+                HttpOnly = true
+            };
+            httpContext.Response.Cookies.Delete(LANGUAGE_COOKIE_NAME);
+            httpContext.Response.Cookies.Append(LANGUAGE_COOKIE_NAME, languageCode, cookieOptions);
         }
 
         /// <summary>
