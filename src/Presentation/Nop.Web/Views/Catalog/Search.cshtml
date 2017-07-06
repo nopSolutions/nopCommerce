@@ -10,14 +10,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
+        $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
 
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
 
-        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }
         else {
