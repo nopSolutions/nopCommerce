@@ -16,15 +16,40 @@ namespace Nop.Web.Infrastructure.Installation
     /// </summary>
     public partial class InstallationLocalizationService : IInstallationLocalizationService
     {
+        #region Fields
+
+        private IHttpContextAccessor _httpContextAccessor;
+
+        #endregion
+
+        #region Constants
+
         /// <summary>
         /// Cookie name to language for the installation page
         /// </summary>
         private const string LANGUAGE_COOKIE_NAME = ".Nop.Installation.Lang";
 
+        #endregion
+
+        #region Ctor
+
+        public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor)
+        {
+            this._httpContextAccessor = httpContextAccessor;
+        }
+
+        #endregion
+
+        #region Utilities
+
         /// <summary>
         /// Available languages
         /// </summary>
         private IList<InstallationLanguage> _availableLanguages;
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Get locale resource value
@@ -53,8 +78,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Current language</returns>
         public virtual InstallationLanguage GetCurrentLanguage()
         {
-            var httpContextAccessor = EngineContext.Current.Resolve<IHttpContextAccessor>();
-            var httpContext = httpContextAccessor.HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
 
             //try to get cookie
             httpContext.Request.Cookies.TryGetValue(LANGUAGE_COOKIE_NAME, out string cookieLanguageCode);
@@ -97,8 +121,7 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
-            var httpContextAccessor = EngineContext.Current.Resolve<IHttpContextAccessor>();
-            var httpContext = httpContextAccessor.HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(24),
@@ -180,5 +203,7 @@ namespace Nop.Web.Infrastructure.Installation
             }
             return _availableLanguages;
         }
+
+        #endregion
     }
 }
