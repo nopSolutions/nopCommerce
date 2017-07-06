@@ -729,7 +729,7 @@ namespace Nop.Web.Controllers
                 });
             }
             
-#region Update existing shopping cart item?
+            #region Update existing shopping cart item?
 
             int updatecartitemid = 0;
             foreach (string formKey in form.Keys)
@@ -766,10 +766,10 @@ namespace Nop.Web.Controllers
                     });
                 }
             }
-
-#endregion
-
-#region Customer entered price
+            
+            #endregion
+            
+            #region Customer entered price
             decimal customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
             {
@@ -784,9 +784,9 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
-#endregion
+            #endregion
 
-#region Quantity
+            #region Quantity
 
             int quantity = 1;
             foreach (string formKey in form.Keys)
@@ -795,8 +795,8 @@ namespace Nop.Web.Controllers
                     int.TryParse(form[formKey], out quantity);
                     break;
                 }
-
-#endregion
+            
+            #endregion
 
             var addToCartWarnings = new List<string>();
 
