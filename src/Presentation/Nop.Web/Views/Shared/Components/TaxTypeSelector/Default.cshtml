@@ -23,5 +23,5 @@
     });
 }
 <div class="tax-display-type-selector">
-    @Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
+    <select id="customerTaxType" name="customerTaxType" asp-items="@taxTypes" onchange="setLocation(this.value);"></select>
 </div>
