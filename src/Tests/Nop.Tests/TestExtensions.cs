@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
-using NUnit.Framework;
-using Nop.Core;
 using System.Collections.Generic;
-using Rhino.Mocks.Constraints;
+using System.Linq;
+using Nop.Core;
+using NUnit.Framework;
 
 namespace Nop.Tests
 {
