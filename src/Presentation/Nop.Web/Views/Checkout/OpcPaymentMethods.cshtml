@@ -5,13 +5,20 @@
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
             <div class="use-reward-points">
-                @Html.CheckBoxFor(x => x.UseRewardPoints, Model.RewardPointsEnoughToPayForOrder ? new {@onclick = "PaymentMethod.toggleUseRewardPoints(this)"} : null)
-                @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
+                @if (Model.RewardPointsEnoughToPayForOrder)
+                {
+                    <input asp-for="UseRewardPoints" onclick="PaymentMethod.toggleUseRewardPoints(this)" />
+                }
+                else
+                {
+                    <input asp-for="UseRewardPoints" />
+                }
+                <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
                 @if (Model.RewardPointsEnoughToPayForOrder)
                 {
                     <script type="text/javascript">
                         $(document).ready(function() {
-                            PaymentMethod.toggleUseRewardPoints($('#@Html.FieldIdFor(model => model.UseRewardPoints)'));
+                            PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
                         });
                     </script>
                 }
@@ -32,7 +39,7 @@
                         <div class="method-name">
                             @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
-                                <div class ="payment-logo">
+                                <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">
                                         <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
                                     </label>

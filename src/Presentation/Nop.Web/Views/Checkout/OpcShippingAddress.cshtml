@@ -5,17 +5,15 @@
     {
         <div class="section pickup-in-store">
             <p class="selector">
-                @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })                
-                <label for="@Html.FieldIdFor(model => model.PickUpInStore)">
-                    @T("Checkout.PickupPoints").Text
-                </label>
+                <input asp-for="PickUpInStore" onclick="Shipping.togglePickUpInStore(this)" />
+                <label asp-for="PickUpInStore">@T("Checkout.PickupPoints")</label>
             </p>
             <p class="description">
                 <i>@T("Checkout.PickupPoints.Description")</i>
             </p>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    Shipping.togglePickUpInStore($('#@Html.FieldIdFor(model => model.PickUpInStore)'));
+                    Shipping.togglePickUpInStore($('#@Html.IdFor(model => model.PickUpInStore)'));
                 });
             </script>
         </div>
@@ -27,13 +25,13 @@
             {
                 if (Model.PickUpInStoreOnly)
                 { 
-                    @Html.HiddenFor(x => x.PickUpInStore)
+                    <input type="hidden" asp-for="PickUpInStore"/>
                 }
                 <div class="select-pickup-points">
                     @if (Model.PickupPoints.Count == 1)
                     {
                         var point = Model.PickupPoints.First();
-                        @Html.Hidden("pickup-points-id", string.Format("{0}___{1}", point.Id, point.ProviderSystemName))
+                        <input name="pickup-points-id" id="pickup-points-id" type="hidden" value="@($"{point.Id}___{point.ProviderSystemName}")" />
                         <div class="single-pickup-point">
                             <ul>
                                 <li class="single-pickup-point name">@point.Name</li>
@@ -155,8 +153,8 @@
                                         new google.maps.event.trigger(markers.get(this.value), 'click' );
                                     });
 
-                                    $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(function() {
-                                        if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                                    $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
+                                        if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                                             var center = googleMap.getCenter();
                                             google.maps.event.trigger(googleMap, 'resize');
                                             googleMap.setCenter(center);
@@ -225,13 +223,7 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_middle" })
             <div class="section new-shipping-address" id="shipping-new-address-form">
                 <div class="enter-address">
-                    @{
-                        var validationSummary = Html.ValidationSummary(true);
-                    }
-                    @if (!String.IsNullOrEmpty(validationSummary.ToHtmlString()))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     @{
                         var dataDictAddress = new ViewDataDictionary(ViewData);
                         dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
