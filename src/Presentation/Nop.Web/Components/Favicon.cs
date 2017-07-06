@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Factories;
+﻿using System;
 using System.Threading.Tasks;
-using System;
+using Microsoft.AspNetCore.Mvc;
+using Nop.Web.Factories;
 
 namespace Nop.Web.Components
 {

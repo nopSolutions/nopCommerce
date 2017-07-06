@@ -9,7 +9,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Extensions;
-using Nop.Core.Http;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;

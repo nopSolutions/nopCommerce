@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Shipping;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 

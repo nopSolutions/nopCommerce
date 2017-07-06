@@ -1,6 +1,4 @@
 ﻿using Nop.Core.Caching;
-using Nop.Core.Infrastructure;
-using Nop.Services.Messages;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Caching

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Localization;
-using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

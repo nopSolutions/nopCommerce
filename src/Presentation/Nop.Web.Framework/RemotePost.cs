@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Net;
 using System.Text;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Infrastructure;

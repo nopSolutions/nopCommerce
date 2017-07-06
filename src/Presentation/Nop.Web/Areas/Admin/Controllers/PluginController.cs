@@ -16,7 +16,6 @@ using Nop.Core.Plugins;
 using Nop.Services;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
