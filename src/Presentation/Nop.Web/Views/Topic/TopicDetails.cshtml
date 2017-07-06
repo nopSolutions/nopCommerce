@@ -72,19 +72,17 @@
         });
     </script>
     <div class="topic-password" id="ph-password">
-        @using (Html.BeginRouteForm("TopicAuthenticate"))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Id)
+        <form asp-route="TopicAuthenticate" method="post">
+            <input type="hidden" asp-for="Id" />
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
             </div>
             <div class="enter-password-form">
-                @Html.Password("password")
-                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
+                <input name="password" id="password" type="password"/>
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
             </div>
             <div class="password-error" id="password-error" style="display: none;"></div>
-        }
+        </form>
     </div>
 }
 <div class="page topic-page" id="ph-topic">
