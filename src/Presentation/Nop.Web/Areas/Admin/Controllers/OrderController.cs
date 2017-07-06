@@ -1892,11 +1892,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
-
-            var warnings = TempData["nop.admin.order.warnings"] as List<string>;
-            if (warnings != null)
-                model.Warnings = warnings;
-
+            
             return View(model);
         }
 
@@ -2317,7 +2313,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
-            model.Warnings = updateOrderParameters.Warnings;
+            foreach (var warning in updateOrderParameters.Warnings)
+                WarningNotification(warning, false);
 
             //selected tab
             SaveSelectedTabName(persistForTheNextRequest: false);
@@ -2398,7 +2395,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
-                model.Warnings = updateOrderParameters.Warnings;
+                foreach (var warning in updateOrderParameters.Warnings)
+                    WarningNotification(warning, false);
 
                 //selected tab
                 SaveSelectedTabName(persistForTheNextRequest: false);
@@ -2837,7 +2835,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //redirect to order details page
-                TempData["nop.admin.order.warnings"] = updateOrderParameters.Warnings;
+                foreach (var warning in updateOrderParameters.Warnings)
+                    WarningNotification(warning);
+
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
             

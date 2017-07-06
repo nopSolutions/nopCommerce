@@ -49,17 +49,6 @@
     </script>
 
     <div class="content">
-        @if (Model.Warnings.Count > 0)
-        {
-            <div class="callout callout-danger">
-                <ul>
-                    @foreach (var warning in Model.Warnings)
-                    {
-                        <li>@warning</li>
-                    }
-                </ul>
-            </div>
-        }
         <div class="form-horizontal">
             <div id="order-edit" class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
