@@ -43,14 +43,14 @@
                                 <span asp-validation-for="AddProductReview.ReviewText"></span>
                             </div>
                             <div class="review-rating">
-                                @Html.LabelFor(model => model.AddProductReview.Rating, new { }, ":")
+                                <label asp-for="AddProductReview.Rating">@T("Reviews.Fields.Rating"):</label>
                                 <ul>
                                     <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li class="rating-options">
-                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" />
-                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" />
-                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" />
-                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" />
+                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1"/>
+                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2"/>
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3"/>
+                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4"/>
                                         <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5"/>
                                     </li>
                                     <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
