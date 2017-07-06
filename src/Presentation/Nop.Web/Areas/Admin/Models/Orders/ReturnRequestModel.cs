@@ -1,10 +1,10 @@
 ﻿using System;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators.Orders;
+using Nop.Web.Areas.Admin.Validators.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Orders
+namespace Nop.Web.Areas.Admin.Models.Orders
 {
     [Validator(typeof(ReturnRequestValidator))]
     public partial class ReturnRequestModel : BaseNopEntityModel

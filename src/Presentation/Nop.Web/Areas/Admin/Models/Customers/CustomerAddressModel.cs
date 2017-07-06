@@ -1,7 +1,7 @@
-﻿using Nop.Admin.Models.Common;
+﻿using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Customers
+namespace Nop.Web.Areas.Admin.Models.Customers
 {
     public partial class CustomerAddressModel : BaseNopModel
     {

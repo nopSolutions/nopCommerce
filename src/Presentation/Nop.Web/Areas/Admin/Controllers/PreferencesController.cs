@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Common;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PreferencesController : BaseAdminController
     {

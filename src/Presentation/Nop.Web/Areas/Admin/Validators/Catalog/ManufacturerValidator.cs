@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Nop.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Catalog
+namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ManufacturerValidator : BaseNopValidator<ManufacturerModel>
     {

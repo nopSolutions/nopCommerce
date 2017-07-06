@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Home;
+using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -9,7 +9,7 @@ using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class CommonStatisticsViewComponent : ViewComponent
     {

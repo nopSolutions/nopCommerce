@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Cms;
+using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Services.Cms;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class AdminWidgetViewComponent : ViewComponent
     {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.News
+namespace Nop.Web.Areas.Admin.Models.News
 {
     public partial class NewsItemListModel : BaseNopModel
     {

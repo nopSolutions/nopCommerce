@@ -2,7 +2,7 @@
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
-using Nop.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -10,7 +10,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Customers
+namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {

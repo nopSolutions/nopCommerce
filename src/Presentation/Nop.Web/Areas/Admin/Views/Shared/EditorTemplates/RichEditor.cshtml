@@ -1,12 +1,10 @@
 ﻿@model String
 @inject IPermissionService permissionService
 @inject AdminAreaSettings adminAreaSettings
-
-@using Nop.Admin.Helpers
+@using Nop.Web.Areas.Admin.Helpers
 @using Nop.Core
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
-
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);

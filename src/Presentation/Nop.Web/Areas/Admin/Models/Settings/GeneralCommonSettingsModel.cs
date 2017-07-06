@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.Security.Captcha;
 
-namespace Nop.Admin.Models.Settings
+namespace Nop.Web.Areas.Admin.Models.Settings
 {
     public partial class GeneralCommonSettingsModel : BaseNopModel
     {

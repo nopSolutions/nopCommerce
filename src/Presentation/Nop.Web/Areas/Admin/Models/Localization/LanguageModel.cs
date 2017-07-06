@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Validators.Localization;
+using Nop.Web.Areas.Admin.Validators.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Localization
+namespace Nop.Web.Areas.Admin.Models.Localization
 {
     [Validator(typeof(LanguageValidator))]
     public partial class LanguageModel : BaseNopEntityModel

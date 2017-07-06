@@ -1,10 +1,10 @@
 ﻿using FluentValidation.Attributes;
-using Nop.Admin.Models.Common;
-using Nop.Admin.Validators.Shipping;
+using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Validators.Shipping;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Shipping
+namespace Nop.Web.Areas.Admin.Models.Shipping
 {
     [Validator(typeof(WarehouseValidator))]
     public partial class WarehouseModel : BaseNopEntityModel

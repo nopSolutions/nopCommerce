@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Nop.Admin.Infrastructure.Mapper;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper;
 using Nop.Core.Infrastructure.Mapper;
 using NUnit.Framework;
 

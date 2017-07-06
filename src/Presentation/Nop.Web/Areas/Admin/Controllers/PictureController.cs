@@ -6,7 +6,7 @@ using Nop.Core;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PictureController : BaseAdminController
     {

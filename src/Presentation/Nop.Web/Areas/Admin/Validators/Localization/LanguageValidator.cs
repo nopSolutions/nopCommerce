@@ -1,12 +1,12 @@
 ﻿using System.Globalization;
 using FluentValidation;
-using Nop.Admin.Models.Localization;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Localization
+namespace Nop.Web.Areas.Admin.Validators.Localization
 {
     public partial class LanguageValidator : BaseNopValidator<LanguageModel>
     {

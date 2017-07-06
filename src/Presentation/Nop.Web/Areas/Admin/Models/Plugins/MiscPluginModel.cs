@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Plugins
+namespace Nop.Web.Areas.Admin.Models.Plugins
 {
     public partial class MiscPluginModel : BaseNopModel
     {

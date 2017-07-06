@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.ShoppingCart;
+using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
@@ -14,7 +14,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Kendoui;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ShoppingCartController : BaseAdminController
     {

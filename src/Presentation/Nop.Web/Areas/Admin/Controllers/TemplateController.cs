@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Extensions;
-using Nop.Admin.Models.Templates;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Catalog;
@@ -11,7 +11,7 @@ using Nop.Services.Topics;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class TemplateController : BaseAdminController
     {

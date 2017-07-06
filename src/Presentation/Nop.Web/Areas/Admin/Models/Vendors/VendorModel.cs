@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
-using Nop.Admin.Models.Common;
-using Nop.Admin.Validators.Vendors;
+using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Validators.Vendors;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Vendors
+namespace Nop.Web.Areas.Admin.Models.Vendors
 {
     [Validator(typeof(VendorValidator))]
     public partial class VendorModel : BaseNopEntityModel, ILocalizedModel<VendorLocalizedModel>

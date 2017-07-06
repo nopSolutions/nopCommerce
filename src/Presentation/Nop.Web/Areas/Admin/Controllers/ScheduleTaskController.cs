@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Tasks;
+using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -11,7 +11,7 @@ using Nop.Services.Tasks;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ScheduleTaskController : BaseAdminController
 	{

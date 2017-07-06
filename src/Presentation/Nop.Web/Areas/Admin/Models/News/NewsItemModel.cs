@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Validators.News;
+using Nop.Web.Areas.Admin.Validators.News;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.News
+namespace Nop.Web.Areas.Admin.Models.News
 {
     [Validator(typeof(NewsItemValidator))]
     public partial class NewsItemModel : BaseNopEntityModel

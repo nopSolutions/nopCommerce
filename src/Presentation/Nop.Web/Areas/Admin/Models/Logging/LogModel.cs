@@ -2,7 +2,7 @@
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Logging
+namespace Nop.Web.Areas.Admin.Models.Logging
 {
     public partial class LogModel : BaseNopEntityModel
     {

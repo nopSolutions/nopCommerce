@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -11,7 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class OnlineCustomerController : BaseAdminController
     {

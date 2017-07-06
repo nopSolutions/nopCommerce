@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
-using Nop.Admin.Validators.Messages;
+using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Messages
+namespace Nop.Web.Areas.Admin.Models.Messages
 {
     [Validator(typeof(NewsLetterSubscriptionValidator))]
     public partial class NewsLetterSubscriptionModel : BaseNopEntityModel

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Validators.Discounts;
+using Nop.Web.Areas.Admin.Validators.Discounts;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Discounts
+namespace Nop.Web.Areas.Admin.Models.Discounts
 {
     [Validator(typeof(DiscountValidator))]
     public partial class DiscountModel : BaseNopEntityModel

@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     /// <summary>
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)

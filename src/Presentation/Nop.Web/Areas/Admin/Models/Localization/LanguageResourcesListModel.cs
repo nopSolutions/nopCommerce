@@ -1,7 +1,7 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Localization
+namespace Nop.Web.Areas.Admin.Models.Localization
 {
     public class LanguageResourcesListModel : BaseNopModel
     {

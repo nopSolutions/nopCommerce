@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Home;
+using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class HomeController : BaseAdminController
     {

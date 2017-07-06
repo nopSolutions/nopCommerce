@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Affiliates
+namespace Nop.Web.Areas.Admin.Models.Affiliates
 {
     public partial class AffiliateListModel : BaseNopModel
     {

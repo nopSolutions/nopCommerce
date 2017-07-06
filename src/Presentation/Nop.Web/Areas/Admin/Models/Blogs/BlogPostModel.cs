@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Validators.Blogs;
+using Nop.Web.Areas.Admin.Validators.Blogs;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Blogs
+namespace Nop.Web.Areas.Admin.Models.Blogs
 {
     [Validator(typeof(BlogPostValidator))]
     public partial class BlogPostModel : BaseNopEntityModel

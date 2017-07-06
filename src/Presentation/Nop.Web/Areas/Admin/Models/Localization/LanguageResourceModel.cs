@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
-using Nop.Admin.Validators.Localization;
+using Nop.Web.Areas.Admin.Validators.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Localization
+namespace Nop.Web.Areas.Admin.Models.Localization
 {
     [Validator(typeof(LanguageResourceValidator))]
     public partial class LanguageResourceModel : BaseNopEntityModel

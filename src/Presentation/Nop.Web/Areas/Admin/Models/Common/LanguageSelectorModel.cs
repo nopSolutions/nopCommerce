@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nop.Admin.Models.Localization;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Common
+namespace Nop.Web.Areas.Admin.Models.Common
 {
     public partial class LanguageSelectorModel : BaseNopModel
     {

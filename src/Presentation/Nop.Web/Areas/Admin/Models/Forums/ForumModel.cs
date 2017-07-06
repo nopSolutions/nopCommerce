@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators.Forums;
+using Nop.Web.Areas.Admin.Validators.Forums;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Forums
+namespace Nop.Web.Areas.Admin.Models.Forums
 {
     [Validator(typeof(ForumValidator))]
     public partial class ForumModel : BaseNopEntityModel

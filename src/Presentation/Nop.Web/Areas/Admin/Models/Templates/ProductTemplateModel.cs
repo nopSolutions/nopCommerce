@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
-using Nop.Admin.Validators.Templates;
+using Nop.Web.Areas.Admin.Validators.Templates;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Templates
+namespace Nop.Web.Areas.Admin.Models.Templates
 {
     [Validator(typeof(ProductTemplateValidator))]
     public partial class ProductTemplateModel : BaseNopEntityModel

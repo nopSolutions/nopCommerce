@@ -4,8 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Extensions;
-using Nop.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
@@ -29,7 +29,7 @@ using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class PluginController : BaseAdminController
 	{

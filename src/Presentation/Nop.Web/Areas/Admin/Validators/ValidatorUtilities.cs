@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Nop.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Models.Settings;
 
-namespace Nop.Admin.Validators
+namespace Nop.Web.Areas.Admin.Validators
 {
     public class ValidatorUtilities
     {

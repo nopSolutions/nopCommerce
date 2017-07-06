@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Home
+namespace Nop.Web.Areas.Admin.Models.Home
 {
     public partial class NopCommerceNewsModel : BaseNopModel
     {

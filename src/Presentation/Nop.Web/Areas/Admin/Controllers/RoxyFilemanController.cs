@@ -14,7 +14,7 @@ using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     //Controller for Roxy fileman (http://www.roxyfileman.com/) for TinyMCE editor
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx

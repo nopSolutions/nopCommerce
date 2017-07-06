@@ -4,15 +4,15 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Infrastructure.Cache;
-using Nop.Admin.Models.Home;
+using Nop.Web.Areas.Admin.Infrastructure.Cache;
+using Nop.Web.Areas.Admin.Models.Home;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 using Nop.Web.Framework.Mvc.Rss;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class NopCommerceNewsViewComponent : ViewComponent
     {

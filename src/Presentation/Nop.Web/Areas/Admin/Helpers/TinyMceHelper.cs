@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Admin.Helpers
+namespace Nop.Web.Areas.Admin.Helpers
 {
     /// <summary>
     /// TinyMCE helper

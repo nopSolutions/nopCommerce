@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using FluentValidation;
-using Nop.Admin.Models.Directory;
+using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Directory
+namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class CurrencyValidator : BaseNopValidator<CurrencyModel>
     {

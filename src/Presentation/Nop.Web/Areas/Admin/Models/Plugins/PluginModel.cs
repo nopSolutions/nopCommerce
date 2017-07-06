@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Validators.Plugins;
+using Nop.Web.Areas.Admin.Validators.Plugins;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Plugins
+namespace Nop.Web.Areas.Admin.Models.Plugins
 {
     [Validator(typeof(PluginValidator))]
     public partial class PluginModel : BaseNopModel, ILocalizedModel<PluginLocalizedModel>

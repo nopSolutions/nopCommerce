@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Polls;
+using Nop.Web.Areas.Admin.Models.Polls;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Polls
+namespace Nop.Web.Areas.Admin.Validators.Polls
 {
     public partial class PollAnswerValidator : BaseNopValidator<PollAnswerModel>
     {

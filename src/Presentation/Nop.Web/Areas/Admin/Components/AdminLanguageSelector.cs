@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Extensions;
-using Nop.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Core;
 using Nop.Services.Localization;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class AdminLanguageSelectorViewComponent : ViewComponent
     {

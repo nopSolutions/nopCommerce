@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Blogs
+namespace Nop.Web.Areas.Admin.Models.Blogs
 {
     public partial class BlogCommentListModel : BaseNopModel
     {

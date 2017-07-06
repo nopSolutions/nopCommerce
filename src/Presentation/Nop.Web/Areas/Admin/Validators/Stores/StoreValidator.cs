@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Stores
+namespace Nop.Web.Areas.Admin.Validators.Stores
 {
     public partial class StoreValidator : BaseNopValidator<StoreModel>
     {

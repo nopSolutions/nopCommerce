@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Customers
+namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerAttributeValueValidator : BaseNopValidator<CustomerAttributeValueModel>
     {

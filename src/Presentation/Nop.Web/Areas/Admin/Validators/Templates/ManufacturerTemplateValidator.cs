@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Templates;
+using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Templates
+namespace Nop.Web.Areas.Admin.Validators.Templates
 {
     public partial class ManufacturerTemplateValidator : BaseNopValidator<ManufacturerTemplateModel>
     {

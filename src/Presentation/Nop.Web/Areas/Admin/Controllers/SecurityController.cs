@@ -4,8 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Security;
+using Nop.Web.Areas.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Security;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
@@ -13,7 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class SecurityController : BaseAdminController
 	{

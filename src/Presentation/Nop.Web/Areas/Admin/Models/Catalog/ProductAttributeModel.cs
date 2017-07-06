@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators.Catalog;
+using Nop.Web.Areas.Admin.Validators.Catalog;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Catalog
+namespace Nop.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(ProductAttributeValidator))]
     public partial class ProductAttributeModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeLocalizedModel>

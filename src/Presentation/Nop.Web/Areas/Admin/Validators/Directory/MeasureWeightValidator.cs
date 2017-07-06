@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Directory;
+using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Directory
+namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class MeasureWeightValidator : BaseNopValidator<MeasureWeightModel>
     {

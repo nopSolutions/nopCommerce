@@ -5,7 +5,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Events;
 
-namespace Nop.Admin.Infrastructure.Cache
+namespace Nop.Web.Areas.Admin.Infrastructure.Cache
 {
     /// <summary>
     /// Model cache event consumer (used for caching of presentation layer models)

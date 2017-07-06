@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Catalog
+namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class SpecificationAttributeOptionValidator : BaseNopValidator<SpecificationAttributeOptionModel>
     {

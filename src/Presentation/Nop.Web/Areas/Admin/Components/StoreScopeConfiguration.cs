@@ -1,13 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Admin.Models.Settings;
-using Nop.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Stores;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class StoreScopeConfigurationViewComponent : ViewComponent
     {

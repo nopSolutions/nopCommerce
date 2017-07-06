@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Nop.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Settings
+namespace Nop.Web.Areas.Admin.Models.Settings
 {
     public partial class StoreScopeConfigurationModel : BaseNopModel
     {

@@ -7,7 +7,7 @@ using Nop.Core.Domain.Media;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class DownloadController : BaseAdminController
     {

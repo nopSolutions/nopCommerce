@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
-using Nop.Admin.Validators.Directory;
+using Nop.Web.Areas.Admin.Validators.Directory;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Directory
+namespace Nop.Web.Areas.Admin.Models.Directory
 {
     [Validator(typeof(MeasureDimensionValidator))]
     public partial class MeasureDimensionModel : BaseNopEntityModel

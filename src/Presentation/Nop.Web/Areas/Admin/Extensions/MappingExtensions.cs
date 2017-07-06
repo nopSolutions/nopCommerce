@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Linq;
-using Nop.Admin.Models.Blogs;
-using Nop.Admin.Models.Catalog;
-using Nop.Admin.Models.Cms;
-using Nop.Admin.Models.Common;
-using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.Directory;
-using Nop.Admin.Models.Discounts;
-using Nop.Admin.Models.ExternalAuthentication;
-using Nop.Admin.Models.Forums;
-using Nop.Admin.Models.Localization;
-using Nop.Admin.Models.Logging;
-using Nop.Admin.Models.Messages;
-using Nop.Admin.Models.News;
-using Nop.Admin.Models.Orders;
-using Nop.Admin.Models.Payments;
-using Nop.Admin.Models.Plugins;
-using Nop.Admin.Models.Polls;
-using Nop.Admin.Models.Settings;
-using Nop.Admin.Models.Shipping;
-using Nop.Admin.Models.Stores;
-using Nop.Admin.Models.Tax;
-using Nop.Admin.Models.Templates;
-using Nop.Admin.Models.Topics;
-using Nop.Admin.Models.Vendors;
+using Nop.Web.Areas.Admin.Models.Blogs;
+using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Models.Cms;
+using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Customers;
+using Nop.Web.Areas.Admin.Models.Directory;
+using Nop.Web.Areas.Admin.Models.Discounts;
+using Nop.Web.Areas.Admin.Models.ExternalAuthentication;
+using Nop.Web.Areas.Admin.Models.Forums;
+using Nop.Web.Areas.Admin.Models.Localization;
+using Nop.Web.Areas.Admin.Models.Logging;
+using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Areas.Admin.Models.News;
+using Nop.Web.Areas.Admin.Models.Orders;
+using Nop.Web.Areas.Admin.Models.Payments;
+using Nop.Web.Areas.Admin.Models.Plugins;
+using Nop.Web.Areas.Admin.Models.Polls;
+using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Areas.Admin.Models.Shipping;
+using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.Tax;
+using Nop.Web.Areas.Admin.Models.Templates;
+using Nop.Web.Areas.Admin.Models.Topics;
+using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -54,7 +54,7 @@ using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Security.Captcha;
 
-namespace Nop.Admin.Extensions
+namespace Nop.Web.Areas.Admin.Extensions
 {
     public static class MappingExtensions
     {

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
-namespace Nop.Admin.Models.Orders
+namespace Nop.Web.Areas.Admin.Models.Orders
 {
     public partial class OrderModel : BaseNopEntityModel
     {

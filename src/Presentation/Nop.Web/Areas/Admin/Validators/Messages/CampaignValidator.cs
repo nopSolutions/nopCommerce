@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Messages;
+using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
-namespace Nop.Admin.Validators.Messages
+namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class CampaignValidator : BaseNopValidator<CampaignModel>
     {

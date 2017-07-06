@@ -4,7 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
 
-namespace Nop.Admin.Components
+namespace Nop.Web.Areas.Admin.Components
 {
     public class MultistoreDisabledWarningViewComponent : ViewComponent
     {

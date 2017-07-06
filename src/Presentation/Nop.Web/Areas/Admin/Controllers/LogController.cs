@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Admin.Models.Logging;
+using Nop.Web.Areas.Admin.Models.Logging;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
 using Nop.Services;
@@ -14,7 +14,7 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
-namespace Nop.Admin.Controllers
+namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class LogController : BaseAdminController
     {
