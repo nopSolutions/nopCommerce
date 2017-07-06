@@ -125,7 +125,7 @@ namespace Nop.Core
             catch { return string.Empty; }
 
             //some of the validation
-            if (result.Equals("::1", StringComparison.InvariantCultureIgnoreCase))
+            if (result != null && result.Equals("::1", StringComparison.InvariantCultureIgnoreCase))
                 result = "127.0.0.1";
 
             //remove port
