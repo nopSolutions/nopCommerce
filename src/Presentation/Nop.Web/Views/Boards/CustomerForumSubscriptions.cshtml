@@ -36,16 +36,16 @@
                     });
                 });
             </script>
-            using (Html.BeginRouteForm("CustomerForumSubscriptions", FormMethod.Post))
-            {
-            <div class="subscription-list">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <colgroup>
-                            <col width="1" />
-                            <col />
-                        </colgroup>
-                        <thead>
+
+            <form asp-route="CustomerForumSubscriptions" method="post">
+                <div class="subscription-list">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                            </colgroup>
+                            <thead>
                             <tr>
                                 <th class="select-boxes">
                                     <input type="checkbox" id="selectall" />
@@ -54,8 +54,8 @@
                                     @T("Account.ForumSubscriptions.InfoColumn")
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             @for (int i = 0; i < Model.ForumSubscriptions.Count; i++)
                             {
                                 var item = Model.ForumSubscriptions[i];
@@ -75,23 +75,23 @@
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
-                @{
-                    var pager = Html.Pager(Model.PagerModel);
-                }
-                @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
-                {
-                    <div class="pager">
-                        @pager
+                            </tbody>
+                        </table>
                     </div>
-                }
-                <div class="buttons">
-                    <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                    @{
+                        var pager = Html.Pager(Model.PagerModel);
+                    }
+                    @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                    <div class="buttons">
+                        <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                    </div>
                 </div>
-            </div>
-            }
+            </form>
         }
         else
         {
