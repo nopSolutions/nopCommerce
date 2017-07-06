@@ -36,14 +36,14 @@
                     {
                         @Html.BBCodeEditor("Text")
                     }
-                    @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
-                    @Html.ValidationMessageFor(model => model.Text)
+                    <textarea asp-for="Text" class="forum-post-text"></textarea>
+                    <span asp-validation-for="Text"></span>
                 </div>
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     <div class="inputs reversed">
-                        @Html.EditorFor(model => model.Subscribed)
-                        <label>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
+                        <input asp-for="Subscribed" />
+                        <label asp-for="Subscribed">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
                     </div>
                 }
             </div>
