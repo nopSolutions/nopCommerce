@@ -1,7 +1,9 @@
 ﻿@model ProductDetailsModel
 @using System.Globalization
 @using Nop.Core.Domain.Catalog
+@using Nop.Services.Helpers
 @inject CatalogSettings catalogSettings
+@inject IUserAgentHelper userAgentHelper
 @if (Model.IsRental)
 {
     <div class="attributes rental-attributes">
@@ -13,8 +15,7 @@
             const string datePickerFormat = "mm/dd/yy";
             //C# format for ToString method
             const string datePickerFormat2 = "MM/dd/yyyy";
-            bool isMobileDevice = false;
-            //TODO bool isMobileDevice = this.Url.ActionContext.HttpContext.Request.Browser.IsMobileDevice;
+            bool isMobileDevice = userAgentHelper.IsMobileDevice();
             <div class="attribute-item">
                 <div class="attribute-label">
                     <label class="text-prompt">
