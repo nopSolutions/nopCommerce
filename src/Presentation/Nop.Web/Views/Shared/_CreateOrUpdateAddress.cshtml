@@ -3,9 +3,9 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
                 statesProgress.show();
                 $.ajax({
@@ -29,7 +29,7 @@
         });
     </script>
 }
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden"/>
 <div class="edit-address">
     <div class="inputs">
         <label asp-for="FirstName">@T("Address.Fields.LastName"):</label>
