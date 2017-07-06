@@ -14,7 +14,7 @@
                 Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
                 Selected = x.Id.Equals(Model.CurrentCurrencyId)
             });
-            @Html.DropDownList("customerCurrency", currencies, new {onchange = "setLocation(this.value);"})
+            <select id="customerCurrency" name="customerCurrency" asp-items="@currencies" onchange="setLocation(this.value);"></select>
         }
     </div>
 }
