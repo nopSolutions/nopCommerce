@@ -353,7 +353,7 @@ namespace Nop.Core
         /// Gets or sets application base path
         /// </summary>
         internal static string BaseDirectory { get; set; }
-
+        
         #endregion
     }
 }
