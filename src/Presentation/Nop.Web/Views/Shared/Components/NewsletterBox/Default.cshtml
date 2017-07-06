@@ -5,17 +5,17 @@
     </div>
     <div class="newsletter-subscribe" id="newsletter-subscribe-block">
         <div class="newsletter-email">
-            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
-            <input type="button" value="@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
+            <input asp-for="NewsletterEmail" id="newsletter-email" class="newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder")/>
+            <input type="button" value="@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button"/>
             @if (Model.AllowToUnsubscribe)
             {
                 <div class="options">
                     <span class="subscribe">
-                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
+                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked"/>
                         <label for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
                     </span>
                     <span class="unsubscribe">
-                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
+                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block"/>
                         <label for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
                     </span>
                 </div>
@@ -23,7 +23,7 @@
         </div>
         <div class="newsletter-validation">
             <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            @Html.ValidationMessageFor(x => x.NewsletterEmail)
+            <span asp-validation-for="NewsletterEmail"></span>
         </div>
     </div>
     <div class="newsletter-result" id="newsletter-result-block"></div>
