@@ -67,7 +67,6 @@
                                         url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
-                                        contentType: "application/json",
                                         data: additionalData
                                     },
                                     create: {
@@ -87,14 +86,6 @@
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
-                                    },
-                                    parameterMap: function(data, operation) {
-                                        if (operation != "read") {
-                                            return data;
-                                        } else {
-                                            //for some reasons only such "Filter" data be parsed
-                                            return JSON.stringify(data);
-                                        }
                                     }
                                 },
                                 schema: {
