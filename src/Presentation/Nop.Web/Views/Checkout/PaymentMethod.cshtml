@@ -26,13 +26,13 @@
                         {
                             <script type="text/javascript">
                                 $(document).ready(function() {
-                                    $("#@Html.FieldIdFor(model => model.UseRewardPoints)")
+                                    $("#@Html.IdFor(model => model.UseRewardPoints)")
                                         .change(toggleUseRewardPoints);
                                     toggleUseRewardPoints();
                                 });
 
                                 function toggleUseRewardPoints() {
-                                    if ($('#@Html.FieldIdFor(model => model.UseRewardPoints)').is(':checked')) {
+                                    if ($('#@Html.IdFor(model => model.UseRewardPoints)').is(':checked')) {
                                         $('#payment-method-block').hide();
                                     } else {
                                         $('#payment-method-block').show();
