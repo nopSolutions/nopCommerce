@@ -19,9 +19,9 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
              var statesProgress = $("#states-loading-progress");
              statesProgress.show();
              $.ajax({
@@ -90,9 +90,9 @@
                     {
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
-                            @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                                        Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                                        Html.FieldNameFor(x => x.DateOfBirthYear),
+                            @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
+                                                        Html.NameFor(x => x.DateOfBirthMonth),
+                                                        Html.NameFor(x => x.DateOfBirthYear),
                                                         DateTime.Now.Year - 110,
                                                         DateTime.Now.Year,
                                                         Model.DateOfBirthDay,
