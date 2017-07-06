@@ -48,7 +48,6 @@ namespace Nop.Web.Controllers
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
@@ -79,7 +78,6 @@ namespace Nop.Web.Controllers
             IShippingService shippingService, 
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
-            IOrderTotalCalculationService orderTotalCalculationService,
             ILogger logger,
             IOrderService orderService,
             IWebHelper webHelper,
@@ -105,7 +103,6 @@ namespace Nop.Web.Controllers
             this._shippingService = shippingService;
             this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
-            this._orderTotalCalculationService = orderTotalCalculationService;
             this._logger = logger;
             this._orderService = orderService;
             this._webHelper = webHelper;
