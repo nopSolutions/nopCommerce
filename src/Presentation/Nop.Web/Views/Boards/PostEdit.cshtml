@@ -5,5 +5,7 @@
     Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "boards_postedit_before", additionalData = Model.Id })
-@await Html.PartialAsync("_CreateUpdatePost", Model)
+<form asp-route="PostEdit" method="post">
+    @await Html.PartialAsync("_CreateUpdatePost", Model)
+</form>
 @await Component.InvokeAsync("Widget", new { widgetZone = "boards_postedit_after", additionalData = Model.Id })
