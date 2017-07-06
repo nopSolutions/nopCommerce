@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"/{activeSlug}"; //TODO support virtual directories
+                redirectionRouteData.Values["url"] = $"/{activeSlug}";
                 redirectionRouteData.Values["permanentRedirect"] = true;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"/{slugForCurrentLanguage}"; //TODO support virtual directories
+                redirectionRouteData.Values["url"] = $"/{slugForCurrentLanguage}";
                 redirectionRouteData.Values["permanentRedirect"] = false;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;

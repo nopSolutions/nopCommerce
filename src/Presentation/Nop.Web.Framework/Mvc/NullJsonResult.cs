@@ -6,7 +6,6 @@ namespace Nop.Web.Framework.Mvc
     {
         public NullJsonResult() : base(null)
         {
-            //TODO test
         }
     }
 }

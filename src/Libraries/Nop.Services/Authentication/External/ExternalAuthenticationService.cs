@@ -131,7 +131,6 @@ namespace Nop.Services.Authentication.External
                 return RegisterNewUser(parameters, returnUrl);
 
             //registration is disabled
-            //TODO create locale for error
             return Error(new[] { "Registration is disabled" }, returnUrl);
         }
 
@@ -204,8 +203,7 @@ namespace Nop.Services.Authentication.External
             //registration is succeeded but isn't approved by admin
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
-
-            //TODO create locale for error
+            
             return Error(new[] { "Error on registration" }, returnUrl);
         }
 
@@ -323,7 +321,6 @@ namespace Nop.Services.Authentication.External
                 throw new ArgumentNullException("parameters");
 
             if (!ExternalAuthenticationMethodIsAvailable(parameters.ProviderSystemName))
-                //TODO create locale for error
                 return Error(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user

@@ -119,7 +119,7 @@ namespace Nop.Core.Caching
         public virtual void RemoveByPattern(string pattern)
         {
 #if NET451
-            //todo
+            //TODO
 #endif
         }
 
@@ -129,7 +129,7 @@ namespace Nop.Core.Caching
         public virtual void Clear()
         {
 #if NET451
-            //todo
+            //TODO
 #endif
         }
 
