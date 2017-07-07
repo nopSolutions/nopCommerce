@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -24,9 +25,20 @@ namespace Nop.Web.Areas.Admin.Controllers
     public class RoxyFilemanController : BaseAdminController
     {
         #region Constants
-        
+
+        /// <summary>
+        /// Default path to root directory of uploaded files (if appropriate settings are not specified)
+        /// </summary>
         private const string DEFAULT_ROOT_DIRECTORY = "/images/uploaded";
+
+        /// <summary>
+        /// Path to directory of language files
+        /// </summary>
         private const string LANGUAGE_DIRECTORY = "/lib/Roxy_Fileman/lang";
+
+        /// <summary>
+        /// Path to configuration file
+        /// </summary>
         private const string CONFIGURATION_FILE = "/lib/Roxy_Fileman/conf.json";
 
         #endregion
@@ -56,6 +68,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual void ProcessRequest()
         {
+            //async requests are disabled in the js code, so use .Wait() method here
+            ProcessRequestAsync().Wait();
+        }
+
+        #endregion
+
+        #region Utitlies
+
+        /// <summary>
+        /// Process the incoming request
+        /// </summary>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task ProcessRequestAsync()
+        {
             var action = "DIRLIST";
             try
             {
@@ -64,47 +90,47 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!StringValues.IsNullOrEmpty(this.HttpContext.Request.Query["a"]))
                     action = this.HttpContext.Request.Query["a"];
-                
+
                 switch (action.ToUpper())
                 {
                     case "DIRLIST":
-                        CreateDirectoryTree(this.HttpContext.Request.Query["type"]);
+                        await GetDirectoriesAsync(this.HttpContext.Request.Query["type"]);
                         break;
                     case "FILESLIST":
-                        CreateFileList(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["type"]);
+                        await GetFilesAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["type"]);
                         break;
                     case "COPYDIR":
-                        CopyDirectory(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CopyDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "COPYFILE":
-                        CopyFile(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await CopyFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "CREATEDIR":
-                        CreateDirectory(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CreateDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "DELETEDIR":
-                        DeleteDirectory(this.HttpContext.Request.Query["d"]);
+                        await DeleteDirectoryAsync(this.HttpContext.Request.Query["d"]);
                         break;
                     case "DELETEFILE":
-                        DeleteFile(this.HttpContext.Request.Query["f"]);
+                        await DeleteFileAsync(this.HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOAD":
-                        DownloadFile(this.HttpContext.Request.Query["f"]);
+                        await DownloadFileAsync(this.HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOADDIR":
-                        DownloadDirectory(this.HttpContext.Request.Query["d"]);
+                        await DownloadDirectoryAsync(this.HttpContext.Request.Query["d"]);
                         break;
                     case "MOVEDIR":
-                        MoveDirectory(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await MoveDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "MOVEFILE":
-                        MoveFile(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await MoveFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEDIR":
-                        RenameDirectory(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await RenameDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEFILE":
-                        RenameFile(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await RenameFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
                         int w = 140, h = 0;
@@ -113,27 +139,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                         CreateThumbnail(this.HttpContext.Request.Query["f"], w, h);
                         break;
                     case "UPLOAD":
-                        UploadFiles(this.HttpContext.Request.Form?["d"]);
+                        await UploadFilesAsync(this.HttpContext.Request.Form["d"]);
                         break;
                     default:
-                        this.HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
+                        await this.HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
                         break;
                 }
 
             }
             catch (Exception ex)
             {
-                if (action == "UPLOAD" && !IsAjaxUpload())
-                    this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
+                if (action == "UPLOAD" && !IsAjaxRequest())
+                    await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
-                    this.HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
+                    await this.HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
             }
         }
 
-        #endregion
-
-        #region Utitlies
-
+        /// <summary>
+        /// Get the virtual path to root directory of uploaded files 
+        /// </summary>
+        /// <returns>Path</returns>
         protected virtual string GetRootDirectory()
         {
             var filesRoot = GetSetting("FILES_ROOT");
@@ -148,16 +174,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             return filesRoot;
         }
 
-        protected virtual string GetFullPath(string path)
-        {
-            if (!path.StartsWith("/"))
-                path = "/" + path;
-            path = path.TrimEnd('/');
-            path = path.Replace('/', '\\');
-
-            return _hostingEnvironment.WebRootPath + path;
-        }
-
+        /// <summary>
+        /// Get a virtual path with the root directory
+        /// </summary>
+        /// <param name="path">Path</param>
+        /// <returns>Path</returns>
         protected virtual string GetVirtualPath(string path)
         {
             path = path ?? string.Empty;
@@ -169,6 +190,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             return path;
         }
 
+        /// <summary>
+        /// Get the absolute path by virtual path
+        /// </summary>
+        /// <param name="virtualPath">Virtual path</param>
+        /// <returns>Path</returns>
+        protected virtual string GetFullPath(string virtualPath)
+        {
+            virtualPath = virtualPath ?? string.Empty;
+            if (!virtualPath.StartsWith("/"))
+                virtualPath = "/" + virtualPath;
+            virtualPath = virtualPath.TrimEnd('/');
+            virtualPath = virtualPath.Replace('/', '\\');
+
+            return _hostingEnvironment.WebRootPath + virtualPath;
+        }
+
+        /// <summary>
+        /// Get a value of the configuration setting
+        /// </summary>
+        /// <param name="key">Setting key</param>
+        /// <returns>Setting value</returns>
         protected virtual string GetSetting(string key)
         {
             if (_settings == null)
@@ -180,6 +222,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Get the language resource value
+        /// </summary>
+        /// <param name="key">Language resource key</param>
+        /// <returns>Language resource value</returns>
         protected virtual string GetLanguageResource(string key)
         {
             if (_languageResources == null)
@@ -191,6 +238,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             return key;
         }
 
+        /// <summary>
+        /// Get the absolute path to the language resources file
+        /// </summary>
+        /// <returns>Path</returns>
         protected virtual string GetLanguageFile()
         {
             var languageCode = GetSetting("LANG");
@@ -202,6 +253,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             return GetFullPath(languageFile);
         }
 
+        /// <summary>
+        /// Parse the JSON file
+        /// </summary>
+        /// <param name="file">Path to the file</param>
+        /// <returns>Collection of keys and values from the parsed file</returns>
         protected virtual Dictionary<string, string> ParseJson(string file)
         {
             var result = new Dictionary<string, string>();
@@ -236,6 +292,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Get a file type by file extension
+        /// </summary>
+        /// <param name="fileExtension">File extension</param>
+        /// <returns>File type</returns>
         protected virtual string GetFileType(string fileExtension)
         {
             var fileType = "file";
@@ -250,10 +311,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             return fileType;
         }
 
-        protected virtual bool CanHandleFile(string filename)
+        /// <summary>
+        /// Check whether there are any restrictions on handling the file
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>True if the file can be handled; otherwise false</returns>
+        protected virtual bool CanHandleFile(string path)
         {
             var result = false;
-            var fileExtension = new FileInfo(filename).Extension.Replace(".", "").ToLower();
+            var fileExtension = new FileInfo(path).Extension.Replace(".", "").ToLower();
 
             var forbiddenUploads = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
             if (!string.IsNullOrEmpty(forbiddenUploads))
@@ -272,23 +338,43 @@ namespace Nop.Web.Areas.Admin.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Get the string to write to the response
+        /// </summary>
+        /// <param name="type">Type of the response</param>
+        /// <param name="message">Additional message</param>
+        /// <returns>String to write to the response</returns>
         protected virtual string GetResponse(string type, string message)
         {
-            message = message ?? string.Empty;
-            return $"{{\"res\":\"{type}\",\"msg\":\"{message.Replace("\"", "\\\"")}\"}}";
+            return $"{{\"res\":\"{type}\",\"msg\":\"{message?.Replace("\"", "\\\"")}\"}}";
         }
 
+        /// <summary>
+        /// Get the string to write a success response
+        /// </summary>
+        /// <param name="message">Additional message</param>
+        /// <returns>String to write to the response</returns>
         protected virtual string GetSuccessResponse(string message = null)
         {
             return GetResponse("ok", message);
         }
-        
+
+        /// <summary>
+        /// Get the string to write an error response
+        /// </summary>
+        /// <param name="message">Additional message</param>
+        /// <returns>String to write to the response</returns>
         protected virtual string GetErrorResponse(string message = null)
         {
             return GetResponse("error", message);
         }
 
-        protected virtual void CreateDirectoryTree(string type)
+        /// <summary>
+        /// Get all available directories as a directory tree
+        /// </summary>
+        /// <param name="type">Type of the file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task GetDirectoriesAsync(string type)
         {
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
             var rootDirectory = new DirectoryInfo(rootDirectoryPath);
@@ -298,22 +384,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             var allDirectories = GetDirectories(rootDirectory.FullName);
             allDirectories.Insert(0, rootDirectory.FullName);
 
-            this.HttpContext.Response.WriteAsync("[");
+            var localPath = GetFullPath(null);
+            await this.HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < allDirectories.Count; i++)
             {
                 var directoryPath = (string)allDirectories[i];
-                this.HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(rootDirectoryPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{Directory.GetDirectories(directoryPath).Length}\"}}");
+                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(localPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{Directory.GetDirectories(directoryPath).Length}\"}}");
                 if (i < allDirectories.Count - 1)
-                    this.HttpContext.Response.WriteAsync(",");
+                    await this.HttpContext.Response.WriteAsync(",");
             }
-            this.HttpContext.Response.WriteAsync("]");
+            await this.HttpContext.Response.WriteAsync("]");
         }
 
-        protected virtual ArrayList GetDirectories(string path)
+        /// <summary>
+        /// Get directories in the passed parent directory
+        /// </summary>
+        /// <param name="parentDirectoryPath">Path to the parent directory</param>
+        /// <returns>Array of the paths to the directories</returns>
+        protected virtual ArrayList GetDirectories(string parentDirectoryPath)
         {
             var directories = new ArrayList();
 
-            var directoryNames = Directory.GetDirectories(path);
+            var directoryNames = Directory.GetDirectories(parentDirectoryPath);
             foreach (var directory in directoryNames)
             {
                 directories.Add(directory);
@@ -323,12 +415,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             return directories;
         }
 
-        protected virtual void CreateFileList(string path, string type)
+        /// <summary>
+        /// Get files in the passed directory
+        /// </summary>
+        /// <param name="directoryPath">Path to the files directory</param>
+        /// <param name="type">Type of the files</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task GetFilesAsync(string directoryPath, string type)
         {
-            path = GetVirtualPath(path);
-            var files = GetFiles(GetFullPath(path), type);
+            directoryPath = GetVirtualPath(directoryPath);
+            var files = GetFiles(GetFullPath(directoryPath), type);
 
-            this.HttpContext.Response.WriteAsync("[");
+            await this.HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < files.Count; i++)
             {
                 var width = 0;
@@ -352,21 +450,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                         throw ex;
                     }
                 }
-                this.HttpContext.Response.WriteAsync($"{{\"p\":\"{path.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(LinuxTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
+                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
 
                 if (i < files.Count - 1)
-                    this.HttpContext.Response.WriteAsync(",");
+                    await this.HttpContext.Response.WriteAsync(",");
             }
-            this.HttpContext.Response.WriteAsync("]");
+            await this.HttpContext.Response.WriteAsync("]");
         }
 
-        protected virtual List<string> GetFiles(string path, string type)
+        /// <summary>
+        /// Get files in the passed directory
+        /// </summary>
+        /// <param name="directoryPath">Path to the files directory</param>
+        /// <param name="type">Type of the files</param>
+        /// <returns>List of paths to the files</returns>
+        protected virtual List<string> GetFiles(string directoryPath, string type)
         {
             if (type == "#")
                 type = string.Empty;
 
             var files = new List<string>();
-            foreach (var fileName in Directory.GetFiles(path))
+            foreach (var fileName in Directory.GetFiles(directoryPath))
             {
                 if (string.IsNullOrEmpty(type) || GetFileType(new FileInfo(fileName).Extension) == type)
                     files.Add(fileName);
@@ -375,29 +479,45 @@ namespace Nop.Web.Areas.Admin.Controllers
             return files;
         }
 
-        protected virtual double LinuxTimestamp(DateTime date)
+        /// <summary>
+        /// Get the Unix timestamp by passed date
+        /// </summary>
+        /// <param name="date">Date and time</param>
+        /// <returns>Unix timestamp</returns>
+        protected virtual double GetTimestamp(DateTime date)
         {
             return (date.ToLocalTime() - new DateTime(1970, 1, 1, 0, 0, 0).ToLocalTime()).TotalSeconds;
         }
 
-        protected virtual void CopyDirectory(string path, string newPath)
+        /// <summary>
+        /// Copy the directory
+        /// </summary>
+        /// <param name="sourcePath">Path to the source directory</param>
+        /// <param name="destinationPath">Path to the destination directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task CopyDirectoryAsync(string sourcePath, string destinationPath)
         {
-            var directoryPath = GetFullPath(GetVirtualPath(path));
+            var directoryPath = GetFullPath(GetVirtualPath(sourcePath));
             var directory = new DirectoryInfo(directoryPath);
             if (!directory.Exists)
                 throw new Exception(GetLanguageResource("E_CopyDirInvalidPath"));
 
-            var newDirectoryPath = GetFullPath(GetVirtualPath($"{newPath.TrimEnd('/')}/{directory.Name}"));
+            var newDirectoryPath = GetFullPath(GetVirtualPath($"{destinationPath.TrimEnd('/')}/{directory.Name}"));
             var newDirectory = new DirectoryInfo(newDirectoryPath);
             if (newDirectory.Exists)
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
-            CopyDirectoryRecursively(directory.FullName, newDirectory.FullName);
+            CopyDirectory(directory.FullName, newDirectory.FullName);
 
-            this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+            await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
         }
 
-        protected virtual void CopyDirectoryRecursively(string sourcePath, string destinationPath)
+        /// <summary>
+        /// Сopy the directory with the embedded files and directories
+        /// </summary>
+        /// <param name="sourcePath">Path to the source directory</param>
+        /// <param name="destinationPath">Path to the destination directory</param>
+        protected virtual void CopyDirectory(string sourcePath, string destinationPath)
         {
             var existingFiles = Directory.GetFiles(sourcePath);
             var existingDirectories = Directory.GetDirectories(sourcePath);
@@ -415,23 +535,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var directory in existingDirectories)
             {
                 var directoryPath = Path.Combine(destinationPath, new DirectoryInfo(directory).Name);
-                CopyDirectoryRecursively(directory, directoryPath);
+                CopyDirectory(directory, directoryPath);
             }
         }
 
-        protected virtual void CopyFile(string path, string newPath)
+        /// <summary>
+        /// Copy the file
+        /// </summary>
+        /// <param name="sourcePath">Path to the source file</param>
+        /// <param name="destinationPath">Path to the destination file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
-            var filePath = GetFullPath(GetVirtualPath(path));
+            var filePath = GetFullPath(GetVirtualPath(sourcePath));
             var file = new FileInfo(filePath);
             if (!file.Exists)
                 throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
 
-            newPath = GetFullPath(GetVirtualPath(newPath));
-            var newFileName = GetUniqueFileName(newPath, file.Name);
+            destinationPath = GetFullPath(GetVirtualPath(destinationPath));
+            var newFileName = GetUniqueFileName(destinationPath, file.Name);
             try
             {
-                System.IO.File.Copy(file.FullName, Path.Combine(newPath, newFileName));
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                System.IO.File.Copy(file.FullName, Path.Combine(destinationPath, newFileName));
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -439,12 +565,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual string GetUniqueFileName(string directory, string fileName)
+        /// <summary>
+        /// Get the unique name of the file (add -copy-(N) to the file name if there is already a file with that name in the directory)
+        /// </summary>
+        /// <param name="directoryPath">Path to the file directory</param>
+        /// <param name="fileName">Original file name</param>
+        /// <returns>Unique name of the file</returns>
+        protected virtual string GetUniqueFileName(string directoryPath, string fileName)
         {
             var uniqueFileName = fileName;
 
             int i = 0;
-            while (System.IO.File.Exists(Path.Combine(directory, uniqueFileName)))
+            while (System.IO.File.Exists(Path.Combine(directoryPath, uniqueFileName)))
             {
                 uniqueFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{Path.GetExtension(fileName)}";
             }
@@ -452,20 +584,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             return uniqueFileName;
         }
 
-        protected virtual void CreateDirectory(string path, string name)
+        /// <summary>
+        /// Create the new directory
+        /// </summary>
+        /// <param name="parentDirectoryPath">Path to the parent directory</param>
+        /// <param name="name">Name of the new directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task CreateDirectoryAsync(string parentDirectoryPath, string name)
         {
-            path = GetFullPath(GetVirtualPath(path));
-            if (!Directory.Exists(path))
+            parentDirectoryPath = GetFullPath(GetVirtualPath(parentDirectoryPath));
+            if (!Directory.Exists(parentDirectoryPath))
                 throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
 
             try
             {
-                path = Path.Combine(path, name);
-
+                var path = Path.Combine(parentDirectoryPath, name);
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -473,7 +610,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void DeleteDirectory(string path)
+        /// <summary>
+        /// Delete the directory
+        /// </summary>
+        /// <param name="path">Path to the directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task DeleteDirectoryAsync(string path)
         {
             path = GetVirtualPath(path);
             if (path == GetRootDirectory())
@@ -489,7 +631,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 Directory.Delete(path);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -497,7 +639,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void DeleteFile(string path)
+        /// <summary>
+        /// Delete the file
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task DeleteFileAsync(string path)
         {
             path = GetFullPath(GetVirtualPath(path));
             if (!System.IO.File.Exists(path))
@@ -506,7 +653,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 System.IO.File.Delete(path);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -514,7 +661,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        public void DownloadDirectory(string path)
+        /// <summary>
+        /// Download the directory from the server as a zip archive
+        /// </summary>
+        /// <param name="path">Path to the directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        public async Task DownloadDirectoryAsync(string path)
         {
             path = GetVirtualPath(path).TrimEnd('/');
             var fullPath = GetFullPath(path);
@@ -535,12 +687,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             this.HttpContext.Response.Clear();
             this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{zipName}\"");
             this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-            this.HttpContext.Response.SendFileAsync(zipPath).Wait();
+            await this.HttpContext.Response.SendFileAsync(zipPath);
 
             System.IO.File.Delete(zipPath);
         }
 
-        protected virtual void DownloadFile(string path)
+        /// <summary>
+        /// Download the file from the server
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(GetVirtualPath(path));
             var file = new FileInfo(filePath);
@@ -549,11 +706,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 this.HttpContext.Response.Clear();
                 this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{file.Name}\"");
                 this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-                this.HttpContext.Response.SendFileAsync(file.FullName);
+                await this.HttpContext.Response.SendFileAsync(file.FullName);
             }
         }
 
-        protected virtual void MoveDirectory(string sourcePath, string destinationPath)
+        /// <summary>
+        /// Move the directory
+        /// </summary>
+        /// <param name="sourcePath">Path to the source directory</param>
+        /// <param name="destinationPath">Path to the destination directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task MoveDirectoryAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
             var sourceDirectory = new DirectoryInfo(fullSourcePath);
@@ -571,7 +734,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceDirectory.MoveTo(destinationDirectory.FullName);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -579,7 +742,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void MoveFile(string sourcePath, string destinationPath)
+        /// <summary>
+        /// Move the file
+        /// </summary>
+        /// <param name="sourcePath">Path to the source file</param>
+        /// <param name="destinationPath">Path to the destination file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
             var sourceFile = new FileInfo(fullSourcePath);
@@ -597,7 +766,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceFile.MoveTo(destinationFile.FullName);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -605,11 +774,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void RenameDirectory(string sourcePath, string name)
+        /// <summary>
+        /// Rename the directory
+        /// </summary>
+        /// <param name="sourcePath">Path to the source directory</param>
+        /// <param name="newName">New name of the directory</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task RenameDirectoryAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
             var sourceDirectory = new DirectoryInfo(fullSourcePath);
-            var destinationDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.Parent.FullName, name));
+            var destinationDirectory = new DirectoryInfo(Path.Combine(sourceDirectory.Parent.FullName, newName));
             if (GetVirtualPath(sourcePath) == GetRootDirectory())
                 throw new Exception(GetLanguageResource("E_CannotRenameRoot"));
 
@@ -622,7 +797,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceDirectory.MoveTo(destinationDirectory.FullName);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -630,22 +805,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void RenameFile(string sourcePath, string name)
+        /// <summary>
+        /// Rename the file
+        /// </summary>
+        /// <param name="sourcePath">Path to the source file</param>
+        /// <param name="newName">New name of the file</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task RenameFileAsync(string sourcePath, string newName)
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
             var sourceFile = new FileInfo(fullSourcePath);
             if (!sourceFile.Exists)
                 throw new Exception(GetLanguageResource("E_RenameFileInvalidPath"));
 
-            if (!CanHandleFile(name))
+            if (!CanHandleFile(newName))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
             try
             {
-                var destinationPath = Path.Combine(sourceFile.Directory.FullName, name);
+                var destinationPath = Path.Combine(sourceFile.Directory.FullName, newName);
                 var destinationFile = new FileInfo(destinationPath);
                 sourceFile.MoveTo(destinationFile.FullName);
-                this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -653,6 +834,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+        /// <summary>
+        /// Create the thumbnail of the image and write it to the response
+        /// </summary>
+        /// <param name="path">Path to the image</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
         protected virtual void CreateThumbnail(string path, int width, int height)
         {
             path = GetFullPath(GetVirtualPath(path));
@@ -706,9 +893,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual ImageFormat GetImageFormat(string filename)
+        /// <summary>
+        /// Get the file format of the image
+        /// </summary>
+        /// <param name="path">Path to the image</param>
+        /// <returns>Image format</returns>
+        protected virtual ImageFormat GetImageFormat(string path)
         {
-            var fileExtension = new FileInfo(filename).Extension.ToLower();
+            var fileExtension = new FileInfo(path).Extension.ToLower();
             switch (fileExtension)
             {
                 case ".png":
@@ -720,9 +912,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        protected virtual void ImageResize(string path, string destinstionFile, int width, int height)
+        /// <summary>
+        /// Resize the image
+        /// </summary>
+        /// <param name="sourcePath">Path to the source image</param>
+        /// <param name="destinstionPath">Path to the destination image</param>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        protected virtual void ImageResize(string sourcePath, string destinstionPath, int width, int height)
         {
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
             {
                 using (var image = Image.FromStream(stream))
                 {
@@ -744,36 +943,45 @@ namespace Nop.Web.Areas.Admin.Controllers
                         {
                             graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-                            if (!string.IsNullOrEmpty(destinstionFile))
-                                newImage.Save(destinstionFile, GetImageFormat(destinstionFile));
+                            if (!string.IsNullOrEmpty(destinstionPath))
+                                newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
                         }
                     }
                 }
             }
         }
 
-        protected virtual bool IsAjaxUpload()
+        /// <summary>
+        /// Whether the request is made with ajax 
+        /// </summary>
+        /// <returns>True or false</returns>
+        protected virtual bool IsAjaxRequest()
         {
             return this.HttpContext.Request.Form != null &&
                 !StringValues.IsNullOrEmpty(this.HttpContext.Request.Form["method"]) &&
                 this.HttpContext.Request.Form["method"] == "ajax";
         }
 
-        protected virtual void UploadFiles(string path)
+        /// <summary>
+        /// Upload files to a directory on passed path
+        /// </summary>
+        /// <param name="directoryPath">Path to directory to upload files</param>
+        /// <returns>A task that represents the completion of the operation</returns>
+        protected virtual async Task UploadFilesAsync(string directoryPath)
         {
             var result = GetSuccessResponse();
             var hasErrors = false;
             try
             {
-                path = GetFullPath(GetVirtualPath(path));
+                directoryPath = GetFullPath(GetVirtualPath(directoryPath));
                 for (var i = 0; i < this.HttpContext.Request.Form.Files.Count; i++)
                 {
                     var fileName = this.HttpContext.Request.Form.Files[i].FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
-                        var uniqueFileName = GetUniqueFileName(path, file.Name);
-                        var destinationFile = Path.Combine(path, uniqueFileName);
+                        var uniqueFileName = GetUniqueFileName(directoryPath, file.Name);
+                        var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
                             this.HttpContext.Request.Form.Files[i].CopyTo(stream);
@@ -796,15 +1004,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 result = GetErrorResponse(ex.Message);
             }
-            if (IsAjaxUpload())
+            if (IsAjaxRequest())
             {
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));
 
-                this.HttpContext.Response.WriteAsync(result);
+                await this.HttpContext.Response.WriteAsync(result);
             }
             else
-                this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
+                await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
         }
 
         #endregion
