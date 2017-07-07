@@ -40,7 +40,6 @@ namespace Nop.Web.Framework.Security.Captcha
 
             try
             {
-                //TODO exception is thrown - https://github.com/aspnet/JavaScriptServices/issues/487 and https://github.com/aspnet/EntityFramework/issues/7889
                 var taskResult = httpClient.GetAsync(requestUri);
                 taskResult.Wait();
                 var response = taskResult.Result;
