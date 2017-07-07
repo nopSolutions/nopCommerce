@@ -1,12 +1,13 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Nop.Core.Domain.Common;
+using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
-
     [Area("Admin")]
     [HttpsRequirement(SslRequirement.Yes)]
     [AdminAntiForgery]
@@ -15,7 +16,6 @@ namespace Nop.Web.Areas.Admin.Controllers
     [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
     {
-
         /// <summary>
         /// Save selected TAB name
         /// </summary>
@@ -43,41 +43,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
             }
         }
-        
-        #if NET451
+
         /// <summary>
-        /// Creates a <see cref="T:System.Web.Mvc.JsonResult"/> object that serializes the specified object to JavaScript Object Notation (JSON) format using the content type, content encoding, and the JSON request behavior.
+        /// Creates an object that serializes the specified object to JSON.
         /// </summary>
-        /// 
-        /// <returns>
-        /// The result object that serializes the specified object to JSON format.
-        /// </returns>
-        /// <param name="data">The JavaScript object graph to serialize.</param>
-        /// <param name="contentType">The content type (MIME type).</param>
-        /// <param name="contentEncoding">The content encoding.</param>
-        /// <param name="behavior">The JSON request behavior</param>
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        /// <param name="data">The object to serialize.</param>
+        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        public override JsonResult Json(object data)
         {
-            //Json fix issue with dates in KendoUI grid
-            //use json with IsoDateTimeConverter
-            var result = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson
-                ? new ConverterJsonResult(new IsoDateTimeConverter()) : new JsonResult();
+            //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
+            //TODO rename setting
+            var useIsoDateTime = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson;
+            var serializerSettings = new JsonSerializerSettings
+            {
+                DateFormatHandling = useIsoDateTime ? DateFormatHandling.IsoDateFormat : DateFormatHandling.MicrosoftDateFormat                
+            };
 
-            result.Data = data;
-            result.ContentType = contentType;
-            result.ContentEncoding = contentEncoding;
-            result.JsonRequestBehavior = behavior;
-
-            //Json fix for admin area
-            //sometime our entities have big text values returned (e.g. product desriptions)
-            //of course, we can set and return them as "empty" (we already do it so). Furthermore, it's a perfoemance optimization
-            //but it's better to avoid exceptions for other entities and allow maximum JSON length
-            result.MaxJsonLength = int.MaxValue;
-
-            return result;
-            //return base.Json(data, contentType, contentEncoding, behavior);
+            return base.Json(data, serializerSettings);
         }
-        
-        #endif
     }
 }
