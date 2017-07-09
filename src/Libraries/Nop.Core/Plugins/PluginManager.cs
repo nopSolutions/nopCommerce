@@ -370,7 +370,7 @@ namespace Nop.Core.Plugins
 
             //    //were running in med trust, so copy to custom bin folder
             //    var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-            //    shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
+            //    shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
             //}
             //else
             //{
@@ -381,7 +381,7 @@ namespace Nop.Core.Plugins
             //}
             //but in order to avoid possible issues we still copy libraries into ~/Plugins/bin/ directory
             var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-            var shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
+            var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
 
             //we can now register the plugin definition
             var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
@@ -426,12 +426,12 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
-        /// Used to initialize plugins when running in Medium Trust
+        /// Copy the plugin file to shadow copy directory
         /// </summary>
         /// <param name="plug"></param>
         /// <param name="shadowCopyPlugFolder"></param>
         /// <returns></returns>
-        private static FileInfo InitializeMediumTrust(FileInfo plug, DirectoryInfo shadowCopyPlugFolder)
+        private static FileInfo ShadowCopyFile(FileInfo plug, DirectoryInfo shadowCopyPlugFolder)
         {
             var shouldCopy = true;
             var shadowCopiedPlug = new FileInfo(Path.Combine(shadowCopyPlugFolder.FullName, plug.Name));
