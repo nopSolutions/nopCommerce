@@ -7,6 +7,16 @@ namespace Nop.Core.Configuration
     public partial class NopConfig
     {
         /// <summary>
+        /// Gets or sets a value of "Cache-Control" header value for static content
+        /// </summary>
+        public string StaticFilesCacheControl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we compress response
+        /// </summary>
+        public bool UseResponseCompression { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
         /// Do not enable it if you run on Azure but use one instance only
         /// </summary>
@@ -70,11 +80,6 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether we should ignore startup tasks
         /// </summary>
         public bool IgnoreStartupTasks { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content
-        /// </summary>
-        public string StaticFilesCacheControl { get; set; }
 
     }
 }

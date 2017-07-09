@@ -4,14 +4,17 @@ using ImageResizer.Configuration;
 using ImageResizer.Plugins.PrettyGifs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework.Compression;
 using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
@@ -28,6 +31,9 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
+            //compression
+            services.AddResponseCompression();
+
             //add options feature
             services.AddOptions();
 
@@ -76,8 +82,18 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //static files
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+
+            //compression
+            if (nopConfig.UseResponseCompression)
+            {
+                //gzip by default
+                application.UseResponseCompression();
+                //workaround with "vary" header
+                application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
+            }
+
+            //static files
             application.UseStaticFiles(new StaticFileOptions
             {
                 //TODO duplicated code (below)
