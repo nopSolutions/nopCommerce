@@ -16,17 +16,14 @@ namespace Nop.Web.Framework.Compression
         #region Fields
 
         private readonly RequestDelegate _next;
-        private readonly IResponseCompressionProvider _responseCompressionProvider;
 
         #endregion
 
         #region Ctor
 
-        public ResponseCompressionVaryWorkaroundMiddleware(RequestDelegate next,
-            IResponseCompressionProvider responseCompressionProvider)
+        public ResponseCompressionVaryWorkaroundMiddleware(RequestDelegate next)
         {
             _next = next;
-            _responseCompressionProvider = responseCompressionProvider;
         }
 
         #endregion
