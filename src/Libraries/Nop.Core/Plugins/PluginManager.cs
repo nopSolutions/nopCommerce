@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core.ComponentModel;
+using Nop.Core.Configuration;
 
 //Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
 //SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
@@ -48,8 +49,17 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Initialize
         /// </summary>
-        public static void Initialize(ApplicationPartManager applicationPartManager)
+        /// <param name="applicationPartManager">Application part manager</param>
+        /// <param name="config">Config</param>
+        public static void Initialize(ApplicationPartManager applicationPartManager, NopConfig config)
         {
+            if (applicationPartManager == null)
+                throw new ArgumentNullException("applicationPartManager");
+
+            if (applicationPartManager == null)
+                throw new ArgumentNullException("config");
+
+
             using (new WriteLockDisposable(Locker))
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
@@ -59,10 +69,7 @@ namespace Nop.Core.Plugins
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
-
-                //TODO move to settings
-                var _clearShadowDirectoryOnStartup = true;
-
+                
                 try
                 {
                     var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
@@ -74,7 +81,7 @@ namespace Nop.Core.Plugins
                     
                     //get list of all files in bin
                     var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
-                    if (_clearShadowDirectoryOnStartup)
+                    if (config.ClearPluginShadowDirectoryOnStartup)
                     {
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)

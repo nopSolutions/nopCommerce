@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
+using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
@@ -30,6 +31,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <returns>Configured service provider</returns>
         public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
         {
+            //add NopConfig configuration parameters
+            services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
+            //add hosting configuration parameters
+            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
+
             //create, initialize and configure the engine
             var engine = EngineContext.Create();
             engine.Initialize(services);

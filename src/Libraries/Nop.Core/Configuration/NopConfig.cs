@@ -87,5 +87,10 @@ namespace Nop.Core.Configuration
         /// </summary>
         public bool IgnoreStartupTasks { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to clear /Plugins/bin directory on application startup
+        /// </summary>
+        public bool ClearPluginShadowDirectoryOnStartup { get; set; }
+
     }
 }

@@ -34,13 +34,8 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-
-            //add NopConfig configuration parameters
-            var nopConfig = services.ConfigureStartupConfig<NopConfig>(configuration.GetSection("Nop"));
-
-            //add hosting configuration parameters
-            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
-
+            
+            var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
             if (nopConfig.RedisCachingEnabled)
             {
                 //add Redis distributed cache

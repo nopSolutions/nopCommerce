@@ -66,10 +66,10 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register dependencies using Autofac
         /// </summary>
-        /// <param name="nopConfiguration">Startup Nop configuration parameters</param>
+        /// <param name="nopConfig">Startup Nop configuration parameters</param>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual IServiceProvider RegisterDependencies(NopConfig nopConfiguration, IServiceCollection services, ITypeFinder typeFinder)
+        protected virtual IServiceProvider RegisterDependencies(NopConfig nopConfig, IServiceCollection services, ITypeFinder typeFinder)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -90,7 +90,7 @@ namespace Nop.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfiguration);
+                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
 
             //populate Autofac container builder with the set of registered service descriptors
             containerBuilder.Populate(services);
@@ -146,12 +146,14 @@ namespace Nop.Core.Infrastructure
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             //set base application path
-            var hostingEnvironment = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
+            var provider = services.BuildServiceProvider();
+            var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
+            var nopConfig = provider.GetRequiredService<NopConfig>();
             CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
 
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager);
+            PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
