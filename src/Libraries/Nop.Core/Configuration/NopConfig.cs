@@ -7,6 +7,12 @@ namespace Nop.Core.Configuration
     public partial class NopConfig
     {
         /// <summary>
+        /// Gets or sets a value indicating whether to display the full error in production environment.
+        /// It's ignored (always enabled) in development environment
+        /// </summary>
+        public bool DisplayFullErrorStack { get; set; }
+
+        /// <summary>
         /// Gets or sets a value of "Cache-Control" header value for static content
         /// </summary>
         public string StaticFilesCacheControl { get; set; }

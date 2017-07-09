@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Http;
@@ -34,9 +36,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Add exception handling
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        /// <param name="useDetailedExceptionPage">Whether to use detailed exception page</param>
-        public static void UseExceptionHandler(this IApplicationBuilder application, bool useDetailedExceptionPage)
+        public static void UseNopExceptionHandler(this IApplicationBuilder application)
         {
+            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes

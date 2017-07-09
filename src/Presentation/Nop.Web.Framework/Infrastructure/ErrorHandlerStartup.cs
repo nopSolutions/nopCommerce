@@ -28,8 +28,7 @@ namespace Nop.Web.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             //exception handling
-            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            application.UseExceptionHandler(hostingEnvironment.IsDevelopment());
+            application.UseNopExceptionHandler();
 
             //handle 404 errors
             application.UsePageNotFound();
