@@ -360,25 +360,6 @@ namespace Nop.Core.Plugins
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
-            //TODO
-            //now asp.net core doesn't init DynamicDirectory in AppContext, that's why we commented the following code
-            //FileInfo shadowCopiedPlug;
-            //if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted || string.IsNullOrEmpty(AppDomain.CurrentDomain.DynamicDirectory))
-            //{
-            //    //all plugins will need to be copied to ~/Plugins/bin/
-            //    //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
-
-            //    //were running in med trust, so copy to custom bin folder
-            //    var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-            //    shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
-            //}
-            //else
-            //{
-            //    var directory = AppDomain.CurrentDomain.DynamicDirectory;
-            //    Debug.WriteLine(plug.FullName + " to " + directory);
-            //    //were running in full trust so copy to standard dynamic folder
-            //    shadowCopiedPlug = InitializeFullTrust(plug, new DirectoryInfo(directory));
-            //}
             //but in order to avoid possible issues we still copy libraries into ~/Plugins/bin/ directory
             var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
             var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
@@ -390,41 +371,7 @@ namespace Nop.Core.Plugins
 
             return shadowCopiedAssembly;
         }
-
-        /// <summary>
-        /// Used to initialize plugins when running in Full Trust
-        /// </summary>
-        /// <param name="plug"></param>
-        /// <param name="shadowCopyPlugFolder"></param>
-        /// <returns></returns>
-        private static FileInfo InitializeFullTrust(FileInfo plug, DirectoryInfo shadowCopyPlugFolder)
-        {
-            var shadowCopiedPlug = new FileInfo(Path.Combine(shadowCopyPlugFolder.FullName, plug.Name));
-            try
-            {
-                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
-            }
-            catch (IOException)
-            {
-                Debug.WriteLine(shadowCopiedPlug.FullName + " is locked, attempting to rename");
-                //this occurs when the files are locked,
-                //for some reason devenv locks plugin files some times and for another crazy reason you are allowed to rename them
-                //which releases the lock, so that it what we are doing here, once it's renamed, we can re-shadow copy
-                try
-                {
-                    var oldFile = shadowCopiedPlug.FullName + Guid.NewGuid().ToString("N") + ".old";
-                    File.Move(shadowCopiedPlug.FullName, oldFile);
-                }
-                catch (IOException exc)
-                {
-                    throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
-                }
-                //ok, we've made it this far, now retry the shadow copy
-                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
-            }
-            return shadowCopiedPlug;
-        }
-
+        
         /// <summary>
         /// Copy the plugin file to shadow copy directory
         /// </summary>
