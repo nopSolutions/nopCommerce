@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
@@ -69,6 +71,20 @@ namespace Nop.Core
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
             return address != null && address.ToString() != NullIpAddress;
+        }
+
+
+        protected virtual bool TryWriteWebConfig()
+        {
+            try
+            {
+                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         #endregion
@@ -486,49 +502,20 @@ namespace Nop.Core
         /// Restart application domain
         /// </summary>
         /// <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
-        /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
-        public virtual void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "")
+        public virtual void RestartAppDomain(bool makeRedirect = false)
         {
-#if NET451
-            if (CommonHelper.GetTrustLevel() > AspNetHostingPermissionLevel.Medium)
-            {
-                //full trust
-                HttpRuntime.UnloadAppDomain();
+            //the site will be restarted during the next request automatically
+            //_applicationLifetime.StopApplication();
 
-                TryWriteGlobalAsax();
-            }
-            else
+            //"touch" web.config to force restart
+            bool success = TryWriteWebConfig();
+            if (!success)
             {
-                //medium trust
-                bool success = TryWriteWebConfig();
-                if (!success)
-                {
-                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
-                        "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
-                        "- run the application in a full trust environment, or" + Environment.NewLine +
-                        "- give the application write access to the 'web.config' file.");
-                }
-                success = TryWriteGlobalAsax();
-
-                if (!success)
-                {
-                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
-                        "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
-                        "- run the application in a full trust environment, or" + Environment.NewLine +
-                        "- give the application write access to the 'Global.asax' file.");
-                }
+                throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
+                    "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
+                    "- run the application in a full trust environment, or" + Environment.NewLine +
+                    "- give the application write access to the 'web.config' file.");
             }
-
-            // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
-            // current request can be processed correctly.  So, we redirect to the same URL, so that the
-            // new request will come to the newly started AppDomain.
-            if (_httpContextAccessor.HttpContext != null && makeRedirect)
-            {
-                if (String.IsNullOrEmpty(redirectUrl))
-                    redirectUrl = GetThisPageUrl(true);
-                _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl, true /*endResponse*/);
-            }
-#endif
         }
 
         /// <summary>

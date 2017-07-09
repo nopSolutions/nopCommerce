@@ -95,8 +95,7 @@ namespace Nop.Core
         /// Restart application domain
         /// </summary>
         /// <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
-        /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
-        void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "");
+        void RestartAppDomain(bool makeRedirect = false);
         
         /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
