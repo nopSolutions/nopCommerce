@@ -50,9 +50,6 @@ namespace Nop.Web.Framework.Infrastructure
             //add memory cache
             services.AddMemoryCache();
 
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
-
             //add HTTP sesion state feature
             services.AddHttpSession();
 
