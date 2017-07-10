@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
@@ -124,11 +125,9 @@ namespace Nop.Services.Tasks
                                 });
 
                                 //execute task with lock
-#if NET451
-                                var redisWrapper = EngineContext.Current.ContainerManager.Resolve<IRedisConnectionWrapper>(scope: scope);
+                                var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
                                 if (!redisWrapper.PerformActionWithLock(scheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
                                     return;
-#endif
                             }
                             else
                             {

@@ -36,20 +36,13 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddOptions();
             
             var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
-            if (nopConfig.RedisCachingEnabled)
-            {
-                //add Redis distributed cache
-                services.AddDistributedRedisCache(options =>
-                {
-                    options.Configuration = nopConfig.RedisCachingConnectionString;
-                });
-            }
-            else
-                services.AddDistributedMemoryCache();
 
             //add memory cache
             services.AddMemoryCache();
 
+            //add distributed memory cache
+            services.AddDistributedMemoryCache();
+                        
             //add HTTP sesion state feature
             services.AddHttpSession();
 
