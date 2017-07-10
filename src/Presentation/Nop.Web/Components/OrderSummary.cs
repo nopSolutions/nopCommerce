@@ -24,8 +24,13 @@ namespace Nop.Web.Components
             this._workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
+        public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData, ShoppingCartModel overriddenModel)
         {
+            //use already prepared (shared) model
+            if (overriddenModel != null)
+                return View(overriddenModel);
+
+            //if not passed, then create a new model
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)

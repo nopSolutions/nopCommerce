@@ -16,6 +16,6 @@
         <h1>@T("ShoppingCart")</h1>
     </div>
     <div class="page-body">
-        @await Html.PartialAsync("~/Views/Shared/Components/OrderSummary/Default.cshtml", Model)
+        @await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model})
     </div>
 </div>
