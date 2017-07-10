@@ -328,7 +328,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <summary>
         /// Gets a configuration page URL
         /// </summary>
-        public string GetConfigurationPageUrl()
+        public override string GetConfigurationPageUrl()
         {
             return _webHelper.GetStoreLocation() + "Admin/ShippingAustraliaPost/Configure";
         }
