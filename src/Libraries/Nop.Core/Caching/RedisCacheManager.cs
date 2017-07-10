@@ -1,7 +1,7 @@
 using System;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Redis;
 using Newtonsoft.Json;
+using Nop.Core.Configuration;
+using StackExchange.Redis;
 
 namespace Nop.Core.Caching
 {
@@ -14,17 +14,27 @@ namespace Nop.Core.Caching
         #region Fields
 
         private readonly ICacheManager _perRequestCacheManager;
-        private readonly RedisCache _cache;
+        private readonly IRedisConnectionWrapper _connectionWrapper;
+
+        private readonly IDatabase _db;
 
         #endregion
 
         #region Ctor
 
         public RedisCacheManager(ICacheManager perRequestCacheManager,
-            RedisCache cache)
+            IRedisConnectionWrapper connectionWrapper, 
+            NopConfig config)
         {
-            _perRequestCacheManager = perRequestCacheManager;
-            _cache = cache;
+            if (string.IsNullOrEmpty(config.RedisCachingConnectionString))
+                throw new Exception("Redis connection string is empty");
+
+            this._perRequestCacheManager = perRequestCacheManager;
+
+            // ConnectionMultiplexer.Connect should only be called once and shared between callers
+            this._connectionWrapper = connectionWrapper;
+
+            this._db = _connectionWrapper.GetDatabase();
         }
 
         #endregion
@@ -45,9 +55,9 @@ namespace Nop.Core.Caching
             if (_perRequestCacheManager.IsSet(key))
                 return _perRequestCacheManager.Get<T>(key);
 
-            //get serialized itenn from cache
-            var serializedItem = _cache.GetString(key);
-            if (string.IsNullOrEmpty(serializedItem))
+            //get serialized item from cache
+            var serializedItem = _db.StringGet(key);
+            if (!serializedItem.HasValue)
                 return default(T);
 
             //deserialize item
@@ -71,18 +81,15 @@ namespace Nop.Core.Caching
         {
             if (data == null)
                 return;
-
+            
             //set cache time
-            var cacheOptions = new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(cacheTime)
-            };
+            var expiresIn = TimeSpan.FromMinutes(cacheTime);
 
             //serialize item
             var serializedItem = JsonConvert.SerializeObject(data);
 
             //and set it to cache
-            _cache.SetString(key, serializedItem, cacheOptions);
+            _db.StringSet(key, serializedItem, expiresIn);
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace Nop.Core.Caching
             if (_perRequestCacheManager.IsSet(key))
                 return true;
 
-            return !string.IsNullOrEmpty(_cache.GetString(key));
+            return _db.KeyExists(key);
         }
 
         /// <summary>
@@ -108,7 +115,7 @@ namespace Nop.Core.Caching
         public virtual void Remove(string key)
         {
             //remove item from caches
-            _cache.Remove(key);
+            _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);
         }
 
@@ -118,9 +125,13 @@ namespace Nop.Core.Caching
         /// <param name="pattern">String key pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-#if NET451
-            //TODO
-#endif
+            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            {
+                var server = _connectionWrapper.GetServer(endPoint);
+                var keys = server.Keys(database: _db.Database, pattern: $"*{pattern}*");
+                foreach (var key in keys)
+                    Remove(key);
+            }
         }
 
         /// <summary>
@@ -128,9 +139,18 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-#if NET451
-            //TODO
-#endif
+            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            {
+                var server = _connectionWrapper.GetServer(endPoint);
+                //we can use the code below (commented)
+                //but it requires administration permission - ",allowAdmin=true"
+                //server.FlushDatabase();
+
+                //that's why we simply interate through all elements now
+                var keys = server.Keys(database: _db.Database);
+                foreach (var key in keys)
+                    Remove(key);
+            }
         }
 
         /// <summary>
@@ -138,7 +158,8 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Dispose()
         {
-            //nothing special
+            //if (_connectionWrapper != null)
+            //    _connectionWrapper.Dispose();
         }
 
         #endregion
