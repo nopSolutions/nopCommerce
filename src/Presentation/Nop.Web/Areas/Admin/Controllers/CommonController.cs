@@ -448,37 +448,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
 
-            //machine key
-            #if NET451
-            try
-            {
-                var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
-                var machineKeySpecified = machineKeySection != null &&
-                    !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
-                    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate", StringComparison.InvariantCultureIgnoreCase);
-
-                if (!machineKeySpecified)
-                {
-                    model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Warning,
-                        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.NotSpecified")
-                    });
-                }
-                else
-                {
-                    model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Pass,
-                        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.Specified")
-                    });
-                }
-            }
-            catch (Exception exc)
-            {
-                LogException(exc);
-            }
-            #endif
+            //TODO remove locales "Admin.System.Warnings.MachineKey.*"
 
             return View(model);
         }
