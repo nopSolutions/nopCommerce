@@ -53,7 +53,7 @@ namespace Nop.Services.News
         public virtual void DeleteNews(NewsItem newsItem)
         {
             if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException(nameof(newsItem));
 
             _newsItemRepository.Delete(newsItem);
             
@@ -139,7 +139,7 @@ namespace Nop.Services.News
         public virtual void InsertNews(NewsItem news)
         {
             if (news == null)
-                throw new ArgumentNullException("news");
+                throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Insert(news);
 
@@ -154,7 +154,7 @@ namespace Nop.Services.News
         public virtual void UpdateNews(NewsItem news)
         {
             if (news == null)
-                throw new ArgumentNullException("news");
+                throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Update(news);
             
@@ -273,7 +273,7 @@ namespace Nop.Services.News
         public virtual void DeleteNewsComment(NewsComment newsComment)
         {
             if (newsComment == null)
-                throw new ArgumentNullException("newsComment");
+                throw new ArgumentNullException(nameof(newsComment));
 
             _newsCommentRepository.Delete(newsComment);
 
@@ -288,7 +288,7 @@ namespace Nop.Services.News
         public virtual void DeleteNewsComments(IList<NewsComment> newsComments)
         {
             if (newsComments == null)
-                throw new ArgumentNullException("newsComments");
+                throw new ArgumentNullException(nameof(newsComments));
 
             foreach (var newsComment in newsComments)
             {

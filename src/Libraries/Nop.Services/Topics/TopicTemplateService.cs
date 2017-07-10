@@ -44,7 +44,7 @@ namespace Nop.Services.Topics
         public virtual void DeleteTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Delete(topicTemplate);
 
@@ -86,7 +86,7 @@ namespace Nop.Services.Topics
         public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Insert(topicTemplate);
 
@@ -101,7 +101,7 @@ namespace Nop.Services.Topics
         public virtual void UpdateTopicTemplate(TopicTemplate topicTemplate)
         {
             if (topicTemplate == null)
-                throw new ArgumentNullException("topicTemplate");
+                throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Update(topicTemplate);
 

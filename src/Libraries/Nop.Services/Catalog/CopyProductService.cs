@@ -81,7 +81,7 @@ namespace Nop.Services.Catalog
             bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (String.IsNullOrEmpty(newName))
                 throw new ArgumentException("Product name is required");

@@ -26,10 +26,10 @@ namespace Nop.Services.Payments
             PaymentSettings paymentSettings)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
             if (paymentSettings == null)
-                throw new ArgumentNullException("paymentSettings");
+                throw new ArgumentNullException(nameof(paymentSettings));
 
             if (paymentSettings.ActivePaymentMethodSystemNames == null)
                 return false;
@@ -53,7 +53,7 @@ namespace Nop.Services.Payments
             decimal fee, bool usePercentage)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
             if (fee <= 0)
                 return fee;
 
@@ -81,7 +81,7 @@ namespace Nop.Services.Payments
         public static string SerializeCustomValues(this ProcessPaymentRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             if (!request.CustomValues.Any())
                 return null;
@@ -112,7 +112,7 @@ namespace Nop.Services.Payments
         public static Dictionary<string, object> DeserializeCustomValues(this Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             var request = new ProcessPaymentRequest();
             return request.DeserializeCustomValues(order.CustomValuesXml);

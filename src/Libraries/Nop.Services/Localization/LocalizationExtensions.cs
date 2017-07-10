@@ -61,7 +61,7 @@ namespace Nop.Services.Localization
             where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             var member = keySelector.Body as MemberExpression;
             if (member == null)
@@ -186,7 +186,7 @@ namespace Nop.Services.Localization
             where T : struct
         {
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             return GetLocalizedEnum(enumValue, localizationService, workContext.WorkingLanguage.Id);
         }
@@ -202,7 +202,7 @@ namespace Nop.Services.Localization
             where T : struct
         {
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
 
@@ -233,7 +233,7 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, IWorkContext workContext)
         {
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             return GetLocalizedPermissionName(permissionRecord, localizationService, workContext.WorkingLanguage.Id);
         }
@@ -249,10 +249,10 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, int languageId)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             //localized value
             string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
@@ -274,11 +274,11 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
             string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
             string resourceValue = permissionRecord.Name;
@@ -313,11 +313,11 @@ namespace Nop.Services.Localization
             ILocalizationService localizationService, ILanguageService languageService)
         {
             if (permissionRecord == null)
-                throw new ArgumentNullException("permissionRecord");
+                throw new ArgumentNullException(nameof(permissionRecord));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
             string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
             foreach (var lang in languageService.GetAllLanguages(true))
@@ -356,11 +356,11 @@ namespace Nop.Services.Localization
         {
             //actually plugin instance is not required
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
 
             foreach (var lang in languageService.GetAllLanguages(true))
             {
@@ -399,11 +399,11 @@ namespace Nop.Services.Localization
         {
             //actually plugin instance is not required
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             if (languageService == null)
-                throw new ArgumentNullException("languageService");
+                throw new ArgumentNullException(nameof(languageService));
             
             foreach (var lang in languageService.GetAllLanguages(true))
             {
@@ -445,10 +445,10 @@ namespace Nop.Services.Localization
             where T : IPlugin
         {   
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
 
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
@@ -479,13 +479,13 @@ namespace Nop.Services.Localization
             where T : IPlugin
         {
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
 
             if (plugin == null)
-                throw new ArgumentNullException("plugin");
+                throw new ArgumentNullException(nameof(plugin));
 
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");

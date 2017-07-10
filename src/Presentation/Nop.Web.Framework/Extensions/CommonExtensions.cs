@@ -27,7 +27,7 @@ namespace Nop.Web.Framework.Extensions
         public static bool SelectionIsNotPossible(this IList<SelectListItem> items, bool ignoreZeroValue = true)
         {
             if (items == null)
-                throw  new ArgumentNullException("items");
+                throw  new ArgumentNullException(nameof(items));
 
             //we ignore items with "0" value? Usually it's something like "Select All", "etc
             return items.Count(x => !ignoreZeroValue || !x.Value.ToString().Equals("0")) < 2;

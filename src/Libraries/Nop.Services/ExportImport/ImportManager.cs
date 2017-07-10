@@ -127,10 +127,10 @@ namespace Nop.Services.ExportImport
         protected virtual int GetColumnIndex(string[] properties, string columnName)
         {
             if (properties == null)
-                throw new ArgumentNullException("properties");
+                throw new ArgumentNullException(nameof(properties));
 
             if (columnName == null)
-                throw new ArgumentNullException("columnName");
+                throw new ArgumentNullException(nameof(columnName));
 
             for (int i = 0; i < properties.Length; i++)
                 if (properties[i].Equals(columnName, StringComparison.InvariantCultureIgnoreCase))

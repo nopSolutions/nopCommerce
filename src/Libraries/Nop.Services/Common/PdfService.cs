@@ -133,7 +133,7 @@ namespace Nop.Services.Common
         protected virtual Font GetFont(string fontFileName)
         {
             if (fontFileName == null)
-                throw new ArgumentNullException("fontFileName");
+                throw new ArgumentNullException(nameof(fontFileName));
 
             string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), fontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -180,7 +180,7 @@ namespace Nop.Services.Common
         public virtual string PrintOrderToPdf(Order order, int languageId = 0, int vendorId = 0)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
             string filePath = Path.Combine(CommonHelper.MapPath("~/files/exportimport"), fileName);
@@ -203,10 +203,10 @@ namespace Nop.Services.Common
         public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0, int vendorId = 0)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             if (orders == null)
-                throw new ArgumentNullException("orders");
+                throw new ArgumentNullException(nameof(orders));
 
             var pageSize = PageSize.A4;
 
@@ -989,10 +989,10 @@ namespace Nop.Services.Common
         public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             if (shipments == null)
-                throw new ArgumentNullException("shipments");
+                throw new ArgumentNullException(nameof(shipments));
 
             var pageSize = PageSize.A4;
 
@@ -1187,10 +1187,10 @@ namespace Nop.Services.Common
         public virtual void PrintProductsToPdf(Stream stream, IList<Product> products)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             if (products == null)
-                throw new ArgumentNullException("products");
+                throw new ArgumentNullException(nameof(products));
 
             var lang = _workContext.WorkingLanguage;
 

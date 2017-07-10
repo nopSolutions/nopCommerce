@@ -469,7 +469,7 @@ namespace Nop.Web.Factories
         public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
         {
             if (order ==null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             var model = new CheckoutCompletedModel
             {
@@ -500,7 +500,7 @@ namespace Nop.Web.Factories
         public virtual OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw  new ArgumentNullException("cart");
+                throw  new ArgumentNullException(nameof(cart));
 
             var model = new OnePageCheckoutModel
             {

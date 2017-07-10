@@ -109,7 +109,7 @@ namespace Nop.Services.Localization
         public virtual void DeleteLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
-                throw new ArgumentNullException("localeStringResource");
+                throw new ArgumentNullException(nameof(localeStringResource));
 
             _lsrRepository.Delete(localeStringResource);
 
@@ -189,7 +189,7 @@ namespace Nop.Services.Localization
         public virtual void InsertLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
-                throw new ArgumentNullException("localeStringResource");
+                throw new ArgumentNullException(nameof(localeStringResource));
             
             _lsrRepository.Insert(localeStringResource);
 
@@ -207,7 +207,7 @@ namespace Nop.Services.Localization
         public virtual void UpdateLocaleStringResource(LocaleStringResource localeStringResource)
         {
             if (localeStringResource == null)
-                throw new ArgumentNullException("localeStringResource");
+                throw new ArgumentNullException(nameof(localeStringResource));
 
             _lsrRepository.Update(localeStringResource);
 
@@ -327,7 +327,7 @@ namespace Nop.Services.Localization
         public virtual string ExportResourcesToXml(Language language)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
             var sb = new StringBuilder();
             var stringWriter = new StringWriter(sb);
             var xmlWriter = new XmlTextWriter(stringWriter);
@@ -361,7 +361,7 @@ namespace Nop.Services.Localization
         public virtual void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
 
             if (String.IsNullOrEmpty(xml))
                 return;

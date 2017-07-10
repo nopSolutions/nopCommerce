@@ -175,7 +175,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProduct(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             product.Deleted = true;
             //delete product
@@ -192,7 +192,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProducts(IList<Product> products)
         {
             if (products == null)
-                throw new ArgumentNullException("products");
+                throw new ArgumentNullException(nameof(products));
 
             foreach (var product in products)
             {
@@ -271,7 +271,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProduct(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //insert
             _productRepository.Insert(product);
@@ -290,7 +290,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProduct(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //update
             _productRepository.Update(product);
@@ -305,7 +305,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProducts(IList<Product> products)
         {
             if (products == null)
-                throw new ArgumentNullException("products");
+                throw new ArgumentNullException(nameof(products));
 
             //update
             _productRepository.Update(products);
@@ -1093,7 +1093,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductReviewTotals(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             int approvedRatingSum = 0;
             int notApprovedRatingSum = 0; 
@@ -1200,7 +1200,7 @@ namespace Nop.Services.Catalog
         public IList<Product> GetProductsBySku(string[] skuArray, int vendorId = 0)
         {
             if (skuArray == null)
-                throw new ArgumentNullException("skuArray");
+                throw new ArgumentNullException(nameof(skuArray));
 
             var query = _productRepository.Table;
             query = query.Where(p => !p.Deleted && skuArray.Contains(p.Sku));
@@ -1218,7 +1218,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateHasTierPricesProperty(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             product.HasTierPrices = product.TierPrices.Any();
             UpdateProduct(product);
@@ -1231,7 +1231,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateHasDiscountsApplied(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             product.HasDiscountsApplied = product.AppliedDiscounts.Any();
             UpdateProduct(product);
@@ -1265,7 +1265,7 @@ namespace Nop.Services.Catalog
         public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "")
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (quantityToChange == 0)
                 return;
@@ -1400,7 +1400,7 @@ namespace Nop.Services.Catalog
         public virtual void ReserveInventory(Product product, int quantity)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (quantity >= 0)
                 throw new ArgumentException("Value must be negative.", "quantity");
@@ -1448,7 +1448,7 @@ namespace Nop.Services.Catalog
         public virtual void UnblockReservedInventory(Product product, int quantity)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (quantity < 0)
                 throw new ArgumentException("Value must be positive.", "quantity");
@@ -1492,7 +1492,7 @@ namespace Nop.Services.Catalog
         public virtual void BookReservedInventory(Product product, int warehouseId, int quantity, string message = "")
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (quantity >= 0)
                 throw new ArgumentException("Value must be negative.", "quantity");
@@ -1527,10 +1527,10 @@ namespace Nop.Services.Catalog
         public virtual int ReverseBookedInventory(Product product, ShipmentItem shipmentItem, string message = "")
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (shipmentItem == null)
-                throw new ArgumentNullException("shipmentItem");
+                throw new ArgumentNullException(nameof(shipmentItem));
             
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
@@ -1573,7 +1573,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
-                throw new ArgumentNullException("relatedProduct");
+                throw new ArgumentNullException(nameof(relatedProduct));
 
             _relatedProductRepository.Delete(relatedProduct);
 
@@ -1621,7 +1621,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
-                throw new ArgumentNullException("relatedProduct");
+                throw new ArgumentNullException(nameof(relatedProduct));
 
             _relatedProductRepository.Insert(relatedProduct);
 
@@ -1636,7 +1636,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
-                throw new ArgumentNullException("relatedProduct");
+                throw new ArgumentNullException(nameof(relatedProduct));
 
             _relatedProductRepository.Update(relatedProduct);
 
@@ -1655,7 +1655,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
-                throw new ArgumentNullException("crossSellProduct");
+                throw new ArgumentNullException(nameof(crossSellProduct));
 
             _crossSellProductRepository.Delete(crossSellProduct);
 
@@ -1702,7 +1702,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
-                throw new ArgumentNullException("crossSellProduct");
+                throw new ArgumentNullException(nameof(crossSellProduct));
 
             _crossSellProductRepository.Insert(crossSellProduct);
 
@@ -1717,7 +1717,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
-                throw new ArgumentNullException("crossSellProduct");
+                throw new ArgumentNullException(nameof(crossSellProduct));
 
             _crossSellProductRepository.Update(crossSellProduct);
 
@@ -1784,7 +1784,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
-                throw new ArgumentNullException("tierPrice");
+                throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Delete(tierPrice);
 
@@ -1814,7 +1814,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
-                throw new ArgumentNullException("tierPrice");
+                throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Insert(tierPrice);
 
@@ -1831,7 +1831,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateTierPrice(TierPrice tierPrice)
         {
             if (tierPrice == null)
-                throw new ArgumentNullException("tierPrice");
+                throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Update(tierPrice);
 
@@ -1852,7 +1852,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
-                throw new ArgumentNullException("productPicture");
+                throw new ArgumentNullException(nameof(productPicture));
 
             _productPictureRepository.Delete(productPicture);
 
@@ -1895,7 +1895,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
-                throw new ArgumentNullException("productPicture");
+                throw new ArgumentNullException(nameof(productPicture));
 
             _productPictureRepository.Insert(productPicture);
 
@@ -1910,7 +1910,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductPicture(ProductPicture productPicture)
         {
             if (productPicture == null)
-                throw new ArgumentNullException("productPicture");
+                throw new ArgumentNullException(nameof(productPicture));
 
             _productPictureRepository.Update(productPicture);
 
@@ -2022,7 +2022,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductReview(ProductReview productReview)
         {
             if (productReview == null)
-                throw new ArgumentNullException("productReview");
+                throw new ArgumentNullException(nameof(productReview));
 
             _productReviewRepository.Delete(productReview);
 
@@ -2038,7 +2038,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductReviews(IList<ProductReview> productReviews)
         {
             if (productReviews == null)
-                throw new ArgumentNullException("productReviews");
+                throw new ArgumentNullException(nameof(productReviews));
 
             _productReviewRepository.Delete(productReviews);
 
@@ -2061,7 +2061,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
-                throw new ArgumentNullException("pwi");
+                throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Delete(pwi);
 
@@ -2085,7 +2085,7 @@ namespace Nop.Services.Catalog
             int warehouseId = 0, string message = "", int? combinationId = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (quantityAdjustment == 0)
                 return;
@@ -2120,7 +2120,7 @@ namespace Nop.Services.Catalog
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var query = _stockQuantityHistoryRepository.Table.Where(historyEntry => historyEntry.ProductId == product.Id);
 

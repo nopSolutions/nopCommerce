@@ -15,7 +15,7 @@ namespace Nop.Services.Orders
         public static string FormatOrderNoteText(this OrderNote orderNote)
         {
             if (orderNote == null)
-                throw new ArgumentNullException("orderNote");
+                throw new ArgumentNullException(nameof(orderNote));
 
             string text = orderNote.Note;
 
@@ -35,7 +35,7 @@ namespace Nop.Services.Orders
         public static int GetTotalNumberOfItemsInAllShipment(this OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var totalInShipments = 0;
             var shipments = orderItem.Order.Shipments.ToList();
@@ -60,7 +60,7 @@ namespace Nop.Services.Orders
         public static int GetTotalNumberOfItemsCanBeAddedToShipment(this OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var totalInShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
@@ -80,7 +80,7 @@ namespace Nop.Services.Orders
         public static int GetTotalNumberOfNotYetShippedItems(this OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
@@ -110,7 +110,7 @@ namespace Nop.Services.Orders
         public static int GetTotalNumberOfShippedItems(this OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
@@ -140,7 +140,7 @@ namespace Nop.Services.Orders
         public static int GetTotalNumberOfDeliveredItems(this OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
@@ -172,7 +172,7 @@ namespace Nop.Services.Orders
         public static bool HasItemsToAddToShipment(this Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             foreach (var orderItem in order.OrderItems)
             {
@@ -197,7 +197,7 @@ namespace Nop.Services.Orders
         public static bool HasItemsToShip(this Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             foreach (var orderItem in order.OrderItems)
             {
@@ -222,7 +222,7 @@ namespace Nop.Services.Orders
         public static bool HasItemsToDeliver(this Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             foreach (var orderItem in order.OrderItems)
             {

@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 if (filterContext == null)
-                    throw new ArgumentNullException("filterContext");
+                    throw new ArgumentNullException(nameof(filterContext));
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;

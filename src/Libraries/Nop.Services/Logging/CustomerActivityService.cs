@@ -128,7 +128,7 @@ namespace Nop.Services.Logging
         public virtual void InsertActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Insert(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -141,7 +141,7 @@ namespace Nop.Services.Logging
         public virtual void UpdateActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Update(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -154,7 +154,7 @@ namespace Nop.Services.Logging
         public virtual void DeleteActivityType(ActivityLogType activityLogType)
         {
             if (activityLogType == null)
-                throw new ArgumentNullException("activityLogType");
+                throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Delete(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
@@ -242,7 +242,7 @@ namespace Nop.Services.Logging
         public virtual void DeleteActivity(ActivityLog activityLog)
         {
             if (activityLog == null)
-                throw new ArgumentNullException("activityLog");
+                throw new ArgumentNullException(nameof(activityLog));
 
             _activityLogRepository.Delete(activityLog);
         }

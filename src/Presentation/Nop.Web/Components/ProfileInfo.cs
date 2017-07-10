@@ -21,7 +21,7 @@ namespace Nop.Web.Components
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var model = _profileModelFactory.PrepareProfileInfoModel(customer);
             return View(model);

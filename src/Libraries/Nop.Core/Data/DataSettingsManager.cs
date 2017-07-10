@@ -104,7 +104,7 @@ namespace Nop.Core.Data
         public virtual void SaveSettings(DataSettings settings)
         {
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             
             string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))

@@ -75,7 +75,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresModel(CampaignModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores.Add(new SelectListItem
             {
@@ -96,7 +96,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareCustomerRolesModel(CampaignModel model)
 	    {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCustomerRoles.Add(new SelectListItem
             {
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareEmailAccountsModel(CampaignModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableEmailAccounts = _emailAccountService.GetAllEmailAccounts().Select(emailAccount => new SelectListItem
             {

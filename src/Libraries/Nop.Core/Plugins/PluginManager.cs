@@ -54,10 +54,10 @@ namespace Nop.Core.Plugins
         public static void Initialize(ApplicationPartManager applicationPartManager, NopConfig config)
         {
             if (applicationPartManager == null)
-                throw new ArgumentNullException("applicationPartManager");
+                throw new ArgumentNullException(nameof(applicationPartManager));
 
             if (applicationPartManager == null)
-                throw new ArgumentNullException("config");
+                throw new ArgumentNullException(nameof(config));
 
 
             using (new WriteLockDisposable(Locker))
@@ -207,7 +207,7 @@ namespace Nop.Core.Plugins
         public static void MarkPluginAsInstalled(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
+                throw new ArgumentNullException(nameof(systemName));
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
@@ -232,7 +232,7 @@ namespace Nop.Core.Plugins
         public static void MarkPluginAsUninstalled(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
+                throw new ArgumentNullException(nameof(systemName));
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
@@ -268,7 +268,7 @@ namespace Nop.Core.Plugins
         public static PluginDescriptor FindPlugin(Type typeInAssembly)
         {
             if (typeInAssembly == null)
-                throw new ArgumentNullException("typeInAssembly");
+                throw new ArgumentNullException(nameof(typeInAssembly));
 
             if (ReferencedPlugins == null)
                 return null;
@@ -289,7 +289,7 @@ namespace Nop.Core.Plugins
         private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
         {
             if (pluginFolder == null)
-                throw new ArgumentNullException("pluginFolder");
+                throw new ArgumentNullException(nameof(pluginFolder));
 
             //create list (<file info, parsed plugin descritor>)
             var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();

@@ -99,7 +99,7 @@ namespace Nop.Web.Framework.Localization
                 return url;
 
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
 
             //remove application path from raw URL
             if (isRawPath)

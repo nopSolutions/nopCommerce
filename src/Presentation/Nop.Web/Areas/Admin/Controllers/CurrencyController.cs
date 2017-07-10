@@ -81,7 +81,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && currency != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(currency).ToList();

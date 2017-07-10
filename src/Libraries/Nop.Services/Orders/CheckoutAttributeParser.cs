@@ -294,7 +294,7 @@ namespace Nop.Services.Orders
         public virtual bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
         {
             if (attribute == null)
-                throw new ArgumentNullException("attribute");
+                throw new ArgumentNullException(nameof(attribute));
 
             var conditionAttributeXml = attribute.ConditionAttributeXml;
             if (String.IsNullOrEmpty(conditionAttributeXml))

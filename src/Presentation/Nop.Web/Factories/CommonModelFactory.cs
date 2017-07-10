@@ -434,7 +434,7 @@ namespace Nop.Web.Factories
         public virtual ContactUsModel PrepareContactUsModel(ContactUsModel model, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties)
             {
@@ -457,10 +457,10 @@ namespace Nop.Web.Factories
         public virtual ContactVendorModel PrepareContactVendorModel(ContactVendorModel model, Vendor vendor, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             if (!excludeProperties)
             {

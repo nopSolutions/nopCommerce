@@ -96,7 +96,7 @@ namespace Nop.Services.Tax
         protected virtual bool IsEuConsumer(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             Country country = null;
 
@@ -151,7 +151,7 @@ namespace Nop.Services.Tax
             int taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var calculateTaxRequest = new CalculateTaxRequest
             {
@@ -627,7 +627,7 @@ namespace Nop.Services.Tax
             bool includingTax, Customer customer, out decimal taxRate)
         {
             if (cav == null)
-                throw new ArgumentNullException("cav");
+                throw new ArgumentNullException(nameof(cav));
 
             taxRate = decimal.Zero;
 

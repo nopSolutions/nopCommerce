@@ -99,7 +99,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && country != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(country).ToList();
@@ -510,7 +510,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException("countryId");
+                throw new ArgumentNullException(nameof(countryId));
 
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();

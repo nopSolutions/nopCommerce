@@ -182,7 +182,7 @@ namespace Nop.Web.Factories
         public virtual SendPrivateMessageModel PrepareSendPrivateMessageModel(Customer customerTo, PrivateMessage replyToPM)
         {
             if (customerTo == null)
-                throw new ArgumentNullException("customerTo");
+                throw new ArgumentNullException(nameof(customerTo));
 
             var model = new SendPrivateMessageModel();
             model.ToCustomerId = customerTo.Id;
@@ -210,7 +210,7 @@ namespace Nop.Web.Factories
         public virtual PrivateMessageModel PreparePrivateMessageModel(PrivateMessage pm)
         {
             if (pm == null)
-                throw new ArgumentNullException("pm");
+                throw new ArgumentNullException(nameof(pm));
 
             var model = new PrivateMessageModel
             {

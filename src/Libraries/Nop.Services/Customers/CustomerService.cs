@@ -320,7 +320,7 @@ namespace Nop.Services.Customers
         public virtual void DeleteCustomer(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (customer.IsSystemAccount)
                 throw new NopException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
@@ -483,7 +483,7 @@ namespace Nop.Services.Customers
         public virtual void InsertCustomer(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             _customerRepository.Insert(customer);
 
@@ -498,7 +498,7 @@ namespace Nop.Services.Customers
         public virtual void UpdateCustomer(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             _customerRepository.Update(customer);
 
@@ -725,7 +725,7 @@ namespace Nop.Services.Customers
         public virtual void DeleteCustomerRole(CustomerRole customerRole)
         {
             if (customerRole == null)
-                throw new ArgumentNullException("customerRole");
+                throw new ArgumentNullException(nameof(customerRole));
 
             if (customerRole.IsSystemRole)
                 throw new NopException("System role could not be deleted");
@@ -799,7 +799,7 @@ namespace Nop.Services.Customers
         public virtual void InsertCustomerRole(CustomerRole customerRole)
         {
             if (customerRole == null)
-                throw new ArgumentNullException("customerRole");
+                throw new ArgumentNullException(nameof(customerRole));
 
             _customerRoleRepository.Insert(customerRole);
 
@@ -816,7 +816,7 @@ namespace Nop.Services.Customers
         public virtual void UpdateCustomerRole(CustomerRole customerRole)
         {
             if (customerRole == null)
-                throw new ArgumentNullException("customerRole");
+                throw new ArgumentNullException(nameof(customerRole));
 
             _customerRoleRepository.Update(customerRole);
 
@@ -878,7 +878,7 @@ namespace Nop.Services.Customers
         public virtual void InsertCustomerPassword(CustomerPassword customerPassword)
         {
             if (customerPassword == null)
-                throw new ArgumentNullException("customerPassword");
+                throw new ArgumentNullException(nameof(customerPassword));
 
             _customerPasswordRepository.Insert(customerPassword);
 
@@ -893,7 +893,7 @@ namespace Nop.Services.Customers
         public virtual void UpdateCustomerPassword(CustomerPassword customerPassword)
         {
             if (customerPassword == null)
-                throw new ArgumentNullException("customerPassword");
+                throw new ArgumentNullException(nameof(customerPassword));
 
             _customerPasswordRepository.Update(customerPassword);
 

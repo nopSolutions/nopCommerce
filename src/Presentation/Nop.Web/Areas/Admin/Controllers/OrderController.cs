@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool HasAccessToOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -228,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool HasAccessToOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -241,7 +241,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool HasAccessToProduct(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -254,7 +254,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -451,10 +451,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.Id = order.Id;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);

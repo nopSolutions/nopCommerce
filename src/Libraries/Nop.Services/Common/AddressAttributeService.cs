@@ -90,7 +90,7 @@ namespace Nop.Services.Common
         public virtual void DeleteAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
-                throw new ArgumentNullException("addressAttribute");
+                throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Delete(addressAttribute);
 
@@ -138,7 +138,7 @@ namespace Nop.Services.Common
         public virtual void InsertAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
-                throw new ArgumentNullException("addressAttribute");
+                throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Insert(addressAttribute);
 
@@ -156,7 +156,7 @@ namespace Nop.Services.Common
         public virtual void UpdateAddressAttribute(AddressAttribute addressAttribute)
         {
             if (addressAttribute == null)
-                throw new ArgumentNullException("addressAttribute");
+                throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Update(addressAttribute);
 
@@ -174,7 +174,7 @@ namespace Nop.Services.Common
         public virtual void DeleteAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
-                throw new ArgumentNullException("addressAttributeValue");
+                throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Delete(addressAttributeValue);
 
@@ -225,7 +225,7 @@ namespace Nop.Services.Common
         public virtual void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
-                throw new ArgumentNullException("addressAttributeValue");
+                throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Insert(addressAttributeValue);
 
@@ -243,7 +243,7 @@ namespace Nop.Services.Common
         public virtual void UpdateAddressAttributeValue(AddressAttributeValue addressAttributeValue)
         {
             if (addressAttributeValue == null)
-                throw new ArgumentNullException("addressAttributeValue");
+                throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Update(addressAttributeValue);
 

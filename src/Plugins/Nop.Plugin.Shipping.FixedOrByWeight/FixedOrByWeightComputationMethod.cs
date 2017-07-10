@@ -127,7 +127,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var response = new GetShippingOptionResponse();
 
@@ -220,7 +220,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 return null;
 
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
             var shippingMethods = _shippingService.GetAllShippingMethods(restrictByCountryId);

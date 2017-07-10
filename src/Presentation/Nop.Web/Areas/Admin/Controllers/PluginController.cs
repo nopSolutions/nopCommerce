@@ -192,7 +192,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IList<OfficialFeedCategory> allCategories)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var breadCrumb = new List<OfficialFeedCategory>();
             while (category != null)

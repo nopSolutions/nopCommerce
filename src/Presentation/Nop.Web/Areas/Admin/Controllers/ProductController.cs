@@ -265,7 +265,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
                 model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(product).ToList();
@@ -309,7 +309,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product).ToList();
@@ -353,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareCategoryMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
                 model.SelectedCategoryIds = _categoryService.GetProductCategoriesByProductId(product.Id, true).Select(c => c.CategoryId).ToList();
@@ -396,7 +396,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareManufacturerMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
                 model.SelectedManufacturerIds = _manufacturerService.GetProductManufacturersByProductId(product.Id, true).Select(c => c.ManufacturerId).ToList();
@@ -439,7 +439,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareDiscountMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
                 model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToList();
@@ -482,9 +482,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAddProductAttributeCombinationModel(AddProductAttributeCombinationModel model, Product product)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
             model.StockQuantity = 10000;
@@ -542,7 +542,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareProductModel(ProductModel model, Product product, bool setPredefinedValues, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (product != null)
             {
@@ -798,7 +798,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveProductWarehouseInventory(Product product, ProductModel model)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (model.ManageInventoryMethodId != (int)ManageInventoryMethod.ManageStock)
                 return;

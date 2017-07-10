@@ -76,7 +76,7 @@ namespace Nop.Services.Stores
         public virtual void DeleteStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Delete(storeMapping);
 
@@ -109,7 +109,7 @@ namespace Nop.Services.Stores
         public virtual IList<StoreMapping> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
@@ -130,7 +130,7 @@ namespace Nop.Services.Stores
         public virtual void InsertStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Insert(storeMapping);
 
@@ -150,7 +150,7 @@ namespace Nop.Services.Stores
         public virtual void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException("storeId");
@@ -175,7 +175,7 @@ namespace Nop.Services.Stores
         public virtual void UpdateStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Update(storeMapping);
 
@@ -195,7 +195,7 @@ namespace Nop.Services.Stores
         public virtual int[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;

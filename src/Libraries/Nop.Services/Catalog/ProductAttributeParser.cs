@@ -445,7 +445,7 @@ namespace Nop.Services.Catalog
         public virtual bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml)
         {
             if (pam == null)
-                throw new ArgumentNullException("pam");
+                throw new ArgumentNullException(nameof(pam));
 
             var conditionAttributeXml = pam.ConditionAttributeXml;
             if (String.IsNullOrEmpty(conditionAttributeXml))
@@ -494,7 +494,7 @@ namespace Nop.Services.Catalog
             string attributesXml, bool ignoreNonCombinableAttributes = true)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
             return combinations.FirstOrDefault(x => 
@@ -510,7 +510,7 @@ namespace Nop.Services.Catalog
         public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var allProductAttributMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             if (ignoreNonCombinableAttributes)

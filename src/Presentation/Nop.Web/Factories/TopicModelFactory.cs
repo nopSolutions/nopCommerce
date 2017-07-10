@@ -62,7 +62,7 @@ namespace Nop.Web.Factories
         protected virtual TopicModel PrepareTopicModel(Topic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             var model = new TopicModel
             {

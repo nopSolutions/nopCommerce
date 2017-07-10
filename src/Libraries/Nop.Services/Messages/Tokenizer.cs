@@ -163,10 +163,10 @@ namespace Nop.Services.Messages
         public string Replace(string template, IEnumerable<Token> tokens, bool htmlEncode)
         {
             if (string.IsNullOrWhiteSpace(template))
-                throw new ArgumentNullException("template");
+                throw new ArgumentNullException(nameof(template));
 
             if (tokens == null)
-                throw new ArgumentNullException("tokens");
+                throw new ArgumentNullException(nameof(tokens));
 
             //replace conditional statements
             template = ReplaceConditionalStatements(template, tokens);

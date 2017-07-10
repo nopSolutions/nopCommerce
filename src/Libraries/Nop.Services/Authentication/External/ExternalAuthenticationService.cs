@@ -318,7 +318,7 @@ namespace Nop.Services.Authentication.External
         public virtual IActionResult Authenticate(ExternalAuthenticationParameters parameters, string returnUrl = null)
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
 
             if (!ExternalAuthenticationMethodIsAvailable(parameters.ProviderSystemName))
                 return Error(new[] { "External authentication method cannot be loaded" }, returnUrl);
@@ -345,7 +345,7 @@ namespace Nop.Services.Authentication.External
         public virtual void AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var externalAuthenticationRecord = new ExternalAuthenticationRecord
             {
@@ -368,7 +368,7 @@ namespace Nop.Services.Authentication.External
         public virtual Customer GetUserByExternalAuthenticationParameters(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
 
             var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
@@ -385,7 +385,7 @@ namespace Nop.Services.Authentication.External
         public virtual void RemoveAssociation(ExternalAuthenticationParameters parameters)
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
 
             var associationRecord = _externalAuthenticationRecordRepository.Table.FirstOrDefault(record =>
                 record.ExternalIdentifier.Equals(parameters.ExternalIdentifier) && record.ProviderSystemName.Equals(parameters.ProviderSystemName));
@@ -401,7 +401,7 @@ namespace Nop.Services.Authentication.External
         public virtual void DeleteExternalAuthenticationRecord(ExternalAuthenticationRecord externalAuthenticationRecord)
         {
             if (externalAuthenticationRecord == null)
-                throw new ArgumentNullException("externalAuthenticationRecord");
+                throw new ArgumentNullException(nameof(externalAuthenticationRecord));
 
             _externalAuthenticationRecordRepository.Delete(externalAuthenticationRecord);
         }

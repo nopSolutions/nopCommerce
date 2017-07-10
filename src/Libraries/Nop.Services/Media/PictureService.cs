@@ -204,7 +204,7 @@ namespace Nop.Services.Media
         protected virtual void DeletePictureOnFileSystem(Picture picture)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
             string fileName = string.Format("{0}_0.{1}", picture.Id.ToString("0000000"), lastPart);
@@ -304,7 +304,7 @@ namespace Nop.Services.Media
         protected virtual byte[] LoadPictureBinary(Picture picture, bool fromDb)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
                 ? picture.PictureBinary
@@ -622,7 +622,7 @@ namespace Nop.Services.Media
         public virtual void DeletePicture(Picture picture)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             //delete thumbs
             DeletePictureThumbs(picture);

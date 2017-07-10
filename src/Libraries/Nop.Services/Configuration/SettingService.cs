@@ -131,7 +131,7 @@ namespace Nop.Services.Configuration
         public virtual void InsertSetting(Setting setting, bool clearCache = true)
         {
             if (setting == null)
-                throw new ArgumentNullException("setting");
+                throw new ArgumentNullException(nameof(setting));
 
             _settingRepository.Insert(setting);
 
@@ -151,7 +151,7 @@ namespace Nop.Services.Configuration
         public virtual void UpdateSetting(Setting setting, bool clearCache = true)
         {
             if (setting == null)
-                throw new ArgumentNullException("setting");
+                throw new ArgumentNullException(nameof(setting));
 
             _settingRepository.Update(setting);
 
@@ -170,7 +170,7 @@ namespace Nop.Services.Configuration
         public virtual void DeleteSetting(Setting setting)
         {
             if (setting == null)
-                throw new ArgumentNullException("setting");
+                throw new ArgumentNullException(nameof(setting));
 
             _settingRepository.Delete(setting);
 
@@ -188,7 +188,7 @@ namespace Nop.Services.Configuration
         public virtual void DeleteSettings(IList<Setting> settings)
         {
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
 
             _settingRepository.Delete(settings);
 
@@ -289,7 +289,7 @@ namespace Nop.Services.Configuration
         public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             key = key.Trim().ToLowerInvariant();
             string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
 

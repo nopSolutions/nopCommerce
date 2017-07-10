@@ -72,10 +72,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (returnRequest == null)
-                throw new ArgumentNullException("returnRequest");
+                throw new ArgumentNullException(nameof(returnRequest));
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem != null)

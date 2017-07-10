@@ -53,7 +53,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
         {
             if (returnRequest == null)
-                throw new ArgumentNullException("returnRequest");
+                throw new ArgumentNullException(nameof(returnRequest));
 
             _returnRequestRepository.Delete(returnRequest);
 
@@ -127,7 +127,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Delete(returnRequestAction);
 
@@ -167,7 +167,7 @@ namespace Nop.Services.Orders
         public virtual void InsertReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Insert(returnRequestAction);
 
@@ -182,7 +182,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Update(returnRequestAction);
 
@@ -200,7 +200,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Delete(returnRequestReason);
 
@@ -240,7 +240,7 @@ namespace Nop.Services.Orders
         public virtual void InsertReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Insert(returnRequestReason);
 
@@ -255,7 +255,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Update(returnRequestReason);
 

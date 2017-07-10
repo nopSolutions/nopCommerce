@@ -104,10 +104,10 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
         {
             if (discountRequirementRule == null)
-                throw new ArgumentNullException("discountRequirementRule");
+                throw new ArgumentNullException(nameof(discountRequirementRule));
 
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
             return url;
@@ -116,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (discount == null)
                 return;
@@ -409,7 +409,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (String.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
+                throw new ArgumentNullException(nameof(systemName));
 
             var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
             if (discountRequirementRule == null)

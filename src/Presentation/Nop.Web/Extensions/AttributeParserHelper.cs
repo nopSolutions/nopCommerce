@@ -17,7 +17,7 @@ namespace Nop.Web.Extensions
             IAddressAttributeService addressAttributeService)
         {
             if (form == null)
-                throw new ArgumentNullException("form");
+                throw new ArgumentNullException(nameof(form));
 
             string attributesXml = "";
             var attributes = addressAttributeService.GetAllAddressAttributes();

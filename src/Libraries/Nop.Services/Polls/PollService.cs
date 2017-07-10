@@ -97,7 +97,7 @@ namespace Nop.Services.Polls
         public virtual void DeletePoll(Poll poll)
         {
             if (poll == null)
-                throw new ArgumentNullException("poll");
+                throw new ArgumentNullException(nameof(poll));
 
             _pollRepository.Delete(poll);
 
@@ -112,7 +112,7 @@ namespace Nop.Services.Polls
         public virtual void InsertPoll(Poll poll)
         {
             if (poll == null)
-                throw new ArgumentNullException("poll");
+                throw new ArgumentNullException(nameof(poll));
 
             _pollRepository.Insert(poll);
 
@@ -127,7 +127,7 @@ namespace Nop.Services.Polls
         public virtual void UpdatePoll(Poll poll)
         {
             if (poll == null)
-                throw new ArgumentNullException("poll");
+                throw new ArgumentNullException(nameof(poll));
 
             _pollRepository.Update(poll);
 
@@ -155,7 +155,7 @@ namespace Nop.Services.Polls
         public virtual void DeletePollAnswer(PollAnswer pollAnswer)
         {
             if (pollAnswer == null)
-                throw new ArgumentNullException("pollAnswer");
+                throw new ArgumentNullException(nameof(pollAnswer));
 
             _pollAnswerRepository.Delete(pollAnswer);
 

@@ -169,10 +169,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
             pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
@@ -213,10 +213,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             pagingFilteringModel.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
 
@@ -257,10 +257,10 @@ namespace Nop.Web.Factories
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             if (command.PageNumber <= 0)
             {
@@ -348,7 +348,7 @@ namespace Nop.Web.Factories
         public virtual CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var model = new CategoryModel
             {
@@ -773,7 +773,7 @@ namespace Nop.Web.Factories
         public virtual ManufacturerModel PrepareManufacturerModel(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             var model = new ManufacturerModel
             {
@@ -990,7 +990,7 @@ namespace Nop.Web.Factories
         public virtual VendorModel PrepareVendorModel(Vendor vendor, CatalogPagingFilteringModel command)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             var model = new VendorModel
             {
@@ -1160,7 +1160,7 @@ namespace Nop.Web.Factories
         public virtual ProductsByTagModel PrepareProductsByTagModel(ProductTag productTag, CatalogPagingFilteringModel command)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             var model = new ProductsByTagModel
             {
@@ -1236,7 +1236,7 @@ namespace Nop.Web.Factories
         public virtual SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var searchTerms = model.q;
             if (searchTerms == null)

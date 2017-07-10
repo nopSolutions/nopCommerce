@@ -47,7 +47,7 @@ namespace Nop.Web.Factories
         public virtual PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
             if (poll == null)
-                throw new ArgumentNullException("poll");
+                throw new ArgumentNullException(nameof(poll));
 
             var model = new PollModel
             {

@@ -279,7 +279,7 @@ namespace Nop.Services.Forums
         {
             if (forumGroup == null)
             {
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
             }
 
             _forumGroupRepository.Delete(forumGroup);
@@ -330,7 +330,7 @@ namespace Nop.Services.Forums
         {
             if (forumGroup == null)
             {
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
             }
 
             _forumGroupRepository.Insert(forumGroup);
@@ -351,7 +351,7 @@ namespace Nop.Services.Forums
         {
             if (forumGroup == null)
             {
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
             }
 
             _forumGroupRepository.Update(forumGroup);
@@ -372,7 +372,7 @@ namespace Nop.Services.Forums
         {            
             if (forum == null)
             {
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
             }
 
             //delete forum subscriptions (topics)
@@ -450,7 +450,7 @@ namespace Nop.Services.Forums
         {
             if (forum == null)
             {
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
             }
 
             _forumRepository.Insert(forum);
@@ -470,7 +470,7 @@ namespace Nop.Services.Forums
         {
             if (forum == null)
             {
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
             }
 
             _forumRepository.Update(forum);
@@ -490,7 +490,7 @@ namespace Nop.Services.Forums
         {            
             if (forumTopic == null)
             {                
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
             }                
 
             int customerId = forumTopic.CustomerId;
@@ -636,7 +636,7 @@ namespace Nop.Services.Forums
         {
             if (forumTopic == null)
             {
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
             }
 
             _forumTopicRepository.Insert(forumTopic);
@@ -682,7 +682,7 @@ namespace Nop.Services.Forums
         {
             if (forumTopic == null)
             {
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
             }
 
             _forumTopicRepository.Update(forumTopic);
@@ -736,7 +736,7 @@ namespace Nop.Services.Forums
         {            
             if (forumPost == null)
             {
-                throw new ArgumentNullException("forumPost");
+                throw new ArgumentNullException(nameof(forumPost));
             }
 
             int forumTopicId = forumPost.TopicId;
@@ -853,7 +853,7 @@ namespace Nop.Services.Forums
         {
             if (forumPost == null)
             {
-                throw new ArgumentNullException("forumPost");
+                throw new ArgumentNullException(nameof(forumPost));
             }
 
             _forumPostRepository.Insert(forumPost);
@@ -910,7 +910,7 @@ namespace Nop.Services.Forums
             //validation
             if (forumPost == null)
             {
-                throw new ArgumentNullException("forumPost");
+                throw new ArgumentNullException(nameof(forumPost));
             }
 
             _forumPostRepository.Update(forumPost);
@@ -930,7 +930,7 @@ namespace Nop.Services.Forums
         {
             if (privateMessage == null)
             {
-                throw new ArgumentNullException("privateMessage");
+                throw new ArgumentNullException(nameof(privateMessage));
             }
 
             _forumPrivateMessageRepository.Delete(privateMessage);
@@ -1002,7 +1002,7 @@ namespace Nop.Services.Forums
         {
             if (privateMessage == null)
             {
-                throw new ArgumentNullException("privateMessage");
+                throw new ArgumentNullException(nameof(privateMessage));
             }
 
             _forumPrivateMessageRepository.Insert(privateMessage);
@@ -1033,7 +1033,7 @@ namespace Nop.Services.Forums
         public virtual void UpdatePrivateMessage(PrivateMessage privateMessage)
         {
             if (privateMessage == null)
-                throw new ArgumentNullException("privateMessage");
+                throw new ArgumentNullException(nameof(privateMessage));
 
             if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
             {
@@ -1057,7 +1057,7 @@ namespace Nop.Services.Forums
         {
             if (forumSubscription == null)
             {
-                throw new ArgumentNullException("forumSubscription");
+                throw new ArgumentNullException(nameof(forumSubscription));
             }
 
             _forumSubscriptionRepository.Delete(forumSubscription);
@@ -1117,7 +1117,7 @@ namespace Nop.Services.Forums
         {
             if (forumSubscription == null)
             {
-                throw new ArgumentNullException("forumSubscription");
+                throw new ArgumentNullException(nameof(forumSubscription));
             }
 
             _forumSubscriptionRepository.Insert(forumSubscription);
@@ -1134,7 +1134,7 @@ namespace Nop.Services.Forums
         {
             if (forumSubscription == null)
             {
-                throw new ArgumentNullException("forumSubscription");
+                throw new ArgumentNullException(nameof(forumSubscription));
             }
             
             _forumSubscriptionRepository.Update(forumSubscription);
@@ -1485,7 +1485,7 @@ namespace Nop.Services.Forums
         public virtual void InsertPostVote(ForumPostVote postVote)
         {
             if (postVote == null)
-                throw new ArgumentNullException("postVote");
+                throw new ArgumentNullException(nameof(postVote));
 
             _forumPostVoteRepository.Insert(postVote);
 
@@ -1505,7 +1505,7 @@ namespace Nop.Services.Forums
         public virtual void UpdatePostVote(ForumPostVote postVote)
         {
             if (postVote == null)
-                throw new ArgumentNullException("postVote");
+                throw new ArgumentNullException(nameof(postVote));
 
             _forumPostVoteRepository.Update(postVote);
 
@@ -1520,7 +1520,7 @@ namespace Nop.Services.Forums
         public virtual void DeletePostVote(ForumPostVote postVote)
         {
             if (postVote == null)
-                throw new ArgumentNullException("postVote");
+                throw new ArgumentNullException(nameof(postVote));
 
             _forumPostVoteRepository.Delete(postVote);
 

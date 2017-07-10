@@ -24,10 +24,10 @@ namespace Nop.Web.Areas.Admin.Helpers
         public static List<SelectListItem> GetCategoryList(ICategoryService categoryService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (categoryService == null)
-                throw new ArgumentNullException("categoryService");
+                throw new ArgumentNullException(nameof(categoryService));
 
             if (cacheManager == null)
-                throw new ArgumentNullException("cacheManager");
+                throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORIES_LIST_KEY, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>
@@ -64,10 +64,10 @@ namespace Nop.Web.Areas.Admin.Helpers
         public static List<SelectListItem> GetManufacturerList(IManufacturerService manufacturerService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (manufacturerService == null)
-                throw new ArgumentNullException("manufacturerService");
+                throw new ArgumentNullException(nameof(manufacturerService));
 
             if (cacheManager == null)
-                throw new ArgumentNullException("cacheManager");
+                throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURERS_LIST_KEY, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>
@@ -104,10 +104,10 @@ namespace Nop.Web.Areas.Admin.Helpers
         public static List<SelectListItem> GetVendorList(IVendorService vendorService, ICacheManager cacheManager, bool showHidden = false)
         {
             if (vendorService == null)
-                throw new ArgumentNullException("vendorService");
+                throw new ArgumentNullException(nameof(vendorService));
 
             if (cacheManager == null)
-                throw new ArgumentNullException("cacheManager");
+                throw new ArgumentNullException(nameof(cacheManager));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.VENDORS_LIST_KEY, showHidden);
             var listItems = cacheManager.Get(cacheKey, () =>

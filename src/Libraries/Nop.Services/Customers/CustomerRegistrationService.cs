@@ -174,7 +174,7 @@ namespace Nop.Services.Customers
         public virtual CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             if (request.Customer == null)
                 throw new ArgumentException("Can't load current customer");
@@ -300,7 +300,7 @@ namespace Nop.Services.Customers
         public virtual ChangePasswordResult ChangePassword(ChangePasswordRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             var result = new ChangePasswordResult();
             if (String.IsNullOrWhiteSpace(request.Email))
@@ -385,7 +385,7 @@ namespace Nop.Services.Customers
         public virtual void SetEmail(Customer customer, string newEmail, bool requireValidation)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (newEmail == null)
                 throw new NopException("Email cannot be null");
@@ -442,7 +442,7 @@ namespace Nop.Services.Customers
         public virtual void SetUsername(Customer customer, string newUsername)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");

@@ -32,7 +32,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             //permission validation is not required here
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, name, value);
 

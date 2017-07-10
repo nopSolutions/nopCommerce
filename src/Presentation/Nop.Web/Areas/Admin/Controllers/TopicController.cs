@@ -72,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareTemplatesModel(TopicModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _topicTemplateService.GetAllTopicTemplates();
             foreach (var template in templates)
@@ -123,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && topic != null)
                 model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(topic).ToList();
@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && topic != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(topic).ToList();

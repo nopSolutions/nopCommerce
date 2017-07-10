@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteCategory(Category category)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             category.Deleted = true;
             UpdateCategory(category);
@@ -408,7 +408,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertCategory(Category category)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             _categoryRepository.Insert(category);
 
@@ -427,7 +427,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateCategory(Category category)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             //validate category hierarchy
             var parentCategory = GetCategoryById(category.ParentCategoryId);
@@ -459,7 +459,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
-                throw new ArgumentNullException("productCategory");
+                throw new ArgumentNullException(nameof(productCategory));
 
             _productCategoryRepository.Delete(productCategory);
 
@@ -610,7 +610,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
-                throw new ArgumentNullException("productCategory");
+                throw new ArgumentNullException(nameof(productCategory));
             
             _productCategoryRepository.Insert(productCategory);
 
@@ -629,7 +629,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductCategory(ProductCategory productCategory)
         {
             if (productCategory == null)
-                throw new ArgumentNullException("productCategory");
+                throw new ArgumentNullException(nameof(productCategory));
 
             _productCategoryRepository.Update(productCategory);
 
@@ -650,7 +650,7 @@ namespace Nop.Services.Catalog
         public virtual string[] GetNotExistingCategories(string[] categoryNames)
         {
             if (categoryNames == null)
-                throw new ArgumentNullException("categoryNames");
+                throw new ArgumentNullException(nameof(categoryNames));
 
             var query = _categoryRepository.Table;
             var queryFilter = categoryNames.Distinct().ToArray();

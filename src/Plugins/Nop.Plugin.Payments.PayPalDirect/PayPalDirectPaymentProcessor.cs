@@ -999,7 +999,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public bool CanRePostProcessPayment(Core.Domain.Orders.Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             //it's not a redirection payment method. So we always return false
             return false;

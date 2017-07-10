@@ -17,10 +17,10 @@ namespace Nop.Services.Authentication.External
         public static bool IsMethodActive(this IExternalAuthenticationMethod method, ExternalAuthenticationSettings settings)
         {
             if (method == null)
-                throw new ArgumentNullException("method");
+                throw new ArgumentNullException(nameof(method));
 
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
 
             if (settings.ActiveAuthenticationMethodSystemNames == null)
                 return false;

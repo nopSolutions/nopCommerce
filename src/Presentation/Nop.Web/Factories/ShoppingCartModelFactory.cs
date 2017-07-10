@@ -178,7 +178,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ShoppingCartModel.CheckoutAttributeModel> PrepareCheckoutAttributeModels(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
 
@@ -324,10 +324,10 @@ namespace Nop.Web.Factories
         protected virtual ShoppingCartModel.ShoppingCartItemModel PrepareShoppingCartItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (sci == null)
-                throw new ArgumentNullException("sci");
+                throw new ArgumentNullException(nameof(sci));
 
 
             var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
@@ -463,10 +463,10 @@ namespace Nop.Web.Factories
         protected virtual WishlistModel.ShoppingCartItemModel PrepareWishlistItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (sci == null)
-                throw new ArgumentNullException("sci");
+                throw new ArgumentNullException(nameof(sci));
 
             var cartItemModel = new WishlistModel.ShoppingCartItemModel
             {
@@ -599,7 +599,7 @@ namespace Nop.Web.Factories
         protected virtual ShoppingCartModel.OrderReviewDataModel PrepareOrderReviewDataModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new ShoppingCartModel.OrderReviewDataModel();
             model.Display = true;
@@ -679,7 +679,7 @@ namespace Nop.Web.Factories
         public virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new EstimateShippingModel();
 
@@ -781,10 +781,10 @@ namespace Nop.Web.Factories
             bool prepareAndDisplayOrderReviewData = false)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //simple properties
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
@@ -887,10 +887,10 @@ namespace Nop.Web.Factories
         public virtual WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
             model.IsEditable = isEditable;
@@ -1295,7 +1295,7 @@ namespace Nop.Web.Factories
         public virtual WishlistEmailAFriendModel PrepareWishlistEmailAFriendModel(WishlistEmailAFriendModel model, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage;
             if (!excludeProperties)

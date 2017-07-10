@@ -54,10 +54,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             RecurringPayment recurringPayment)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
             
             model.Id = recurringPayment.Id;
             model.CycleLength = recurringPayment.CycleLength;
@@ -81,10 +81,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             RecurringPaymentHistory history)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (history == null)
-                throw new ArgumentNullException("history");
+                throw new ArgumentNullException(nameof(history));
 
             var order = _orderService.GetOrderById(history.OrderId);
 

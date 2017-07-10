@@ -57,7 +57,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
                 if (filterContext == null)
-                    throw new ArgumentNullException("filterContext");
+                    throw new ArgumentNullException(nameof(filterContext));
 
                 //whether honeypot is enabled
                 if (!_securitySettings.HoneypotEnabled)

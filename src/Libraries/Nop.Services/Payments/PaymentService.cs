@@ -118,7 +118,7 @@ namespace Nop.Services.Payments
         public virtual IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
             var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey);
@@ -135,7 +135,7 @@ namespace Nop.Services.Payments
         public virtual void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
             //we should be sure that countryIds is of type List<int> (not IList<int>)
             var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
@@ -198,7 +198,7 @@ namespace Nop.Services.Payments
         public virtual bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;

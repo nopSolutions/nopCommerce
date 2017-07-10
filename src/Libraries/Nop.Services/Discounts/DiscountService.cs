@@ -191,7 +191,7 @@ namespace Nop.Services.Discounts
         public virtual void DeleteDiscount(Discount discount)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             _discountRepository.Delete(discount);
 
@@ -260,7 +260,7 @@ namespace Nop.Services.Discounts
         public virtual void InsertDiscount(Discount discount)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             _discountRepository.Insert(discount);
 
@@ -275,7 +275,7 @@ namespace Nop.Services.Discounts
         public virtual void UpdateDiscount(Discount discount)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             _discountRepository.Update(discount);
 
@@ -329,7 +329,7 @@ namespace Nop.Services.Discounts
         public virtual IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             var discountId = discount.Id;
             var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_CATEGORY_IDS_MODEL_KEY,
@@ -373,7 +373,7 @@ namespace Nop.Services.Discounts
         public virtual IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             var discountId = discount.Id;
             var cacheKey = string.Format(DiscountEventConsumer.DISCOUNT_MANUFACTURER_IDS_MODEL_KEY,
@@ -424,7 +424,7 @@ namespace Nop.Services.Discounts
         public virtual void DeleteDiscountRequirement(DiscountRequirement discountRequirement)
         {
             if (discountRequirement == null)
-                throw new ArgumentNullException("discountRequirement");
+                throw new ArgumentNullException(nameof(discountRequirement));
 
             _discountRequirementRepository.Delete(discountRequirement);
 
@@ -469,7 +469,7 @@ namespace Nop.Services.Discounts
         public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             return ValidateDiscount(discount.MapDiscount(), customer);
         }
@@ -484,7 +484,7 @@ namespace Nop.Services.Discounts
         public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             return ValidateDiscount(discount.MapDiscount(), customer, couponCodesToValidate);
         }
@@ -498,10 +498,10 @@ namespace Nop.Services.Discounts
         public virtual DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             string[] couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
             return ValidateDiscount(discount, customer, couponCodesToValidate);
@@ -517,10 +517,10 @@ namespace Nop.Services.Discounts
         public virtual DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             //invalid by default
             var result = new DiscountValidationResult();
@@ -681,7 +681,7 @@ namespace Nop.Services.Discounts
         public virtual void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
-                throw new ArgumentNullException("discountUsageHistory");
+                throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Insert(discountUsageHistory);
             
@@ -696,7 +696,7 @@ namespace Nop.Services.Discounts
         public virtual void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
-                throw new ArgumentNullException("discountUsageHistory");
+                throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Update(discountUsageHistory);
             
@@ -711,7 +711,7 @@ namespace Nop.Services.Discounts
         public virtual void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
         {
             if (discountUsageHistory == null)
-                throw new ArgumentNullException("discountUsageHistory");
+                throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Delete(discountUsageHistory);
             

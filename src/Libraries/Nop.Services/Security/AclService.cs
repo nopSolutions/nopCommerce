@@ -77,7 +77,7 @@ namespace Nop.Services.Security
         public virtual void DeleteAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Delete(aclRecord);
 
@@ -110,7 +110,7 @@ namespace Nop.Services.Security
         public virtual IList<AclRecord> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
@@ -131,7 +131,7 @@ namespace Nop.Services.Security
         public virtual void InsertAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Insert(aclRecord);
 
@@ -151,7 +151,7 @@ namespace Nop.Services.Security
         public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (customerRoleId == 0)
                 throw new ArgumentOutOfRangeException("customerRoleId");
@@ -176,7 +176,7 @@ namespace Nop.Services.Security
         public virtual void UpdateAclRecord(AclRecord aclRecord)
         {
             if (aclRecord == null)
-                throw new ArgumentNullException("aclRecord");
+                throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Update(aclRecord);
 
@@ -196,7 +196,7 @@ namespace Nop.Services.Security
         public virtual int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;

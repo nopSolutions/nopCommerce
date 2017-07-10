@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Menu
         public static bool ContainsSystemName(this SiteMapNode node, string systemName)
         {
             if (node == null)
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException(nameof(node));
 
             if (String.IsNullOrWhiteSpace(systemName))
                 return false;

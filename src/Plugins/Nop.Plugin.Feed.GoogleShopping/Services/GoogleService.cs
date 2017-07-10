@@ -42,7 +42,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Services
         public virtual void DeleteGoogleProduct(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
-                throw new ArgumentNullException("googleProductRecord");
+                throw new ArgumentNullException(nameof(googleProductRecord));
 
             _gpRepository.Delete(googleProductRecord);
         }
@@ -80,7 +80,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Services
         public virtual void InsertGoogleProductRecord(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
-                throw new ArgumentNullException("googleProductRecord");
+                throw new ArgumentNullException(nameof(googleProductRecord));
 
             _gpRepository.Insert(googleProductRecord);
         }
@@ -88,7 +88,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Services
         public virtual void UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord)
         {
             if (googleProductRecord == null)
-                throw new ArgumentNullException("googleProductRecord");
+                throw new ArgumentNullException(nameof(googleProductRecord));
 
             _gpRepository.Update(googleProductRecord);
         }

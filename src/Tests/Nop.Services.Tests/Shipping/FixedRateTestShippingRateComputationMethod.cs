@@ -22,7 +22,7 @@ namespace Nop.Services.Tests.Shipping
         public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var response = new GetShippingOptionResponse();
             response.ShippingOptions.Add(new ShippingOption
@@ -49,7 +49,7 @@ namespace Nop.Services.Tests.Shipping
         public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             return GetRate();
         }

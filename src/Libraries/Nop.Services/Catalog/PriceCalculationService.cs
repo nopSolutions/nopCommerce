@@ -244,7 +244,7 @@ namespace Nop.Services.Catalog
             out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             appliedDiscounts = null;
             decimal appliedDiscountAmount = decimal.Zero;
@@ -367,7 +367,7 @@ namespace Nop.Services.Catalog
             out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
@@ -468,7 +468,7 @@ namespace Nop.Services.Catalog
             out List<DiscountForCaching> appliedDiscounts)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             return GetUnitPrice(shoppingCartItem.Product,
                 shoppingCartItem.Customer,
@@ -509,10 +509,10 @@ namespace Nop.Services.Catalog
             out List<DiscountForCaching> appliedDiscounts)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
@@ -617,7 +617,7 @@ namespace Nop.Services.Catalog
             out int? maximumDiscountQty)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             decimal subTotal;
             maximumDiscountQty = null;
@@ -676,7 +676,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetProductCost(Product product, string attributesXml)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             decimal cost = product.ProductCost;
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
@@ -716,7 +716,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value)
         {
             if (value == null)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
             var adjustment = decimal.Zero;
             switch (value.AttributeValueType)

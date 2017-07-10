@@ -32,7 +32,7 @@ namespace Nop.Services.Messages
         public virtual void InsertEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
+                throw new ArgumentNullException(nameof(emailAccount));
 
             emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
             emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
@@ -65,7 +65,7 @@ namespace Nop.Services.Messages
         public virtual void UpdateEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
+                throw new ArgumentNullException(nameof(emailAccount));
 
             emailAccount.Email = CommonHelper.EnsureNotNull(emailAccount.Email);
             emailAccount.DisplayName = CommonHelper.EnsureNotNull(emailAccount.DisplayName);
@@ -98,7 +98,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteEmailAccount(EmailAccount emailAccount)
         {
             if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
+                throw new ArgumentNullException(nameof(emailAccount));
 
             if (GetAllEmailAccounts().Count == 1)
                 throw new NopException("You cannot delete this email account. At least one account is required.");

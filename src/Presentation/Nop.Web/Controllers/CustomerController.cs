@@ -167,7 +167,7 @@ namespace Nop.Web.Controllers
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
-                throw new ArgumentNullException("form");
+                throw new ArgumentNullException(nameof(form));
 
             string attributesXml = "";
             var attributes = _customerAttributeService.GetAllCustomerAttributes();

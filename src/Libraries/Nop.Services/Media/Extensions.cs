@@ -52,11 +52,11 @@ namespace Nop.Services.Media
             IProductAttributeParser productAttributeParser)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
             if (pictureService == null)
-                throw new ArgumentNullException("pictureService");
+                throw new ArgumentNullException(nameof(pictureService));
             if (productAttributeParser == null)
-                throw new ArgumentNullException("productAttributeParser");
+                throw new ArgumentNullException(nameof(productAttributeParser));
 
             Picture picture = null;
 

@@ -162,10 +162,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
         public void GenerateFeed(Stream stream, Store store)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             const string googleBaseNamespace = "http://base.google.com/ns/1.0";
 
@@ -645,7 +645,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
         public virtual void GenerateStaticFile(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
             string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport", store.Id + "-" + _googleShoppingSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {

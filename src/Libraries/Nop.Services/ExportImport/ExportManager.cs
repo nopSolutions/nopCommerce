@@ -1482,7 +1482,7 @@ namespace Nop.Services.ExportImport
         public virtual string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions)
         {
             if (subscriptions == null)
-                throw new ArgumentNullException("subscriptions");
+                throw new ArgumentNullException(nameof(subscriptions));
 
             const string separator = ",";
             var sb = new StringBuilder();
@@ -1506,7 +1506,7 @@ namespace Nop.Services.ExportImport
         public virtual string ExportStatesToTxt(IList<StateProvince> states)
         {
             if (states == null)
-                throw new ArgumentNullException("states");
+                throw new ArgumentNullException(nameof(states));
 
             const string separator = ",";
             var sb = new StringBuilder();

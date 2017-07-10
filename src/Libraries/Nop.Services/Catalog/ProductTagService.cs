@@ -172,7 +172,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Delete(productTag);
 
@@ -229,7 +229,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Insert(productTag);
 
@@ -247,7 +247,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Update(productTag);
 
@@ -281,7 +281,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductTags(Product product, string[] productTags)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //product tags
             var existingProductTags = product.ProductTags.ToList();

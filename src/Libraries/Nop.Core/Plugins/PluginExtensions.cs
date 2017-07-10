@@ -18,10 +18,10 @@ namespace Nop.Core.Plugins
         public static string GetLogoUrl(this PluginDescriptor pluginDescriptor, IWebHelper webHelper)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             if (webHelper == null)
-                throw new ArgumentNullException("webHelper");
+                throw new ArgumentNullException(nameof(webHelper));
 
             if (pluginDescriptor.OriginalAssemblyFile == null || pluginDescriptor.OriginalAssemblyFile.Directory == null)
             {

@@ -86,7 +86,7 @@ namespace Nop.Services.Localization
         public virtual void DeleteLanguage(Language language)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
             
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
@@ -160,7 +160,7 @@ namespace Nop.Services.Localization
         public virtual void InsertLanguage(Language language)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
 
             _languageRepository.Insert(language);
 
@@ -178,7 +178,7 @@ namespace Nop.Services.Localization
         public virtual void UpdateLanguage(Language language)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
             
             //update language
             _languageRepository.Update(language);

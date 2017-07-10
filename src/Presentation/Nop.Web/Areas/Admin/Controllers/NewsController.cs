@@ -71,7 +71,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareLanguagesModel(NewsItemModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var languages = _languageService.GetAllLanguages(true);
             foreach (var language in languages)
@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && newsItem != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem).ToList();

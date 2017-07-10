@@ -54,7 +54,7 @@ namespace Nop.Web.Factories
         public virtual ApplyVendorModel PrepareApplyVendorModel(ApplyVendorModel model, bool validateVendor, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (validateVendor && _workContext.CurrentCustomer.VendorId > 0)
             {
@@ -82,7 +82,7 @@ namespace Nop.Web.Factories
         public virtual VendorInfoModel PrepareVendorInfoModel(VendorInfoModel model, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var vendor = _workContext.CurrentVendor;
             if (!excludeProperties)

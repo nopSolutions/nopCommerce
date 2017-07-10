@@ -148,7 +148,7 @@ namespace Nop.Web.Factories
         public virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer, string overrideAttributesXml = "")
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var result = new List<CustomerAttributeModel>();
 
@@ -249,10 +249,10 @@ namespace Nop.Web.Factories
             bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -408,7 +408,7 @@ namespace Nop.Web.Factories
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
@@ -766,10 +766,10 @@ namespace Nop.Web.Factories
         public virtual UserAgreementModel PrepareUserAgreementModel(OrderItem orderItem,Product product)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var model = new UserAgreementModel();
             model.UserAgreementText = product.UserAgreementText;
@@ -796,7 +796,7 @@ namespace Nop.Web.Factories
         public virtual CustomerAvatarModel PrepareCustomerAvatarModel(CustomerAvatarModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),

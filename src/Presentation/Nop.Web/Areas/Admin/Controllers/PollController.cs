@@ -47,7 +47,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareLanguagesModel(PollModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var languages = _languageService.GetAllLanguages(true);
             foreach (var language in languages)

@@ -260,7 +260,7 @@ namespace Nop.Web.Framework.Extensions
             IHtmlContent content, bool isDefaultTab = false, string tabNameToSelect = "")
         {
             if (helper == null)
-                throw new ArgumentNullException("helper");
+                throw new ArgumentNullException(nameof(helper));
 
             if (string.IsNullOrEmpty(tabNameToSelect))
                 tabNameToSelect = helper.GetSelectedTabName();
@@ -295,7 +295,7 @@ namespace Nop.Web.Framework.Extensions
             LocalizedString title, bool isDefaultTab = false, string tabNameToSelect = "", string customCssClass = "")
         {
             if (helper == null)
-                throw new ArgumentNullException("helper");
+                throw new ArgumentNullException(nameof(helper));
 
             if (string.IsNullOrEmpty(tabNameToSelect))
                 tabNameToSelect = helper.GetSelectedTabName();

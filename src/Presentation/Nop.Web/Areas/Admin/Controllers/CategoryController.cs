@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCategories.Add(new SelectListItem
             {
@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _categoryTemplateService.GetAllCategoryTemplates();
             foreach (var template in templates)
@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && category != null)
                 model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToList();
@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && category != null)
                 model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(category).ToList();
@@ -250,7 +250,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && category != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category).ToList();

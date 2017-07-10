@@ -76,7 +76,7 @@ namespace Nop.Web.Factories
         public virtual BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
         {
             if (blogComment == null)
-                throw new ArgumentNullException("blogComment");
+                throw new ArgumentNullException(nameof(blogComment));
 
             var model = new BlogCommentModel
             {
@@ -108,10 +108,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.MetaTitle;
@@ -153,7 +153,7 @@ namespace Nop.Web.Factories
         public virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = command.Tag;

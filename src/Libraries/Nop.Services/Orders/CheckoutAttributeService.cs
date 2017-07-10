@@ -101,7 +101,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
 
@@ -162,7 +162,7 @@ namespace Nop.Services.Orders
         public virtual void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
@@ -180,7 +180,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateCheckoutAttribute(CheckoutAttribute checkoutAttribute)
         {
             if (checkoutAttribute == null)
-                throw new ArgumentNullException("checkoutAttribute");
+                throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Update(checkoutAttribute);
 
@@ -202,7 +202,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
 
@@ -253,7 +253,7 @@ namespace Nop.Services.Orders
         public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
@@ -271,7 +271,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
         {
             if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
+                throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
 

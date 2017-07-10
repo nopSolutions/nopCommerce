@@ -51,7 +51,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteSubscription(BackInStockSubscription subscription)
         {
             if (subscription == null)
-                throw new ArgumentNullException("subscription");
+                throw new ArgumentNullException(nameof(subscription));
 
             _backInStockSubscriptionRepository.Delete(subscription);
 
@@ -147,7 +147,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertSubscription(BackInStockSubscription subscription)
         {
             if (subscription == null)
-                throw new ArgumentNullException("subscription");
+                throw new ArgumentNullException(nameof(subscription));
 
             _backInStockSubscriptionRepository.Insert(subscription);
 
@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateSubscription(BackInStockSubscription subscription)
         {
             if (subscription == null)
-                throw new ArgumentNullException("subscription");
+                throw new ArgumentNullException(nameof(subscription));
 
             _backInStockSubscriptionRepository.Update(subscription);
 
@@ -178,7 +178,7 @@ namespace Nop.Services.Catalog
         public virtual int SendNotificationsToSubscribers(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             int result = 0;
             var subscriptions = GetAllSubscriptionsByProductId(product.Id);

@@ -20,7 +20,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, int storeId)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
         }
@@ -34,7 +34,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterForCustomer(this IEnumerable<TierPrice> source, Customer customer)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (customer == null)
                 return source.Where(tierPrice => tierPrice.CustomerRole == null);
@@ -51,7 +51,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> RemoveDuplicatedQuantities(this IEnumerable<TierPrice> source)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             //get group of tier prices with the same quantity
             var tierPricesWithDuplicates = source.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterByDate(this IEnumerable<TierPrice> source, DateTime? date = null)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (!date.HasValue)
                 date = DateTime.UtcNow;

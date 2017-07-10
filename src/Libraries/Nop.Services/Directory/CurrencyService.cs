@@ -105,7 +105,7 @@ namespace Nop.Services.Directory
         public virtual void DeleteCurrency(Currency currency)
         {
             if (currency == null)
-                throw new ArgumentNullException("currency");
+                throw new ArgumentNullException(nameof(currency));
             
             _currencyRepository.Delete(currency);
 
@@ -176,7 +176,7 @@ namespace Nop.Services.Directory
         public virtual void InsertCurrency(Currency currency)
         {
             if (currency == null)
-                throw new ArgumentNullException("currency");
+                throw new ArgumentNullException(nameof(currency));
 
             _currencyRepository.Insert(currency);
 
@@ -193,7 +193,7 @@ namespace Nop.Services.Directory
         public virtual void UpdateCurrency(Currency currency)
         {
             if (currency == null)
-                throw new ArgumentNullException("currency");
+                throw new ArgumentNullException(nameof(currency));
 
             _currencyRepository.Update(currency);
 
@@ -230,10 +230,10 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
             if (sourceCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
             if (targetCurrencyCode == null)
-                throw new ArgumentNullException("targetCurrencyCode");
+                throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             decimal result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
@@ -255,7 +255,7 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
@@ -281,7 +281,7 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
         {
             if (targetCurrencyCode == null)
-                throw new ArgumentNullException("targetCurrencyCode");
+                throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (primaryExchangeRateCurrency == null)
@@ -307,7 +307,7 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
         {
             if (sourceCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException(nameof(sourceCurrencyCode));
 
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             var result = ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);

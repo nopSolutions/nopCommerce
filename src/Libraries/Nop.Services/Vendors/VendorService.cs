@@ -61,7 +61,7 @@ namespace Nop.Services.Vendors
         public virtual void DeleteVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             vendor.Deleted = true;
             UpdateVendor(vendor);
@@ -100,7 +100,7 @@ namespace Nop.Services.Vendors
         public virtual void InsertVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             _vendorRepository.Insert(vendor);
 
@@ -115,7 +115,7 @@ namespace Nop.Services.Vendors
         public virtual void UpdateVendor(Vendor vendor)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             _vendorRepository.Update(vendor);
 
@@ -145,7 +145,7 @@ namespace Nop.Services.Vendors
         public virtual void DeleteVendorNote(VendorNote vendorNote)
         {
             if (vendorNote == null)
-                throw new ArgumentNullException("vendorNote");
+                throw new ArgumentNullException(nameof(vendorNote));
 
             _vendorNoteRepository.Delete(vendorNote);
 

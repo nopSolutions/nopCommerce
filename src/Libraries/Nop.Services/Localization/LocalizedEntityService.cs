@@ -144,7 +144,7 @@ namespace Nop.Services.Localization
         public virtual void DeleteLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
-                throw new ArgumentNullException("localizedProperty");
+                throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Delete(localizedProperty);
 
@@ -225,7 +225,7 @@ namespace Nop.Services.Localization
         public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
-                throw new ArgumentNullException("localizedProperty");
+                throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Insert(localizedProperty);
 
@@ -240,7 +240,7 @@ namespace Nop.Services.Localization
         public virtual void UpdateLocalizedProperty(LocalizedProperty localizedProperty)
         {
             if (localizedProperty == null)
-                throw new ArgumentNullException("localizedProperty");
+                throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Update(localizedProperty);
 
@@ -270,7 +270,7 @@ namespace Nop.Services.Localization
             int languageId) where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (languageId == 0)
                 throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");

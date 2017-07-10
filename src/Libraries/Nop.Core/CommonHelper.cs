@@ -219,8 +219,8 @@ namespace Nop.Core
         /// <param name="value">The value to set the property to.</param>
         public static void SetProperty(object instance, string propertyName, object value)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
-            if (propertyName == null) throw new ArgumentNullException("propertyName");
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
             Type instanceType = instance.GetType();
             PropertyInfo pi = instanceType.GetProperty(propertyName);

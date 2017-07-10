@@ -243,7 +243,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var result = new List<CustomerModel.AssociatedExternalAuthModel>();
             foreach (var record in customer.ExternalAuthenticationRecords)
@@ -285,7 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
         {
             if (customerRoles == null)
-                throw new ArgumentNullException("customerRoles");
+                throw new ArgumentNullException(nameof(customerRoles));
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
@@ -303,7 +303,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareVendorsModel(CustomerModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableVendors.Add(new SelectListItem
             {
@@ -404,7 +404,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual string ParseCustomCustomerAttributes(IFormCollection form)
         {
             if (form == null)
-                throw new ArgumentNullException("form");
+                throw new ArgumentNullException(nameof(form));
 
             string attributesXml = "";
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
@@ -690,7 +690,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             model.CustomerId = customer.Id;
             if (address != null)

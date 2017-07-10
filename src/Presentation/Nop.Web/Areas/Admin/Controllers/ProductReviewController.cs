@@ -63,10 +63,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             ProductReview productReview, bool excludeProperties, bool formatReviewAndReplyText)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (productReview == null)
-                throw new ArgumentNullException("productReview");
+                throw new ArgumentNullException(nameof(productReview));
 
             model.Id = productReview.Id;
             model.StoreName = productReview.Store.Name;

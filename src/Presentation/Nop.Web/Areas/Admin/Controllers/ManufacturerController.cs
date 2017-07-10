@@ -158,7 +158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _manufacturerTemplateService.GetAllManufacturerTemplates();
             foreach (var template in templates)
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && manufacturer != null)
                 model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToList();
@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && manufacturer != null)
                 model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(manufacturer).ToList();
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && manufacturer != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(manufacturer).ToList();

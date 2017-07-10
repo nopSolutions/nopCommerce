@@ -834,7 +834,7 @@ namespace Nop.Services.Messages
         public virtual void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount)
         {
             if (emailAccount == null)
-                throw new ArgumentNullException("emailAccount");
+                throw new ArgumentNullException(nameof(emailAccount));
 
             tokens.Add(new Token("Store.Name", store.GetLocalized(x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));

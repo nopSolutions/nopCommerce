@@ -137,7 +137,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             if (getShippingOptionRequest.Items == null)
                 return new GetShippingOptionResponse { Errors = new List<string> { "No shipment items" } };

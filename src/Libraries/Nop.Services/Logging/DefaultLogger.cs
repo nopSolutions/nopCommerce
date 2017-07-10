@@ -97,7 +97,7 @@ namespace Nop.Services.Logging
         public virtual void DeleteLog(Log log)
         {
             if (log == null)
-                throw new ArgumentNullException("log");
+                throw new ArgumentNullException(nameof(log));
 
             _logRepository.Delete(log);
         }
@@ -109,7 +109,7 @@ namespace Nop.Services.Logging
         public virtual void DeleteLogs(IList<Log> logs)
         {
             if (logs == null)
-                throw new ArgumentNullException("logs");
+                throw new ArgumentNullException(nameof(logs));
 
             _logRepository.Delete(logs);
         }

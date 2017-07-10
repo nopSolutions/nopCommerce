@@ -611,10 +611,10 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             //this method is very similar to the same one in Nop.Web project
             if (addressAttributeService == null)
-                throw new ArgumentNullException("addressAttributeService");
+                throw new ArgumentNullException(nameof(addressAttributeService));
 
             if (addressAttributeParser == null)
-                throw new ArgumentNullException("addressAttributeParser");
+                throw new ArgumentNullException(nameof(addressAttributeParser));
 
             var attributes = addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)

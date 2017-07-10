@@ -57,7 +57,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 if (filterContext == null)
-                    throw new ArgumentNullException("filterContext");
+                    throw new ArgumentNullException(nameof(filterContext));
 
                 //there is AdminAuthorizeFilter, so check access
                 if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))

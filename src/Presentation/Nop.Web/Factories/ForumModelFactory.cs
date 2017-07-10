@@ -133,7 +133,7 @@ namespace Nop.Web.Factories
         public virtual ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             var topicModel = new ForumTopicRowModel
             {
@@ -166,7 +166,7 @@ namespace Nop.Web.Factories
         public virtual ForumRowModel PrepareForumRowModel(Forum forum)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
 
             var forumModel = new ForumRowModel
             {
@@ -189,7 +189,7 @@ namespace Nop.Web.Factories
         public virtual ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {
             if (forumGroup == null)
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
 
             var forumGroupModel = new ForumGroupModel
             {
@@ -287,7 +287,7 @@ namespace Nop.Web.Factories
         public virtual ForumPageModel PrepareForumPageModel(Forum forum, int page)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
 
             var model = new ForumPageModel();
             model.Id = forum.Id;
@@ -335,7 +335,7 @@ namespace Nop.Web.Factories
         public virtual ForumTopicPageModel PrepareForumTopicPageModel(ForumTopic forumTopic, int page)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             //load posts
             var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
@@ -437,7 +437,7 @@ namespace Nop.Web.Factories
         public virtual TopicMoveModel PrepareTopicMove(ForumTopic forumTopic)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             var model = new TopicMoveModel
             {
@@ -458,10 +458,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareTopicCreateModel(Forum forum, EditForumTopicModel model)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.IsEdit = false;
             model.ForumId = forum.Id;
@@ -482,10 +482,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareTopicEditModel(ForumTopic forumTopic, EditForumTopicModel model, bool excludeProperties)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var forum = forumTopic.Forum;
             if (forum == null)
@@ -528,7 +528,7 @@ namespace Nop.Web.Factories
         public virtual EditForumPostModel PreparePostCreateModel(ForumTopic forumTopic, int? quote, bool excludeProperties)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             var forum = forumTopic.Forum;
             if (forum == null)
@@ -590,7 +590,7 @@ namespace Nop.Web.Factories
         public virtual EditForumPostModel PreparePostEditModel(ForumPost forumPost, bool excludeProperties)
         {
             if (forumPost == null)
-                throw new ArgumentNullException("forumPost");
+                throw new ArgumentNullException(nameof(forumPost));
 
             var forumTopic = forumPost.ForumTopic;
             if (forumTopic == null)

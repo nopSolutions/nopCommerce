@@ -131,7 +131,7 @@ namespace Nop.Services.Orders
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             var customer = shoppingCartItem.Customer;
             var storeId = shoppingCartItem.StoreId;
@@ -199,10 +199,10 @@ namespace Nop.Services.Orders
             int storeId, bool automaticallyAddRequiredProductsIfEnabled)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == shoppingCartType)
@@ -288,10 +288,10 @@ namespace Nop.Services.Orders
             int quantity)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
@@ -493,7 +493,7 @@ namespace Nop.Services.Orders
             bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
@@ -675,7 +675,7 @@ namespace Nop.Services.Orders
             Product product, string attributesXml)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
 
@@ -726,7 +726,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
             
             var warnings = new List<string>();
 
@@ -800,7 +800,7 @@ namespace Nop.Services.Orders
             bool getRentalWarnings = true)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
             
@@ -986,10 +986,10 @@ namespace Nop.Services.Orders
             DateTime? rentalEndDate = null)
         {
             if (shoppingCart == null)
-                throw new ArgumentNullException("shoppingCart");
+                throw new ArgumentNullException(nameof(shoppingCart));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
@@ -1069,10 +1069,10 @@ namespace Nop.Services.Orders
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var warnings = new List<string>();
             if (shoppingCartType == ShoppingCartType.ShoppingCart && !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, customer))
@@ -1212,7 +1212,7 @@ namespace Nop.Services.Orders
             int quantity = 1, bool resetCheckoutData = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             var warnings = new List<string>();
 
@@ -1265,9 +1265,9 @@ namespace Nop.Services.Orders
         public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
         {
             if (fromCustomer == null)
-                throw new ArgumentNullException("fromCustomer");
+                throw new ArgumentNullException(nameof(fromCustomer));
             if (toCustomer == null)
-                throw new ArgumentNullException("toCustomer");
+                throw new ArgumentNullException(nameof(toCustomer));
 
             if (fromCustomer.Id == toCustomer.Id)
                 return; //the same customer

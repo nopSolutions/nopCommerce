@@ -49,7 +49,7 @@ namespace Nop.Web.Framework.Controllers
 
             //TODO add support for parameters (pass ViewComponent as input parameter)
             if (String.IsNullOrEmpty(componentName))
-                throw new ArgumentNullException("componentName");
+                throw new ArgumentNullException(nameof(componentName));
 
             var actionContextAccessor = HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) as IActionContextAccessor;
             if (actionContextAccessor == null)

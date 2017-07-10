@@ -112,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && checkoutAttribute != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute).ToList();
@@ -168,7 +168,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //currently any checkout attribute can have condition.
             model.ConditionAllowed = true;

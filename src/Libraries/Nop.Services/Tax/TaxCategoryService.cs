@@ -69,7 +69,7 @@ namespace Nop.Services.Tax
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Delete(taxCategory);
 
@@ -117,7 +117,7 @@ namespace Nop.Services.Tax
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
 
@@ -134,7 +134,7 @@ namespace Nop.Services.Tax
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Update(taxCategory);
 

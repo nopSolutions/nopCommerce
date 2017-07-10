@@ -97,10 +97,10 @@ namespace Nop.Data
         public static void DropPluginTable(this DbContext context, string tableName)
         {
             if (context == null)
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
 
             if (String.IsNullOrEmpty(tableName))
-                throw new ArgumentNullException("tableName");
+                throw new ArgumentNullException(nameof(tableName));
 
             //drop the table
             if (context.Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())

@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && language != null)
                 model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language).ToList();
@@ -85,7 +85,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //templates
             model.AvailableCurrencies.Add(new SelectListItem

@@ -56,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareLanguagesModel(StoreModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             
             model.AvailableLanguages.Add(new SelectListItem
             {

@@ -491,7 +491,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
             
             //let's ensure that at least 5 seconds passed after order is placed
             //P.S. there's no any particular reason for that. we just do it

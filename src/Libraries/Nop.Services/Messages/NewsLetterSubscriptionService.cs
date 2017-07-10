@@ -77,7 +77,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscription == null)
             {
-                throw new ArgumentNullException("newsLetterSubscription");
+                throw new ArgumentNullException(nameof(newsLetterSubscription));
             }
 
             //Handle e-mail
@@ -105,7 +105,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscription == null)
             {
-                throw new ArgumentNullException("newsLetterSubscription");
+                throw new ArgumentNullException(nameof(newsLetterSubscription));
             }
 
             //Handle e-mail
@@ -149,7 +149,7 @@ namespace Nop.Services.Messages
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
         public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
+            if (newsLetterSubscription == null) throw new ArgumentNullException(nameof(newsLetterSubscription));
 
             _subscriptionRepository.Delete(newsLetterSubscription);
 

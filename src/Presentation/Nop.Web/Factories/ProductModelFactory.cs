@@ -199,7 +199,7 @@ namespace Nop.Web.Factories
         protected virtual ProductOverviewModel.ProductPriceModel PrepareProductOverviewPriceModel(Product product, bool forceRedirectionAfterAddingToCart = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var priceModel = new ProductOverviewModel.ProductPriceModel
             {
@@ -449,7 +449,7 @@ namespace Nop.Web.Factories
         protected virtual PictureModel PrepareProductOverviewPictureModel(Product product, int? productThumbPictureSize = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var productName = product.GetLocalized(x => x.Name);
             //If a size has been set in the view, we use it in priority
@@ -494,7 +494,7 @@ namespace Nop.Web.Factories
         protected virtual ProductDetailsModel.ProductBreadcrumbModel PrepareProductBreadcrumbModel(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
                     product.Id,
@@ -541,7 +541,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ProductTagModel> PrepareProductTagModels(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
@@ -568,7 +568,7 @@ namespace Nop.Web.Factories
         protected virtual ProductDetailsModel.ProductPriceModel PrepareProductPriceModel(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var model = new ProductDetailsModel.ProductPriceModel();
 
@@ -650,7 +650,7 @@ namespace Nop.Web.Factories
         protected virtual ProductDetailsModel.AddToCartModel PrepareProductAddToCartModel(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var model = new ProductDetailsModel.AddToCartModel();
 
@@ -724,7 +724,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ProductDetailsModel.ProductAttributeModel> PrepareProductAttributeModels(Product product, ShoppingCartItem updatecartitem)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //performance optimization
             //We cache a value indicating whether a product has attributes
@@ -945,7 +945,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ProductDetailsModel.TierPriceModel> PrepareProductTierPriceModels(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var model = product.TierPrices.OrderBy(x => x.Quantity)
                    .FilterByStore(_storeContext.CurrentStore.Id)
@@ -977,7 +977,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ManufacturerBriefInfoModel> PrepareProductManufacturerModels(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
                      product.Id,
@@ -1012,7 +1012,7 @@ namespace Nop.Web.Factories
         protected virtual dynamic PrepareProductDetailsPictureModel(Product product, bool isAssociatedProduct = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //default picture size
             var defaultPictureSize = isAssociatedProduct ?
@@ -1083,7 +1083,7 @@ namespace Nop.Web.Factories
         public virtual string PrepareProductTemplateViewPath(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var templateCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_TEMPLATE_MODEL_KEY, product.ProductTemplateId);
             var productTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
@@ -1115,7 +1115,7 @@ namespace Nop.Web.Factories
             bool forceRedirectionAfterAddingToCart = false)
         {
             if (products == null)
-                throw new ArgumentNullException("products");
+                throw new ArgumentNullException(nameof(products));
 
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
@@ -1171,7 +1171,7 @@ namespace Nop.Web.Factories
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //standard properties
             var model = new ProductDetailsModel
@@ -1378,10 +1378,10 @@ namespace Nop.Web.Factories
         public virtual ProductReviewsModel PrepareProductReviewsModel(ProductReviewsModel model, Product product)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
@@ -1495,10 +1495,10 @@ namespace Nop.Web.Factories
         public virtual ProductEmailAFriendModel PrepareProductEmailAFriendModel(ProductEmailAFriendModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
@@ -1520,7 +1520,7 @@ namespace Nop.Web.Factories
         public virtual IList<ProductSpecificationModel> PrepareProductSpecificationModel(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>

@@ -127,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties, bool prepareEntireAddressModel)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var address = _addressService.GetAddressById(vendor != null ? vendor.AddressId : 0);
 

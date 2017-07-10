@@ -55,7 +55,7 @@ namespace Nop.Services.Shipping
         public virtual void DeleteShipment(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             _shipmentRepository.Delete(shipment);
 
@@ -170,7 +170,7 @@ namespace Nop.Services.Shipping
         public virtual void InsertShipment(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             _shipmentRepository.Insert(shipment);
 
@@ -185,7 +185,7 @@ namespace Nop.Services.Shipping
         public virtual void UpdateShipment(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             _shipmentRepository.Update(shipment);
 
@@ -202,7 +202,7 @@ namespace Nop.Services.Shipping
         public virtual void DeleteShipmentItem(ShipmentItem shipmentItem)
         {
             if (shipmentItem == null)
-                throw new ArgumentNullException("shipmentItem");
+                throw new ArgumentNullException(nameof(shipmentItem));
 
             _siRepository.Delete(shipmentItem);
 
@@ -230,7 +230,7 @@ namespace Nop.Services.Shipping
         public virtual void InsertShipmentItem(ShipmentItem shipmentItem)
         {
             if (shipmentItem == null)
-                throw new ArgumentNullException("shipmentItem");
+                throw new ArgumentNullException(nameof(shipmentItem));
 
             _siRepository.Insert(shipmentItem);
 
@@ -245,7 +245,7 @@ namespace Nop.Services.Shipping
         public virtual void UpdateShipmentItem(ShipmentItem shipmentItem)
         {
             if (shipmentItem == null)
-                throw new ArgumentNullException("shipmentItem");
+                throw new ArgumentNullException(nameof(shipmentItem));
 
             _siRepository.Update(shipmentItem);
 
@@ -268,7 +268,7 @@ namespace Nop.Services.Shipping
             bool ignoreShipped, bool ignoreDelivered)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)

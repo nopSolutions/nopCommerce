@@ -78,7 +78,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             bool prepareEntireAddressModel, bool prepareOrderListModel)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (affiliate != null)
             {

@@ -76,7 +76,7 @@ namespace Nop.Web.Factories
         public virtual NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment)
         {
             if (newsComment == null)
-                throw new ArgumentNullException("newsComment");
+                throw new ArgumentNullException(nameof(newsComment));
 
             var model = new NewsCommentModel
             {
@@ -110,10 +110,10 @@ namespace Nop.Web.Factories
         public virtual NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException(nameof(newsItem));
 
             model.Id = newsItem.Id;
             model.MetaTitle = newsItem.MetaTitle;

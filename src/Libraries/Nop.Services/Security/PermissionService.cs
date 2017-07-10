@@ -105,7 +105,7 @@ namespace Nop.Services.Security
         public virtual void DeletePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Delete(permission);
 
@@ -164,7 +164,7 @@ namespace Nop.Services.Security
         public virtual void InsertPermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Insert(permission);
 
@@ -178,7 +178,7 @@ namespace Nop.Services.Security
         public virtual void UpdatePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Update(permission);
 

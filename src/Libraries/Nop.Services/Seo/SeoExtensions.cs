@@ -42,7 +42,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ProductTag productTag, int languageId)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
             string seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId));
             return seName;
         }
@@ -59,7 +59,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumGroup forumGroup)
         {
             if (forumGroup == null)
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
             string seName = GetSeName(forumGroup.Name);
             return seName;
         }
@@ -72,7 +72,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this Forum forum)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
             string seName = GetSeName(forum.Name);
             return seName;
         }
@@ -85,7 +85,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumTopic forumTopic)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
             string seName = GetSeName(forumTopic.Subject);
 
             // Trim SE name to avoid URLs that are too long
@@ -129,7 +129,7 @@ namespace Nop.Services.Seo
             where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             string entityName = typeof(T).Name;
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
@@ -187,7 +187,7 @@ namespace Nop.Services.Seo
              where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             return ValidateSeName(entity.Id, typeof(T).Name, seName, name, ensureNotEmpty);
         }
