@@ -33,7 +33,6 @@ namespace Nop.Services.Authentication.External
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRecordRepository;
@@ -55,7 +54,6 @@ namespace Nop.Services.Authentication.External
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
-            IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IPluginFinder pluginFinder,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRecordRepository,
@@ -73,7 +71,6 @@ namespace Nop.Services.Authentication.External
             this._customerService = customerService;
             this._eventPublisher = eventPublisher;
             this._genericAttributeService = genericAttributeService;
-            this._httpContextAccessor = httpContextAccessor;
             this._localizationService = localizationService;
             this._pluginFinder = pluginFinder;
             this._externalAuthenticationRecordRepository = externalAuthenticationRecordRepository;
