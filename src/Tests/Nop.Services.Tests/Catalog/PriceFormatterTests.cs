@@ -1,10 +1,10 @@
-﻿
-#if NET451
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -12,7 +12,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -88,10 +87,11 @@ namespace Nop.Services.Tests.Catalog
                 _taxSettings, _currencySettings);
 
             var nopEngine = MockRepository.GenerateMock<NopEngine>();
-            var containe = MockRepository.GenerateMock<IContainer>();
-            var containerManager = MockRepository.GenerateMock<ContainerManager>(containe);
-            nopEngine.Expect(x => x.ContainerManager).Return(containerManager);
-            containerManager.Expect(x => x.Resolve<IWorkContext>()).Return(_workContext);
+            var serviceProvider = MockRepository.GenerateMock<IServiceProvider>();
+            var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IWorkContext))).Return(_workContext);
+            nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
             EngineContext.Replace(nopEngine);
         }
 
@@ -195,4 +195,3 @@ namespace Nop.Services.Tests.Catalog
         }
     }
 }
-#endif

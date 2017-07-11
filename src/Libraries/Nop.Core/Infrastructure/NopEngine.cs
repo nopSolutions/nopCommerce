@@ -37,9 +37,9 @@ namespace Nop.Core.Infrastructure
 
         protected IServiceProvider GetServiceProvider()
         {
-            var accessor = _serviceProvider.GetService<IHttpContextAccessor>();
+            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
             var context = accessor.HttpContext;
-            return context != null ? context.RequestServices : _serviceProvider;
+            return context != null ? context.RequestServices : ServiceProvider;
         }
 
         /// <summary>
@@ -289,6 +289,15 @@ namespace Nop.Core.Infrastructure
             }
             throw new NopException("No constructor was found that had all the dependencies satisfied.");
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Service provider
+        /// </summary>
+        public virtual IServiceProvider ServiceProvider => _serviceProvider;
 
         #endregion
     }
