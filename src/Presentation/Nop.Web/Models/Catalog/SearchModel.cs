@@ -25,7 +25,6 @@ namespace Nop.Web.Models.Catalog
         /// Query string
         /// </summary>
         [NopResourceDisplayName("Search.SearchTerm")]
-
         public string q { get; set; }
 
         /// <summary>
