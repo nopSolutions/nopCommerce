@@ -95,14 +95,15 @@ namespace Nop.Web.Framework.Localization
         /// <returns>Result</returns>
         public static string AddLanguageSeoCodeToUrl(this string url, PathString pathBase, bool isRawPath, Language language)
         {
-            if (string.IsNullOrEmpty(url))
-                return url;
-
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
+            //null validation is not required
+            //if (string.IsNullOrEmpty(url))
+            //    return url;
+
             //remove application path from raw URL
-            if (isRawPath)
+            if (isRawPath && !string.IsNullOrEmpty(url))
                 url = url.RemoveApplicationPathFromRawUrl(pathBase);
 
             //add language code
