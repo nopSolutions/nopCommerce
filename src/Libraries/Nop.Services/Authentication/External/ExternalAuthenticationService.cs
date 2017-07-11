@@ -104,7 +104,10 @@ namespace Nop.Services.Authentication.External
                 return Error(new[] { "Account is already assigned" }, returnUrl);
 
             //or the user try to log in as himself. bit weird
-            return new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "/");
+            if (String.IsNullOrEmpty(returnUrl))
+                //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
+                return new RedirectToRouteResult("HomePage", new { area = "" });
+            return new RedirectResult(returnUrl);
         }
 
         /// <summary>
@@ -120,7 +123,11 @@ namespace Nop.Services.Authentication.External
             if (currentLoggedInUser != null)
             {
                 AssociateExternalAccountWithUser(currentLoggedInUser, parameters);
-                return new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "/");
+
+                if (String.IsNullOrEmpty(returnUrl))
+                    //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
+                    return new RedirectToRouteResult("HomePage", new {area = ""});
+                return new RedirectResult(returnUrl);
             }
 
             //or try to register new user
@@ -224,7 +231,10 @@ namespace Nop.Services.Authentication.External
             //activity log
             _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
-            return new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "/");
+            if (String.IsNullOrEmpty(returnUrl))
+                //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
+                return new RedirectToRouteResult("HomePage", new { area = "" });
+            return new RedirectResult(returnUrl);
         }
 
         /// <summary>
