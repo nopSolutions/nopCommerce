@@ -10,7 +10,12 @@ namespace Nop.Core.Configuration
         /// Gets or sets custom forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc)
         /// </summary>
         public string ForwardedHttpHeader { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use HTTP_CLUSTER_HTTPS; set null if not specified
+        /// </summary>
+        public bool? UseHttpClusterHttps { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to use HTTP_X_FORWARDED_PROTO; set null if not specified
         /// </summary>

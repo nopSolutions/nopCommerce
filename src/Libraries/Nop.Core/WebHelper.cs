@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
@@ -195,6 +194,10 @@ namespace Nop.Core
                 return false;
 
             //check whether hosting uses a load balancer
+            //use HTTP_CLUSTER_HTTPS?
+            if (_hostingConfig.UseHttpClusterHttps.HasValue && _hostingConfig.UseHttpClusterHttps.Value)
+                return _httpContextAccessor.HttpContext.Request.Headers["HTTP_CLUSTER_HTTPS"].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
+
             //use HTTP_X_FORWARDED_PROTO?
             if (_hostingConfig.UseHttpXForwardedProto.HasValue && _hostingConfig.UseHttpXForwardedProto.Value)
                 return _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
