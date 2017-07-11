@@ -131,10 +131,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var scheduleTask = _scheduleTaskService.GetTaskById(id);
                 if (scheduleTask == null)
                     throw new Exception("Schedule task cannot be loaded");
-
-                var task = new Task(scheduleTask);
+                
+                var task = new Task(scheduleTask) {Enabled = true};
                 //ensure that the task is enabled
-                task.Enabled = true;
                 task.Execute(true, false);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
