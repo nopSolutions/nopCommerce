@@ -106,7 +106,7 @@ namespace Nop.Services.Authentication.External
                 //TODO create locale for error
                 return Error(new[] { "Account is already assigned" }, returnUrl);
 
-            //or the user try to log in as himself.. bit weird
+            //or the user try to log in as himself. bit weird
             return new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "/");
         }
 
