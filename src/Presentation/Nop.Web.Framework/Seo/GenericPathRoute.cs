@@ -91,6 +91,9 @@ namespace Nop.Web.Framework.Seo
             if (urlRecord == null)
                 return Task.CompletedTask;
 
+            //virtual directory path
+            var pathBase = context.HttpContext.Request.PathBase;
+
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
             {
@@ -102,7 +105,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"/{activeSlug}";
+                redirectionRouteData.Values["url"] = $"{pathBase}/{activeSlug}";
                 redirectionRouteData.Values["permanentRedirect"] = true;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
@@ -121,7 +124,7 @@ namespace Nop.Web.Framework.Seo
                 var redirectionRouteData = new RouteData(context.RouteData);
                 redirectionRouteData.Values["controller"] = "Common";
                 redirectionRouteData.Values["action"] = "InternalRedirect";
-                redirectionRouteData.Values["url"] = $"/{slugForCurrentLanguage}";
+                redirectionRouteData.Values["url"] = $"{pathBase}/{slugForCurrentLanguage}";
                 redirectionRouteData.Values["permanentRedirect"] = false;
                 context.HttpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
                 context.RouteData = redirectionRouteData;
