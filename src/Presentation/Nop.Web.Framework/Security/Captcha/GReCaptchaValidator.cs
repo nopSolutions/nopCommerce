@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Security.Captcha
                 taskString.Wait();
                 result = ParseResponseResult(taskString.Result);
             }
-            catch (Exception exc)
+            catch
             {
                 result = new GReCaptchaResponse { IsValid = false };
                 result.ErrorCodes.Add("Unknown error");
