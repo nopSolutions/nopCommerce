@@ -22,7 +22,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// </summary>
         public int Priority
         {
-            get { return 1; }
+            get { return -1; }
         }
     }
 }
