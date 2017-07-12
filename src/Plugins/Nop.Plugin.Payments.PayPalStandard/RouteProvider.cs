@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
 
-namespace Nop.Plugin.Payments.PayPalDirect
+namespace Nop.Plugin.Payments.PayPalStandard
 {
     public partial class RouteProvider : IRouteProvider
     {
