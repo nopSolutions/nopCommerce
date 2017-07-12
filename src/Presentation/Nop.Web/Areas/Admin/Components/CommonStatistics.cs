@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Home;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -8,6 +6,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Models.Home;
 
 namespace Nop.Web.Areas.Admin.Components
 {
@@ -35,7 +34,7 @@ namespace Nop.Web.Areas.Admin.Components
             this._workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) ||
                 !_permissionService.Authorize(StandardPermissionProvider.ManageOrders) ||

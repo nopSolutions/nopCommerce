@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Models.Checkout;
 
@@ -14,7 +13,7 @@ namespace Nop.Web.Components
             this._checkoutModelFactory = checkoutModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(CheckoutProgressStep step)
+        public IViewComponentResult Invoke(CheckoutProgressStep step)
         {
             var model = _checkoutModelFactory.PrepareCheckoutProgressModel(step);
             return View(model);

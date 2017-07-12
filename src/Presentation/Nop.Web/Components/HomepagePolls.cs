@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
@@ -14,7 +13,7 @@ namespace Nop.Web.Components
             this._pollModelFactory = pollModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = _pollModelFactory.PrepareHomePagePollModels();
             if (!model.Any())

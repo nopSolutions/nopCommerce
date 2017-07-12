@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Components
@@ -13,7 +12,7 @@ namespace Nop.Web.Components
             this._catalogModelFactory = catalogModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
+        public IViewComponentResult Invoke(int? productThumbPictureSize)
         {
             var model = _catalogModelFactory.PrepareTopMenuModel();
             return View(model);

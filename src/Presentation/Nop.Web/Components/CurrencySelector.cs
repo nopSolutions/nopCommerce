@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Components
@@ -13,7 +12,7 @@ namespace Nop.Web.Components
             this._commonModelFactory = commonModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = _commonModelFactory.PrepareCurrencySelectorModel();
             if (model.AvailableCurrencies.Count == 1)

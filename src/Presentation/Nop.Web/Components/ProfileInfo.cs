@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
@@ -17,7 +16,7 @@ namespace Nop.Web.Components
             this._profileModelFactory = profileModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int customerProfileId)
+        public IViewComponentResult Invoke(int customerProfileId)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)

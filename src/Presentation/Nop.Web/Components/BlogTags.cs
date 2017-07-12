@@ -16,7 +16,7 @@ namespace Nop.Web.Components
             this._blogSettings = blogSettings;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int currentCategoryId, int currentProductId)
+        public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)
         {
             if (!_blogSettings.Enabled)
                 return Content("");

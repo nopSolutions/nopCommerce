@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Services.Cms;
+using Nop.Web.Areas.Admin.Models.Cms;
 
 namespace Nop.Web.Areas.Admin.Components
 {
@@ -16,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Components
             this._widgetService = widgetService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
+        public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
             var model = new List<RenderWidgetModel>();
 

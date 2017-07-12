@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Components
@@ -13,7 +12,7 @@ namespace Nop.Web.Components
             this._forumModelFactory = forumModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int? forumGroupId, int? forumId, int? forumTopicId)
+        public IViewComponentResult Invoke(int? forumGroupId, int? forumId, int? forumTopicId)
         {
             var model = _forumModelFactory.PrepareForumBreadcrumbModel(forumGroupId, forumId, forumTopicId);
             return View(model);

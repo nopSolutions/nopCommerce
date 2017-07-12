@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Components
@@ -23,7 +22,7 @@ namespace Nop.Web.Components
 
         #region Methods
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = _externalAuthenticationModelFactory.PrepareExternalMethodsModel();
 

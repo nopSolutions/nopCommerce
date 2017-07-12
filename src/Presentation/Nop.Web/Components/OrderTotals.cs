@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -23,7 +22,7 @@ namespace Nop.Web.Components
             this._workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
+        public IViewComponentResult Invoke(bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)

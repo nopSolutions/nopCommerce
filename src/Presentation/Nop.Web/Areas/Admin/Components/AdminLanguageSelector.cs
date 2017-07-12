@@ -1,11 +1,10 @@
 ﻿
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Core;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Common;
 
 namespace Nop.Web.Areas.Admin.Components
 {
@@ -24,7 +23,7 @@ namespace Nop.Web.Areas.Admin.Components
             this._workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();

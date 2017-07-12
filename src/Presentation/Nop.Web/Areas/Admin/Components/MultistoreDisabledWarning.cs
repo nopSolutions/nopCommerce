@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
@@ -21,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Components
             this._storeService = storeService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
 
             //action displaying notification (warning) to a store owner that "limit per store" feature is ignored

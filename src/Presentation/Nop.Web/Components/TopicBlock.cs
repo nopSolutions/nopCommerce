@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 
 namespace Nop.Web.Components
@@ -13,7 +12,7 @@ namespace Nop.Web.Components
             this._topicModelFactory = topicModelFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string systemName)
+        public IViewComponentResult Invoke(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)

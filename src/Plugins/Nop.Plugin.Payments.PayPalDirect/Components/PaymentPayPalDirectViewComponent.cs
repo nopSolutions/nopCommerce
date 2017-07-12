@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Payments.PayPalDirect.Models;
@@ -12,7 +11,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Components
     [ViewComponent(Name = "PaymentPayPalDirect")]
     public class PaymentPayPalDirectViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = new PaymentInfoModel
             {

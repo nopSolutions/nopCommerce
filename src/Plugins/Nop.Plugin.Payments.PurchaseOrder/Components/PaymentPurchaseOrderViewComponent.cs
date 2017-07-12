@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Payments.PurchaseOrder.Models;
 
@@ -8,7 +7,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Components
     [ViewComponent(Name = "PaymentPurchaseOrder")]
     public class PaymentPurchaseOrderViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             var model = new PaymentInfoModel();
             //set postback values (we cannot access "Form" with "GET" requests)

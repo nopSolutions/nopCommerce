@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -36,11 +35,11 @@ namespace Nop.Web.Components
             this._cacheManager = cacheManager;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int productId, int? productThumbPictureSize)
+        public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
         {
             //load and cache report
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
-                () => _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray() );
+                () => _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray());
 
             //load products
             var products = _productService.GetProductsByIds(productIds);

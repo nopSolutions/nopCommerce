@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Factories;
@@ -18,7 +17,7 @@ namespace Nop.Web.Components
             this._catalogSettings = catalogSettings;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int currentManufacturerId)
+        public IViewComponentResult Invoke(int currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");

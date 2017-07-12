@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Settings;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Common;
+using Nop.Web.Areas.Admin.Models.Settings;
 
 namespace Nop.Web.Areas.Admin.Components
 {
@@ -15,7 +14,7 @@ namespace Nop.Web.Areas.Admin.Components
             this._workContext = workContext;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string modeName = "settings-advanced-mode")
+        public IViewComponentResult Invoke(string modeName = "settings-advanced-mode")
         {
             var model = new ModeModel()
             {
