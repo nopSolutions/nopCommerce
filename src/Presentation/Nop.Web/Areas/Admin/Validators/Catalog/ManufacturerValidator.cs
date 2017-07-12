@@ -14,12 +14,10 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
-            Custom(x =>
+            RuleFor(x => x).Custom((x, context) =>
             {
                 if (!x.AllowCustomersToSelectPageSize && x.PageSize <= 0)
-                    return new ValidationFailure("PageSize", localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.PageSize.Positive"));
-
-                return null;
+                    context.AddFailure(new ValidationFailure("PageSize", localizationService.GetResource("Admin.Catalog.Manufacturers.Fields.PageSize.Positive")));
             });
 
             SetDatabaseValidationRules<Manufacturer>(dbContext);
