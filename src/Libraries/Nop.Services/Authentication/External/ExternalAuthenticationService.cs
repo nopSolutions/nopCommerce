@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
@@ -101,13 +100,10 @@ namespace Nop.Services.Authentication.External
             //account is already assigned to another user
             if (currentLoggedInUser.Id != associatedUser.Id)
                 //TODO create locale for error
-                return Error(new[] { "Account is already assigned" }, returnUrl);
+                return ErrorAuthentication(new[] { "Account is already assigned" }, returnUrl);
 
             //or the user try to log in as himself. bit weird
-            if (String.IsNullOrEmpty(returnUrl))
-                //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
-                return new RedirectToRouteResult("HomePage", new { area = "" });
-            return new RedirectResult(returnUrl);
+            return SuccessfulAuthentication(returnUrl);
         }
 
         /// <summary>
@@ -123,11 +119,7 @@ namespace Nop.Services.Authentication.External
             if (currentLoggedInUser != null)
             {
                 AssociateExternalAccountWithUser(currentLoggedInUser, parameters);
-
-                if (String.IsNullOrEmpty(returnUrl))
-                    //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
-                    return new RedirectToRouteResult("HomePage", new {area = ""});
-                return new RedirectResult(returnUrl);
+                return SuccessfulAuthentication(returnUrl);
             }
 
             //or try to register new user
@@ -135,7 +127,7 @@ namespace Nop.Services.Authentication.External
                 return RegisterNewUser(parameters, returnUrl);
 
             //registration is disabled
-            return Error(new[] { "Registration is disabled" }, returnUrl);
+            return ErrorAuthentication(new[] { "Registration is disabled" }, returnUrl);
         }
 
         /// <summary>
@@ -170,7 +162,7 @@ namespace Nop.Services.Authentication.External
             //whether registration request has been completed successfully
             var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
             if (!registrationResult.Success)
-                return Error(registrationResult.Errors, returnUrl);
+                return ErrorAuthentication(registrationResult.Errors, returnUrl);
 
             //allow to save other customer values by consuming this event
             _eventPublisher.Publish(new CustomerAutoRegisteredByExternalMethodEvent(_workContext.CurrentCustomer, parameters));
@@ -208,7 +200,7 @@ namespace Nop.Services.Authentication.External
             if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
                 return new RedirectToRouteResult("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
             
-            return Error(new[] { "Error on registration" }, returnUrl);
+            return ErrorAuthentication(new[] { "Error on registration" }, returnUrl);
         }
 
         /// <summary>
@@ -231,10 +223,7 @@ namespace Nop.Services.Authentication.External
             //activity log
             _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
 
-            if (String.IsNullOrEmpty(returnUrl))
-                //if we don't specify "area", then it could redirect to wrong URL for some weird reasons
-                return new RedirectToRouteResult("HomePage", new { area = "" });
-            return new RedirectResult(returnUrl);
+            return SuccessfulAuthentication(returnUrl);
         }
 
         /// <summary>
@@ -243,12 +232,26 @@ namespace Nop.Services.Authentication.External
         /// <param name="errors">Collection of errors</param>
         /// <param name="returnUrl">URL to which the user will return after authentication</param>
         /// <returns>Result of an authentication</returns>
-        protected virtual IActionResult Error(IEnumerable<string> errors, string returnUrl)
+        protected virtual IActionResult ErrorAuthentication(IEnumerable<string> errors, string returnUrl)
         {
             foreach (var error in errors)
                 ExternalAuthorizerHelper.AddErrorsToDisplay(error);
 
             return new RedirectToActionResult("Login", "Customer", !string.IsNullOrEmpty(returnUrl) ? new { ReturnUrl = returnUrl } : null);
+        }
+
+        /// <summary>
+        /// Redirect the user after successful authentication
+        /// </summary>
+        /// <param name="returnUrl">URL to which the user will return after authentication</param>
+        /// <returns>Result of an authentication</returns>
+        protected virtual IActionResult SuccessfulAuthentication(string returnUrl)
+        {
+            //redirect to the return URL if it's specified
+            if (!string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult(returnUrl);
+
+            return new RedirectToRouteResult("HomePage", null);
         }
 
         #endregion
@@ -328,7 +331,7 @@ namespace Nop.Services.Authentication.External
                 throw new ArgumentNullException(nameof(parameters));
 
             if (!ExternalAuthenticationMethodIsAvailable(parameters.ProviderSystemName))
-                return Error(new[] { "External authentication method cannot be loaded" }, returnUrl);
+                return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
             var currentLoggedInUser = _workContext.CurrentCustomer.IsRegistered() ? _workContext.CurrentCustomer : null;
