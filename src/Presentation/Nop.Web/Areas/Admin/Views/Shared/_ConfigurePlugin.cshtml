@@ -1,4 +1,5 @@
-﻿@using Nop.Core
+﻿@using Microsoft.AspNetCore.Mvc.Controllers
+@using Nop.Core
 @using Nop.Core.Plugins
 @using Nop.Services.Authentication.External
 @using Nop.Services.Cms
@@ -10,25 +11,17 @@
 @inject IPluginFinder pluginFinder
 @inject IWebHelper webHelper
 @{
-    var thisPageUrl = webHelper.GetThisPageUrl(false);
-    var plugins = pluginFinder.GetPluginDescriptors(LoadPluginsMode.All).Select(x => x.Instance()).ToList();
+    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo).Instance();
 
-    var plugin = plugins.FirstOrDefault(x =>
-    {
-        var configurationUrl = x.GetConfigurationPageUrl();
-        if (String.IsNullOrEmpty(configurationUrl))
-            return false;
+    //friendly name
+    var friendlyName = plugin?.PluginDescriptor.FriendlyName;
 
-        return configurationUrl.IndexOf(thisPageUrl, StringComparison.InvariantCultureIgnoreCase) >= 0;
-    });
+    var activeMenuSystemName = string.Empty;
+    var configureLocale = string.Empty;
+    var backToLocale = string.Empty;
+    var listActionMethodName = string.Empty;
+    var listControllerName = string.Empty;
 
-    Layout = "_AdminLayout";
-
-    var activeMenuSystemName = "";
-    var configureLocale = "";
-    var backToLocale = "";
-    var listActionMethodName = "";
-    var listControllerName = "";
     if (plugin is IPaymentMethod)
     {
         //payment plugin
@@ -93,9 +86,7 @@
         listControllerName = "Plugin";
     }
 
-
-    //friendly name
-    var friendlyName = plugin?.PluginDescriptor.FriendlyName;
+    Layout = "_AdminLayout";
     //page title
     ViewBag.Title = T(configureLocale).Text + " - " + friendlyName;
     //active menu item (system name)
