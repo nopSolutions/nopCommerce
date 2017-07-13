@@ -342,7 +342,7 @@ namespace Nop.Core
         public static string MapPath(string path)
         {
             path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(BaseDirectory, path);
+            return Path.Combine(BaseDirectory??string.Empty, path);
         }
 
         #endregion
