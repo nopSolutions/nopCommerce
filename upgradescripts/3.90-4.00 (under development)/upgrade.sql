@@ -17,6 +17,12 @@ set @resources='
   <LocaleResource Name="Admin.System.SystemInfo.Headers.Hint">
     <Value>A list of headers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.MachineKey.NotSpecified">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.MachineKey.Specified">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -448,8 +448,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
 
-            //TODO remove locales "Admin.System.Warnings.MachineKey.*"
-
             return View(model);
         }
         

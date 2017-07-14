@@ -13023,12 +13023,6 @@
   <LocaleResource Name="Admin.System.Warnings.IncompatiblePlugin">
     <Value>'{0}' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.Warnings.MachineKey.NotSpecified">
-    <Value>A custom machine key is not specified (web.config file)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.Warnings.MachineKey.Specified">
-    <Value>A custom machine key is specified (web.config file)</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PaymentMethods.NoActive">
     <Value>You don't have active payment methods</Value>
   </LocaleResource>
