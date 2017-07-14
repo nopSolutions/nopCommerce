@@ -1,33 +1,27 @@
-﻿#if NET451
-using System;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core.Configuration;
-using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Services.Events;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Events
 {
     [TestFixture]
     public class EventsTests
     {
-        private NopEngine _engine;
         private IEventPublisher _eventPublisher;
 
         [OneTimeSetUp]
         public void SetUp()
         {
-            _engine = new NopEngine();
-            _engine.Initialize(new NopConfig());
-            _eventPublisher = _engine.Resolve<IEventPublisher>();
-        }
-
-        [Test]
-        public void Can_find_consumers()
-        {
-            var types = _engine.ResolveAll<IConsumer<DateTime>>().ToList();
-            Assert.AreEqual(1, types.Count);
-            Assert.IsInstanceOf<DateTimeConsumer>(types[0]);
+            PluginManager.Initialize(new ApplicationPartManager(), new NopConfig());
+            var subscriptionService = MockRepository.GenerateMock<ISubscriptionService>();
+            var consumers = new List<IConsumer<DateTime>> {new DateTimeConsumer()};
+            subscriptionService.Expect(c => c.GetSubscriptions<DateTime>()).Return(consumers);
+            _eventPublisher = new EventPublisher(subscriptionService);
         }
 
         [Test]
@@ -38,9 +32,7 @@ namespace Nop.Web.MVC.Tests.Events
 
             var newDateTime = DateTime.Now.Subtract(TimeSpan.FromDays(5));
             _eventPublisher.Publish(newDateTime);
-
             Assert.AreEqual(DateTimeConsumer.DateTime, newDateTime);
         }
     }
 }
-#endif
