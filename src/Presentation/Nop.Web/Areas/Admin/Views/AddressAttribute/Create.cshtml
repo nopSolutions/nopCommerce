@@ -6,9 +6,7 @@
     Html.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addressattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="AddressAttribute" asp-action="Create" method="post" id="addressattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Address.AddressAttributes.AddNew")
@@ -26,4 +24,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>

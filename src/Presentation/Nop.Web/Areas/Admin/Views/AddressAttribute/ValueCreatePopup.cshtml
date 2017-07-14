@@ -6,9 +6,7 @@
     ViewBag.Title = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="AddressAttribute" asp-action="ValueCreatePopup" asp-route-formId="@(ViewBag.formId)" asp-route-btnId="@(ViewBag.btnId)" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Address.AddressAttributes.Values.AddNew")
@@ -21,4 +19,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)
-}
+</form>

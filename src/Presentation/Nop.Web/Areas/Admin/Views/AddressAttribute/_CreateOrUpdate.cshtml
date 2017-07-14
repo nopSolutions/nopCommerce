@@ -8,19 +8,20 @@
 </script>
 
 <div class="content">
-    @Html.ValidationSummary(false)
-    @Html.HiddenFor(model => model.Id)
+    <div asp-validation-summary="All"></div>
+    <input asp-for="Id" type="hidden"/>
+
     <div class="form-horizontal">
-        <div id="addressattribute-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Address.AddressAttributes.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Address.AddressAttributes.Values"))
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info"), true)
-                @Html.RenderBootstrapTabContent("tab-values", await Html.PartialAsync("_CreateOrUpdate.Values"))
-            </div>
-        </div>
+        <nop-tabs id="addressattribute-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Address.AddressAttributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-values">@T("Admin.Address.AddressAttributes.Values")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 

@@ -10,56 +10,57 @@
 }
 
 <div class="content">
-    @Html.ValidationSummary(false)
-    @Html.HiddenFor(model => model.Id)
-    @Html.HiddenFor(model => model.AddressAttributeId)
+    <div asp-validation-summary="All"></div>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="AddressAttributeId" type="hidden" />
+
     <div class="form-horizontal">
         <div class="panel-group">
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<AddressAttributeValueModel, AddressAttributeValueLocalizedModel>("addressattributevalue-localized",
-                    @<div>
-                        <div class="form-group">
-                            <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.Locales[item].Name)
-                            </div>
-                            <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.Locales[item].Name)
-                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                            </div>
-                        </div>
-                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                    </div>
-                    ,
-                            @<div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        @Html.NopLabelFor(model => model.Name)
-                                    </div>
-                                    <div class="col-sm-9">
-                                        @Html.NopEditorFor(model => model.Name, required: true)
-                                        @Html.ValidationMessageFor(model => model.Name)
-                                    </div>
-                                </div>
-                            </div>
+                          @<div>
+                              <div class="form-group">
+                                  <div class="col-sm-3">
+                                      <nop-label asp-for="@Model.Locales[item].Name" />
+                                  </div>
+                                  <div class="col-sm-9">
+                                      <nop-editor asp-for="@Model.Locales[item].Name" />
+                                      <span asp-validation-for="@Model.Locales[item].Name"></span>
+                                  </div>
+                              </div>
+                               <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                          </div>
+    ,
+                          @<div>
+                              <div class="form-group">
+                                  <div class="col-sm-3">
+                                      <nop-label asp-for="Name" />
+                                  </div>
+                                  <div class="col-sm-9">
+                                      <nop-editor asp-for="Name" asp-required="true" />
+                                      <span asp-validation-for="Name"></span>
+                                  </div>
+                              </div>
+                          </div>
                           ))
 
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.IsPreSelected)
+                            <nop-label asp-for="IsPreSelected" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.IsPreSelected)
-                            @Html.ValidationMessageFor(model => model.IsPreSelected)
+                            <nop-editor asp-for="IsPreSelected" />
+                            <span asp-validation-for="IsPreSelected"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.DisplayOrder)
+                            <nop-label asp-for="DisplayOrder" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.DisplayOrder)
-                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
                 </div>

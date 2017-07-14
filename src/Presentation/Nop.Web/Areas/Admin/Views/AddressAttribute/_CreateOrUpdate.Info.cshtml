@@ -9,24 +9,24 @@
                   @<div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Locales[item].Name)
+                              <nop-label asp-for="@Model.Locales[item].Name" />
                           </div>
                           <div class="col-md-9">
-                              @Html.NopEditorFor(model => model.Locales[item].Name)
-                              @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                              <nop-editor asp-for="@Model.Locales[item].Name" />
+                              <span asp-validation-for="@Model.Locales[item].Name"></span>
                           </div>
                       </div>
-                      @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                       <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                   </div>
-    ,
+                    ,
                   @<div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Name)
+                              <nop-label asp-for="Name" />
                           </div>
                           <div class="col-md-9">
-                              @Html.NopEditorFor(model => model.Name, required: true)
-                              @Html.ValidationMessageFor(model => model.Name)
+                              <nop-editor asp-for="Name" asp-required="true" />
+                              <span asp-validation-for="Name"></span>
                           </div>
                       </div>
                   </div>
@@ -34,35 +34,35 @@
 
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.IsRequired)
+                    <nop-label asp-for="IsRequired" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.IsRequired)
-                    @Html.ValidationMessageFor(model => model.IsRequired)
+                    <nop-editor asp-for="IsRequired" />
+                    <span asp-validation-for="IsRequired"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AttributeControlTypeId)
+                    <nop-label asp-for="AttributeControlTypeId" />
                 </div>
                 <div class="col-md-9">
                     @{
-                        var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                        IEnumerable<SelectListItem> attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
                             .ToSelectList(valuesToExclude:
                                 //these attributes don't support some control types
                                 new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
                     }
-                    @Html.NopDropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
-                    @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
+                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"></nop-select>
+                    <span asp-validation-for="AttributeControlTypeId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DisplayOrder)
+                    <nop-label asp-for="DisplayOrder" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
                 </div>
             </div>
         </div>
