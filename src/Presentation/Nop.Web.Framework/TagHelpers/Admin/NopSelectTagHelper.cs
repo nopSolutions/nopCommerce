@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// Items for a dropdown list
         /// </summary>
         [HtmlAttributeName(ItemsAttributeName)]
-        public IList<SelectListItem> Items { set; get; }
+        public IEnumerable<SelectListItem> Items { set; get; }
 
         /// <summary>
         /// Indicates whether the field is required
