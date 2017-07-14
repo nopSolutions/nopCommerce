@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Activity types");
 }
 
-@using (Html.BeginForm("SaveTypes", "ActivityLog"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ActivityLog" asp-action="SaveTypes" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.ActivityLog.ActivityLogType")
@@ -119,4 +117,4 @@
             </div>
         </div>
     </div>
-}
+</form>

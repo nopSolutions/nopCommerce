@@ -10,7 +10,7 @@
     Html.SetActiveMenuItemSystemName("Activity log list");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ActivityLog.ActivityLog")
@@ -32,34 +32,34 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnFrom)
+                                    <nop-label asp-for="CreatedOnFrom" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnFrom)
+                                    <nop-editor asp-for="CreatedOnFrom" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnTo)
+                                    <nop-label asp-for="CreatedOnTo" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnTo)
+                                    <nop-editor asp-for="CreatedOnTo" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.IpAddress)
+                                    <nop-label asp-for="IpAddress" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.IpAddress)
+                                    <nop-editor asp-for="IpAddress" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.ActivityLogTypeId)
+                                    <nop-label asp-for="ActivityLogTypeId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("ActivityLogTypeId", Model.ActivityLogType)
+                                    <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType"></nop-select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -176,9 +176,9 @@
 
                         function additionalData() {
                             var data = {
-                                CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                                IpAddress: $('#@Html.FieldIdFor(model => model.IpAddress)').val(),
+                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                IpAddress: $('#@Html.IdFor(model => model.IpAddress)').val(),
                                 ActivityLogTypeId: $('#ActivityLogTypeId').val()
                             };
                             addAntiForgeryToken(data);
