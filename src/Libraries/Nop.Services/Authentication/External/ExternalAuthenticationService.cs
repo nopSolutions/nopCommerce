@@ -138,15 +138,6 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         protected virtual IActionResult RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
-            //if auto registration is disabled redirect to login page
-            //TODO remove this setting
-            if (!_externalAuthenticationSettings.AutoRegisterEnabled)
-            {
-                ExternalAuthorizerHelper.StoreParametersForRoundTrip(parameters);
-                return new RedirectToActionResult("Login", "Customer", !string.IsNullOrEmpty(returnUrl) ? new { ReturnUrl = returnUrl } : null);
-            }
-
-            //or try to auto register new user
             //registration is approved if validation isn't required
             var registrationIsApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);

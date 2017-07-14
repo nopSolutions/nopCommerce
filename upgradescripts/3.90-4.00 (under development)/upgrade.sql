@@ -23,6 +23,21 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.MachineKey.Specified">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -97,4 +112,7 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
-
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'externalauthenticationsettings.autoregisterenabled'
+GO

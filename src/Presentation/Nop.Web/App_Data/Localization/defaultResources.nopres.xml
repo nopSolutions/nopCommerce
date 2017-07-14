@@ -33,12 +33,6 @@
   <LocaleResource Name="Account.AssociatedExternalAuth.Remove">
     <Value>Remove</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo">
-    <Value>Account Association: Your new user account will be linked to</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove">
-    <Value>(remove)</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -5583,9 +5577,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields">
     <Value>Default fields</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication">
-    <Value>External authentication</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.Password">
     <Value>Password and security</Value>
   </LocaleResource>
@@ -5693,12 +5684,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
     <Value>Force entering email twice during registration.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled">
-    <Value>External authentication. Auto register enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled.Hint">
-    <Value>Check to enable auto registration when using external authentication (e.g. using Facebokk or Twitter).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxEnabled">
     <Value>'Fax number' enabled</Value>
