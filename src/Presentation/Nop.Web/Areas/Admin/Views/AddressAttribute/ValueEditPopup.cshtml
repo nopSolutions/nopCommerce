@@ -5,8 +5,8 @@
     //page title
     ViewBag.Title = T("Admin.Address.AddressAttributes.Values.EditValueDetails").Text;
 }
-
-<form asp-controller="AddressAttribute" asp-action="ValueEditPopup" method="post">
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Address.AddressAttributes.Values.EditValueDetails")
