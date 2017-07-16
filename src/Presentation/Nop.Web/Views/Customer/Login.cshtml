@@ -54,7 +54,7 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                <form asp-route="Login" method="post">
+                <form asp-route="Login"  asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
