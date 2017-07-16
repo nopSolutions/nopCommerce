@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Topics");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Topic" asp-action="Create" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.Topics.AddNew") 
@@ -27,4 +25,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>

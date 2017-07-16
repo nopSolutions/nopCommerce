@@ -80,13 +80,11 @@ namespace Nop.Web.Areas.Admin.Models.Topics
 
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 

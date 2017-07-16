@@ -1,11 +1,11 @@
 ﻿@model TopicModel
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
 @inject IEventPublisher eventPublisher
 
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         bindBootstrapTabSelectEvent('topic-edit');
     });
 </script>
@@ -19,16 +19,16 @@
                 </div>
             </div>
         </div>
-        <div id="topic-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Topics.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-seo", await Html.PartialAsync("_CreateOrUpdate.Seo", Model))
-            </div>
-        </div>
+        <nop-tabs id="topic-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.ContentManagement.Topics.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-seo" class="advanced-setting">@T("Admin.Common.SEO")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 
