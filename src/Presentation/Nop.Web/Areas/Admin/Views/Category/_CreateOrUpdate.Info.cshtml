@@ -153,8 +153,7 @@
                     <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true"/>
                     <script>
                         $(document).ready(function() {
-                            var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)')
-                                .data("kendoMultiSelect");
+                            var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
                             discountsIdsInput.setOptions({
                                 autoClose: false
                             });
