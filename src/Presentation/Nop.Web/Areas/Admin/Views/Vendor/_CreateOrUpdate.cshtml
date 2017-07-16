@@ -1,8 +1,8 @@
 ﻿@model VendorModel
 @inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script>
     $(document).ready(function() {
@@ -19,24 +19,24 @@
                 </div>
             </div>
         </div>
-        <div id="vendor-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Vendors.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass: "advanced-setting")
+        <nop-tabs id="vendor-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Vendors.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-seo" class="advanced-setting">@T("Admin.Common.SEO")</nop-tab-header-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-vendor-notes", @T("Admin.Vendors.VendorNotes"), customCssClass: "advanced-setting")
+                    <nop-tab-header-item asp-name="tab-vendor-notes" class="advanced-setting">@T("Admin.Vendors.VendorNotes")</nop-tab-header-item>
                 }
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-seo", await Html.PartialAsync("_CreateOrUpdate.Seo", Model))
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabContent("tab-vendor-notes", await Html.PartialAsync("_CreateOrUpdate.Notes", Model))
+                    <nop-tab-content-item asp-name="tab-vendor-notes">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-tab-content-item>
                 }
-            </div>
-        </div>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 

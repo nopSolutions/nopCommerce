@@ -7,60 +7,60 @@
                   @<div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Locales[item].Name)
+                              <nop-label asp-for="@Model.Locales[item].Name" />
                           </div>
                           <div class="col-md-9">
-                              @Html.NopEditorFor(model => model.Locales[item].Name)
-                              @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                              <nop-editor asp-for="@Model.Locales[item].Name" />
+                              <span asp-validation-for="@Model.Locales[item].Name"></span>
                           </div>
                       </div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Locales[item].Description)
+                              <nop-label asp-for="@Model.Locales[item].Description" />
                           </div>
                           <div class="col-md-9">
-                              @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                              @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                              <nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                              <span asp-validation-for="@Model.Locales[item].Description"></span>
                           </div>
                       </div>
-                      @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                      <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                   </div>
     ,
                   @<div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Name)
+                              <nop-label asp-for="Name" />
                           </div>
                           <div class="col-md-9">
-                              @Html.NopEditorFor(model => model.Name, required: true)
-                              @Html.ValidationMessageFor(model => model.Name)
+                              <nop-editor asp-for="Name" asp-required="true" />
+                              <span asp-validation-for="Name"></span>
                           </div>
                       </div>
                       <div class="form-group">
                           <div class="col-md-3">
-                              @Html.NopLabelFor(model => model.Description)
+                              <nop-label asp-for="Description" />
                           </div>
                           <div class="col-md-9">
-                              @Html.EditorFor(x => x.Description, "RichEditor")
-                              @Html.ValidationMessageFor(model => model.Description)
+                              <nop-editor asp-for="Description" asp-template="RichEditor" />
+                              <span asp-validation-for="Description"></span>
                           </div>
                       </div>
                   </div>
                   ))
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Email)
+                    <nop-label asp-for="Email" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Email, required: true)
-                    @Html.ValidationMessageFor(model => model.Email)
+                    <nop-editor asp-for="Email" asp-required="true" />
+                    <span asp-validation-for="Email"></span>
                 </div>
             </div>
             @if (Model.Id > 0)
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AssociatedCustomers)
+                        <nop-label asp-for="AssociatedCustomers" />
                     </div>
                     <div class="col-md-9">
                         @if (Model.AssociatedCustomers.Count > 0)
@@ -70,7 +70,7 @@
                                 @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
                                 if (i != Model.AssociatedCustomers.Count - 1)
                                 {
-                                    <text>,  </text>
+                                    <text>, </text>
                                 }
                             }
                         }
@@ -83,65 +83,65 @@
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Active)
+                    <nop-label asp-for="Active" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Active)
-                    @Html.ValidationMessageFor(model => model.Active)
+                    <nop-editor asp-for="Active"/>
+                    <span asp-validation-for="Active"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PictureId)
+                    <nop-label asp-for="PictureId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.PictureId)
-                    @Html.ValidationMessageFor(model => model.PictureId)
+                    <nop-editor asp-for="PictureId" />
+                    <span asp-validation-for="PictureId"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AdminComment)
+                    <nop-label asp-for="AdminComment" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopTextAreaFor(model => model.AdminComment)
-                    @Html.ValidationMessageFor(model => model.AdminComment)
+                    <nop-textarea asp-for="AdminComment"></nop-textarea>
+                    <span asp-validation-for="AdminComment"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
+                    <nop-label asp-for="AllowCustomersToSelectPageSize" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
-                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                    <nop-editor asp-for="AllowCustomersToSelectPageSize" />
+                    <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting" id="pnlPageSize">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PageSize)
+                    <nop-label asp-for="PageSize" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.PageSize)
-                    @Html.ValidationMessageFor(model => model.PageSize)
+                    <nop-editor asp-for="PageSize" />
+                    <span asp-validation-for="PageSize"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting" id="pnlPageSizeOptions">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PageSizeOptions)
+                    <nop-label asp-for="PageSizeOptions" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.PageSizeOptions)
-                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                    <nop-editor asp-for="PageSizeOptions" />
+                    <span asp-validation-for="PageSizeOptions"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DisplayOrder)
+                    <nop-label asp-for="DisplayOrder" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
             @T("Admin.Vendors.Address")
         </div>
         <div class="panel-body">
-            @Html.EditorFor(model => model.Address, "Address")
+            <nop-editor asp-for="Address" asp-template="Address" />
         </div>
     </div>
 </div>
