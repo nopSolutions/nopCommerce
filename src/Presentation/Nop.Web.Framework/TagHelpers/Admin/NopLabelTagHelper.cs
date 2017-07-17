@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -91,7 +92,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
                         if (!string.IsNullOrEmpty(hintResource))
                         {
-                            var hintContent = $"<div title='{hintResource}' class='ico-help'><i class='fa fa-question-circle'></i></div>";
+                            var hintContent = $"<div title='{WebUtility.HtmlEncode(hintResource)}' class='ico-help'><i class='fa fa-question-circle'></i></div>";
                             output.Content.AppendHtml(hintContent);
                         }
                     }
