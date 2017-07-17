@@ -12,7 +12,6 @@
     @{
         //standard (default) items
         var rootNode = siteMap.RootNode;
-
         //plugins
         var adminMenuPlugins = pluginFinder.GetPlugins<IAdminMenuPlugin>().ToList();
         foreach (var adminMenuPlugin in adminMenuPlugins)

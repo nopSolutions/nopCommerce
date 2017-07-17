@@ -20,11 +20,11 @@
 @if (!String.IsNullOrEmpty(url))
 {
     <li @(isActive ? Html.Raw("class=\"active current-active-item\"") : null)>
-        <a href="@url" class="menu-item-link"@(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
+        <a href="@url" class="menu-item-link" @(Model.OpenUrlInNewTab ? Html.Raw(" target=\"_blank\"") : null)>
             @if (!String.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
-                    <i class="fa @Url.Content(Model.IconClass)"></i>
+                <i class="fa @Url.Content(Model.IconClass)"></i>
                 </text>
             }
             <span class="menu-item-title">@Model.Title</span>
@@ -38,7 +38,7 @@ else
             @if (!String.IsNullOrEmpty(Model.IconClass))
             {
                 <text>
-                    <i class="fa @Url.Content(Model.IconClass)"></i>
+                <i class="fa @Url.Content(Model.IconClass)"></i>
                 </text>
             }
             <span>@Model.Title</span>
@@ -51,7 +51,6 @@ else
                 <i class="fa fa-angle-left pull-right"></i>
             }
         </a>
-
         @{
             var childNodes = Model.ChildNodes.Where(x => x.Visible).ToList();
         }
@@ -65,4 +64,4 @@ else
             </ul>
         }
     </li>
-}
+            }

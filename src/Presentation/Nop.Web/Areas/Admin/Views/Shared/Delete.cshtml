@@ -6,8 +6,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
         </div>
-        @using (Html.BeginForm(Model.ActionName, Model.ControllerName, new { id = Model.Id }))
-        {
+        <form asp-action="@Model.ActionName" asp-controller="@Model.ControllerName" asp-route-id="@Model.Id">
             <div class="form-horizontal">
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
@@ -20,6 +19,6 @@
                     </button>
                 </div>
             </div>
-        }
+        </form>
     </div>
 </div>

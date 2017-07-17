@@ -1,12 +1,9 @@
 ﻿@model IList<AddressModel.AddressAttributeModel>
-
 @using Nop.Core.Domain.Catalog;
-
 @foreach (var attribute in Model)
 {
     string controlId = string.Format("address_attribute_{0}", attribute.Id);
     string textPrompt = attribute.Name;
-
     <div class="form-group">
         <div class="col-md-3">
             <div class="label-wrapper">

@@ -6,7 +6,6 @@
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
-
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -19,7 +18,6 @@
 @using Nop.Services.Customers
 @using Nop.Services.Helpers
 @using Nop.Services.Security;
-
 @{
     var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
     
@@ -87,7 +85,6 @@
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
-
 <!DOCTYPE html>
 <html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
     <head>
@@ -98,7 +95,7 @@
         @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
         @Html.NopScripts(this.Url, ResourceLocation.Head, false)
     </head>
-    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar)
+    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
                                                     {<text>sidebar-collapse</text>}">
         <div class="throbber">
             <div class="curtain">
@@ -147,18 +144,14 @@
                                         @currentCustomer.GetFullName()
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)">
-                                            @T("Admin.Header.Logout")
-                                        </a>
+                                        <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>
                                     </li>
                                 }
                                 <li>
                                     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_middle" })
                                 </li>
                                 <li>
-                                    <a href="@Url.Action("Index", "Home", new {area = ""})">
-                                        @T("Admin.Header.PublicStore")
-                                    </a>
+                                    <a asp-controller="Home" asp-action="Index" asp-area="">@T("Admin.Header.PublicStore")</a>
                                 </li>
                                 @if (canManageMaintenance)
                                 {
@@ -166,20 +159,16 @@
                                         <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
                                         <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
                                             <li>
-                                                @using (Html.BeginForm("ClearCache", "Common", new { area = "Admin" }))
-                                                {
-                                                    @Html.AntiForgeryToken()
-                                                    @Html.Hidden("returnurl", rawUrl)
+                                                <form asp-controller="Common" asp-action="ClearCache" asp-area="Admin">
+                                                    <input name="returnurl" type="hidden" value="@rawUrl">
                                                     <button type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.ClearCache")</span>
                                                     </button>
-                                                }
+                                                </form>
                                             </li>
                                             <li>
-                                                @using (Html.BeginForm("RestartApplication", "Common", new { area = "Admin" }))
-                                                {
-                                                    @Html.AntiForgeryToken()
-                                                    @Html.Hidden("returnurl", rawUrl)
+                                                <form asp-controller="Common" asp-action="RestartApplication" asp-area="Admin">
+                                                    <input name="returnurl" type="hidden" value="@rawUrl">
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
@@ -190,7 +179,7 @@
                                                             });
                                                         });
                                                     </script>
-                                                }
+                                                </form>
                                             </li>
                                         </ul>
                                     </li>
