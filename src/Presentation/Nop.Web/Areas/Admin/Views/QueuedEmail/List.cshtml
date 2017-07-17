@@ -227,8 +227,8 @@
                                     return false;
                                 });
 
-                                $("".concat("#@Html.FieldIdFor(model => model.SearchFromEmail),",
-                                    "#@Html.FieldIdFor(model => model.SearchToEmail)")).keydown(function(event) {
+                                $("".concat("#@Html.IdFor(model => model.SearchFromEmail),",
+                                    "#@Html.IdFor(model => model.SearchToEmail)")).keydown(function(event) {
                                         if (event.keyCode === 13) {
                                             $("#search-queuedemails").click();
                                             return false;
@@ -236,7 +236,7 @@
                                     });
                             
 
-                                $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                                $("#@Html.IdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
                                     if (event.keyCode === 13) {
                                         $("#go-to-email-by-number").click();
                                         return false;
@@ -302,12 +302,12 @@
 
                             function additionalData() {
                                 var data = {
-                                    SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
-                                    SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
-                                    SearchFromEmail: $('#@Html.FieldIdFor(model => model.SearchFromEmail)').val(),
-                                    SearchToEmail: $('#@Html.FieldIdFor(model => model.SearchToEmail)').val(),
-                                    SearchLoadNotSent: $('#@Html.FieldIdFor(model => model.SearchLoadNotSent)').is(':checked'),
-                                    SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
+                                    SearchStartDate: $('#@Html.IdFor(model => model.SearchStartDate)').val(),
+                                    SearchEndDate: $('#@Html.IdFor(model => model.SearchEndDate)').val(),
+                                    SearchFromEmail: $('#@Html.IdFor(model => model.SearchFromEmail)').val(),
+                                    SearchToEmail: $('#@Html.IdFor(model => model.SearchToEmail)').val(),
+                                    SearchLoadNotSent: $('#@Html.IdFor(model => model.SearchLoadNotSent)').is(':checked'),
+                                    SearchMaxSentTries: $('#@Html.IdFor(model => model.SearchMaxSentTries)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

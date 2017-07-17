@@ -32,7 +32,7 @@
     //tags
     $(document).ready(function() {
         @Html.Raw(blogTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.Tags)").tagEditor({
+        $("#@Html.IdFor(model => model.Tags)").tagEditor({
             autocomplete: {
                 delay: 0,
                 position: { collision: 'flip' },
@@ -131,7 +131,7 @@
                     @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
                     <script>
                             $(document).ready(function() {
-                                var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                 storesIdsInput.setOptions({
                                     autoClose: false
                                 });

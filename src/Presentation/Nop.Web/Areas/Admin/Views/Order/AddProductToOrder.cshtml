@@ -151,7 +151,7 @@
                             });
                         });
 
-                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function(event) {
+                        $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
                             if (event.keyCode == 13) {
                                 $("#search-products").click();
                                 return false;
@@ -160,7 +160,7 @@
 
                         function additionalData() {
                             var data = {
-                                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
                                 SearchCategoryId: $('#SearchCategoryId').val(),
                                 SearchManufacturerId: $('#SearchManufacturerId').val(),
                                 SearchProductTypeId: $('#SearchProductTypeId').val()

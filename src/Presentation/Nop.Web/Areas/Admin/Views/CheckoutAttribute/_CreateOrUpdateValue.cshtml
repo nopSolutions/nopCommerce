@@ -61,7 +61,7 @@
                                 <div id="color-picker"></div>
                                 <script type="text/javascript">
                                     $(document).ready(function(){
-                                        $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                        $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                                     });
                                 </script>
                                 @Html.ValidationMessageFor(model => model.ColorSquaresRgb)

@@ -6,7 +6,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
-            var customerRoleId = $("#@Html.FieldIdFor(model => model.CustomerRoleId)").val();
+            var customerRoleId = $("#@Html.IdFor(model => model.CustomerRoleId)").val();
             var discountId = @Model.DiscountId;
             var requirementId = @Model.RequirementId;
 

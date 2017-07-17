@@ -12,7 +12,7 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
+                $("#@Html.IdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
 
                 //load add requirement box
                 loadNewRequirementBox();
@@ -22,7 +22,7 @@
 
                 //adding requirement event
                 $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
-                    var parentId = $("#@Html.FieldIdFor(model => model.RequirementGroupId)").val();
+                    var parentId = $("#@Html.IdFor(model => model.RequirementGroupId)").val();
                     loadRequirements(newRequirementId, parentId);
                 });
             });
@@ -30,9 +30,9 @@
             //load HTML for adding requirement
             function loadNewRequirementBox() {
                 //load URL
-                var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
+                var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
                 if (ruleSystemName) {
-                    var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
+                    var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                     if (groupsElement.find('option').length > 1) {
                         $("#pnlGroup").show();
                     }
@@ -102,12 +102,12 @@
                         loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
 
                         //set available groups
-                        var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
+                        var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                         groupsElement.html('');
                         $.each(result.AvailableGroups, function (id, option) {
                             groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
                         });
-                        var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
+                        var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
                         if (ruleSystemName && groupsElement.find('option').length > 1) {
                             $("#pnlGroup").show();
                         }
@@ -146,7 +146,7 @@
             function addNewGroup() {
                 var postData = {
                     discountId: @Model.Id,
-                    name: $("#@Html.FieldIdFor(model => model.GroupName)").val(),
+                    name: $("#@Html.IdFor(model => model.GroupName)").val(),
                 };
 
                 addAntiForgeryToken(postData);

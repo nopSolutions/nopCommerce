@@ -97,7 +97,7 @@
                                     @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
                                     <script>
                                         $(document).ready(function() {
-                                            var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
                                                 autoClose: false
                                             });

@@ -107,15 +107,15 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
-                            $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+                            $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+                            $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
 
                             toggleSearchPagePageSize();
                             toggleProductSearchAutoComplete();
                         });
 
                         function toggleSearchPagePageSize() {
-                            if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
                                 $('#pnlSearchPageProductsPerPage').hide();
                                 $('#pnlSearchPagePageSizeOptions').show();
                             } else {
@@ -125,7 +125,7 @@
                         }
 
                         function toggleProductSearchAutoComplete() {
-                            if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
                                 $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
                                 $('#pnlShowProductImagesInSearchAutoComplete').show();
                             } else {
@@ -214,13 +214,13 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
+                            $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
 
                             toggleProductReviewsPageSizeOnAccountPage();
                         });
 
                         function toggleProductReviewsPageSizeOnAccountPage() {
-                            if ($('#@Html.FieldIdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
                                 $('#pnlProductReviewsPageSizeOnAccountPage').show();
                             } else {
                                 $('#pnlProductReviewsPageSizeOnAccountPage').hide();
@@ -328,12 +328,12 @@
                         </div>
                         <script type="text/javascript">
                             $(document).ready(function () {
-                                $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
+                                $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
                                 togglePageShareCode();
                             });
 
                             function togglePageShareCode() {
-                                if ($('#@Html.FieldIdFor(model => model.ShowShareButton)').is(':checked')) {
+                                if ($('#@Html.IdFor(model => model.ShowShareButton)').is(':checked')) {
                                     $('#pnlPageShareCode').show();
                                 } else {
                                     $('#pnlPageShareCode').hide();
@@ -379,12 +379,12 @@
                         </div>
                         <script type="text/javascript">
                             $(document).ready(function () {
-                                $("#@Html.FieldIdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
+                                $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
                                 toggleCompareProductsEnabled();
                             });
 
                             function toggleCompareProductsEnabled() {
-                                if ($('#@Html.FieldIdFor(model => model.CompareProductsEnabled)').is(':checked')) {
+                                if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
                                     $('#pnlIncludeShortDescriptionInCompareProducts').show();
                                     $('#IncludeFullDescriptionInCompareProducts').show();
                                 } else {
@@ -682,13 +682,13 @@
 
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
-                            $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
-                            $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
-                            $("#@Html.FieldIdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
-                            $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
-                            $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
-                            $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+                            $("#@Html.IdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+                            $("#@Html.IdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
+                            $("#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
+                            $("#@Html.IdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
+                            $("#@Html.IdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
+                            $("#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
+                            $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
 
                             toggleShowCategoryProductNumberIncludingSubcategories();
                             toggleEmailAFriend();
@@ -700,7 +700,7 @@
                         });
 
                         function toggleShowCategoryProductNumberIncludingSubcategories() {
-                            if ($('#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
                                 $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
                             } else {
                                 $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
@@ -708,7 +708,7 @@
                         }
 
                         function toggleEmailAFriend() {
-                            if ($('#@Html.FieldIdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
                                 $('#pnlAllowAnonymousUsersToEmailAFriend').show();
                             } else {
                                 $('#pnlAllowAnonymousUsersToEmailAFriend').hide();
@@ -716,7 +716,7 @@
                         }
 
                         function toggleRecentlyViewedProducts() {
-                            if ($('#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
                                 $('#pnlRecentlyViewedProductsNumber').show();
                             } else {
                                 $('#pnlRecentlyViewedProductsNumber').hide();
@@ -724,7 +724,7 @@
                         }
 
                         function toggleNewProducts() {
-                            if ($('#@Html.FieldIdFor(model => model.NewProductsEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
                                 $('#pnlNewProductsNumber').show();
                             } else {
                                 $('#pnlNewProductsNumber').hide();
@@ -732,7 +732,7 @@
                         }
 
                         function toggleBestsellersOnHomepage() {
-                            if ($('#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
                                 $('#pnlNumberOfBestsellersOnHomepage').show();
                             } else {
                                 $('#pnlNumberOfBestsellersOnHomepage').hide();
@@ -740,7 +740,7 @@
                         }
 
                         function toggleProductsAlsoPurchasedNumber() {
-                            if ($('#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
                                 $('#pnlProductsAlsoPurchasedNumber').show();
                             } else {
                                 $('#pnlProductsAlsoPurchasedNumber').hide();
@@ -748,7 +748,7 @@
                         }
 
                         function toggleProductsByTagPageSize() {
-                            if ($('#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
                                 $('#pnlProductsByTagPageSize').hide();
                                 $('#pnlProductsByTagPageSizeOptions').show();
                             } else {

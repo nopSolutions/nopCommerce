@@ -2,12 +2,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
+        $("#@Html.IdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
         toggleOnePageCheckoutEnabled();
     });
 
     function toggleOnePageCheckoutEnabled() {
-        if ($('#@Html.FieldIdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
             $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').show();
         }
         else {

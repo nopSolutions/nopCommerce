@@ -213,15 +213,15 @@
 
                         function additionalData() {
                             var data = {
-                                SearchSettingName: $('#@Html.FieldIdFor(model => model.SearchSettingName)').val(),
-                                SearchSettingValue: $('#@Html.FieldIdFor(model => model.SearchSettingValue)').val()
+                                SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
+                                SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;
                         }
 
-                        $("".concat("#@Html.FieldIdFor(model => model.SearchSettingName),",
-                            "#@Html.FieldIdFor(model => model.SearchSettingValue)")).keydown(function(event) {
+                        $("".concat("#@Html.IdFor(model => model.SearchSettingName),",
+                            "#@Html.IdFor(model => model.SearchSettingValue)")).keydown(function(event) {
                                 if (event.keyCode === 13) {
                                     $("#search-settings").click();
                                     return false;

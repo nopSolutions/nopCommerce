@@ -110,7 +110,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#addVendorNote').click(function() {
-            var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+            var vendorNoteMessage = $("#@Html.IdFor(model => model.AddVendorNoteMessage)").val();
             $('#addVendorNote').attr('disabled', true);
 
             var postData = {

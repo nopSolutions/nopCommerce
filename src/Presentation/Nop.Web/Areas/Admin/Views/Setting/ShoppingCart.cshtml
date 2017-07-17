@@ -232,15 +232,15 @@
 
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
-                            $("#@Html.FieldIdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
+                            $("#@Html.IdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
+                            $("#@Html.IdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
 
                             toggleMiniShoppingCartEnabled();
                             toggleEmailWishlistEnabled();
                         });
 
                         function toggleMiniShoppingCartEnabled() {
-                            if ($('#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
                                 $('#pnlMiniShoppingCartProductNumber').show();
                                 $('#pnlShowProductImagesInMiniShoppingCart').show();
                             } else {
@@ -250,7 +250,7 @@
                         }
 
                         function toggleEmailWishlistEnabled() {
-                            if ($('#@Html.FieldIdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
                                 $('#pnlAllowAnonymousUsersToEmailWishlist').show();
                             } else {
                                 $('#pnlAllowAnonymousUsersToEmailWishlist').hide();

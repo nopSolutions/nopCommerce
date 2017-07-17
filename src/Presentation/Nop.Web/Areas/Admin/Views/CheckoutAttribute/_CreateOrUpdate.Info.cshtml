@@ -5,15 +5,15 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
-        $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+        $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
+        $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
 
         toggleTax();
         toggleAttributeControlType();
     });
 
     function toggleTax() {
-        if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
         } else {
             $('#pnlTaxCategory').show();
@@ -21,7 +21,7 @@
     }
 
     function toggleAttributeControlType() {
-        var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+        var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
         //validation
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
             $('#pnlValidationMinLength').show();
@@ -225,7 +225,7 @@
                             @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
                             <script>
                                 $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                     storesIdsInput.setOptions({
                                         autoClose: false
                                     });

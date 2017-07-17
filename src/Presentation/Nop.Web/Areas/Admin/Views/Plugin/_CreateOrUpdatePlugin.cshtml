@@ -73,7 +73,7 @@
                             @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                             <script>
                                 $(document).ready(function() {
-                                    var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
                                         autoClose: false
                                     });
@@ -103,7 +103,7 @@
                                     @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
                                     <script>
                                         $(document).ready(function() {
-                                            var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
                                                 autoClose: false
                                             });

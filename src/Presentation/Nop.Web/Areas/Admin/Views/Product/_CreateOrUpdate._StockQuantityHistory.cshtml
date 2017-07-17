@@ -119,7 +119,7 @@
                 function additionalData() {
                     var data = {
                         productId: @Model.Id,
-                        warehouseId: $('#@Html.FieldIdFor(model => model.StockQuantityHistory.SearchWarehouseId)').val()
+                        warehouseId: $('#@Html.IdFor(model => model.StockQuantityHistory.SearchWarehouseId)').val()
                     };
                     addAntiForgeryToken(data);
                     return data;

@@ -4,9 +4,9 @@
 {
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+            $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
 
                 var postData = {
                     countryId: selectedItem,
@@ -168,7 +168,7 @@
                 </div>
                 <script>
                     $(document).ready(function() {
-                        var customerRolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         customerRolesIdsInput.setOptions({
                             customerRolesIdsInput: false
                         });

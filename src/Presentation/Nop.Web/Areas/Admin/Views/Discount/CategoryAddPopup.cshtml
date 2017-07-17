@@ -129,7 +129,7 @@
                                     return false;
                                 });
 
-                                $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function(event) {
+                                $("#@Html.IdFor(model => model.SearchCategoryName)").keydown(function(event) {
                                     if (event.keyCode == 13) {
                                         $("#search-categories").click();
                                         return false;
@@ -148,7 +148,7 @@
 
                             function additionalData() {
                                 var data = {
-                                    SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val()
+                                    SearchCategoryName: $('#@Html.IdFor(model => model.SearchCategoryName)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

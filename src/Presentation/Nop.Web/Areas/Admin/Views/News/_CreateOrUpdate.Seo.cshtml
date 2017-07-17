@@ -41,13 +41,13 @@
             </div>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                    $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
                         var parameters = {
                             entityId: '@Model.Id',
                             entityName: 'NewsItem',
                             seName: $(this).val()
                         };
-                        warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                        warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
                     });
                 });
             </script>

@@ -76,15 +76,15 @@
                     });
 
                     function preConfigureGoogleAnalytic() {
-                        $('#@Html.FieldIdFor(model => model.TrackingScript)').val('@googleAnalytics_trackingScript');
-                        $('#@Html.FieldIdFor(model => model.EcommerceScript)').val('@googleAnalytics_EcommerceScript');
-                        $('#@Html.FieldIdFor(model => model.EcommerceDetailScript)').val('@googleAnalytics_EcommerceDetailScript');
+                        $('#@Html.IdFor(model => model.TrackingScript)').val('@googleAnalytics_trackingScript');
+                        $('#@Html.IdFor(model => model.EcommerceScript)').val('@googleAnalytics_EcommerceScript');
+                        $('#@Html.IdFor(model => model.EcommerceDetailScript)').val('@googleAnalytics_EcommerceDetailScript');
                     }
 
                     function preConfigureUniversalAnalytic() {
-                        $('#@Html.FieldIdFor(model => model.TrackingScript)').val('@universalAnalytics_trackingScript');
-                        $('#@Html.FieldIdFor(model => model.EcommerceScript)').val('@universalAnalytics_EcommerceScript');
-                        $('#@Html.FieldIdFor(model => model.EcommerceDetailScript)').val('@universalAnalytics_EcommerceDetailScript');
+                        $('#@Html.IdFor(model => model.TrackingScript)').val('@universalAnalytics_trackingScript');
+                        $('#@Html.IdFor(model => model.EcommerceScript)').val('@universalAnalytics_EcommerceScript');
+                        $('#@Html.IdFor(model => model.EcommerceDetailScript)').val('@universalAnalytics_EcommerceDetailScript');
                     }
 
                 </script>

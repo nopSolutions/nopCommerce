@@ -190,7 +190,7 @@
                                         @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                                         <script>
                                             $(document).ready(function() {
-                                                var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
+                                                var rolesIdsInput = $('#@Html.IdFor(model => model.SearchCustomerRoleIds)').data("kendoMultiSelect");
                                                 rolesIdsInput.setOptions({
                                                     autoClose: false
                                                 });
@@ -366,14 +366,14 @@
                                     return false;
                                 });
 
-                                $("".concat("#@Html.FieldIdFor(model => model.SearchEmail),",
-                                    "#@Html.FieldIdFor(model => model.SearchUsername),",
-                                    "#@Html.FieldIdFor(model => model.SearchFirstName),",
-                                    "#@Html.FieldIdFor(model => model.SearchLastName),",
-                                    "#@Html.FieldIdFor(model => model.SearchCompany),",
-                                    "#@Html.FieldIdFor(model => model.SearchPhone),",
-                                    "#@Html.FieldIdFor(model => model.SearchZipPostalCode),",
-                                    "#@Html.FieldIdFor(model => model.SearchIpAddress)")).keydown(function(event) {
+                                $("".concat("#@Html.IdFor(model => model.SearchEmail),",
+                                    "#@Html.IdFor(model => model.SearchUsername),",
+                                    "#@Html.IdFor(model => model.SearchFirstName),",
+                                    "#@Html.IdFor(model => model.SearchLastName),",
+                                    "#@Html.IdFor(model => model.SearchCompany),",
+                                    "#@Html.IdFor(model => model.SearchPhone),",
+                                    "#@Html.IdFor(model => model.SearchZipPostalCode),",
+                                    "#@Html.IdFor(model => model.SearchIpAddress)")).keydown(function(event) {
                                         if (event.keyCode === 13) {
                                             $("#search-customers").click();
                                             return false;
@@ -425,17 +425,17 @@
 
                             function additionalData() {
                                 var data = {
-                                    SearchCustomerRoleIds: $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').val(),
-                                    SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
-                                    SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
-                                    SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
-                                    SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
-                                    SearchDayOfBirth: $('#@Html.FieldIdFor(model => model.SearchDayOfBirth)').val(),
-                                    SearchMonthOfBirth: $('#@Html.FieldIdFor(model => model.SearchMonthOfBirth)').val(),
-                                    SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
-                                    SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
-                                    SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val(),
-                                    SearchIpAddress: $('#@Html.FieldIdFor(model => model.SearchIpAddress)').val()
+                                    SearchCustomerRoleIds: $('#@Html.IdFor(model => model.SearchCustomerRoleIds)').val(),
+                                    SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val(),
+                                    SearchUsername: $('#@Html.IdFor(model => model.SearchUsername)').val(),
+                                    SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
+                                    SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
+                                    SearchDayOfBirth: $('#@Html.IdFor(model => model.SearchDayOfBirth)').val(),
+                                    SearchMonthOfBirth: $('#@Html.IdFor(model => model.SearchMonthOfBirth)').val(),
+                                    SearchCompany: $('#@Html.IdFor(model => model.SearchCompany)').val(),
+                                    SearchPhone: $('#@Html.IdFor(model => model.SearchPhone)').val(),
+                                    SearchZipPostalCode: $('#@Html.IdFor(model => model.SearchZipPostalCode)').val(),
+                                    SearchIpAddress: $('#@Html.IdFor(model => model.SearchIpAddress)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

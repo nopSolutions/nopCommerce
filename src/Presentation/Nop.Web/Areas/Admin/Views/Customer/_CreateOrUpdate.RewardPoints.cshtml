@@ -119,9 +119,9 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#addRewardPoints').click(function () {
-                    var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
-                    var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
-                    var rewardPointsStoreId = $("#@Html.FieldIdFor(model => model.AddRewardPointsStoreId)").val();
+                    var rewardPointsValue = $("#@Html.IdFor(model => model.AddRewardPointsValue)").val();
+                    var rewardPointsMessage = $("#@Html.IdFor(model => model.AddRewardPointsMessage)").val();
+                    var rewardPointsStoreId = $("#@Html.IdFor(model => model.AddRewardPointsStoreId)").val();
                     $('#addRewardPoints').attr('disabled', true);
 
                     var postData = {

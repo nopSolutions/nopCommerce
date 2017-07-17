@@ -157,7 +157,7 @@
                             });
                         });
 
-                        $("#@Html.FieldIdFor(model => model.CouponCode)").keydown(function (event) {
+                        $("#@Html.IdFor(model => model.CouponCode)").keydown(function (event) {
                             if (event.keyCode == 13) {
                                 $("#search-giftcards").click();
                                 return false;
@@ -166,9 +166,9 @@
 
                         function additionalData() {
                             var data = {
-                                ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
-                                CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val(),
-                                RecipientName: $('#@Html.FieldIdFor(model => model.RecipientName)').val()
+                                ActivatedId: $('#@Html.IdFor(model => model.ActivatedId)').val(),
+                                CouponCode: $('#@Html.IdFor(model => model.CouponCode)').val(),
+                                RecipientName: $('#@Html.IdFor(model => model.RecipientName)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

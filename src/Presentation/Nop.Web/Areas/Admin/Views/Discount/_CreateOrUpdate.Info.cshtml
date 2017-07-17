@@ -4,10 +4,10 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
-        $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
-        $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
-        $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+        $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
+        $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+        $("#@Html.IdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+        $("#@Html.IdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
 
         toggleDiscountType();
         toggleLimitation();
@@ -16,7 +16,7 @@
     });
 
     function toggleDiscountType() {
-        var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
+        var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
         if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
             $('[data-tab-name=tab-applied-to-categories]').show();
         $('[data-tab-name=tab-applied-to-manufacturers]').hide();
@@ -45,7 +45,7 @@
     }
 
     function toggleLimitation() {
-        var selectedDiscountLimitationId = $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").val();
+        var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
         if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
             //'N Times Only' or 'N Times Per Customer'
             $('#pnlLimitationTimes').show();
@@ -55,7 +55,7 @@
     }
 
     function toggleUsePercentage() {
-        if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
             $('#pnlDiscountPercentage').show();
             $('#pnlDiscountAmount').hide();
             $('#pnlMaximumDiscountAmount').show();
@@ -67,7 +67,7 @@
     }
 
     function toggleRequiresCouponCode() {
-        if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
             $('#pnlCouponCode').show();
         } else {
             $('#pnlCouponCode').hide();

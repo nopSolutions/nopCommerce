@@ -202,17 +202,17 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
-                            $("#@Html.FieldIdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickUpInStore);
-                            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+                            $("#@Html.IdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
+                            $("#@Html.IdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickUpInStore);
+                            $("#@Html.IdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
                             toggleAllowPickUpInStore();
                             toggleFreeShippingOverX();
                         });
 
                         function toggleAllowPickUpInStore() {
-                            if ($('#@Html.FieldIdFor(model => model.AllowPickUpInStore)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.AllowPickUpInStore)').is(':checked')) {
                                 $('#pnlDisplayPickupPointsOnMap').show();
-                                if ($('#@Html.FieldIdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
+                                if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
                                     $('#pnlGoogleMapsApiKey').show();
                                 } else {
                                     $('#pnlGoogleMapsApiKey').hide();
@@ -224,7 +224,7 @@
                         }
 
                         function toggleFreeShippingOverX() {
-                            if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
                                 $('#pnlValueOfX').show();
                                 $('#pnlValueOfXincltax').show();
                             } else {

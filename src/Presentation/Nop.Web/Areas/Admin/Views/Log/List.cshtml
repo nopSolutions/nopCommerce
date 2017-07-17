@@ -171,7 +171,7 @@
                                     return false;
                                 });
 
-                                $("#@Html.FieldIdFor(model => model.Message)").keydown(function(event) {
+                                $("#@Html.IdFor(model => model.Message)").keydown(function(event) {
                                     if (event.keyCode == 13) {
                                         $("#search-log").click();
                                         return false;
@@ -237,10 +237,10 @@
 
                             function additionalData() {
                                 var data = {
-                                    CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                                    CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                                    Message: $('#@Html.FieldIdFor(model => model.Message)').val(),
-                                    LogLevelId: $('#@Html.FieldIdFor(model => model.LogLevelId)').val()
+                                    CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                    CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                    Message: $('#@Html.IdFor(model => model.Message)').val(),
+                                    LogLevelId: $('#@Html.IdFor(model => model.LogLevelId)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

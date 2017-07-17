@@ -40,33 +40,33 @@
         function toggleCC(editmode) {
             if (editmode) {
                 $('#lblCardType').hide();
-                $('#@Html.FieldIdFor(model => model.CardType)').show();
+                $('#@Html.IdFor(model => model.CardType)').show();
                 $('#lblCardName').hide();
-                $('#@Html.FieldIdFor(model => model.CardName)').show();
+                $('#@Html.IdFor(model => model.CardName)').show();
                 $('#lblCardNumber').hide();
-                $('#@Html.FieldIdFor(model => model.CardNumber)').show();
+                $('#@Html.IdFor(model => model.CardNumber)').show();
                 $('#lblCardCvv2').hide();
-                $('#@Html.FieldIdFor(model => model.CardCvv2)').show();
+                $('#@Html.IdFor(model => model.CardCvv2)').show();
                 $('#lblCardExpirationMonth').hide();
-                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').show();
+                $('#@Html.IdFor(model => model.CardExpirationMonth)').show();
                 $('#lblCardExpirationYear').hide();
-                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').show();
+                $('#@Html.IdFor(model => model.CardExpirationYear)').show();
                 $('#btnEditCC').hide();
                 $('#btnSaveCC').show();
                 $('#btnCancelCC').show();
             } else {
                 $('#lblCardType').show();
-                $('#@Html.FieldIdFor(model => model.CardType)').hide();
+                $('#@Html.IdFor(model => model.CardType)').hide();
                 $('#lblCardName').show();
-                $('#@Html.FieldIdFor(model => model.CardName)').hide();
+                $('#@Html.IdFor(model => model.CardName)').hide();
                 $('#lblCardNumber').show();
-                $('#@Html.FieldIdFor(model => model.CardNumber)').hide();
+                $('#@Html.IdFor(model => model.CardNumber)').hide();
                 $('#lblCardCvv2').show();
-                $('#@Html.FieldIdFor(model => model.CardCvv2)').hide();
+                $('#@Html.IdFor(model => model.CardCvv2)').hide();
                 $('#lblCardExpirationMonth').show();
-                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').hide();
+                $('#@Html.IdFor(model => model.CardExpirationMonth)').hide();
                 $('#lblCardExpirationYear').show();
-                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').hide();
+                $('#@Html.IdFor(model => model.CardExpirationYear)').hide();
                 $('#btnEditCC').show();
                 $('#btnSaveCC').hide();
                 $('#btnCancelCC').hide();

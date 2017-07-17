@@ -6,7 +6,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#saveHasOneProductrequirement@(Model.RequirementId)').click(function () {
-            var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
+            var productIds = $("#@Html.IdFor(model => model.Products)").val();
             var discountId = @Model.DiscountId;
             var requirementId = @Model.RequirementId;
 
@@ -50,7 +50,7 @@
                     <input type="submit"
                            id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                            value="@T("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew")"
-                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 850, true); return false;"
+                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.IdFor(model => model.Products)}))', 800, 850, true); return false;"
                            class="btn btn-info"/>
                     <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
                 </div>
@@ -88,7 +88,7 @@
         loadDiscountRequirementProductFriendlyNames@(Model.RequirementId)();
     });
     $(document).ready(function() {
-        $('#@Html.FieldIdFor(model => model.Products)')
+        $('#@Html.IdFor(model => model.Products)')
             .data('timeout', null)
             .keyup(function() {
                 clearTimeout($(this).data('timeout'));
@@ -98,7 +98,7 @@
     });
 
     function loadDiscountRequirementProductFriendlyNames@(Model.RequirementId)() {
-        var inputValue = $('#@Html.FieldIdFor(model => model.Products)').val();
+        var inputValue = $('#@Html.IdFor(model => model.Products)').val();
         if (inputValue) {
             //load friendly names
             $('#discountrequirement-products-check-progress@(Model.RequirementId)').show();

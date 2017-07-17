@@ -5,12 +5,12 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
+        $("#@Html.IdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
         toggleGiftCardType();
     });
 
     function toggleGiftCardType() {
-        var selectedGiftCardTypeId = $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").val();
+        var selectedGiftCardTypeId = $("#@Html.IdFor(model => model.GiftCardTypeId)").val();
         if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
             $('#pnlRecipientEmail').show();
             $('#pnlSenderEmail').show();
@@ -97,7 +97,7 @@
                                             url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
                                             data: postData,
                                             success: function(data) {
-                                                $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                                                $('#@Html.IdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
                                             },
                                             error: function(xhr, ajaxOptions, thrownError) {
                                                 alert('Failed to generate code.');

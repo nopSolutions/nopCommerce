@@ -5,12 +5,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.SslEnabled)").click(toggleSslEnabled);
+        $("#@Html.IdFor(model => model.SslEnabled)").click(toggleSslEnabled);
         toggleSslEnabled();
     });
 
     function toggleSslEnabled() {
-        if ($('#@Html.FieldIdFor(model => model.SslEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.SslEnabled)').is(':checked')) {
             $('#pnlSecureUrl').show();
         } else {
             $('#pnlSecureUrl').hide();

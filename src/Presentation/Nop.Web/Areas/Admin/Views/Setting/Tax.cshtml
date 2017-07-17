@@ -166,12 +166,12 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+                            $("#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
                             toggleTaxDisplayType();
                         });
 
                         function toggleTaxDisplayType() {
-                            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
                                 $('#pnlTaxDisplayType').hide();
                             } else {
                                 $('#pnlTaxDisplayType').show();
@@ -218,13 +218,13 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+                            $("#@Html.IdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
 
                             toggleShipping();
                         });
 
                         function toggleShipping() {
-                            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.ShippingIsTaxable)').is(':checked')) {
                                 $('#pnlShippingPriceIncludesTax').show();
                                 $('#pnlShippingTaxClass').show();
                             } else {
@@ -272,14 +272,14 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+                            $("#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
 
                             togglePayment();
                         });
 
 
                         function togglePayment() {
-                            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
                                 $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
                                 $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
                             } else {
@@ -356,14 +356,14 @@
                         </div>
                         <script type="text/javascript">
                             $(document).ready(function () {
-                                $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+                                $("#@Html.IdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
 
                                 toggleEUVAT();
                             });
 
 
                             function toggleEUVAT() {
-                                if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
+                                if ($('#@Html.IdFor(model => model.EuVatEnabled)').is(':checked')) {
                                     $('#pnlEuVatShopCountry').show();
                                     $('#pnlEuVatAllowVATExemption').show();
                                     $('#pnlEuVatAssumeValid').show();

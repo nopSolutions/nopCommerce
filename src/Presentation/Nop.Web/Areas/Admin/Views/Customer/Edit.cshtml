@@ -121,12 +121,12 @@
 
 <script type="text/javascript">
     $('#sendemail-window').on('show.bs.modal', function (e) {
-        $("#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
+        $("#@Html.IdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
         sendImmediately();
     });
 
     function sendImmediately() {
-        if ($('#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
+        if ($('#@Html.IdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
             $('#pnl-send-date').hide();
         else
             $('#pnl-send-date').show();

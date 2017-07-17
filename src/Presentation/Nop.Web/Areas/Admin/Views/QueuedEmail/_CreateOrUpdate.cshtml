@@ -198,12 +198,12 @@
 
                 <script type="text/javascript">
                     $(document).ready(function () {
-                        $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+                        $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
                         sendImmediately();
                     });
 
                     function sendImmediately() {
-                        if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                        if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
                             $('#pnl-send-date').hide();
                         else
                             $('#pnl-send-date').show();

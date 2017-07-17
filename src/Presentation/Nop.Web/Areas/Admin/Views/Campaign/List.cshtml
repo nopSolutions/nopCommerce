@@ -131,7 +131,7 @@
 
                         function additionalData() {
                             var data = {
-                                StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val()
+                                StoreId: $('#@Html.IdFor(model => model.StoreId)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

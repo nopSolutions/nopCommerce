@@ -175,7 +175,7 @@
                 <div class="panel-body">
                     <script type="text/javascript">
                         $(document).ready(function() {
-                            $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
+                            $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                                 var selectedAttributeId = $(this).val();
                                 $.ajax({
                                     cache: false,
@@ -183,7 +183,7 @@
                                     url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
                                     data: { "attributeId": selectedAttributeId },
                                     success: function(data) {
-                                        var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)");
+                                        var ddlSpecOptions = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)");
                                         ddlSpecOptions.html('');
                                         $.each(data, function(id, option) {
                                             ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
@@ -198,12 +198,12 @@
 
                         $(document).ready(function() {
                             $('#addProductSpec').click(function() {
-                                var attributeTypeId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
-                                var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
-                                var customValue = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
-                                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
-                                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
-                                var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
+                                var attributeTypeId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
+                                var specificationAttributeOptionId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
+                                var customValue = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
+                                var allowFiltering = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
+                                var showOnProductPage = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
+                                var displayOrder = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
 
                                 if (specificationAttributeOptionId === null) {
                                     //some validation
@@ -249,12 +249,12 @@
 
 
                         $(document).ready(function() {
-                            $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
+                            $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
                             toggleAttributeType();
                         });
 
                         function toggleAttributeType() {
-                            var selectedTypeId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
+                            var selectedTypeId = $("#@Html.IdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
                             if (selectedTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
                                 $('#pnlSpecificationAttributeOptionId').show();
                             $('#pnlCustomValue').hide();

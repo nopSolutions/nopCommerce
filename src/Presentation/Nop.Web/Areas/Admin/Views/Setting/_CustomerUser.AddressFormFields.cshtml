@@ -2,21 +2,21 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.IdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
 
         toggleAddressCountryFormField();
         toggleAddressRequiredFormField();
     });
 
     function toggleAddressCountryFormField() {
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
             $('#pnlAddressStateProvinceEnabled').show();
         }
         else {
@@ -25,49 +25,49 @@
     }
 
     function toggleAddressRequiredFormField() {
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
             $('#pnlAddressCompanyRequired').show();
         }
         else {
             $('#pnlAddressCompanyRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
             $('#pnlAddressStreetAddressRequired').show();
         }
         else {
             $('#pnlAddressStreetAddressRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
             $('#pnlAddressStreetAddress2Required').show();
         }
         else {
             $('#pnlAddressStreetAddress2Required').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
             $('#pnlAddressZipPostalCodeRequired').show();
         }
         else {
             $('#pnlAddressZipPostalCodeRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
             $('#pnlAddressCityRequired').show();
         }
         else {
             $('#pnlAddressCityRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
             $('#pnlAddressPhoneRequired').show();
         }
         else {
             $('#pnlAddressPhoneRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
             $('#pnlAddressFaxRequired').show();
         }
         else {

@@ -184,10 +184,10 @@
 
                         function additionalData() {
                             var data = {
-                                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                                CustomNumber: $('#@Html.FieldIdFor(model => model.CustomNumber)').val(),
-                                ReturnRequestStatusId: $('#@Html.FieldIdFor(model => model.ReturnRequestStatusId)')
+                                StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                CustomNumber: $('#@Html.IdFor(model => model.CustomNumber)').val(),
+                                ReturnRequestStatusId: $('#@Html.IdFor(model => model.ReturnRequestStatusId)')
                                     .val()
                             };
                             addAntiForgeryToken(data);

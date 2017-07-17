@@ -2,19 +2,19 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
-        $("#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
+        $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.CityEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
+        $("#@Html.IdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
 
         toggleCustomerCountryFormField();
         toggleCustomerStateProvinceFormField();
@@ -24,7 +24,7 @@
     });
 
     function toggleCustomerCountryFormField() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
             $('#pnlCustomerCountryRequired').show();
             $('#pnlCustomerStateProvinceEnabled').show();
             toggleCustomerStateProvinceFormField();
@@ -36,8 +36,8 @@
     }
 
     function toggleCustomerStateProvinceFormField() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
-            $('#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
+            $('#@Html.IdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
             $('#pnlCustomerStateProvinceRequired').show();
         } else {
             $('#pnlCustomerStateProvinceRequired').hide();
@@ -45,56 +45,56 @@
     }
 
     function toggleCustomerRequiredFormField() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
             $('#pnlCustomerDateOfBirthRequired').show();
         } else {
             $('#pnlCustomerDateOfBirthRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
-            $('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
+            $('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
             $('#pnlDateOfBirthMinimumAge').show();
         } else {
             $('#pnlDateOfBirthMinimumAge').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
             $('#pnlCustomerCompanyRequired').show();
         } else {
             $('#pnlCustomerCompanyRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
             $('#pnlCustomerStreetAddressRequired').show();
         } else {
             $('#pnlCustomerStreetAddressRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
             $('#pnlCustomerStreetAddress2Required').show();
         } else {
             $('#pnlCustomerStreetAddress2Required').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
             $('#pnlCustomerZipPostalCodeRequired').show();
         } else {
             $('#pnlCustomerZipPostalCodeRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
             $('#pnlCustomerCityRequired').show();
         } else {
             $('#pnlCustomerCityRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
             $('#pnlCustomerPhoneRequired').show();
         } else {
             $('#pnlCustomerPhoneRequired').hide();
         }
 
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
             $('#pnlCustomerFaxRequired').show();
         } else {
             $('#pnlCustomerFaxRequired').hide();
@@ -102,7 +102,7 @@
     }
 
     function toggleNewsletterEnabledField() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
             $('#pnlCustomerNewsletterTickedByDefault').show();
         } else {
             $('#pnlCustomerNewsletterTickedByDefault').hide();
@@ -110,7 +110,7 @@
     }
 
     function toggleHideNewsletterBlock() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
             $('#pnlNewsletterBlockAllowToUnsubscribe').hide();
         }
         else {

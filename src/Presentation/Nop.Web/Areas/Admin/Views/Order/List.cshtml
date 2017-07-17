@@ -132,7 +132,7 @@
                                     minLength: 3,
                                     source: '@(Url.Action("ProductSearchAutoComplete"))',
                                     select: function(event, ui) {
-                                        $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
+                                        $('#@Html.IdFor(model => model.ProductId)').val(ui.item.productid);
                                         $('#search-product-friendly-name').text(ui.item.label);
 
                                         $('#search-product-clear').show();
@@ -142,7 +142,7 @@
 
                                 //remove button
                                 $('#search-product-clear').click(function() {
-                                    $('#@Html.FieldIdFor(model => model.ProductId)').val('0');
+                                    $('#@Html.IdFor(model => model.ProductId)').val('0');
                                     $('#search-product-friendly-name').text('');
                                     $('#search-product-clear').hide();
                                     return false;
@@ -417,16 +417,16 @@
             return false;
         });
 
-        $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
-            "#@Html.FieldIdFor(model => model.BillingLastName),",
-            "#@Html.FieldIdFor(model => model.OrderNotes)")).keydown(function (event) {
+        $("".concat("#@Html.IdFor(model => model.BillingEmail),",
+            "#@Html.IdFor(model => model.BillingLastName),",
+            "#@Html.IdFor(model => model.OrderNotes)")).keydown(function (event) {
             if (event.keyCode === 13) {
                 $("#search-orders").click();
                 return false;
             }
         });
 
-        $("#@Html.FieldIdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
+        $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
             if (event.keyCode === 13) {
                 $("#go-to-order-by-number").click();
                 return false;
@@ -462,20 +462,20 @@
 
     function additionalData() {
         var data = {
-            StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-            EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-            OrderStatusIds: $('#@Html.FieldIdFor(model => model.OrderStatusIds)').val(),
-            PaymentStatusIds: $('#@Html.FieldIdFor(model => model.PaymentStatusIds)').val(),
-            ShippingStatusIds: $('#@Html.FieldIdFor(model => model.ShippingStatusIds)').val(),
-            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-            VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
-            WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
-            BillingEmail: $('#@Html.FieldIdFor(model => model.BillingEmail)').val(),
-            BillingLastName: $('#@Html.FieldIdFor(model => model.BillingLastName)').val(),
-            BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
-            PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
-            ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
-            OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val()
+            StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+            EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+            OrderStatusIds: $('#@Html.IdFor(model => model.OrderStatusIds)').val(),
+            PaymentStatusIds: $('#@Html.IdFor(model => model.PaymentStatusIds)').val(),
+            ShippingStatusIds: $('#@Html.IdFor(model => model.ShippingStatusIds)').val(),
+            StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+            VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
+            WarehouseId: $('#@Html.IdFor(model => model.WarehouseId)').val(),
+            BillingEmail: $('#@Html.IdFor(model => model.BillingEmail)').val(),
+            BillingLastName: $('#@Html.IdFor(model => model.BillingLastName)').val(),
+            BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+            PaymentMethodSystemName: $('#@Html.IdFor(model => model.PaymentMethodSystemName)').val(),
+            ProductId: $('#@Html.IdFor(model => model.ProductId)').val(),
+            OrderNotes: $('#@Html.IdFor(model => model.OrderNotes)').val()
         };
         addAntiForgeryToken(data);
         return data;

@@ -153,7 +153,7 @@
             return false;
         });
 
-        $("#@Html.FieldIdFor(model => model.SeName)").keydown(function(event) {
+        $("#@Html.IdFor(model => model.SeName)").keydown(function(event) {
             if (event.keyCode == 13) {
                 $("#search-senames").click();
                 return false;
@@ -219,7 +219,7 @@
 
     function additionalData() {
         var data = {
-            SeName: $('#@Html.FieldIdFor(model => model.SeName)').val()
+            SeName: $('#@Html.IdFor(model => model.SeName)').val()
         };
         addAntiForgeryToken(data);
         return data;

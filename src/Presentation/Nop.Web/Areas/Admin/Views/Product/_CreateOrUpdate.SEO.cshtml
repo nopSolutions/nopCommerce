@@ -43,13 +43,13 @@
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function () {
-                        $('#@Html.FieldIdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
+                        $('#@Html.IdFor(model => model.Locales[item].SeName)').on('input propertychange paste', function () {
                             var parameters = {
                                 entityId: '@Model.Id',
                                 entityName: 'Product',
                                 seName: $(this).val()
                             };
-                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.Locales[item].SeName)', parameters);
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.Locales[item].SeName)', parameters);
                         });
                     });
                 </script>
@@ -97,13 +97,13 @@
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function () {
-                        $('#@Html.FieldIdFor(model => model.SeName)').on('input propertychange paste', function () {
+                        $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
                             var parameters = {
                                 entityId: '@Model.Id',
                                 entityName: 'Product',
                                 seName: $(this).val()
                             };
-                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.FieldNameFor(model => model.SeName)', parameters);
+                            warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
                         });
                     });
                 </script>

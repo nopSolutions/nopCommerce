@@ -133,8 +133,8 @@
 
                         function additionalData() {
                             var data = {
-                                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                                StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
                                 OrderStatusId: $('#OrderStatusId').val(),
                                 PaymentStatusId: $('#PaymentStatusId').val()
                             };

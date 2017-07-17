@@ -5,13 +5,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+        $("#@Html.IdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
 
         toggleAttributeControlType();
     });
 
     function toggleAttributeControlType() {
-        var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+        var selectedAttributeControlTypeId = $("#@Html.IdFor(model => model.AttributeControlTypeId)").val();
            
         //values
         if (selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString()) ||

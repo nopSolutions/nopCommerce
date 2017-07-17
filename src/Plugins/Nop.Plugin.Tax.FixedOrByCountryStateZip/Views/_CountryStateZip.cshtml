@@ -153,10 +153,10 @@
                 <script type="text/javascript">
                     $(document)
                         .ready(function() {
-                            $("#@Html.FieldIdFor(model => model.AddCountryId)")
+                            $("#@Html.IdFor(model => model.AddCountryId)")
                                 .change(function() {
                                     var selectedItem = $(this).val();
-                                    var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)");
+                                    var ddlStates = $("#@Html.IdFor(model => model.AddStateProvinceId)");
                                     $.ajax({
                                         cache: false,
                                         type: "GET",

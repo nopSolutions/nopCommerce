@@ -133,7 +133,7 @@
                                     return false;
                                 });
 
-                                $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function(event) {
+                                $("#@Html.IdFor(model => model.SearchManufacturerName)").keydown(function(event) {
                                     if (event.keyCode == 13) {
                                         $("#search-manufacturers").click();
                                         return false;
@@ -152,7 +152,7 @@
 
                             function additionalData() {
                                 var data = {
-                                    SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
+                                    SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

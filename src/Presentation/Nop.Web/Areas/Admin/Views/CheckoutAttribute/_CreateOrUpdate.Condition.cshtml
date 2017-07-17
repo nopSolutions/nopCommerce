@@ -7,12 +7,12 @@
         {
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $("#@Html.FieldIdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
+                    $("#@Html.IdFor(model => model.ConditionModel.EnableCondition)").click(toggleEnableCondition);
                     toggleEnableCondition();
                 });
 
                 function toggleEnableCondition() {
-                    if ($('#@Html.FieldIdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
+                    if ($('#@Html.IdFor(model => model.ConditionModel.EnableCondition)').is(':checked')) {
                         $('#pnlAttributes').show();
                     } else {
                         $('#pnlAttributes').hide();
@@ -44,13 +44,13 @@
 
                                 <script type="text/javascript">
                                     $(document).ready(function() {
-                                        $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").change(toggleConditionAttributes);
+                                        $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").change(toggleConditionAttributes);
 
                                         toggleConditionAttributes();
                                     });
 
                                     function toggleConditionAttributes() {
-                                        var selectedCheckoutAttributeId = $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").val();
+                                        var selectedCheckoutAttributeId = $("#@Html.IdFor(model => model.ConditionModel.SelectedAttributeId)").val();
                                         $('[id^="pnl_attribute_values_"]').hide();
                                         $('#pnl_attribute_values_' + selectedCheckoutAttributeId).show();
                                     }

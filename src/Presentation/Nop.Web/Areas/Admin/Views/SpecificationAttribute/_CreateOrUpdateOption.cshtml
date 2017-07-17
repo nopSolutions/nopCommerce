@@ -28,12 +28,12 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
+        $("#@Html.IdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
         toggleEnableColorSquaresRgb();
     });
 
     function toggleEnableColorSquaresRgb() {
-        if ($('#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
             $('#pnlColorSquaresRgb').show();
         } else {
             $('#pnlColorSquaresRgb').hide();
@@ -90,7 +90,7 @@
                             <div id="color-picker"></div>
                             <script type="text/javascript">
                                 $(document).ready(function(){
-                                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                    $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                                 });
                             </script>
                             <span asp-validation-for="ColorSquaresRgb"></span>

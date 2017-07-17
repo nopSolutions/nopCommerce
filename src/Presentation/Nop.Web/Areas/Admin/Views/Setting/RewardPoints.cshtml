@@ -165,12 +165,12 @@
 
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.ActivatePointsImmediately)").click(activatePointsImmediately);
+                            $("#@Html.IdFor(model => model.ActivatePointsImmediately)").click(activatePointsImmediately);
                             activatePointsImmediately();
                         });
 
                         function activatePointsImmediately() {
-                            if ($('#@Html.FieldIdFor(model => model.ActivatePointsImmediately)').is(':checked'))
+                            if ($('#@Html.IdFor(model => model.ActivatePointsImmediately)').is(':checked'))
                                 $('#pnl-activating-delay').hide();
                             else
                                 $('#pnl-activating-delay').show();

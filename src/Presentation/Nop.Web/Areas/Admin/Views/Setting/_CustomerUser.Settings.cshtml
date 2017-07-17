@@ -257,15 +257,15 @@
         </div>
         <script type="text/javascript">
         $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
+            $("#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
+            $("#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
 
             toggleAvatar();
             toggleUsername();
         });
 
         function toggleAvatar() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
                 $('#pnlDefaultAvatarEnabled').show();
             } else {
                 $('#pnlDefaultAvatarEnabled').hide();
@@ -273,7 +273,7 @@
         }
 
         function toggleUsername() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
                 $('#pnlAllowUsersToChangeUsernames').show();
                 $('#pnlCheckUsernameAvailability').show();
             } else {

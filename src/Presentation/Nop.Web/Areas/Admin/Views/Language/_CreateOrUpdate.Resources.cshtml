@@ -169,15 +169,15 @@
 
                     function additionalData() {
                         var data = {
-                            SearchResourceName: $('#@Html.FieldIdFor(model => model.Search.SearchResourceName)').val(),
-                            SearchResourceValue: $('#@Html.FieldIdFor(model => model.Search.SearchResourceValue)').val()
+                            SearchResourceName: $('#@Html.IdFor(model => model.Search.SearchResourceName)').val(),
+                            SearchResourceValue: $('#@Html.IdFor(model => model.Search.SearchResourceValue)').val()
                         };
                         addAntiForgeryToken(data);
                         return data;
                     }
 
-                    $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
-                        "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
+                    $("".concat("#@Html.IdFor(model => model.Search.SearchResourceName),",
+                        "#@Html.IdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
                         if (event.keyCode === 13) {
                             $("#search-resources").click();
                             return false;

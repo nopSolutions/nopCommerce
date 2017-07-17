@@ -73,8 +73,8 @@
                                     <text>
                                     <script type="text/javascript">
                                           $(document).ready(function() {
-                                              $('#@Html.FieldIdFor(model => model.Locales[item].Body)')
-                                                  .height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                              $('#@Html.IdFor(model => model.Locales[item].Body)')
+                                                  .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
                                           });
                                     </script>
                                     </text>
@@ -146,8 +146,8 @@
                                     <text>
                                     <script type="text/javascript">
                               $(document).ready(function() {
-                                  $('#@Html.FieldIdFor(model => model.Body)')
-                                      .height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                  $('#@Html.IdFor(model => model.Body)')
+                                      .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
                               });
                                     </script>
                                     </text>
@@ -257,7 +257,7 @@
                                })
                                     <script>
                     $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)')
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                             .data("kendoMultiSelect");
                         storesIdsInput.setOptions({
                             autoClose: false
@@ -288,14 +288,14 @@
         </div>
         <script type="text/javascript">
     $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
-        $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+        $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+        $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
         toggleHasAttachedDownload();
         sendImmediately();
     });
 
     function toggleHasAttachedDownload() {
-        if ($('#@Html.FieldIdFor(model => model.HasAttachedDownload)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.HasAttachedDownload)').is(':checked')) {
             $('#pnlAttachedDownload').show();
         } else {
             $('#pnlAttachedDownload').hide();
@@ -303,7 +303,7 @@
     }
 
     function sendImmediately() {
-        if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+        if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
             $('#pnl-send-after').hide();
         else
             $('#pnl-send-after').show();

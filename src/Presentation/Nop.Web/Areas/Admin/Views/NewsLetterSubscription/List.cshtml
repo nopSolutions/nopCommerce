@@ -222,7 +222,7 @@
                                     return false;
                                 });
 
-                                $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
+                                $("#@Html.IdFor(model => model.SearchEmail)").keydown(function(event) {
                                     if (event.keyCode == 13) {
                                         $("#search-subscriptions").click();
                                         return false;
@@ -232,12 +232,12 @@
 
                             function additionalData() {
                                 var data = {
-                                    StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                                    EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                                    ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
-                                    StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-                                    CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
-                                    SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
+                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                    ActiveId: $('#@Html.IdFor(model => model.ActiveId)').val(),
+                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                    CustomerRoleId: $('#@Html.IdFor(model => model.CustomerRoleId)').val(),
+                                    SearchEmail: $('#@Html.IdFor(model => model.SearchEmail)').val()
                                 };
                                 addAntiForgeryToken(data);
                                 return data;

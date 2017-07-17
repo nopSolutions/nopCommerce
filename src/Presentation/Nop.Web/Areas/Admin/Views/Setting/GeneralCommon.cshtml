@@ -25,14 +25,14 @@
     <script>
         $(document).ready(function () {
             bindBootstrapTabSelectEvent('generalsettings-edit');
-            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
-            $("#@Html.FieldIdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
+            $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
+            $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleSitemapSettings();
             toggleLoadAllLocaleRecordsOnStartup();
         });
 
         function toggleSitemapSettings() {
-            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
                 $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts").show();
             }
             else {
@@ -42,9 +42,9 @@
 
         function toggleLoadAllLocaleRecordsOnStartup() {
             warningValidation('@Url.Action("RedisCacheHighTrafficWarning", "Setting")',
-                '@Html.FieldNameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
+                '@Html.NameFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)',
                 {
-                    loadAllLocaleRecordsOnStartup: $('#@Html.FieldIdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
+                    loadAllLocaleRecordsOnStartup: $('#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)').is(':checked')
                 });
         }
     </script>
@@ -73,7 +73,7 @@
                                         <div class="checkbox">
                                             <label>
                                                 <span>
-                                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
+                                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
                                                            @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>    }>
                                                     @theme.ThemeTitle
                                                 </span>
@@ -665,12 +665,12 @@
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
+                            $("#@Html.IdFor(model => model.CaptchaSettings.Enabled)").click(toggleReCaptcha);
                             toggleReCaptcha();
                         });
 
                         function toggleReCaptcha() {
-                            if ($('#@Html.FieldIdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
+                            if ($('#@Html.IdFor(model => model.CaptchaSettings.Enabled)').is(':checked')) {
                                 $('#ssCaptchaShowOnLoginPagepnl').show();
                                 $('#ssCaptchaShowOnRegistrationPagepnl').show();
                                 $('#ssCaptchaShowOnContactUsPagepnl').show();

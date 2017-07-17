@@ -25,12 +25,12 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
+        $("#@Html.IdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
         toggleLoadOnlyWithOrders();
     });
 
     function toggleLoadOnlyWithOrders() {
-        if ($('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
             $('#pnlOrdersCreatedFromUtc').show();
             $('#pnlOrdersCreatedToUtc').show();
         } else {
@@ -194,9 +194,9 @@
                         });
 
 
-                        $("".concat("#@Html.FieldIdFor(model => model.SearchFirstName),",
-                            "#@Html.FieldIdFor(model => model.SearchLastName),",
-                            "#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)")).keydown(function(event) {
+                        $("".concat("#@Html.IdFor(model => model.SearchFirstName),",
+                            "#@Html.IdFor(model => model.SearchLastName),",
+                            "#@Html.IdFor(model => model.SearchFriendlyUrlName)")).keydown(function(event) {
                                 if (event.keyCode === 13) {
                                     $("#search-affiliates").click();
                                     return false;
@@ -205,12 +205,12 @@
 
                         function additionalData() {
                             var data = {
-                                SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
-                                SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
-                                SearchFriendlyUrlName: $('#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)').val(),
-                                LoadOnlyWithOrders: $('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
-                                OrdersCreatedFromUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedFromUtc)').val(),
-                                OrdersCreatedToUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedToUtc)').val()
+                                SearchFirstName: $('#@Html.IdFor(model => model.SearchFirstName)').val(),
+                                SearchLastName: $('#@Html.IdFor(model => model.SearchLastName)').val(),
+                                SearchFriendlyUrlName: $('#@Html.IdFor(model => model.SearchFriendlyUrlName)').val(),
+                                LoadOnlyWithOrders: $('#@Html.IdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
+                                OrdersCreatedFromUtc: $('#@Html.IdFor(model => model.OrdersCreatedFromUtc)').val(),
+                                OrdersCreatedToUtc: $('#@Html.IdFor(model => model.OrdersCreatedToUtc)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

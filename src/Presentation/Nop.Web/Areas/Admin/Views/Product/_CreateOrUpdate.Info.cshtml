@@ -22,27 +22,27 @@
     $(document).ready(function() {
         @if (!Model.IsLoggedInAsVendor)
         {
-            <text>$("#@Html.FieldIdFor(model => model.ShowOnHomePage)").click(toggleShowOnHomePage);</text>
+            <text>$("#@Html.IdFor(model => model.ShowOnHomePage)").click(toggleShowOnHomePage);</text>
         }
-        $("#@Html.FieldIdFor(model => model.ProductTypeId)").change(toggleProductType);
-        $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
-        $("#@Html.FieldIdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
-        $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
-        $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
-        $("#@Html.FieldIdFor(model => model.BasepriceEnabled)").click(toggleBasepriceEnabled);
-        $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
-        $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
-        $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
-        $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
-        $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
-        $("#@Html.FieldIdFor(model => model.IsRental)").click(toggleRental);
-        $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
-        $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
-        $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
-        $("#@Html.FieldIdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
-        $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
-        $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
-        $("#@Html.FieldIdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
+        $("#@Html.IdFor(model => model.ProductTypeId)").change(toggleProductType);
+        $("#@Html.IdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
+        $("#@Html.IdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
+        $("#@Html.IdFor(model => model.IsGiftCard)").click(toggleGiftCard);
+        $("#@Html.IdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
+        $("#@Html.IdFor(model => model.BasepriceEnabled)").click(toggleBasepriceEnabled);
+        $("#@Html.IdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.IsRecurring)").click(toggleRecurring);
+        $("#@Html.IdFor(model => model.IsRental)").click(toggleRental);
+        $("#@Html.IdFor(model => model.IsShipEnabled)").click(toggleShipping);
+        $("#@Html.IdFor(model => model.IsTaxExempt)").click(toggleTax);
+        $("#@Html.IdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
+        $("#@Html.IdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
+        $("#@Html.IdFor(model => model.BackorderModeId)").change(toggleManageStock);
+        $("#@Html.IdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
+        $("#@Html.IdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
 
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -64,7 +64,7 @@
     });
 
     function toggleShowOnHomePage() {
-        if ($('#@Html.FieldIdFor(model => model.ShowOnHomePage)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.ShowOnHomePage)').is(':checked')) {
             $('#pnlDisplayOrder').show();
         } else {
             $('#pnlDisplayOrder').hide();
@@ -76,7 +76,7 @@
         var groupedProductId = "@((int)ProductType.GroupedProduct)";
 
 
-        var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
+        var selectedProductTypeId = $("#@Html.IdFor(model => model.ProductTypeId)").val();
         if (!selectedProductTypeId || selectedProductTypeId == simpleProductId) {
             $('#group-prices').show();
             $('#tier-prices').show();
@@ -111,20 +111,20 @@
                 <text>productTypeSupportedValues['@(kvp.Key)']['@(item.Value)'] = '@Html.Raw(JavaScriptEncoder.Default.Encode((item.Text)))';</text>
             }
         }
-        var productTemplateDropddown = $("#@Html.FieldIdFor(model => model.ProductTemplateId)");
+        var productTemplateDropddown = $("#@Html.IdFor(model => model.ProductTemplateId)");
         var productTemplateSelectedValue = productTemplateDropddown.val();
         productTemplateDropddown.empty();
         for (var name in productTypeSupportedValues[selectedProductTypeId]) {
             productTemplateDropddown.append($("<option></option>").attr("value", name).text(productTypeSupportedValues[selectedProductTypeId][name]));
         }
         //previously selected value
-        $('#@Html.FieldIdFor(model => model.ProductTemplateId) option').each(function(){
+        $('#@Html.IdFor(model => model.ProductTemplateId) option').each(function(){
             if (this.value == productTemplateSelectedValue) {
                 productTemplateDropddown.val(productTemplateSelectedValue);
             }
         });
 
-        if ($('#@Html.FieldIdFor(model => model.ProductTemplateId) option').length > 1) {
+        if ($('#@Html.IdFor(model => model.ProductTemplateId) option').length > 1) {
             $('#pnlProductTemplateId').show();
         } else {
             $('#pnlProductTemplateId').hide();
@@ -132,7 +132,7 @@
     }
 
     function togglePreOrder() {
-        if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AvailableForPreOrder)').is(':checked')) {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
         } else {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
@@ -140,7 +140,7 @@
     }
 
     function toggleRequireOtherProducts() {
-        if ($('#@Html.FieldIdFor(model => model.RequireOtherProducts)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.RequireOtherProducts)').is(':checked')) {
             $('#pnlRequiredProductIds').show();
             $('#pnlAutomaticallyAddRequiredProducts').show();
         } else {
@@ -150,7 +150,7 @@
     }
 
     function toggleGiftCard() {
-        if ($('#@Html.FieldIdFor(model => model.IsGiftCard)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsGiftCard)').is(':checked')) {
             $('#pnlGiftCardType').show();
             $('#pnlOverriddenGiftCardAmount').show();
         } else {
@@ -160,7 +160,7 @@
     }
 
     function toggleCustomerEntersPrice() {
-        if ($('#@Html.FieldIdFor(model => model.CustomerEntersPrice)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.CustomerEntersPrice)').is(':checked')) {
             $('#pnlMinimumCustomerEnteredPrice').show();
             $('#pnlMaximumCustomerEnteredPrice').show();
         } else {
@@ -170,7 +170,7 @@
     }
 
     function toggleBasepriceEnabled() {
-        if ($('#@Html.FieldIdFor(model => model.BasepriceEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.BasepriceEnabled)').is(':checked')) {
             $('#pnlBasepriceAmount').show();
             $('#pnlBasepriceUnit').show();
             $('#pnlBasepriceBaseAmount').show();
@@ -184,10 +184,10 @@
     }
 
     function toggleDownloadableProduct() {
-        if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsDownload)').is(':checked')) {
             $('#pnlDownloadFile').show();
             $('#pnlUnlimitedDownloads').show();
-            if ($('#@Html.FieldIdFor(model => model.UnlimitedDownloads)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.UnlimitedDownloads)').is(':checked')) {
                 $('#pnlMaxNumberOfDownloads').hide();
             } else {
                 $('#pnlMaxNumberOfDownloads').show();
@@ -196,7 +196,7 @@
             $('#pnlDownloadActivationType').show();
 
             $('#pnlHasUserAgreement').show();
-            if ($('#@Html.FieldIdFor(model => model.HasUserAgreement)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.HasUserAgreement)').is(':checked')) {
                 $('#pnlUserAgreementText').show();
             } else {
                 $('#pnlUserAgreementText').hide();
@@ -204,7 +204,7 @@
 
             $('#pnlHasSampleDownload').show();
 
-            if ($('#@Html.FieldIdFor(model => model.HasSampleDownload)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.HasSampleDownload)').is(':checked')) {
                 $('#pnlSampleDownloadFile').show();
             } else {
                 $('#pnlSampleDownloadFile').hide();
@@ -223,7 +223,7 @@
     }
 
     function toggleShipping() {
-        if ($('#@Html.FieldIdFor(model => model.IsShipEnabled)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsShipEnabled)').is(':checked')) {
             $('#pnlFreeShipping').show();
             $('#pnlShipSeparately').show();
             $('#pnlAdditionalShippingCharge').show();
@@ -245,7 +245,7 @@
     }
 
     function toggleRecurring() {
-        if ($('#@Html.FieldIdFor(model => model.IsRecurring)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsRecurring)').is(':checked')) {
             $('#pnlCycleLength').show();
             $('#pnlCyclePeriod').show();
             $('#pnlTotalCycles').show();
@@ -257,7 +257,7 @@
     }
 
     function toggleRental() {
-        if ($('#@Html.FieldIdFor(model => model.IsRental)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsRental)').is(':checked')) {
             $('#pnlRentalPriceLength').show();
             $('#pnlRentalPricePeriod').show();
         } else {
@@ -267,7 +267,7 @@
     }
 
     function toggleTax() {
-        if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
         } else {
             $('#pnlTaxCategory').show();
@@ -281,7 +281,7 @@
         var allowQtyBelow0Id = "@((int)BackorderMode.AllowQtyBelow0)";
         var allowQtyBelow0AndNotifyCustomerId = "@((int)BackorderMode.AllowQtyBelow0AndNotifyCustomer)";
 
-        var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
+        var selectedManageInventoryMethodId = $("#@Html.IdFor(model => model.ManageInventoryMethodId)").val();
         if (selectedManageInventoryMethodId == dontManageStockId) {
             $('#pnlProductAvailabilityRange').hide();
             $('#pnlUseMultipleWarehouses').hide();
@@ -301,7 +301,7 @@
         } else if (selectedManageInventoryMethodId == manageStockId) {
             $('#pnlUseMultipleWarehouses').show();
 
-            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
                 $('#pnlWarehouse').hide();
                 $('#pnlMultipleWarehouses').show();
                 $('#pnlStockQuantity').hide();
@@ -312,7 +312,7 @@
             }
 
             $('#pnlDisplayStockAvailability').show();
-            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.DisplayStockAvailability)').is(':checked')) {
                 $('#pnlDisplayStockQuantity').show();
             } else {
                 $('#pnlDisplayStockQuantity').hide();
@@ -323,7 +323,7 @@
             $('#pnlNotifyForQuantityBelow').show();
             $('#pnlBackorders').show();
 
-            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+            var selectedBackorderModeId = $("#@Html.IdFor(model => model.BackorderModeId)").val();
             if (selectedBackorderModeId == noBackordersId) {
                 //no backorders
                 $('#pnlAllowBackInStockSubscriptions').show();
@@ -350,7 +350,7 @@
             $('#pnlStockQuantity').hide();
             $('#pnlDisplayStockAvailability').show();
 
-            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+            if ($('#@Html.IdFor(model => model.DisplayStockAvailability)').is(':checked')) {
                 $('#pnlDisplayStockQuantity').show();
             } else {
                 $('#pnlDisplayStockQuantity').hide();
@@ -367,7 +367,7 @@
     }
 
     function toggleMarkAsNew() {
-        if ($('#@Html.FieldIdFor(model => model.MarkAsNew)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.MarkAsNew)').is(':checked')) {
             $('#pnlMarkAsNewStartDateTimeUtc').show();
             $('#pnlMarkAsNewEndDateTimeUtc').show();
         } else {
@@ -398,7 +398,7 @@
     //tags
     $(document).ready(function() {
         @Html.Raw(productTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.ProductTags)").tagEditor({
+        $("#@Html.IdFor(model => model.ProductTags)").tagEditor({
             autocomplete: {
                 delay: 0,
                 position: { collision: 'flip' },
@@ -415,7 +415,7 @@
     });
 
     $(document).ready(function() {
-        $('#@Html.FieldIdFor(model => model.RequiredProductIds)')
+        $('#@Html.IdFor(model => model.RequiredProductIds)')
             .data('timeout', null)
             .keyup(function() {
                 clearTimeout($(this).data('timeout'));
@@ -425,7 +425,7 @@
     });
 
     function loadRequiredProductFriendlyNames() {
-        var inputValue = $('#@Html.FieldIdFor(model => model.RequiredProductIds)').val();
+        var inputValue = $('#@Html.IdFor(model => model.RequiredProductIds)').val();
         if (inputValue) {
             //load friendly names
             $('#required-products-check-progress').show();
@@ -1094,7 +1094,7 @@
                             @Html.EditorFor(model => model.SelectedDiscountIds, new { SelectList = Model.AvailableDiscounts })
                             <script>
                                 $(document).ready(function() {
-                                    var discountsIdsInput = $('#@Html.FieldIdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
+                                    var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
                                     discountsIdsInput.setOptions({
                                         autoClose: false
                                     });
@@ -1772,7 +1772,7 @@
                             @Html.EditorFor(model => model.SelectedCategoryIds, new { SelectList = Model.AvailableCategories })
                             <script>
                                 $(document).ready(function() {
-                                    var categoryIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
+                                    var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
                                         autoClose: false
                                     });
@@ -1800,7 +1800,7 @@
                             @Html.EditorFor(model => model.SelectedManufacturerIds, new { SelectList = Model.AvailableManufacturers })
                             <script>
                                 $(document).ready(function() {
-                                    var manufacturersIdsInput = $('#@Html.FieldIdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
+                                    var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
                                     manufacturersIdsInput.setOptions({
                                         autoClose: false
                                     });
@@ -1828,7 +1828,7 @@
                             @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
                             <script>
                                 $(document).ready(function() {
-                                    var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                    var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                     storesIdsInput.setOptions({
                                         autoClose: false
                                     });
@@ -1872,7 +1872,7 @@
                             @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                             <script>
                                 $(document).ready(function() {
-                                    var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
                                         autoClose: false
                                     });

@@ -8,14 +8,14 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 
-		$("#@Html.FieldIdFor(model => model.EnableIpn)").click(toggleEnableIpn);
-        $("#@Html.FieldIdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
+		$("#@Html.IdFor(model => model.EnableIpn)").click(toggleEnableIpn);
+        $("#@Html.IdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
 	    toggleEnableIpn();
 	    togglePassProductNamesAndTotals();
 	});
 
 	function toggleEnableIpn() {
-	    if ($('#@Html.FieldIdFor(model => model.EnableIpn)').is(':checked')) {
+	    if ($('#@Html.IdFor(model => model.EnableIpn)').is(':checked')) {
 			$('#pnlIpnUrl').show();
 		}
 		else {
@@ -24,8 +24,8 @@
 	}
 
     function togglePassProductNamesAndTotals() {
-        warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.FieldNameFor(model => model.PassProductNamesAndTotals)',
-            { passProductNamesAndTotals: $('#@Html.FieldIdFor(model => model.PassProductNamesAndTotals)').is(':checked') });
+        warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.NameFor(model => model.PassProductNamesAndTotals)',
+            { passProductNamesAndTotals: $('#@Html.IdFor(model => model.PassProductNamesAndTotals)').is(':checked') });
     }
 </script>
 

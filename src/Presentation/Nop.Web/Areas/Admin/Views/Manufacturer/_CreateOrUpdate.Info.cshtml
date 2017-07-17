@@ -2,12 +2,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
         togglePageSize();
     });
 
     function togglePageSize() {
-        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
             $('#pnlPageSize').hide();
             $('#pnlPageSizeOptions').show();
         } else {
@@ -126,7 +126,7 @@
                     @Html.EditorFor(model => model.SelectedDiscountIds, new { SelectList = Model.AvailableDiscounts })
                     <script>
             $(document).ready(function() {
-                var discountsIdsInput = $('#@Html.FieldIdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
+                var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
                 discountsIdsInput.setOptions({
                     autoClose: false
                 });
@@ -156,7 +156,7 @@
                             @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                             <script>
                     $(document).ready(function() {
-                        var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         rolesIdsInput.setOptions({
                             autoClose: false
                         });
@@ -191,7 +191,7 @@
                             @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
                             <script>
                     $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                         storesIdsInput.setOptions({
                             autoClose: false
                         });

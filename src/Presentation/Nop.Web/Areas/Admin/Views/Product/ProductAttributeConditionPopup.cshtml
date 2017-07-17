@@ -42,12 +42,12 @@
             <div class="form-horizontal">
                 <script type="text/javascript">
                     $(document).ready(function() {
-                        $("#@Html.FieldIdFor(model => model.EnableCondition)").click(toggleEnableCondition);
+                        $("#@Html.IdFor(model => model.EnableCondition)").click(toggleEnableCondition);
                         toggleEnableCondition();
                     });
 
                     function toggleEnableCondition() {
-                        if ($('#@Html.FieldIdFor(model => model.EnableCondition)').is(':checked')) {
+                        if ($('#@Html.IdFor(model => model.EnableCondition)').is(':checked')) {
                             $('#pnlAttributes').show();
                         } else {
                             $('#pnlAttributes').hide();
@@ -89,7 +89,7 @@
 
                                             <script type="text/javascript">
                                                 $(document).ready(function() {
-                                                    $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)")
+                                                    $("#@Html.IdFor(model => model.SelectedProductAttributeId)")
                                                         .change(toggleProductAttributes);
 
                                                     toggleProductAttributes();
@@ -97,7 +97,7 @@
 
                                                 function toggleProductAttributes() {
                                                     var selectedProductAttributeId =
-                                                        $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)")
+                                                        $("#@Html.IdFor(model => model.SelectedProductAttributeId)")
                                                             .val();
                                                     $('[id^="pnl_attribute_values_"]').hide();
                                                     $('#pnl_attribute_values_' + selectedProductAttributeId).show();

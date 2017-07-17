@@ -161,8 +161,8 @@
                             });
                         });
 
-                        $("".concat("#@Html.FieldIdFor(model => model.SearchDiscountName),",
-                            "#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)")).keydown(function(event) {
+                        $("".concat("#@Html.IdFor(model => model.SearchDiscountName),",
+                            "#@Html.IdFor(model => model.SearchDiscountCouponCode)")).keydown(function(event) {
                                 if (event.keyCode === 13) {
                                     $("#search-discounts").click();
                                     return false;
@@ -171,9 +171,9 @@
 
                         function additionalData() {
                             var data = {
-                                SearchDiscountTypeId: $('#@Html.FieldIdFor(model => model.SearchDiscountTypeId)').val(),
-                                SearchDiscountCouponCode: $('#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)').val(),
-                                SearchDiscountName: $('#@Html.FieldIdFor(model => model.SearchDiscountName)').val()
+                                SearchDiscountTypeId: $('#@Html.IdFor(model => model.SearchDiscountTypeId)').val(),
+                                SearchDiscountCouponCode: $('#@Html.IdFor(model => model.SearchDiscountCouponCode)').val(),
+                                SearchDiscountName: $('#@Html.IdFor(model => model.SearchDiscountName)').val()
                             };
                             addAntiForgeryToken(data);
                             return data;

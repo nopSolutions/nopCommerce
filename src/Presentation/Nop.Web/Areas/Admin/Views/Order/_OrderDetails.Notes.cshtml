@@ -99,12 +99,12 @@
     <div class="panel panel-default">
         <script type="text/javascript">
             $(document).ready(function () {
-                $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
+                $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
                 toggleAddOrderNoteHasDownload();
             });
 
             function toggleAddOrderNoteHasDownload() {
-                if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
                     $('#pnlAddOrderNoteDownloadId').show();
                 }
                 else {
@@ -165,12 +165,12 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
-            var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
+            var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
             var orderNoteDownloadId = 0;
-            if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
-                orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
+            if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                orderNoteDownloadId = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)").val();
             }
-            var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+            var orderNoteDisplayToCustomer = $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
             $('#addOrderNote').attr('disabled', true);
 
             var postData = {

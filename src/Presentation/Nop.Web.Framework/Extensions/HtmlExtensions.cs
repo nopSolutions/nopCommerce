@@ -177,7 +177,7 @@ namespace Nop.Web.Framework.Extensions
             int activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression));
+            dataInputIds.Add(helper.IdFor(forInputExpression));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
         public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2>(this IHtmlHelper<TModel> helper,
@@ -187,8 +187,8 @@ namespace Nop.Web.Framework.Extensions
             int activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression2));
+            dataInputIds.Add(helper.IdFor(forInputExpression1));
+            dataInputIds.Add(helper.IdFor(forInputExpression2));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
         public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2, TValue3>(this IHtmlHelper<TModel> helper,
@@ -199,9 +199,9 @@ namespace Nop.Web.Framework.Extensions
             int activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression2));
-            dataInputIds.Add(helper.FieldIdFor(forInputExpression3));
+            dataInputIds.Add(helper.IdFor(forInputExpression1));
+            dataInputIds.Add(helper.IdFor(forInputExpression2));
+            dataInputIds.Add(helper.IdFor(forInputExpression3));
             return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
         }
         public static IHtmlContent OverrideStoreCheckboxFor<TModel>(this IHtmlHelper<TModel> helper,
@@ -552,16 +552,6 @@ namespace Nop.Web.Framework.Extensions
                 innerText += " " + additionalText;
             tagBuilder.InnerHtml.AppendHtml(innerText);
             return new HtmlString(tagBuilder.RenderHtmlContent());
-        }
-        public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            //TODO remove this method and use in cshtml files
-            return html.NameFor(expression);
-        }
-        public static string FieldIdFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            //TODO remove this method and use in cshtml files
-            return html.IdFor(expression);
         }
 
         /// <summary>

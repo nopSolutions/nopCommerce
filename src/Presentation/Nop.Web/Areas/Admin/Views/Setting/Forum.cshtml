@@ -30,14 +30,14 @@
 
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $("#@Html.FieldIdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
-                    $("#@Html.FieldIdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);
+                    $("#@Html.IdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
+                    $("#@Html.IdFor(model => model.AllowPrivateMessages)").click(toggleAllowPrivateMessages);
                     toggleAllowVoting();
                     toggleAllowPrivateMessages();
                 });
 
                 function toggleAllowVoting() {
-                    if ($('#@Html.FieldIdFor(model => model.AllowPostVoting)').is(':checked')) {
+                    if ($('#@Html.IdFor(model => model.AllowPostVoting)').is(':checked')) {
                         $('#pnlMaxVotes').show();
                     }
                     else {
@@ -46,7 +46,7 @@
                 }
 
                 function toggleAllowPrivateMessages() {
-                    if ($('#@Html.FieldIdFor(model => model.AllowPrivateMessages)').is(':checked')) {
+                    if ($('#@Html.IdFor(model => model.AllowPrivateMessages)').is(':checked')) {
                         $('#pnlShowAlertForPM').show();
                         $('#pnlNotifyAboutPrivateMessages').show();
                     }

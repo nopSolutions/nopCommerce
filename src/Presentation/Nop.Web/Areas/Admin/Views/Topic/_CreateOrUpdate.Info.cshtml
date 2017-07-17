@@ -149,7 +149,7 @@
                             <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                             <script>
                     $(document).ready(function() {
-                        var rolesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         rolesIdsInput.setOptions({
                             autoClose: false
                         });
@@ -184,7 +184,7 @@
                             <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                             <script>
                     $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                         storesIdsInput.setOptions({
                             autoClose: false
                         });
@@ -242,12 +242,12 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
+        $("#@Html.IdFor(model => model.IsPasswordProtected)").click(togglePassword);
         togglePassword();
     });
 
     function togglePassword() {
-        if ($('#@Html.FieldIdFor(model => model.IsPasswordProtected)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.IsPasswordProtected)').is(':checked')) {
             $('#pnlPasswordEnabled').show();
         } else {
             $('#pnlPasswordEnabled').hide();

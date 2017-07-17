@@ -91,7 +91,7 @@
                                             minLength: 3,
                                             source: '@(Url.Action("ProductSearchAutoComplete"))',
                                             select: function(event, ui) {
-                                                $('#@Html.FieldIdFor(model => model.SearchProductId)').val(ui.item.productid);
+                                                $('#@Html.IdFor(model => model.SearchProductId)').val(ui.item.productid);
                                                 $('#search-product-friendly-name').text(ui.item.label);
                                                 $('#search-product-clear').show();
                                                 return false;
@@ -107,7 +107,7 @@
                                     <script>
                                     //remove button
                                     $('#search-product-clear').click(function() {
-                                        $('#@Html.FieldIdFor(model => model.SearchProductId)').val('0');
+                                        $('#@Html.IdFor(model => model.SearchProductId)').val('0');
                                         $('#search-product-friendly-name').text('');
                                         $('#search-product-clear').hide();
                                         return false;
@@ -371,11 +371,11 @@
 
                         function additionalData() {
                             var data = {
-                                CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                                SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
-                                SearchStoreId: $('#@Html.FieldIdFor(model => model.SearchStoreId)').val(),
-                                SearchProductId: $('#@Html.FieldIdFor(model => model.SearchProductId)').val(),
+                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
+                                SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
                                 SearchApprovedId: $('#SearchApprovedId').val()
                             };
                             addAntiForgeryToken(data);
