@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Shipping" asp-action="CreateMethod" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Shipping.Methods.AddNew") 
@@ -27,4 +26,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateMethod", Model)
-}
+</form>

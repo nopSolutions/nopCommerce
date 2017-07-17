@@ -7,12 +7,11 @@
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Shipping" asp-action="EditMethod" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Shipping.Methods.EditMethodDetails") - @Model.Name 
+            @T("Admin.Configuration.Shipping.Methods.EditMethodDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.Methods.BackToList").Text, "Methods")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +30,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateMethod", Model)
-}
+</form>
 @Html.DeleteConfirmation("DeleteMethod", "method-delete")
