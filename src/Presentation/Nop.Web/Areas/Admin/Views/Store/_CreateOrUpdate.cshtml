@@ -1,7 +1,7 @@
 ﻿@model StoreModel
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script type="text/javascript">
     $(document).ready(function () {
