@@ -34,8 +34,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-            
-            var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
 
             //add memory cache
             services.AddMemoryCache();

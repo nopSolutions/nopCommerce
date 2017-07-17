@@ -114,6 +114,10 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
+            //we should always persist the data protection key list
+            if (key.Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase))
+                return;
+
             //remove item from caches
             _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);

@@ -18,6 +18,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.2" />
