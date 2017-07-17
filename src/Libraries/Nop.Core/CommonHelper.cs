@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -72,7 +73,7 @@ namespace Nop.Core
         public static string GenerateRandomDigitCode(int length)
         {
             var random = new Random();
-            string str = string.Empty;
+            string str = String.Empty;
             for (int i = 0; i < length; i++)
                 str = String.Concat(str, random.Next(10).ToString());
             return str;
@@ -84,7 +85,7 @@ namespace Nop.Core
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
         /// <returns>Result</returns>
-        public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
+        public static int GenerateRandomInteger(int min = 0, int max = Int32.MaxValue)
         {
             var randomNumberBuffer = new byte[10];
             new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
@@ -125,7 +126,7 @@ namespace Nop.Core
         /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
         public static string EnsureNumericOnly(string str)
         {
-            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(p => char.IsDigit(p)).ToArray());
+            return String.IsNullOrEmpty(str) ? String.Empty : new string(str.Where(p => Char.IsDigit(p)).ToArray());
         }
 
         /// <summary>
@@ -135,7 +136,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static string EnsureNotNull(string str)
         {
-            return str ?? string.Empty;
+            return str ?? String.Empty;
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace Nop.Core
         /// <returns>Boolean</returns>
         public static bool AreNullOrEmpty(params string[] stringsToValidate)
         {
-            return stringsToValidate.Any(p => string.IsNullOrEmpty(p));
+            return stringsToValidate.Any(p => String.IsNullOrEmpty(p));
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Nop.Core
                         _trustLevel = trustLevel;
                         break; //we've set the highest permission we can
                     }
-                    catch (System.Security.SecurityException)
+                    catch (SecurityException)
                     {
                         continue;
                     }
@@ -293,8 +294,8 @@ namespace Nop.Core
         /// <returns>Converted string</returns>
         public static string ConvertEnum(string str)
         {
-            if (string.IsNullOrEmpty(str)) return string.Empty;
-            string result = string.Empty;
+            if (String.IsNullOrEmpty(str)) return String.Empty;
+            string result = String.Empty;
             foreach (var c in str)
                 if (c.ToString() != c.ToString().ToLower())
                     result += " " + c.ToString();
@@ -342,7 +343,45 @@ namespace Nop.Core
         public static string MapPath(string path)
         {
             path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(BaseDirectory??string.Empty, path);
+            return Path.Combine(BaseDirectory??String.Empty, path);
+        }
+
+        /// <summary>
+        /// Get private fields property value
+        /// </summary>
+        /// <param name="target">Target object</param>
+        /// <param name="fieldName">Feild name</param>
+        /// <returns>Value</returns>
+        public static object GetPrivateFieldValue(object target, string fieldName)
+        {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target", "The assignment target cannot be null.");
+            }
+
+            if (String.IsNullOrEmpty(fieldName))
+            {
+                throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
+            }
+
+            Type t = target.GetType();
+            FieldInfo fi = null;
+
+            while (t != null)
+            {
+                fi = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+
+                if (fi != null) break;
+
+                t = t.BaseType;
+            }
+
+            if (fi == null)
+            {
+                throw new Exception(String.Format("Field '{0}' not found in type hierarchy.", fieldName));
+            }
+
+            return fi.GetValue(target);
         }
 
         #endregion
