@@ -37,7 +37,7 @@
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="@Url.Action("List", "Order")" class="small-box-footer">
+                <a asp-controller="Order" asp-action="List" class="small-box-footer">
                     @T("Admin.Dashboard.MoreInfo")
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -52,7 +52,7 @@
                 <div class="icon">
                     <i class="ion ion-refresh"></i>
                 </div>
-                <a href="@Url.Action("List", "ReturnRequest")" class="small-box-footer">
+                <a asp-controller="ReturnRequest" asp-action="List" class="small-box-footer">
                     @T("Admin.Dashboard.MoreInfo")
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -67,7 +67,7 @@
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="@Url.Action("List", "Customer")" class="small-box-footer">
+                <a asp-controller="Customer" asp-action="List" class="small-box-footer">
                     @T("Admin.Dashboard.MoreInfo")
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -82,7 +82,7 @@
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="@Url.Action("LowStockReport", "Product")" class="small-box-footer">
+                <a asp-controller="Product" asp-action="LowStockReport" class="small-box-footer">
                     @T("Admin.Dashboard.MoreInfo")
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
