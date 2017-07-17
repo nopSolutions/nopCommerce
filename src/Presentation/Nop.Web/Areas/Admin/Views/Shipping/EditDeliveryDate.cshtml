@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Delivery dates");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Shipping" asp-action="EditDeliveryDate" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails") - @Model.Name 
+            @T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.DeliveryDates.BackToList").Text, "DatesAndRanges")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)
-}
+</form>
 @Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")
