@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Shipping" asp-action="Restrictions" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Shipping.Restrictions")
@@ -29,7 +28,7 @@
                     <div class="panel-body" style="overflow-x: auto;">
                         <p>@T("Admin.Configuration.Shipping.Restrictions.Description")</p>
                         @if (Model.AvailableCountries.Count == 0)
-                        {       
+                        {
                             <text>No countries defined</text>
                         }
                         else if (Model.AvailableShippingMethods.Count == 0)
@@ -53,33 +52,33 @@
 
                             <table class="table table-hover table-bordered">
                                 <tbody>
-                                <tr>
-                                    <th scope="col">
-                                        <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
-                                    </th>
-                                    @foreach (var sm in Model.AvailableShippingMethods)
-                                    {
-                                        <th scope="col">
-                                            <strong>@sm.Name</strong>
-                                            <input type="checkbox" id="selectall-@(sm.Id)"/>
-                                        </th>
-                                    }
-                                </tr>
-                                @foreach (var c in Model.AvailableCountries)
-                                {
                                     <tr>
-                                        <td>
-                                            <span>@c.Name</span>
-                                        </td>
+                                        <th scope="col">
+                                            <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                        </th>
                                         @foreach (var sm in Model.AvailableShippingMethods)
                                         {
-                                            var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
-                                            <td>
-                                                <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null)/>
-                                            </td>
+                                            <th scope="col">
+                                                <strong>@sm.Name</strong>
+                                                <input type="checkbox" id="selectall-@(sm.Id)" />
+                                            </th>
                                         }
                                     </tr>
-                                }
+                                    @foreach (var c in Model.AvailableCountries)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span>@c.Name</span>
+                                            </td>
+                                            @foreach (var sm in Model.AvailableShippingMethods)
+                                            {
+                                                var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                                <td>
+                                                    <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         }
@@ -88,4 +87,4 @@
             </div>
         </div>
     </div>
-}
+</form>
