@@ -1,7 +1,7 @@
 ﻿@model WarehouseModel
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -10,23 +10,23 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Name)
+                            <nop-label asp-for="Name" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name, required: true)
-                            @Html.ValidationMessageFor(model => model.Name)
+                            <nop-editor asp-for="Name" asp-required="true" />
+                            <span asp-validation-for="Name"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AdminComment)
+                            <nop-label asp-for="AdminComment" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.AdminComment)
-                            @Html.ValidationMessageFor(model => model.AdminComment)
+                            <nop-textarea asp-for="AdminComment" />
+                            <span asp-validation-for="AdminComment"></span>
                         </div>
                     </div>
-                    @Html.EditorFor(x => x.Address, "Address")
+                    <nop-editor asp-for="Address" asp-template="Address" />
                 </div>
             </div>
         </div>

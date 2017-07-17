@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Warehouses");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Shipping" asp-action="EditWarehouse" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Shipping.Warehouses.EditWarehouseDetails") - @Model.Name 
+            @T("Admin.Configuration.Shipping.Warehouses.EditWarehouseDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.Warehouses.BackToList").Text, "Warehouses")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateWarehouse", Model)
-}
+</form>
 @Html.DeleteConfirmation("DeleteWarehouse", "warehouse-delete")
