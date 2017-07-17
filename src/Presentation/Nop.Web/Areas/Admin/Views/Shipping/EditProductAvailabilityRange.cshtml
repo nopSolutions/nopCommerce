@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("Dates and ranges");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Shipping" asp-action="EditProductAvailabilityRange" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Shipping.ProductAvailabilityRanges.EditProductAvailabilityRangeDetails") - @Model.Name 
@@ -31,5 +30,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)
-}
+</form>
 @Html.DeleteConfirmation("DeleteProductAvailabilityRange", "product-availability-range-delete")
