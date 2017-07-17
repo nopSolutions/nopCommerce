@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "specificationattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="SpecificationAttribute" asp-action="Edit" method="post" id="specificationattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails") - @Model.Name 
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Attributes.SpecificationAttributes.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("specificationattribute-delete")

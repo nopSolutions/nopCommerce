@@ -1,8 +1,8 @@
 ﻿@model SpecificationAttributeModel
 @inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script>
     $(document).ready(function () {
@@ -12,16 +12,16 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="specificationattribute-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.SpecificationAttributes.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-options", @T("Admin.Catalog.Attributes.SpecificationAttributes.Options"))
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-options", await Html.PartialAsync("_CreateOrUpdate.Options", Model))
-            </div>
-        </div>
+        <nop-tabs id="specificationattribute-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-options">@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-options">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 

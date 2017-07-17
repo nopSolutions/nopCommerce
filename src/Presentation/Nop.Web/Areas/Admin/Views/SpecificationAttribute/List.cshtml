@@ -10,13 +10,13 @@
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn bg-blue">
+        <a asp-action="Create" class="btn bg-blue">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>

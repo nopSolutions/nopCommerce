@@ -6,10 +6,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails").Text;
 }
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails")
@@ -21,4 +19,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateOption", Model)
-}
+</form>
