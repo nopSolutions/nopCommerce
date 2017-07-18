@@ -10,7 +10,7 @@
     Html.SetActiveMenuItemSystemName("Search engine friendly names");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.SeNames")
@@ -32,10 +32,10 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SeName)
+                                    <nop-label asp-for="SeName"/>
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SeName)
+                                    <nop-editor asp-for="SeName"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -226,7 +226,6 @@
     }
 
     function onDataBound(e) {
-
         $('#sename-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
             var currentId = $(this).val();
             var checked = jQuery.inArray(currentId, selectedIds);
