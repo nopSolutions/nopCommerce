@@ -17,9 +17,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Common" asp-action="Maintenance" method="post">
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
@@ -34,26 +32,26 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteGuests.StartDate)
+                                                <nop-label asp-for="DeleteGuests.StartDate" />
                                             </div>
                                             <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteGuests.StartDate)
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteGuests.EndDate)
-                                            </div>
-                                            <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteGuests.EndDate)
+                                                <nop-editor asp-for="DeleteGuests.StartDate" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                                <nop-label asp-for="DeleteGuests.EndDate" />
                                             </div>
                                             <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                                <nop-editor asp-for="DeleteGuests.EndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -86,10 +84,10 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteAbandonedCarts.OlderThan)
+                                                <nop-label asp-for="DeleteAbandonedCarts.OlderThan" />
                                             </div>
                                             <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteAbandonedCarts.OlderThan)
+                                                <nop-editor asp-for="DeleteAbandonedCarts.OlderThan" />
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -122,18 +120,18 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteExportedFiles.StartDate)
+                                                <nop-label asp-for="DeleteExportedFiles.StartDate" />
                                             </div>
                                             <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteExportedFiles.StartDate)
+                                                <nop-editor asp-for="DeleteExportedFiles.StartDate" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                @Html.NopLabelFor(model => model.DeleteExportedFiles.EndDate)
+                                                <nop-label asp-for="DeleteExportedFiles.EndDate" />
                                             </div>
                                             <div class="col-md-6">
-                                                @Html.NopEditorFor(model => model.DeleteExportedFiles.EndDate)
+                                                <nop-editor asp-for="DeleteExportedFiles.EndDate" />
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -272,4 +270,4 @@
             </div>
         </div>
     </div>
-}
+</form>
