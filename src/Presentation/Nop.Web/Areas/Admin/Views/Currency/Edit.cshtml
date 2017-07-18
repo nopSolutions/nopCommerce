@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Currencies");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Currency" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Currencies.EditCurrencyDetails") - @Model.Name 
+            @T("Admin.Configuration.Currencies.EditCurrencyDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Currencies.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("currency-delete")

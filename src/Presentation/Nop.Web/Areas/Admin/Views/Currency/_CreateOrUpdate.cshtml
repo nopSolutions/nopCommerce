@@ -2,8 +2,8 @@
 @using Nop.Services
 @model CurrencyModel
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -14,49 +14,49 @@
                           @<div>
                               <div class="form-group">
                                   <div class="col-md-3">
-                                      @Html.NopLabelFor(model => model.Locales[item].Name)
+                                      <nop-label asp-for="@Model.Locales[item].Name" />
                                   </div>
                                   <div class="col-md-9">
-                                      @Html.NopEditorFor(model => model.Locales[item].Name)
-                                      @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                                      <nop-editor asp-for="@Model.Locales[item].Name" />
+                                      <span asp-validation-for="@Model.Locales[item].Name"></span>
                                   </div>
                               </div>
-                              @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                               <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                           </div>
                           ,
                         @<div>
                               <div class="form-group">
                                   <div class="col-md-3">
-                                      @Html.NopLabelFor(model => model.Name)
+                                      <nop-label asp-for="Name" />
                                   </div>
                                   <div class="col-md-9">
-                                      @Html.NopEditorFor(model => model.Name, required: true)
-                                      @Html.ValidationMessageFor(model => model.Name)
+                                      <nop-editor asp-for="Name" asp-required="true" />
+                                      <span asp-validation-for="Name"></span>
                                   </div>
                               </div>
                           </div>
                           ))
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CurrencyCode)
+                            <nop-label asp-for="CurrencyCode"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CurrencyCode, required: true)
-                            @Html.ValidationMessageFor(model => model.CurrencyCode)
+                            <nop-editor asp-for="CurrencyCode" asp-required="true" />
+                            <span asp-validation-for="CurrencyCode"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Rate)
+                            <nop-label asp-for="Rate"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Rate)
-                            @Html.ValidationMessageFor(model => model.Rate)
+                            <nop-editor asp-for="Rate"/>
+                            <span asp-validation-for="Rate"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.DisplayLocale)
+                            <nop-label asp-for="DisplayLocale"/>
                         </div>
                         <div class="col-md-9">
                             @{
@@ -74,30 +74,31 @@
                                     Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
                                 });
                             }
-                            @Html.NopDropDownListFor(model => model.DisplayLocale, cultures)
-                            @Html.ValidationMessageFor(model => model.DisplayLocale)
+                            <nop-select asp-for="DisplayLocale" asp-items="@cultures"></nop-select>
+                            <span asp-validation-for="DisplayLocale"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomFormatting)
+                            <nop-label asp-for="CustomFormatting"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CustomFormatting)
-                            @Html.ValidationMessageFor(model => model.CustomFormatting)
+                            <nop-editor asp-for="CustomFormatting"/>
+                            <span asp-validation-for="CustomFormatting"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SelectedStoreIds)
+                            <nop-label asp-for="SelectedStoreIds"/>
                         </div>
                         <div class="col-md-9">
                             <div class="row">
                                 <div class="col-md-4">
-                                    @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"></nop-select>
                                     <script>
                                         $(document).ready(function() {
-                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                            var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
+                                                .data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
                                                 autoClose: false
                                             });
@@ -105,13 +106,13 @@
                                             @if (Model.AvailableStores.Count == 0)
                                             {
                                                 <text>
-                                    storesIdsInput.setOptions({
-                                        enable: false,
-                                        placeholder: 'No stores available'
-                                    });
-                                    storesIdsInput._placeholder();
-                                    storesIdsInput._enable();
-                                    </text>
+                                                    storesIdsInput.setOptions({
+                                                        enable: false,
+                                                        placeholder: 'No stores available'
+                                                    });
+                                                    storesIdsInput._placeholder();
+                                                    storesIdsInput._enable();
+                                                </text>
                                             }
                                         });
                                     </script>
@@ -124,39 +125,39 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.RoundingTypeId)
+                            <nop-label asp-for="RoundingTypeId"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.RoundingTypeId, ((RoundingType)Model.RoundingTypeId).ToSelectList())
-                            @Html.ValidationMessageFor(model => model.RoundingTypeId)
+                            <nop-select asp-for="RoundingTypeId" asp-items="@((RoundingType) Model.RoundingTypeId).ToSelectList()"></nop-select>
+                            <span asp-validation-for="RoundingTypeId"></span>
                         </div>
                     </div>                    
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Published)
+                            <nop-label asp-for="Published"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Published)
-                            @Html.ValidationMessageFor(model => model.Published)
+                            <nop-editor asp-for="Published"/>
+                            <span asp-validation-for="Published"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.DisplayOrder)
+                            <nop-label asp-for="DisplayOrder"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.DisplayOrder)
-                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                            <nop-editor asp-for="DisplayOrder"/>
+                            <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
                     @if (Model.Id > 0)
                     {
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CreatedOn)
+                                <nop-label asp-for="CreatedOn"/>
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.CreatedOn)
+                                <div class="form-text-row">@Model.CreatedOn</div>
                             </div>
                         </div>
                     }

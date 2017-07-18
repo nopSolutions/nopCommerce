@@ -1,5 +1,4 @@
 ﻿@using System.Text.Encodings.Web
-@using System.Web
 @{
     List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
@@ -10,9 +9,7 @@
     Html.SetActiveMenuItemSystemName("Currencies");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Currency" asp-action="List" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Currencies")
@@ -47,7 +44,7 @@
                                 </div>
                             </div>
                             <div class="col-md-9">
-                                @(Html.NopDropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
+                                <nop-select asp-for-name="exchangeRateProvider" asp-items="@(ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>)" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -59,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="col-md-9">
-                                @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled))
+                                <input type="checkbox" name="autoUpdateEnabled" id="autoUpdateEnabled" @if(autoUpdateEnabled) {<text>checked="checked"</text>}/>
                             </div>
                         </div>
                     </div>
@@ -294,10 +291,10 @@
                                     {
                                         var rate = rates[i];
                                         <text>
-                                        {
-                                            CurrencyCode: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
-                                            Rate: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
-                                        }
+                                            {
+                                                CurrencyCode: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.CurrencyCode)))",
+                                                Rate: "@(Html.Raw(JavaScriptEncoder.Default.Encode(rate.Rate.ToString())))"
+                                            }
                                         </text>
                                         if (i != rates.Count - 1)
                                         {
@@ -312,4 +309,4 @@
             </div>
         </div>
     </div>
-}
+</form>
