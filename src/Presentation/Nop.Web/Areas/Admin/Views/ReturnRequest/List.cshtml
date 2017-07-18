@@ -11,7 +11,7 @@
     Html.SetActiveMenuItemSystemName("Return requests");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ReturnRequests")
@@ -29,34 +29,34 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CustomNumber)
+                                    <nop-label asp-for="CustomNumber" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CustomNumber)
+                                    <nop-editor asp-for="CustomNumber" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.StartDate)
+                                    <nop-label asp-for="StartDate" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.StartDate)
+                                    <nop-editor asp-for="StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.EndDate)
+                                    <nop-label asp-for="EndDate" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.EndDate)
+                                    <nop-editor asp-for="EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.ReturnRequestStatusId)
+                                    <nop-label asp-for="ReturnRequestStatusId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownListFor(model => model.ReturnRequestStatusId, Model.ReturnRequestStatusList)
+                                    <nop-select asp-for="ReturnRequestStatusId" asp-items="@Model.ReturnRequestStatusList" />
                                 </div>
                             </div>
 

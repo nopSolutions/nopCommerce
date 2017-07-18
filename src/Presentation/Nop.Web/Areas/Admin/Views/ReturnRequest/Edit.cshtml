@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Return requests");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ReturnRequest" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.ReturnRequests.EditReturnRequestDetails") 
+            @T("Admin.ReturnRequests.EditReturnRequestDetails")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ReturnRequests.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -35,5 +33,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("returnrequest-delete")
