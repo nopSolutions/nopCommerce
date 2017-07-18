@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("General settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Setting" asp-action="GeneralCommon" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.GeneralCommon")
@@ -53,7 +52,7 @@
         <div class="form-horizontal">
             @await Component.InvokeAsync("StoreScopeConfiguration")
             @await Component.InvokeAsync("SettingMode")
-            @Html.ValidationSummary(false)
+            <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -63,8 +62,8 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.DefaultStoreTheme_OverrideForStore" asp-parent-container="theme-selection-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.DefaultStoreTheme" />
                             </div>
                             <div class="col-md-9">
                                 <div id="theme-selection-block" class="theme-selection-block clearfix">
@@ -82,68 +81,68 @@
                                         </div>
                                     }
                                 </div>
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                                <span asp-validation-for="StoreInformationSettings.DefaultStoreTheme"></span>
                                 <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.nopcommerce.com/marketplace.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">http://www.nopcommerce.com/marketplace.aspx</a></em>
                             </div>
                         </div>
                         <div class="form-group" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore" asp-input="StoreInformationSettings.AllowCustomerToSelectTheme" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                                <nop-editor asp-for="StoreInformationSettings.AllowCustomerToSelectTheme" />
+                                <span asp-validation-for="StoreInformationSettings.AllowCustomerToSelectTheme"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, "logo-block", Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.LogoPictureId)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.LogoPictureId_OverrideForStore" asp-parent-container="logo-block" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.LogoPictureId" />
                             </div>
                             <div class="col-md-9" id="logo-block">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.LogoPictureId)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.LogoPictureId)
+                                <nop-editor asp-for="StoreInformationSettings.LogoPictureId" />
+                                <span asp-validation-for="StoreInformationSettings.LogoPictureId"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore" asp-input="StoreInformationSettings.DisplayEuCookieLawWarning" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                                <nop-editor asp-for="StoreInformationSettings.DisplayEuCookieLawWarning" />
+                                <span asp-validation-for="StoreInformationSettings.DisplayEuCookieLawWarning"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.StoreClosed_OverrideForStore" asp-input="StoreInformationSettings.StoreClosed" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.StoreClosed" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.StoreClosed)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+                                <nop-editor asp-for="StoreInformationSettings.StoreClosed" />
+                                <span asp-validation-for="StoreInformationSettings.StoreClosed"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.SubjectFieldOnContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                                <nop-editor asp-for="StoreInformationSettings.SubjectFieldOnContactUsForm" />
+                                <span asp-validation-for="StoreInformationSettings.SubjectFieldOnContactUsForm"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore" asp-input="StoreInformationSettings.UseSystemEmailForContactUsForm" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                                <nop-editor asp-for="StoreInformationSettings.UseSystemEmailForContactUsForm" />
+                                <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
                             </div>
                         </div>
                     </div>
@@ -156,72 +155,72 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayBlogMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayBlogMenuItem"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
                             </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem)
+                            <div class="col-md-9">  
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayForumsMenuItem"></span> 
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore, model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
+                                <nop-override-store-checkbox asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem_OverrideForStore" asp-input="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
-                                @Html.ValidationMessageFor(model => model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem)
+                                <nop-editor asp-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem" />
+                                <span asp-validation-for="DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem"></span>
                             </div>
                         </div>
                     </div>
@@ -234,42 +233,42 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.FacebookLink)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.FacebookLink_OverrideForStore" asp-input="StoreInformationSettings.FacebookLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.FacebookLink" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.FacebookLink)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.FacebookLink)
+                                <nop-editor asp-for="StoreInformationSettings.FacebookLink" />
+                                <span asp-validation-for="StoreInformationSettings.FacebookLink"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.TwitterLink_OverrideForStore, model => model.StoreInformationSettings.TwitterLink, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.TwitterLink)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.TwitterLink_OverrideForStore" asp-input="StoreInformationSettings.TwitterLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.TwitterLink" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.TwitterLink)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.TwitterLink)
+                                <nop-editor asp-for="StoreInformationSettings.TwitterLink" />
+                                <span asp-validation-for="StoreInformationSettings.TwitterLink"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.YoutubeLink_OverrideForStore, model => model.StoreInformationSettings.YoutubeLink, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.YoutubeLink)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.YoutubeLink_OverrideForStore" asp-input="StoreInformationSettings.YoutubeLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.YoutubeLink" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.YoutubeLink)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.YoutubeLink)
+                                <nop-editor asp-for="StoreInformationSettings.YoutubeLink" />
+                                <span asp-validation-for="StoreInformationSettings.YoutubeLink"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.GooglePlusLink)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.GooglePlusLink_OverrideForStore" asp-input="StoreInformationSettings.GooglePlusLink" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.GooglePlusLink" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.GooglePlusLink)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
+                                <nop-editor asp-for="StoreInformationSettings.GooglePlusLink" />
+                                <span asp-validation-for="StoreInformationSettings.GooglePlusLink"></span>
                             </div>
                         </div>
                     </div>
@@ -282,42 +281,42 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapEnabled_OverrideForStore, model => model.StoreInformationSettings.SitemapEnabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapEnabled)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapEnabled_OverrideForStore" asp-input="StoreInformationSettings.SitemapEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.SitemapEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapEnabled)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapEnabled)
+                                <nop-editor asp-for="StoreInformationSettings.SitemapEnabled" />
+                                <span asp-validation-for="StoreInformationSettings.SitemapEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlSitemapIncludeCategories">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeCategories_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeCategories, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeCategories_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeCategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.SitemapIncludeCategories" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeCategories)
+                                <nop-editor asp-for="StoreInformationSettings.SitemapIncludeCategories" />
+                                <span asp-validation-for="StoreInformationSettings.SitemapIncludeCategories"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlSitemapIncludeManufacturers">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeManufacturers, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeManufacturers_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeManufacturers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.SitemapIncludeManufacturers" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeManufacturers)
+                                <nop-editor asp-for="StoreInformationSettings.SitemapIncludeManufacturers" />
+                                <span asp-validation-for="StoreInformationSettings.SitemapIncludeManufacturers"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlSitemapIncludeProducts">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SitemapIncludeProducts_OverrideForStore, model => model.StoreInformationSettings.SitemapIncludeProducts, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeProducts_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.SitemapIncludeProducts" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
-                                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SitemapIncludeProducts)
+                                <nop-editor asp-for="StoreInformationSettings.SitemapIncludeProducts" />
+                                <span asp-validation-for="StoreInformationSettings.SitemapIncludeProducts"></span>
                             </div>
                         </div>
                     </div>
@@ -330,142 +329,142 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle)
+                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultTitle_OverrideForStore" asp-input="SeoSettings.DefaultTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.DefaultTitle" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.DefaultTitle)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+                                <nop-editor asp-for="SeoSettings.DefaultTitle" />
+                                <span asp-validation-for="SeoSettings.DefaultTitle"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                                <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeoAdjustment_OverrideForStore" asp-input="SeoSettings.PageTitleSeoAdjustment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.PageTitleSeoAdjustment" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                                <nop-select asp-for="SeoSettings.PageTitleSeoAdjustment" asp-items="@Model.SeoSettings.PageTitleSeoAdjustmentValues" />
+                                <span asp-validation-for="SeoSettings.PageTitleSeoAdjustment"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator)
+                                <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeparator_OverrideForStore" asp-input="SeoSettings.PageTitleSeparator" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.PageTitleSeparator" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.PageTitleSeparator)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+                                <nop-editor asp-for="SeoSettings.PageTitleSeparator" />
+                                <span asp-validation-for="SeoSettings.PageTitleSeparator"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords)
+                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaKeywords_OverrideForStore" asp-input="SeoSettings.DefaultMetaKeywords" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.DefaultMetaKeywords" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.DefaultMetaKeywords)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
+                                <nop-editor asp-for="SeoSettings.DefaultMetaKeywords" />
+                                <span asp-validation-for="SeoSettings.DefaultMetaKeywords"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription)
+                                <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaDescription_OverrideForStore" asp-input="SeoSettings.DefaultMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.DefaultMetaDescription" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.DefaultMetaDescription)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
+                                <nop-editor asp-for="SeoSettings.DefaultMetaDescription" />
+                                <span asp-validation-for="SeoSettings.DefaultMetaDescription"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                                <nop-override-store-checkbox asp-for="SeoSettings.GenerateProductMetaDescription_OverrideForStore" asp-input="SeoSettings.GenerateProductMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.GenerateProductMetaDescription" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.GenerateProductMetaDescription)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                                <nop-editor asp-for="SeoSettings.GenerateProductMetaDescription" />
+                                <span asp-validation-for="SeoSettings.GenerateProductMetaDescription"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling)
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableJsBundling_OverrideForStore" asp-input="SeoSettings.EnableJsBundling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableJsBundling" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.EnableJsBundling)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.EnableJsBundling)
+                                <nop-editor asp-for="SeoSettings.EnableJsBundling" />
+                                <span asp-validation-for="SeoSettings.EnableJsBundling"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.EnableCssBundling)
+                                <nop-override-store-checkbox asp-for="SeoSettings.EnableCssBundling_OverrideForStore" asp-input="SeoSettings.EnableCssBundling" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.EnableCssBundling" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.EnableCssBundling)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
+                                <nop-editor asp-for="SeoSettings.EnableCssBundling" />
+                                <span asp-validation-for="SeoSettings.EnableCssBundling"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement)
+                                <nop-override-store-checkbox asp-for="SeoSettings.WwwRequirement_OverrideForStore" asp-input="SeoSettings.WwwRequirement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.WwwRequirement" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
+                                <nop-select asp-for="SeoSettings.WwwRequirement" asp-items="@Model.SeoSettings.WwwRequirementValues" />
+                                <span asp-validation-for="SeoSettings.WwwRequirement"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars)
+                                <nop-override-store-checkbox asp-for="SeoSettings.ConvertNonWesternChars_OverrideForStore" asp-input="SeoSettings.ConvertNonWesternChars" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.ConvertNonWesternChars" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.ConvertNonWesternChars)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+                                <nop-editor asp-for="SeoSettings.ConvertNonWesternChars" />
+                                <span asp-validation-for="SeoSettings.ConvertNonWesternChars"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                                <nop-override-store-checkbox asp-for="SeoSettings.CanonicalUrlsEnabled_OverrideForStore" asp-input="SeoSettings.CanonicalUrlsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.CanonicalUrlsEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                                <nop-editor asp-for="SeoSettings.CanonicalUrlsEnabled" />
+                                <span asp-validation-for="SeoSettings.CanonicalUrlsEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.TwitterMetaTags)
+                                <nop-override-store-checkbox asp-for="SeoSettings.TwitterMetaTags_OverrideForStore" asp-input="SeoSettings.TwitterMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.TwitterMetaTags" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.TwitterMetaTags)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.TwitterMetaTags)
+                                <nop-editor asp-for="SeoSettings.TwitterMetaTags" />
+                                <span asp-validation-for="SeoSettings.TwitterMetaTags"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.OpenGraphMetaTags)
+                                <nop-override-store-checkbox asp-for="SeoSettings.OpenGraphMetaTags_OverrideForStore" asp-input="SeoSettings.OpenGraphMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.OpenGraphMetaTags" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.OpenGraphMetaTags)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
+                                <nop-editor asp-for="SeoSettings.OpenGraphMetaTags" />
+                                <span asp-validation-for="SeoSettings.OpenGraphMetaTags"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CustomHeadTags_OverrideForStore, model => model.SeoSettings.CustomHeadTags, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.SeoSettings.CustomHeadTags)
+                                <nop-override-store-checkbox asp-for="SeoSettings.CustomHeadTags_OverrideForStore" asp-input="SeoSettings.CustomHeadTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SeoSettings.CustomHeadTags" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SeoSettings.CustomHeadTags)
-                                @Html.ValidationMessageFor(model => model.SeoSettings.CustomHeadTags)
+                                <nop-editor asp-for="SeoSettings.CustomHeadTags" />
+                                <span asp-validation-for="SeoSettings.CustomHeadTags"></span>
                             </div>
                         </div>
                     </div>
@@ -477,56 +476,56 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                                <nop-label asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                                <nop-editor asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
+                                <span asp-validation-for="SecuritySettings.AdminAreaAllowedIpAddresses"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.ForceSslForAllPages)
+                                <nop-label asp-for="SecuritySettings.ForceSslForAllPages" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SecuritySettings.ForceSslForAllPages)
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+                                <nop-editor asp-for="SecuritySettings.ForceSslForAllPages" />
+                                <span asp-validation-for="SecuritySettings.ForceSslForAllPages"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                                <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                                <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
+                                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForAdminArea"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                                <nop-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                             </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.HoneypotEnabled)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SecuritySettings.HoneypotEnabled)
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+                            <div class="col-md-9"> 
+                                <nop-editor asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
+                                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey)
+                                <nop-label asp-for="SecuritySettings.HoneypotEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SecuritySettings.HoneypotEnabled" />
+                                <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SecuritySettings.EncryptionKey" />
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group input-group-short">
-                                    @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
+                                    <nop-editor asp-for="SecuritySettings.EncryptionKey" />
                                     <span class="input-group-btn">
                                         <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info">
                                             @T("Admin.Common.Change")
@@ -534,7 +533,7 @@
                                         @Html.ActionConfirmation("changeencryptionkey")
                                     </span>
                                 </div>
-                                @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                                <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
                             </div>
                         </div>
                     </div>
@@ -547,119 +546,119 @@
                        @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.Enabled)
+                                <nop-label asp-for="CaptchaSettings.Enabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.Enabled)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.Enabled)
+                                <nop-editor asp-for="CaptchaSettings.Enabled" />
+                                <span asp-validation-for="CaptchaSettings.Enabled"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnLoginPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnLoginPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnLoginPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnLoginPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnLoginPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnLoginPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnRegistrationPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnRegistrationPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnRegistrationPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnRegistrationPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnRegistrationPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnRegistrationPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnContactUsPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnContactUsPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnContactUsPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnContactUsPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnContactUsPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnContactUsPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnEmailWishlistToFriendPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnEmailWishlistToFriendPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnEmailWishlistToFriendPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnEmailProductToFriendPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnEmailProductToFriendPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnEmailProductToFriendPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnEmailProductToFriendPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnBlogCommentPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnBlogCommentPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnBlogCommentPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnBlogCommentPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnNewsCommentPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnNewsCommentPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnNewsCommentPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnNewsCommentPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnProductReviewPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnProductReviewPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnProductReviewPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnProductReviewPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnProductReviewPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnProductReviewPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ShowOnApplyVendorPage)
+                                <nop-label asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ShowOnApplyVendorPage)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ShowOnApplyVendorPage)
+                                <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
+                                <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssReCaptchaVersionpnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ReCaptchaVersion)
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaVersion" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.CaptchaSettings.ReCaptchaVersion, Model.CaptchaSettings.AvailableReCaptchaVersions)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ReCaptchaVersion)
+                                <nop-select asp-for="CaptchaSettings.ReCaptchaVersion" asp-items="@Model.CaptchaSettings.AvailableReCaptchaVersions" />
+                                <span asp-validation-for="CaptchaSettings.ReCaptchaVersion"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssReCaptchaPublicKeypnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ReCaptchaPublicKey)
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaPublicKey" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ReCaptchaPublicKey)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ReCaptchaPublicKey)
+                                <nop-editor asp-for="CaptchaSettings.ReCaptchaPublicKey" />
+                                <span asp-validation-for="CaptchaSettings.ReCaptchaPublicKey"></span>
                             </div>
                         </div>
                         <div class="form-group" id="ssReCaptchaPrivateKeypnl">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CaptchaSettings.ReCaptchaPrivateKey)
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.CaptchaSettings.ReCaptchaPrivateKey)
-                                @Html.ValidationMessageFor(model => model.CaptchaSettings.ReCaptchaPrivateKey)
+                                <nop-editor asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
+                                <span asp-validation-for="CaptchaSettings.ReCaptchaPrivateKey"></span>
                             </div>
                         </div>
                     </div>
@@ -707,52 +706,52 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId)
+                                <nop-override-store-checkbox asp-for="PdfSettings.LogoPictureId_OverrideForStore" asp-parent-container="pdf-logo-picture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.LogoPictureId" />
                             </div>
                             <div class="col-md-9" id="pdf-logo-picture">
-                                @Html.NopEditorFor(model => model.PdfSettings.LogoPictureId)
-                                @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
+                                <nop-editor asp-for="PdfSettings.LogoPictureId" />
+                                <span asp-validation-for="PdfSettings.LogoPictureId"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+                                <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn1_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn1" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn1" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopTextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
-                                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+                                <nop-textarea asp-for="PdfSettings.InvoiceFooterTextColumn1" />
+                                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn1"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+                                <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn2_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn2" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn2" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopTextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
-                                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+                                <nop-textarea asp-for="PdfSettings.InvoiceFooterTextColumn2" />
+                                <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn2"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                                <nop-override-store-checkbox asp-for="PdfSettings.LetterPageSizeEnabled_OverrideForStore" asp-input="PdfSettings.LetterPageSizeEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.LetterPageSizeEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
-                                @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                                <nop-editor asp-for="PdfSettings.LetterPageSizeEnabled" />
+                                <span asp-validation-for="PdfSettings.LetterPageSizeEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                                <nop-override-store-checkbox asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore" asp-input="PdfSettings.DisablePdfInvoicesForPendingOrders" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
-                                @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                                <nop-editor asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />
+                                <span asp-validation-for="PdfSettings.DisablePdfInvoicesForPendingOrders"></span>
                             </div>
                         </div>
                     </div>
@@ -764,56 +763,56 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                                <nop-label asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                                <nop-editor asp-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup" />
+                                <span asp-validation-for="LocalizationSettings.LoadAllLocaleRecordsOnStartup"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                                <nop-label asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                                <nop-editor asp-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup" />
+                                <span asp-validation-for="LocalizationSettings.LoadAllLocalizedPropertiesOnStartup"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                                <nop-label asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                                <nop-editor asp-for="LocalizationSettings.LoadAllUrlRecordsOnStartup" />
+                                <span asp-validation-for="LocalizationSettings.LoadAllUrlRecordsOnStartup"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                                <nop-label asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                                <nop-editor asp-for="LocalizationSettings.UseImagesForLanguageSelection" />
+                                <span asp-validation-for="LocalizationSettings.UseImagesForLanguageSelection"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                                <nop-label asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                                <nop-editor asp-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled" />
+                                <span asp-validation-for="LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                                <nop-label asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-                                @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                                <nop-editor asp-for="LocalizationSettings.AutomaticallyDetectLanguage" />
+                                <span asp-validation-for="LocalizationSettings.AutomaticallyDetectLanguage"></span>
                             </div>
                         </div>
                     </div>
@@ -865,11 +864,11 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-3">
-                                        @Html.NopLabelFor(model => model.FullTextSettings.SearchMode)
+                                        <nop-label asp-for="FullTextSettings.SearchMode" />
                                     </div>
                                     <div class="col-md-9">
-                                        @Html.NopDropDownListFor(model => model.FullTextSettings.SearchMode, Model.FullTextSettings.SearchModeValues)
-                                        @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
+                                        <nop-select asp-for="FullTextSettings.SearchMode" asp-items="@Model.FullTextSettings.SearchModeValues" />
+                                        <span asp-validation-for="FullTextSettings.SearchMode"></span>
                                     </div>
                                 </div>
                             }
@@ -879,4 +878,4 @@
             </div>
         </div>
     </div>
-}
+</form>

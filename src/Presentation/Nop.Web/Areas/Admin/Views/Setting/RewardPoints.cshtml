@@ -10,9 +10,7 @@
     Html.SetActiveMenuItemSystemName("Reward points");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Setting" asp-action="RewardPoints" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.RewardPoints")
@@ -29,7 +27,7 @@
         <div class="form-horizontal">
             @await Component.InvokeAsync("StoreScopeConfiguration")
             @await Component.InvokeAsync("SettingMode")
-            @Html.ValidationSummary(false)
+            <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -42,35 +40,35 @@
                         </p>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.Enabled)
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.Enabled)
-                                @Html.ValidationMessageFor(model => model.Enabled)
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ExchangeRate)
+                                <nop-override-store-checkbox asp-for="ExchangeRate_OverrideForStore" asp-input="ExchangeRate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExchangeRate" />
                             </div>
                             <div class="col-md-9">
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
                                 <div class="pull-left">
-                                    @Html.NopEditorFor(model => model.ExchangeRate, Model.PrimaryStoreCurrencyCode)
-                                    @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                    <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode"  />
+                                    <span asp-validation-for="ExchangeRate"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.MinimumRewardPointsToUse)
+                                <nop-override-store-checkbox asp-for="MinimumRewardPointsToUse_OverrideForStore" asp-input="MinimumRewardPointsToUse" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MinimumRewardPointsToUse" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.MinimumRewardPointsToUse)
-                                @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
+                                <nop-editor asp-for="MinimumRewardPointsToUse" />
+                                <span asp-validation-for="MinimumRewardPointsToUse"></span>
                             </div>
                         </div>
                     </div>
@@ -82,8 +80,8 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PointsForPurchases_Amount)
+                                <nop-override-store-checkbox asp-for="PointsForPurchases_OverrideForStore" asp-input="PointsForPurchases_Amount" asp-input2="PointsForPurchases_Points" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PointsForPurchases_Amount" />
                             </div>
                             <div class="col-md-9">
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
@@ -91,74 +89,75 @@
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
                                 <div class="pull-left margin-r-10">@Html.NopEditorFor(model => model.PointsForPurchases_Points)</div>
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
-                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
-                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
+                                <span asp-validation-for="PointsForPurchases_Amount"></span>
+                                <span asp-validation-for="PointsForPurchases_Points"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PointsForRegistration)
+                                <nop-override-store-checkbox asp-for="PointsForRegistration_OverrideForStore" asp-input="PointsForRegistration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PointsForRegistration" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PointsForRegistration)
-                                @Html.ValidationMessageFor(model => model.PointsForRegistration)
+                                <nop-editor asp-for="PointsForRegistration" />
+                                <span asp-validation-for="PointsForRegistration"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ActivatePointsImmediately)
+                                <nop-label asp-for="ActivatePointsImmediately" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ActivatePointsImmediately)
-                                @Html.ValidationMessageFor(model => model.ActivatePointsImmediately)
+                                <nop-editor asp-for="ActivatePointsImmediately" />
+                                <span asp-validation-for="ActivatePointsImmediately"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnl-activating-delay">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ActivationDelay_OverrideForStore, model => model.ActivationDelay, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ActivationDelay)
+                                <nop-override-store-checkbox asp-for="ActivationDelay_OverrideForStore" asp-input="ActivationDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ActivationDelay" />
                             </div>
                             <div class="col-md-9">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        @Html.NopEditorFor(model => model.ActivationDelay)
-                                        @Html.ValidationMessageFor(model => model.ActivationDelay)
+                                        <nop-editor asp-for="ActivationDelay" />
+                                        <span asp-validation-for="ActivationDelay"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod)Model.ActivationDelayPeriodId).ToSelectList(), htmlAttributes: new { style = "max-width: 200px;" })
-                                        @Html.ValidationMessageFor(model => model.ActivationDelayPeriodId)
+                                        @*TODO*@
+                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList(), htmlAttributes: new {style = "max-width: 200px;"})
+                                        <span asp-validation-for="ActivationDelayPeriodId"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayHowMuchWillBeEarned)
+                                <nop-override-store-checkbox asp-for="DisplayHowMuchWillBeEarned_OverrideForStore" asp-input="DisplayHowMuchWillBeEarned" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayHowMuchWillBeEarned" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayHowMuchWillBeEarned)
-                                @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
+                                <nop-editor asp-for="DisplayHowMuchWillBeEarned" />
+                                <span asp-validation-for="DisplayHowMuchWillBeEarned"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.PointsAccumulatedForAllStores)
+                                <nop-label asp-for="PointsAccumulatedForAllStores" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PointsAccumulatedForAllStores)
-                                @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
+                                <nop-editor asp-for="PointsAccumulatedForAllStores" />
+                                <span asp-validation-for="PointsAccumulatedForAllStores"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.PageSize)
+                                <nop-override-store-checkbox asp-for="PageSize_OverrideForStore" asp-input="PageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PageSize" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.PageSize)
-                                @Html.ValidationMessageFor(model => model.PageSize)
+                                <nop-editor asp-for="PageSize" />
+                                <span asp-validation-for="PageSize"></span>
                             </div>
                         </div>
                     </div>
@@ -181,4 +180,4 @@
             </div>
         </div>
     </div>
-}
+</form>

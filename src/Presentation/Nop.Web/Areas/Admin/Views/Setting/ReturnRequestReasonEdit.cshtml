@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Order settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Setting" asp-action="ReturnRequestReasonEdit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails") - @Model.Name
@@ -36,5 +34,5 @@
             @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestReason", Model)
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("ReturnRequestReasonDelete", "returnrequestreason-delete")

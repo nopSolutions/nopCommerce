@@ -15,7 +15,7 @@
     Html.SetActiveMenuItemSystemName("All settings");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Settings.AllSettings")
@@ -34,18 +34,18 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchSettingName)
+                                    <nop-label asp-for="SearchSettingName" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchSettingName)
+                                    <nop-editor asp-for="SearchSettingName" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchSettingValue)
+                                    <nop-label asp-for="SearchSettingValue" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchSettingValue)
+                                    <nop-editor asp-for="SearchSettingValue" />
                                 </div>
                             </div>
                             <div class="form-group">

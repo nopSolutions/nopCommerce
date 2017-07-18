@@ -8,9 +8,7 @@
     Html.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Setting" asp-action="CustomerUser" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.CustomerUser")
@@ -22,7 +20,7 @@
             </button>
         </div>
     </div>
-    @Html.ValidationSummary(false)
+    <div asp-validation-summary="All"></div>
 
     <script>
         $(document).ready(function () {
@@ -33,23 +31,23 @@
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
-
-            <div id="customersettings-edit" class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    @Html.RenderBootstrapTabHeader("tab-customer", @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings"), true)
-                    @Html.RenderBootstrapTabHeader("tab-customerformfields", @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields"))
-                    @Html.RenderBootstrapTabHeader("tab-addressformfields", @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields"))
-                </ul>
-                <div class="tab-content">
-                    @Html.RenderBootstrapTabContent("tab-customer", await Html.PartialAsync("_CustomerUser.Settings", Model), true)
-                    @Html.RenderBootstrapTabContent("tab-customerformfields", await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model))
-                    @Html.RenderBootstrapTabContent("tab-addressformfields", await Html.PartialAsync("_CustomerUser.AddressFormFields", Model))
-                </div>
-            </div>
+            
+            <nop-tabs id="customersettings-edit">
+                <nop-tab-header>
+                    <nop-tab-header-item asp-name="tab-customer" asp-default="true">@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-customerformfields" class="advanced-setting">@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-addressformfields" class="advanced-setting">@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")</nop-tab-header-item>
+                </nop-tab-header>
+                <nop-tab-content>
+                    <nop-tab-content-item asp-name="tab-customer" asp-default="true">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-customerformfields">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-addressformfields">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab-content-item>
+                </nop-tab-content>
+            </nop-tabs>
         </div>
     </div>
 
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
         eventPublisher.Publish(eventMessage);
@@ -61,4 +59,4 @@
 
     @*save selected tab name*@
     <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-}
+</form>

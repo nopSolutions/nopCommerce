@@ -16,22 +16,22 @@
             </ul>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.ReturnRequestsEnabled)
+                    <nop-override-store-checkbox asp-for="ReturnRequestsEnabled_OverrideForStore" asp-input="ReturnRequestsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ReturnRequestsEnabled" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.ReturnRequestsEnabled)
-                    @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
+                    <nop-editor asp-for="ReturnRequestsEnabled" />
+                    <span asp-validation-for="ReturnRequestsEnabled"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestNumberMask_OverrideForStore, model => model.ReturnRequestNumberMask, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.ReturnRequestNumberMask)
+                    <nop-override-store-checkbox asp-for="ReturnRequestNumberMask_OverrideForStore" asp-input="ReturnRequestNumberMask" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ReturnRequestNumberMask" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.ReturnRequestNumberMask)
-                    @Html.ValidationMessageFor(model => model.ReturnRequestNumberMask)
+                    <nop-editor asp-for="ReturnRequestNumberMask" />
+                    <span asp-validation-for="ReturnRequestNumberMask"></span>
                     <ul class="common-list">
                         <li>
                             @T("Admin.Configuration.Settings.Order.ReturnRequestNumberMask.Description.ID")
@@ -53,22 +53,22 @@
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable)
+                    <nop-override-store-checkbox asp-for="NumberOfDaysReturnRequestAvailable_OverrideForStore" asp-input="NumberOfDaysReturnRequestAvailable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="NumberOfDaysReturnRequestAvailable" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.NumberOfDaysReturnRequestAvailable)
-                    @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
+                    <nop-editor asp-for="NumberOfDaysReturnRequestAvailable" />
+                    <span asp-validation-for="NumberOfDaysReturnRequestAvailable"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsAllowFiles_OverrideForStore, model => model.ReturnRequestsAllowFiles, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.ReturnRequestsAllowFiles)
+                    <nop-override-store-checkbox asp-for="ReturnRequestsAllowFiles_OverrideForStore" asp-input="ReturnRequestsAllowFiles" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                    <nop-label asp-for="ReturnRequestsAllowFiles" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.ReturnRequestsAllowFiles)
-                    @Html.ValidationMessageFor(model => model.ReturnRequestsAllowFiles)
+                    <nop-editor asp-for="ReturnRequestsAllowFiles" />
+                    <span asp-validation-for="ReturnRequestsAllowFiles"></span>
                 </div>
             </div>
         </div>
