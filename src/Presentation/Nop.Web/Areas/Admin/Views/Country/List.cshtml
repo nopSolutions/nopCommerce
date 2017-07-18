@@ -5,7 +5,7 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Countries")
@@ -266,11 +266,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
             </div>
-            @using (Html.BeginForm("ImportCsv", "Country", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
+            <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        @Html.AntiForgeryToken()
                         <ul class="common-list">
                             <li>
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
@@ -298,8 +296,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>
-

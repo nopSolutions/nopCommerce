@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Country" asp-action="Edit" method="post" id="country-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Countries.EditCountryDetails") - @Model.Name 
+            @T("Admin.Configuration.Countries.EditCountryDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Countries.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("country-delete")

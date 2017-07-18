@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Country" asp-action="Create" method="post" id="country-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Countries.AddNew") 
@@ -27,4 +25,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>

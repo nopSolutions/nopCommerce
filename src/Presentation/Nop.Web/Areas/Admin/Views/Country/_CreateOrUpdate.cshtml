@@ -1,27 +1,21 @@
 ﻿@model CountryModel
 @inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
-<script>
-    $(document).ready(function () {
-        bindBootstrapTabSelectEvent('country-edit');
-    });
-</script>
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="country-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Countries.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-states", @T("Admin.Configuration.Countries.States"))
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-states", await Html.PartialAsync("_CreateOrUpdate.States", Model))
-            </div>
-        </div>
+        <nop-tabs id="country-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Countries.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-states">@T("Admin.Configuration.Countries.States")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-states">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 
@@ -34,7 +28,3 @@
         @eventBlock
     }
 }
-
-
-@*save selected tab name*@
-<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
