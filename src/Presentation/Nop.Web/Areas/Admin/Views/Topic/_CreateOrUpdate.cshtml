@@ -4,12 +4,6 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
-<script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('topic-edit');
-    });
-</script>
-
 <div class="content">
     <div class="form-horizontal">
         <div class="row">
@@ -41,6 +35,3 @@
         @eventBlock
     }
 }
-
-@*save selected tab name*@
-<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">

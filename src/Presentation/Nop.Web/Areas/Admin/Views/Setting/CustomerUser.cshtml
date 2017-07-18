@@ -21,13 +21,7 @@
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-
-    <script>
-        $(document).ready(function () {
-            bindBootstrapTabSelectEvent('customersettings-edit');
-        });
-    </script>
-
+    
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
@@ -56,7 +50,4 @@
             @eventBlock
         }
     }
-
-    @*save selected tab name*@
-    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 </form>

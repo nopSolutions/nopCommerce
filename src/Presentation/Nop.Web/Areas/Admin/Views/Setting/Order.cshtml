@@ -22,12 +22,6 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            bindBootstrapTabSelectEvent('ordersettings-edit');
-        });
-    </script>
-
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("StoreScopeConfiguration")
@@ -56,7 +50,4 @@
             @eventBlock
         }
     }
-
-    @*save selected tab name*@
-    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 </form>
