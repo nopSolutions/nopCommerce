@@ -5,13 +5,11 @@
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Affiliates");
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Affiliate" asp-action="Edit" method="post">
     <div class="content-header clearfix">
-       <h1 class="pull-left">
-           @T("Admin.Affiliates.EditAffiliateDetails") - @Model.Address.FirstName @Model.Address.LastName 
-           <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Affiliates.BackToList").Text, "List")</small>
+        <h1 class="pull-left">
+            @T("Admin.Affiliates.EditAffiliateDetails") - @Model.Address.FirstName @Model.Address.LastName
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Affiliates.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
             <button type="submit" name="save" class="btn bg-blue">
@@ -29,5 +27,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("affiliate-delete")

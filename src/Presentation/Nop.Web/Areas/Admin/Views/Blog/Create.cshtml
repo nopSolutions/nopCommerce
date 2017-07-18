@@ -6,9 +6,7 @@
     Html.SetActiveMenuItemSystemName("Blog posts");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Blog" asp-action="Create" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.Blog.BlogPosts.AddNew")
@@ -26,4 +24,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
