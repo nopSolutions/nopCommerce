@@ -99,8 +99,6 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            object htmlAttributes = null;
-
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
@@ -123,7 +121,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
+                additionalViewData: new { postfix = this.Postfix });
 
             var s = templateBuilder.Build();
             string htmlOutput;
