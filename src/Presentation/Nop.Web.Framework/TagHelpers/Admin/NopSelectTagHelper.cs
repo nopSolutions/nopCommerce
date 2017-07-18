@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq.Dynamic;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,10 +9,11 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
-    [HtmlTargetElement("nop-select", Attributes = ForAttributeName)]
+    [HtmlTargetElement("nop-select", TagStructure = TagStructure.WithoutEndTag)]
     public class NopSelectTagHelper : TagHelper
     {
         private const string ForAttributeName = "asp-for";
+        private const string NameAttributeName = "asp-for-name";
         private const string ItemsAttributeName = "asp-items";
         private const string DisabledAttributeName = "asp-multiple";
         private const string RequiredAttributeName = "asp-required";
@@ -29,10 +27,16 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public ModelExpression For { get; set; }
 
         /// <summary>
+        /// Name for a dropdown list
+        /// </summary>
+        [HtmlAttributeName(NameAttributeName)]
+        public string Name { get; set; }
+
+        /// <summary>
         /// Items for a dropdown list
         /// </summary>
         [HtmlAttributeName(ItemsAttributeName)]
-        public IEnumerable<SelectListItem> Items { set; get; }
+        public IEnumerable<SelectListItem> Items { set; get; } = new List<SelectListItem>();
 
         /// <summary>
         /// Indicates whether the field is required
@@ -86,19 +90,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            //generate editor
-            IHtmlContent selectList;
-            bool.TryParse(IsMultiple, out bool multiple);
-            if (multiple)
-            {
-                selectList = _htmlHelper.Editor(For.Name, "MultiSelect", Items != null && Items.Any() ? new {SelectList = Items} : null);
-            }
-            else
-            {
-                selectList = _htmlHelper.DropDownList(For.Name, Items, new { @class = "form-control" });
-            }
 
-            output.Content.SetHtmlContent(selectList.RenderHtmlContent());
+            //generate editor
+            var tagName = For != null ? For.Name : Name;
+            bool.TryParse(IsMultiple, out bool multiple);
+            if (!string.IsNullOrEmpty(tagName))
+            {
+                IHtmlContent selectList = multiple 
+                    ? _htmlHelper.Editor(tagName, "MultiSelect", new { SelectList = Items }) 
+                    : _htmlHelper.DropDownList(tagName, Items, new { @class = "form-control" });
+                output.Content.SetHtmlContent(selectList.RenderHtmlContent());
+            }
         }
     }
 }
