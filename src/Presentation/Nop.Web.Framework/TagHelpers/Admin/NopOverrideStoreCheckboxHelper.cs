@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -109,15 +110,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     onclick = onClick,
                     data_for_input_selector = dataInputSelector
                 };
-                var s = _htmlHelper.CheckBox(For.Name, null, htmlAttributes);
-                string htmlOutput;
-                using (var writer = new StringWriter())
-                {
-                    s.WriteTo(writer, HtmlEncoder.Default);
-                    htmlOutput = writer.ToString();
-                }
-
-                output.Content.SetHtmlContent(htmlOutput);
+                var htmlOutput = _htmlHelper.CheckBox(For.Name, null, htmlAttributes);
+                output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
             }
         }
     }
