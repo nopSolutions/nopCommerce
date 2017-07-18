@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Queued emails");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="QueuedEmail" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.System.QueuedEmails.EditQueuedEmailDetails")
@@ -35,5 +33,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("queuedEmail-delete")

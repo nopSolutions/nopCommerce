@@ -1,18 +1,16 @@
 ﻿@model RecurringPaymentModel
 
-@{  
+@{
     //page title
     ViewBag.Title = T("Admin.RecurringPayments.EditPaymentDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Recurring payments");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="RecurringPayment" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.RecurringPayments.EditPaymentDetails") 
+            @T("Admin.RecurringPayments.EditPaymentDetails")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.RecurringPayments.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("payment-delete")

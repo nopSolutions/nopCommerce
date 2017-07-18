@@ -3,8 +3,8 @@
 @using Nop.Core.Domain.Orders;
 @using Nop.Services
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -13,20 +13,20 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomNumber)
+                            <nop-label asp-for="CustomNumber" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.CustomNumber)
+                            <div class="form-text-row">@Model.CustomNumber</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomOrderNumber)
+                            <nop-label asp-for="CustomOrderNumber" />
                         </div>
                         <div class="col-md-9">
                             @if (Model.OrderId > 0)
                             {
-                                @Html.ActionLink(Model.CustomOrderNumber, "Edit", "Order", new {id = Model.OrderId}, new {})
+                                <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.OrderId">@Model.CustomOrderNumber</a>
                             }
                             else
                             {
@@ -36,20 +36,20 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomerId)
+                            <nop-label asp-for="CustomerId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                            <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@Model.CustomerInfo</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ProductName)
+                            <nop-label asp-for="ProductName" />
                         </div>
                         <div class="col-md-9">
                             @if (Model.ProductId > 0)
                             {
-                                @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">@Model.ProductName</a>
                             }
                             else
                             {
@@ -59,75 +59,75 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Quantity)
+                            <nop-label asp-for="Quantity" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Quantity)
-                            @Html.ValidationMessageFor(model => model.Quantity)
+                            <nop-editor asp-for="Quantity" />
+                            <span asp-validation-for="Quantity"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReturnRequestStatusId)
+                            <nop-label asp-for="ReturnRequestStatusId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.ReturnRequestStatusId, ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())
-                            @Html.ValidationMessageFor(model => model.ReturnRequestStatusId)
+                            <nop-select asp-for="ReturnRequestStatusId" asp-items="@(((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())" />
+                            <span asp-validation-for="ReturnRequestStatusId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReasonForReturn)
+                            <nop-label asp-for="ReasonForReturn" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.ReasonForReturn, required: true)
-                            @Html.ValidationMessageFor(model => model.ReasonForReturn)
+                            <nop-editor asp-for="ReasonForReturn" asp-required="true" />
+                            <span asp-validation-for="ReasonForReturn"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.RequestedAction)
+                            <nop-label asp-for="RequestedAction" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.RequestedAction, required: true)
-                            @Html.ValidationMessageFor(model => model.RequestedAction)
+                            <nop-editor asp-for="RequestedAction" asp-required="true" />
+                            <span asp-validation-for="RequestedAction"></span>
                         </div>
                     </div>
                     @if (Model.UploadedFileGuid != Guid.Empty)
                     {
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.UploadedFileGuid)
+                                <nop-label asp-for="UploadedFileGuid" />
                             </div>
                             <div class="col-md-9">
-                                <a href="@Url.Action("DownloadFile", "Download", new {downloadGuid = Model.UploadedFileGuid})">@T("Admin.ReturnRequests.Fields.UploadedFile.Download")</a>
+                                <a asp-controller="Download" asp-action="DownloadFile" asp-route-downloadGuid="@Model.UploadedFileGuid">@T("Admin.ReturnRequests.Fields.UploadedFile.Download")</a>
                             </div>
                         </div>
                     }
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomerComments)
+                            <nop-label asp-for="CustomerComments" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.CustomerComments)
-                            @Html.ValidationMessageFor(model => model.CustomerComments)
+                            <nop-textarea asp-for="CustomerComments" />
+                            <span asp-validation-for="CustomerComments"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.StaffNotes)
+                            <nop-label asp-for="StaffNotes" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.StaffNotes)
-                            @Html.ValidationMessageFor(model => model.StaffNotes)
+                            <nop-textarea asp-for="StaffNotes" />
+                            <span asp-validation-for="StaffNotes"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CreatedOn)
+                            <nop-label asp-for="CreatedOn" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.CreatedOn)
+                            <div class="form-text-row">@Model.CreatedOn</div>
                         </div>
                     </div>
                 </div>

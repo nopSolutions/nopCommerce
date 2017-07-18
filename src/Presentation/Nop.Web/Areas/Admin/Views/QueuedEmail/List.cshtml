@@ -11,9 +11,7 @@
     Html.SetActiveMenuItemSystemName("Queued emails");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="QueuedEmail" asp-action="List" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.System.QueuedEmails")
@@ -40,59 +38,59 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchStartDate)
+                                        <nop-label asp-for="SearchStartDate" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchStartDate)
+                                        <nop-editor asp-for="SearchStartDate" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchEndDate)
+                                        <nop-label asp-for="SearchEndDate" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchEndDate)
+                                        <nop-editor asp-for="SearchEndDate" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchFromEmail)
+                                        <nop-label asp-for="SearchFromEmail" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchFromEmail)
+                                        <nop-editor asp-for="SearchFromEmail" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchToEmail)
+                                        <nop-label asp-for="SearchToEmail" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchToEmail)
+                                        <nop-editor asp-for="SearchToEmail" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchLoadNotSent)
+                                        <nop-label asp-for="SearchLoadNotSent" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchLoadNotSent)
+                                        <nop-editor asp-for="SearchLoadNotSent" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchMaxSentTries)
+                                        <nop-label asp-for="SearchMaxSentTries" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.SearchMaxSentTries)
+                                        <nop-editor asp-for="SearchMaxSentTries" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.GoDirectlyToNumber)
+                                        <nop-label asp-for="GoDirectlyToNumber" />
                                     </div>
                                     <div class="col-md-8">
                                         <div class="custom-input-group input-group-short">
-                                            @Html.NopEditorFor(model => model.GoDirectlyToNumber)
+                                            <nop-editor asp-for="GoDirectlyToNumber" />
                                             <span class="custom-input-group-btn">
                                                 <button type="submit" id="go-to-email-by-number" name="go-to-email-by-number" class="btn btn-info btn-flat">
                                                     @T("Admin.Common.Go")
@@ -234,7 +232,7 @@
                                             return false;
                                         }
                                     });
-                            
+
 
                                 $("#@Html.IdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
                                     if (event.keyCode === 13) {
@@ -336,4 +334,4 @@
             </div>
         </div>
     </div>
-}
+</form>
