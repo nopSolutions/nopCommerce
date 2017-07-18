@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Access control list");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Security" asp-action="Permissions" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.ACL")
@@ -96,4 +94,4 @@
             </div>
         </div>
     </div>
-}
+</form>
