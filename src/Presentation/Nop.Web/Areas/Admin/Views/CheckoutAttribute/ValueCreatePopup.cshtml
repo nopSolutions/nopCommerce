@@ -7,9 +7,7 @@
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")
@@ -22,4 +20,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)
-}
+</form>

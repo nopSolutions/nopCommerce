@@ -1,14 +1,8 @@
 ﻿@model CheckoutAttributeModel
 @inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
-<script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('checkoutattribute-edit');
-    });
-</script>
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -19,24 +13,25 @@
                 </div>
             </div>
         </div>
-        <div id="checkoutattribute-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Catalog.Attributes.CheckoutAttributes.Values"))
+        
+        <nop-tabs id="checkoutattribute-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-values" class="advanced-setting">@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")</nop-tab-header-item>
                 @if (Model.ConditionAllowed)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-condition", @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition"))
+                    <nop-tab-header-item asp-name="tab-condition">@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")</nop-tab-header-item>
                 }
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-values", await Html.PartialAsync("_CreateOrUpdate.Values", Model))
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab-content-item>
                 @if (Model.ConditionAllowed)
                 {
-                    @Html.RenderBootstrapTabContent("tab-condition", await Html.PartialAsync("_CreateOrUpdate.Condition", Model))
+                    <nop-tab-content-item asp-name="tab-condition">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-tab-content-item>
                 }
-            </div>
-        </div>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 
@@ -49,6 +44,3 @@
         @eventBlock
     }
 }
-
-@*save selected tab name*@
-<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
