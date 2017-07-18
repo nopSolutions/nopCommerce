@@ -18,6 +18,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string DisabledAttributeName = "asp-disabled";
         private const string RequiredAttributeName = "asp-required";
         private const string TemplateAttributeName = "asp-template";
+        private const string PostfixAttributeName = "asp-postfix";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -44,6 +45,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(TemplateAttributeName)]
         public string Template { set; get; }
+
+        /// <summary>
+        /// Postfix
+        /// </summary>
+        [HtmlAttributeName(PostfixAttributeName)]
+        public string Postfix { set; get; }
 
         /// <summary>
         /// ViewContext
@@ -92,6 +99,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
+            object htmlAttributes = null;
+
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
@@ -114,7 +123,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: null);
+                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
 
             var s = templateBuilder.Build();
             string htmlOutput;
