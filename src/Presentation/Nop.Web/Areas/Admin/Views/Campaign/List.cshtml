@@ -6,7 +6,7 @@
     Html.SetActiveMenuItemSystemName("Campaigns");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Campaigns")
@@ -29,10 +29,10 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.StoreId)
+                                    <nop-label asp-for="StoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"></nop-select>
                                 </div>
                             </div>
                             <div class="form-group">

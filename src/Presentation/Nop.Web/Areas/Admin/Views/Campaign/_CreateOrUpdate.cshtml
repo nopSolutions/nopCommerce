@@ -1,8 +1,8 @@
 ﻿@model CampaignModel
 @inject AdminAreaSettings adminAreaSettings
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -16,27 +16,27 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.EmailAccountId)
+                                <nop-label asp-for="EmailAccountId" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.EmailAccountId, Model.AvailableEmailAccounts)
-                                @Html.ValidationMessageFor(model => model.EmailAccountId)
+                                <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts"></nop-select>
+                                <span asp-validation-for="EmailAccountId"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.TestEmail)
+                                <nop-label asp-for="TestEmail" />
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group">
-                                    @Html.NopEditorFor(model => model.TestEmail)
+                                    <nop-editor asp-for="TestEmail" />
                                     <div class="input-group-btn">
                                         <button type="submit" name="send-test-email" class="btn btn-info">
                                             @T("Admin.Promotions.Campaigns.SendTestEmail")
                                         </button>
                                     </div>
                                 </div>
-                                @Html.ValidationMessageFor(model => model.TestEmail)
+                                <span asp-validation-for="TestEmail"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -56,25 +56,25 @@
                 <div class="panel panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Name)
+                            <nop-label asp-for="Name" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Name, required: true)
-                            @Html.ValidationMessageFor(model => model.Name)
+                            <nop-editor asp-for="Name" asp-required="true"/>
+                            <span asp-validation-for="Name"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Subject)
+                            <nop-label asp-for="Subject" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Subject, required: true)
-                            @Html.ValidationMessageFor(model => model.Subject)
+                            <nop-editor asp-for="Subject" asp-required="true"/>
+                            <span asp-validation-for="Subject"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Body)
+                            <nop-label asp-for="Body" />
                         </div>
                         <div class="col-md-9">
                             @if (adminAreaSettings.UseRichEditorInMessageTemplates)
@@ -86,15 +86,15 @@
                                 //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
                                 ViewData["nop.RichEditor.EnableFullPage"] = true;
                                 <div class="input-group input-group-required">
-                                    @Html.EditorFor(model => model.Body, "RichEditor")
+                                    <nop-editor asp-for="Body" asp-template="RichEditor" />
                                     <div class="input-group-btn">
-                                        @Html.RequiredHint()
+                                        <nop-required/>
                                     </div>
                                 </div>
                             }
                             else
                             {
-                                @Html.NopTextAreaFor(model => model.Body, required: true);
+                                <nop-textarea asp-for="Body" asp-required="true"></nop-textarea>
                                 <text>
                                     <script type="text/javascript">
                                         $(document).ready(function () {
@@ -103,38 +103,37 @@
                                     </script>
                                 </text>
                             }
-                            @Html.ValidationMessageFor(model => model.Body)
+                            <span asp-validation-for="Body"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.DontSendBeforeDate)
+                            <nop-label asp-for="DontSendBeforeDate" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.DontSendBeforeDate)
-                            @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
+                            <nop-editor asp-for="DontSendBeforeDate" />
+                            <span asp-validation-for="DontSendBeforeDate"></span>
                         </div>
                     </div>
                     <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.StoreId)
+                            <nop-label asp-for="StoreId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                            @Html.ValidationMessageFor(model => model.StoreId)
+                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"></nop-select>
+                            <span asp-validation-for="StoreId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                            <nop-label asp-for="CustomerRoleId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
-                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles"></nop-select>
+                            <span asp-validation-for="CustomerRoleId"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        
                         <script type="text/javascript">
                             function toggleLoadedAllowedTokens() {
                                 $('#pnlAllowedTokens').toggle();
@@ -147,12 +146,12 @@
                         </script>
 
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AllowedTokens)
+                            <nop-label asp-for="AllowedTokens" />
                         </div>
                         <div class="col-md-9">
                             <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
                             <div id="pnlAllowedTokens" style="display: none">
-                                @Html.NopDisplayFor(model => model.AllowedTokens)
+                                <div class="form-text-row">@Model.AllowedTokens</div>
                             </div>
                         </div>
                     </div>
