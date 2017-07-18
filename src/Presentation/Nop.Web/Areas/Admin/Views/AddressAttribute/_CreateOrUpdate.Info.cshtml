@@ -52,7 +52,7 @@
                                 //these attributes don't support some control types
                                 new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
                     }
-                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"></nop-select>
+                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"/>
                     <span asp-validation-for="AttributeControlTypeId"></span>
                 </div>
             </div>

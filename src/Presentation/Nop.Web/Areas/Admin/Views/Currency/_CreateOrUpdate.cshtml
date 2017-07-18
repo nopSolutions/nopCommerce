@@ -74,7 +74,7 @@
                                     Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
                                 });
                             }
-                            <nop-select asp-for="DisplayLocale" asp-items="@cultures"></nop-select>
+                            <nop-select asp-for="DisplayLocale" asp-items="@cultures"/>
                             <span asp-validation-for="DisplayLocale"></span>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                         <div class="col-md-9">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"></nop-select>
+                                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
                                     <script>
                                         $(document).ready(function() {
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
@@ -128,7 +128,7 @@
                             <nop-label asp-for="RoundingTypeId"/>
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="RoundingTypeId" asp-items="@((RoundingType) Model.RoundingTypeId).ToSelectList()"></nop-select>
+                            <nop-select asp-for="RoundingTypeId" asp-items="@((RoundingType) Model.RoundingTypeId).ToSelectList()"/>
                             <span asp-validation-for="RoundingTypeId"></span>
                         </div>
                     </div>                    

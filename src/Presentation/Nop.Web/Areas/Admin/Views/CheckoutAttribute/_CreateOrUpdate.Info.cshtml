@@ -142,7 +142,7 @@
                     <nop-label asp-for="TaxCategoryId"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories"></nop-select>
+                    <nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories"/>
                     <span asp-validation-for="TaxCategoryId"></span>
                 </div>
             </div>
@@ -157,7 +157,7 @@
                             //these attributes don't support some control types
                             new[] { (int)AttributeControlType.ImageSquares });
                     }
-                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"></nop-select>
+                    <nop-select asp-for="AttributeControlTypeId" asp-items="@attributeControlTypes"/>
                     <span asp-validation-for="AttributeControlTypeId"></span>
                 </div>
             </div>
@@ -222,7 +222,7 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"></nop-select>
+                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
                             <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')

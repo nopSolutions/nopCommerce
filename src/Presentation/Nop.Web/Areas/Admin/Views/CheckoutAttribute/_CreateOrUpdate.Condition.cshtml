@@ -39,7 +39,7 @@
                                 <nop-label asp-for="ConditionModel.SelectedAttributeId"/>
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))"></nop-select>
+                                <nop-select asp-for="ConditionModel.SelectedAttributeId" asp-items="@(Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() {Text = x.Name, Value = x.Id.ToString()}))"/>
                                 
                                 <script type="text/javascript">
                                     $(document).ready(function() {
@@ -67,7 +67,7 @@
                                         @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
                                         {
                                             case AttributeControlType.DropdownList:
-                                                <nop-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values"></nop-select>
+                                                <nop-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values"/>
                                                 break;
                                             case AttributeControlType.RadioList:
                                             case AttributeControlType.ColorSquares:
