@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
 {
@@ -30,6 +32,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
 
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
+
+            //render tabs script
+            if (output.Attributes.ContainsName("id"))
+            {
+                var script = new TagBuilder("script");
+                script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "');});");
+                output.PostContent.SetHtmlContent(script.RenderHtmlContent());
+            }
         }
     }
 }
