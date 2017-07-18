@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Shipping settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Setting" asp-action="Shipping" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Shipping")
@@ -22,12 +20,11 @@
         </div>
     </div>
 
-
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("StoreScopeConfiguration")
             @await Component.InvokeAsync("SettingMode")
-            @Html.ValidationSummary(false)
+            <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -37,82 +34,82 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.AllowPickUpInStore_OverrideForStore, model => model.AllowPickUpInStore, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.AllowPickUpInStore)
+                                <nop-override-store-checkbox asp-for="AllowPickUpInStore_OverrideForStore" asp-input="AllowPickUpInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowPickUpInStore" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.AllowPickUpInStore)
-                                @Html.ValidationMessageFor(model => model.AllowPickUpInStore)
+                                <nop-editor asp-for="AllowPickUpInStore" />
+                                <span asp-validation-for="AllowPickUpInStore"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlDisplayPickupPointsOnMap">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayPickupPointsOnMap_OverrideForStore, model => model.DisplayPickupPointsOnMap, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayPickupPointsOnMap)
+                                <nop-override-store-checkbox asp-for="DisplayPickupPointsOnMap_OverrideForStore" asp-input="DisplayPickupPointsOnMap" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayPickupPointsOnMap" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayPickupPointsOnMap)
-                                @Html.ValidationMessageFor(model => model.DisplayPickupPointsOnMap)
+                                <nop-editor asp-for="DisplayPickupPointsOnMap" />
+                                <span asp-validation-for="DisplayPickupPointsOnMap"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlGoogleMapsApiKey">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.GoogleMapsApiKey_OverrideForStore, model => model.GoogleMapsApiKey, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.GoogleMapsApiKey)
+                                <nop-override-store-checkbox asp-for="GoogleMapsApiKey_OverrideForStore" asp-input="GoogleMapsApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="GoogleMapsApiKey" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.GoogleMapsApiKey)
-                                @Html.ValidationMessageFor(model => model.GoogleMapsApiKey)
+                                <nop-editor asp-for="GoogleMapsApiKey" />
+                                <span asp-validation-for="GoogleMapsApiKey"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.FreeShippingOverXEnabled)
+                                <nop-override-store-checkbox asp-for="FreeShippingOverXEnabled_OverrideForStore" asp-input="FreeShippingOverXEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FreeShippingOverXEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.FreeShippingOverXEnabled)
-                                @Html.ValidationMessageFor(model => model.FreeShippingOverXEnabled)
+                                <nop-editor asp-for="FreeShippingOverXEnabled" />
+                                <span asp-validation-for="FreeShippingOverXEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group" id="pnlValueOfX">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXValue_OverrideForStore, model => model.FreeShippingOverXValue, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.FreeShippingOverXValue)
+                                <nop-override-store-checkbox asp-for="FreeShippingOverXValue_OverrideForStore" asp-input="FreeShippingOverXValue" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FreeShippingOverXValue" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.FreeShippingOverXValue)
-                                @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
+                                <nop-editor asp-for="FreeShippingOverXValue" />
+                                <span asp-validation-for="FreeShippingOverXValue"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting" id="pnlValueOfXincltax">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.FreeShippingOverXIncludingTax)
+                                <nop-override-store-checkbox asp-for="FreeShippingOverXIncludingTax_OverrideForStore" asp-input="FreeShippingOverXIncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="FreeShippingOverXIncludingTax" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.FreeShippingOverXIncludingTax)
-                                @Html.ValidationMessageFor(model => model.FreeShippingOverXIncludingTax)
+                                <nop-editor asp-for="FreeShippingOverXIncludingTax" />
+                                <span asp-validation-for="FreeShippingOverXIncludingTax"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.UseWarehouseLocation)
+                                <nop-override-store-checkbox asp-for="UseWarehouseLocation_OverrideForStore" asp-input="UseWarehouseLocation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="UseWarehouseLocation" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.UseWarehouseLocation)
-                                @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
+                                <nop-editor asp-for="UseWarehouseLocation" />
+                                <span asp-validation-for="UseWarehouseLocation"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ConsiderAssociatedProductsDimensions_OverrideForStore, model => model.ConsiderAssociatedProductsDimensions, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ConsiderAssociatedProductsDimensions)
+                                <nop-override-store-checkbox asp-for="ConsiderAssociatedProductsDimensions_OverrideForStore" asp-input="ConsiderAssociatedProductsDimensions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ConsiderAssociatedProductsDimensions" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ConsiderAssociatedProductsDimensions)
-                                @Html.ValidationMessageFor(model => model.ConsiderAssociatedProductsDimensions)
+                                <nop-editor asp-for="ConsiderAssociatedProductsDimensions" />
+                                <span asp-validation-for="ConsiderAssociatedProductsDimensions"></span>
                             </div>
                         </div>
                     </div>
@@ -124,32 +121,32 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                                <nop-override-store-checkbox asp-for="NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore" asp-input="NotifyCustomerAboutShippingFromMultipleLocations" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyCustomerAboutShippingFromMultipleLocations" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
-                                @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                                <nop-editor asp-for="NotifyCustomerAboutShippingFromMultipleLocations" />
+                                <span asp-validation-for="NotifyCustomerAboutShippingFromMultipleLocations"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayShipmentEventsToCustomers)
+                                <nop-override-store-checkbox asp-for="DisplayShipmentEventsToCustomers_OverrideForStore" asp-input="DisplayShipmentEventsToCustomers" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayShipmentEventsToCustomers" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayShipmentEventsToCustomers)
-                                @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToCustomers)
+                                <nop-editor asp-for="DisplayShipmentEventsToCustomers" />
+                                <span asp-validation-for="DisplayShipmentEventsToCustomers"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.DisplayShipmentEventsToStoreOwner)
+                                <nop-override-store-checkbox asp-for="DisplayShipmentEventsToStoreOwner_OverrideForStore" asp-input="DisplayShipmentEventsToStoreOwner" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayShipmentEventsToStoreOwner" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.DisplayShipmentEventsToStoreOwner)
-                                @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToStoreOwner)
+                                <nop-editor asp-for="DisplayShipmentEventsToStoreOwner" />
+                                <span asp-validation-for="DisplayShipmentEventsToStoreOwner"></span>
                             </div>
                         </div>
                     </div>
@@ -161,42 +158,42 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.EstimateShippingEnabled_OverrideForStore, model => model.EstimateShippingEnabled, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.EstimateShippingEnabled)
+                                <nop-override-store-checkbox asp-for="EstimateShippingEnabled_OverrideForStore" asp-input="EstimateShippingEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EstimateShippingEnabled" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.EstimateShippingEnabled)
-                                @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
+                                <nop-editor asp-for="EstimateShippingEnabled" />
+                                <span asp-validation-for="EstimateShippingEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.HideShippingTotal_OverrideForStore, model => model.HideShippingTotal, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.HideShippingTotal)
+                                <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="HideShippingTotal" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.HideShippingTotal)
-                                @Html.ValidationMessageFor(model => model.HideShippingTotal)
+                                <nop-editor asp-for="HideShippingTotal" />
+                                <span asp-validation-for="HideShippingTotal"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.ShipToSameAddress)
+                                <nop-override-store-checkbox asp-for="ShipToSameAddress_OverrideForStore" asp-input="ShipToSameAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShipToSameAddress" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.ShipToSameAddress)
-                                @Html.ValidationMessageFor(model => model.ShipToSameAddress)
+                                <nop-editor asp-for="ShipToSameAddress" />
+                                <span asp-validation-for="ShipToSameAddress"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
-                                @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
-                                @Html.NopLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+                                <nop-override-store-checkbox asp-for="BypassShippingMethodSelectionIfOnlyOne_OverrideForStore" asp-input="BypassShippingMethodSelectionIfOnlyOne" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="BypassShippingMethodSelectionIfOnlyOne" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
-                                @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+                                <nop-editor asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+                                <span asp-validation-for="BypassShippingMethodSelectionIfOnlyOne"></span>
                             </div>
                         </div>
                     </div>
@@ -237,16 +234,16 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
+                        <nop-override-store-checkbox asp-for="ShippingOriginAddress_OverrideForStore" asp-parent-container="pnlShippingOriginAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         @T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")
                     </div>
                     <div class="panel-body">
                         <div id="pnlShippingOriginAddress">
-                            @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+                            <nop-editor asp-for="ShippingOriginAddress" asp-template="Address" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-}
+</form>

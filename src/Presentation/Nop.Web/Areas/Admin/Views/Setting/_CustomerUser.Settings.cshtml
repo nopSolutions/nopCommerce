@@ -10,29 +10,29 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.UserRegistrationType)
+                    <nop-label asp-for="CustomerSettings.UserRegistrationType" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.CustomerSettings.UserRegistrationType, ((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.UserRegistrationType)
+                    <nop-select asp-for="CustomerSettings.UserRegistrationType" asp-items="@(((UserRegistrationType)Model.CustomerSettings.UserRegistrationType).ToSelectList())" />
+                    <span asp-validation-for="CustomerSettings.UserRegistrationType"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
+                    <nop-label asp-for="CustomerSettings.NotifyNewCustomerRegistration" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.NotifyNewCustomerRegistration)
+                    <nop-editor asp-for="CustomerSettings.NotifyNewCustomerRegistration" />
+                    <span asp-validation-for="CustomerSettings.NotifyNewCustomerRegistration"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
+                    <nop-label asp-for="CustomerSettings.RequireRegistrationForDownloadableProducts" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.RequireRegistrationForDownloadableProducts)
+                    <nop-editor asp-for="CustomerSettings.RequireRegistrationForDownloadableProducts" />
+                    <span asp-validation-for="CustomerSettings.RequireRegistrationForDownloadableProducts"></span>
                 </div>
             </div>
         </div>
@@ -44,74 +44,74 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength)
+                    <nop-label asp-for="CustomerSettings.PasswordMinLength" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.PasswordMinLength)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
+                    <nop-editor asp-for="CustomerSettings.PasswordMinLength" />
+                    <span asp-validation-for="CustomerSettings.PasswordMinLength"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
+                    <nop-label asp-for="CustomerSettings.UnduplicatedPasswordsNumber" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
+                    <nop-editor asp-for="CustomerSettings.UnduplicatedPasswordsNumber" />
+                    <span asp-validation-for="CustomerSettings.UnduplicatedPasswordsNumber"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    <nop-label asp-for="CustomerSettings.DefaultPasswordFormat" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
+                    <nop-select asp-for="CustomerSettings.DefaultPasswordFormat" asp-items="@(((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())" />
+                    <span asp-validation-for="CustomerSettings.DefaultPasswordFormat"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">                    
+                    <nop-label asp-for="CustomerSettings.PasswordLifetime" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.PasswordLifetime" />
+                    <span asp-validation-for="CustomerSettings.PasswordLifetime"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.PasswordLifetime)
+                    <nop-label asp-for="CustomerSettings.PasswordRecoveryLinkDaysValid" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.PasswordLifetime)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordLifetime)
+                    <nop-editor asp-for="CustomerSettings.PasswordRecoveryLinkDaysValid" />
+                    <span asp-validation-for="CustomerSettings.PasswordRecoveryLinkDaysValid"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                    <nop-label asp-for="CustomerSettings.FailedPasswordAllowedAttempts" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
-                </div>
-                <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+                    <nop-editor asp-for="CustomerSettings.FailedPasswordAllowedAttempts" />
+                    <span asp-validation-for="CustomerSettings.FailedPasswordAllowedAttempts"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlFailedPasswordLockoutMinutes">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                    <nop-label asp-for="CustomerSettings.FailedPasswordLockoutMinutes" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                    <nop-editor asp-for="CustomerSettings.FailedPasswordLockoutMinutes" />
+                    <span asp-validation-for="CustomerSettings.FailedPasswordLockoutMinutes"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice)
+                    <nop-label asp-for="CustomerSettings.EnteringEmailTwice" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.EnteringEmailTwice)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
+                    <nop-editor asp-for="CustomerSettings.EnteringEmailTwice" />
+                    <span asp-validation-for="CustomerSettings.EnteringEmailTwice"></span>
                 </div>
             </div>
         </div>
@@ -123,101 +123,101 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.UsernamesEnabled)
+                    <nop-label asp-for="CustomerSettings.UsernamesEnabled" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.UsernamesEnabled)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.UsernamesEnabled)
+                    <nop-editor asp-for="CustomerSettings.UsernamesEnabled" />
+                    <span asp-validation-for="CustomerSettings.UsernamesEnabled"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                    <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+                    <nop-editor asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+                    <span asp-validation-for="CustomerSettings.AllowUsersToChangeUsernames"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting" id="pnlCheckUsernameAvailability">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                    <nop-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                    <nop-editor asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
+                    <span asp-validation-for="CustomerSettings.CheckUsernameAvailabilityEnabled"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat)
+                    <nop-label asp-for="CustomerSettings.CustomerNameFormat" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.CustomerSettings.CustomerNameFormat, ((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.CustomerNameFormat)
+                    <nop-select asp-for="CustomerSettings.CustomerNameFormat" asp-items="@(((CustomerNameFormat)Model.CustomerSettings.CustomerNameFormat).ToSelectList())" />
+                    <span asp-validation-for="CustomerSettings.CustomerNameFormat"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    <nop-label asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)
+                    <nop-editor asp-for="CustomerSettings.AllowCustomersToUploadAvatars" />
+                    <span asp-validation-for="CustomerSettings.AllowCustomersToUploadAvatars"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlDefaultAvatarEnabled">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.DefaultAvatarEnabled)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultAvatarEnabled)
+                    <nop-editor asp-for="CustomerSettings.DefaultAvatarEnabled" />
+                    <span asp-validation-for="CustomerSettings.DefaultAvatarEnabled"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.HideDownloadableProductsTab)
+                    <nop-label asp-for="CustomerSettings.HideDownloadableProductsTab" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.HideDownloadableProductsTab)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.HideDownloadableProductsTab)
+                    <nop-editor asp-for="CustomerSettings.HideDownloadableProductsTab" />
+                    <span asp-validation-for="CustomerSettings.HideDownloadableProductsTab"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                    <nop-label asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                    <nop-editor asp-for="CustomerSettings.HideBackInStockSubscriptionsTab" />
+                    <span asp-validation-for="CustomerSettings.HideBackInStockSubscriptionsTab"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock)
+                    <nop-label asp-for="CustomerSettings.HideNewsletterBlock" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.HideNewsletterBlock)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.HideNewsletterBlock)
+                    <nop-editor asp-for="CustomerSettings.HideNewsletterBlock" />
+                    <span asp-validation-for="CustomerSettings.HideNewsletterBlock"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlNewsletterBlockAllowToUnsubscribe">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
+                    <nop-label asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterBlockAllowToUnsubscribe)
+                    <nop-editor asp-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe" />
+                    <span asp-validation-for="CustomerSettings.NewsletterBlockAllowToUnsubscribe"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.StoreLastVisitedPage)
+                    <nop-label asp-for="CustomerSettings.StoreLastVisitedPage" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.StoreLastVisitedPage)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
+                    <nop-editor asp-for="CustomerSettings.StoreLastVisitedPage" />
+                    <span asp-validation-for="CustomerSettings.StoreLastVisitedPage"></span>
                 </div>
             </div>
         </div>
@@ -229,29 +229,29 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    <nop-label asp-for="CustomerSettings.AllowViewingProfiles" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.AllowViewingProfiles)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.AllowViewingProfiles)
+                    <nop-editor asp-for="CustomerSettings.AllowViewingProfiles" />
+                    <span asp-validation-for="CustomerSettings.AllowViewingProfiles"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    <nop-label asp-for="CustomerSettings.ShowCustomersLocation" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersLocation)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersLocation)
+                    <nop-editor asp-for="CustomerSettings.ShowCustomersLocation" />
+                    <span asp-validation-for="CustomerSettings.ShowCustomersLocation"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                    <nop-label asp-for="CustomerSettings.ShowCustomersJoinDate" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CustomerSettings.ShowCustomersJoinDate)
-                    @Html.ValidationMessageFor(model => model.CustomerSettings.ShowCustomersJoinDate)
+                    <nop-editor asp-for="CustomerSettings.ShowCustomersJoinDate" />
+                    <span asp-validation-for="CustomerSettings.ShowCustomersJoinDate"></span>
                 </div>
             </div>
         </div>
@@ -290,20 +290,20 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                    <nop-label asp-for="DateTimeSettings.AllowCustomersToSetTimeZone" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
-                    @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                    <nop-editor asp-for="DateTimeSettings.AllowCustomersToSetTimeZone" />
+                    <span asp-validation-for="DateTimeSettings.AllowCustomersToSetTimeZone"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+                    <nop-label asp-for="DateTimeSettings.DefaultStoreTimeZoneId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
-                    @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+                    <nop-select asp-for="DateTimeSettings.DefaultStoreTimeZoneId" asp-items="@Model.DateTimeSettings.AvailableTimeZones" />
+                    <span asp-validation-for="DateTimeSettings.DefaultStoreTimeZoneId"></span>
                 </div>
             </div>
         </div>

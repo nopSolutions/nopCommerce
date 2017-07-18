@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Order settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Setting" asp-action="ReturnRequestActionCreate" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew") 
+            @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList").Text, "ReturnRequestActionList")</small>
         </h1>
         <div class="pull-right">
@@ -32,4 +30,4 @@
             @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
         </div>
     </div>
-}
+</form>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -97,14 +98,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 selectList = _htmlHelper.DropDownList(For.Name, Items, new { @class = "form-control" });
             }
 
-            string htmlOutput;
-            using (var writer = new StringWriter())
-            {
-                selectList.WriteTo(writer, HtmlEncoder.Default);
-                htmlOutput = writer.ToString();
-            }
-
-            output.Content.SetHtmlContent(htmlOutput);
+            output.Content.SetHtmlContent(selectList.RenderHtmlContent());
         }
     }
 }

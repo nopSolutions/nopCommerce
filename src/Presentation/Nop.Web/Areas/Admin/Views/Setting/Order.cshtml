@@ -8,9 +8,8 @@
     Html.SetActiveMenuItemSystemName("Order settings");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Setting" asp-action="Order" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Order")
@@ -23,32 +22,26 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            bindBootstrapTabSelectEvent('ordersettings-edit');
-        });
-    </script>
-
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("StoreScopeConfiguration")
             @await Component.InvokeAsync("SettingMode")
-            @Html.ValidationSummary(false)
+            <div asp-validation-summary="All"></div>
 
-            <div id="ordersettings-edit" class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Settings.Order.OrderSettings"), true)
-                    @Html.RenderBootstrapTabHeader("tab-returnrequest", @T("Admin.Configuration.Settings.Order.ReturnRequestSettings"))
-                </ul>
-                <div class="tab-content">
-                    @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_Order.Settings", Model), true)
-                    @Html.RenderBootstrapTabContent("tab-returnrequest", await Html.PartialAsync("_Order.ReturnRequestSettings", Model))
-                </div>
-            </div>
+            <nop-tabs id="ordersettings-edit">
+                <nop-tab-header>
+                    <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Settings.Order.OrderSettings")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-returnrequest" class="advanced-setting">@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")</nop-tab-header-item>
+                </nop-tab-header>
+                <nop-tab-content>
+                    <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-returnrequest">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-tab-content-item>
+                </nop-tab-content>
+            </nop-tabs>
         </div>
     </div>
 
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
         eventPublisher.Publish(eventMessage);
@@ -57,7 +50,4 @@
             @eventBlock
         }
     }
-
-    @*save selected tab name*@
-    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-}
+</form>
