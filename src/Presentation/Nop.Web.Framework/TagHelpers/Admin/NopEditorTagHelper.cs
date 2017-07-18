@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -123,15 +124,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 readOnly: false,
                 additionalViewData: new { postfix = this.Postfix });
 
-            var s = templateBuilder.Build();
-            string htmlOutput;
-            using (var writer = new StringWriter())
-            {
-                s.WriteTo(writer, HtmlEncoder.Default);
-                htmlOutput = writer.ToString();
-            }
-
-            output.Content.SetHtmlContent(htmlOutput);
+            var htmlOutput = templateBuilder.Build();
+            output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
         }
     }
 }
