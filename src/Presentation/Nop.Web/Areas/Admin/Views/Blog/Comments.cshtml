@@ -12,7 +12,7 @@
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.Comments")
@@ -42,34 +42,34 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnFrom)
+                                    <nop-label asp-for="CreatedOnFrom" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnFrom)
+                                    <nop-editor asp-for="CreatedOnFrom" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnTo)
+                                    <nop-label asp-for="CreatedOnTo" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnTo)
+                                    <nop-editor asp-for="CreatedOnTo" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchApprovedId)
+                                    <nop-label asp-for="SearchApprovedId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("SearchApprovedId", Model.AvailableApprovedOptions)
+                                    <nop-select asp-for="SearchApprovedId" asp-items="Model.AvailableApprovedOptions"></nop-select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchText)
+                                    <nop-label asp-for="SearchText" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchText)
+                                    <nop-editor asp-for="SearchText" />
                                 </div>
                             </div>
 
