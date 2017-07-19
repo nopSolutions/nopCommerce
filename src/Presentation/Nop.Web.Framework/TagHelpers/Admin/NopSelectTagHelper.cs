@@ -90,15 +90,40 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
+            //get htmlAttributes object
+            var htmlAttributes = new Dictionary<string, object>();
+            var attributes = context.AllAttributes;
+            foreach (var attribute in attributes)
+            {
+                if (!attribute.Name.Equals(ForAttributeName) &&
+                    !attribute.Name.Equals(NameAttributeName) &&
+                    !attribute.Name.Equals(ItemsAttributeName) &&
+                    !attribute.Name.Equals(DisabledAttributeName) &&
+                    !attribute.Name.Equals(ForAttributeName))
+                {
+                    htmlAttributes.Add(attribute.Name, attribute.Value);
+                }
+            }
 
             //generate editor
             var tagName = For != null ? For.Name : Name;
             bool.TryParse(IsMultiple, out bool multiple);
             if (!string.IsNullOrEmpty(tagName))
             {
-                IHtmlContent selectList = multiple 
-                    ? _htmlHelper.Editor(tagName, "MultiSelect", new { SelectList = Items }) 
-                    : _htmlHelper.DropDownList(tagName, Items, new { @class = "form-control" });
+                IHtmlContent selectList;
+                if (multiple)
+                {
+                    selectList = _htmlHelper.Editor(tagName, "MultiSelect", new {htmlAttributes, SelectList = Items});
+                }
+                else
+                {
+                    if (htmlAttributes.ContainsKey("class"))
+                        htmlAttributes["class"] += " form-control";
+                    else
+                        htmlAttributes.Add("class", "form-control");
+
+                    selectList = _htmlHelper.DropDownList(tagName, Items, htmlAttributes);
+                }
                 output.Content.SetHtmlContent(selectList.RenderHtmlContent());
             }
         }
