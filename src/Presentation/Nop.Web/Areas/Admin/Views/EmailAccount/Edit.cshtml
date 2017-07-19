@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Email accounts");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="EmailAccount" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.EmailAccounts.EditEmailAccountDetails")
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("emailAccount-delete")

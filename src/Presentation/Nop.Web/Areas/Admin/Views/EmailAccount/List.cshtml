@@ -5,7 +5,7 @@
     Html.SetActiveMenuItemSystemName("Email accounts");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.EmailAccounts")
@@ -23,7 +23,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="email-accounts-grid"></div>
 
                     <script>
