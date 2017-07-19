@@ -64,11 +64,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
             </div>
-            @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
-            {
+            <form asp-controller="Customer" asp-action="SendEmail" asp-route-id="Id" method="post">
+                <input type="hidden" asp-for="Id" />
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        <nop-antiforgery-token/>
                         <div class="form-group">
                             <div class="col-md-5">
                                 <nop-label asp-for="SendEmail.Subject"/>
@@ -112,7 +111,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>
@@ -139,11 +138,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
             </div>
-            @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
-            {
+            <form asp-controller="Customer" asp-action="SendPm" method="post">
+                <input type="hidden" asp-for="Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        <nop-antiforgery-token/>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-label asp-for="SendPm.Subject"/>
@@ -169,7 +167,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>
