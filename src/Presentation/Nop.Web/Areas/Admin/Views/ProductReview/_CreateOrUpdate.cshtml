@@ -1,7 +1,7 @@
 ﻿@model ProductReviewModel
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -10,47 +10,47 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ProductName)
+                            <nop-label asp-for="ProductName" />
                         </div>
                         <div class="col-md-9">
-                            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">@Model.ProductName</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.StoreName)
+                            <nop-label asp-for="StoreName" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.StoreName)
+                            <div class="form-text-row">@Model.StoreName</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CustomerInfo)
+                            <nop-label asp-for="CustomerInfo" />
                         </div>
                         <div class="col-md-9">
-                            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                            <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@Model.CustomerInfo</a>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Title)
+                            <nop-label asp-for="Title" />
                         </div>
                         <div class="col-md-9">
                             @if (Model.IsLoggedInAsVendor)
                             {
-                                @Html.NopDisplayFor(model => model.Title)
+                                <div class="form-text-row">@Model.Title</div>
                             }
                             else
                             {
-                                @Html.NopEditorFor(model => model.Title, required: true)
-                                @Html.ValidationMessageFor(model => model.Title)
+                                <nop-editor asp-for="Title" asp-required="true" />
+                                <span asp-validation-for="Title"></span>
                             }
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReviewText)
+                            <nop-label asp-for="ReviewText" />
                         </div>
                         <div class="col-md-9">
                             @if (Model.IsLoggedInAsVendor)
@@ -59,31 +59,31 @@
                             }
                             else
                             {
-                                @Html.NopTextAreaFor(model => model.ReviewText, required: true)
-                                @Html.ValidationMessageFor(model => model.ReviewText)
+                                <nop-textarea asp-for="ReviewText" asp-required="true" />
+                                <span asp-validation-for="ReviewText"></span>
                             }
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ReplyText)
+                            <nop-label asp-for="ReplyText" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopTextAreaFor(model => model.ReplyText)
-                            @Html.ValidationMessageFor(model => model.ReplyText)
+                            <nop-textarea asp-for="ReplyText" />
+                            <span asp-validation-for="ReplyText"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Rating)
+                            <nop-label asp-for="Rating" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.Rating)
+                            <div class="form-text-row">@Model.Rating</div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.IsApproved)
+                            <nop-label asp-for="IsApproved" />
                         </div>
                         <div class="col-md-9">
                             @if (Model.IsLoggedInAsVendor)
@@ -101,17 +101,17 @@
                             }
                             else
                             {
-                                @Html.NopEditorFor(model => model.IsApproved)
-                                @Html.ValidationMessageFor(model => model.IsApproved)
+                                <nop-editor asp-for="IsApproved" />
+                                <span asp-validation-for="IsApproved"></span>
                             }
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CreatedOn)
+                            <nop-label asp-for="CreatedOn" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDisplayFor(model => model.CreatedOn)
+                            <div class="form-text-row">@Model.CreatedOn</div>
                         </div>
                     </div>
                 </div>
