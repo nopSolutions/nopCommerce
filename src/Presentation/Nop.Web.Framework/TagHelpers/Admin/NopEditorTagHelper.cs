@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
-            //but we cannot do it because we dob't have access to Expression<Func<TModel, TValue>>
+            //but we cannot do it because we don't have access to Expression<Func<TModel, TValue>>
             //more info at https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/HtmlHelperOfT.cs
 
             //so we manually invoke implementation of "GenerateEditor" method of HtmlHelper
