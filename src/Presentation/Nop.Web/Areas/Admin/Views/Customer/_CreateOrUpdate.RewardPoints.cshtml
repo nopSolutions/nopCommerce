@@ -85,29 +85,29 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AddRewardPointsValue)
+                    <nop-label asp-for="AddRewardPointsValue" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.AddRewardPointsValue)
-                    @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
+                    <nop-editor asp-for="AddRewardPointsValue" />
+                    <span asp-validation-for="AddRewardPointsValue"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AddRewardPointsMessage)
+                    <nop-label asp-for="AddRewardPointsMessage" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.AddRewardPointsMessage)
-                    @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
+                    <nop-editor asp-for="AddRewardPointsMessage" />
+                    <span asp-validation-for="AddRewardPointsMessage"></span>
                 </div>
             </div>
             <div class="form-group" @(Model.RewardPointsAvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AddRewardPointsStoreId)
+                    <nop-label asp-for="AddRewardPointsStoreId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.AddRewardPointsStoreId, Model.RewardPointsAvailableStores)
-                    @Html.ValidationMessageFor(model => model.AddRewardPointsStoreId)
+                    <nop-select asp-for="AddRewardPointsStoreId" asp-items="Model.RewardPointsAvailableStores" />
+                    <span asp-validation-for="AddRewardPointsStoreId"></span>
                 </div>
             </div>
             <div class="form-group">

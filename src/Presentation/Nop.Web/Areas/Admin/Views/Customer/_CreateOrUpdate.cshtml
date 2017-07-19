@@ -1,53 +1,47 @@
 ﻿@model CustomerModel
 @inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
-<script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('customer-edit');
-    });
-</script>
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="customer-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Customers.Customers.Info"), true)
+        <nop-tabs id="customer-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Customers.Customers.Info")</nop-tab-header-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-orders", @T("Admin.Customers.Customers.Orders"))
-                    @Html.RenderBootstrapTabHeader("tab-address", @T("Admin.Customers.Customers.Addresses"))
-                    @Html.RenderBootstrapTabHeader("tab-cart", @T("Admin.Customers.Customers.CurrentShoppingCart"))
-                    @Html.RenderBootstrapTabHeader("tab-wishlist", @T("Admin.Customers.Customers.CurrentWishlist"))
-                    @Html.RenderBootstrapTabHeader("tab-activitylog", @T("Admin.Customers.Customers.ActivityLog"))
-                    @Html.RenderBootstrapTabHeader("tab-impersonate", @T("Admin.Customers.Customers.Impersonate"))
-                    @Html.RenderBootstrapTabHeader("tab-backinstock", @T("Admin.Customers.Customers.BackInStockSubscriptions"))
-                } 
+                    <nop-tab-header-item asp-name="tab-orders">@T("Admin.Customers.Customers.Orders")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-address">@T("Admin.Customers.Customers.Addresses")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-cart">@T("Admin.Customers.Customers.CurrentShoppingCart")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-wishlist">@T("Admin.Customers.Customers.CurrentWishlist")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-activitylog">@T("Admin.Customers.Customers.ActivityLog")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-impersonate">@T("Admin.Customers.Customers.Impersonate")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-backinstock">@T("Admin.Customers.Customers.BackInStockSubscriptions")</nop-tab-header-item>
+                }
                 @if (Model.DisplayRewardPointsHistory)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-rewardpoints", @T("Admin.Customers.Customers.RewardPoints"))
+                    <nop-tab-header-item asp-name="tab-rewardpoints">@T("Admin.Customers.Customers.RewardPoints")</nop-tab-header-item>
                 }
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabContent("tab-orders", await Html.PartialAsync("_CreateOrUpdate.Orders", Model))
-                    @Html.RenderBootstrapTabContent("tab-address", await Html.PartialAsync("_CreateOrUpdate.Addresses", Model))
-                    @Html.RenderBootstrapTabContent("tab-cart", await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model))
-                    @Html.RenderBootstrapTabContent("tab-wishlist", await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model))
-                    @Html.RenderBootstrapTabContent("tab-activitylog", await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model))
-                    @Html.RenderBootstrapTabContent("tab-impersonate", await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model))
-                    @Html.RenderBootstrapTabContent("tab-backinstock", await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model))
-                } 
+                    <nop-tab-content-item asp-name="tab-orders">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-address">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-cart">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-wishlist">@await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-activitylog">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-impersonate">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-backinstock">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-tab-content-item>
+                }
                 @if (Model.DisplayRewardPointsHistory)
                 {
-                    @Html.RenderBootstrapTabContent("tab-rewardpoints", await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model))
+                    <nop-tab-content-item asp-name="tab-rewardpoints">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-tab-content-item>
                 }
-            </div>
-        </div>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 
@@ -60,6 +54,3 @@
         @eventBlock
     }
 }
-
-@*save selected tab name*@
-<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
