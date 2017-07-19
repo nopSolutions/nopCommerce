@@ -8,13 +8,7 @@
     Html.SetActiveMenuItemSystemName("Customer reports");
 }
 
-@Html.AntiForgeryToken()
-
-<script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('customer-reports');
-    });
-</script>
+<nop-antiforgery-token/>
 
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -27,13 +21,13 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="customer-reports" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-ordertotal", @T("Admin.Customers.Reports.BestBy.BestByOrderTotal"), true)
-                @Html.RenderBootstrapTabHeader("tab-numberoforders", @T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders"))
-                @Html.RenderBootstrapTabHeader("tab-registeredcustomers", @T("Admin.Customers.Reports.RegisteredCustomers"))
-            </ul>
-            <div class="tab-content">
+        <nop-tabs id="customer-reports">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-ordertotal" asp-default="true">@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-numberoforders">@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-registeredcustomers">@T("Admin.Customers.Reports.RegisteredCustomers")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
                 @{
                     var dataDictAttributesByTotal = new ViewDataDictionary(ViewData);
                     dataDictAttributesByTotal.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
@@ -41,11 +35,11 @@
                     var dataDictAttributesByNumber = new ViewDataDictionary(ViewData);
                     dataDictAttributesByNumber.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
                 }
-                @Html.RenderBootstrapTabContent("tab-ordertotal", await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal), true)
-                @Html.RenderBootstrapTabContent("tab-numberoforders", await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber))
-                @Html.RenderBootstrapTabContent("tab-registeredcustomers", await Html.PartialAsync("_ReportRegisteredCustomers"))
-            </div>
-        </div>
+                <nop-tab-content-item asp-name="tab-ordertotal" asp-default="true">@await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-numberoforders">@await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-registeredcustomers">@await Html.PartialAsync("_ReportRegisteredCustomers", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 

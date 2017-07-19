@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Customers list");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Customer" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
@@ -55,7 +53,7 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("customer-delete")
 
 @*send email form*@
@@ -66,45 +64,44 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
             </div>
-            @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
-            {
+            <form asp-controller="Customer" asp-action="SendEmail" asp-route-id="Id" method="post">
+                <input type="hidden" asp-for="Id" />
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        @Html.AntiForgeryToken()
                         <div class="form-group">
                             <div class="col-md-5">
-                                @Html.NopLabelFor(model => model.SendEmail.Subject)
+                                <nop-label asp-for="SendEmail.Subject"/>
                             </div>
                             <div class="col-md-7">
-                                @Html.NopEditorFor(model => model.SendEmail.Subject)
-                                @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                                <nop-editor asp-for="SendEmail.Subject"/>
+                                <span asp-validation-for="SendEmail.Subject"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-5">
-                                @Html.NopLabelFor(model => model.SendEmail.Body)
+                                <nop-label asp-for="SendEmail.Body"/>
                             </div>
                             <div class="col-md-7">
-                                @Html.NopTextAreaFor(model => model.SendEmail.Body)
-                                @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                                <nop-textarea asp-for="SendEmail.Body"/>
+                                <span asp-validation-for="SendEmail.Body"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-5">
-                                @Html.NopLabelFor(model => model.SendEmail.SendImmediately)
+                                <nop-label asp-for="SendEmail.SendImmediately"/>
                             </div>
                             <div class="col-md-7">
-                                @Html.NopEditorFor(model => model.SendEmail.SendImmediately)
-                                @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                                <nop-editor asp-for="SendEmail.SendImmediately"/>
+                                <span asp-validation-for="SendEmail.SendImmediately"></span>
                             </div>
                         </div>
                         <div class="form-group" id="pnl-send-date">
                             <div class="col-md-5">
-                                @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate)
+                                <nop-label asp-for="SendEmail.DontSendBeforeDate"/>
                             </div>
                             <div class="col-md-7">
-                                @Html.NopEditorFor(model => model.SendEmail.DontSendBeforeDate)
-                                @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                                <nop-editor asp-for="SendEmail.DontSendBeforeDate"/>
+                                <span asp-validation-for="SendEmail.DontSendBeforeDate"></span>
                             </div>
                         </div>
                     </div>
@@ -114,7 +111,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>
@@ -141,27 +138,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
             </div>
-            @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
-            {
+            <form asp-controller="Customer" asp-action="SendPm" method="post">
+                <input type="hidden" asp-for="Id"/>
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        @Html.AntiForgeryToken()
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SendPm.Subject)
+                                <nop-label asp-for="SendPm.Subject"/>
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SendPm.Subject)
-                                @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                                <nop-editor asp-for="SendPm.Subject"/>
+                                <span asp-validation-for="SendPm.Subject"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SendPm.Message)
+                                <nop-label asp-for="SendPm.Message"/>
                             </div>
                             <div class="col-md-9">
-                                @Html.NopTextAreaFor(model => model.SendPm.Message)
-                                @Html.ValidationMessageFor(model => model.SendPm.Message)
+                                <nop-textarea asp-for="SendPm.Message"></nop-textarea>
+                                <span asp-validation-for="SendPm.Message"></span>
                             </div>
                         </div>
                     </div>
@@ -171,7 +167,7 @@
                         </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>

@@ -79,137 +79,137 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Name)
+                    <nop-label asp-for="Name"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Name, required: true)
-                    @Html.ValidationMessageFor(model => model.Name)
+                    <nop-editor asp-for="Name" asp-required="true"/>
+                    <span asp-validation-for="Name"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DiscountTypeId)
+                    <nop-label asp-for="DiscountTypeId"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.DiscountTypeId)
+                    <nop-select asp-for="DiscountTypeId" asp-items="@((DiscountType) Model.DiscountTypeId).ToSelectList()" />
+                    <span asp-validation-for="DiscountTypeId"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlAppliedToSubCategories">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AppliedToSubCategories)
+                    <nop-label asp-for="AppliedToSubCategories"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.AppliedToSubCategories)
-                    @Html.ValidationMessageFor(model => model.AppliedToSubCategories)
+                    <nop-editor asp-for="AppliedToSubCategories"/>
+                    <span asp-validation-for="AppliedToSubCategories"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.UsePercentage)
+                    <nop-label asp-for="UsePercentage"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.UsePercentage)
-                    @Html.ValidationMessageFor(model => model.UsePercentage)
+                    <nop-editor asp-for="UsePercentage"/>
+                    <span asp-validation-for="UsePercentage"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlDiscountAmount">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DiscountAmount)
+                    <nop-label asp-for="DiscountAmount"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DiscountAmount, Model.PrimaryStoreCurrencyCode)
-                    @Html.ValidationMessageFor(model => model.DiscountAmount)
+                    <nop-editor asp-for="DiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
+                    <span asp-validation-for="DiscountAmount"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlDiscountPercentage">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DiscountPercentage)
+                    <nop-label asp-for="DiscountPercentage"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DiscountPercentage)
-                    @Html.ValidationMessageFor(model => model.DiscountPercentage)
+                    <nop-editor asp-for="DiscountPercentage"/>
+                    <span asp-validation-for="DiscountPercentage"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlMaximumDiscountAmount">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.MaximumDiscountAmount)
+                    <nop-label asp-for="MaximumDiscountAmount"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.MaximumDiscountAmount, Model.PrimaryStoreCurrencyCode)
-                    @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
+                    <nop-editor asp-for="MaximumDiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
+                    <span asp-validation-for="MaximumDiscountAmount"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.RequiresCouponCode)
+                    <nop-label asp-for="RequiresCouponCode"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.RequiresCouponCode)
-                    @Html.ValidationMessageFor(model => model.RequiresCouponCode)
+                    <nop-editor asp-for="RequiresCouponCode"/>
+                    <span asp-validation-for="RequiresCouponCode"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlCouponCode">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CouponCode)
+                    <nop-label asp-for="CouponCode"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.CouponCode)
-                    @Html.ValidationMessageFor(model => model.CouponCode)
+                    <nop-editor asp-for="CouponCode"/>
+                    <span asp-validation-for="CouponCode"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.StartDateUtc)
+                    <nop-label asp-for="StartDateUtc"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.StartDateUtc)
-                    @Html.ValidationMessageFor(model => model.StartDateUtc)
+                    <nop-editor asp-for="StartDateUtc"/>
+                    <span asp-validation-for="StartDateUtc"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.EndDateUtc)
+                    <nop-label asp-for="EndDateUtc"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.EndDateUtc)
-                    @Html.ValidationMessageFor(model => model.EndDateUtc)
+                    <nop-editor asp-for="EndDateUtc"/>
+                    <span asp-validation-for="EndDateUtc"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.IsCumulative)
+                    <nop-label asp-for="IsCumulative"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.IsCumulative)
-                    @Html.ValidationMessageFor(model => model.IsCumulative)
+                    <nop-editor asp-for="IsCumulative"/>
+                    <span asp-validation-for="IsCumulative"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DiscountLimitationId)
+                    <nop-label asp-for="DiscountLimitationId"/>
                 </div>
                 <div class="col-md-9">
                     @Html.NopDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.DiscountLimitationId)
+                    <span asp-validation-for="DiscountLimitationId"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlLimitationTimes">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.LimitationTimes)
+                    <nop-label asp-for="LimitationTimes"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.LimitationTimes)
-                    @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+                    <nop-editor asp-for="LimitationTimes"/>
+                    <span asp-validation-for="LimitationTimes"></span> @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
                 </div>
             </div>
             <div class="form-group" id="pnlMaximumDiscountedQuantity">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.MaximumDiscountedQuantity)
+                    <nop-label asp-for="MaximumDiscountedQuantity"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.MaximumDiscountedQuantity)
-                    @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
+                    <nop-editor asp-for="MaximumDiscountedQuantity"/>
+                    <span asp-validation-for="MaximumDiscountedQuantity"></span>
                 </div>
             </div>
         </div>

@@ -8,10 +8,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToCategories.AddNew").Text;
 }
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
@@ -21,7 +18,7 @@
         </div>
     </div>
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
             try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
@@ -39,10 +36,10 @@
                             <div class="col-sm-8">
                                 <div class="form-group">
                                     <div class="col-sm-4">
-                                        @Html.NopLabelFor(model => model.SearchCategoryName)
+                                        <nop-label asp-for="SearchCategoryName"/>
                                     </div>
                                     <div class="col-sm-8">
-                                        @Html.NopEditorFor(model => model.SearchCategoryName)
+                                        <nop-editor asp-for="SearchCategoryName"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -172,4 +169,4 @@
             </div>
         </div>
     </div>
-}
+</form>

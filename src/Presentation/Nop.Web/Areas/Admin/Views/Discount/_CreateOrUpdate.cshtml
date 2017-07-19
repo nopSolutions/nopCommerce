@@ -1,44 +1,35 @@
 ﻿@model DiscountModel
 @inject IEventPublisher eventPublisher
-@using Nop.Core.Domain.Discounts;
-@using Nop.Services
-@using Nop.Web.Framework.UI;
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
-<script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('discount-edit');
-    });
-</script>
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="discount-edit" class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Promotions.Discounts.Info"), true)
-                @Html.RenderBootstrapTabHeader("tab-requirements", @T("Admin.Promotions.Discounts.Requirements"))
-                @Html.RenderBootstrapTabHeader("tab-applied-to-products", @T("Admin.Promotions.Discounts.AppliedToProducts"))
-                @Html.RenderBootstrapTabHeader("tab-applied-to-categories", @T("Admin.Promotions.Discounts.AppliedToCategories"))
-                @Html.RenderBootstrapTabHeader("tab-applied-to-manufacturers", @T("Admin.Promotions.Discounts.AppliedToManufacturers"))
+        <nop-tabs id="discount-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Promotions.Discounts.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-requirements">@T("Admin.Promotions.Discounts.Requirements")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-applied-to-products">@T("Admin.Promotions.Discounts.AppliedToProducts")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-applied-to-categories">@T("Admin.Promotions.Discounts.AppliedToCategories")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-applied-to-manufacturers">@T("Admin.Promotions.Discounts.AppliedToManufacturers")</nop-tab-header-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-history", @T("Admin.Promotions.Discounts.History"))
+                    <nop-tab-header-item asp-name="tab-history">@T("Admin.Promotions.Discounts.History")</nop-tab-header-item>
                 }
-            </ul>
-            <div class="tab-content">
-                @Html.RenderBootstrapTabContent("tab-info", await Html.PartialAsync("_CreateOrUpdate.Info", Model), true)
-                @Html.RenderBootstrapTabContent("tab-requirements", await Html.PartialAsync("_CreateOrUpdate.Requirements", Model))
-                @Html.RenderBootstrapTabContent("tab-applied-to-products", await Html.PartialAsync("_CreateOrUpdate.AppliedToProducts", Model))
-                @Html.RenderBootstrapTabContent("tab-applied-to-categories", await Html.PartialAsync("_CreateOrUpdate.AppliedToCategories", Model))
-                @Html.RenderBootstrapTabContent("tab-applied-to-manufacturers", await Html.PartialAsync("_CreateOrUpdate.AppliedToManufacturers", Model))
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-requirements">@await Html.PartialAsync("_CreateOrUpdate.Requirements", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-applied-to-products">@await Html.PartialAsync("_CreateOrUpdate.AppliedToProducts", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-applied-to-categories">@await Html.PartialAsync("_CreateOrUpdate.AppliedToCategories", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-applied-to-manufacturers">@await Html.PartialAsync("_CreateOrUpdate.AppliedToManufacturers", Model)</nop-tab-content-item>
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabContent("tab-history", await Html.PartialAsync("_CreateOrUpdate.History", Model))
+                    <nop-tab-content-item asp-name="tab-history">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab-content-item>
                 }
-            </div>
-        </div>
+            </nop-tab-content>
+        </nop-tabs>
     </div>
 </div>
 
@@ -51,6 +42,3 @@
         @eventBlock
     }
 }
-
-@*save selected tab name*@
-<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">

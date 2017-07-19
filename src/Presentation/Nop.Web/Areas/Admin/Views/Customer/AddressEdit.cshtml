@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Customers list");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Customer" asp-action="AddressEdit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Customers.Customers.Addresses.EditAddress") 
@@ -23,4 +21,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
-}
+</form>

@@ -1,7 +1,7 @@
 ﻿@model EmailAccountModel
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="ModelOnly"></div>
+<input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
@@ -10,56 +10,56 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Email)
+                            <nop-label asp-for="Email"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Email, required: true)
-                            @Html.ValidationMessageFor(model => model.Email)
+                            <nop-editor asp-for="Email" asp-required="true"/>
+                            <span asp-validation-for="Email"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.DisplayName)
+                            <nop-label asp-for="DisplayName"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.DisplayName, required: true)
-                            @Html.ValidationMessageFor(model => model.DisplayName)
+                            <nop-editor asp-for="DisplayName" asp-required="true"/>
+                            <span asp-validation-for="DisplayName"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Host)
+                            <nop-label asp-for="Host"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Host)
-                            @Html.ValidationMessageFor(model => model.Host)
+                            <nop-editor asp-for="Host"/>
+                            <span asp-validation-for="Host"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Port)
+                            <nop-label asp-for="Port"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Port)
-                            @Html.ValidationMessageFor(model => model.Port)
+                            <nop-editor asp-for="Port"/>
+                            <span asp-validation-for="Port"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Username)
+                            <nop-label asp-for="Username"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Username)
-                            @Html.ValidationMessageFor(model => model.Username)
+                            <nop-editor asp-for="Username"/>
+                            <span asp-validation-for="Username"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.Password)
+                            <nop-label asp-for="Password"/>
                         </div>
                         <div class="col-md-9">
                             <div class="input-group">
-                                @Html.NopEditorFor(model => model.Password)
+                                <nop-editor asp-for="Password"/>
                                 <div class="input-group-btn">
                                     @if (Model.Id > 0)
                                     {
@@ -69,25 +69,25 @@
                                     }
                                 </div>
                             </div>
-                            @Html.ValidationMessageFor(model => model.Password)
+                            <span asp-validation-for="Password"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.EnableSsl)
+                            <nop-label asp-for="EnableSsl"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.EnableSsl)
-                            @Html.ValidationMessageFor(model => model.EnableSsl)
+                            <nop-editor asp-for="EnableSsl"/>
+                            <span asp-validation-for="EnableSsl"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.UseDefaultCredentials)
+                            <nop-label asp-for="UseDefaultCredentials"/>
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.UseDefaultCredentials)
-                            @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
+                            <nop-editor asp-for="UseDefaultCredentials"/>
+                            <span asp-validation-for="UseDefaultCredentials"></span>
                         </div>
                     </div>
                 </div>
@@ -101,18 +101,18 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SendTestEmailTo)
+                                <nop-label asp-for="SendTestEmailTo"/>
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group">
-                                    @Html.NopEditorFor(model => model.SendTestEmailTo)
+                                    <nop-editor asp-for="SendTestEmailTo"/>
                                     <div class="input-group-btn">
                                         <button type="submit" name="sendtestemail" class="btn btn-info">
                                             @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
                                         </button>
                                     </div>
                                 </div>
-                                @Html.ValidationMessageFor(model => model.SendTestEmailTo)
+                            <span asp-validation-for="SendTestEmailTo"></span>
                             </div>
                         </div>
                     </div>
