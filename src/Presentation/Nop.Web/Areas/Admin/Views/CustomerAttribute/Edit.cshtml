@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Customer and user settings");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customerattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="CustomerAttribute" asp-action="Edit" method="post" id="customerattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Customers.CustomerAttributes.EditAttributeDetails") - @Model.Name 
+            @T("Admin.Customers.CustomerAttributes.EditAttributeDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.CustomerAttributes.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("customerattribute-delete")
