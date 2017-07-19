@@ -40,7 +40,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
             _htmlHelper = htmlHelper;
         }
 
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
                 }
             };
 
-            var content = await output.GetChildContentAsync();
+            var content = output.GetChildContentAsync().Result;
             a.InnerHtml.AppendHtml(content.GetContent());
 
             output.TagName = "li";

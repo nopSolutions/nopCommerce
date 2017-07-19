@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         {
         }
 
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             //tag details
             output.TagName = "textarea";
@@ -62,7 +62,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 output.PostElement.SetHtmlContent("<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>");
             }
 
-            await base.ProcessAsync(context, output);
+            base.Process(context, output);
         }
     }
 }

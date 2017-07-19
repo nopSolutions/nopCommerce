@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
         {
         }
 
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             //add disabled attribute
             bool.TryParse(IsDisabled, out bool disabled);
@@ -30,7 +30,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
                 output.Attributes.Add(d);
             }
 
-            await base.ProcessAsync(context, output);
+            base.Process(context, output);
         }
     }
 }

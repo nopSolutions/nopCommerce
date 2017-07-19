@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
     [HtmlTargetElement("nop-tab-content", ParentTag = "nop-tabs")]
     public class NopTabContentHelper : TagHelper
     {
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {

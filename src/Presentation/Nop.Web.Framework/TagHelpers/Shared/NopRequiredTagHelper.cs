@@ -7,7 +7,7 @@ namespace Nop.Web.Framework.TagHelpers.Shared
     [HtmlTargetElement("nop-required", TagStructure = TagStructure.WithoutEndTag)]
     public class NopRequiredTagHelper : TagHelper
     {
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
