@@ -239,30 +239,30 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AddDiscountRequirement)
+                        <nop-label asp-for="AddDiscountRequirement"/>
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
-                        @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+                        <nop-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
+                        <span asp-validation-for="AddDiscountRequirement"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnlGroup" style="display: none">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.RequirementGroupId)
+                        <nop-label asp-for="RequirementGroupId"/>
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.RequirementGroupId, Model.AvailableRequirementGroups)
-                        @Html.ValidationMessageFor(model => model.RequirementGroupId)
+                        <nop-select asp-for="RequirementGroupId" asp-items="Model.AvailableRequirementGroups" />
+                        <span asp-validation-for="RequirementGroupId"></span>
                     </div>
                 </div>
                 <div id="addrequirementplaceholder"></div>
                 <div class="form-group" id="pnlGroupName" style="display: none">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.GroupName)
+                        <nop-label asp-for="GroupName"/>
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.GroupName)
-                        @Html.ValidationMessageFor(model => model.GroupName)
+                        <nop-editor asp-for="GroupName"/>
+                        <span asp-validation-for="GroupName"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnlAddNewGroup" style="display: none">

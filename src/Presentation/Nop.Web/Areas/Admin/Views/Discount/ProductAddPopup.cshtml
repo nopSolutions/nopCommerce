@@ -10,9 +10,7 @@
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToProducts.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
@@ -22,7 +20,7 @@
         </div>
     </div>
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
             try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
@@ -40,52 +38,52 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchProductName)
+                                        <nop-label asp-for="SearchProductName" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopEditorFor(model => model.SearchProductName)
+                                        <nop-editor asp-for="SearchProductName" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchCategoryId)
+                                        <nop-label asp-for="SearchCategoryId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchVendorId)
+                                        <nop-label asp-for="SearchVendorId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchStoreId)
+                                        <nop-label asp-for="SearchStoreId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchProductTypeId)
+                                        <nop-label asp-for="SearchProductTypeId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchManufacturerId)
+                                        <nop-label asp-for="SearchManufacturerId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                     </div>
                                 </div>
                             </div>
@@ -106,110 +104,110 @@
                         <div id="products-grid"></div>
 
                         <script>
-                            $(document).ready(function () {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ProductAddPopupList", "Discount"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: additionalData
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(popupGridPageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
+                        $(document).ready(function () {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductAddPopupList", "Discount"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
                                     },
-                                    pageable: {
-                                        refresh: true,
-                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
                                     },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
                                     },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "Id",
-                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                        headerAttributes: { style: "text-align:center" },
-                                        template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' class='checkboxGroups' />",
-                                        attributes: { style: "text-align:center" },
-                                        width: 50
-                                    }, {
-                                        field: "Name",
-                                        title: "@T("Admin.Catalog.Products.Fields.Name")"
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                    }]
-                                });
+                                    pageSize: @(popupGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Id",
+                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                    headerAttributes: { style: "text-align:center" },
+                                    template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' class='checkboxGroups' />",
+                                    attributes: { style: "text-align:center" },
+                                    width: 50
+                                }, {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }]
                             });
+                        });
                         </script>
 
                         <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('#search-products').click(function() {
-                                    var grid = $('#products-grid').data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                    //clear selected checkboxes
-                                    $('.checkboxGroups').attr('checked', false).change();
-                                    return false;
-                                });
-
-                                $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
-                                    if (event.keyCode == 13) {
-                                        $("#search-products").click();
-                                        return false;
-                                    }
-                                });
-
-                                //wire up checkboxes
-                                $('#mastercheckbox').click(function() {
-                                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                                });
-
-                                $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
-                                    updateMasterCheckbox();
-                                });
+                        $(document).ready(function() {
+                            $('#search-products').click(function() {
+                                var grid = $('#products-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                //clear selected checkboxes
+                                $('.checkboxGroups').attr('checked', false).change();
+                                return false;
                             });
 
-                            function additionalData() {
-                                var data = {
-                                    SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
-                                    SearchCategoryId: $('#SearchCategoryId').val(),
-                                    SearchManufacturerId: $('#SearchManufacturerId').val(),
-                                    SearchStoreId: $('#SearchStoreId').val(),
-                                    SearchVendorId: $('#SearchVendorId').val(),
-                                    SearchProductTypeId: $('#SearchProductTypeId').val()
-                                };
-                                addAntiForgeryToken(data);
-                                return data;
-                            }
+                            $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
+                                if (event.keyCode == 13) {
+                                    $("#search-products").click();
+                                    return false;
+                                }
+                            });
 
-                            function updateMasterCheckbox() {
-                                var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
-                                var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-                                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                            }
+                            //wire up checkboxes
+                            $('#mastercheckbox').click(function() {
+                                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                            });
+
+                            $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
+                                updateMasterCheckbox();
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                SearchCategoryId: $('#SearchCategoryId').val(),
+                                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                SearchStoreId: $('#SearchStoreId').val(),
+                                SearchVendorId: $('#SearchVendorId').val(),
+                                SearchProductTypeId: $('#SearchProductTypeId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        function updateMasterCheckbox() {
+                            var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                            var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                        }
                         </script>
                     </div>
                     <div class="panel-footer">
@@ -222,4 +220,4 @@
             </div>
         </div>
     </div>
-}
+</form>

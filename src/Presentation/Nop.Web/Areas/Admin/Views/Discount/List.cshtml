@@ -10,7 +10,7 @@
     Html.SetActiveMenuItemSystemName("Discounts");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Discounts")
@@ -32,26 +32,26 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchDiscountName)
+                                    <nop-label asp-for="SearchDiscountName"/>
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchDiscountName)
+                                    <nop-editor asp-for="SearchDiscountName"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchDiscountCouponCode)
+                                    <nop-label asp-for="SearchDiscountCouponCode"/>
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchDiscountCouponCode)
+                                    <nop-editor asp-for="SearchDiscountCouponCode"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchDiscountTypeId)
+                                    <nop-label asp-for="SearchDiscountTypeId"/>
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("SearchDiscountTypeId", Model.AvailableDiscountTypes)
+                                    <nop-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes"/>
                                 </div>
                             </div>
                             <div class="form-group">

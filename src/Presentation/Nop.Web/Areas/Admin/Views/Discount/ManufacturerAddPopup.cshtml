@@ -10,9 +10,7 @@
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
@@ -22,7 +20,7 @@
         </div>
     </div>
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
             try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
@@ -40,13 +38,13 @@
                             <div class="col-sm-8">
                                 <div class="form-group">
                                     <div class="col-sm-4">
-                                        @Html.NopLabelFor(model => model.SearchManufacturerName)
+                                        <nop-label asp-for="SearchManufacturerName" />
                                     </div>
-                                    <div class="col-sm-8">
-                                        @Html.NopEditorFor(model => model.SearchManufacturerName)
+                                    <div class=" col-sm-8">
+                                        <nop-editor asp-for="SearchManufacturerName" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class=" form-group">
                                     <div class="col-sm-8 col-sm-offset-4">
                                         <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
                                             <i class="fa fa-search"></i>
@@ -176,4 +174,4 @@
             </div>
         </div>
     </div>
-}
+</form>
