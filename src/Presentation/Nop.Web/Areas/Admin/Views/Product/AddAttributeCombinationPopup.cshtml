@@ -19,107 +19,107 @@
     </script>
 }
 
-    @*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-    <form asp-all-route-data="@null">
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
 
-        <div class="content-header clearfix">
-            <h1 class="pull-left">
-                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
-            </h1>
-            <div class="pull-right">
-                &nbsp;
-            </div>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
         </div>
-        <div class="content">
-            <div asp-validation-summary="All"></div>
-            <div class="form-horizontal">
-                <div class="panel-group">
-                    <div class="panel panel-default panel-popup">
-                        <div class="panel-body">
-                            @if (Model.Warnings.Count > 0)
-                            {
-                            <div class="alert alert-warning alert-dismissible">
-                                @foreach (var warning in Model.Warnings)
-                                    {
-                                @warning
-                                    }
-                            </div>
-                            }
+    </div>
+    <div class="content">
+        <div asp-validation-summary="All"></div>
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-popup">
+                    <div class="panel-body">
+                        @if (Model.Warnings.Count > 0)
+                        {
+                        <div class="alert alert-warning alert-dismissible">
+                            @foreach (var warning in Model.Warnings)
+                                {
+                            @warning
+                                }
+                        </div>
+                        }
 
-                            @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="StockQuantity" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="StockQuantity" />
-                                    <span asp-validation-for="StockQuantity"></span>
-                                </div>
+                        @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="StockQuantity" />
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="AllowOutOfStockOrders" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="AllowOutOfStockOrders" />
-                                    <span asp-validation-for="AllowOutOfStockOrders"></span>
-                                </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="StockQuantity" />
+                                <span asp-validation-for="StockQuantity"></span>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="Sku" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="Sku" />
-                                    <span asp-validation-for="Sku"></span>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="AllowOutOfStockOrders" />
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="ManufacturerPartNumber" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="ManufacturerPartNumber" />
-                                    <span asp-validation-for="ManufacturerPartNumber"></span>
-                                </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="AllowOutOfStockOrders" />
+                                <span asp-validation-for="AllowOutOfStockOrders"></span>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="Gtin" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="Gtin" />
-                                    <span asp-validation-for="Gtin"></span>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="Sku" />
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="OverriddenPrice" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="OverriddenPrice" />
-                                    <span asp-validation-for="OverriddenPrice"></span>
-                                </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="Sku" />
+                                <span asp-validation-for="Sku"></span>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <nop-label asp-for="NotifyAdminForQuantityBelow" />
-                                </div>
-                                <div class="col-sm-8">
-                                    <nop-editor asp-for="NotifyAdminForQuantityBelow" />
-                                    <span asp-validation-for="NotifyAdminForQuantityBelow"></span>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="ManufacturerPartNumber" />
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-8 col-sm-offset-4">
-                                    <button type="submit" id="add-attribute-combination" name="add-attribute-combination" class="btn btn-primary">
-                                        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
-                                    </button>
-                                </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="ManufacturerPartNumber" />
+                                <span asp-validation-for="ManufacturerPartNumber"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="Gtin" />
+                            </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="Gtin" />
+                                <span asp-validation-for="Gtin"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="OverriddenPrice" />
+                            </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="OverriddenPrice" />
+                                <span asp-validation-for="OverriddenPrice"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <nop-label asp-for="NotifyAdminForQuantityBelow" />
+                            </div>
+                            <div class="col-sm-8">
+                                <nop-editor asp-for="NotifyAdminForQuantityBelow" />
+                                <span asp-validation-for="NotifyAdminForQuantityBelow"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-4">
+                                <button type="submit" id="add-attribute-combination" name="add-attribute-combination" class="btn btn-primary">
+                                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
