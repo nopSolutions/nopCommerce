@@ -86,8 +86,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             }
 
             //contextualize IHtmlHelper
-            var viewContextAware
-                = _htmlHelper as IViewContextAware;
+            var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             //get htmlAttributes object

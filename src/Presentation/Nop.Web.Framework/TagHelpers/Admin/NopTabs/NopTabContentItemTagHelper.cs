@@ -52,8 +52,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
             }
 
             //contextualize IHtmlHelper
-            var viewContextAware
-                = _htmlHelper as IViewContextAware;
+            var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
             bool.TryParse(IsDefault, out bool isDefaultTab);
