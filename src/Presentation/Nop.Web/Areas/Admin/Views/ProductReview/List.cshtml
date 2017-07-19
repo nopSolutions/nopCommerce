@@ -14,7 +14,7 @@
     Html.SetActiveMenuItemSystemName("Product reviews");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
@@ -48,31 +48,31 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnFrom)
+                                    <nop-label asp-for="CreatedOnFrom" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnFrom)
+                                    <nop-editor asp-for="CreatedOnFrom" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.CreatedOnTo)
+                                    <nop-label asp-for="CreatedOnTo" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.CreatedOnTo)
+                                    <nop-editor asp-for="CreatedOnTo" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchText)
+                                    <nop-label asp-for="SearchText" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopEditorFor(model => model.SearchText)
+                                    <nop-editor asp-for="SearchText" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchApprovedId)
+                                    <nop-label asp-for="SearchApprovedId" />
                                 </div>
                                 <div class="col-md-8">
                                     @Html.NopDropDownList("SearchApprovedId", Model.AvailableApprovedOptions)
@@ -80,7 +80,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchProductId)
+                                    <nop-label asp-for="SearchProductId" />
                                 </div>
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" id="search-product-name" autocomplete="off" />
@@ -102,7 +102,7 @@
 
                                     <span id="search-product-friendly-name"></span>
                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
-                                    @Html.TextBoxFor(model => model.SearchProductId, new {autocomplete = "off", style = "display:none;"})
+                                    <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
 
                                     <script>
                                     //remove button
@@ -117,10 +117,10 @@
                             </div>
                             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                    <nop-label asp-for="SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                    <nop-select asp-for="SearchStoreId" asp-items="@Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">

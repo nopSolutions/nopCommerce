@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Product reviews");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ProductReview" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.ProductReviews.EditProductReviewDetails")
@@ -35,7 +33,7 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @if (!Model.IsLoggedInAsVendor)
 {
     //this button is not visible to vendors

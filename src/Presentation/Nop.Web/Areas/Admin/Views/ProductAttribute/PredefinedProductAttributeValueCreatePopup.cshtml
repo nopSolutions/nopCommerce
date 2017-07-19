@@ -7,9 +7,8 @@
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")
@@ -22,4 +21,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdatePredefinedProductAttributeValue", Model)
-}
+</form>
