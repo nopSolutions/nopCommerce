@@ -277,65 +277,65 @@
 
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
+                            <nop-label asp-for="AddSpecificationAttributeModel.AttributeTypeId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.AttributeTypeId, ((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
+                            <nop-select asp-for="AddSpecificationAttributeModel.AttributeTypeId" asp-items="@(((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.AttributeTypeId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
+                            <nop-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId, Model.AddSpecificationAttributeModel.AvailableAttributes)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
+                            <nop-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" asp-items="@Model.AddSpecificationAttributeModel.AvailableAttributes" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeId"></span>
                         </div>
                     </div>
                     <div class="form-group" id="pnlSpecificationAttributeOptionId">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+                            <nop-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId, Model.AddSpecificationAttributeModel.AvailableOptions)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+                            <nop-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" asp-items="@Model.AddSpecificationAttributeModel.AvailableOptions" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId"></span>
                         </div>
                     </div>
                     <div class="form-group" id="pnlCustomValue">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                            <nop-label asp-for="AddSpecificationAttributeModel.CustomValue" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                            <nop-editor asp-for="AddSpecificationAttributeModel.CustomValue" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.CustomValue"></span>
                         </div>
                     </div>
                     <div class="form-group" id="pnlAllowFiltering">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                            <nop-label asp-for="AddSpecificationAttributeModel.AllowFiltering" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                            <nop-editor asp-for="AddSpecificationAttributeModel.AllowFiltering" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.AllowFiltering"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                            <nop-label asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                            <nop-editor asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.ShowOnProductPage"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                            <nop-label asp-for="AddSpecificationAttributeModel.DisplayOrder" />
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
-                            @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                            <nop-editor asp-for="AddSpecificationAttributeModel.DisplayOrder" />
+                            <span asp-validation-for="AddSpecificationAttributeModel.DisplayOrder"></span>
                         </div>
                     </div>
                     <div class="form-group">

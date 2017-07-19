@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Products");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form"}))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Product" asp-action="Create" method="post" id="product-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.AddNew")
@@ -27,7 +25,7 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @if (!Model.IsLoggedInAsVendor)
 {
     //product editor settings modal

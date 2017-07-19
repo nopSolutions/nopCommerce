@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Nop.Web.Framework.TagHelpers.Public
+namespace Nop.Web.Framework.TagHelpers.Shared
 {
     [HtmlTargetElement("nop-required", TagStructure = TagStructure.WithoutEndTag)]
-    public class RequiredTagHelper : TagHelper
+    public class NopRequiredTagHelper : TagHelper
     {
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {

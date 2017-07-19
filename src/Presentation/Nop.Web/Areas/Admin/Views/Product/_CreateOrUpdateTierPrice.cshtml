@@ -1,7 +1,7 @@
 ﻿@model ProductModel.TierPriceModel
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -19,56 +19,56 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Quantity)
+                            <nop-label asp-for="Quantity" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Quantity)
-                            @Html.ValidationMessageFor(model => model.Quantity)
+                            <nop-editor asp-for="Quantity"/>
+                            <span asp-validation-for="Quantity"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Price)
+                            <nop-label asp-for="Price" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Price)
-                            @Html.ValidationMessageFor(model => model.Price)
+                            <nop-editor asp-for="Price" />
+                            <span asp-validation-for="Price"></span>
                         </div>
                     </div>
                     <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.StoreId)
+                            <nop-label asp-for="StoreId" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                            @Html.ValidationMessageFor(model => model.StoreId)
+                            <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                            <span asp-validation-for="StoreId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.CustomerRoleId)
+                            <nop-label asp-for="CustomerRoleId" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
-                            @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                            <nop-select asp-for="CustomerRoleId" asp-items="@Model.AvailableCustomerRoles" />
+                            <span asp-validation-for="CustomerRoleId"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.StartDateTimeUtc)
+                            <nop-label asp-for="StartDateTimeUtc" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.StartDateTimeUtc)
-                            @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+                            <nop-editor asp-for="StartDateTimeUtc" />
+                            <span asp-validation-for="StartDateTimeUtc"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.EndDateTimeUtc)
+                            <nop-label asp-for="EndDateTimeUtc" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.EndDateTimeUtc)
-                            @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+                            <nop-editor asp-for="EndDateTimeUtc" />
+                            <span asp-validation-for="EndDateTimeUtc"></span>
                         </div>
                     </div>
                 </div>

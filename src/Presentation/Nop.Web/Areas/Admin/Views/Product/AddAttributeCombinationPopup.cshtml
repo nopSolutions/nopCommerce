@@ -19,12 +19,9 @@
     </script>
 }
 
-    @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-    @using (Html.BeginForm(null, null, new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
-                                                FormMethod.Post, null,
-                                                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
-    {
-        @Html.AntiForgeryToken()
+    @*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+    <form asp-all-route-data="@null">
+
         <div class="content-header clearfix">
             <h1 class="pull-left">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
@@ -34,83 +31,83 @@
             </div>
         </div>
         <div class="content">
-            @Html.ValidationSummary(false)
+            <div asp-validation-summary="All"></div>
             <div class="form-horizontal">
                 <div class="panel-group">
                     <div class="panel panel-default panel-popup">
                         <div class="panel-body">
                             @if (Model.Warnings.Count > 0)
                             {
-                                <div class="alert alert-warning alert-dismissible">
-                                    @foreach (var warning in Model.Warnings)
+                            <div class="alert alert-warning alert-dismissible">
+                                @foreach (var warning in Model.Warnings)
                                     {
-                                        @warning
+                                @warning
                                     }
-                                </div>
+                            </div>
                             }
 
                             @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.StockQuantity)
+                                    <nop-label asp-for="StockQuantity" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.StockQuantity)
-                                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                                    <nop-editor asp-for="StockQuantity" />
+                                    <span asp-validation-for="StockQuantity"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.AllowOutOfStockOrders)
+                                    <nop-label asp-for="AllowOutOfStockOrders" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.AllowOutOfStockOrders)
-                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                                    <nop-editor asp-for="AllowOutOfStockOrders" />
+                                    <span asp-validation-for="AllowOutOfStockOrders"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.Sku)
+                                    <nop-label asp-for="Sku" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.Sku)
-                                    @Html.ValidationMessageFor(model => model.Sku)
+                                    <nop-editor asp-for="Sku" />
+                                    <span asp-validation-for="Sku"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.ManufacturerPartNumber)
+                                    <nop-label asp-for="ManufacturerPartNumber" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.ManufacturerPartNumber)
-                                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+                                    <nop-editor asp-for="ManufacturerPartNumber" />
+                                    <span asp-validation-for="ManufacturerPartNumber"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.Gtin)
+                                    <nop-label asp-for="Gtin" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.Gtin)
-                                    @Html.ValidationMessageFor(model => model.Gtin)
+                                    <nop-editor asp-for="Gtin" />
+                                    <span asp-validation-for="Gtin"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.OverriddenPrice)
+                                    <nop-label asp-for="OverriddenPrice" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.OverriddenPrice)
-                                    @Html.ValidationMessageFor(model => model.OverriddenPrice)
+                                    <nop-editor asp-for="OverriddenPrice" />
+                                    <span asp-validation-for="OverriddenPrice"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.NotifyAdminForQuantityBelow)
+                                    <nop-label asp-for="NotifyAdminForQuantityBelow" />
                                 </div>
                                 <div class="col-sm-8">
-                                    @Html.NopEditorFor(model => model.NotifyAdminForQuantityBelow)
-                                    @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+                                    <nop-editor asp-for="NotifyAdminForQuantityBelow" />
+                                    <span asp-validation-for="NotifyAdminForQuantityBelow"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -125,4 +122,4 @@
                 </div>
             </div>
         </div>
-    }
+    </form>

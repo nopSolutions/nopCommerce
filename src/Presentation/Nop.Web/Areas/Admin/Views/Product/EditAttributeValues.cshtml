@@ -7,9 +7,9 @@
     Html.SetActiveMenuItemSystemName("Products");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null" id="productattribute-form">
+   
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
@@ -153,4 +153,4 @@
             </div>
         </div>
     </div>
-}
+</form>

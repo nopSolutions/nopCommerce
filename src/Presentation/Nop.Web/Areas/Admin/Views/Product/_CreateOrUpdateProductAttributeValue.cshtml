@@ -8,11 +8,11 @@
     Html.AddCssFileParts("~/lib/farbtastic/farbtastic.css");
 }
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.ProductAttributeMappingId)
-@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
-@Html.HiddenFor(model => model.DisplayImageSquaresPicture)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="ProductAttributeMappingId" type="hidden" />
+<input asp-for="DisplayColorSquaresRgb" type="hidden" />
+<input asp-for="DisplayImageSquaresPicture" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -66,21 +66,21 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.AttributeValueTypeId)
+                            <nop-label asp-for="AttributeValueTypeId" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopDropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
-                            @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
+                            <nop-select asp-for="AttributeValueTypeId" asp-items="@(((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())" />
+                            <span asp-validation-for="AttributeValueTypeId"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-associated-product">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.AssociatedProductId)
+                            <nop-label asp-for="AssociatedProductId" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.HiddenFor(model => model.AssociatedProductId)
+                            <input asp-for="AssociatedProductId" type="hidden" />
                             <span id="associate-product-name">@Model.AssociatedProductName</span>
-                            @Html.ValidationMessageFor(model => model.AssociatedProductId)
+                            <span asp-validation-for="AssociatedProductId"></span>
                             <button type="submit" onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.IdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary">
                                 @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
                             </button>
@@ -99,20 +99,20 @@
                     </div>
                     <div class="form-group" id="group-customer-enters-qty">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.CustomerEntersQty)
+                            <nop-label asp-for="CustomerEntersQty" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.CustomerEntersQty)
-                            @Html.ValidationMessageFor(model => model.CustomerEntersQty)
+                            <nop-editor asp-for="CustomerEntersQty" />
+                            <span asp-validation-for="CustomerEntersQty"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-quantity">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Quantity)
+                            <nop-label asp-for="Quantity" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Quantity)
-                            @Html.ValidationMessageFor(model => model.Quantity)
+                            <nop-editor asp-for="Quantity" />
+                            <span asp-validation-for="Quantity"></span>
                         </div>
                     </div>
 
@@ -120,24 +120,24 @@
                     @<div>
                         <div class="form-group">
                             <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.Locales[item].Name)
+                                <nop-label asp-for="@Model.Locales[item].Name" />
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.Locales[item].Name)
-                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                                <nop-editor asp-for="@Model.Locales[item].Name" />
+                                <span asp-validation-for="@Model.Locales[item].Name"></span>
                             </div>
                         </div>
-                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                     </div>
     ,
                     @<div>
                         <div class="form-group">
                             <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.Name)
+                                <nop-label asp-for="Name" />
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.Name, required: true)
-                                @Html.ValidationMessageFor(model => model.Name)
+                                <nop-editor asp-for="Name" asp-required="true" />
+                                <span asp-validation-for="Name"></span>
                             </div>
                         </div>
                     </div>
@@ -146,17 +146,17 @@
                     {
                         <div class="form-group">
                             <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.ColorSquaresRgb)
+                                <nop-label asp-for="ColorSquaresRgb" />
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.ColorSquaresRgb)
+                                <nop-editor asp-for="ColorSquaresRgb" />
                                 <div id="color-picker"></div>
                                 <script type="text/javascript">
                                     $(document).ready(function(){
                                         $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
                                     });
                                 </script>
-                                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                                <span asp-validation-for="ColorSquaresRgb"></span>
                             </div>
                         </div>
                     }
@@ -164,62 +164,62 @@
                     {
                         <div class="form-group">
                             <div class="col-sm-3">
-                                @Html.NopLabelFor(model => model.ImageSquaresPictureId)
+                                <nop-label asp-for="ImageSquaresPictureId" />
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopEditorFor(model => model.ImageSquaresPictureId)
-                                @Html.ValidationMessageFor(model => model.ImageSquaresPictureId)
+                                <nop-editor asp-for="ImageSquaresPictureId" />
+                                <span asp-validation-for="ImageSquaresPictureId"></span>
                             </div>
                         </div>
                     }
                     <div class="form-group" id="group-price-adjustment">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.PriceAdjustment)
+                            <nop-label asp-for="PriceAdjustment" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.PriceAdjustment)
-                            @Html.ValidationMessageFor(model => model.PriceAdjustment)
+                            <nop-editor asp-for="PriceAdjustment" />
+                            <span asp-validation-for="PriceAdjustment"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-weight-adjustment">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.WeightAdjustment)
+                            <nop-label asp-for="WeightAdjustment" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.WeightAdjustment)
-                            @Html.ValidationMessageFor(model => model.WeightAdjustment)
+                            <nop-editor asp-for="WeightAdjustment" />
+                            <span asp-validation-for="WeightAdjustment"></span>
                         </div>
                     </div>
                     <div class="form-group" id="group-cost">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Cost)
+                            <nop-label asp-for="Cost" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Cost)
-                            @Html.ValidationMessageFor(model => model.Cost)
+                            <nop-editor asp-for="Cost" />
+                            <span asp-validation-for="Cost"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.IsPreSelected)
+                            <nop-label asp-for="IsPreSelected" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.IsPreSelected)
-                            @Html.ValidationMessageFor(model => model.IsPreSelected)
+                            <nop-editor asp-for="IsPreSelected" />
+                            <span asp-validation-for="IsPreSelected"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.DisplayOrder)
+                            <nop-label asp-for="DisplayOrder" />
                         </div>
                         <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.DisplayOrder)
-                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                            <nop-editor asp-for="DisplayOrder" />
+                            <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.PictureId)
+                            <nop-label asp-for="PictureId" />
                         </div>
                         <div class="col-sm-9">
                             <div class="attribute-picture-selection-block clearfix">
@@ -244,7 +244,7 @@
                                     </div>
                                 }
                             </div>
-                            @Html.ValidationMessageFor(model => model.PictureId)
+                            <span asp-validation-for="PictureId"></span>
                         </div>
                     </div>
                 </div>

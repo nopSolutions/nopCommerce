@@ -2,14 +2,13 @@
 
 @{
     Layout = "_AdminPopupLayout";
- 
+
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.TierPrices.Edit").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.TierPrices.Edit")
@@ -22,4 +21,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateTierPrice", Model)
-}
+</form>

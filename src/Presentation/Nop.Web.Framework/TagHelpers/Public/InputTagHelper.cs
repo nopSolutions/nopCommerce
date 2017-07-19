@@ -1,22 +1,22 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
-    [HtmlTargetElement("textarea", Attributes = ForAttributeName)]
-    public class NopTextAreaTagHelper : TextAreaTagHelper
+    [HtmlTargetElement("input", Attributes = ForAttributeName)]
+    public class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
     {
         private const string ForAttributeName = "asp-for";
+        private const string DisabledAttributeName = "asp-disabled";
 
         /// <summary>
         /// Indicates whether the input is disabled
         /// </summary>
-        [HtmlAttributeName("asp-disabled")]
+        [HtmlAttributeName(DisabledAttributeName)]
         public string IsDisabled { set; get; }
 
-        public NopTextAreaTagHelper(IHtmlGenerator generator) : base(generator)
+        public InputTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 

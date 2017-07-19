@@ -10,9 +10,7 @@
     Html.SetActiveMenuItemSystemName("Product tags");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "product-tags-form"}))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Product" asp-action="ProductTags" method="post" id="product-tags-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.ProductTags")
@@ -88,26 +86,26 @@
                                 },
                                 scrollable: false,
                                 columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "ProductCount",
-                                    title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
-                                    width: 150
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 320, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                                }, {
-                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    title: "@T("Admin.Common.Delete")",
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "ProductCount",
+                                        title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
+                                        width: 150
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 320, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                    }, {
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        title: "@T("Admin.Common.Delete")",
                                         width: 100
                                     }
                                 ]
@@ -131,4 +129,4 @@
             </div>
         </div>
     </div>
-}
+</form>

@@ -17,10 +17,10 @@
                 <div class="col-md-6">
                     <div class="form-group" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                         <div class="col-md-4">
-                            @Html.NopLabelFor(model => model.StockQuantityHistory.SearchWarehouseId)
+                            <nop-label asp-for="StockQuantityHistory.SearchWarehouseId" />
                         </div>
                         <div class="col-md-8">
-                            @Html.NopDropDownListFor(model => model.StockQuantityHistory.SearchWarehouseId, Model.AvailableWarehouses)
+                            <nop-select asp-for="StockQuantityHistory.SearchWarehouseId" asp-items="@Model.AvailableWarehouses" />
                         </div>
                     </div>
                     <div class="form-group">
