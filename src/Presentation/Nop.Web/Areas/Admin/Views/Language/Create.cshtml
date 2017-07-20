@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Languages");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Language" asp-action="Create" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Languages.AddNew") 
+            @T("Admin.Configuration.Languages.AddNew")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Languages.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -27,4 +25,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>

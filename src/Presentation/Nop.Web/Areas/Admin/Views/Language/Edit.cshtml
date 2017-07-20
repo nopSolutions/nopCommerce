@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("Languages");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Language" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name
@@ -24,7 +23,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <a href="@Url.Action("ExportXml", new {id = Model.Id})" class="btn bg-green">
+            <a asp-action="ExportXml" asp-route-id="@Model.Id" class="btn bg-green">
                 <i class="fa fa-download"></i>
                 @T("Admin.Configuration.Languages.Export")
             </a>
@@ -39,7 +38,7 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("language-delete")
 
 @*import resources form*@
@@ -50,8 +49,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
             </div>
-            @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-            {
+            <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
@@ -80,7 +78,7 @@
                         <input id="importxmlsubmit" type="submit" class="btn btn-primary" value="@T("Admin.Configuration.Languages.Import")" />
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>

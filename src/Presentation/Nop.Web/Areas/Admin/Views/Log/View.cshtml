@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Log");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Log" asp-action="View" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.System.Log.ViewLogDetails")
@@ -27,73 +25,73 @@
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default">
-                    @Html.ValidationSummary(true)
+                    <div asp-validation-summary="All"></div>
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.LogLevel)
+                                <nop-label asp-for="LogLevel" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.LogLevel)
+                                <div class="form-text-row">@Model.LogLevel</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ShortMessage)
+                                <nop-label asp-for="ShortMessage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.ShortMessage)
+                                <div class="form-text-row">@Model.ShortMessage</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.FullMessage)
+                                <nop-label asp-for="FullMessage" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.FullMessage)
+                                <div class="form-text-row">@Model.FullMessage</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.IpAddress)
+                                <nop-label asp-for="IpAddress" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.IpAddress)
+                                <div class="form-text-row">@Model.IpAddress</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CustomerId)
+                                <nop-label asp-for="CustomerId" />
                             </div>
                             <div class="col-md-9">
                                 @if (Model.CustomerId.HasValue)
                                 {
-                                    @Html.ActionLink(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                                    <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text)</a>
                                 }
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.PageUrl)
+                                <nop-label asp-for="PageUrl" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.PageUrl)
+                                <div class="form-text-row">@Model.PageUrl</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ReferrerUrl)
+                                <nop-label asp-for="ReferrerUrl" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.ReferrerUrl)
+                                <div class="form-text-row">@Model.ReferrerUrl</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.CreatedOn)
+                                <nop-label asp-for="CreatedOn" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopDisplayFor(model => model.CreatedOn)
+                                <div class="form-text-row">@Model.CreatedOn</div>
                             </div>
                         </div>
                     </div>
@@ -101,5 +99,5 @@
             </div>
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("log-delete")
