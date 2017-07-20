@@ -59,7 +59,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
         //comma-separated list of stores used on the list page

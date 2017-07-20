@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Message templates");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="MessageTemplate" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails") - @Model.Name 
+            @T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -39,5 +37,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
-@Html.DeleteConfirmation("message-template-delete")
+</form>
