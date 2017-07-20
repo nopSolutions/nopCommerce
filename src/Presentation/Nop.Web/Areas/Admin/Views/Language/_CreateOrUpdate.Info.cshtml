@@ -43,15 +43,17 @@
                     <nop-label asp-for="FlagImageFileName" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.FlagImageFileName, renderFormControlClass: false)
+                    <nop-editor asp-for="FlagImageFileName" />
                     <span asp-validation-for="FlagImageFileName"></span>
                     <script>
                         $(function() {
                             $('#FlagImageFileName').kendoDropDownList({
                                 dataTextField: "Text",
                                 dataValueField: "Value",
-                                valueTemplate: '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
-                                template: '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                valueTemplate:
+                                    '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                template:
+                                    '<span class="image" style="background-image: url(\'@Url.Content("~/images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
                                 dataSource: {
                                     transport: {
                                         type: "json",
