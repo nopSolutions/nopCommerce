@@ -651,42 +651,6 @@ namespace Nop.Web.Framework.Extensions
 
         }
 
-        /// <summary>
-        /// Renders the standard label with a specified suffix added to label text
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <typeparam name="TValue">Value</typeparam>
-        /// <param name="html">HTML helper</param>
-        /// <param name="expression">Expression</param>
-        /// <param name="htmlAttributes">HTML attributes</param>
-        /// <param name="suffix">Suffix</param>
-        /// <returns>Label</returns>
-        public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
-        {
-            //TODO refactor the way it's implemented in \Microsoft.AspNetCore.Mvc.ViewFeatures\ViewFeatures\HtmlHelperOfT.cs - "IHtmlContent LabelFor<TResult>"
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
-            string resolvedLabelText = metadata.Metadata.DisplayName ?? (metadata.Metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
-            if (string.IsNullOrEmpty(resolvedLabelText))
-            {
-                return new HtmlString("");
-            }
-            var tag = new TagBuilder("label");
-            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.IdFor(expression), ""));
-            if (!String.IsNullOrEmpty(suffix))
-            {
-                resolvedLabelText = String.Concat(resolvedLabelText, suffix);
-            }
-            tag.InnerHtml.AppendHtml(resolvedLabelText);
-
-            var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            tag.MergeAttributes(dictionary, true);
-
-            return new HtmlString(tag.ToHtmlString());
-
-        }
-        
         #endregion
     }
 }
