@@ -85,9 +85,9 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
-                                <div class="pull-left margin-r-10">@Html.NopEditorFor(model => model.PointsForPurchases_Amount, Model.PrimaryStoreCurrencyCode)</div>
+                                <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
-                                <div class="pull-left margin-r-10">@Html.NopEditorFor(model => model.PointsForPurchases_Points)</div>
+                                <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
                                 <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
                                 <span asp-validation-for="PointsForPurchases_Amount"></span>
                                 <span asp-validation-for="PointsForPurchases_Points"></span>
@@ -124,8 +124,7 @@
                                         <span asp-validation-for="ActivationDelay"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        @*TODO*@
-                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList(), htmlAttributes: new {style = "max-width: 200px;"})
+                                        <nop-select asp-for="ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
                                         <span asp-validation-for="ActivationDelayPeriodId"></span>
                                     </div>
                                 </div>

@@ -190,7 +190,7 @@
                     <nop-label asp-for="DiscountLimitationId"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
+                    <nop-select asp-for="DiscountLimitationId" asp-items="@(((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())" />
                     <span asp-validation-for="DiscountLimitationId"></span>
                 </div>
             </div>

@@ -232,7 +232,7 @@
                             }
                             <div class="checkbox">
                                 <label>
-                                    @Html.NopEditorFor(model => model.HasAttachedDownload)
+                                    <nop-editor asp-for="HasAttachedDownload" />
                                     @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
                                 </label>
                             </div>

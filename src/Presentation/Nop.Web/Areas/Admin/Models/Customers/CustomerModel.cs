@@ -171,7 +171,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public string CustomerRoleNames { get; set; }
         public List<SelectListItem> AvailableCustomerRoles { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
 
 

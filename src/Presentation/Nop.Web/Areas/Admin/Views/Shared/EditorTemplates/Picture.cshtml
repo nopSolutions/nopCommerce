@@ -19,7 +19,7 @@
 }
 
 <div id="@(clientId + "value")">
-    @Html.HiddenFor(x => x)
+    <input type="hidden" asp-for="@Model" />
 </div>
 <div class="row">
     <div class="col-md-12">

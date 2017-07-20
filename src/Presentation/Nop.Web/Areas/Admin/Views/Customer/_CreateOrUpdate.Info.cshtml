@@ -160,7 +160,7 @@
             </div>
             <div class="col-md-9">
                 <div class="input-group input-group-required">
-                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                     <div class="input-group-btn">
                         @Html.RequiredHint()
                     </div>
@@ -192,7 +192,7 @@
                     <nop-label asp-for="VendorId"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                    <nop-select asp-for="VendorId" asp-items="@Model.AvailableVendors" />
                     <span asp-validation-for="VendorId"></span>
                     <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
                 </div>
