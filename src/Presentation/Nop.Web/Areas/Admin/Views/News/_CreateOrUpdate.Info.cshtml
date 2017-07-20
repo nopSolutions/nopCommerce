@@ -5,80 +5,80 @@
         <div class="panel-body">
             <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.LanguageId)
+                    <nop-label asp-for="LanguageId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.LanguageId, Model.AvailableLanguages)
-                    @Html.ValidationMessageFor(model => model.LanguageId)
+                    <nop-select asp-for="LanguageId" asp-items="@Model.AvailableLanguages" />
+                    <span asp-validation-for="LanguageId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Title)
+                    <nop-label asp-for="Title" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Title, required: true)
-                    @Html.ValidationMessageFor(model => model.Title)
+                    <nop-editor asp-for="Title" asp-required="true" />
+                    <span asp-validation-for="Title"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Short)
+                    <nop-label asp-for="Short" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopTextAreaFor(model => model.Short, required: true)
-                    @Html.ValidationMessageFor(model => model.Short)
+                    <nop-textarea asp-for="Short" asp-required="true" />
+                    <span asp-validation-for="Short"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Full)
+                    <nop-label asp-for="Full" />
                 </div>
                 <div class="col-md-9">
                     <div class="input-group input-group-required">
-                        @Html.EditorFor(x => x.Full, "RichEditor")
+                        <nop-editor asp-for="Full" asp-template="RichEditor" />
                         <div class="input-group-btn">
-                            @Html.RequiredHint()
+                            <nop-required />
                         </div>
                     </div>
-                    @Html.ValidationMessageFor(model => model.Full)
+                    <span asp-validation-for="Full"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AllowComments)
+                    <nop-label asp-for="AllowComments" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.AllowComments)
-                    @Html.ValidationMessageFor(model => model.AllowComments)
+                    <nop-editor asp-for="AllowComments" />
+                    <span asp-validation-for="AllowComments"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.StartDate)
+                    <nop-label asp-for="StartDate" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.StartDate)
-                    @Html.ValidationMessageFor(model => model.StartDate)
+                    <nop-editor asp-for="StartDate" />
+                    <span asp-validation-for="StartDate"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.EndDate)
+                    <nop-label asp-for="EndDate" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.EndDate)
-                    @Html.ValidationMessageFor(model => model.EndDate)
+                    <nop-editor asp-for="EndDate" />
+                    <span asp-validation-for="EndDate"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    <nop-label asp-for="SelectedStoreIds" />
                 </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                            <nop-select asp-for="SelectedStoreIds" asp-items="@Model.AvailableStores" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
@@ -108,11 +108,11 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Published)
+                    <nop-label asp-for="Published" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Published)
-                    @Html.ValidationMessageFor(model => model.Published)
+                    <nop-editor asp-for="Published" />
+                    <span asp-validation-for="Published"></span>
                 </div>
             </div>
         </div>

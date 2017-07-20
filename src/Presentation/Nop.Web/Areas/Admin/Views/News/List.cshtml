@@ -11,13 +11,13 @@
     Html.SetActiveMenuItemSystemName("News items");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.News.NewsItems")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn bg-blue">
+        <a asp-action="Create" class="btn bg-blue">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
@@ -34,10 +34,10 @@
                         <div class="col-md-6">
                             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                    <nop-label asp-for="SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                    <nop-select asp-for="SearchStoreId" asp-items="@Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
