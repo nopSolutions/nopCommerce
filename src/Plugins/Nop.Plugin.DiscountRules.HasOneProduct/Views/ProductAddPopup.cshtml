@@ -34,10 +34,10 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        @Html.NopLabelFor(model => model.SearchProductName)
+                                        <nop-label asp-for="SearchProductName"/>
                                     </div>
                                     <div class="col-sm-7">
-                                        @Html.NopEditorFor(model => model.SearchProductName)
+                                        <nop-editor asp-for="SearchProductName"/>
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
