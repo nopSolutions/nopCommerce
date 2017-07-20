@@ -4,16 +4,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Name)
+                    <nop-label asp-for="Name" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Name, required: true)
-                    @Html.ValidationMessageFor(model => model.Name)
+                    <nop-editor asp-for="Name" asp-required="true" />
+                    <span asp-validation-for="Name"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.LanguageCulture)
+                    <nop-label asp-for="LanguageCulture" />
                 </div>
                 <div class="col-md-9">
                     @{
@@ -25,26 +25,26 @@
                                 Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
                             });
                     }
-                    @Html.NopDropDownListFor(model => model.LanguageCulture, cultures)
-                    @Html.ValidationMessageFor(model => model.LanguageCulture)
+                    <nop-select asp-for="LanguageCulture" asp-items="@cultures" />
+                    <span asp-validation-for="LanguageCulture"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.UniqueSeoCode)
+                    <nop-label asp-for="UniqueSeoCode" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.UniqueSeoCode, required: true)
-                    @Html.ValidationMessageFor(model => model.UniqueSeoCode)
+                    <nop-editor asp-for="UniqueSeoCode" asp-required="true" />
+                    <span asp-validation-for="UniqueSeoCode"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.FlagImageFileName)
+                    <nop-label asp-for="FlagImageFileName" />
                 </div>
                 <div class="col-md-9">
                     @Html.NopEditorFor(model => model.FlagImageFileName, renderFormControlClass: false)
-                    @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                    <span asp-validation-for="FlagImageFileName"></span>
                     <script>
                         $(function() {
                             $('#FlagImageFileName').kendoDropDownList({
@@ -70,30 +70,30 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Rtl)
+                    <nop-label asp-for="Rtl" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Rtl)
-                    @Html.ValidationMessageFor(model => model.Rtl)
+                    <nop-editor asp-for="Rtl"/>
+                    <span asp-validation-for="Rtl"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DefaultCurrencyId)
+                    <nop-label asp-for="DefaultCurrencyId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
-                    @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
+                    <nop-select asp-for="DefaultCurrencyId" asp-items="@Model.AvailableCurrencies" />
+                    <span asp-validation-for="DefaultCurrencyId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    <nop-label asp-for="SelectedStoreIds" />
                 </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-3">
-                            @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                            <nop-select asp-for="SelectedStoreIds" asp-items="@Model.AvailableStores" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
@@ -123,20 +123,20 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Published)
+                    <nop-label asp-for="Published" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Published)
-                    @Html.ValidationMessageFor(model => model.Published)
+                    <nop-editor asp-for="Published" />
+                    <span asp-validation-for="Published"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DisplayOrder)
+                    <nop-label asp-for="DisplayOrder" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
                 </div>
             </div>
         </div>

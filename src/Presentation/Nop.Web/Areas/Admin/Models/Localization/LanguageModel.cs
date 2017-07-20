@@ -49,7 +49,6 @@ namespace Nop.Web.Areas.Admin.Models.Localization
 
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
