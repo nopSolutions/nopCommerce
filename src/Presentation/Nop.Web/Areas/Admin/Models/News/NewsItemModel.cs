@@ -29,7 +29,6 @@ namespace Nop.Web.Areas.Admin.Models.News
 
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 

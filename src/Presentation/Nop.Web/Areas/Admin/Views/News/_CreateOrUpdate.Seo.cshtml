@@ -5,38 +5,38 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.MetaKeywords)
+                    <nop-label asp-for="MetaKeywords" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.MetaKeywords)
-                    @Html.ValidationMessageFor(model => model.MetaKeywords)
+                    <nop-editor asp-for="MetaKeywords" />
+                    <span asp-validation-for="MetaKeywords"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.MetaDescription)
+                    <nop-label asp-for="MetaDescription" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopTextAreaFor(model => model.MetaDescription)
-                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                    <nop-textarea asp-for="MetaDescription"></nop-textarea>
+                    <span asp-validation-for="MetaDescription"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.MetaTitle)
+                    <nop-label asp-for="MetaTitle" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.MetaTitle)
-                    @Html.ValidationMessageFor(model => model.MetaTitle)
+                    <nop-editor asp-for="MetaTitle" />
+                    <span asp-validation-for="MetaTitle"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SeName)
+                    <nop-label asp-for="SeName" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.SeName)
-                    @Html.ValidationMessageFor(model => model.SeName)
+                    <nop-editor asp-for="SeName" />
+                    <span asp-validation-for="SeName"></span>
                 </div>
             </div>
             <script type="text/javascript">

@@ -7,9 +7,8 @@
     Html.SetActiveMenuItemSystemName("News items");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="News" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.News.NewsItems.EditNewsItemDetails") - @Model.Title
@@ -31,5 +30,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("newsitem-delete")
