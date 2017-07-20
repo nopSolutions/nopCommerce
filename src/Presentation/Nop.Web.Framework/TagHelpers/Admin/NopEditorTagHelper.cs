@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -18,6 +15,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string ForAttributeName = "asp-for";
         private const string DisabledAttributeName = "asp-disabled";
         private const string RequiredAttributeName = "asp-required";
+        private const string RenderFormControlClassAttributeName = "asp-render-form-control-class";
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
 
@@ -40,6 +38,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(RequiredAttributeName)]
         public string IsRequired { set; get; }
+
+        /// <summary>
+        /// Indicates whether the "form-control" class shold be added to the input
+        /// </summary>
+        [HtmlAttributeName(RenderFormControlClassAttributeName)]
+        public string RenderFormControlClass { set; get; }
 
         /// <summary>
         /// Editor template for the field
@@ -100,6 +104,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
+            //add form-control class
+            bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
+            object htmlAttributes = null;
+            if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
+                htmlAttributes = new {@class = "form-control"};
+            
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
@@ -122,7 +132,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: new { postfix = this.Postfix });
+                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
 
             var htmlOutput = templateBuilder.Build();
             output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
