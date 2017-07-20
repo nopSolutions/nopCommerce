@@ -5,7 +5,7 @@
     Html.SetActiveMenuItemSystemName("External authentication methods");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ExternalAuthenticationMethods")
@@ -20,7 +20,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="authenticationmethods-grid"></div>
 
                     <script>
