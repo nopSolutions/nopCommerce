@@ -8,9 +8,7 @@
     Html.SetActiveMenuItemSystemName("Local plugins");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Plugins.Local")
@@ -66,18 +64,18 @@
 
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchLoadModeId)
+                                        <nop-label asp-for="SearchLoadModeId" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
+                                        <nop-select asp-for="SearchLoadModeId" asp-items="@Model.AvailableLoadModes" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.SearchGroup)
+                                        <nop-label asp-for="SearchGroup" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
+                                        <nop-select asp-for="SearchGroup" asp-items="@Model.AvailableGroups" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -191,7 +189,7 @@
                                     //refresh grid
                                     var grid = $("#plugins-grid").data('kendoGrid');
                                     grid.dataSource.read();
-                                   
+
                                     //return false to don't reload a page
                                     return false;
                                 });
@@ -224,4 +222,4 @@
             </div>
         </div>
     </div>
-}
+</form>

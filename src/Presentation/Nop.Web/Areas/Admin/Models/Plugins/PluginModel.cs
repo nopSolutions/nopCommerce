@@ -58,13 +58,11 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AclCustomerRoles")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }

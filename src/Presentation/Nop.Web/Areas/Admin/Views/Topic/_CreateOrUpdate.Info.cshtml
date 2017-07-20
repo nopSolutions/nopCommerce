@@ -148,24 +148,24 @@
                         <div class="col-md-4">
                             <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                             <script>
-                    $(document).ready(function() {
-                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                        rolesIdsInput.setOptions({
-                            autoClose: false
-                        });
+                                $(document).ready(function() {
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                    rolesIdsInput.setOptions({
+                                        autoClose: false
+                                    });
 
-                        @if (Model.AvailableCustomerRoles.Count == 0)
-                        {
-                            <text>
-                                rolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No customer roles available'
+                                    @if (Model.AvailableCustomerRoles.Count == 0)
+                                    {
+                                        <text>
+                                            rolesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: 'No customer roles available'
+                                            });
+                                            rolesIdsInput._placeholder();
+                                            rolesIdsInput._enable();
+                                        </text>
+                                    }
                                 });
-                                rolesIdsInput._placeholder();
-                                rolesIdsInput._enable();
-                            </text>
-                        }
-                    });
                             </script>
                         </div>
                         <div class="col-md-8">
