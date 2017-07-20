@@ -160,7 +160,7 @@
             </div>
             <div class="col-md-9">
                 <div class="input-group input-group-required">
-                    @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                     <div class="input-group-btn">
                         @Html.RequiredHint()
                     </div>

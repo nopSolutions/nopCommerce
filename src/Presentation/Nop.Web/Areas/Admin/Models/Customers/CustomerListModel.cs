@@ -14,7 +14,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             AvailableCustomerRoles = new List<SelectListItem>();
         }
 
-        [UIHint("MultiSelect")]
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         public IList<int> SearchCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }

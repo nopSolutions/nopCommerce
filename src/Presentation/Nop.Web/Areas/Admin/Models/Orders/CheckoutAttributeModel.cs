@@ -76,7 +76,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         //store mapping
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 

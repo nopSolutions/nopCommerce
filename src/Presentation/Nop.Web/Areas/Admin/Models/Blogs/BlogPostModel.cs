@@ -71,7 +71,6 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
 
         //store mapping
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
-        [UIHint("MultiSelect")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
