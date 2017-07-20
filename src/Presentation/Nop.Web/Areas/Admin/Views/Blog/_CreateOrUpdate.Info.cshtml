@@ -70,9 +70,9 @@
                 </div>
                 <div class="col-md-9">
                     <div class="input-group input-group-required">
-                        @Html.EditorFor(x => x.Body, "RichEditor")
+                        <nop-editor asp-for="Body" asp-template="RichEditor"/>
                         <div class="input-group-btn">
-                            @Html.RequiredHint()
+                            <nop-required/>
                         </div>
                     </div>
                     <span asp-validation-for="Body"></span>

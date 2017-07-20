@@ -541,19 +541,6 @@ namespace Nop.Web.Framework.Extensions
             }
         }
 
-        public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
-        {
-            // Create tag builder
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.AddCssClass("required");
-            var innerText = "*";
-            //add additional text if specified
-            if (!String.IsNullOrEmpty(additionalText))
-                innerText += " " + additionalText;
-            tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RenderHtmlContent());
-        }
-
         /// <summary>
         /// Creates a days, months, years drop down list using an HTML select control. 
         /// The parameters represent the value of the "name" attribute on the select control.
