@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Manage forums");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Forum" asp-action="CreateForum" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.Forums.Forum.CreateForum") 
@@ -27,4 +25,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForum", Model)
-}
+</form>

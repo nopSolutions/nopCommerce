@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Manage forums");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Forum" asp-action="EditForumGroup" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup") - @Model.Name 
+            @T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup") - @Model.Name
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.Forums.ForumGroup.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForumGroup", Model)
-}
+</form>
 @Html.DeleteConfirmation("DeleteForumGroup", "forumgroup-delete")
