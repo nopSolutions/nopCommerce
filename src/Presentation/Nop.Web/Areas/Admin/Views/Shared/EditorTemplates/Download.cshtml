@@ -59,7 +59,7 @@
 </script>
 
 <div id="@(clientId + "value")">
-    @Html.HiddenFor(x => x)
+    <input type="hidden" asp-for="@Model" />
 </div>
 
 <div class="panel panel-default">
