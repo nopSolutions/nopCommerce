@@ -124,8 +124,7 @@
                                         <span asp-validation-for="ActivationDelay"></span>
                                     </div>
                                     <div class="col-md-3">
-                                        @*TODO*@
-                                        @Html.NopDropDownListFor(model => model.ActivationDelayPeriodId, ((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList(), htmlAttributes: new {style = "max-width: 200px;"})
+                                        <nop-select asp-for="ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
                                         <span asp-validation-for="ActivationDelayPeriodId"></span>
                                     </div>
                                 </div>
