@@ -43,7 +43,7 @@
                     <nop-label asp-for="FlagImageFileName" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="FlagImageFileName" />
+                    <nop-editor asp-for="FlagImageFileName" asp-render-form-control-class="false" />
                     <span asp-validation-for="FlagImageFileName"></span>
                     <script>
                         $(function() {
