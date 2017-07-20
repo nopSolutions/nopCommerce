@@ -7,7 +7,7 @@
     Html.SetActiveMenuItemSystemName("Message templates");
 }
 
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.MessageTemplates")
@@ -27,10 +27,10 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-4">
-                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                    <nop-label asp-for="SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                    <nop-select asp-for="SearchStoreId" asp-items="@Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">

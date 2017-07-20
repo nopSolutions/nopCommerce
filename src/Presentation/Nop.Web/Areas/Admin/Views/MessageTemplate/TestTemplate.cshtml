@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Message templates");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="MessageTemplate" asp-action="TestTemplate" method="post" id="specificationattribute-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
@@ -21,7 +19,8 @@
             </button>
         </div>
     </div>
-    @Html.HiddenFor(model => model.Id)
+    <input asp-for="Id" type="hidden" />
+
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
@@ -29,11 +28,11 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SendTo)
+                                <nop-label asp-for="SendTo" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SendTo, required: true)
-                                @Html.ValidationMessageFor(model => model.SendTo)
+                                <nop-editor asp-for="SendTo" asp-required="true" />
+                                <span asp-validation-for="SendTo"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -61,4 +60,4 @@
             </div>
         </div>
     </div>
-}
+</form>
