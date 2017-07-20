@@ -40,7 +40,7 @@
                         <nop-label asp-for="PurchasedWithOrderNumber"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
+                        <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.PurchasedWithOrderId.Value">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
                     </div>
                 </div>
             }

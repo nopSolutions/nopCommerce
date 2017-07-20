@@ -404,7 +404,7 @@
                         <nop-label asp-for="AffiliateId"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="@Url.Action("Edit", "Affiliate", new {id = Model.AffiliateId})">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                        <a asp-controller="Affiliate" asp-action="Edit" asp-route-id="@Model.AffiliateId">@Model.AffiliateName - @T("Admin.Common.View")</a>
                         <button type="submit" name="remove-affiliate" class="btn bg-red">
                             @T("Admin.Customers.Customers.Fields.Affiliate.Remove")
                         </button>

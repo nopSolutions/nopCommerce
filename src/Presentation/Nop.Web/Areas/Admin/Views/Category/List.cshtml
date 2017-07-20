@@ -17,7 +17,7 @@
         @T("Admin.Catalog.Categories.Manage")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn bg-blue">
+        <a asp-action="Create" class="btn bg-blue">
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
@@ -32,13 +32,13 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li>
-                    <a href="@Url.Action("ExportXml")">
+                    <a asp-action="ExportXml">
                         <i class="fa fa-file-code-o"></i>
                         @T("Admin.Common.ExportToXml")
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("ExportXlsx")">
+                    <a asp-action="ExportXlsx">
                         <i class="fa fa-file-excel-o"></i>
                         @T("Admin.Common.ExportToExcel")
                     </a>

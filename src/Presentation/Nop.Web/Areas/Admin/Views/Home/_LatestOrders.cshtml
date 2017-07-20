@@ -16,7 +16,7 @@
         <h3 class="box-title">
             <i class="fa fa-cart-plus"></i>
             @T("Admin.Dashboard.LatestOrders")
-            <a href="@Url.Action("List", "Order")" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
+            <a asp-controller="Order" asp-action="List" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
         </h3>
         <div class="box-tools pull-right">
             <button class="btn btn-box-tool" data-widget="collapse">
