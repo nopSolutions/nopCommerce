@@ -1,15 +1,14 @@
 ﻿@model PollModel
 
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Polls.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Polls");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Poll" asp-action="Create" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.Polls.AddNew")
@@ -27,4 +26,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
