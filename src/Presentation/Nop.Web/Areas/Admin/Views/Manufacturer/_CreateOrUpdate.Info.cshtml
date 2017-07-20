@@ -24,106 +24,106 @@
     @<div>
         <div class="form-group">
             <div class="col-md-3">
-                @Html.NopLabelFor(model => model.Locales[item].Name)
+                <nop-label asp-for="@Model.Locales[item].Name" />
             </div>
             <div class="col-md-9">
-                @Html.NopEditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3">
-                @Html.NopLabelFor(model => model.Locales[item].Description)
+                <nop-label asp-for="@Model.Locales[item].Description" />
             </div>
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                <nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                <span asp-validation-for="@Model.Locales[item].Description"></span>
             </div>
         </div>
-        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
     </div>
     ,
     @<div>
         <div class="form-group">
             <div class="col-md-3">
-                @Html.NopLabelFor(model => model.Name)
+                <nop-label asp-for="Name" />
             </div>
             <div class="col-md-9">
-                @Html.NopEditorFor(model => model.Name, required: true)
-                @Html.ValidationMessageFor(model => model.Name)
+                <nop-editor asp-for="Name" asp-required="true" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3">
-                @Html.NopLabelFor(model => model.Description)
+                <nop-label asp-for="Description" />
             </div>
             <div class="col-md-9">
-                @Html.EditorFor(x => x.Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Description)
+                <nop-editor asp-for="Description" asp-template="RichEditor" />
+                <span asp-validation-for="Description"></span>
             </div>
         </div>
     </div>
       ))
             <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.ManufacturerTemplateId)
+                    <nop-label asp-for="ManufacturerTemplateId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.ManufacturerTemplateId, Model.AvailableManufacturerTemplates)
-                    @Html.ValidationMessageFor(model => model.ManufacturerTemplateId)
+                    <nop-select asp-for="ManufacturerTemplateId" asp-items="@Model.AvailableManufacturerTemplates"/>
+                    <span asp-validation-for="ManufacturerTemplateId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PictureId)
+                    <nop-label asp-for="PictureId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.PictureId)
-                    @Html.ValidationMessageFor(model => model.PictureId)
+                    <nop-editor asp-for="PictureId" />
+                    <span asp-validation-for="PictureId"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PriceRanges)
+                    <nop-label asp-for="PriceRanges" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.PriceRanges)
-                    @Html.ValidationMessageFor(model => model.PriceRanges)
+                    <nop-editor asp-for="PriceRanges" />
+                    <span asp-validation-for="PriceRanges"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
+                    <nop-label asp-for="AllowCustomersToSelectPageSize" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
-                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                    <nop-editor asp-for="AllowCustomersToSelectPageSize" />
+                    <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
                 </div>
             </div>
             <div id="pnlPageSize" class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PageSize)
+                    <nop-label asp-for="PageSize" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.PageSize)
-                    @Html.ValidationMessageFor(model => model.PageSize)
+                    <nop-editor asp-for="PageSize" />
+                    <span asp-validation-for="PageSize"></span>
                 </div>
             </div>
             <div id="pnlPageSizeOptions" class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PageSizeOptions)
+                    <nop-label asp-for="PageSizeOptions" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.PageSizeOptions)
-                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                    <nop-editor asp-for="PageSizeOptions" />
+                    <span asp-validation-for="PageSizeOptions"></span>
                 </div>
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SelectedDiscountIds)
+                    <nop-label asp-for="SelectedDiscountIds" />
                 </div>
                 <div class="col-md-9">
-                    @Html.EditorFor(model => model.SelectedDiscountIds, new { SelectList = Model.AvailableDiscounts })
+                    <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
                     <script>
             $(document).ready(function() {
                 var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
@@ -148,12 +148,12 @@
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SelectedCustomerRoleIds)
+                    <nop-label asp-for="SelectedCustomerRoleIds" />
                 </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                             <script>
                     $(document).ready(function() {
                         var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
@@ -183,12 +183,12 @@
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    <nop-label asp-for="SelectedStoreIds" />
                 </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            @Html.EditorFor(model => model.SelectedStoreIds, new { SelectList = Model.AvailableStores })
+                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                             <script>
                     $(document).ready(function() {
                         var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
@@ -218,20 +218,20 @@
             </div>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Published)
+                    <nop-label asp-for="Published" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(x => x.Published)
-                    @Html.ValidationMessageFor(model => model.Published)
+                    <nop-editor asp-for="Published" />
+                    <span asp-validation-for="Published"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DisplayOrder)
+                    <nop-label asp-for="DisplayOrder" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
                 </div>
             </div>
         </div>

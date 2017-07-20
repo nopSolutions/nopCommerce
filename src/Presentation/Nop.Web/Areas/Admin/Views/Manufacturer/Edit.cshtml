@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Manufacturers");
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Manufacturer" asp-action="Edit" method="post" id="manufacturer-form">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
@@ -35,5 +33,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("manufacturer-delete")
