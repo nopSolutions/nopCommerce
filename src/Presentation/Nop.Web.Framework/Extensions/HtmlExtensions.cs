@@ -482,26 +482,7 @@ namespace Nop.Web.Framework.Extensions
 
             return new HtmlString(result.ToString());
         }
-
-
-        public static IHtmlContent NopDisplayFor<TModel, TValue>(this IHtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
-        {
-            var result = new TagBuilder("div");
-            result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml.AppendHtml(helper.DisplayFor(expression).ToHtmlString());
-
-            return new HtmlString(result.ToHtmlString());
-        }
-
-        public static IHtmlContent NopDisplay<TModel>(this IHtmlHelper<TModel> helper, string expression)
-        {
-            var result = new TagBuilder("div");
-            result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml.AppendHtml(expression);
-
-            return new HtmlString(result.ToHtmlString());
-        }
-
+        
         public static IDictionary<string, object> AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
         {
             //TODO test new implementation
