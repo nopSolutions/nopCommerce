@@ -2,7 +2,6 @@
 @using Nop.Services
 @model GiftCardModel
 
-
 <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
@@ -27,18 +26,18 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.GiftCardTypeId)
+                    <nop-label asp-for="GiftCardTypeId"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+                    <nop-select asp-for="GiftCardTypeId" asp-items="((GiftCardType) Model.GiftCardTypeId).ToSelectList()" />
+                    <span asp-validation-for="GiftCardTypeId"></span>
                 </div>
             </div>
             @if (Model.PurchasedWithOrderId.HasValue)
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.PurchasedWithOrderNumber)
+                        <nop-label asp-for="PurchasedWithOrderNumber"/>
                     </div>
                     <div class="col-md-9">
                         <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a>
@@ -47,41 +46,41 @@
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Amount)
+                    <nop-label asp-for="Amount"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.Amount, Model.PrimaryStoreCurrencyCode)
-                    @Html.ValidationMessageFor(model => model.Amount)
+                    <nop-editor asp-for="Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
+                    <span asp-validation-for="Amount"></span>
                 </div>
             </div>
             @if (Model.Id > 0)
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.RemainingAmountStr)
+                        <nop-label asp-for="RemainingAmountStr"/>
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDisplayFor(model => model.RemainingAmountStr)
+                        <div class="form-text-row">@Model.RemainingAmountStr</div>
                     </div>
                 </div>
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.IsGiftCardActivated)
+                    <nop-label asp-for="IsGiftCardActivated"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.IsGiftCardActivated)
-                    @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
+                    <nop-editor asp-for="IsGiftCardActivated"/>
+                    <span asp-validation-for="IsGiftCardActivated"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.GiftCardCouponCode)
+                    <nop-label asp-for="GiftCardCouponCode"/>
                 </div>
                 <div class="col-md-9">
                     <div class="input-group">
-                        @Html.NopEditorFor(model => model.GiftCardCouponCode)
-                        @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
+                        <nop-editor asp-for="GiftCardCouponCode"/>
+                        <span asp-validation-for="GiftCardCouponCode"></span>
                         <div class="input-group-btn">
                             <button type="button" id="generateCouponCode" class="btn btn-info">@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")</button>
                             <script type="text/javascript">
@@ -112,59 +111,59 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.RecipientName)
+                    <nop-label asp-for="RecipientName"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.RecipientName)
-                    @Html.ValidationMessageFor(model => model.RecipientName)
+                    <nop-editor asp-for="RecipientName"/>
+                    <span asp-validation-for="RecipientName"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlRecipientEmail">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.RecipientEmail)
+                    <nop-label asp-for="RecipientEmail"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.RecipientEmail)
-                    @Html.ValidationMessageFor(model => model.RecipientEmail)
+                    <nop-editor asp-for="RecipientEmail"/>
+                    <span asp-validation-for="RecipientEmail"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SenderName)
+                    <nop-label asp-for="SenderName"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.SenderName)
-                    @Html.ValidationMessageFor(model => model.SenderName)
+                    <nop-editor asp-for="SenderName"/>
+                    <span asp-validation-for="SenderName"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlSenderEmail">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.SenderEmail)
+                    <nop-label asp-for="SenderEmail"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.SenderEmail)
-                    @Html.ValidationMessageFor(model => model.SenderEmail)
+                    <nop-editor asp-for="SenderEmail"/>
+                    <span asp-validation-for="SenderEmail"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Message)
+                    <nop-label asp-for="Message"/>
                 </div>
                 <div class="col-md-9">
-                    @Html.NopTextAreaFor(model => model.Message)
-                    @Html.ValidationMessageFor(model => model.Message)
+                    <nop-textarea asp-for="Message"/>
+                    <span asp-validation-for="Message"></span>
                 </div>
             </div>
             @if (Model.Id > 0)
             {
                 <div class="form-group" id="pnlNotifyRecipient">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.IsRecipientNotified)
+                        <nop-label asp-for="IsRecipientNotified"/>
                     </div>
                     <div class="col-md-9">
                         <div class="input-group input-group-short">
                             <div class="input-group-text">
-                                @Html.NopDisplay(Model.IsRecipientNotified.ToString())
+                                <div class="form-text-row">@Model.IsRecipientNotified.ToString()</div>
                             </div>
                             <div class="input-group-btn">
                                 <button type="submit" name="notifyRecipient" class="btn btn-info">
@@ -179,10 +178,10 @@
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CreatedOn)
+                        <nop-label asp-for="CreatedOn"/>
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDisplayFor(model => model.CreatedOn)
+                        <div class="form-text-row">@Model.CreatedOn</div>
                     </div>
                 </div>
             }

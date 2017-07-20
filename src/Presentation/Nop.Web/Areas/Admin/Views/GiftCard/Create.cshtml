@@ -7,9 +7,7 @@
     Html.SetActiveMenuItemSystemName("Gift cards");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="GiftCard" asp-action="Create" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.GiftCards.AddNew") 
@@ -27,4 +25,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>

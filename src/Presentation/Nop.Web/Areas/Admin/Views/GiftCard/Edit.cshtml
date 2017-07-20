@@ -7,12 +7,10 @@
     Html.SetActiveMenuItemSystemName("Gift cards");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="GiftCard" asp-action="Edit" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.GiftCards.EditGiftCardDetails") 
+            @T("Admin.GiftCards.EditGiftCardDetails")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.GiftCards.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
@@ -31,5 +29,5 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
-}
+</form>
 @Html.DeleteConfirmation("giftcard-delete")
