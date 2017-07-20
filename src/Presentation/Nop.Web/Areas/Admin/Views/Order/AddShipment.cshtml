@@ -13,9 +13,7 @@
         .ToList();
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="AddShipment" asp-route-orderId="@Model.OrderId" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
@@ -32,7 +30,7 @@
             </button>
         </div>
     </div>
-    @Html.ValidationSummary(false)
+    <div asp-validation-summary="All"></div>
 
     <div class="content">
         <div class="form-horizontal">
@@ -41,18 +39,18 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.TrackingNumber)
+                                <nop-label asp-for="TrackingNumber" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.TrackingNumber)
+                                <nop-editor asp-for="TrackingNumber" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.AdminComment)
+                                <nop-label asp-for="AdminComment" />
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.AdminComment)
+                                <nop-editor asp-for="AdminComment" />
                             </div>
                         </div>
                     </div>
@@ -140,7 +138,7 @@
                                 {
                                     <tr>
                                         <td style="width: 25%;text-align: left">
-                                            <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
+                                            <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                                             @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <p>
@@ -210,4 +208,4 @@
             </div>
         </div>
     </div>
-}
+</form>

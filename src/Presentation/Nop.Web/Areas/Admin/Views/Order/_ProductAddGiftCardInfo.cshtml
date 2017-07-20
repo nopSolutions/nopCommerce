@@ -16,9 +16,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="input-group input-group-required">
-                        @Html.NopEditorFor(model => model.RecipientName)
+                        <nop-editor asp-for="RecipientName" />
                         <div class="input-group-btn">
-                            @Html.RequiredHint()
+                            <nop-required />
                         </div>
                     </div>
                 </div>
@@ -36,9 +36,9 @@
                     </div>
                     <div class="col-md-6">
                         <div class="input-group input-group-required">
-                            @Html.NopEditorFor(model => model.RecipientEmail)
+                            <nop-editor asp-for="RecipientEmail" />
                             <div class="input-group-btn">
-                                @Html.RequiredHint()
+                                <nop-required />
                             </div>
                         </div>
                     </div>
@@ -55,9 +55,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="input-group input-group-required">
-                        @Html.NopEditorFor(model => model.SenderName)
+                        <nop-editor asp-for="SenderName" />
                         <div class="input-group-btn">
-                            @Html.RequiredHint()
+                            <nop-required />
                         </div>
                     </div>
                 </div>
@@ -75,9 +75,9 @@
                     </div>
                     <div class="col-md-6">
                         <div class="input-group input-group-required">
-                            @Html.NopEditorFor(model => model.SenderEmail)
+                            <nop-editor asp-for="SenderEmail" />
                             <div class="input-group-btn">
-                                @Html.RequiredHint()
+                                <nop-required />
                             </div>
                         </div>
                     </div>
@@ -85,10 +85,10 @@
             }
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.Message)
+                    <nop-label asp-for="Message" />
                 </div>
                 <div class="col-md-6">
-                    @Html.NopTextAreaFor(model => model.Message)
+                    <nop-textarea asp-for="Message" />
                 </div>
             </div>
         </div>

@@ -7,12 +7,11 @@
     Html.SetActiveMenuItemSystemName("Orders");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Orders.Address.EditAddress") 
+            @T("Admin.Orders.Address.EditAddress")
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Address.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
@@ -23,4 +22,4 @@
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
-}
+</form>

@@ -98,7 +98,7 @@
                                     <img src="@item.PictureThumbnailUrl" alt="" title=""/>
                                 </td>
                                 <td style="text-align: left; width: 15%;">
-                                    <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
+                                    <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <p>
@@ -137,7 +137,7 @@
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
                                             @for (int i = 0; i < item.ReturnRequests.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new {id = item.ReturnRequests[i].Id})">@item.ReturnRequests[i].CustomNumber</a>
+                                                <a asp-controller="ReturnRequest" asp-action="Edit" asp-route-id="@item.ReturnRequests[i].Id">@item.ReturnRequests[i].CustomNumber</a>
                                                 if (i != item.ReturnRequests.Count - 1)
                                                 {
                                                     <text>,</text>
@@ -151,7 +151,7 @@
                                             @T("Admin.Orders.Products.GiftCards")<text>:</text>
                                             @for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "GiftCard", new {id = item.PurchasedGiftCardIds[i]})">@item.PurchasedGiftCardIds[i]</a>
+                                                <a asp-controller="GiftCard" asp-action="Edit" asp-route-id="@item.PurchasedGiftCardIds[i]">@item.PurchasedGiftCardIds[i]</a>
                                                 if (i != item.PurchasedGiftCardIds.Count - 1)
                                                 {
                                                     <text>,</text>
@@ -191,7 +191,7 @@
                                                 @if (item.LicenseDownloadGuid != Guid.Empty)
                                                 {
                                                     <div>
-                                                        <a href="@Url.Action("DownloadFile", "Download", new {downloadGuid = item.LicenseDownloadGuid})">@T("Admin.Orders.Products.License.DownloadLicense")</a>
+                                                        <a asp-controller="Download" asp-action="DownloadFile" asp-route-downloadGuid="@item.LicenseDownloadGuid">@T("Admin.Orders.Products.License.DownloadLicense")</a>
                                                     </div>
                                                 }
                                                 <button type="submit" id="pvlicensefile" name="pvlicensefile" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new {id = Model.Id, orderItemId = item.Id, btnId = "btnRefreshPage", formId = "order-form"}))', 500, 400, true); return false;" class="btn btn-sm bg-olive">

@@ -5,7 +5,7 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.BillingAddress)
+                    <nop-label asp-for="BillingAddress" />
                 </div>
                 <div class="col-md-9">
                     <table class="table table-hover table-bordered" style="max-width: 400px;">
@@ -147,7 +147,7 @@
             {
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <a href="@Url.Action("AddressEdit", new {addressId = Model.BillingAddress.Id, orderId = Model.Id})" class="btn btn-primary">@T("Admin.Common.Edit")</a>
+                        <a asp-action="AddressEdit" asp-route-addressId="@Model.BillingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
                     </div>
                 </div>
             }

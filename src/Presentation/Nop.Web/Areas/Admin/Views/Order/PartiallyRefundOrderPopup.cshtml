@@ -16,9 +16,9 @@
     </script>
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Fields.PartialRefund")
@@ -29,7 +29,7 @@
     </div>
 
     <div class="content">
-        @Html.ValidationSummary(false)
+        <div asp-validation-summary="All"></div>
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default panel-popup">
@@ -39,10 +39,10 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-sm-5">
-                                @Html.NopLabelFor(model => model.AmountToRefund)
+                                <nop-label asp-for="AmountToRefund" />
                             </div>
                             <div class="col-sm-7">
-                                @Html.NopEditorFor(model => model.AmountToRefund)
+                                <nop-editor asp-for="AmountToRefund" />
                                 <span style="white-space: nowrap">
                                     @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
                                 </span>
@@ -60,4 +60,4 @@
             </div>
         </div>
     </div>
-}
+</form>

@@ -30,15 +30,12 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public DateTime? EndDate { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.OrderStatus")]
-        [UIHint("MultiSelect")]
         public int[] OrderStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.PaymentStatus")]
-        [UIHint("MultiSelect")]
         public int[] PaymentStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.ShippingStatus")]
-        [UIHint("MultiSelect")]
         public int[] ShippingStatusIds { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.PaymentMethod")]

@@ -12,9 +12,8 @@
     Html.SetActiveMenuItemSystemName("Shipments");
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Order" asp-action="ShipmentList" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Shipments.List")
@@ -30,7 +29,8 @@
                     <span class="sr-only">&nbsp;</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><button type="submit" name="exportpackagingslips-all">
+                    <li>
+                        <button type="submit" name="exportpackagingslips-all">
                             @T("Admin.Orders.Shipments.PrintPackagingSlips.All")
                         </button>
                     </li>
@@ -60,68 +60,68 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.StartDate)
+                                        <nop-label asp-for="StartDate" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.StartDate)
+                                        <nop-editor asp-for="StartDate" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.EndDate)
+                                        <nop-label asp-for="EndDate" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.EndDate)
+                                        <nop-editor asp-for="EndDate" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.TrackingNumber)
+                                        <nop-label asp-for="TrackingNumber" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.TrackingNumber)
+                                        <nop-editor asp-for="TrackingNumber" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.WarehouseId)
+                                        <nop-label asp-for="WarehouseId" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
+                                        <nop-select asp-for="WarehouseId" asp-items="@Model.AvailableWarehouses" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.CountryId)
+                                        <nop-label asp-for="CountryId" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                                        <nop-select asp-for="CountryId" asp-items="@Model.AvailableCountries" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.StateProvinceId)
+                                        <nop-label asp-for="StateProvinceId" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                                        <nop-select asp-for="StateProvinceId" asp-items="@Model.AvailableStates" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.City)
+                                        <nop-label asp-for="City" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.City)
+                                        <nop-editor asp-for="City" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        @Html.NopLabelFor(model => model.LoadNotShipped)
+                                        <nop-label asp-for="LoadNotShipped" />
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopEditorFor(model => model.LoadNotShipped)
+                                        <nop-editor asp-for="LoadNotShipped" />
                                     </div>
                                 </div>
                             </div>
@@ -449,23 +449,21 @@
             </div>
         </div>
     </div>
-}
+ </form>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("PdfPackagingSlipSelected", "Order", FormMethod.Post, new { id = "pdf-packaging-slip-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#exportpackagingslips-selected').click(function (e) {
-            e.preventDefault();
-            var ids = selectedIds.join(",");
-            $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
-            $('#pdf-packaging-slip-selected-form').submit();
-            return false;
-        });
-    });
+                $(document).ready(function () {
+                    $('#exportpackagingslips-selected').click(function (e) {
+                        e.preventDefault();
+                        var ids = selectedIds.join(",");
+                        $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+                        $('#pdf-packaging-slip-selected-form').submit();
+                        return false;
+                    });
+                });
 </script>
