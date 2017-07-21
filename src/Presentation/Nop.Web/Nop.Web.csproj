@@ -42,10 +42,27 @@
 	We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
 	<Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml" />
 	<Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.cshtml" />
-	
+    
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+    
+  <!-- This target execute after "Build" target.
+  We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
+  <Target Name="NopTarget" AfterTargets="Build">
+    <ItemGroup>   
+      <!-- Get all the libraries from the shadow copy folder to remove them,
+      because depending on the settings, this may not happen when the application is starting,
+      but this can lead to unpredictable results during debugging of the project. -->
+      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" />
+    </ItemGroup>
+    <!-- Delete libraries from the shadow copy folder -->
+    <Delete Files="@(ShadowCopiesLibraries)" />
+    <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Targets="NopClear" />
+  </Target> 
+      
 </Project>
