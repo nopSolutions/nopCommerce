@@ -160,9 +160,7 @@ namespace Nop.Services.Tasks
 
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error(
-                    string.Format("Error while running the '{0}' schedule task. {1}", ScheduleTask.Name, exc.Message),
-                    exc);
+                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", ScheduleTask.Name, exc.Message), exc);
                 if (throwException)
                     throw;
             }
