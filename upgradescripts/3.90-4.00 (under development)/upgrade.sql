@@ -65,6 +65,42 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses.Hint">
     <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improved performance. Furthermore, it''s prohibited to store IP addresses in some countries (private customer data).</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AddressOverride">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.IpnUrl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Instructions">
+    <Value><![CDATA[<p><b>If you''re using this gateway ensure that your primary store currency is supported by Paypal.</b><br /><br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br /><br />1. Log in to your PayPal account (click <a href="https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8" target="_blank">here</a> to create your account).<br />2. Click the Profile subtab.<br />3. Click Website Payment Preferences in the Seller Preferences column.<br />4. Under Auto Return for Website Payments, click the On radio button.<br />5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment ({0}).<br />6. Under Payment Data Transfer, click the On radio button.<br />7. Click Save.<br />8. Click Website Payment Preferences in the Seller Preferences column.<br />9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br /><br /></p>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -144,7 +180,6 @@ DELETE FROM [Setting]
 WHERE [Name] = N'externalauthenticationsettings.autoregisterenabled'
 GO
 
-
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.storeipaddresses')
 BEGIN
@@ -165,4 +200,29 @@ IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ScheduleTask]')
 BEGIN
 	ALTER TABLE [ScheduleTask] DROP COLUMN [LeasedUntilUtc]
 END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'paypalstandardpaymentsettings.pdtvalidateordertotal'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'paypalstandardpaymentsettings.enableipn'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'paypalstandardpaymentsettings.ipnurl'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'paypalstandardpaymentsettings.returnfrompaypalwithoutpaymentredirectstoorderdetailspage'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'paypalstandardpaymentsettings.addressoverride'
 GO

@@ -100,14 +100,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 UseSandbox = payPalStandardPaymentSettings.UseSandbox,
                 BusinessEmail = payPalStandardPaymentSettings.BusinessEmail,
                 PdtToken = payPalStandardPaymentSettings.PdtToken,
-                PdtValidateOrderTotal = payPalStandardPaymentSettings.PdtValidateOrderTotal,
+                PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals,
                 AdditionalFee = payPalStandardPaymentSettings.AdditionalFee,
                 AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage,
-                PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals,
-                EnableIpn = payPalStandardPaymentSettings.EnableIpn,
-                IpnUrl = payPalStandardPaymentSettings.IpnUrl,
-                AddressOverride = payPalStandardPaymentSettings.AddressOverride,
-                ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage,
                 ActiveStoreScopeConfiguration = storeScope
             };
             if (storeScope > 0)
@@ -115,14 +110,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
                 model.BusinessEmail_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
                 model.PdtToken_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-                model.PdtValidateOrderTotal_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
+                model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-                model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-                model.EnableIpn_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-                model.IpnUrl_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-                model.AddressOverride_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-                model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
             return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
@@ -148,14 +138,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.UseSandbox = model.UseSandbox;
             payPalStandardPaymentSettings.BusinessEmail = model.BusinessEmail;
             payPalStandardPaymentSettings.PdtToken = model.PdtToken;
-            payPalStandardPaymentSettings.PdtValidateOrderTotal = model.PdtValidateOrderTotal;
+            payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
             payPalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
             payPalStandardPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
-            payPalStandardPaymentSettings.EnableIpn = model.EnableIpn;
-            payPalStandardPaymentSettings.IpnUrl = model.IpnUrl;
-            payPalStandardPaymentSettings.AddressOverride = model.AddressOverride;
-            payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -163,14 +148,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, model.PdtValidateOrderTotal_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.EnableIpn, model.EnableIpn_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.IpnUrl, model.IpnUrl_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AddressOverride, model.AddressOverride_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, storeScope, false);
             
             //now clear settings cache
             _settingService.ClearCache();
@@ -264,7 +244,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine("invoice: " + invoice);
                     sb.AppendLine("payment_fee: " + payment_fee);
 
-                    var newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
+                    var newPaymentStatus = PayPalHelper.GetPaymentStatus(payment_status, pending_reason);
                     sb.AppendLine("New payment status: " + newPaymentStatus);
 
                     //order note
@@ -276,13 +256,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     });
                     _orderService.UpdateOrder(order);
 
-                    //load settings for a chosen store scope
-                    var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-                    var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
-
                     //validate order total
-                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>("OrderTotalSentToPayPal");
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
+                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>(PayPalHelper.OrderTotalSentToPayPal);
+                    if (orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
                         //log
@@ -300,7 +276,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     }
                     //clear attribute
                     if (orderTotalSentToPayPal.HasValue)
-                        _genericAttributeService.SaveAttribute<decimal?>(order, "OrderTotalSentToPayPal", null);
+                        _genericAttributeService.SaveAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
 
                     //mark order as paid
                     if (newPaymentStatus == PaymentStatus.Paid)
@@ -403,7 +379,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);
                 }
 
-                var newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
+                var newPaymentStatus = PayPalHelper.GetPaymentStatus(payment_status, pending_reason);
                 sb.AppendLine("New payment status: " + newPaymentStatus);
 
                 switch (txn_type)
@@ -642,18 +618,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public IActionResult CancelOrder()
         {
-            if (_payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
-            {
-                var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                    customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
-                    .FirstOrDefault();
-                if (order != null)
-                {
-                    return RedirectToRoute("OrderDetails", new { orderId = order.Id });
-                }
-            }
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id, 
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            if (order != null)
+                return RedirectToRoute("OrderDetails", new { orderId = order.Id });
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToRoute("HomePage");
         }
 
         #endregion

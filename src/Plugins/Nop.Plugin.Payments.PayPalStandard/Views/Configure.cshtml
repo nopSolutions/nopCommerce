@@ -1,37 +1,28 @@
 ﻿@model Nop.Plugin.Payments.PayPalStandard.Models.ConfigurationModel
+@inject Nop.Core.IWebHelper webHelper
 @{
     Layout = "_ConfigurePlugin";
 }
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
+
 <script type="text/javascript">
 	$(document).ready(function () {
-
-		$("#@Html.IdFor(model => model.EnableIpn)").click(toggleEnableIpn);
         $("#@Html.IdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
-	    toggleEnableIpn();
 	    togglePassProductNamesAndTotals();
 	});
-
-	function toggleEnableIpn() {
-	    if ($('#@Html.IdFor(model => model.EnableIpn)').is(':checked')) {
-			$('#pnlIpnUrl').show();
-		}
-		else {
-			$('#pnlIpnUrl').hide();
-		}
-	}
 
     function togglePassProductNamesAndTotals() {
         warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.NameFor(model => model.PassProductNamesAndTotals)',
             { passProductNamesAndTotals: $('#@Html.IdFor(model => model.PassProductNamesAndTotals)').is(':checked') });
     }
 </script>
+
 <form asp-controller="PaymentPayPalStandard" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @Html.Raw(T("Plugins.Payments.PayPalStandard.Instructions"))
+                @Html.Raw(T("Plugins.Payments.PayPalStandard.Instructions", $"{webHelper.GetStoreLocation()}Plugins/PaymentPayPalStandard/PDTHandler"))
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -64,12 +55,12 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="PdtValidateOrderTotal_OverrideForStore" asp-input="PdtValidateOrderTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="PdtValidateOrderTotal" />
+                        <nop-override-store-checkbox asp-for="PassProductNamesAndTotals_OverrideForStore" asp-input="PassProductNamesAndTotals" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PassProductNamesAndTotals" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="PdtValidateOrderTotal" />
-                        <span asp-validation-for="PdtValidateOrderTotal"></span>
+                        <nop-editor asp-for="PassProductNamesAndTotals" />
+                        <span asp-validation-for="PassProductNamesAndTotals"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -90,57 +81,6 @@
                     <div class="col-md-9">
                         <nop-editor asp-for="AdditionalFeePercentage" />
                         <span asp-validation-for="AdditionalFeePercentage"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="PassProductNamesAndTotals_OverrideForStore" asp-input="PassProductNamesAndTotals" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="PassProductNamesAndTotals" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="PassProductNamesAndTotals" />
-                        <span asp-validation-for="PassProductNamesAndTotals"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="EnableIpn_OverrideForStore" asp-input="EnableIpn" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="EnableIpn" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="EnableIpn" />
-                        <span asp-validation-for="EnableIpn"></span>
-                    </div>
-                </div>
-                <div class="form-group" id="pnlIpnUrl">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="IpnUrl_OverrideForStore" asp-input="IpnUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="IpnUrl" />
-                        @*TODO: Move to hint <em>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</em>*@
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="IpnUrl" />
-                        <span asp-validation-for="IpnUrl"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="AddressOverride_OverrideForStore" asp-input="AddressOverride" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="AddressOverride" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="AddressOverride" />
-                        <span asp-validation-for="AddressOverride"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore" asp-input="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" />
-                        <span asp-validation-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage"></span>
                     </div>
                 </div>
                 <div class="form-group">
