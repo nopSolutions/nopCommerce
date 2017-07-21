@@ -9,6 +9,17 @@ namespace Nop.Core.Caching
     /// </summary>
     public interface IRedisConnectionWrapper : IDisposable
     {
+        #region Properties
+
+        /// <summary>
+        /// Get the key used to store the protection key list (used with the PersistDataProtectionKeysToRedis option enabled)
+        /// </summary>
+        string DataProtectionKeysName { get; }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Obtain an interactive connection to a database inside redis
         /// </summary>
@@ -43,5 +54,7 @@ namespace Nop.Core.Caching
         /// <param name="action">Action to be performed with locking</param>
         /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
         bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action);
+
+        #endregion
     }
 }
