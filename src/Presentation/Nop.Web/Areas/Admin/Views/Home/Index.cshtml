@@ -12,7 +12,7 @@
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
     var canManageReturnRequests = permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests);
 }
-@Html.AntiForgeryToken()
+<nop-antiforgery-token />
 <div class="content-header">
     <h1>
         @T("Admin.Dashboard")
