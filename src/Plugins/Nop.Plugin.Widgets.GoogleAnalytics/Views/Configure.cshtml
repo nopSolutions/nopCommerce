@@ -56,9 +56,7 @@
         "});"));
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -95,61 +93,61 @@
                 @T("Plugins.Widgets.GoogleAnalytics.Note")
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.GoogleId)
+                        <nop-override-store-checkbox asp-for="GoogleId_OverrideForStore" asp-input="GoogleId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="GoogleId" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.GoogleId)
-                        @Html.ValidationMessageFor(model => model.GoogleId)
+                        <nop-editor asp-for="GoogleId" />
+                        <span asp-validation-for="GoogleId"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.TrackingScript)
+                        <nop-override-store-checkbox asp-for="TrackingScript_OverrideForStore" asp-input="TrackingScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="TrackingScript" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.TrackingScript)
-                        @Html.ValidationMessageFor(model => model.TrackingScript)
+                        <nop-editor asp-for="TrackingScript" />
+                        <span asp-validation-for="TrackingScript"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.EcommerceScript)
+                        <nop-override-store-checkbox asp-for="EcommerceScript_OverrideForStore" asp-input="EcommerceScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EcommerceScript" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.EcommerceScript)
-                        @Html.ValidationMessageFor(model => model.EcommerceScript)
+                        <nop-editor asp-for="EcommerceScript" />
+                        <span asp-validation-for="EcommerceScript"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.EcommerceDetailScript)
+                        <nop-override-store-checkbox asp-for="EcommerceDetailScript_OverrideForStore" asp-input="EcommerceDetailScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EcommerceDetailScript" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopTextAreaFor(model => model.EcommerceDetailScript)
-                        @Html.ValidationMessageFor(model => model.EcommerceDetailScript)
+                        <nop-editor asp-for="EcommerceDetailScript" />
+                        <span asp-validation-for="EcommerceDetailScript"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IncludingTax_OverrideForStore, model => model.IncludingTax, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.IncludingTax)
+                        <nop-override-store-checkbox asp-for="IncludingTax_OverrideForStore" asp-input="IncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IncludingTax" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.IncludingTax)
-                        @Html.ValidationMessageFor(model => model.IncludingTax)
+                        <nop-editor asp-for="IncludingTax" />
+                        <span asp-validation-for="IncludingTax"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ZoneId)
+                        <nop-label asp-for="ZoneId" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownListFor(model => model.ZoneId, Model.AvailableZones)
-                        @Html.ValidationMessageFor(model => model.ZoneId)
+                        <nop-select asp-for="ZoneId" asp-items="@Model.AvailableZones" />
+                        <span asp-validation-for="ZoneId"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -163,4 +161,4 @@
             </div>
         </div>
     </div>
-}
+</form>
