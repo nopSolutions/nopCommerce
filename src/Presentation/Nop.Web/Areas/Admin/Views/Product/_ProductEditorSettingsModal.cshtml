@@ -15,7 +15,7 @@
             </div>
             <div class="modal-body">
                 <form asp-controller="Product" asp-action="SaveProductEditorSettings" method="post">
-                    @Html.Hidden("returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request))
+                    <input type="hidden" name="returnurl" value="@webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)" />
                     <div class="row">
                         <div class="col-md-12">
                             @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")
