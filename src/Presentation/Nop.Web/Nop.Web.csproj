@@ -42,10 +42,22 @@
 	We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
 	<Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml" />
 	<Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.cshtml" />
-	
+    
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+    
+  <!-- This target execute after "Build" target -->
+  <Target Name="NopTarget" AfterTargets="Build">        
+    <ItemGroup>   
+      <!-- Get all shadow copies of libraries -->
+      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" />
+    </ItemGroup>
+    <!-- Delete shadow copies of libraries -->
+    <Delete Files="@(ShadowCopiesLibraries)" />
+    <!-- Delete unnecessary libraries from plugins path -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\nop.proj" Targets="NopClear" />
+  </Target> 
+      
 </Project>
