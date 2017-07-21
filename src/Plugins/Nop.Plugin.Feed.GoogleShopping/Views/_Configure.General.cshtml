@@ -1,5 +1,4 @@
-﻿@using Nop.Plugin.Feed.GoogleShopping.Models
-@model Nop.Plugin.Feed.GoogleShopping.Models.FeedGoogleShoppingModel
+﻿@model Nop.Plugin.Feed.GoogleShopping.Models.FeedGoogleShoppingModel
 
 <div class="panel-group">
     <div class="panel panel-default">
@@ -7,72 +6,72 @@
             @T("Plugins.Feed.GoogleShopping.GeneralInstructions")
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.ProductPictureSize)
+                    <nop-label asp-for="ProductPictureSize" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.ProductPictureSize)
-                    @Html.ValidationMessageFor(model => model.ProductPictureSize)
+                    <nop-editor asp-for="ProductPictureSize" />
+                    <span asp-validation-for="ProductPictureSize"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PassShippingInfoWeight)
+                    <nop-label asp-for="PassShippingInfoWeight" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.PassShippingInfoWeight)
-                    @Html.ValidationMessageFor(model => model.PassShippingInfoWeight)
+                    <nop-editor asp-for="PassShippingInfoWeight" />
+                    <span asp-validation-for="PassShippingInfoWeight"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PassShippingInfoDimensions)
+                    <nop-label asp-for="PassShippingInfoDimensions" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.PassShippingInfoDimensions)
-                    @Html.ValidationMessageFor(model => model.PassShippingInfoDimensions)
+                    <nop-editor asp-for="PassShippingInfoDimensions" />
+                    <span asp-validation-for="PassShippingInfoDimensions"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.PricesConsiderPromotions)
+                    <nop-label asp-for="PricesConsiderPromotions" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopEditorFor(model => model.PricesConsiderPromotions)
-                    @Html.ValidationMessageFor(model => model.PricesConsiderPromotions)
+                    <nop-editor asp-for="PricesConsiderPromotions" />
+                    <span asp-validation-for="PricesConsiderPromotions"></span>
                 </div>
             </div>
             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.StoreId)
+                    <nop-label asp-for="StoreId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                    @Html.ValidationMessageFor(model => model.StoreId)
+                    <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.CurrencyId)
+                    <nop-label asp-for="CurrencyId" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies)
-                    @Html.ValidationMessageFor(model => model.CurrencyId)
+                    <nop-select asp-for="CurrencyId" asp-items="@Model.AvailableCurrencies" />
+                    <span asp-validation-for="CurrencyId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3">
-                    @Html.NopLabelFor(model => model.DefaultGoogleCategory)
+                    <nop-label asp-for="DefaultGoogleCategory" />
                 </div>
                 <div class="col-md-9">
-                    @Html.NopDropDownListFor(model => model.DefaultGoogleCategory, Model.AvailableGoogleCategories)
-                    @Html.ValidationMessageFor(model => model.DefaultGoogleCategory)
+                    <nop-select asp-for="DefaultGoogleCategory" asp-items="@Model.AvailableGoogleCategories" />
+                    <span asp-validation-for="DefaultGoogleCategory"></span>
                 </div>
             </div>
             @if (Model.GeneratedFiles.Count > 0)
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(m => m.GeneratedFiles)
+                        <nop-label asp-for="GeneratedFiles" />
                     </div>
                     <div class="col-md-9">
                         @for (int i = 0; i <= Model.GeneratedFiles.Count - 1; i++)

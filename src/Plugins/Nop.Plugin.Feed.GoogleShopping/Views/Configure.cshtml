@@ -5,24 +5,16 @@
 
     Html.AddCssFileParts("~/Plugins/Feed.GoogleShopping/Content/styles.css");
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
-    <script>
-        $(document).ready(function() {
-            bindBootstrapTabSelectEvent('googlebase-configure');
-        });
-    </script>
-
-    <div id="googlebase-configure" class="nav-tabs-custom">
-        <ul class="nav nav-tabs">
-            @Html.RenderBootstrapTabHeader("tab-general", @T("Plugins.Feed.GoogleShopping.General"), true)
-            @Html.RenderBootstrapTabHeader("tab-override", @T("Plugins.Feed.GoogleShopping.Override"))
-        </ul>
-        <div class="tab-content">
-            @Html.RenderBootstrapTabContent("tab-general", await Html.PartialAsync("~/Plugins/Feed.GoogleShopping/Views/_Configure.General.cshtml", Model), true)
-            @Html.RenderBootstrapTabContent("tab-override", await Html.PartialAsync("~/Plugins/Feed.GoogleShopping/Views/_Configure.Override.cshtml", Model))
-        </div>
-    </div>
-}
+<form asp-controller="FeedGoogleShopping" asp-action="Configure" method="post">
+    <nop-tabs id="googlebase-configure">
+        <nop-tab-header>
+            <nop-tab-header-item asp-name="tab-general" asp-default="true">@T("Plugins.Feed.GoogleShopping.General")</nop-tab-header-item>
+            <nop-tab-header-item asp-name="tab-override" class="advanced-setting">@T("Plugins.Feed.GoogleShopping.Override")</nop-tab-header-item>
+        </nop-tab-header>
+        <nop-tab-content>
+            <nop-tab-content-item asp-name="tab-general" asp-default="true">@await Html.PartialAsync("~/Plugins/Feed.GoogleShopping/Views/_Configure.General.cshtml", Model)</nop-tab-content-item>
+            <nop-tab-content-item asp-name="tab-override">@await Html.PartialAsync("~/Plugins/Feed.GoogleShopping/Views/_Configure.Override.cshtml", Model)</nop-tab-content-item>
+        </nop-tab-content>
+    </nop-tabs>
+</form>
