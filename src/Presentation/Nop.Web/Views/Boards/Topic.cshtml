@@ -11,7 +11,7 @@
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
     @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
-    @Html.AntiForgeryToken()
+    <nop-antiforgery-token />
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
