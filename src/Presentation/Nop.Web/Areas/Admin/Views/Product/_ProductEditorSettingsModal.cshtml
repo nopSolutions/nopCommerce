@@ -14,10 +14,8 @@
                 </h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("SaveProductEditorSettings", "Product"))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request))
+                <form asp-controller="Product" asp-action="SaveProductEditorSettings" method="post">
+                    <input type="hidden" name="returnurl" value="@webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)" />
                     <div class="row">
                         <div class="col-md-12">
                             @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")
@@ -781,7 +779,7 @@
                             <button type="submit" name="save-product-editor-settings" class="btn btn-lg bg-light-blue">Save</button>
                         </div>
                     </div>
-                }
+                </form>
                 <script>
                     $(document).ready(function () {
                         $('input[type=checkbox].select-all-fields').each(function (index, value) {
@@ -789,7 +787,6 @@
                                 $(this).attr('checked', true);
                             }
                         });
-
 
                         $('input[type=checkbox].select-all-fields').on('click', function () {
                             $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));

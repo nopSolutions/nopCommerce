@@ -1,13 +1,8 @@
-﻿using System.Collections.Specialized;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Compression
 {

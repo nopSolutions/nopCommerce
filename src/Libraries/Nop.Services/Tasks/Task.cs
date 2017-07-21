@@ -13,15 +13,13 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class Task
     {
-        #region Ctor
+        #region Fields
 
-        /// <summary>
-        /// Ctor for Task
-        /// </summary>
-        private Task()
-        {
-            this.Enabled = true;
-        }
+        private bool? _enabled;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor for Task
@@ -29,11 +27,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task </param>
         public Task(ScheduleTask task)
         {
-            this.Type = task.Type;
-            this.Enabled = task.Enabled;
-            this.StopOnError = task.StopOnError;
-            this.Name = task.Name;
-            this.LastSuccessUtc = task.LastSuccessUtc;
+            ScheduleTask = task;
         }
 
         #endregion
@@ -42,10 +36,10 @@ namespace Nop.Services.Tasks
 
         private ITask CreateTask()
         {
-            if (!this.Enabled)
+            if (!Enabled)
                 return null;
 
-            var type = System.Type.GetType(this.Type);
+            var type = Type.GetType(ScheduleTask.Type);
             if (type == null)
                 return null;
 
@@ -79,7 +73,9 @@ namespace Nop.Services.Tasks
         public void Execute(bool throwException = false, bool ensureRunOnOneWebFarmInstance = true)
         {
             var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-            var scheduleTask = scheduleTaskService.GetTaskByType(this.Type);
+
+            if (ScheduleTask == null || !Enabled)
+                return;
 
             try
             {
@@ -101,47 +97,44 @@ namespace Nop.Services.Tasks
                             //actually in this case we can generate some unique string (e.g. Guid) and store it in some "static" (!!!) variable
                             //then it can be used as a machine name
                         }
-
-                        if (scheduleTask != null)
+                        if (nopConfig.RedisCachingEnabled)
                         {
-                            if (nopConfig.RedisCachingEnabled)
-                            {
-                                //get expiration time
-                                var expirationInSeconds = scheduleTask.Seconds <= 300 ? scheduleTask.Seconds - 1 : 300;
+                            //get expiration time
+                            var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
 
-                                var executeTaskAction = new Action(() =>
+                            var executeTaskAction = new Action(() =>
+                            {
+                                //execute task
+                                taskExecuted = true;
+                                var task = this.CreateTask();
+                                if (task != null)
                                 {
-                                    //execute task
-                                    taskExecuted = true;
-                                    var task = this.CreateTask();
-                                    if (task != null)
-                                    {
-                                        //update appropriate datetime properties
-                                        scheduleTask.LastStartUtc = DateTime.UtcNow;
-                                        scheduleTaskService.UpdateTask(scheduleTask);
-                                        task.Execute();
-                                        this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
-                                    }
-                                });
+                                    //update appropriate datetime properties
+                                    ScheduleTask.LastStartUtc = DateTime.UtcNow;
+                                    scheduleTaskService.UpdateTask(ScheduleTask);
+                                    task.Execute();
+                                    ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
+                                }
+                            });
 
-                                //execute task with lock
-                                var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                                if (!redisWrapper.PerformActionWithLock(scheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
-                                    return;
-                            }
-                            else
-                            {
-                                //lease can't be acquired only if for a different machine and it has not expired
-                                if (scheduleTask.LeasedUntilUtc.HasValue &&
-                                    scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
-                                    scheduleTask.LeasedByMachineName != machineName)
-                                    return;
+                            //execute task with lock
+                            var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                            if (!redisWrapper.PerformActionWithLock(ScheduleTask.Type,
+                                TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
+                                return;
+                        }
+                        else
+                        {
+                            //lease can't be acquired only if for a different machine and it has not expired
+                            if (ScheduleTask.LeasedUntilUtc.HasValue &&
+                                ScheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
+                                ScheduleTask.LeasedByMachineName != machineName)
+                                return;
 
-                                //lease the task. so it's run on one farm node at a time
-                                scheduleTask.LeasedByMachineName = machineName;
-                                scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
-                                scheduleTaskService.UpdateTask(scheduleTask);
-                            }
+                            //lease the task. so it's run on one farm node at a time
+                            ScheduleTask.LeasedByMachineName = machineName;
+                            ScheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
+                            scheduleTaskService.UpdateTask(ScheduleTask);
                         }
                     }
                 }
@@ -153,37 +146,27 @@ namespace Nop.Services.Tasks
                     var task = this.CreateTask();
                     if (task != null)
                     {
-                        this.LastStartUtc = DateTime.UtcNow;
-                        if (scheduleTask != null)
-                        {
-                            //update appropriate datetime properties
-                            scheduleTask.LastStartUtc = this.LastStartUtc;
-                            scheduleTaskService.UpdateTask(scheduleTask);
-                        }
+                        ScheduleTask.LastStartUtc = DateTime.UtcNow;
+                        scheduleTaskService.UpdateTask(ScheduleTask);
                         task.Execute();
-                        this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
+                        ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
                     }
                 }
             }
             catch (Exception exc)
             {
-                this.Enabled = !this.StopOnError;
-                this.LastEndUtc = DateTime.UtcNow;
+                ScheduleTask.Enabled = !ScheduleTask.StopOnError;
+                ScheduleTask.LastEndUtc = DateTime.UtcNow;
 
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this.Name, exc.Message), exc);
+                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", ScheduleTask.Name, exc.Message), exc);
                 if (throwException)
                     throw;
             }
 
-            if (scheduleTask != null)
-            {
-                //update appropriate datetime properties
-                scheduleTask.LastEndUtc = this.LastEndUtc;
-                scheduleTask.LastSuccessUtc = this.LastSuccessUtc;
-                scheduleTaskService.UpdateTask(scheduleTask);
-            }
+            //update appropriate datetime properties
+            scheduleTaskService.UpdateTask(ScheduleTask);
         }
 
         #endregion
@@ -191,39 +174,24 @@ namespace Nop.Services.Tasks
         #region Properties
 
         /// <summary>
-        /// Datetime of the last start
+        /// Schedule task
         /// </summary>
-        public DateTime? LastStartUtc { get; private set; }
-
-        /// <summary>
-        /// Datetime of the last end
-        /// </summary>
-        public DateTime? LastEndUtc { get; private set; }
-
-        /// <summary>
-        /// Datetime of the last success
-        /// </summary>
-        public DateTime? LastSuccessUtc { get; private set; }
-
-        /// <summary>
-        /// A value indicating type of the task
-        /// </summary>
-        public string Type { get; private set; }
-
-        /// <summary>
-        /// A value indicating whether to stop task on error
-        /// </summary>
-        public bool StopOnError { get; private set; }
-
-        /// <summary>
-        /// Get the task name
-        /// </summary>
-        public string Name { get; private set; }
+        public ScheduleTask ScheduleTask { get; }
 
         /// <summary>
         /// A value indicating whether the task is enabled
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get
+            {
+                if (!_enabled.HasValue)
+                    _enabled = ScheduleTask?.Enabled;
+
+                    return _enabled.HasValue && _enabled.Value;
+            }
+            set => _enabled = value;
+        }
 
         #endregion
     }

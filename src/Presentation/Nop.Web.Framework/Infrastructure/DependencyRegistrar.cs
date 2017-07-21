@@ -5,6 +5,8 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -107,6 +109,16 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
+
+                //configure the data protection system to persist keys in the Redis database
+                if (config.PersistDataProtectionKeysToRedis)
+                {
+                    builder.Register(x =>
+                    {
+                        var redisConnectionWrapper = x.Resolve<IRedisConnectionWrapper>();
+                        return new RedisXmlRepository(() => redisConnectionWrapper.GetDatabase(), redisConnectionWrapper.DataProtectionKeysName);
+                    }).As<IXmlRepository>().SingleInstance();
+                }
             }
             else
                 builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();

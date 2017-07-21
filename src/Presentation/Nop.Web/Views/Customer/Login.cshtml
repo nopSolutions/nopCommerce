@@ -54,7 +54,7 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                <form asp-route="Login"  asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
@@ -64,7 +64,7 @@
                         {
                             <div class="inputs">
                                 <label asp-for="Username">@T("Account.Login.Fields.UserName"):</label>
-                                <input asp-for="Username" class="username" autofocus="autofocus"/>
+                                <input asp-for="Username" class="username" autofocus="autofocus" />
                                 <span asp-validation-for="Username"></span>
                             </div>
                         }
@@ -72,7 +72,7 @@
                         {
                             <div class="inputs">
                                 <label asp-for="Email">@T("Account.Login.Fields.Email"):</label>
-                                <input asp-for="Email" class="email" autofocus="autofocus"/>
+                                <input asp-for="Email" class="email" autofocus="autofocus" />
                                 <span asp-validation-for="Email"></span>
                             </div>
                         }
@@ -96,7 +96,7 @@
                         }
                     </div>
                     <div class="buttons">
-                        <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")"/>
+                        <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
                     </div>
                 </form>
             </div>

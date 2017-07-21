@@ -162,7 +162,7 @@
                 <div class="input-group input-group-required">
                     <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
                     <div class="input-group-btn">
-                        @Html.RequiredHint()
+                        <nop-required />
                     </div>
                 </div>
                 <script>

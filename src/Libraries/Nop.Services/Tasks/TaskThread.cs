@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Net;
 using System.Threading;
+using Nop.Core;
+using Nop.Core.Domain.Tasks;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
 {
@@ -10,15 +15,33 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class TaskThread : IDisposable
     {
+        #region Fields
+
         private Timer _timer;
         private bool _disposed;
-        private readonly Dictionary<string, Task> _tasks;
+        private readonly Dictionary<string, string> _tasks;
+        private static readonly string _scheduleTaskUrl;
+
+        #endregion
+
+        #region Ctors
+
+        static TaskThread()
+        {
+            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            
+            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPatch;
+        }
 
         internal TaskThread()
         {
-            this._tasks = new Dictionary<string, Task>();
+            this._tasks = new Dictionary<string, string>();
             this.Seconds = 10 * 60;
         }
+
+        #endregion
+
+        #region Utilities
 
         private void Run()
         {
@@ -27,9 +50,27 @@ namespace Nop.Services.Tasks
 
             this.StartedUtc = DateTime.UtcNow;
             this.IsRunning = true;
-            foreach (Task task in this._tasks.Values)
+            foreach (var taskType in _tasks.Values)
             {
-                task.Execute();
+                //create and send post data
+                var postData = new NameValueCollection
+                {
+                    {"taskType", taskType}
+                };
+
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        client.UploadValues(_scheduleTaskUrl, postData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    logger.Error(ex.Message, ex);
+                }
+               
             }
             this.IsRunning = false;
         }
@@ -47,6 +88,10 @@ namespace Nop.Services.Tasks
                 this._timer.Change(this.Interval, this.Interval);
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Disposes the instance
@@ -71,7 +116,7 @@ namespace Nop.Services.Tasks
         {
             if (this._timer == null)
             {
-                this._timer = new Timer(new TimerCallback(this.TimerHandler), null, this.Interval, this.Interval);
+                this._timer = new Timer(this.TimerHandler, null, this.Interval, this.Interval);
             }
         }
 
@@ -79,14 +124,17 @@ namespace Nop.Services.Tasks
         /// Adds a task to the thread
         /// </summary>
         /// <param name="task">The task to be added</param>
-        public void AddTask(Task task)
+        public void AddTask(ScheduleTask task)
         {
             if (!this._tasks.ContainsKey(task.Name))
             {
-                this._tasks.Add(task.Name, task);
+                this._tasks.Add(task.Name, task.Type);
             }
         }
 
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the interval in seconds at which to run the tasks
@@ -104,22 +152,6 @@ namespace Nop.Services.Tasks
         public bool IsRunning { get; private set; }
 
         /// <summary>
-        /// Get a list of tasks
-        /// </summary>
-        public IList<Task> Tasks
-        {
-            get
-            {
-                var list = new List<Task>();
-                foreach (var task in this._tasks.Values)
-                {
-                    list.Add(task);
-                }
-                return new ReadOnlyCollection<Task>(list);
-            }
-        }
-
-        /// <summary>
         /// Gets the interval (in milliseconds) at which to run the task
         /// </summary>
         public int Interval
@@ -127,7 +159,7 @@ namespace Nop.Services.Tasks
             get
             {
                 //if somobody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
-                int interval = this.Seconds * 1000;
+                var interval = this.Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
                 return interval;
@@ -138,5 +170,7 @@ namespace Nop.Services.Tasks
         /// Gets or sets a value indicating whether the thread whould be run only once (per appliction start)
         /// </summary>
         public bool RunOnlyOnce { get; set; }
+
+        #endregion
     }
 }

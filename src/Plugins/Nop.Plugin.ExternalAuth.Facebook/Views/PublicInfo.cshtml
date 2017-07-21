@@ -4,6 +4,6 @@
 }
 <div class="facebook-login-block">
     <div class="buttons">
-        <a href="@Url.Action("Login", "FacebookAuthentication", new { ReturnUrl = this.Context.Request.Query["ReturnUrl"] })" class="facebook-btn"></a>
+        <a asp-controller="facebookauthentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" class="facebook-btn"></a>
     </div>
 </div>

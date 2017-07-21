@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Text;
@@ -171,82 +170,6 @@ namespace Nop.Web.Framework.Extensions
             return new HtmlString(window.ToString());
         }
 
-        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            Expression<Func<TModel, TValue>> forInputExpression,
-            int activeStoreScopeConfiguration)
-        {
-            var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.IdFor(forInputExpression));
-            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
-        }
-        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            Expression<Func<TModel, TValue1>> forInputExpression1,
-            Expression<Func<TModel, TValue2>> forInputExpression2,
-            int activeStoreScopeConfiguration)
-        {
-            var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.IdFor(forInputExpression1));
-            dataInputIds.Add(helper.IdFor(forInputExpression2));
-            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
-        }
-        public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue1, TValue2, TValue3>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            Expression<Func<TModel, TValue1>> forInputExpression1,
-            Expression<Func<TModel, TValue2>> forInputExpression2,
-            Expression<Func<TModel, TValue3>> forInputExpression3,
-            int activeStoreScopeConfiguration)
-        {
-            var dataInputIds = new List<string>();
-            dataInputIds.Add(helper.IdFor(forInputExpression1));
-            dataInputIds.Add(helper.IdFor(forInputExpression2));
-            dataInputIds.Add(helper.IdFor(forInputExpression3));
-            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
-        }
-        public static IHtmlContent OverrideStoreCheckboxFor<TModel>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            string parentContainer,
-            int activeStoreScopeConfiguration)
-        {
-            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, parentContainer);
-        }
-        private static IHtmlContent OverrideStoreCheckboxFor<TModel>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            int activeStoreScopeConfiguration,
-            string parentContainer = null,
-            params string[] datainputIds)
-        {
-            if (String.IsNullOrEmpty(parentContainer) && datainputIds == null)
-                throw new ArgumentException("Specify at least one selector");
-
-            IHtmlContent result = null;
-            if (activeStoreScopeConfiguration > 0)
-            {
-                //render only when a certain store is chosen
-                const string cssClass = "multi-store-override-option";
-                string dataInputSelector = "";
-                if (!String.IsNullOrEmpty(parentContainer))
-                {
-                    dataInputSelector = "#" + parentContainer + " input, #" + parentContainer + " textarea, #" + parentContainer + " select";
-                }
-                if (datainputIds != null && datainputIds.Length > 0)
-                {
-                    dataInputSelector = "#" + String.Join(", #", datainputIds);
-                }
-                var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
-                result = helper.CheckBoxFor(expression, new Dictionary<string, object>
-                {
-                    { "class", cssClass },
-                    { "onclick", onClick },
-                    { "data-for-input-selector", dataInputSelector },
-                });
-            }
-
-            return result;
-        }
-
-        
         /// <summary>
         /// Render CSS styles of selected index 
         /// </summary>
@@ -406,116 +329,6 @@ namespace Nop.Web.Framework.Extensions
             return new HtmlString(laberWrapper.ToHtmlString());
         }
 
-        public static IHtmlContent NopEditorFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, string postfix = "",
-            bool? renderFormControlClass = null, bool required = false)
-        {
-            object htmlAttributes = null;
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
-            if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
-                (renderFormControlClass.HasValue && renderFormControlClass.Value))
-                htmlAttributes = new {@class = "form-control"};
-
-            string result = "";
-            var editorHtml = helper.EditorFor(expression, new {htmlAttributes, postfix}).ToHtmlString();
-            if (required)
-                result = string.Format("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>", editorHtml);
-            else
-                result = editorHtml;
-
-            return new HtmlString(result);
-        }
-
-        public static IHtmlContent NopDropDownList<TModel>(this IHtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, object htmlAttributes = null, 
-            bool renderFormControlClass = true, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownList(name, itemList, attrs).ToHtmlString());
-            else
-                result.Append(helper.DropDownList(name, itemList, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-        public static IHtmlContent NopDropDownListFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
-            object htmlAttributes = null, bool renderFormControlClass = true, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownListFor(expression, itemList, attrs).ToHtmlString());
-            else
-                result.Append(helper.DropDownListFor(expression, itemList, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-        public static IHtmlContent NopTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
-            bool renderFormControlClass = true, int rows = 4, int columns = 20, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-            else
-                result.Append(helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-
-        public static IHtmlContent NopDisplayFor<TModel, TValue>(this IHtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
-        {
-            var result = new TagBuilder("div");
-            result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml.AppendHtml(helper.DisplayFor(expression).ToHtmlString());
-
-            return new HtmlString(result.ToHtmlString());
-        }
-
-        public static IHtmlContent NopDisplay<TModel>(this IHtmlHelper<TModel> helper, string expression)
-        {
-            var result = new TagBuilder("div");
-            result.Attributes.Add("class", "form-text-row");
-            result.InnerHtml.AppendHtml(expression);
-
-            return new HtmlString(result.ToHtmlString());
-        }
-
-        public static IDictionary<string, object> AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
-        {
-            //TODO test new implementation
-            if (!htmlAttributes.ContainsKey("class"))
-                htmlAttributes.Add("class", null);
-            if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
-                htmlAttributes["class"] = "form-control";
-            else
-                if (!htmlAttributes["class"].ToString().Contains("form-control"))
-                htmlAttributes["class"] += " form-control";
-
-            return htmlAttributes;
-        }
-        
         #endregion
         
         #endregion
@@ -539,19 +352,6 @@ namespace Nop.Web.Framework.Extensions
                 tag.WriteTo(writer, HtmlEncoder.Default);
                 return writer.ToString();
             }
-        }
-
-        public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
-        {
-            // Create tag builder
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.AddCssClass("required");
-            var innerText = "*";
-            //add additional text if specified
-            if (!String.IsNullOrEmpty(additionalText))
-                innerText += " " + additionalText;
-            tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RenderHtmlContent());
         }
 
         /// <summary>
@@ -664,42 +464,6 @@ namespace Nop.Web.Framework.Extensions
 
         }
 
-        /// <summary>
-        /// Renders the standard label with a specified suffix added to label text
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <typeparam name="TValue">Value</typeparam>
-        /// <param name="html">HTML helper</param>
-        /// <param name="expression">Expression</param>
-        /// <param name="htmlAttributes">HTML attributes</param>
-        /// <param name="suffix">Suffix</param>
-        /// <returns>Label</returns>
-        public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
-        {
-            //TODO refactor the way it's implemented in \Microsoft.AspNetCore.Mvc.ViewFeatures\ViewFeatures\HtmlHelperOfT.cs - "IHtmlContent LabelFor<TResult>"
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
-            string resolvedLabelText = metadata.Metadata.DisplayName ?? (metadata.Metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
-            if (string.IsNullOrEmpty(resolvedLabelText))
-            {
-                return new HtmlString("");
-            }
-            var tag = new TagBuilder("label");
-            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.IdFor(expression), ""));
-            if (!String.IsNullOrEmpty(suffix))
-            {
-                resolvedLabelText = String.Concat(resolvedLabelText, suffix);
-            }
-            tag.InnerHtml.AppendHtml(resolvedLabelText);
-
-            var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            tag.MergeAttributes(dictionary, true);
-
-            return new HtmlString(tag.ToHtmlString());
-
-        }
-        
         #endregion
     }
 }

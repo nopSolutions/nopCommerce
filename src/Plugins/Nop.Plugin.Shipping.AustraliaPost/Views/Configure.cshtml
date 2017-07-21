@@ -2,28 +2,27 @@
 @{
     Layout = "_ConfigurePlugin";
 }
-@using (Html.BeginForm("Configure", "ShippingAustraliaPost"))
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="ShippingAustraliaPost" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ApiKey)
+                        <nop-label asp-for="ApiKey" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ApiKey)
-                        @Html.ValidationMessageFor(model => model.ApiKey)
+                        <nop-editor asp-for="ApiKey" />
+                        <span asp-validation-for="ApiKey"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                        <nop-label asp-for="AdditionalHandlingCharge" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
-                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                        <nop-editor asp-for="AdditionalHandlingCharge" />
+                        <span asp-validation-for="AdditionalHandlingCharge"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -34,4 +33,4 @@
             </div>
         </div>
     </div> 
-}
+</form>

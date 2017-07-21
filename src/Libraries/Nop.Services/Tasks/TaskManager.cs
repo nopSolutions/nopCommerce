@@ -11,14 +11,29 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class TaskManager
     {
-        private static readonly TaskManager _taskManager = new TaskManager();
-        private readonly List<TaskThread> _taskThreads = new List<TaskThread>();
+        #region Consts
+
+        public const string ScheduleTaskPatch = "scheduletask/index";
         private const int _notRunTasksInterval = 60 * 30; //30 minutes
+
+        #endregion
+
+        #region Fields
+
+        private readonly List<TaskThread> _taskThreads = new List<TaskThread>();
+
+        #endregion
+
+        #region Ctor
 
         private TaskManager()
         {
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Initializes the task manager
         /// </summary>
@@ -42,8 +57,7 @@ namespace Nop.Services.Tasks
                 };
                 foreach (var scheduleTask in scheduleTaskGrouped)
                 {
-                    var task = new Task(scheduleTask);
-                    taskThread.AddTask(task);
+                    taskThread.AddTask(scheduleTask);
                 }
                 this._taskThreads.Add(taskThread);
             }
@@ -66,8 +80,7 @@ namespace Nop.Services.Tasks
                 };
                 foreach (var scheduleTask in notRunTasks)
                 {
-                    var task = new Task(scheduleTask);
-                    taskThread.AddTask(task);
+                    taskThread.AddTask(scheduleTask);
                 }
                 this._taskThreads.Add(taskThread);
             }
@@ -95,26 +108,20 @@ namespace Nop.Services.Tasks
             }
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets the task mamanger instance
         /// </summary>
-        public static TaskManager Instance
-        {
-            get
-            {
-                return _taskManager;
-            }
-        }
+        public static TaskManager Instance { get; } = new TaskManager();
 
         /// <summary>
         /// Gets a list of task threads of this task manager
         /// </summary>
-        public IList<TaskThread> TaskThreads
-        {
-            get
-            {
-                return new ReadOnlyCollection<TaskThread>(this._taskThreads);
-            }
-        }
+        public IList<TaskThread> TaskThreads => new ReadOnlyCollection<TaskThread>(_taskThreads);
+
+        #endregion
     }
 }

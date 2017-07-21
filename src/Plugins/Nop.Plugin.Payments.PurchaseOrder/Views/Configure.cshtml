@@ -4,41 +4,38 @@
 }
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
-
-@using (Html.BeginForm("Configure", "PaymentPurchaseOrder"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="PaymentPurchaseOrder" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AdditionalFee)
+                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFee" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalFee)
-                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeePercentage" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalFeePercentage)
-                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.ShippableProductRequired_OverrideForStore, model => model.ShippableProductRequired, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.ShippableProductRequired)
+                        <nop-override-store-checkbox asp-for="ShippableProductRequired_OverrideForStore" asp-input="ShippableProductRequired" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ShippableProductRequired" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ShippableProductRequired)
-                        @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+                        <nop-editor asp-for="ShippableProductRequired" />
+                        <span asp-validation-for="ShippableProductRequired"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,4 +46,4 @@
             </div>
         </div>
     </div>
-}
+</form>

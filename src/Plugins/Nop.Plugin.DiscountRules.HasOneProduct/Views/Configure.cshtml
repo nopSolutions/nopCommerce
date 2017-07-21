@@ -40,12 +40,12 @@
 
 <div class="form-group">
     <div class="col-md-3 requirement-label-col">
-        @Html.NopLabelFor(model => model.Products)
+        <nop-label asp-for="Products"/>
     </div>
     <div class="col-md-9 requirement-data-col">
         <div class="requirement-data-input">
             <div class="input-group">
-                @Html.NopEditorFor(model => model.Products)
+                <nop-editor asp-for="Products"/>
                 <div class="input-group-btn">
                     <input type="submit"
                            id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"

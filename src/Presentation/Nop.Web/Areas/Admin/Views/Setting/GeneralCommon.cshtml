@@ -23,7 +23,6 @@
 
     <script>
         $(document).ready(function () {
-            bindBootstrapTabSelectEvent('generalsettings-edit');
             $("#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)").click(toggleSitemapSettings);
             $("#@Html.IdFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)").click(toggleLoadAllLocaleRecordsOnStartup);
             toggleSitemapSettings();

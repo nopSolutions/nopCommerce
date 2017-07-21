@@ -40,11 +40,11 @@
 
 <div class="form-group">
     <div class="col-md-3 requirement-label-col">
-        @Html.NopLabelFor(model => model.CustomerRoleId)
+        <nop-label asp-for="CustomerRoleId" />
     </div>
     <div class="col-md-9 requirement-data-col">
         <div class="requirement-data-input">
-            @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+            <nop-select asp-for="CustomerRoleId" asp-items="@Model.AvailableCustomerRoles" />
         </div>
         <div class="requirement-data-buttons">
             <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn btn-primary" value="@T("Admin.Common.Save")"/>

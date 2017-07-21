@@ -1,7 +1,7 @@
 ﻿@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
 
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -42,92 +42,92 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Name)
+                    <nop-label asp-for="Name" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
+                    <nop-editor asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Description)
+                    <nop-label asp-for="Description" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopTextAreaFor(model => model.Description)
-                    @Html.ValidationMessageFor(model => model.Description)
+                    <nop-textarea asp-for="Description" />
+                    <span asp-validation-for="Description"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Address.CountryId)
+                    <nop-label asp-for="Address.CountryId" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopDropDownListFor(model => model.Address.CountryId, Model.Address.AvailableCountries)
-                    @Html.ValidationMessageFor(model => model.Address.CountryId)
+                    <nop-select asp-for="Address.CountryId" asp-items="@Model.Address.AvailableCountries" />
+                    <span asp-validation-for="Address.CountryId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Address.StateProvinceId)
+                    <nop-label asp-for="Address.StateProvinceId" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopDropDownListFor(model => model.Address.StateProvinceId, Model.Address.AvailableStates)
-                    @Html.ValidationMessageFor(model => model.Address.StateProvinceId)
+                    <nop-select asp-for="Address.StateProvinceId" asp-items="@Model.Address.AvailableStates" />
+                    <span asp-validation-for="Address.StateProvinceId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Address.City)
+                    <nop-label asp-for="Address.City" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Address.City)
-                    @Html.ValidationMessageFor(model => model.Address.City)
+                    <nop-editor asp-for="Address.City" />
+                    <span asp-validation-for="Address.City"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Address.Address1)
+                    <nop-label asp-for="Address.Address1" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Address.Address1)
-                    @Html.ValidationMessageFor(model => model.Address.Address1)
+                    <nop-editor asp-for="Address.Address1" />
+                    <span asp-validation-for="Address.Address1"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Address.ZipPostalCode)
+                    <nop-label asp-for="Address.ZipPostalCode" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Address.ZipPostalCode)
-                    @Html.ValidationMessageFor(model => model.Address.ZipPostalCode)
+                    <nop-editor asp-for="Address.ZipPostalCode" />
+                    <span asp-validation-for="Address.ZipPostalCode"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.OpeningHours)
+                    <nop-label asp-for="OpeningHours" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.OpeningHours)
-                    @Html.ValidationMessageFor(model => model.OpeningHours)
+                    <nop-editor asp-for="OpeningHours" />
+                    <span asp-validation-for="OpeningHours"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.PickupFee)
+                    <nop-label asp-for="PickupFee" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.PickupFee)
-                    @Html.ValidationMessageFor(model => model.PickupFee)
+                    <nop-editor asp-for="PickupFee" />
+                    <span asp-validation-for="PickupFee"></span>
                 </div>
             </div>
             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.StoreId)
+                    <nop-label asp-for="StoreId" />
                 </div>
                 <div class="col-sm-9">
-                    @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                    @Html.ValidationMessageFor(model => model.StoreId)
+                    <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
                 </div>
             </div>
         </div>

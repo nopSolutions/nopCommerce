@@ -4,47 +4,45 @@
     Layout = "_ConfigurePlugin";
 }
 
-@using (Html.BeginForm("Configure", "ShippingCanadaPost"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ShippingCanadaPost" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 @Html.Raw(T("Plugins.Shipping.CanadaPost.Instructions"))
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.CustomerNumber)
+                        <nop-label asp-for="CustomerNumber" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.CustomerNumber)
-                        @Html.ValidationMessageFor(model => model.CustomerNumber)
+                        <nop-editor asp-for="CustomerNumber" />
+                        <span asp-validation-for="CustomerNumber"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ContractId)
+                        <nop-label asp-for="ContractId" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ContractId)
-                        @Html.ValidationMessageFor(model => model.ContractId)
+                        <nop-editor asp-for="ContractId" />
+                        <span asp-validation-for="ContractId"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ApiKey)
+                        <nop-label asp-for="ApiKey" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ApiKey)
-                        @Html.ValidationMessageFor(model => model.ApiKey)
+                        <nop-editor asp-for="ApiKey" />
+                        <span asp-validation-for="ApiKey"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.UseSandbox)
+                        <nop-label asp-for="UseSandbox" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.UseSandbox)
-                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -55,4 +53,4 @@
             </div>
         </div>
     </div>
-}
+</form>

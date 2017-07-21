@@ -53,7 +53,11 @@ namespace Nop.Core.Configuration
         /// Gets or sets Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; set; }
-        
+        /// <summary>
+        /// Gets or sets a value indicating whether the data protection system should be configured to persist keys in the Redis database
+        /// </summary>
+        public bool PersistDataProtectionKeysToRedis { get; set; }
+
         /// <summary>
         /// Gets or sets path to database with user agent strings
         /// </summary>
