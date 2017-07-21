@@ -96,7 +96,7 @@
                                     <button type="submit" name="cancelorder" id="cancelorder" class="btn bg-red" style="margin-right: 3px;">
                                         @T("Admin.Orders.Fields.OrderStatus.Cancel")
                                     </button>
-                                    @Html.ActionConfirmation("cancelorder")
+                                    <nop-action-confirmation asp-button-id="cancelorder" />
                                 }
                                 <button type="submit" name="btnChangeOrderStatus" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary">
                                     @T("Admin.Orders.Fields.OrderStatus.Change")
@@ -106,7 +106,7 @@
                                     <button type="submit" name="btnSaveOrderStatus" id="btnSaveOrderStatus" class="btn btn-primary" style="margin-left: 3px">
                                         @T("Admin.Common.Save")
                                     </button>
-                                    @Html.ActionConfirmation("btnSaveOrderStatus")
+                                    <nop-action-confirmation asp-button-id="btnSaveOrderStatus" />
                                     <button type="submit" name="btnCancelOrderStatus" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-left: 3px">
                                         @T("Admin.Common.Cancel")
                                     </button>
@@ -555,7 +555,7 @@
                         <button type="submit" name="btnSaveOrderTotals" id="btnSaveOrderTotals" class="btn btn-primary">
                             @T("Admin.Orders.Fields.SaveOrderTotals")
                         </button>
-                        @Html.ActionConfirmation("btnSaveOrderTotals")
+                        <nop-action-confirmation asp-button-id="btnSaveOrderTotals" />
 
                         <button type="submit" name="btnCancelOrderTotals" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="btn bg-teal">
                             @T("Admin.Common.Cancel")
@@ -657,7 +657,7 @@
                             <button type="submit" name="btnSaveCC" id="btnSaveCC" class="btn btn-primary">
                                 @T("Admin.Orders.Fields.SaveCC")
                             </button>
-                            @Html.ActionConfirmation("btnSaveCC")
+                            <nop-action-confirmation asp-button-id="btnSaveCC" />
 
                             <button type="submit" name="btnCancelCC" onclick="toggleCC(false);return false;" id="btnCancelCC" class="btn bg-teal">
                                 @T("Admin.Common.Cancel")
@@ -732,7 +732,7 @@
                                     @T("Admin.Orders.Fields.Capture")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("captureorder")
+                                <nop-action-confirmation asp-button-id="captureorder" />
                             }
                             if (Model.CanMarkOrderAsPaid)
                             {
@@ -740,7 +740,7 @@
                                     @T("Admin.Orders.Fields.MarkAsPaid")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("markorderaspaid")
+                                <nop-action-confirmation asp-button-id="markorderaspaid" />
                             }
                             if (Model.CanRefund)
                             {
@@ -748,7 +748,7 @@
                                     @T("Admin.Orders.Fields.Refund")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("refundorder")
+                                <nop-action-confirmation asp-button-id="refundorder" />
                             }
                             if (Model.CanRefundOffline)
                             {
@@ -756,7 +756,7 @@
                                     @T("Admin.Orders.Fields.RefundOffline")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("refundorderoffline")
+                                <nop-action-confirmation asp-button-id="refundorderoffline" />
                             }
                             if (Model.CanPartiallyRefund)
                             {
@@ -778,7 +778,7 @@
                                     @T("Admin.Orders.Fields.Void")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("voidorder")
+                                <nop-action-confirmation asp-button-id="voidorder" />
                             }
                             if (Model.CanVoidOffline)
                             {
@@ -786,7 +786,7 @@
                                     @T("Admin.Orders.Fields.VoidOffline")
                                 </button>
                                 <text>&nbsp;</text>
-                                @Html.ActionConfirmation("voidorderoffline")
+                                <nop-action-confirmation asp-button-id="voidorderoffline" />
                             }
                         }
                     </div>

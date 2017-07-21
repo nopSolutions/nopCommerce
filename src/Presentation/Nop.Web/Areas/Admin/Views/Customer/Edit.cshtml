@@ -36,7 +36,7 @@
                     <i class="fa fa-smile-o"></i>
                     @T("Admin.Customers.Customers.SendWelcomeMessage")
                 </button>
-                @Html.ActionConfirmation("send-welcome-message")
+                <nop-action-confirmation asp-button-id="send-welcome-message" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
@@ -44,7 +44,7 @@
                     <i class="fa fa-check-circle"></i>
                     @T("Admin.Customers.Customers.ReSendActivationMessage")
                 </button>
-                @Html.ActionConfirmation("resend-activation-message")
+                <nop-action-confirmation asp-button-id="resend-activation-message" />
             }
             <span id="customer-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>

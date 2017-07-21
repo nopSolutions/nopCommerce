@@ -154,7 +154,7 @@
                                         <button type="submit" id="btnSaveShippedDate" name="saveshippeddate" class="btn btn-primary">
                                             @T("Admin.Common.Save")
                                         </button>
-                                        @Html.ActionConfirmation("btnSaveShippedDate")
+                                        <nop-action-confirmation asp-button-id="btnSaveShippedDate" />
 
                                         <button type="submit" onclick="toggleShippedDate(false);return false;" id="btnCancelShippedDate" class="btn bg-teal">
                                             @T("Admin.Common.Cancel")
@@ -198,7 +198,7 @@
                                         <button type="submit" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn btn-primary">
                                             @T("Admin.Common.Save")
                                         </button>
-                                        @Html.ActionConfirmation("btnSaveDeliveryDate")
+                                        <nop-action-confirmation asp-button-id="btnSaveDeliveryDate" />
 
                                         <button type="submit" onclick="toggleDeliveryDate(false);return false;" id="btnCancelDeliveryDate" class="btn bg-teal">
                                             @T("Admin.Common.Cancel")

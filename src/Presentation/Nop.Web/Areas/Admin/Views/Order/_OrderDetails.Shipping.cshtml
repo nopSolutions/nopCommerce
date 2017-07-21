@@ -269,7 +269,7 @@
                                     <button type="submit" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary">
                                         @T("Admin.Common.Save")
                                     </button>
-                                    @Html.ActionConfirmation("btnSaveShippingMethod")
+                                    <nop-action-confirmation asp-button-id="btnSaveShippingMethod" />
 
                                     <button type="submit" onclick="toggleEditShippingMethod(false);return false;" id="btnCancelShippingMethod" class="btn bg-teal">
                                         @T("Admin.Common.Cancel")

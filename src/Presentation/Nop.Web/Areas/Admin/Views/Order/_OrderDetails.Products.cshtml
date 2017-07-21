@@ -352,13 +352,13 @@
                                             <i class="fa fa-trash"></i>
                                             @T("Admin.Common.Delete")
                                         </button>
-                                        @Html.ActionConfirmation("btnDeleteOrderItem" + item.Id)
+                                        <nop-action-confirmation asp-button-id="@("btnDeleteOrderItem" + item.Id)" />
 
                                         <button type="submit" class="btn btn-default" name="btnSaveOrderItem@(item.Id)" id="btnSaveOrderItem@(item.Id)" style="display: none;">
                                             <i class="fa fa-floppy-o"></i>
                                             @T("Admin.Common.Save")
                                         </button>
-                                        @Html.ActionConfirmation("btnSaveOrderItem" + item.Id)
+                                        <nop-action-confirmation asp-button-id="@("btnSaveOrderItem" + item.Id)" />
 
                                         <button type="submit" class="btn btn-default" name="btnCancelOrderItem@(item.Id)" onclick="toggleOrderItemEdit@(item.Id)(false);return false;" id="btnCancelOrderItem@(item.Id)" style="display: none;">
                                             <i class="fa fa-close"></i>

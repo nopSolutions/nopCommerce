@@ -529,7 +529,7 @@
                                         <button type="submit" name="changeencryptionkey" id="changeencryptionkey" class="btn btn-info">
                                             @T("Admin.Common.Change")
                                         </button>
-                                        @Html.ActionConfirmation("changeencryptionkey")
+                                        <nop-action-confirmation asp-button-id="changeencryptionkey" />
                                     </span>
                                 </div>
                                 <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
