@@ -2,15 +2,11 @@
     Layout = "_ConfigurePlugin";
 }
 
-@using (Html.BeginForm(null, null, null, FormMethod.Post, null, new { id = "pickup-instore-form" }))
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="PickupInStore" asp-action="Configure" method="post" id="pickup-instore-form">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="pickup-points-grid"></div>
-
                 <script>
                     $(document).ready(function() {
                         $("#pickup-points-grid").kendoGrid({
@@ -102,7 +98,6 @@
                 <input type="submit" id="btnAddNewOption" class="btn btn-primary" value="@T("Plugins.Pickup.PickupInStore.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("Create", "PickupInStore",  new { btnId = "btnRefresh", formId = "pickup-instore-form" }))', 800, 800, true); return false;"/>
                 <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
-
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
@@ -118,4 +113,4 @@
             </script>
         </div>
     </div>
-}
+</form>

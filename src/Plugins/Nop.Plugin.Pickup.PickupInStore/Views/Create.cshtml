@@ -3,9 +3,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Common.AddNew")
@@ -23,4 +22,4 @@
             @await Html.PartialAsync("~/Plugins/Pickup.PickupInStore/Views/_CreateOrUpdate.cshtml", Model)
         </div>
     </div>
-}
+</form>
