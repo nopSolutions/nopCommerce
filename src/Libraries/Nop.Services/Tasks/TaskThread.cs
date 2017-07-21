@@ -6,6 +6,7 @@ using System.Threading;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
 {
@@ -28,6 +29,7 @@ namespace Nop.Services.Tasks
         static TaskThread()
         {
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            
             _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPatch;
         }
 
@@ -56,10 +58,19 @@ namespace Nop.Services.Tasks
                     {"taskType", taskType}
                 };
 
-                using (var client = new WebClient())
+                try
                 {
-                    client.UploadValues(_scheduleTaskUrl, postData);
+                    using (var client = new WebClient())
+                    {
+                        client.UploadValues(_scheduleTaskUrl, postData);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    logger.Error(ex.Message, ex);
+                }
+               
             }
             this.IsRunning = false;
         }
