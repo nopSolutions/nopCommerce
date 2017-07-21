@@ -4,7 +4,6 @@
 }
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
-
 <script type="text/javascript">
 	$(document).ready(function () {
 
@@ -28,124 +27,120 @@
             { passProductNamesAndTotals: $('#@Html.IdFor(model => model.PassProductNamesAndTotals)').is(':checked') });
     }
 </script>
-
-
-@using (Html.BeginForm("Configure", "PaymentPayPalStandard"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="PaymentPayPalStandard" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 @Html.Raw(T("Plugins.Payments.PayPalStandard.Instructions"))
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.UseSandbox)
+                        <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseSandbox" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.UseSandbox)
-                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.BusinessEmail_OverrideForStore, model => model.BusinessEmail, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.BusinessEmail)
+                        <nop-override-store-checkbox asp-for="BusinessEmail_OverrideForStore" asp-input="BusinessEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="BusinessEmail" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.BusinessEmail)
-                        @Html.ValidationMessageFor(model => model.BusinessEmail)
+                        <nop-editor asp-for="BusinessEmail" />
+                        <span asp-validation-for="BusinessEmail"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.PdtToken_OverrideForStore, model => model.PdtToken, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.PdtToken)
+                        <nop-override-store-checkbox asp-for="PdtToken_OverrideForStore" asp-input="PdtToken" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PdtToken" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PdtToken)
-                        @Html.ValidationMessageFor(model => model.PdtToken)
+                        <nop-editor asp-for="PdtToken" />
+                        <span asp-validation-for="PdtToken"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.PdtValidateOrderTotal_OverrideForStore, model => model.PdtValidateOrderTotal, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.PdtValidateOrderTotal)
+                        <nop-override-store-checkbox asp-for="PdtValidateOrderTotal_OverrideForStore" asp-input="PdtValidateOrderTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PdtValidateOrderTotal" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PdtValidateOrderTotal)
-                        @Html.ValidationMessageFor(model => model.PdtValidateOrderTotal)
+                        <nop-editor asp-for="PdtValidateOrderTotal" />
+                        <span asp-validation-for="PdtValidateOrderTotal"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AdditionalFee)
+                        <nop-override-store-checkbox asp-for="AdditionalFee_OverrideForStore" asp-input="AdditionalFee" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFee" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalFee)
-                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                        <nop-override-store-checkbox asp-for="AdditionalFeePercentage_OverrideForStore" asp-input="AdditionalFeePercentage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AdditionalFeePercentage" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalFeePercentage)
-                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.PassProductNamesAndTotals_OverrideForStore, model => model.PassProductNamesAndTotals, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.PassProductNamesAndTotals)
+                        <nop-override-store-checkbox asp-for="PassProductNamesAndTotals_OverrideForStore" asp-input="PassProductNamesAndTotals" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="PassProductNamesAndTotals" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PassProductNamesAndTotals)
-                        @Html.ValidationMessageFor(model => model.PassProductNamesAndTotals)
+                        <nop-editor asp-for="PassProductNamesAndTotals" />
+                        <span asp-validation-for="PassProductNamesAndTotals"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.EnableIpn_OverrideForStore, model => model.EnableIpn, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.EnableIpn)
+                        <nop-override-store-checkbox asp-for="EnableIpn_OverrideForStore" asp-input="EnableIpn" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableIpn" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.EnableIpn)
-                        @Html.ValidationMessageFor(model => model.EnableIpn)
+                        <nop-editor asp-for="EnableIpn" />
+                        <span asp-validation-for="EnableIpn"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnlIpnUrl">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.IpnUrl)
+                        <nop-override-store-checkbox asp-for="IpnUrl_OverrideForStore" asp-input="IpnUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="IpnUrl" />
                         @*TODO: Move to hint <em>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</em>*@
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.IpnUrl)
-                        @Html.ValidationMessageFor(model => model.IpnUrl)
+                        <nop-editor asp-for="IpnUrl" />
+                        <span asp-validation-for="IpnUrl"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.AddressOverride_OverrideForStore, model => model.AddressOverride, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.AddressOverride)
+                        <nop-override-store-checkbox asp-for="AddressOverride_OverrideForStore" asp-input="AddressOverride" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="AddressOverride" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AddressOverride)
-                        @Html.ValidationMessageFor(model => model.AddressOverride)
+                        <nop-editor asp-for="AddressOverride" />
+                        <span asp-validation-for="AddressOverride"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                        <nop-override-store-checkbox asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore" asp-input="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
-                        @Html.ValidationMessageFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                        <nop-editor asp-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage" />
+                        <span asp-validation-for="ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -156,4 +151,4 @@
             </div>
         </div>
     </div>
-}
+</form>
