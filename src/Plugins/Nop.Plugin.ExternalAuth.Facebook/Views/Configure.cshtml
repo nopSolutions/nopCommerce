@@ -6,9 +6,7 @@
 
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-@using (Html.BeginForm("Configure", "FacebookAuthentication"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -27,12 +25,12 @@
                 </p>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.ClientId_OverrideForStore, model => model.ClientId, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.ClientId)
+                        <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="ClientId" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ClientId)
-                        @Html.ValidationMessageFor(model => model.ClientId)
+                        <nop-editor asp-for="ClientId" />
+                        <span asp-validation-for="ClientId"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -53,4 +51,4 @@
             </div>
         </div>
     </div> 
-}
+</form>
