@@ -11,9 +11,9 @@
                 <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.ProductAttributes.Info")</nop-tab-header-item>
                 @if (Model.Id > 0)
             {
-                    <nop-tab-header-item asp-name="tab-used-by-products" class="advanced-setting">@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-used-by-products">@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")</nop-tab-header-item>
                 }
-                <nop-tab-header-item asp-name="tab-predefined-values" class="advanced-setting">@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-predefined-values">@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")</nop-tab-header-item>
             </nop-tab-header>
             <nop-tab-content>
                 <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>

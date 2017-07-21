@@ -31,7 +31,7 @@
             <nop-tabs id="ordersettings-edit">
                 <nop-tab-header>
                     <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Settings.Order.OrderSettings")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-returnrequest" class="advanced-setting">@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-returnrequest">@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")</nop-tab-header-item>
                 </nop-tab-header>
                 <nop-tab-content>
                     <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab-content-item>

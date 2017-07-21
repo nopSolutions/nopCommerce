@@ -29,8 +29,8 @@
             <nop-tabs id="customersettings-edit">
                 <nop-tab-header>
                     <nop-tab-header-item asp-name="tab-customer" asp-default="true">@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-customerformfields" class="advanced-setting">@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-addressformfields" class="advanced-setting">@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-customerformfields">@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-addressformfields">@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")</nop-tab-header-item>
                 </nop-tab-header>
                 <nop-tab-content>
                     <nop-tab-content-item asp-name="tab-customer" asp-default="true">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab-content-item>
