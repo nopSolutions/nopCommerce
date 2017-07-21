@@ -3,51 +3,49 @@
     Layout = "_ConfigurePlugin";
 }
 
-@using (Html.BeginForm("Configure", "ShippingUSPS"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ShippingUSPS" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Url)
+                        <nop-label asp-for="Url" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Url)
-                        @Html.ValidationMessageFor(model => model.Url)
+                        <nop-editor asp-for="Url" />
+                        <span asp-validation-for="Url"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Username)
+                        <nop-label asp-for="Username" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Username)
-                        @Html.ValidationMessageFor(model => model.Username)
+                        <nop-editor asp-for="Username" />
+                        <span asp-validation-for="Username"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Password)
+                        <nop-label asp-for="Password" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Password)
-                        @Html.ValidationMessageFor(model => model.Password)
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                        <nop-label asp-for="AdditionalHandlingCharge" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
-                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                        <nop-editor asp-for="AdditionalHandlingCharge" />
+                        <span asp-validation-for="AdditionalHandlingCharge"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableCarrierServicesDomestic)
+                        <nop-label asp-for="AvailableCarrierServicesDomestic" />
                     </div>
                     <div class="col-md-9">
                         @foreach (var csd in Model.AvailableCarrierServicesDomestic)
@@ -63,7 +61,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableCarrierServicesInternational)
+                        <nop-label asp-for="AvailableCarrierServicesInternational" />
                     </div>
                     <div class="col-md-9">
                         @foreach (var csd in Model.AvailableCarrierServicesInternational)
@@ -85,4 +83,4 @@
             </div>
         </div>
     </div>
-}
+</form>

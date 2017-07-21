@@ -5,9 +5,7 @@
     var stores = storeService.GetAllStores();
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="FixedOrByWeight" asp-action="Configure" method="post" id="shipping-byweight-form">
     <div class="panel-group advanced-setting">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -123,13 +121,13 @@
                         onclick="javascript:OpenWindow('@(Url.Action("AddRateByWeighPopup", "FixedOrByWeight", new { btnId = "btnRefresh", formId = "shipping-byweight-form" }))', 800, 800, true); return false;">
                     @T("Plugins.Shipping.FixedOrByWeight.AddRecord")
                 </button>
-                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none"/>
+                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
             </div>
             <script type="text/javascript">
                 $(document)
-                    .ready(function() {
+                    .ready(function () {
                         $('#btnRefresh')
-                            .click(function() {
+                            .click(function () {
                                 //refresh grid
                                 var grid = $("#shipping-byweight-grid").data('kendoGrid');
                                 //grid.dataSource.page(1); //new search. Set page size to 1
@@ -145,11 +143,11 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.LimitMethodsToCreated)
+                        <nop-label asp-for="LimitMethodsToCreated" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.LimitMethodsToCreated)
-                        @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+                        <nop-editor asp-for="LimitMethodsToCreated" />
+                        <span asp-validation-for="LimitMethodsToCreated"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -157,32 +155,30 @@
                         &nbsp;
                     </div>
                     <div class="col-md-9">
-                        <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
+                        <input type="button" id="savegeneralsettings" class="btn btn-primary" value="@T("Admin.Common.Save")" />
 
                         <script type="text/javascript">
                             $(document)
                                 .ready(function() {
-                                    $('#savegeneralsettings')
-                                        .click(function() {
+                                    $('#savegeneralsettings').click(function() {
+                                        var postData = $(this.form).serialize();
+                                        addAntiForgeryToken(postData);
 
-                                            var postData = $(this.form).serialize();
-                                            addAntiForgeryToken(postData);
-
-                                            $.ajax({
-                                                cache: false,
-                                                type: 'POST',
-                                                url: '@Url.Action("Configure", "FixedOrByWeight")',
-                                                data: postData,
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                    alert('Saved');
-                                                },
-                                                error: function(xhr, ajaxOptions, thrownError) {
-                                                    alert('Error while saving.');
-                                                }
-                                            });
-                                            return false;
+                                        $.ajax({
+                                            cache: false,
+                                            type: 'POST',
+                                            url: '@Url.Action("Configure", "FixedOrByWeight")',
+                                            data: postData,
+                                            dataType: 'json',
+                                            success: function(data) {
+                                                alert('Saved');
+                                            },
+                                            error: function(xhr, ajaxOptions, thrownError) {
+                                                alert('Error while saving.');
+                                            }
                                         });
+                                        return false;
+                                    });
                                 });
                         </script>
                     </div>
@@ -190,4 +186,4 @@
             </div>
         </div>
     </div>
-}
+</form>

@@ -2,9 +2,9 @@
     Layout = "_AdminPopupLayout";
 }
 @model Nop.Plugin.Shipping.FixedOrByWeight.Models.ShippingByWeightModel
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
+<form asp-all-route-data="@null">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Common.Edit")
@@ -19,4 +19,4 @@
             @await Html.PartialAsync("~/Plugins/Shipping.FixedOrByWeight/Views/_CreateOrUpdateRateByWeight.cshtml", Model)
         </div>
     </div>
-}
+</form>

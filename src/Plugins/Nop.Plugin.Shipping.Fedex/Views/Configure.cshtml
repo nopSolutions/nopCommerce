@@ -5,8 +5,7 @@
 @model Nop.Plugin.Shipping.Fedex.Models.FedexShippingModel
 @using Nop.Plugin.Shipping.Fedex;
 
-@using (Html.BeginForm("Configure", "ShippingFedex"))
-{
+<form asp-controller="ShippingFedex" asp-action="Configure" method="post">
     <script type="text/javascript">
         $(document).ready(function () {
             $("#PackingType").change(togglePackingType);
@@ -30,93 +29,92 @@
         }
     </script>
 
-    @Html.AntiForgeryToken()
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Url)
+                        <nop-label asp-for="Url" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Url)
-                        @Html.ValidationMessageFor(model => model.Url)
+                        <nop-editor asp-for="Url" />
+                        <span asp-validation-for="Url"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Key)
+                        <nop-label asp-for="Key" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Key)
-                        @Html.ValidationMessageFor(model => model.Key)
+                        <nop-editor asp-for="Key" />
+                        <span asp-validation-for="Key"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.Password)
+                        <nop-label asp-for="Password" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Password)
-                        @Html.ValidationMessageFor(model => model.Password)
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AccountNumber)
+                        <nop-label asp-for="AccountNumber" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AccountNumber)
-                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                        <nop-editor asp-for="AccountNumber" />
+                        <span asp-validation-for="AccountNumber"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.MeterNumber)
+                        <nop-label asp-for="MeterNumber" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.MeterNumber)
-                        @Html.ValidationMessageFor(model => model.MeterNumber)
+                        <nop-editor asp-for="MeterNumber" />
+                        <span asp-validation-for="MeterNumber"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableDropOffTypes)
+                        <nop-label asp-for="AvailableDropOffTypes" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownList("DropoffType", Model.AvailableDropOffTypes)
+                        <nop-select asp-for="DropoffType" asp-items="@Model.AvailableDropOffTypes" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.UseResidentialRates)
+                        <nop-label asp-for="UseResidentialRates" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.UseResidentialRates)
-                        @Html.ValidationMessageFor(model => model.UseResidentialRates)
+                        <nop-editor asp-for="UseResidentialRates" />
+                        <span asp-validation-for="UseResidentialRates"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.ApplyDiscounts)
+                        <nop-label asp-for="ApplyDiscounts" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ApplyDiscounts)
-                        @Html.ValidationMessageFor(model => model.ApplyDiscounts)
+                        <nop-editor asp-for="ApplyDiscounts" />
+                        <span asp-validation-for="ApplyDiscounts"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                        <nop-label asp-for="AdditionalHandlingCharge" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
-                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                        <nop-editor asp-for="AdditionalHandlingCharge" />
+                        <span asp-validation-for="AdditionalHandlingCharge"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.AvailableCarrierServices)
+                        <nop-label asp-for="AvailableCarrierServices" />
                     </div>
                     <div class="col-md-9">
                         @foreach (var csd in Model.AvailableCarrierServices)
@@ -132,28 +130,28 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.PackingTypeValues)
+                        <nop-label asp-for="PackingTypeValues" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownList("PackingType", Model.PackingTypeValues)
+                        <nop-select asp-for="PackingType" asp-items="@Model.PackingTypeValues" />
                     </div>
                 </div>
                 <div class="form-group" id="pnlPassDimensions">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.PassDimensions)
+                        <nop-label asp-for="PassDimensions" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PassDimensions)
-                        @Html.ValidationMessageFor(model => model.PassDimensions)
+                        <nop-editor asp-for="PassDimensions" />
+                        <span asp-validation-for="PassDimensions"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnlPackingPackageVolume">
                     <div class="col-md-3">
-                        @Html.NopLabelFor(model => model.PackingPackageVolume)
+                        <nop-label asp-for="PackingPackageVolume" />
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.PackingPackageVolume)
-                        @Html.ValidationMessageFor(model => model.PackingPackageVolume)
+                        <nop-editor asp-for="PackingPackageVolume" />
+                        <span asp-validation-for="PackingPackageVolume"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -164,4 +162,4 @@
             </div>
         </div>
     </div>
-}
+</form>
