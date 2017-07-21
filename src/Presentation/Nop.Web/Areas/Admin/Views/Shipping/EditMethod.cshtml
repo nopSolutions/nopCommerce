@@ -31,4 +31,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdateMethod", Model)
 </form>
-@Html.DeleteConfirmation("DeleteMethod", "method-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="method-delete" asp-action="DeleteMethod" />

@@ -54,7 +54,7 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
-@Html.DeleteConfirmation("customer-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="customer-delete" />
 
 @*send email form*@
 <div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">

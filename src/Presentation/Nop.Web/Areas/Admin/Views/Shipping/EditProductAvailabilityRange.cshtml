@@ -31,4 +31,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)
 </form>
-@Html.DeleteConfirmation("DeleteProductAvailabilityRange", "product-availability-range-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="product-availability-range-delete" asp-action="DeleteProductAvailabilityRange" />

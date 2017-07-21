@@ -30,4 +30,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForum", Model)
 </form>
-@Html.DeleteConfirmation("DeleteForum", "forum-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="forum-delete" asp-action="DeleteForum"/>

@@ -29,5 +29,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
-
-@Html.DeleteConfirmation("addressattribute-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="addressattribute-delete"/>

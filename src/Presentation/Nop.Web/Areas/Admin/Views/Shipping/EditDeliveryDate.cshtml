@@ -30,4 +30,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)
 </form>
-@Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="delivery-date-delete" asp-action="DeleteDeliveryDate" />

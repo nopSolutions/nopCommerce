@@ -37,5 +37,5 @@
 @if (!Model.IsLoggedInAsVendor)
 {
     //this button is not visible to vendors
-    @Html.DeleteConfirmation("productreview-delete")
+    <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="productreview-delete" />
 }

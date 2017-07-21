@@ -34,4 +34,4 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
-@Html.DeleteConfirmation("queuedEmail-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="queuedEmail-delete" />

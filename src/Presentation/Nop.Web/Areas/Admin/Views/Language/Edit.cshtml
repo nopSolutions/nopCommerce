@@ -39,7 +39,7 @@
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>
-@Html.DeleteConfirmation("language-delete")
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="language-delete" />
 
 @*import resources form*@
 <div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">
