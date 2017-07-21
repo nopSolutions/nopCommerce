@@ -66,7 +66,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
                 return Configure();
 
             //Canada Post page provides the API key with extra spaces
-            model.ApiKey = model.ApiKey.Replace(" : ", ":");
+            model.ApiKey = model.ApiKey?.Replace(" : ", ":");
 
             //save settings
             _canadaPostSettings.CustomerNumber = model.CustomerNumber;
