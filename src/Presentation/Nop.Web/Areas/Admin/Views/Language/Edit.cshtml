@@ -52,7 +52,6 @@
             <form asp-controller="Language" asp-route-id="@Model.Id" asp-action="ImportXml" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
-                        @Html.AntiForgeryToken()
                         <ul class="common-list">
                             <li>
                                 <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>

@@ -9,7 +9,6 @@
         <form asp-action="@Model.ActionName" asp-controller="@Model.ControllerName" asp-route-id="@Model.Id">
             <div class="form-horizontal">
                 <div class="modal-body">
-                    @Html.AntiForgeryToken()
                     @T("Admin.Common.DeleteConfirmation")
                 </div>
                 <div class="modal-footer">
