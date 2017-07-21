@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -11,7 +10,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
     public class NopTabsTagHelper : TagHelper
     {
         private const string IdAttributeName = "id";
+        private const string TabNameToSelectAttributeName = "asp-tab-name-to-select";
+        private const string RenderSelectedTabInputAttributeName = "asp-render-selected-tab-input";
+
         private readonly IHtmlHelper _htmlHelper;
+
+        /// <summary>
+        /// Name of the tab which should be selected
+        /// </summary>
+        [HtmlAttributeName(TabNameToSelectAttributeName)]
+        public string TabNameToSelect { set; get; }
+
+        /// <summary>
+        /// Indicates whether the tab is default
+        /// </summary>
+        [HtmlAttributeName(RenderSelectedTabInputAttributeName)]
+        public string RenderSelectedTabInput { set; get; }
 
         /// <summary>
         /// ViewContext
@@ -37,6 +51,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
                 throw new ArgumentNullException(nameof(output));
             }
 
+            //save tab name which should be selected
+            if (!string.IsNullOrEmpty(TabNameToSelect))
+                context.Items.Add("tabNameToSelect", TabNameToSelect);
+
             var tabsClass = "nav-tabs-custom";
             //merge classes
             var classValue = output.Attributes.ContainsName("class")
@@ -48,20 +66,24 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
             var viewContextAware = _htmlHelper as IViewContextAware;
             viewContextAware?.Contextualize(ViewContext);
 
-            //render input contains selected tab name
-            var selectedTabInput = new TagBuilder("input");
-            selectedTabInput.Attributes.Add("type", "hidden");
-            selectedTabInput.Attributes.Add("id", "selected-tab-name");
-            selectedTabInput.Attributes.Add("name", "selected-tab-name");
-            selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
-            output.PreContent.SetHtmlContent(selectedTabInput.RenderHtmlContent());
-
-            //render tabs script
-            if (output.Attributes.ContainsName("id"))
+            bool.TryParse(RenderSelectedTabInput, out bool renderSelectedTabInput);
+            if (string.IsNullOrEmpty(RenderSelectedTabInput) || renderSelectedTabInput)
             {
-                var script = new TagBuilder("script");
-                script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "');});");
-                output.PostContent.SetHtmlContent(script.RenderHtmlContent());
+                //render input contains selected tab name
+                var selectedTabInput = new TagBuilder("input");
+                selectedTabInput.Attributes.Add("type", "hidden");
+                selectedTabInput.Attributes.Add("id", "selected-tab-name");
+                selectedTabInput.Attributes.Add("name", "selected-tab-name");
+                selectedTabInput.Attributes.Add("value", _htmlHelper.GetSelectedTabName());
+                output.PreContent.SetHtmlContent(selectedTabInput.RenderHtmlContent());
+
+                //render tabs script
+                if (output.Attributes.ContainsName("id"))
+                {
+                    var script = new TagBuilder("script");
+                    script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "');});");
+                    output.PostContent.SetHtmlContent(script.RenderHtmlContent());
+                }
             }
 
             //tag details

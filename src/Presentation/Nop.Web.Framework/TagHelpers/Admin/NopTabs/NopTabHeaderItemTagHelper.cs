@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -59,12 +58,18 @@ namespace Nop.Web.Framework.TagHelpers.Admin.NopTabs
             bool.TryParse(IsDefault, out bool isDefaultTab);
 
             //get name of the tab should be selected
-            var nameToSelect = _htmlHelper.GetSelectedTabName();
-            if (string.IsNullOrEmpty(nameToSelect) && isDefaultTab)
-                nameToSelect = Name;
+            var tabNameToSelect = context.Items.ContainsKey("tabNameToSelect")
+                ? context.Items["tabNameToSelect"].ToString()
+                : "";
+
+            if (string.IsNullOrEmpty(tabNameToSelect))
+                tabNameToSelect = _htmlHelper.GetSelectedTabName();
+
+            if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
+                tabNameToSelect = Name;
 
             var itemClass = string.Empty;
-            if (nameToSelect == Name)
+            if (tabNameToSelect == Name)
                 itemClass = "active";
 
             //merge classes

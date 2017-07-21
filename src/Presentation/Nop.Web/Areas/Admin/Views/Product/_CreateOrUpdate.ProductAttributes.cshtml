@@ -8,16 +8,16 @@
     {
         if (Model.AvailableProductAttributes.Count > 0)
         {
-            <div id="productattribute-edit" class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    @Html.RenderBootstrapTabHeader("tab-attributes", @T("Admin.Catalog.Products.ProductAttributes.Attributes"), true, "tab-attributes")
-                    @Html.RenderBootstrapTabHeader("tab-attribute-combinations", @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations"))
-                </ul>
-                <div class="tab-content">
-                    @Html.RenderBootstrapTabContent("tab-attributes", await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info"), true, "tab-attributes")
-                    @Html.RenderBootstrapTabContent("tab-attribute-combinations", await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations"))
-                </div>
-            </div>
+            <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
+                <nop-tab-header>
+                    <nop-tab-header-item asp-name="tab-attributes" asp-default="true">@T("Admin.Catalog.Products.ProductAttributes.Attributes")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-attribute-combinations">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")</nop-tab-header-item>
+                </nop-tab-header>
+                <nop-tab-content>
+                    <nop-tab-content-item asp-name="tab-attributes" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-attribute-combinations">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab-content-item>
+                </nop-tab-content>
+            </nop-tabs>
         }
         else
         {
