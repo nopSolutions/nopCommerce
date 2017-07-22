@@ -10,7 +10,7 @@
     <nop-tabs id="googlebase-configure">
         <nop-tab-header>
             <nop-tab-header-item asp-name="tab-general" asp-default="true">@T("Plugins.Feed.GoogleShopping.General")</nop-tab-header-item>
-            <nop-tab-header-item asp-name="tab-override" class="advanced-setting">@T("Plugins.Feed.GoogleShopping.Override")</nop-tab-header-item>
+            <nop-tab-header-item asp-name="tab-override">@T("Plugins.Feed.GoogleShopping.Override")</nop-tab-header-item>
         </nop-tab-header>
         <nop-tab-content>
             <nop-tab-content-item asp-name="tab-general" asp-default="true">@await Html.PartialAsync("~/Plugins/Feed.GoogleShopping/Views/_Configure.General.cshtml", Model)</nop-tab-content-item>
