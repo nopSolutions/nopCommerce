@@ -11,7 +11,10 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.System.QueuedEmails.EditQueuedEmailDetails")
-            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.QueuedEmails.BackToList").Text, "List")</small>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.System.QueuedEmails.BackToList")</a>
+            </small>
         </h1>
         <div class="pull-right">
             <button type="submit" name="requeue" class="btn bg-green">

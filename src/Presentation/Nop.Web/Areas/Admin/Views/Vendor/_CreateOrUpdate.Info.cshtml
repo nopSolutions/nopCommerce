@@ -67,7 +67,9 @@
                         {
                             for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
                             {
-                                @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
+                                <a asp-action="Edit" asp-controller="Customer" asp-route-id="@Model.AssociatedCustomers[i].Id">
+                                    @Model.AssociatedCustomers[i].Email
+                                </a>
                                 if (i != Model.AssociatedCustomers.Count - 1)
                                 {
                                     <text>, </text>

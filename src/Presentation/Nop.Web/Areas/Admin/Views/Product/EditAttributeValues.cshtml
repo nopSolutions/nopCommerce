@@ -13,7 +13,10 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct").Text, "Edit", "Product", new {Id = Model.ProductId}, null)</small>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-controller="Product" asp-route-Id="@Model.ProductId">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct")</a>
+            </small>
         </h1>
         <div class="pull-right">
             &nbsp;

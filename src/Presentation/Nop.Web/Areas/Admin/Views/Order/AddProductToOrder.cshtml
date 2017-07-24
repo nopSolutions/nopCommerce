@@ -15,7 +15,10 @@
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
-        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Products.AddNew.BackToOrder")</a>
+        </small>
     </h1>
     <div class="pull-right">
         &nbsp;

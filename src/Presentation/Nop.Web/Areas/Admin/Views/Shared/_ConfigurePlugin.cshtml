@@ -96,7 +96,10 @@
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T(configureLocale) - @friendlyName
-        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T(backToLocale).Text, listActionMethodName, listControllerName)</small>
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="@listActionMethodName" asp-controller="@listControllerName">@T(backToLocale)</a>
+        </small>
     </h1>
     <div class="pull-right">
         &nbsp;
