@@ -19,9 +19,10 @@
     </script>
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
-
+<form asp-controller="Product" asp-action="AddAttributeCombinationPopup"
+      asp-route-productId="@Context.Request.Query["productId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
@@ -38,12 +39,12 @@
                     <div class="panel-body">
                         @if (Model.Warnings.Count > 0)
                         {
-                        <div class="alert alert-warning alert-dismissible">
-                            @foreach (var warning in Model.Warnings)
+                            <div class="alert alert-warning alert-dismissible">
+                                @foreach (var warning in Model.Warnings)
                                 {
-                            @warning
+                                    @warning
                                 }
-                        </div>
+                            </div>
                         }
 
                         @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)

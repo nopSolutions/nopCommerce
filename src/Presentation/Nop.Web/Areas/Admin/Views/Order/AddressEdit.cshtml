@@ -7,8 +7,9 @@
     Html.SetActiveMenuItemSystemName("Orders");
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Order" asp-action="AddressEdit"
+      asp-route-addressId="@Context.Request.Query["addressId"]"
+      asp-route-orderId="@Context.Request.Query["orderId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Address.EditAddress")

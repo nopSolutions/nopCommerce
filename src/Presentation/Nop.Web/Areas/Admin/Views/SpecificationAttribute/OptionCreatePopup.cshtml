@@ -7,8 +7,10 @@
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew").Text;
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="SpecificationAttribute" asp-action="OptionCreatePopup"
+      asp-route-specificationAttributeId="@Context.Request.Query["specificationAttributeId"]" 
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")

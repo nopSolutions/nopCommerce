@@ -19,8 +19,10 @@
     </script>
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Manufacturer" asp-action="ProductAddPopup"
+      asp-route-manufacturerId="@Context.Request.Query["manufacturerId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Manufacturers.Products.AddNew")
@@ -50,7 +52,7 @@
                                         <nop-label asp-for="SearchCategoryId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories"/>
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -68,7 +70,7 @@
                                         <nop-label asp-for="SearchStoreId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">

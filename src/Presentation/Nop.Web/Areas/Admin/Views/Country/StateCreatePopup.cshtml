@@ -7,8 +7,10 @@
     ViewBag.Title = T("Admin.Configuration.Countries.States.AddNew").Text;
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Country" asp-action="StateCreatePopup"
+      asp-route-countryId="@Context.Request.Query["countryId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Countries.States.AddNew")

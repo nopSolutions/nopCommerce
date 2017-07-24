@@ -7,8 +7,10 @@
     ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Plugin" asp-action="EditPopup"
+      asp-route-systemName="@Context.Request.Query["systemName"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Plugins.EditDetails")

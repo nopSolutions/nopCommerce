@@ -16,8 +16,10 @@
     </script>
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Order" asp-action="UploadLicenseFilePopup"
+      asp-route-orderItemId="@Context.Request.Query["orderItemId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Products.License.UploadFile")
@@ -38,23 +40,18 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <nop-editor asp-for="LicenseDownloadId" />
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 col-sm-offset-4">
                                 <button type="submit" name="uploadlicense" id="uploadlicense" class="btn btn-primary">
                                     @T("Admin.Common.Save")
                                 </button>
-                            </div>
-                            <div class="col-sm-2">
                                 @if (Model.LicenseDownloadId > 0)
                                 {
-                                <button type="submit" name="deletelicense" id="deletelicense" class="btn bg-red">
-                                    @T("Admin.Common.Delete")
-                                </button>
-                                }
-                                else
-                                {
-                                <text>&nbsp;</text>
+                                    <button type="submit" name="deletelicense" id="deletelicense" class="btn bg-red">
+                                        @T("Admin.Common.Delete")
+                                    </button>
                                 }
                             </div>
                         </div>
