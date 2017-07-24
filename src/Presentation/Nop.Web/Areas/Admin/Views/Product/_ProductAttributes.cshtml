@@ -77,7 +77,13 @@
                             break;
                         case AttributeControlType.Datepicker:
                             {
-                                @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                                <nop-date-picker 
+                                    asp-day-name="@(controlId + "_day")" 
+                                    asp-month-name="@(controlId + "_month")" 
+                                    asp-year-name="@(controlId + "_year")"
+                                    asp-begin-year="@(DateTime.Now.Year)"
+                                    asp-end-year="@(DateTime.Now.Year + 1)"
+                                />
                             }
                             break;
                         case AttributeControlType.FileUpload:

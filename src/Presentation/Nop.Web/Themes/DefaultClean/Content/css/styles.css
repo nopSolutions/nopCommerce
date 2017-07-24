@@ -2787,9 +2787,12 @@ label, label + * {
 	margin: 0 5px;
 	line-height: 32px;
 }
+.date-of-birth .date-picker-wrapper {
+    display: inline;
+} 
 .date-of-birth select {
-	width: 31%; /*always single line*/
-	max-width: 126px;
+    width: 31%; /*always single line*/
+    max-width: 126px;
 }
 .date-of-birth select + select {
 	margin: 0 0 0 10px;

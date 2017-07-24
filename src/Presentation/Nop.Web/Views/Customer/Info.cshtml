@@ -90,15 +90,16 @@
                     {
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
-                            @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
-                                                        Html.NameFor(x => x.DateOfBirthMonth),
-                                                        Html.NameFor(x => x.DateOfBirthYear),
-                                                        DateTime.Now.Year - 110,
-                                                        DateTime.Now.Year,
-                                                        Model.DateOfBirthDay,
-                                                        Model.DateOfBirthMonth,
-                                                        Model.DateOfBirthYear)
-
+                            <nop-date-picker 
+                                asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)" 
+                                asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)" 
+                                asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
+                                asp-begin-year="@(DateTime.Now.Year - 110)"
+                                asp-end-year="@(DateTime.Now.Year)"
+                                asp-selected-day="@Model.DateOfBirthDay"
+                                asp-selected-month="@Model.DateOfBirthMonth"
+                                asp-selected-year="@Model.DateOfBirthYear"
+                            />
                             @if (Model.DateOfBirthRequired)
                             {
                                 <nop-required />
