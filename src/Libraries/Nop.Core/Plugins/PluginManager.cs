@@ -377,7 +377,7 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
-        /// Perform file deply
+        /// Perform file deploy
         /// </summary>
         /// <param name="plug">Plugin file info</param>
         /// <param name="applicationPartManager">Application part manager</param>
