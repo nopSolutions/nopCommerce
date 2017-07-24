@@ -11,7 +11,10 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
-            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate").Text, "Edit", new { id = Model.Id })</small>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.Id">@T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate")</a>
+            </small>
         </h1>
         <div class="pull-right">
             <button type="submit" name="send-test" class="btn bg-blue">

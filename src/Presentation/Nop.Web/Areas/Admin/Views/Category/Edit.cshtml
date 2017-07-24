@@ -10,7 +10,10 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name
-            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Categories.BackToList").Text, "List")</small>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Categories.BackToList")</a>)
+            </small>
         </h1>
         <div class="pull-right">
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">

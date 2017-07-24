@@ -52,7 +52,10 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
-            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Shipments.BackToOrder")</a>
+            </small>
         </h1>
         <div class="pull-right">
             <a asp-action="PdfPackagingSlip" asp-route-shipmentId="@Model.Id" class="btn bg-purple">

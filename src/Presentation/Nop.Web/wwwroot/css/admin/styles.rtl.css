@@ -801,6 +801,18 @@ td.k-state-focused.k-state-selected {
 .form-group {
     margin-bottom: 5px;
 }
+
+/*don't show the default input spinners*/
+.form-group input[type=number]::-webkit-outer-spin-button,
+.form-group input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-group input[type=number] {
+    -moz-appearance: textfield;
+}
+
 .form-group input[type=checkbox] {
     margin-top: 10px;
 }
