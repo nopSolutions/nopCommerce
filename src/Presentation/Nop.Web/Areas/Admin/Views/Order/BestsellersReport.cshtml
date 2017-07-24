@@ -49,7 +49,7 @@
                                     <nop-label asp-for="StoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -57,7 +57,7 @@
                                     <nop-label asp-for="OrderStatusId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="OrderStatusId" asp-items="@Model.AvailableOrderStatuses" />
+                                    <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -65,7 +65,7 @@
                                     <nop-label asp-for="PaymentStatusId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="PaymentStatusId" asp-items="@Model.AvailablePaymentStatuses" />
+                                    <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                     <nop-label asp-for="CategoryId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="CategoryId" asp-items="@Model.AvailableCategories" />
+                                    <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -83,7 +83,7 @@
                                     <nop-label asp-for="ManufacturerId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="ManufacturerId" asp-items="@Model.AvailableManufacturers" />
+                                    <nop-select asp-for="ManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -91,7 +91,7 @@
                                     <nop-label asp-for="BillingCountryId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="BillingCountryId" asp-items="@Model.AvailableCountries" />
+                                    <nop-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -99,7 +99,7 @@
                                     <nop-label asp-for="VendorId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="VendorId" asp-items="@Model.AvailableVendors" />
+                                    <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                         </div>

@@ -342,7 +342,7 @@
                                 <nop-label asp-for="SeoSettings.PageTitleSeoAdjustment" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="SeoSettings.PageTitleSeoAdjustment" asp-items="@Model.SeoSettings.PageTitleSeoAdjustmentValues" />
+                                <nop-select asp-for="SeoSettings.PageTitleSeoAdjustment" asp-items="Model.SeoSettings.PageTitleSeoAdjustmentValues" />
                                 <span asp-validation-for="SeoSettings.PageTitleSeoAdjustment"></span>
                             </div>
                         </div>
@@ -412,7 +412,7 @@
                                 <nop-label asp-for="SeoSettings.WwwRequirement" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="SeoSettings.WwwRequirement" asp-items="@Model.SeoSettings.WwwRequirementValues" />
+                                <nop-select asp-for="SeoSettings.WwwRequirement" asp-items="Model.SeoSettings.WwwRequirementValues" />
                                 <span asp-validation-for="SeoSettings.WwwRequirement"></span>
                             </div>
                         </div>
@@ -638,7 +638,7 @@
                                 <nop-label asp-for="CaptchaSettings.ReCaptchaVersion" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="CaptchaSettings.ReCaptchaVersion" asp-items="@Model.CaptchaSettings.AvailableReCaptchaVersions" />
+                                <nop-select asp-for="CaptchaSettings.ReCaptchaVersion" asp-items="Model.CaptchaSettings.AvailableReCaptchaVersions" />
                                 <span asp-validation-for="CaptchaSettings.ReCaptchaVersion"></span>
                             </div>
                         </div>
@@ -866,7 +866,7 @@
                                         <nop-label asp-for="FullTextSettings.SearchMode" />
                                     </div>
                                     <div class="col-md-9">
-                                        <nop-select asp-for="FullTextSettings.SearchMode" asp-items="@Model.FullTextSettings.SearchModeValues" />
+                                        <nop-select asp-for="FullTextSettings.SearchMode" asp-items="Model.FullTextSettings.SearchModeValues" />
                                         <span asp-validation-for="FullTextSettings.SearchMode"></span>
                                     </div>
                                 </div>

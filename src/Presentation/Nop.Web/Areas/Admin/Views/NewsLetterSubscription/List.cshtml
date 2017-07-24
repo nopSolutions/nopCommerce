@@ -67,7 +67,7 @@
                                         <nop-label asp-for="ActiveId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="ActiveId" asp-items="@Model.ActiveList" />
+                                        <nop-select asp-for="ActiveId" asp-items="Model.ActiveList" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -75,7 +75,7 @@
                                         <nop-label asp-for="StoreId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                                        <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -83,7 +83,7 @@
                                         <nop-label asp-for="CustomerRoleId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="CustomerRoleId" asp-items="@Model.AvailableCustomerRoles" />
+                                        <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
                                     </div>
                                 </div>
                                 <div class="form-group">

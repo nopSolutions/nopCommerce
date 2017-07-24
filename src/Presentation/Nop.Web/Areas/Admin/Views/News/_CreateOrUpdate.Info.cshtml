@@ -8,7 +8,7 @@
                     <nop-label asp-for="LanguageId" />
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="LanguageId" asp-items="@Model.AvailableLanguages" />
+                    <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
                     <span asp-validation-for="LanguageId"></span>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-md-4">
-                            <nop-select asp-for="SelectedStoreIds" asp-items="@Model.AvailableStores" asp-multiple="true" />
+                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");

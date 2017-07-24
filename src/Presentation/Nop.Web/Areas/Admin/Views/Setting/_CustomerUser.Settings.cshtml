@@ -302,7 +302,7 @@
                     <nop-label asp-for="DateTimeSettings.DefaultStoreTimeZoneId" />
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="DateTimeSettings.DefaultStoreTimeZoneId" asp-items="@Model.DateTimeSettings.AvailableTimeZones" />
+                    <nop-select asp-for="DateTimeSettings.DefaultStoreTimeZoneId" asp-items="Model.DateTimeSettings.AvailableTimeZones" />
                     <span asp-validation-for="DateTimeSettings.DefaultStoreTimeZoneId"></span>
                 </div>
             </div>

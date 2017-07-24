@@ -500,7 +500,7 @@
                             <nop-label asp-for="ProductTemplateId" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="ProductTemplateId" asp-items="@Model.AvailableProductTemplates" />
+                            <nop-select asp-for="ProductTemplateId" asp-items="Model.AvailableProductTemplates" />
                             <span asp-validation-for="ProductTemplateId"></span>
                         </div>
                     </div>
@@ -1061,7 +1061,7 @@
 							<nop-label asp-for="BasepriceUnitId" />
                         </div>
                         <div class="col-md-9">
-							<nop-select asp-for="BasepriceUnitId" asp-items="@Model.AvailableBasepriceUnits" />
+							<nop-select asp-for="BasepriceUnitId" asp-items="Model.AvailableBasepriceUnits" />
 							<span asp-validation-for="BasepriceUnitId"></span>
                         </div>
                     </div>
@@ -1079,7 +1079,7 @@
 							<nop-label asp-for="BasepriceBaseUnitId" />
                         </div>
                         <div class="col-md-9">
-							<nop-select asp-for="BasepriceBaseUnitId" asp-items="@Model.AvailableBasepriceBaseUnits" />
+							<nop-select asp-for="BasepriceBaseUnitId" asp-items="Model.AvailableBasepriceBaseUnits" />
 							<span asp-validation-for="BasepriceBaseUnitId"></span>
                         </div>
                     </div>
@@ -1088,7 +1088,7 @@
 							<nop-label asp-for="SelectedDiscountIds" />
                         </div>
                         <div class="col-md-9">
-							<nop-select asp-for="SelectedDiscountIds" asp-items="@Model.AvailableDiscounts" asp-multiple="true"/>
+							<nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true"/>
                             <script>
                                 $(document).ready(function() {
                                     var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
@@ -1125,7 +1125,7 @@
 							<nop-label asp-for="TaxCategoryId" />
                         </div>
                         <div class="col-md-9">
-							<nop-select asp-for="TaxCategoryId" asp-items="@Model.AvailableTaxCategories" />
+							<nop-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
 							<span asp-validation-for="TaxCategoryId"></span>
                         </div>
                     </div>
@@ -1455,7 +1455,7 @@
 							<nop-label asp-for="WarehouseId" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="WarehouseId" asp-items="@Model.AvailableWarehouses" />
+							<nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
 							<span asp-validation-for="WarehouseId"></span>
                         </div>
                     </div>
@@ -1617,7 +1617,7 @@
 							<nop-label asp-for="ProductAvailabilityRangeId" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="ProductAvailabilityRangeId" asp-items="@Model.AvailableProductAvailabilityRanges" />
+							<nop-select asp-for="ProductAvailabilityRangeId" asp-items="Model.AvailableProductAvailabilityRanges" />
 							<span asp-validation-for="ProductAvailabilityRangeId"></span>
                         </div>
                     </div>
@@ -1750,7 +1750,7 @@
 							<nop-label asp-for="DeliveryDateId" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="DeliveryDateId" asp-items="@Model.AvailableDeliveryDates" />
+							<nop-select asp-for="DeliveryDateId" asp-items="Model.AvailableDeliveryDates" />
 							<span asp-validation-for="DeliveryDateId"></span>
                         </div>
                     </div>
@@ -1766,7 +1766,7 @@
 							<nop-label asp-for="SelectedCategoryIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedCategoryIds" asp-items="@Model.AvailableCategories" asp-multiple="true" />
+							<nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
@@ -1794,7 +1794,7 @@
 							<nop-label asp-for="SelectedManufacturerIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedManufacturerIds" asp-items="@Model.AvailableManufacturers" asp-multiple="true" />
+							<nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
@@ -1822,7 +1822,7 @@
 							<nop-label asp-for="SelectedStoreIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedStoreIds" asp-items="@Model.AvailableStores" asp-multiple="true" />
+							<nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
@@ -1850,7 +1850,7 @@
 							<nop-label asp-for="VendorId" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="VendorId" asp-items="@Model.AvailableVendors" />
+							<nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
 							<span asp-validation-for="VendorId"></span>
                         </div>
                     </div>
@@ -1866,7 +1866,7 @@
 							<nop-label asp-for="SelectedCustomerRoleIds" />
                         </div>
                         <div class="@rightColumnClass">
-							<nop-select asp-for="SelectedCustomerRoleIds" asp-items="@Model.AvailableCustomerRoles" asp-multiple="true" />
+							<nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
                             <script>
                                 $(document).ready(function() {
                                     var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
