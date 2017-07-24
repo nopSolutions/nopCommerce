@@ -89,8 +89,8 @@ namespace Nop.Core.Domain.Orders
         public int MiniShoppingCartProductNumber { get; set; }
         
         //Round is already an issue. 
-        //When enabled it can cause one issue: http://www.nopcommerce.com/boards/t/7679/vattax-rounding-error-important-fix.aspx
-        //When disable it causes another one: http://www.nopcommerce.com/boards/t/11419/nop-20-order-of-steps-in-checkout.aspx?p=3#46924
+        //When enabled it can cause one issue: https://www.nopcommerce.com/boards/t/7679/vattax-rounding-error-important-fix.aspx
+        //When disable it causes another one: https://www.nopcommerce.com/boards/t/11419/nop-20-order-of-steps-in-checkout.aspx?p=3#46924
         /// <summary>
         /// Gets or sets a value indicating whether to round calculated prices and total during calculation
         /// </summary>

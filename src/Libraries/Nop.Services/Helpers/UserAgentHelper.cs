@@ -77,7 +77,7 @@ namespace Nop.Services.Helpers
                 return false;
 
             //we put required logic in try-catch block
-            //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
+            //more info: https://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
             try
             {
                 var browscapXmlHelper = GetBrowscapXmlHelper();
@@ -106,7 +106,7 @@ namespace Nop.Services.Helpers
                 return false;
 
             //we put required logic in try-catch block
-            //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
+            //more info: https://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
             try
             {
                 //we don't parse browscap library here
