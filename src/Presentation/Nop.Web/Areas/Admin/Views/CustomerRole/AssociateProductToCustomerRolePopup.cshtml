@@ -9,8 +9,10 @@
     ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="CustomerRole" asp-action="AssociateProductToCustomerRolePopup"
+      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose")
@@ -32,8 +34,8 @@
             window.close();
         </script>
     }
-    
-    <input type="hidden" asp-for="AssociatedToProductId"/>
+
+    <input type="hidden" asp-for="AssociatedToProductId" />
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
@@ -43,52 +45,52 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchProductName"/>
+                                        <nop-label asp-for="SearchProductName" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-editor asp-for="SearchProductName"/>
+                                        <nop-editor asp-for="SearchProductName" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchCategoryId"/>
+                                        <nop-label asp-for="SearchCategoryId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories"/>
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchVendorId"/>
+                                        <nop-label asp-for="SearchVendorId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors"/>
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchStoreId"/>
+                                        <nop-label asp-for="SearchStoreId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores"/>
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchProductTypeId"/>
+                                        <nop-label asp-for="SearchProductTypeId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes"/>
+                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
-                                        <nop-label asp-for="SearchManufacturerId"/>
+                                        <nop-label asp-for="SearchManufacturerId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers"/>
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                     </div>
                                 </div>
                             </div>

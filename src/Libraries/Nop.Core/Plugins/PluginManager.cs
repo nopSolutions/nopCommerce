@@ -329,7 +329,7 @@ namespace Nop.Core.Plugins
             }
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            //it's required: http://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
             result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
             return result;
         }
@@ -377,7 +377,7 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
-        /// Perform file deply
+        /// Perform file deploy
         /// </summary>
         /// <param name="plug">Plugin file info</param>
         /// <param name="applicationPartManager">Application part manager</param>
@@ -425,7 +425,7 @@ namespace Nop.Core.Plugins
                 {
                     //delete an existing file
 
-                    //More info: http://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
+                    //More info: https://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
                     Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
                     File.Delete(shadowCopiedPlug.FullName);
                 }

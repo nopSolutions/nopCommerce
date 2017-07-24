@@ -5,8 +5,10 @@
     //page title
     ViewBag.Title = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
 }
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="AddressAttribute" asp-action="ValueCreatePopup"
+      asp-route-addressAttributeId="@Context.Request.Query["addressAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Address.AddressAttributes.Values.AddNew")

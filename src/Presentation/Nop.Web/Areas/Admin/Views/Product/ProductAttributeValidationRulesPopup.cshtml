@@ -22,8 +22,9 @@
     </script>
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Product" asp-action="ProductAttributeValidationRulesPopup"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")
@@ -39,7 +40,7 @@
                     <div class="panel-body">
                         @if (!Model.ValidationRulesAllowed)
                         {
-                        <p>This attribute type cannot have validation rules</p>
+                            <p>This attribute type cannot have validation rules</p>
                         }
 
                         <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>

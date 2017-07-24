@@ -38,7 +38,7 @@
                                 <nop-label asp-for="DefaultTaxCategoryId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="DefaultTaxCategoryId" asp-items="@Model.TaxCategories" />
+                                <nop-select asp-for="DefaultTaxCategoryId" asp-items="Model.TaxCategories" />
                                 <span asp-validation-for="DefaultTaxCategoryId"></span>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                                 <nop-label asp-for="TaxBasedOn" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="TaxBasedOn" asp-items="@Model.TaxBasedOnValues" />
+                                <nop-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
                                 <span asp-validation-for="TaxBasedOn"></span>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 <nop-label asp-for="TaxDisplayType" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="TaxDisplayType" asp-items="@Model.TaxDisplayTypeValues" />
+                                <nop-select asp-for="TaxDisplayType" asp-items="Model.TaxDisplayTypeValues" />
                                 <span asp-validation-for="TaxDisplayType"></span>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                                 <nop-label asp-for="ShippingTaxClassId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="ShippingTaxClassId" asp-items="@Model.TaxCategories" />
+                                <nop-select asp-for="ShippingTaxClassId" asp-items="Model.TaxCategories" />
                                 <span asp-validation-for="ShippingTaxClassId"></span>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                                 <nop-label asp-for="PaymentMethodAdditionalFeeTaxClassId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="@Model.PaymentMethodAdditionalFeeTaxCategories" />
+                                <nop-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="Model.PaymentMethodAdditionalFeeTaxCategories" />
                                 <span asp-validation-for="PaymentMethodAdditionalFeeTaxClassId"></span>
                             </div>
                         </div>
@@ -307,7 +307,7 @@
                                 <nop-label asp-for="EuVatShopCountryId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="EuVatShopCountryId" asp-items="@Model.EuVatShopCountries" />
+                                <nop-select asp-for="EuVatShopCountryId" asp-items="Model.EuVatShopCountries" />
                                 <span asp-validation-for="EuVatShopCountryId"></span>
                             </div>
                         </div>

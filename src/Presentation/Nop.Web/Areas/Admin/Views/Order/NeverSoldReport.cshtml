@@ -33,7 +33,7 @@
                                     <nop-label asp-for="SearchCategoryId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchCategoryId" asp-items="@Model.AvailableCategories" />
+                                    <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -41,7 +41,7 @@
                                     <nop-label asp-for="SearchManufacturerId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchManufacturerId" asp-items="@Model.AvailableManufacturers" />
+                                    <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -49,7 +49,7 @@
                                     <nop-label asp-for="SearchStoreId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="@Model.AvailableStores" />
+                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -57,7 +57,7 @@
                                     <nop-label asp-for="SearchVendorId" />
                                 </div>
                                 <div class="col-md-8">
-                                    <nop-select asp-for="SearchVendorId" asp-items="@Model.AvailableVendors" />
+                                    <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                         </div>

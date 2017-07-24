@@ -105,7 +105,7 @@
             <nop-label asp-for="CountryId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="CountryId" asp-items="@Model.AvailableCountries" asp-required="@Model.CountryRequired" />
+            <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" asp-required="@Model.CountryRequired" />
             <span asp-validation-for="CountryId"></span>
         </div>
     </div>
@@ -117,7 +117,7 @@
             <nop-label asp-for="StateProvinceId" />
         </div>
         <div class="col-md-9">
-            <nop-select asp-for="StateProvinceId" asp-items="@Model.AvailableStates" />
+            <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
             <span asp-validation-for="StateProvinceId"></span>
         </div>
     </div>

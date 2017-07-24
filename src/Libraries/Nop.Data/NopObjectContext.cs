@@ -127,7 +127,7 @@ namespace Nop.Data
 
             var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
 
-            //performance hack applied as described here - http://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
+            //performance hack applied as described here - https://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
             bool acd = this.Configuration.AutoDetectChangesEnabled;
             try
             {

@@ -6,8 +6,10 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew").Text;
 }
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Product" asp-action="ProductAttributeValueCreatePopup"
+      asp-route-productAttributeMappingId="@Context.Request.Query["productAttributeMappingId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")

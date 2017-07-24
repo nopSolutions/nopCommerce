@@ -192,7 +192,7 @@
                     <nop-label asp-for="VendorId"/>
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="VendorId" asp-items="@Model.AvailableVendors" />
+                    <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                     <span asp-validation-for="VendorId"></span>
                     <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
                 </div>

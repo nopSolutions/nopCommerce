@@ -95,7 +95,7 @@
                                 <nop-label asp-for="@Model.Locales[item].EmailAccountId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@Model.Locales[item].AvailableEmailAccounts" />
+                                <nop-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="Model.Locales[item].AvailableEmailAccounts" />
                                 <span asp-validation-for="@Model.Locales[item].EmailAccountId"></span>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                                 <nop-label asp-for="EmailAccountId" />
                             </div>
                             <div class="col-md-9">
-                                <nop-select asp-for="EmailAccountId" asp-items="@Model.AvailableEmailAccounts" />
+                                <nop-select asp-for="EmailAccountId" asp-items="Model.AvailableEmailAccounts" />
                                 <span asp-validation-for="EmailAccountId"></span>
                             </div>
                         </div>
@@ -249,7 +249,7 @@
                         <div class="col-md-9">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <nop-select asp-for="SelectedStoreIds" asp-items="@Model.AvailableStores" asp-multiple="true" />
+                                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                                     <script>
                                         $(document).ready(function() {
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')

@@ -22,8 +22,9 @@
     </script>
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null">
+<form asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
+      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew")
@@ -54,7 +55,7 @@
                                         <nop-label asp-for="SearchCategoryId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchCategoryId" asp-items="@Model.AvailableCategories" />
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -62,7 +63,7 @@
                                         <nop-label asp-for="SearchVendorId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchVendorId" asp-items="@Model.AvailableVendors" />
+                                        <nop-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +73,7 @@
                                         <nop-label asp-for="SearchStoreId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchStoreId" asp-items="@Model.AvailableStores" />
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -80,7 +81,7 @@
                                         <nop-label asp-for="SearchProductTypeId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchProductTypeId" asp-items="@Model.AvailableProductTypes" />
+                                        <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -88,7 +89,7 @@
                                         <nop-label asp-for="SearchManufacturerId" />
                                     </div>
                                     <div class="col-sm-7">
-                                        <nop-select asp-for="SearchManufacturerId" asp-items="@Model.AvailableManufacturers" />
+                                        <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                     </div>
                                 </div>
                             </div>

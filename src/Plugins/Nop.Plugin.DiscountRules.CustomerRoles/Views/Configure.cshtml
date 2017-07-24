@@ -44,7 +44,7 @@
     </div>
     <div class="col-md-9 requirement-data-col">
         <div class="requirement-data-input">
-            <nop-select asp-for="CustomerRoleId" asp-items="@Model.AvailableCustomerRoles" />
+            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
         </div>
         <div class="requirement-data-buttons">
             <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn btn-primary" value="@T("Admin.Common.Save")"/>

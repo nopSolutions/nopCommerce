@@ -178,7 +178,7 @@ namespace Nop.Plugin.Shipping.Fedex
             //Saturday pickup is available for certain FedEx Express U.S. service types:
             //http://www.fedex.com/us/developer/product/WebServices/MyWebHelp/Services/Options/c_SaturdayShipAndDeliveryServiceDetails.html
             //If the customer orders on a Saturday, the rate calculation will use Saturday as the shipping date, and the rates will include a Saturday pickup surcharge
-            //More info: http://www.nopcommerce.com/boards/t/27348/fedex-rate-can-be-excessive-for-express-methods-if-calculated-on-a-saturday.aspx
+            //More info: https://www.nopcommerce.com/boards/t/27348/fedex-rate-can-be-excessive-for-express-methods-if-calculated-on-a-saturday.aspx
             var shipTimestamp = DateTime.Now;
             if (shipTimestamp.DayOfWeek == DayOfWeek.Saturday)
                 shipTimestamp = shipTimestamp.AddDays(2);

@@ -8,7 +8,7 @@
                     <nop-label asp-for="LanguageId" />
                 </div>
                 <div class="col-md-9">
-                    <nop-select asp-for="LanguageId" asp-items="@Model.AvailableLanguages" />
+                    <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
                     <span asp-validation-for="LanguageId"></span>
                 </div>
             </div>

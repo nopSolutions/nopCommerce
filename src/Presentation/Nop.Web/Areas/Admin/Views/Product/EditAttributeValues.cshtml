@@ -7,29 +7,30 @@
     Html.SetActiveMenuItemSystemName("Products");
 }
 
-@*Use "asp-all-route-data" to automatically generate "action" form attribute (including query string)*@
-<form asp-all-route-data="@null" id="productattribute-form">
-   
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-            <small>
-                <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="Edit" asp-controller="Product" asp-route-Id="@Model.ProductId">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct")</a>
-            </small>
-        </h1>
-        <div class="pull-right">
-            &nbsp;
+
+<form asp-controller="Product" asp-action="EditAttributeValues" asp-route-productAttributeMappingId="@Context.Request.Query["productAttributeMappingId"]" id="productattribute-form">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
+                <small>
+                    <i class="fa fa-arrow-circle-left"></i>
+                    <a asp-action="Edit" asp-controller="Product" asp-route-Id="@Model.ProductId">
+                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct")
+                    </a>
+                </small>
+            </h1>
+            <div class="pull-right">
+                &nbsp;
+            </div>
         </div>
-    </div>
 
-    <div class="content">
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div id="productattributevalues-grid"></div>
+        <div class="content">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="productattributevalues-grid"></div>
 
-                    <script>
+                        <script>
                         $(document).ready(function () {
                             $("#productattributevalues-grid").kendoGrid({
                                 dataSource: {
@@ -133,27 +134,27 @@
                                 ]
                             });
                         });
-                    </script>
-                </div>
-                <div class="panel-footer">
-                    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new {productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 750, true); return false;" class="btn btn-primary">
-                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
-                    </button>
-                    <input type="submit" id="btnRefresh" style="display: none" />
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#btnRefresh').click(function () {
-                                //refresh grid
-                                var grid = $("#productattributevalues-grid").data('kendoGrid');
-                                grid.dataSource.read();
+                        </script>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new {productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 750, true); return false;" class="btn btn-primary">
+                            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
+                        </button>
+                        <input type="submit" id="btnRefresh" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefresh').click(function () {
+                                    //refresh grid
+                                    var grid = $("#productattributevalues-grid").data('kendoGrid');
+                                    grid.dataSource.read();
 
-                                //return false to don't reload a page
-                                return false;
+                                    //return false to don't reload a page
+                                    return false;
+                                });
                             });
-                        });
-                    </script>
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
