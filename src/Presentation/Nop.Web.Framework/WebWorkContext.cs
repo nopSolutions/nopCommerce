@@ -398,7 +398,7 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId, languageId, _storeContext.CurrentStore.Id);
 
-                //then reset the cache value
+                //then reset the cached value
                 _cachedLanguage = null;
             }
         }
@@ -461,7 +461,7 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
                     SystemCustomerAttributeNames.CurrencyId, currencyId, _storeContext.CurrentStore.Id);
 
-                //then reset the cache value
+                //then reset the cached value
                 _cachedCurrency = null;
             }
         }
@@ -509,7 +509,7 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
                     SystemCustomerAttributeNames.TaxDisplayTypeId, (int)value, _storeContext.CurrentStore.Id);
 
-                //then reset the cache value
+                //then reset the cached value
                 _cachedTaxDisplayType = null;
             }
         }
