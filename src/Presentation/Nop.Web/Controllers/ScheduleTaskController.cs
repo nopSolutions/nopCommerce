@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Domain.Tasks;
 using Nop.Services.Tasks;
 
 namespace Nop.Web.Controllers
@@ -14,6 +15,7 @@ namespace Nop.Web.Controllers
         {
             this._scheduleTaskService = scheduleTaskService;
         }
+        
 
         [HttpPost]
         public virtual IActionResult RunTask(string taskType)
@@ -21,10 +23,6 @@ namespace Nop.Web.Controllers
             var scheduleTask = _scheduleTaskService.GetTaskByType(taskType);
             if (scheduleTask == null)
                 //schedule task cannot be loaded
-                return NoContent();
-            
-            if(scheduleTask.LastEndUtc.HasValue && (DateTime.UtcNow-scheduleTask.LastEndUtc).Value.TotalSeconds < scheduleTask.Seconds)
-                //too early
                 return NoContent();
 
             var task = new Task(scheduleTask);

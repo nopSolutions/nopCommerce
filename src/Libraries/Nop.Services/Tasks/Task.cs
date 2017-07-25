@@ -3,7 +3,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
-using Nop.Services.Infrastructure;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -34,14 +33,19 @@ namespace Nop.Services.Tasks
 
         #region Utilities
 
-        private ITask CreateTask()
+        /// <summary>
+        /// Initialize and execute task
+        /// </summary>
+        private void ExecuteTask()
         {
+            var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+            
             if (!Enabled)
-                return null;
+                return;
 
             var type = Type.GetType(ScheduleTask.Type);
             if (type == null)
-                return null;
+                return;
 
             object instance = null;
             try
@@ -58,7 +62,37 @@ namespace Nop.Services.Tasks
                 instance = EngineContext.Current.ResolveUnregistered(type);
             }
 
-            return instance as ITask;
+            var task = instance as ITask;
+
+            if (task == null)
+                return;
+
+            ScheduleTask.LastStartUtc = DateTime.UtcNow;
+            //update appropriate datetime properties
+            scheduleTaskService.UpdateTask(ScheduleTask);
+            task.Execute();
+            ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
+            //update appropriate datetime properties
+            scheduleTaskService.UpdateTask(ScheduleTask);
+        }
+
+        protected virtual bool IsTaskAlreadyRunning(ScheduleTask scheduleTask)
+        {
+            //task run for the first time
+            if (!scheduleTask.LastStartUtc.HasValue && !scheduleTask.LastEndUtc.HasValue)
+                return false;
+
+            var lastStartUtc = scheduleTask.LastStartUtc ?? DateTime.UtcNow;
+
+            //task already finished
+            if (scheduleTask.LastEndUtc.HasValue && lastStartUtc < scheduleTask.LastEndUtc)
+                return false;
+
+            //task wasn't finished last time
+            if (lastStartUtc.AddSeconds(scheduleTask.Seconds) <= DateTime.UtcNow)
+                return false;
+
+            return true;
         }
 
         #endregion
@@ -69,94 +103,49 @@ namespace Nop.Services.Tasks
         /// Executes the task
         /// </summary>
         /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
-        /// <param name="ensureRunOnOneWebFarmInstance">A value indicating whether we should ensure this task is run on one farm node at a time</param>
-        public void Execute(bool throwException = false, bool ensureRunOnOneWebFarmInstance = true)
+        /// <param name="ensureRunOncePerPeriod">A value indicating whether we should ensure this task is run once per run period</param>
+        public void Execute(bool throwException = false, bool ensureRunOncePerPeriod = true)
         {
-            var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-
             if (ScheduleTask == null || !Enabled)
                 return;
 
+            if (ensureRunOncePerPeriod)
+            {
+                //task already running
+                if (IsTaskAlreadyRunning(ScheduleTask))
+                    return;
+
+                //validation (so nobody else can invoke this method when he wants)
+                if (ScheduleTask.LastEndUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastEndUtc).Value.TotalSeconds <
+                    ScheduleTask.Seconds)
+                    //too early
+                    return;
+            }
+
             try
             {
-                //flag that task is already executed
-                var taskExecuted = false;
-
-                //task is run on one farm node at a time?
-                if (ensureRunOnOneWebFarmInstance)
+                var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+                if (nopConfig.RedisCachingEnabled)
                 {
-                    //is web farm enabled (multiple instances)?
-                    var nopConfig = EngineContext.Current.Resolve<NopConfig>();
-                    if (nopConfig.MultipleInstancesEnabled)
-                    {
-                        var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
-                        var machineName = machineNameProvider.GetMachineName();
-                        if (String.IsNullOrEmpty(machineName))
-                        {
-                            throw new Exception("Machine name cannot be detected. You cannot run in web farm.");
-                            //actually in this case we can generate some unique string (e.g. GUID) and store it in some "static" (!!!) variable
-                            //then it can be used as a machine name
-                        }
-                        if (nopConfig.RedisCachingEnabled)
-                        {
-                            //get expiration time
-                            var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
+                    //get expiration time
+                    var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
 
-                            var executeTaskAction = new Action(() =>
-                            {
-                                //execute task
-                                taskExecuted = true;
-                                var task = this.CreateTask();
-                                if (task != null)
-                                {
-                                    //update appropriate datetime properties
-                                    ScheduleTask.LastStartUtc = DateTime.UtcNow;
-                                    scheduleTaskService.UpdateTask(ScheduleTask);
-                                    task.Execute();
-                                    ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
-                                }
-                            });
-
-                            //execute task with lock
-                            var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                            if (!redisWrapper.PerformActionWithLock(ScheduleTask.Type,
-                                TimeSpan.FromSeconds(expirationInSeconds), executeTaskAction))
-                                return;
-                        }
-                        else
-                        {
-                            //lease can't be acquired only if for a different machine and it has not expired
-                            if (ScheduleTask.LeasedUntilUtc.HasValue &&
-                                ScheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
-                                ScheduleTask.LeasedByMachineName != machineName)
-                                return;
-
-                            //lease the task. so it's run on one farm node at a time
-                            ScheduleTask.LeasedByMachineName = machineName;
-                            ScheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
-                            scheduleTaskService.UpdateTask(ScheduleTask);
-                        }
-                    }
+                    //execute task with lock
+                    var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                    redisWrapper.PerformActionWithLock(ScheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), ExecuteTask);
                 }
-
-                //execute task in case if is not executed yet
-                if (!taskExecuted)
+                else
                 {
-                    //initialize and execute
-                    var task = this.CreateTask();
-                    if (task != null)
-                    {
-                        ScheduleTask.LastStartUtc = DateTime.UtcNow;
-                        scheduleTaskService.UpdateTask(ScheduleTask);
-                        task.Execute();
-                        ScheduleTask.LastEndUtc = ScheduleTask.LastSuccessUtc = DateTime.UtcNow;
-                    }
+                    ExecuteTask();
                 }
             }
             catch (Exception exc)
             {
+                var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
                 ScheduleTask.LastEndUtc = DateTime.UtcNow;
+                scheduleTaskService.UpdateTask(ScheduleTask);
 
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
@@ -164,9 +153,6 @@ namespace Nop.Services.Tasks
                 if (throwException)
                     throw;
             }
-
-            //update appropriate datetime properties
-            scheduleTaskService.UpdateTask(ScheduleTask);
         }
 
         #endregion

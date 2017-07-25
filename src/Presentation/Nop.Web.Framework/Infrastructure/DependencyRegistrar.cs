@@ -31,7 +31,6 @@ using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
-using Nop.Services.Infrastructure;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -122,12 +121,6 @@ namespace Nop.Web.Framework.Infrastructure
             }
             else
                 builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
-
-            //machine name provider
-            if (config.RunOnAzureWebApps)
-                builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
-            else
-                builder.RegisterType<DefaultMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
