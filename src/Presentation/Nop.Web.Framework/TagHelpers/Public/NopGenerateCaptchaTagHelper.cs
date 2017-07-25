@@ -6,7 +6,7 @@ using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
-    [HtmlTargetElement("nop-generate-captcha", TagStructure = TagStructure.WithoutEndTag)]
+    [HtmlTargetElement("nop-captcha", TagStructure = TagStructure.WithoutEndTag)]
     public class NopGenerateCaptchaTagHelper : TagHelper
     {
         private readonly IHtmlHelper _htmlHelper;
