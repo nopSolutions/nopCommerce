@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
@@ -12,11 +11,18 @@ namespace Nop.Web.Framework.TagHelpers.Public
     {
         private const string ForAttributeName = "asp-for";
 
+        private readonly IWebHelper _webHelper;
+
         /// <summary>
         /// An expression to be evaluated against the current model
         /// </summary>
         [HtmlAttributeName(ForAttributeName)]
         public ModelExpression For { get; set; }
+
+        public NopBBCodeEditorTagHelper(IWebHelper webHelper)
+        {
+            _webHelper = webHelper;
+        }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -34,7 +40,7 @@ namespace Nop.Web.Framework.TagHelpers.Public
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "bb-code-editor-wrapper");
 
-            var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+            var storeLocation = _webHelper.GetStoreLocation();
             var bbEditorWebRoot = $"{storeLocation}js/";
 
             var script1 = new TagBuilder("script");
