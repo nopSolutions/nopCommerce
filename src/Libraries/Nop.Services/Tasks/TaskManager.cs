@@ -13,7 +13,7 @@ namespace Nop.Services.Tasks
     {
         #region Consts
 
-        public const string ScheduleTaskPatch = "scheduletask/index";
+        public const string ScheduleTaskPatch = "scheduletask/runtask";
         private const int _notRunTasksInterval = 60 * 30; //30 minutes
 
         #endregion

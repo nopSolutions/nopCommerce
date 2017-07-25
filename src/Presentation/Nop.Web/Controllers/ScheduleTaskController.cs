@@ -16,7 +16,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult Index(string taskType)
+        public virtual IActionResult RunTask(string taskType)
         {
             var scheduleTask = _scheduleTaskService.GetTaskByType(taskType);
             if (scheduleTask == null)
