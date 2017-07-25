@@ -4751,12 +4751,12 @@ label, label + * {
 	font-size: 14px; /*reset zeroing*/
 	white-space: normal;
 }
-.forum-edit-page .toolbar,
-.private-message-send-page .toolbar {
-	max-width: 400px;
-	margin: 20px auto;
-	background-color: #ddd;
-	padding: 10px;
+.forum-edit-page .bb-code-editor-wrapper,
+.private-message-send-page .bb-code-editor-wrapper {
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #ddd;
+    padding: 10px;
 }
 .forum-edit-page .toolbar .button,
 .private-message-send-page .toolbar .button {
@@ -6742,11 +6742,11 @@ pre {
 	width: 600px;
 	height: 250px;
 }
-.private-message-send-page .toolbar {
-	display: inline-block;
-	width: 400px;
-	margin: 10px 0;
-	vertical-align: middle;
+.private-message-send-page .bb-code-editor-wrapper {
+    display: inline-block;
+    width: 400px;
+    margin: 10px 0;
+    vertical-align: middle;
 }
 
 }

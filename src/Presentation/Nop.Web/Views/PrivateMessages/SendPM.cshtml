@@ -37,7 +37,7 @@
                     </div>
                     <div class="inputs message">
                         <label>@T("PrivateMessages.Send.Message")</label>
-                        @Html.BBCodeEditor("Message")
+                        <nop-bb-code-editor asp-for="Message" />
                         <textarea asp-for="Message" class="bb-editor-text" ></textarea>
                         <span asp-validation-for="Message"></span>
                     </div>
