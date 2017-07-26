@@ -163,6 +163,12 @@ src/Presentation/Nop.Web/App_Data/InstalledPlugins.txt
 src/Presentation/Nop.Web/App_Data/Settings.txt
 src/Presentation/Nop.Web/App_Data/browscap.crawlersonly.xml
 src/Presentation/Nop.Web/wwwroot/bundles/*
-src/Presentation/Nop.Web/wwwroot/images/thumbs/*
+!src/Presentation/Nop.Web/wwwroot/bundles/Index.htm
 src/Presentation/Nop.Web/wwwroot/db_backups/*.bak
+!src/Presentation/Nop.Web/wwwroot/db_backups/Index.htm
+src/Presentation/Nop.Web/wwwroot/files/exportimport/*
+!src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
+src/Presentation/Nop.Web/wwwroot/images/thumbs/*
+
+!src/Presentation/Nop.Web/wwwroot/images/thumbs/placeholder.txt
 src/packages/*
