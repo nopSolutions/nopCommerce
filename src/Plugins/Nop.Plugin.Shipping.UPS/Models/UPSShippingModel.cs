@@ -18,6 +18,9 @@ namespace Nop.Plugin.Shipping.UPS.Models
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Url")]
         public string Url { get; set; }
 
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccountNumber")]
+        public string AccountNumber { get; set; }
+
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccessKey")]
         public string AccessKey { get; set; }
 

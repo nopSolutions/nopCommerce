@@ -305,6 +305,12 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Manual.Instructions">
     <Value>This payment method stores credit card information in database (it''s not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AccountNumber">
+    <Value>Account number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AccountNumber.Hint">
+    <Value>Specify UPS account number (required to get negotiated rates).</Value>
+  </LocaleResource>
 </Language>
 '
 
