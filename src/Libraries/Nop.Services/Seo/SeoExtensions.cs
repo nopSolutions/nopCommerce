@@ -233,6 +233,7 @@ namespace Nop.Services.Seo
             //ensure this sename is not reserved yet
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
             int i = 2;
             var tempSeName = seName;
             while (true)
@@ -242,7 +243,9 @@ namespace Nop.Services.Seo
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
-                if (!reserved1 && !reserved2)
+                //and it's not equal to a language code
+                var reserved3 = languageService.GetAllLanguages(true).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
+                if (!reserved1 && !reserved2 && !reserved3)
                     break;
 
                 tempSeName = string.Format("{0}-{1}", seName, i);
