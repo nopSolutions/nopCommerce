@@ -49,7 +49,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Customer.EmailValidationMessage">
 	  <Value>This message template is used when Configuration - Settings - Customer settings - "Registration method" dropdownlist is set to "Email validation". The customer receives a message to confirm an email address used when registering.</Value>
-  </LocaleResource> 
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.CategoryThumbPictureSize.Hint">
+    <Value>The default size (pixels) for category thumbnail images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize.Hint">
+    <Value>The default size (pixels) for manufacturer thumbnail images.</Value>
+  </LocaleResource>
 </Language>
 '
 

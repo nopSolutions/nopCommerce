@@ -6547,7 +6547,7 @@
     <Value>Category thumbnail image size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.CategoryThumbPictureSize.Hint">
-    <Value>The default size (pixels) for product thumbnail images on category pages.</Value>
+    <Value>The default size (pixels) for category thumbnail images.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality">
     <Value>Default image quality (0 - 100)</Value>
@@ -6571,7 +6571,7 @@
     <Value>Manufacturer thumbnail image size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize.Hint">
-    <Value>The default size (pixels) for product thumbnail images on manufacturer pages.</Value>
+    <Value>The default size (pixels) for manufacturer thumbnail images.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.MaximumImageSize">
     <Value>Maximum image size</Value>
