@@ -63,10 +63,10 @@ namespace Nop.Services.Common
 
             throw new DataException("This database does not support backup");
         }
-
-#endregion
-
-#region Methods
+        
+        #endregion
+        
+        #region Methods
 
         /// <summary>
         /// Get the current ident value
@@ -200,7 +200,7 @@ namespace Nop.Services.Common
         {
             return Path.Combine(GetBackupDirectoryPath(), backupFileName);
         }
-
-#endregion
+        
+        #endregion
     }
 }
