@@ -510,13 +510,13 @@ namespace Nop.Services.ExportImport
             var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
             return _customerAttributeFormatter.FormatAttributes(selectedCustomerAttributes, ";");
         }
-        
-#endregion
 
-#region Methods
+        #endregion
+
+        #region Methods
 
         /// <summary>
-        /// Export manufacturer list to xml
+        /// Export manufacturer list to XML
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
@@ -612,7 +612,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export category list to xml
+        /// Export category list to XML
         /// </summary>
         /// <returns>Result in XML format</returns>
         public virtual string ExportCategoriesToXml()
@@ -662,7 +662,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export product list to xml
+        /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
@@ -1138,7 +1138,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export order list to xml
+        /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
@@ -1391,7 +1391,7 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export customer list to xml
+        /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>

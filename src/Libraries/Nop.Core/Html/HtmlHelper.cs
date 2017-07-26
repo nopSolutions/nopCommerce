@@ -138,7 +138,7 @@ namespace Nop.Core.Html
         }
 
         /// <summary>
-        /// replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")
+        /// replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Text</returns>
@@ -169,13 +169,13 @@ namespace Nop.Core.Html
 
             return text;
         }
-        
+
         /// <summary>
         /// Converts HTML to plain text
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="decode">A value indicating whether to decode text</param>
-        /// <param name="replaceAnchorTags">A value indicating whether to replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")</param>
+        /// <param name="replaceAnchorTags">A value indicating whether to replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")</param>
         /// <returns>Formatted text</returns>
         public static string ConvertHtmlToPlainText(string text,
             bool decode = false, bool replaceAnchorTags = false)

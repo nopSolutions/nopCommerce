@@ -28,7 +28,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Domain
         public decimal PickupFee { get; set; }
 
         /// <summary>
-        /// Gets or sets an oppening hours
+        /// Gets or sets an opening hours
         /// </summary>
         public string OpeningHours { get; set; }
 

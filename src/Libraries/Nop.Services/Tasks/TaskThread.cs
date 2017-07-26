@@ -158,7 +158,7 @@ namespace Nop.Services.Tasks
         {
             get
             {
-                //if somobody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
+                //if somebody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
                 var interval = this.Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
@@ -167,7 +167,7 @@ namespace Nop.Services.Tasks
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the thread whould be run only once (per appliction start)
+        /// Gets or sets a value indicating whether the thread would be run only once (on application start)
         /// </summary>
         public bool RunOnlyOnce { get; set; }
 

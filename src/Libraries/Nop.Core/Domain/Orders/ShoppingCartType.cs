@@ -2,7 +2,7 @@
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
-    /// Represents a shoping cart type
+    /// Represents a shopping cart type
     /// </summary>
     public enum ShoppingCartType
     {

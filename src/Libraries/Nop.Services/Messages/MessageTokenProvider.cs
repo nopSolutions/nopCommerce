@@ -476,7 +476,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(rentalInfo);
                 }
-                //sku
+                //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
@@ -562,7 +562,7 @@ namespace Nop.Services.Messages
                 }
                 else
                 {
-                    //exсluding tax
+                    //excluding tax
 
                     //subtotal
                     var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
@@ -783,7 +783,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(rentalInfo);
                 }
-                //sku
+                //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);

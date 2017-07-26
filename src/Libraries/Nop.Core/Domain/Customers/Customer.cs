@@ -25,7 +25,7 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
-        /// Gets or sets the customer Guid
+        /// Gets or sets the customer GUID
         /// </summary>
         public Guid CustomerGuid { get; set; }
 

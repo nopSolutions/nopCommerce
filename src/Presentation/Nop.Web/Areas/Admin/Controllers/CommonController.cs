@@ -112,8 +112,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
-        #region Utitlies
+
+        #region Utilities
 
         private bool IsDebugAssembly(Assembly assembly)
         {

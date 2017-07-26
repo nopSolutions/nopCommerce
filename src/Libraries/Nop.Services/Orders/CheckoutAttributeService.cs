@@ -21,7 +21,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <remarks>
         /// {0} : store ID
-        /// {1} : >A value indicating whether we should exlude shippable attributes
+        /// {1} : >A value indicating whether we should exclude shippable attributes
         /// </remarks>
         private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}";
         /// <summary>
@@ -116,7 +116,7 @@ namespace Nop.Services.Orders
         /// Gets all checkout attributes
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
+        /// <param name="excludeShippableAttributes">A value indicating whether we should exclude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {

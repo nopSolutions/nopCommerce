@@ -83,7 +83,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #region Utilities
 
         /// <summary>
-        /// Gets Paypal URL
+        /// Gets PayPal URL
         /// </summary>
         /// <returns></returns>
         private string GetPaypalUrl()
@@ -94,7 +94,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         }
 
         /// <summary>
-        /// Gets IPN Paypal URL
+        /// Gets IPN PayPal URL
         /// </summary>
         /// <returns></returns>
         private string GetIpnPaypalUrl()
@@ -226,7 +226,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     cartTotalRounded += unitPriceExclTaxRounded * item.Quantity;
                 }
 
-                //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
+                //the checkout attributes that have a dollar value and send them to PayPal as items to be paid for
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
                 foreach (var val in attributeValues)
                 {
@@ -302,7 +302,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     decimal discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
                     discountTotal = Math.Round(discountTotal, 2);
                     cartTotalRounded -= discountTotal;
-                    //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
+                    //gift card or rewarded point amount applied to cart in nopCommerce - shows in PayPal as "discount"
                     builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
                 }
 
@@ -412,7 +412,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
         public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
@@ -425,7 +425,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
@@ -580,7 +580,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint", "Enable if a customer should be redirected to the order details page when he clicks \"return to store\" link on PayPal site WITHOUT completing a payment");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by Paypal.</b><br /><br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br /><br />1. Log in to your PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click the Profile subtab.<br />3. Click Website Payment Preferences in the Seller Preferences column.<br />4. Under Auto Return for Website Payments, click the On radio button.<br />5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment (http://www.yourStore.com/Plugins/PaymentPayPalStandard/PDTHandler).<br />6. Under Payment Data Transfer, click the On radio button.<br />7. Click Save.<br />8. Click Website Payment Preferences in the Seller Preferences column.<br />9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br /><br /><b>Two ways to be able to receive IPN messages (optional):</b><br /><br /><b>The first way is to check 'Enable IPN' below.</b> It will include in the request the url of you IPN handler<br /><br /><b>The second way is to confugure your paypal account to activate this service</b>; follow these steps:<br />1. Log in to your Premier or Business account.<br />2. Click the Profile subtab.<br />3. Click Instant Payment Notification in the Selling Preferences column.<br />4. Click the 'Edit IPN Settings' button to update your settings.<br />5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).<br />6. Click Save, and you should get a message that you have successfully activated IPN.</p>");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b><br /><br />To use PDT, you must activate PDT and Auto Return in your PayPal account profile. You must also acquire a PDT identity token, which is used in all PDT communication you send to PayPal. Follow these steps to configure your account for PDT:<br /><br />1. Log in to your PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click the Profile subtab.<br />3. Click Website Payment Preferences in the Seller Preferences column.<br />4. Under Auto Return for Website Payments, click the On radio button.<br />5. For the Return URL, enter the URL on your site that will receive the transaction ID posted by PayPal after a customer payment (http://www.yourStore.com/Plugins/PaymentPayPalStandard/PDTHandler).<br />6. Under Payment Data Transfer, click the On radio button.<br />7. Click Save.<br />8. Click Website Payment Preferences in the Seller Preferences column.<br />9. Scroll down to the Payment Data Transfer section of the page to view your PDT identity token.<br /><br /><b>Two ways to be able to receive IPN messages (optional):</b><br /><br /><b>The first way is to check 'Enable IPN' below.</b> It will include in the request the URL of you IPN handler<br /><br /><b>The second way is to configure your PayPal account to activate this service</b>; follow these steps:<br />1. Log in to your Premier or Business account.<br />2. Click the Profile subtab.<br />3. Click Instant Payment Notification in the Selling Preferences column.<br />4. Click the 'Edit IPN Settings' button to update your settings.<br />5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).<br />6. Click Save, and you should get a message that you have successfully activated IPN.</p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.RoundingWarning", "It looks like you have \"ShoppingCartSettings.RoundPricesDuringCalculation\" setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal only rounds to two decimals.");
 

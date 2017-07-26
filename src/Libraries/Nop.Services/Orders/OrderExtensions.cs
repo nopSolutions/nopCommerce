@@ -31,7 +31,7 @@ namespace Nop.Services.Orders
         /// Gets a total number of items in all shipments
         /// </summary>
         /// <param name="orderItem">Order item</param>
-        /// <returns>Total number of items in all shipmentss</returns>
+        /// <returns>Total number of items in all shipments</returns>
         public static int GetTotalNumberOfItemsInAllShipment(this OrderItem orderItem)
         {
             if (orderItem == null)

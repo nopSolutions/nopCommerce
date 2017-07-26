@@ -318,7 +318,7 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int OrderMaximumQuantity { get; set; }
         /// <summary>
-        /// Gets or sets the comma seperated list of allowed quantities. null or empty if any quantity is allowed
+        /// Gets or sets the comma separated list of allowed quantities. null or empty if any quantity is allowed
         /// </summary>
         public string AllowedQuantities { get; set; }
         /// <summary>

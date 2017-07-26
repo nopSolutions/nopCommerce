@@ -130,7 +130,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 stream = ex.Response.GetResponseStream();
             }
 
-            //parse json from response
+            //parse JSON from response
             using (var reader = new StreamReader(stream))
             {
                 var json = reader.ReadToEnd();

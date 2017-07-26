@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Localization
             if (string.IsNullOrEmpty(url))
                 return false;
 
-            //remove application path from raw url
+            //remove application path from raw URL
             if (isRawPath)
                 url = url.RemoveApplicationPathFromRawUrl(pathBase);
 

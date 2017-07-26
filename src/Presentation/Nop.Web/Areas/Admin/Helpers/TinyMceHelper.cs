@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Helpers
     public static class TinyMceHelper
     {
         /// <summary>
-        /// Get tinyMCE language name for curent language 
+        /// Get tinyMCE language name for current language 
         /// </summary>
         /// <returns>tinyMCE language name</returns>
         public static string GetTinyMceLanguage()

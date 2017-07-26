@@ -329,7 +329,7 @@ namespace Nop.Services.Seo
         #region Methods
 
         /// <summary>
-        /// This will build an xml sitemap for better index with search engines.
+        /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="urlHelper">URL helper</param>
@@ -345,7 +345,7 @@ namespace Nop.Services.Seo
         }
 
         /// <summary>
-        /// This will build an xml sitemap for better index with search engines.
+        /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
         /// <param name="urlHelper">URL helper</param>

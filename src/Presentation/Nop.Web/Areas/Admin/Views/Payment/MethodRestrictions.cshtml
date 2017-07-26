@@ -77,11 +77,10 @@
                                                 </td>
                                                 @foreach (var pm in Model.AvailablePaymentMethods)
                                                     {
-                                                        var resticted = Model.Resticted.ContainsKey(pm.SystemName) && Model.Resticted[pm.SystemName][c.Id];
-
+                                                        var restricted = Model.Resticted.ContainsKey(pm.SystemName) && Model.Resticted[pm.SystemName][c.Id];
                                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                                     <td>
-                                                        <input class="restrict_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrict_@(pm.SystemName)" @(resticted ? " checked=checked" : null) />
+                                                        <input class="restrict_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrict_@(pm.SystemName)" @(restricted ? " checked=checked" : null) />
                                                     </td>
                                                     }
                                             </tr>

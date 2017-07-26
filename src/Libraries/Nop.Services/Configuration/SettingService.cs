@@ -352,7 +352,7 @@ namespace Nop.Services.Configuration
         /// Load settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store identifier for which settigns should be loaded</param>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
         public virtual T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
         {
             return (T)LoadSetting(typeof(T), storeId);
@@ -361,7 +361,7 @@ namespace Nop.Services.Configuration
         /// Load settings
         /// </summary>
         /// <param name="type">Type</param>
-        /// <param name="storeId">Store identifier for which settigns should be loaded</param>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
         public virtual ISettings LoadSetting(Type type, int storeId = 0)
         {
             var settings = Activator.CreateInstance(type);

@@ -153,7 +153,7 @@ namespace Nop.Services.Localization
         /// <param name="settings">Settings</param>
         /// <param name="keySelector">Key selector</param>
         /// <param name="languageId">Language identifier</param>
-        /// <param name="value">Localizaed value</param>
+        /// <param name="value">Localized value</param>
         /// <returns>Localized property</returns>
         public static void SaveLocalizedSetting<T>(this T settings,
             Expression<Func<T, string>> keySelector, int languageId,

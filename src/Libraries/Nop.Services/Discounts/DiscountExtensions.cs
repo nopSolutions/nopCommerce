@@ -25,7 +25,7 @@ namespace Nop.Services.Discounts
             else
                 result = discount.DiscountAmount;
 
-            //validate maximum disocunt amount
+            //validate maximum discount amount
             if (discount.UsePercentage && 
                 discount.MaximumDiscountAmount.HasValue &&
                 result > discount.MaximumDiscountAmount.Value)

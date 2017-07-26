@@ -251,7 +251,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     values.TryGetValue("payment_fee", out payment_fee);
 
                     var sb = new StringBuilder();
-                    sb.AppendLine("Paypal PDT:");
+                    sb.AppendLine("PayPal PDT:");
                     sb.AppendLine("mc_gross: " + mc_gross);
                     sb.AppendLine("Payer status: " + payer_status);
                     sb.AppendLine("Payment status: " + payment_status);
@@ -397,7 +397,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 #endregion
 
                 var sb = new StringBuilder();
-                sb.AppendLine("Paypal IPN:");
+                sb.AppendLine("PayPal IPN:");
                 foreach (KeyValuePair<string, string> kvp in values)
                 {
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);

@@ -88,7 +88,7 @@ namespace Nop.Services.Logging
 
         #endregion
 
-        #region Utitlies
+        #region Utilities
 
         /// <summary>
         /// Gets all activity log types (class for caching)

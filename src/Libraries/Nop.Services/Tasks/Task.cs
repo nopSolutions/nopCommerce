@@ -94,7 +94,7 @@ namespace Nop.Services.Tasks
                         if (String.IsNullOrEmpty(machineName))
                         {
                             throw new Exception("Machine name cannot be detected. You cannot run in web farm.");
-                            //actually in this case we can generate some unique string (e.g. Guid) and store it in some "static" (!!!) variable
+                            //actually in this case we can generate some unique string (e.g. GUID) and store it in some "static" (!!!) variable
                             //then it can be used as a machine name
                         }
                         if (nopConfig.RedisCachingEnabled)

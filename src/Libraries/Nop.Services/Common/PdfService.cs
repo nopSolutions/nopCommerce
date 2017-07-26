@@ -335,7 +335,7 @@ namespace Nop.Services.Common
                 var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes( order.BillingAddress.CustomAttributes);
                 if (!String.IsNullOrEmpty(customBillingAddressAttributes))
                 {
-                    //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
+                    //TODO: we should add padding to each line (in case if we have several custom address attributes)
                     billingAddress.AddCell(new Paragraph("   " + HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true), font));
                 }
 
@@ -403,7 +403,7 @@ namespace Nop.Services.Common
                         var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
                         if (!String.IsNullOrEmpty(customShippingAddressAttributes))
                         {
-                            //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
+                            //TODO: we should add padding to each line (in case if we have several custom address attributes)
                             shippingAddress.AddCell(new Paragraph("   " + HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                         }
                         shippingAddress.AddCell(new Paragraph(" "));

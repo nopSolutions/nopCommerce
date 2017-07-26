@@ -4,7 +4,7 @@ using Nop.Services.Tasks;
 
 namespace Nop.Web.Controllers
 {
-    //do not inherit it from BasePublicController. otherwise a lot of extra acion filters will be called
+    //do not inherit it from BasePublicController. otherwise a lot of extra action filters will be called
     //they can create guest account(s), etc
     public partial class ScheduleTaskController : Controller
     {

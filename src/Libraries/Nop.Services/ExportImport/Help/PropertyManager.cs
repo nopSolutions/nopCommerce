@@ -21,7 +21,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="properties">All acsess properties</param>
+        /// <param name="properties">All access properties</param>
         public PropertyManager(IEnumerable<PropertyByName<T>> properties)
         {
             _properties = new Dictionary<string, PropertyByName<T>>();
@@ -36,12 +36,12 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Curent object to acsess
+        /// Current object to access
         /// </summary>
         public T CurrentObject { get; set; }
 
         /// <summary>
-        /// Return properti index
+        /// Return property index
         /// </summary>
         /// <param name="propertyName">Property name</param>
         /// <returns></returns>

@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
         public IList<PaymentMethodModel> AvailablePaymentMethods { get; set; }
         public IList<CountryModel> AvailableCountries { get; set; }
 
-        //[payment method system name] / [customer role id] / [resticted]
+        //[payment method system name] / [customer role id] / [restricted]
         public IDictionary<string, IDictionary<int, bool>> Resticted { get; set; }
     }
 }

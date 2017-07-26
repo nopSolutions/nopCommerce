@@ -317,10 +317,10 @@ namespace Nop.Core
         /// <summary>
         /// Modifies query string
         /// </summary>
-        /// <param name="url">Url to modify</param>
+        /// <param name="url">URL to modify</param>
         /// <param name="queryStringModification">Query string modification</param>
         /// <param name="anchor">Anchor</param>
-        /// <returns>New url</returns>
+        /// <returns>New URL</returns>
         public virtual string ModifyQueryString(string url, string queryStringModification, string anchor)
         {
             if (url == null)
@@ -422,7 +422,7 @@ namespace Nop.Core
         /// <summary>
         /// Remove query string from the URL
         /// </summary>
-        /// <param name="url">Url to modify</param>
+        /// <param name="url">URL to modify</param>
         /// <param name="queryString">Query string to remove</param>
         /// <returns>New URL without passed query string</returns>
         public virtual string RemoveQueryString(string url, string queryString)
@@ -554,11 +554,11 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Gets whether the specified http request uri references the local host.
+        /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
-        /// <param name="req">Http request</param>
-        /// <returns>True, if http request uri references to the local host</returns>
-        public  virtual bool IsLocalRequest(HttpRequest req)
+        /// <param name="req">HTTP request</param>
+        /// <returns>True, if HTTP request URI references to the local host</returns>
+        public virtual bool IsLocalRequest(HttpRequest req)
         {
             //source: https://stackoverflow.com/a/41242493/7860424
             var connection = req.HttpContext.Connection;
@@ -578,7 +578,7 @@ namespace Nop.Core
         /// <summary>
         /// Get the raw path and full query of request
         /// </summary>
-        /// <param name="request">Http request</param>
+        /// <param name="request">HTTP request</param>
         /// <returns>Raw URL</returns>
         public virtual string GetRawUrl(HttpRequest request)
         {

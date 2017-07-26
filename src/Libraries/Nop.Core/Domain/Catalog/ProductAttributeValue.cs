@@ -48,7 +48,7 @@ namespace Nop.Core.Domain.Catalog
         public decimal WeightAdjustment { get; set; }
 
         /// <summary>
-        /// Gets or sets the attibute value cost (used only with AttributeValueType.Simple)
+        /// Gets or sets the attribute value cost (used only with AttributeValueType.Simple)
         /// </summary>
         public decimal Cost { get; set; }
 

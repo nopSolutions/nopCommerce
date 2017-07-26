@@ -105,7 +105,7 @@ namespace Nop.Services.Payments
             }
         }
         /// <summary>
-        /// Deerialize CustomValues of Order
+        /// Deserialize CustomValues of Order
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Serialized CustomValues CustomValues</returns>
@@ -118,7 +118,7 @@ namespace Nop.Services.Payments
             return request.DeserializeCustomValues(order.CustomValuesXml);
         }
         /// <summary>
-        /// Deerialize CustomValues of ProcessPaymentRequest
+        /// Deserialize CustomValues of ProcessPaymentRequest
         /// </summary>
         /// <param name="request">Request</param>
         /// <param name="customValuesXml">Serialized CustomValues</param>
@@ -144,7 +144,7 @@ namespace Nop.Services.Payments
             }
         }
         /// <summary>
-        /// Dictonary serializer
+        /// Dictionary serializer
         /// </summary>
         public class DictionarySerializer : IXmlSerializable
         {

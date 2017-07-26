@@ -19,7 +19,7 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool AllowViewUnpublishedProductPage { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating customers should see "discontinued" message when visibting details pages of unpublished products (if "AllowViewUnpublishedProductPage" is "true)
+        /// Gets or sets a value indicating customers should see "discontinued" message when visiting details pages of unpublished products (if "AllowViewUnpublishedProductPage" is "true)
         /// </summary>
         public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
         /// <summary>

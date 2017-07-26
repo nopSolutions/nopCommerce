@@ -81,34 +81,34 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Delete a return request reaspn
+        /// Delete a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
         void DeleteReturnRequestReason(ReturnRequestReason returnRequestReason);
 
         /// <summary>
-        /// Gets all return request reaspns
+        /// Gets all return request reasons
         /// </summary>
-        /// <returns>Return request reaspns</returns>
+        /// <returns>Return request reasons</returns>
         IList<ReturnRequestReason> GetAllReturnRequestReasons();
 
         /// <summary>
-        /// Gets a return request reaspn
+        /// Gets a return request reason
         /// </summary>
-        /// <param name="returnRequestReasonId">Return request reaspn identifier</param>
-        /// <returns>Return request reaspn</returns>
+        /// <param name="returnRequestReasonId">Return request reason identifier</param>
+        /// <returns>Return request reason</returns>
         ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId);
 
         /// <summary>
-        /// Inserts a return request reaspn
+        /// Inserts a return request reason
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         void InsertReturnRequestReason(ReturnRequestReason returnRequestReason);
 
         /// <summary>
-        /// Updates the  return request reaspn
+        /// Updates the  return request reason
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason);
     }
 }

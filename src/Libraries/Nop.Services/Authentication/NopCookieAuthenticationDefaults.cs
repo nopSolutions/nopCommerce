@@ -43,7 +43,7 @@ namespace Nop.Services.Authentication
         public static readonly PathString AccessDeniedPath = new PathString("/page-not-found");
 
         /// <summary>
-        /// The default value of the return url parameter
+        /// The default value of the return URL parameter
         /// </summary>
         public static readonly string ReturnUrlParameter = "";
     }

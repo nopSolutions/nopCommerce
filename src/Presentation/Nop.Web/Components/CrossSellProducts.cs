@@ -55,7 +55,7 @@ namespace Nop.Web.Components
                 return Content("");
 
 
-            //Cross-sell products are dispalyed on the shopping cart page.
+            //Cross-sell products are displayed on the shopping cart page.
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case

@@ -345,7 +345,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             }
                         }
                         else
-                            _logger.Error(string.Format("PayPal error: Order with guid {0} was not found", sale.invoice_number));
+                            _logger.Error(string.Format("PayPal error: Order with GUID {0} was not found", sale.invoice_number));
                     }
                 }
 

@@ -50,7 +50,7 @@ namespace Nop.Services.Logging
 
         #endregion
 
-        #region Utitilities
+        #region Utilities
 
         /// <summary>
         /// Gets a value indicating whether this message should not be logged

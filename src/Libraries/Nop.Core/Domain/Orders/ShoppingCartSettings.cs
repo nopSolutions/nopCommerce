@@ -6,12 +6,12 @@ namespace Nop.Core.Domain.Orders
     public class ShoppingCartSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether a custoemr should be redirected to the shopping cart page after adding a product to the cart/wishlist
+        /// Gets or sets a value indicating whether a customer should be redirected to the shopping cart page after adding a product to the cart/wishlist
         /// </summary>
         public bool DisplayCartAfterAddingProduct { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a custoemr should be redirected to the shopping cart page after adding a product to the cart/wishlist
+        /// Gets or sets a value indicating whether a customer should be redirected to the shopping cart page after adding a product to the cart/wishlist
         /// </summary>
         public bool DisplayWishlistAfterAddingProduct { get; set; }
 
@@ -103,7 +103,7 @@ namespace Nop.Core.Domain.Orders
         public bool GroupTierPricesForDistinctShoppingCartItems  { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether a customer will beable to edit products in the cart
+        /// Gets or sets a value indicating whether a customer will be able to edit products in the cart
         /// </summary>
         public bool AllowCartItemEditing { get; set; }
 

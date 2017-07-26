@@ -146,7 +146,7 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<Code>03</Code>");
             sb.Append("</Service>");
 
-            //saturday delivery flag
+            //Saturday delivery flag
             if (saturdayDelivery)
             {
                 sb.Append("<ShipmentServiceOptions>");
@@ -778,7 +778,7 @@ namespace Nop.Plugin.Shipping.UPS
                     response.AddError(error);
                 }
 
-                //saturday delivery
+                //Saturday delivery
                 if (_upsSettings.CarrierServicesOffered.Contains("[sa]"))
                 {
                     requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,

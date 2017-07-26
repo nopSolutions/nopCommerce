@@ -37,11 +37,11 @@ namespace Nop.Services.Affiliates
 
 
         /// <summary>
-        /// Generate affilaite URL
+        /// Generate affiliate URL
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <param name="webHelper">Web helper</param>
-        /// <returns>Generated affilaite URL</returns>
+        /// <returns>Generated affiliate URL</returns>
         public static string GenerateUrl(this Affiliate affiliate, IWebHelper webHelper)
         {
             if (affiliate == null)

@@ -3032,7 +3032,7 @@ namespace Nop.Services.Orders
             });
             _orderService.UpdateOrder(order);
 
-            //check orer status
+            //check order status
             CheckOrderStatus(order);
         }
 
@@ -3090,11 +3090,11 @@ namespace Nop.Services.Orders
             //ensure that we have at least one returnable product
             return order.OrderItems.Any(oi => !oi.Product.NotReturnable);
         }
-        
+
 
 
         /// <summary>
-        /// Valdiate minimum order sub-total amount
+        /// Validate minimum order sub-total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
@@ -3123,7 +3123,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Valdiate minimum order total amount
+        /// Validate minimum order total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>

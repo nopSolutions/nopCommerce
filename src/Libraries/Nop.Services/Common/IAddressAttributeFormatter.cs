@@ -9,11 +9,11 @@ namespace Nop.Services.Common
         /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="serapator">Serapator</param>
+        /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
         string FormatAttributes(string attributesXml,
-            string serapator = "<br />", 
+            string separator = "<br />", 
             bool htmlEncode = true);
     }
 }

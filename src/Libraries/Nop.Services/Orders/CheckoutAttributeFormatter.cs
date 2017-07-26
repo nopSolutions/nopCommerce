@@ -62,14 +62,14 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
+        /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
             Customer customer, 
-            string serapator = "<br />", 
+            string separator = "<br />", 
             bool htmlEncode = true, 
             bool renderPrices = true,
             bool allowHyperlinks = true)
@@ -170,7 +170,7 @@ namespace Nop.Services.Orders
                     if (!String.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
-                            result.Append(serapator);
+                            result.Append(separator);
                         result.Append(formattedAttribute);
                     }
                 }

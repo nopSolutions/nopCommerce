@@ -250,7 +250,7 @@ namespace Nop.Services.Orders
                                     automaticallyAddRequiredProductsIfEnabled: false);
                                 if (addToCartWarnings.Any())
                                 {
-                                    //a product wasn't atomatically added for some reasons
+                                    //a product wasn't automatically added for some reasons
 
                                     //don't display specific errors from 'addToCartWarnings' variable
                                     //display only generic error

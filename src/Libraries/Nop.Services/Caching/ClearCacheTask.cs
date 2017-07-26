@@ -4,7 +4,7 @@ using Nop.Services.Tasks;
 namespace Nop.Services.Caching
 {
     /// <summary>
-    /// Clear cache schedueled task implementation
+    /// Clear cache scheduled task implementation
     /// </summary>
     public partial class ClearCacheTask : ITask
     {

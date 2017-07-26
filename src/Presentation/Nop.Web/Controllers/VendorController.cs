@@ -70,7 +70,7 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Utilites
+        #region Utilities
         
         protected virtual void UpdatePictureSeoNames(Vendor vendor)
         {

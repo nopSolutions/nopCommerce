@@ -320,7 +320,7 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
-        /// Export language resources to xml
+        /// Export language resources to XML
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>

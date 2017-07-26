@@ -54,7 +54,7 @@ namespace Nop.Services.Stores
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>Store identifiers</returns>
         int[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
 
@@ -62,7 +62,7 @@ namespace Nop.Services.Stores
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
 

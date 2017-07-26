@@ -54,11 +54,11 @@ namespace Nop.Services.Affiliates
             
             return _affiliateRepository.GetById(affiliateId);
         }
-        
+
         /// <summary>
-        /// Gets an affiliate by friendly url name
+        /// Gets an affiliate by friendly URL name
         /// </summary>
-        /// <param name="friendlyUrlName">Friendly url name</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
         {

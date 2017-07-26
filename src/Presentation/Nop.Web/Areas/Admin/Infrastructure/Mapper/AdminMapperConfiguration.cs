@@ -187,7 +187,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CampaignModel, Campaign>()
                 .ForMember(dest => dest.DontSendBeforeDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
-            //topcis
+            //topics
             CreateMap<Topic, TopicModel>()
                 .ForMember(dest => dest.AvailableTopicTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Url, mo => mo.Ignore())

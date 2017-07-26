@@ -3,7 +3,7 @@ using Nop.Core.Domain.Payments;
 namespace Nop.Plugin.Payments.PayPalStandard
 {
     /// <summary>
-    /// Represents paypal helper
+    /// Represents PayPal helper
     /// </summary>
     public class PaypalHelper
     {

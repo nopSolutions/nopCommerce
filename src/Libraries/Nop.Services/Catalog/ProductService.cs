@@ -831,7 +831,7 @@ namespace Nop.Services.Catalog
                                   (searchDescriptions && p.FullDescription.Contains(keywords)) ||
                                   //manufacturer part number
                                   (searchManufacturerPartNumber && p.ManufacturerPartNumber == keywords) ||
-                                  //sku (exact match)
+                                  //SKU (exact match)
                                   (searchSku && p.Sku == keywords) ||
                                   //product tags (exact match)
                                   (searchProductTags && pt.Name == keywords) ||
@@ -1259,7 +1259,7 @@ namespace Nop.Services.Catalog
         /// Adjust inventory
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="quantityToChange">Quantity to increase or descrease</param>
+        /// <param name="quantityToChange">Quantity to increase or decrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="message">Message for the stock quantity history</param>
         public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string message = "")
