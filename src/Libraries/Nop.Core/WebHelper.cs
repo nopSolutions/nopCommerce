@@ -137,7 +137,10 @@ namespace Nop.Core
                 if (string.IsNullOrEmpty(result) && _httpContextAccessor.HttpContext.Connection.RemoteIpAddress != null)
                     result = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             }
-            catch { return string.Empty; }
+            catch
+            {
+                return string.Empty;
+            }
 
             //some of the validation
             if (result != null && result.Equals("::1", StringComparison.InvariantCultureIgnoreCase))

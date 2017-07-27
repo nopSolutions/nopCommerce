@@ -56,6 +56,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize.Hint">
     <Value>The default size (pixels) for manufacturer thumbnail images.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled">
+    <Value>"Store IP addresses" setting is disabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses">
+    <Value>Store IP addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses.Hint">
+    <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improved performance. Furthermore, it''s prohibited to store IP addresses in some countries (private customer data).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -133,4 +142,12 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'externalauthenticationsettings.autoregisterenabled'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.storeipaddresses')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.storeipaddresses', N'True', 0)
+END
 GO

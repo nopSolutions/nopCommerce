@@ -134,7 +134,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating we should store last visited page URL for each customer
         /// </summary>
         public bool StoreLastVisitedPage { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating we should store IP addresses of customers
+        /// </summary>
+        public bool StoreIpAddresses { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>

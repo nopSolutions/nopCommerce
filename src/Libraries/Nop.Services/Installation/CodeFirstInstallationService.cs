@@ -6104,6 +6104,7 @@ namespace Nop.Services.Installation
                 NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
+                StoreIpAddresses = true,
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,

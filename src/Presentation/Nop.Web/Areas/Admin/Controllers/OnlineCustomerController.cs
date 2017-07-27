@@ -67,7 +67,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     Id = x.Id,
                     CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    LastIpAddress = x.LastIpAddress,
+                    LastIpAddress = _customerSettings.StoreIpAddresses ?
+                        x.LastIpAddress :
+                        _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled"),
                     Location = _geoLookupService.LookupCountryName(x.LastIpAddress),
                     LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
                     LastVisitedPage = _customerSettings.StoreLastVisitedPage ?

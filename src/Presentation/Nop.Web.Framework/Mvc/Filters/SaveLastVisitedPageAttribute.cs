@@ -70,7 +70,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
                     return;
 
-                //whether is need to store last visited page URL
+                //check whether we store last visited page URL
                 if (!_customerSettings.StoreLastVisitedPage)
                     return;
 

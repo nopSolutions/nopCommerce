@@ -5817,6 +5817,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceRequired.Hint">
     <Value>Check if 'State/province' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses">
+    <Value>Store IP addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreIpAddresses.Hint">
+    <Value>When enabled, IP addresses of customers will be stored. When disabled, it can improved performance. Furthermore, it's prohibited to store IP addresses in some countries (private customer data).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage">
     <Value>Store last visited page</Value>
   </LocaleResource>
@@ -10031,6 +10037,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.IPAddress">
     <Value>IP Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled">
+    <Value>"Store IP addresses" setting is disabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.LastActivityDate">
     <Value>Last activity</Value>

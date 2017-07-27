@@ -34,6 +34,7 @@ namespace Nop.Services.Tax
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILogger _logger;
+        private readonly IWebHelper _webHelper;
         private readonly CustomerSettings _customerSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
@@ -54,6 +55,7 @@ namespace Nop.Services.Tax
         /// <param name="countryService">Country service</param>
         /// <param name="stateProvinceService">State province service</param>
         /// <param name="logger">Logger service</param>
+        /// <param name="webHelper">Web helper</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="addressSettings">Address settings</param>
@@ -66,6 +68,7 @@ namespace Nop.Services.Tax
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             ILogger logger,
+            IWebHelper webHelper,
             CustomerSettings customerSettings,
             ShippingSettings shippingSettings,
             AddressSettings addressSettings)
@@ -79,6 +82,7 @@ namespace Nop.Services.Tax
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._logger = logger;
+            this._webHelper = webHelper;
             this._customerSettings = customerSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
@@ -114,8 +118,7 @@ namespace Nop.Services.Tax
             //get country by IP address
             if (country == null)
             {
-                var ipAddress = customer.LastIpAddress;
-                //ipAddress = _webHelper.GetCurrentIpAddress();
+                var ipAddress = _webHelper.GetCurrentIpAddress();
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
                 country = _countryService.GetCountryByTwoLetterIsoCode(countryIsoCode);
             }
