@@ -23,16 +23,6 @@ namespace Nop.Core.Configuration
         public bool UseResponseCompression { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
-        /// Do not enable it if you run on Azure but use one instance only
-        /// </summary>
-        public bool MultipleInstancesEnabled { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether the site is run on Windows Azure Web Apps
-        /// </summary>
-        public bool RunOnAzureWebApps { get; set; }
-
-        /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageConnectionString { get; set; }

@@ -144,10 +144,25 @@ DELETE FROM [Setting]
 WHERE [Name] = N'externalauthenticationsettings.autoregisterenabled'
 GO
 
+
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.storeipaddresses')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.storeipaddresses', N'True', 0)
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ScheduleTask]') and NAME='LeasedByMachineName')
+BEGIN
+	ALTER TABLE [ScheduleTask] DROP COLUMN [LeasedByMachineName]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ScheduleTask]') and NAME='LeasedUntilUtc')
+BEGIN
+	ALTER TABLE [ScheduleTask] DROP COLUMN [LeasedUntilUtc]
 END
 GO
