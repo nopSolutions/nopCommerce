@@ -144,6 +144,11 @@
     ))
                     @if (Model.DisplayColorSquaresRgb)
                     {
+                        //ensure "ColorSquaresRgb" has some default value. Otherwise farbtastic won't set a selected value
+                        if (String.IsNullOrEmpty(Model.ColorSquaresRgb))
+                        {
+                            Model.ColorSquaresRgb = "#000000";
+                        }
                         <div class="form-group">
                             <div class="col-sm-3">
                                 <nop-label asp-for="ColorSquaresRgb" />

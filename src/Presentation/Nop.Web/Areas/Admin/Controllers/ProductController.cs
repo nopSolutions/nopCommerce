@@ -3930,7 +3930,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //color squares
             model.DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares;
-            model.ColorSquaresRgb = "#000000";
             //image squares
             model.DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares;
 
@@ -4085,10 +4084,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DisplayOrder = pav.DisplayOrder,
                 PictureId = pav.PictureId
             };
-            if (model.DisplayColorSquaresRgb && String.IsNullOrEmpty(model.ColorSquaresRgb))
-            {
-                model.ColorSquaresRgb = "#000000";
-            }
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {

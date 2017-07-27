@@ -481,7 +481,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //color squares
             model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
-            model.ColorSquaresRgb = "#000000";
 
             //locales
             AddLocales(_languageService, model.Locales);
