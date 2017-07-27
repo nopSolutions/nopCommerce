@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public PasswordFormat DefaultPasswordFormat { get; set; }
         /// <summary>
-        /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed
+        /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed (DO NOT edit in production environment)
         /// </summary>
         public string HashedPasswordFormat { get; set; }
         /// <summary>

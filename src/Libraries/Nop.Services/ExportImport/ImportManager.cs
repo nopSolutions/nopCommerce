@@ -37,6 +37,9 @@ namespace Nop.Services.ExportImport
     {
         #region Fields
 
+        //it's quite fast hash (to cheaply distinguish between objects)
+        private const string IMAGE_HASH_ALGORITHM = "SHA1";
+
         private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ICategoryService _categoryService;
@@ -260,8 +263,8 @@ namespace Nop.Services.ExportImport
                     var pictureAlreadyExists = false;
                     if (!product.IsNew)
                     {
-                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray());
-                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray());
+                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
+                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
 
                         var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                             ? productsImagesIds[product.ProductItem.Id]

@@ -6063,7 +6063,7 @@ namespace Nop.Services.Installation
                 CheckUsernameAvailabilityEnabled = false,
                 AllowUsersToChangeUsernames = false,
                 DefaultPasswordFormat = PasswordFormat.Hashed,
-                HashedPasswordFormat = "SHA1",
+                HashedPasswordFormat = "SHA512",
                 PasswordMinLength = 6,
                 UnduplicatedPasswordsNumber = 4,
                 PasswordRecoveryLinkDaysValid = 7,
