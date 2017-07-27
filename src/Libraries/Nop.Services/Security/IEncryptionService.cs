@@ -17,7 +17,7 @@ namespace Nop.Services.Security
         /// <param name="saltkey">Salk key</param>
         /// <param name="passwordFormat">Password format (hash algorithm)</param>
         /// <returns>Password hash</returns>
-        string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1");
+        string CreatePasswordHash(string password, string saltkey, string passwordFormat);
 
         /// <summary>
         /// Create a data hash
@@ -25,7 +25,7 @@ namespace Nop.Services.Security
         /// <param name="data">The data for calculating the hash</param>
         /// <param name="hashAlgorithm">Hash algorithm</param>
         /// <returns>Data hash</returns>
-        string CreateHash(byte [] data, string hashAlgorithm = "SHA1");
+        string CreateHash(byte [] data, string hashAlgorithm);
 
         /// <summary>
         /// Encrypt text
