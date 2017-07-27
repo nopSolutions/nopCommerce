@@ -55,7 +55,6 @@ namespace Nop.Services.Security
             if (String.IsNullOrEmpty(hashAlgorithm))
                 hashAlgorithm = "SHA1";
            
-            //return FormsAuthentication.HashPasswordForStoringInConfigFile(saltAndPassword, passwordFormat);
             var algorithm = HashAlgorithm.Create(hashAlgorithm);
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");
