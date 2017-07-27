@@ -13,7 +13,7 @@ namespace Nop.Services.Security
         /// <summary>
         /// Create a password hash
         /// </summary>
-        /// <param name="password">{assword</param>
+        /// <param name="password">Password</param>
         /// <param name="saltkey">Salk key</param>
         /// <param name="passwordFormat">Password format (hash algorithm)</param>
         /// <returns>Password hash</returns>
