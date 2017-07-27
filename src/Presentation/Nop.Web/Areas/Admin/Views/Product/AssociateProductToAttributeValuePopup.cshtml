@@ -14,8 +14,8 @@
 {
     <script type="text/javascript">
         try {
-            window.opener.$('#@(ViewBag.productIdInput)').val('@(ViewBag.productId)').trigger('change');
-            window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
+            window.opener.$('#@(Context.Request.Query["productIdInput"])').val('@(ViewBag.productId)').trigger('change');
+            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
         }
         catch (e){}
         window.close();

@@ -1769,7 +1769,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
-        public virtual IActionResult PartiallyRefundOrderPopup(string btnId, string formId, int id, bool online, OrderModel model)
+        public virtual IActionResult PartiallyRefundOrderPopup(int id, bool online, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1805,8 +1805,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //success
                     ViewBag.RefreshPage = true;
-                    ViewBag.btnId = btnId;
-                    ViewBag.formId = formId;
 
                     PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -2516,7 +2514,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("uploadlicense")]
-        public virtual IActionResult UploadLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public virtual IActionResult UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2544,15 +2542,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }
 
         [HttpPost, ActionName("UploadLicenseFilePopup")]
         [FormValueRequired("deletelicense")]
-        public virtual IActionResult DeleteLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public virtual IActionResult DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2577,8 +2573,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }

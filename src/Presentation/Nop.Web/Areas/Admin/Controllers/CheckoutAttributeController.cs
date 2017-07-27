@@ -489,7 +489,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ValueCreatePopup(string btnId, string formId, CheckoutAttributeValueModel model)
+        public virtual IActionResult ValueCreatePopup(CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -535,8 +535,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -579,7 +577,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ValueEditPopup(string btnId, string formId, CheckoutAttributeValueModel model)
+        public virtual IActionResult ValueEditPopup(CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -621,8 +619,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

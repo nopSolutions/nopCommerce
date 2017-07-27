@@ -285,7 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual IActionResult ValueCreatePopup(AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -313,8 +313,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -351,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
+        public virtual IActionResult ValueEditPopup( AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -374,8 +372,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("EditAddressAttributeValue", _localizationService.GetResource("ActivityLog.EditAddressAttributeValue"), cav.Id);
                 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

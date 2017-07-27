@@ -14,10 +14,8 @@
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">
-        try {
-            window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
-        } catch (e) {
-        }
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
         window.close();
     </script>
 }

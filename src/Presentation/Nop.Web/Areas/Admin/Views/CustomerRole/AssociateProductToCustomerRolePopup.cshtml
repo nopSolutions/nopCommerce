@@ -26,9 +26,9 @@
     {
         <script type="text/javascript">
             try {
-                window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
-                window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
-                window.opener.document.getElementById('@(ViewBag.btnId)').click();
+                window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+                window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+                window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
             }
             catch (e){}
             window.close();

@@ -368,7 +368,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult EditPopup(string btnId, string formId, PluginModel model)
+        public virtual IActionResult EditPopup(PluginModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -536,8 +536,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

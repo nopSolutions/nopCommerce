@@ -756,7 +756,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult ProductAddPopup(string btnId, string formId, CategoryModel.AddCategoryProductModel model)
+        public virtual IActionResult ProductAddPopup(CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -785,8 +785,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 

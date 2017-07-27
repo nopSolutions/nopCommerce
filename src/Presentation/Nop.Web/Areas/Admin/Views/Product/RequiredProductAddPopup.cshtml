@@ -188,13 +188,13 @@
 
             function selectRequiredProduct(productid) {
                 try {
-                    var currentValue = window.opener.document.getElementById('@(ViewBag.productIdsInput)').value;
+                    var currentValue = window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value;
                     if (currentValue) {
                         //add comma
-                        window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += ', ';
+                        window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += ', ';
                     }
-                    window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += productid;
-                    window.opener.document.getElementById('@(ViewBag.btnId)').click();
+                    window.opener.document.getElementById('@(Context.Request.Query["productIdsInput"])').value += productid;
+                    window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
                 }
                 catch (e){}
                 window.close();

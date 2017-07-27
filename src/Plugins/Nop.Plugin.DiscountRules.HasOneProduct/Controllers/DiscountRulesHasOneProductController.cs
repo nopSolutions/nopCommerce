@@ -123,7 +123,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
         }
 
-        public ActionResult ProductAddPopup(string btnId, string productIdsInput)
+        public ActionResult ProductAddPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("Access denied");
@@ -156,11 +156,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
-
-            ViewBag.productIdsInput = productIdsInput;
-            ViewBag.btnId = btnId;
-
+            
             return View("~/Plugins/DiscountRules.HasOneProduct/Views/ProductAddPopup.cshtml", model);
         }
 

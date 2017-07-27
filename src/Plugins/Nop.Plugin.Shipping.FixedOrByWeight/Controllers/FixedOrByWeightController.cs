@@ -275,7 +275,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult AddRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
+        public IActionResult AddRateByWeighPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
@@ -298,8 +298,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             _shippingByWeightService.InsertShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Shipping.FixedOrByWeight/Views/AddRateByWeightPopup.cshtml", model);
         }
@@ -369,7 +367,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult EditRateByWeighPopup(string btnId, string formId, ShippingByWeightModel model)
+        public IActionResult EditRateByWeighPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return RedirectToAction("AccessDenied", "Security", new { pageUrl = _webHelper.GetRawUrl(this.Request) });
@@ -394,8 +392,6 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Shipping.FixedOrByWeight/Views/EditRateByWeightPopup.cshtml", model);
         }

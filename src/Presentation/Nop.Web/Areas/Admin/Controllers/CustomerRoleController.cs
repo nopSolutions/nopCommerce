@@ -310,8 +310,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
-            string productNameInput, CustomerRoleModel.AssociateProductToCustomerRoleModel model)
+        public virtual IActionResult AssociateProductToCustomerRolePopup(CustomerRoleModel.AssociateProductToCustomerRoleModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -327,9 +326,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.productIdInput = productIdInput;
-            ViewBag.productNameInput = productNameInput;
-            ViewBag.btnId = btnId;
             ViewBag.productId = associatedProduct.Id;
             ViewBag.productName = associatedProduct.Name;
             return View(model);

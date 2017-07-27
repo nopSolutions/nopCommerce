@@ -325,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult PredefinedProductAttributeValueCreatePopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        public virtual IActionResult PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -351,8 +351,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(ppav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -389,7 +387,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult PredefinedProductAttributeValueEditPopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        public virtual IActionResult PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -411,8 +409,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(ppav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

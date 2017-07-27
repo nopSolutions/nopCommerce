@@ -395,7 +395,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult StateCreatePopup(string btnId, string formId, StateProvinceModel model)
+        public virtual IActionResult StateCreatePopup(StateProvinceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -417,8 +417,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(sp, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -448,7 +446,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult StateEditPopup(string btnId, string formId, StateProvinceModel model)
+        public virtual IActionResult StateEditPopup(StateProvinceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -469,8 +467,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(sp, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

@@ -131,7 +131,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult Create(string btnId, string formId, StorePickupPointModel model)
+        public IActionResult Create(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -159,8 +159,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             _storePickupPointService.InsertStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
         }
@@ -221,7 +219,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult Edit(string btnId, string formId, StorePickupPointModel model)
+        public IActionResult Edit(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -250,8 +248,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
         }

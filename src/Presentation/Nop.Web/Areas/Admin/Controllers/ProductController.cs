@@ -1460,7 +1460,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public virtual IActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
+        public virtual IActionResult RequiredProductAddPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1496,9 +1496,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             
-            ViewBag.productIdsInput = productIdsInput;
-            ViewBag.btnId = btnId;
-
             return View(model);
         }
 
@@ -1697,7 +1694,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult RelatedProductAddPopup(string btnId, string formId, ProductModel.AddRelatedProductModel model)
+        public virtual IActionResult RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1731,8 +1728,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -1874,7 +1869,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult CrossSellProductAddPopup(string btnId, string formId, ProductModel.AddCrossSellProductModel model)
+        public virtual IActionResult CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1907,8 +1902,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -2084,7 +2077,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult AssociatedProductAddPopup(string btnId, string formId, ProductModel.AddAssociatedProductModel model)
+        public virtual IActionResult AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2109,8 +2102,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -2530,7 +2521,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult EditProductTag(string btnId, string formId, ProductTagModel model)
+        public virtual IActionResult EditProductTag(ProductTagModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2548,8 +2539,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(productTag, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -3145,7 +3134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult TierPriceCreatePopup(string btnId, string formId, ProductModel.TierPriceModel model)
+        public virtual IActionResult TierPriceCreatePopup(ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3176,8 +3165,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateHasTierPricesProperty(product);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
 
                 return View(model);
             }
@@ -3239,7 +3226,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult TierPriceEditPopup(string btnId, string formId, ProductModel.TierPriceModel model)
+        public virtual IActionResult TierPriceEditPopup(ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3267,8 +3254,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
 
                 return View(model);
             }
@@ -3562,7 +3547,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
+        public virtual IActionResult ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3590,8 +3575,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -3605,7 +3588,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Product attributes. Condition
 
-        public virtual IActionResult ProductAttributeConditionPopup(string btnId, string formId, int productAttributeMappingId)
+        public virtual IActionResult ProductAttributeConditionPopup(int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3622,9 +3605,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             var model = new ProductAttributeConditionModel();
             model.ProductAttributeMappingId = productAttributeMapping.Id;
@@ -3718,8 +3698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeConditionPopup(string btnId, string formId,
-            ProductAttributeConditionModel model, IFormCollection form)
+        public virtual IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3830,8 +3809,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -3979,7 +3956,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public virtual IActionResult ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4043,8 +4020,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(pav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -4135,7 +4110,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public virtual IActionResult ProductAttributeValueEditPopup(ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4195,8 +4170,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateLocales(pav, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -4316,8 +4289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult AssociateProductToAttributeValuePopup(string productIdInput,
-            string productNameInput, ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
+        public virtual IActionResult AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4332,8 +4304,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.productIdInput = productIdInput;
-            ViewBag.productNameInput = productNameInput;
             ViewBag.productId = associatedProduct.Id;
             ViewBag.productName = associatedProduct.Name;
             return View(model);
@@ -4487,7 +4457,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public virtual IActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId)
+        public virtual IActionResult AddAttributeCombinationPopup(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4500,17 +4470,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
+            
             var model = new AddProductAttributeCombinationModel();
             PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
-            AddProductAttributeCombinationModel model, IFormCollection form)
+        public virtual IActionResult AddAttributeCombinationPopup(int productId, AddProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4523,10 +4490,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
-
+            
             //attributes
             string attributesXml = "";
             var warnings = new List<string>();

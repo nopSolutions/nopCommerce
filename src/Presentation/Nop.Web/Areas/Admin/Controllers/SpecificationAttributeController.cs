@@ -274,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public virtual IActionResult OptionCreatePopup(SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -295,8 +295,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateOptionLocales(sao, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -328,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public virtual IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -350,8 +348,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 UpdateOptionLocales(sao, model);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
