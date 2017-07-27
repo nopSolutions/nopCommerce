@@ -19,6 +19,8 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private const int SALT_KEY_SIZE = 5;
+
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -254,7 +256,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(5);
+                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -362,7 +364,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(5);
+                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                     }
