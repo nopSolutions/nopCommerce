@@ -12223,11 +12223,11 @@ namespace Nop.Services.Installation
             InstallShippingMethods();
             InstallDeliveryDates();
             InstallProductAvailabilityRanges();
-            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
-            InstallSettings(installSampleData);
             InstallTopicTemplates();
+            InstallSettings(installSampleData);
+            InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
