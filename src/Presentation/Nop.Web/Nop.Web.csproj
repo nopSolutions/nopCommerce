@@ -48,16 +48,22 @@
     </None>
   </ItemGroup>
     
-  <!-- This target execute after "Build" target -->
-  <Target Name="NopTarget" AfterTargets="Build">        
+  <!-- This target execute after "Build" target.
+  We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
+  <Target Name="NopTarget" AfterTargets="Build">
     <ItemGroup>   
-      <!-- Get all shadow copies of libraries -->
+      <!-- Get all the libraries from the shadow copy folder to remove them,
+      because depending on the settings, this may not happen when the application is starting,
+      but this can lead to unpredictable results during debugging of the project. -->
       <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" />
     </ItemGroup>
-    <!-- Delete shadow copies of libraries -->
+    <!-- Delete libraries from the shadow copy folder -->
     <Delete Files="@(ShadowCopiesLibraries)" />
-    <!-- Delete unnecessary libraries from plugins path -->
-    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\nop.proj" Targets="NopClear" />
+    <!-- When .net Core builds of any project it copys to output folder all libraries
+    on which the project depends with all the recursive dependencies.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment, you can't disable this behavior, which is why we have to manually delete all unnecessary libraries from plugins paths. -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Targets="NopClear" />
   </Target> 
       
 </Project>

@@ -10,8 +10,8 @@
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
     <RepositoryType>Git</RepositoryType>    
     
-    <OutputPath>$(MSBuildProjectDirectory)\Presentation\Nop.Web\bin\$(Configuration)</OutputPath>
-    <NopWebPath>$(MSBuildProjectDirectory)\Presentation\Nop.Web</NopWebPath>
+    <OutputPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web\bin\$(Configuration)</OutputPath>
+    <NopWebPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web</NopWebPath>
   </PropertyGroup>
   
   <!-- This task delete all sended files from all sended path if they exists -->
@@ -21,7 +21,7 @@
       <Paths ParameterType="System.String" Required="true" />  
       <!-- File names without extensions for deleting -->
       <FileNames ParameterType="System.String" Required="true" />  
-      <!-- Plugin path for clean, if it set then it replace Paths parameter -->
+      <!-- Plugin path for clean, if it set and not empty then it replace Paths parameter -->
       <PluginPath ParameterType="System.String" />
     </ParameterGroup>    
     <Task>         
@@ -66,15 +66,18 @@
     <ItemGroup>
       <!-- Get all libraries from /bin/{version}/ directory -->
       <BaseDllFiles Include="$(OutputPath)\*.dll;" />
-      <!-- Get file name for all libraries from /bin/{version}/ directory-->
+      <!-- Get file name without extension for all libraries from /bin/{version}/ directory-->
       <DllFilesName Include="@(BaseDllFiles->'%(filename)')" />
       <!-- Get plugins description files for next getting path for all plugins -->
       <PluginsDescription Include="$(NopWebPath)\Plugins\**\Description.txt;" />      
       <!-- Get paths for all plugins -->
       <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
-    </ItemGroup>
-        
-    <!-- Delete unnecessary libraries from plugins path -->
+    </ItemGroup>        
+    
+    <!-- When .net Core builds of any project it copys to output folder all libraries
+    on which the project depends with all the recursive dependencies.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment, you can't disable this behavior, which is why we have to manually delete all unnecessary libraries from plugins path(s). -->
     <NopClearPluginsPath Paths="@(PluginsFolders)" FileNames="@(DllFilesName)" PluginPath="$(PluginPath)" />        
   </Target> 
       
