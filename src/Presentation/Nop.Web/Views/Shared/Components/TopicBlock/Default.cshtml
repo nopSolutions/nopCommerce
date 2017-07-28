@@ -5,7 +5,7 @@
         $(document).ready(function () {
             $('#button-password-@Model.Id').click(function() {
                 var postData = {
-                    id: $("#@Html.IdFor(model => model.Id)").val(),
+                    id: $("#topic-@Model.Id").val(),
                     password: $('#password-@Model.Id').val()
                 };
                 addAntiForgeryToken(postData);
@@ -44,7 +44,7 @@
     </script>
     <div class="topic-password" id="ph-password-@Model.Id">
         <form asp-route="TopicAuthenticate" method="post">
-            <input asp-for="Id" type="hidden"/>
+            <input asp-for="Id" id="topic-@Model.Id" type="hidden"/>
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
             </div>
