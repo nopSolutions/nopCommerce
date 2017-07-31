@@ -1,0 +1,84 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl> 
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>    
+    
+    <OutputPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web\bin\$(Configuration)</OutputPath>
+    <NopWebPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web</NopWebPath>
+  </PropertyGroup>
+  
+  <!-- This task delete all sended files from all sended path if they exists -->
+  <UsingTask TaskName="NopClearPluginsPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">  
+    <ParameterGroup>
+      <!-- Paths for search and delete files -->
+      <Paths ParameterType="System.String" Required="true" />  
+      <!-- File names without extensions for deleting -->
+      <FileNames ParameterType="System.String" Required="true" />  
+      <!-- Plugin path for clean, if it set and not empty then it replace Paths parameter -->
+      <PluginPath ParameterType="System.String" />
+    </ParameterGroup>    
+    <Task>         
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />  
+      <Code Type="Fragment" Language="cs">  
+        <![CDATA[
+        if(!string.IsNullOrEmpty(PluginPath))
+        {
+            Paths = PluginPath;
+        }
+        var filesToDelete = "dotnet-bundle.exe;";
+        foreach (var pluginPath in Paths.Split(';'))
+        {            
+            foreach (var fileName in FileNames.Split(';'))
+            {
+                //delete dll file if it exist in current path
+                var dllfilePath = Path.Combine(pluginPath, fileName+".dll");               
+                if(File.Exists(dllfilePath))
+                    File.Delete(dllfilePath);
+                //delete pdb file if it exist in current path
+                var pdbfilePath = Path.Combine(pluginPath, fileName + ".pdb");
+                if (File.Exists(pdbfilePath))
+                    File.Delete(pdbfilePath);
+            }
+            
+            foreach(var fileName in filesToDelete.Split(';'))
+            {
+                //delete file if it exist in current path
+                var pdbfilePath = Path.Combine(pluginPath, fileName);
+                if (File.Exists(pdbfilePath))
+                    File.Delete(pdbfilePath);
+            }
+        }
+        return true;
+        ]]>  
+      </Code>  
+    </Task>  
+  </UsingTask>
+
+  <Target Name="NopClear"> 
+    <ItemGroup>
+      <!-- Get all libraries from /bin/{version}/ directory -->
+      <BaseDllFiles Include="$(OutputPath)\*.dll;" />
+      <!-- Get file name without extension for all libraries from /bin/{version}/ directory-->
+      <DllFilesName Include="@(BaseDllFiles->'%(filename)')" />
+      <!-- Get plugins description files for next getting path for all plugins -->
+      <PluginsDescription Include="$(NopWebPath)\Plugins\**\Description.txt;" />      
+      <!-- Get paths for all plugins -->
+      <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
+    </ItemGroup>        
+    
+    <!-- When .net Core builds of any project it copys to output folder all libraries
+    on which the project depends with all the recursive dependencies.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment, you can't disable this behavior, which is why we have to manually delete all unnecessary libraries from plugins path(s). -->
+    <NopClearPluginsPath Paths="@(PluginsFolders)" FileNames="@(DllFilesName)" PluginPath="$(PluginPath)" />        
+  </Target> 
+      
+</Project>
