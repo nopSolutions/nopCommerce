@@ -1302,6 +1302,10 @@ namespace Nop.Services.Orders
                 _customerService.UpdateCustomer(toCustomer);
                  
             }
+
+            //move selected checkout attributes
+            var checkoutAttributesXml = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, _storeContext.CurrentStore.Id);
         }
 
         #endregion
