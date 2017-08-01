@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Tasks;
 
 namespace Nop.Web.Controllers
