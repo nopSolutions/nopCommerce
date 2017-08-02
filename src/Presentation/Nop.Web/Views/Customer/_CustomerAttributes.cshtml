@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Catalog
 @foreach (var attribute in Model)
 {
-    string controlId = string.Format("customer_attribute_{0}", attribute.Id);
+    string controlId = $"customer_attribute_{attribute.Id}";
     string textPrompt = attribute.Name;
 
     <div class="inputs custom-attributes">

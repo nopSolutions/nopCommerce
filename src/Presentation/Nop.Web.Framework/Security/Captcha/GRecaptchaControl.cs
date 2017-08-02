@@ -34,7 +34,8 @@ namespace Nop.Web.Framework.Security.Captcha
                 var scriptCaptchaOptionsTag = new TagBuilder("script");
                 scriptCaptchaOptionsTag.TagRenderMode = TagRenderMode.Normal;
                 scriptCaptchaOptionsTag.Attributes.Add("type", MimeTypes.TextJavascript);
-                scriptCaptchaOptionsTag.InnerHtml.AppendHtml(string.Format("var RecaptchaOptions = {{ theme: '{0}', tabindex: 0 }}; ", Theme));
+                scriptCaptchaOptionsTag.InnerHtml.AppendHtml(
+                    $"var RecaptchaOptions = {{ theme: '{Theme}', tabindex: 0 }}; ");
                 
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 var scriptLoadApiTag = new TagBuilder("script");
@@ -51,7 +52,8 @@ namespace Nop.Web.Framework.Security.Captcha
                 var scriptCallbackTag = new TagBuilder("script");
                 scriptCallbackTag.TagRenderMode = TagRenderMode.Normal;
                 scriptCallbackTag.Attributes.Add("type", MimeTypes.TextJavascript);
-                scriptCallbackTag.InnerHtml.AppendHtml(string.Format("var onloadCallback = function() {{grecaptcha.render('{0}', {{'sitekey' : '{1}', 'theme' : '{2}' }});}};", Id, PublicKey, Theme));
+                scriptCallbackTag.InnerHtml.AppendHtml(
+                    $"var onloadCallback = function() {{grecaptcha.render('{Id}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}' }});}};");
                
                 var captchaTag = new TagBuilder("div");
                 captchaTag.TagRenderMode = TagRenderMode.Normal;
@@ -59,7 +61,8 @@ namespace Nop.Web.Framework.Security.Captcha
                
                 var scriptLoadApiTag = new TagBuilder("script");
                 scriptLoadApiTag.TagRenderMode = TagRenderMode.Normal;
-                scriptLoadApiTag.Attributes.Add("src", RECAPTCHA_API_URL_VERSION2 + (string.IsNullOrEmpty(Language) ? "" : string.Format("&hl={0}", Language)));
+                scriptLoadApiTag.Attributes.Add("src", RECAPTCHA_API_URL_VERSION2 + (string.IsNullOrEmpty(Language) ? "" : $"&hl={Language}"
+                                                       ));
                 scriptLoadApiTag.Attributes.Add("async", null);
                 scriptLoadApiTag.Attributes.Add("defer", null);
 

@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!GetAllowedFileTypes().Contains(fileExtension))
             {
                 ViewData["resultCode"] = "failed";
-                ViewData["result"] = string.Format("Files with {0} extension cannot be uploaded", fileExtension);
+                ViewData["result"] = $"Files with {fileExtension} extension cannot be uploaded";
                 return View();
             }
 
@@ -76,7 +76,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             ViewData["resultCode"] = "success";
             ViewData["result"] = "success";
-            ViewData["filename"] = this.Url.Content(string.Format("{0}{1}", directory, fileName));
+            ViewData["filename"] = this.Url.Content($"{directory}{fileName}");
             return View();
         }
     }

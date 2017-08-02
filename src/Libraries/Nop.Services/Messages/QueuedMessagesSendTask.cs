@@ -60,7 +60,7 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    _logger.Error($"Error sending e-mail. {exc.Message}", exc);
                 }
                 finally
                 {

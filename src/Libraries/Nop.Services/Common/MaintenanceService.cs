@@ -79,7 +79,7 @@ namespace Nop.Services.Common
             {
                 //stored procedures are enabled and supported by the database
                 var tableName = _dbContext.GetTableName<T>();
-                var result = _dbContext.SqlQuery<decimal>(string.Format("SELECT IDENT_CURRENT('[{0}]')", tableName));
+                var result = _dbContext.SqlQuery<decimal>($"SELECT IDENT_CURRENT('[{tableName}]')");
                 return Convert.ToInt32(result.FirstOrDefault());
             }
             
@@ -102,7 +102,7 @@ namespace Nop.Services.Common
                 if (currentIdent.HasValue && ident > currentIdent.Value)
                 {
                     var tableName = _dbContext.GetTableName<T>();
-                    _dbContext.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT([{0}], RESEED, {1})", tableName, ident));
+                    _dbContext.ExecuteSqlCommand($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
                 }
             }
             else

@@ -33,7 +33,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
             var method = WebRequestMethods.Http.Post;
             var acceptType = "application/vnd.cpc.ship.rate-v3+xml";
-            var url = string.Format("{0}/rs/ship/price", GetBaseUrl(isSandbox));
+            var url = $"{GetBaseUrl(isSandbox)}/rs/ship/price";
             var response = Request(parameters.ToString(), apiKey, method, acceptType, url, out errors);
             if (response == null)
                 return null;
@@ -65,7 +65,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         {
             var method = "GET";
             var acceptType = "application/vnd.cpc.ship.rate-v3+xml";
-            var url = string.Format("{0}/rs/ship/service?country={1}", GetBaseUrl(isSandbox), countryCode);
+            var url = $"{GetBaseUrl(isSandbox)}/rs/ship/service?country={countryCode}";
             var response = Request(null, apiKey, method, acceptType, url, out errors);
             if (response == null)
                 return null;
@@ -127,7 +127,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         {
             var method = "GET";
             var acceptType = "application/vnd.cpc.track+xml";
-            var url = string.Format("{0}/vis/track/pin/{1}/detail", GetBaseUrl(isSandbox), trackingNumber);
+            var url = $"{GetBaseUrl(isSandbox)}/vis/track/pin/{trackingNumber}/detail";
 
             var response = Request(null, apiKey, method, acceptType, url, out errors);
 
@@ -183,7 +183,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = method;
                 request.Accept = acceptType;
-                request.Headers.Add(HttpRequestHeader.Authorization, string.Format("Basic {0}", authorization));
+                request.Headers.Add(HttpRequestHeader.Authorization, $"Basic {authorization}");
                 request.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-CA");
 
                 if (method == WebRequestMethods.Http.Post)
@@ -212,7 +212,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
                         var serializerResponse = new XmlSerializer(typeof(messages));
                         var errorMessages = (messages)serializerResponse.Deserialize(streamReader);
                         if (errorMessages != null)
-                            errorMessages.message.ToList().ForEach(error => errorBuilder.AppendLine(string.Format("Canada Post error {0}: {1}", error.code, error.description)));
+                            errorMessages.message.ToList().ForEach(error => errorBuilder.AppendLine(
+                                $"Canada Post error {error.code}: {error.description}"));
                     }
                 }
                 catch (Exception e)

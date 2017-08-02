@@ -45,7 +45,7 @@ namespace Nop.Data
             var msg = string.Empty;
             foreach (var validationErrors in exc.EntityValidationErrors)
                 foreach (var error in validationErrors.ValidationErrors)
-                    msg += string.Format("Property: {0} Error: {1}", error.PropertyName, error.ErrorMessage) + Environment.NewLine;
+                    msg += $"Property: {error.PropertyName} Error: {error.ErrorMessage}" + Environment.NewLine;
             return msg;
         }
 

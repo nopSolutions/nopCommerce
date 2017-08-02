@@ -114,7 +114,7 @@ namespace Nop.Web.Factories
                 var forums = _forumService.GetAllForumsByGroupId(fg.Id);
                 foreach (var f in forums)
                 {
-                    forumsList.Add(new SelectListItem { Text = string.Format("{0}{1}", separator, f.Name), Value = f.Id.ToString() });
+                    forumsList.Add(new SelectListItem { Text = $"{separator}{f.Name}", Value = f.Id.ToString() });
                 }
             }
 
@@ -567,10 +567,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = String.Format("{0}:\n{1}\n", quotePost.Customer.FormatUserName(), quotePostText);
+                                text = $"{quotePost.Customer.FormatUserName()}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = String.Format("[quote={0}]{1}[/quote]", quotePost.Customer.FormatUserName(), BBCodeHelper.RemoveQuotes(quotePostText));
+                                text = $"[quote={quotePost.Customer.FormatUserName()}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -711,7 +711,7 @@ namespace Nop.Web.Factories
                     forumsSelectList.Add(
                         new SelectListItem
                         {
-                            Text = string.Format("{0}{1}", separator, f.Name),
+                            Text = $"{separator}{f.Name}",
                             Value = f.Id.ToString()
                         });
                 }

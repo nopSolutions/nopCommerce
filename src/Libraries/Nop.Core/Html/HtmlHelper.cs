@@ -115,7 +115,7 @@ namespace Nop.Core.Html
             }
             catch (Exception exc)
             {
-                text = string.Format("Text cannot be formatted. Error: {0}", exc.Message);
+                text = $"Text cannot be formatted. Error: {exc.Message}";
             }
             return text;
         }

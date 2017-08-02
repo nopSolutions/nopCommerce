@@ -526,7 +526,7 @@ namespace Nop.Services.Orders
                                     if (selectedPickupPoint != null)
                                         shippingTotal = selectedPickupPoint.PickupFee;
                                     else
-                                        updateOrderParameters.Warnings.Add(string.Format("Shipping method {0} could not be loaded", updatedOrder.ShippingMethod));
+                                        updateOrderParameters.Warnings.Add($"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
                                 }
                                 else
                                     updateOrderParameters.Warnings.AddRange(pickupPointsResponse.Errors);
@@ -545,7 +545,7 @@ namespace Nop.Services.Orders
                                 if (shippingOption != null)
                                     shippingTotal = shippingOption.Rate;
                                 else
-                                    updateOrderParameters.Warnings.Add(string.Format("Shipping method {0} could not be loaded", updatedOrder.ShippingMethod));
+                                    updateOrderParameters.Warnings.Add($"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
                             }
                             else
                                 updateOrderParameters.Warnings.AddRange(shippingOptionsResponse.Errors);
@@ -701,7 +701,7 @@ namespace Nop.Services.Orders
 
             updatedOrder.OrderTax = taxTotal;
             updatedOrder.TaxRates = taxRates.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2};   ", current, next.Key.ToString(CultureInfo.InvariantCulture), next.Value.ToString(CultureInfo.InvariantCulture)));
+                $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
 
             #endregion
 

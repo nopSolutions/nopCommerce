@@ -196,7 +196,7 @@ namespace Nop.Web.Factories
                 replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
             {
                 model.ReplyToMessageId = replyToPM.Id;
-                model.Subject = string.Format("Re: {0}", replyToPM.Subject);
+                model.Subject = $"Re: {replyToPM.Subject}";
             }
 
             return model;

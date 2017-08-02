@@ -24,7 +24,7 @@
                 <div class="product-review-item">
                     <div class="review-item-head">
                         <div class="review-title">
-                            <strong>@review.Title</strong>@(!string.IsNullOrEmpty(review.ApprovalStatus) ? string.Format(" - {0}", review.ApprovalStatus) : null)
+                            <strong>@review.Title</strong>@(!string.IsNullOrEmpty(review.ApprovalStatus) ? $" - {review.ApprovalStatus}" : null)
                         </div>
                         <div class="product-review-box">
                             <div class="rating">

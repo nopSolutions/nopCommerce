@@ -60,7 +60,7 @@
                                 <input name="pickup-points-id" id="pickup-points-id" type="hidden" value="@($"{point.Id}___{point.ProviderSystemName}")"/>
                                 <ul>
                                     <li class="single-pickup-point name">@point.Name</li>
-                                    <li class="single-pickup-point address">@(string.Format("{0} {1} {2} {3}", point.Address, point.City, point.StateName, point.CountryName))</li>
+                                    <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.StateName} {point.CountryName}")</li>
                                     @if (!string.IsNullOrEmpty(point.PickupFee))
                                     {
                                         <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -97,14 +97,14 @@
                                         {
                                             addressLine.AppendFormat(", {0}", point.PickupFee);
                                         }
-                                        <option value="@(string.Format("{0}___{1}", point.Id, point.ProviderSystemName))">@(addressLine)</option>
+                                        <option value="@($"{point.Id}___{point.ProviderSystemName}")">@(addressLine)</option>
                                     }
                                 </select>
                             }
                         </div>
                         if (Model.DisplayPickupPointsOnMap)
                         {
-                            var src = string.Format("https://maps.googleapis.com/maps/api/js{0}", string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : string.Format("?key={0}", Model.GoogleMapsApiKey));
+                            var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
                             <div class="pickup-points-map" id="map">
                                 <script type="text/javascript">
                     var markers = new Map();
@@ -123,9 +123,8 @@
                                 @for (var i = 0; i < Model.PickupPoints.Count; i++)
                                 {
                                     var point = Model.PickupPoints[i];
-                                    var value = string.Format("{0}___{1}", point.Id, point.ProviderSystemName);
-                                    var pickupPointInfo = Html.Raw(string.Format(@"<div class='pickup-point-info'><ul><li><strong>{0}</strong></li><li>{1}</li><li>{2}</li></ul></div>",
-                                        point.Name, point.OpeningHours, point.PickupFee));
+                                    var value = $"{point.Id}___{point.ProviderSystemName}";
+                                    var pickupPointInfo = Html.Raw($@"<div class='pickup-point-info'><ul><li><strong>{point.Name}</strong></li><li>{point.OpeningHours}</li><li>{point.PickupFee}</li></ul></div>");
                                     if (point.Latitude != null && point.Longitude != null)
                                     {
                                         <text>
@@ -155,7 +154,7 @@
                                     }
                                     else
                                     {
-                                        var address = string.Format("{0} {1} {2} {3}", point.Address, point.City, point.ZipPostalCode, point.CountryName);
+                                        var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
                                         <text>
                                             geocoder.geocode({ 'address': "@address" },
                                                 function(results, status) {

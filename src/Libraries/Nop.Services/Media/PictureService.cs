@@ -177,7 +177,7 @@ namespace Nop.Services.Media
         protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             var filePath = GetPictureLocalPath(fileName);
             if (!File.Exists(filePath))
                 return new byte[0];
@@ -193,7 +193,7 @@ namespace Nop.Services.Media
         protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
@@ -207,7 +207,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string fileName = string.Format("{0}_0.{1}", picture.Id.ToString("0000000"), lastPart);
+            string fileName = $"{picture.Id.ToString("0000000")}_0.{lastPart}";
             string filePath = GetPictureLocalPath(fileName);
             if (File.Exists(filePath))
             {
@@ -221,7 +221,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
+            string filter = $"{picture.Id.ToString("0000000")}*.*";
             var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
@@ -405,10 +405,7 @@ namespace Nop.Services.Media
             else
             {
                 string fileExtension = Path.GetExtension(filePath);
-                string thumbFileName = string.Format("{0}_{1}{2}",
-                    Path.GetFileNameWithoutExtension(filePath),
-                    targetSize,
-                    fileExtension);
+                string thumbFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
@@ -503,14 +500,14 @@ namespace Nop.Services.Media
             if (targetSize == 0)
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
-                    ? string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart)
-                    : string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
+                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}.{lastPart}"
+                    : $"{picture.Id.ToString("0000000")}.{lastPart}";
             }
             else
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
-                    ? string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart)
-                    : string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
+                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}_{targetSize}.{lastPart}"
+                    : $"{picture.Id.ToString("0000000")}_{targetSize}.{lastPart}";
             }
             string thumbFilePath = GetThumbLocalPath(thumbFileName);
 
@@ -540,7 +537,7 @@ namespace Nop.Services.Media
                                 }
                                 catch (ArgumentException exc)
                                 {
-                                    _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id),
+                                    _logger.Error($"Error generating picture thumb. ID={picture.Id}",
                                         exc);
                                 }
 

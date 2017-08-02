@@ -101,7 +101,7 @@ namespace Nop.Web.Controllers
             {
                 var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
                 //TODO add locale resource
-                _logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath), 
+                _logger.Error($"Error 404. The requested page ({statusCodeReExecuteFeature?.OriginalPath}) was not found", 
                     customer: _workContext.CurrentCustomer);
             }
 

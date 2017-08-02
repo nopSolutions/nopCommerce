@@ -25,29 +25,29 @@ namespace Nop.Web.Areas.Admin.Helpers
 
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
-            var langFile = string.Format("{0}.js", languageCulture);
+            var langFile = $"{languageCulture}.js";
             var path = Path.Combine(hostingEnvironment.WebRootPath, "lib\\tinymce\\langs");
-            var fileExists = File.Exists(string.Format("{0}{1}", path, langFile));
+            var fileExists = File.Exists($"{path}{langFile}");
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Replace('-', '_');
-                langFile = string.Format("{0}.js", languageCulture);
-                fileExists = File.Exists(string.Format("{0}{1}", path, langFile));
+                langFile = $"{languageCulture}.js";
+                fileExists = File.Exists($"{path}{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Replace('-', '_');
-                langFile = string.Format("{0}.js", languageCulture);
-                fileExists = File.Exists(string.Format("{0}{1}", path, langFile));
+                langFile = $"{languageCulture}.js";
+                fileExists = File.Exists($"{path}{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Split('_', '-')[0];
-                langFile = string.Format("{0}.js", languageCulture);
-                fileExists = File.Exists(string.Format("{0}{1}", path, langFile));
+                langFile = $"{languageCulture}.js";
+                fileExists = File.Exists($"{path}{langFile}");
             }
 
             return fileExists ? languageCulture : string.Empty;

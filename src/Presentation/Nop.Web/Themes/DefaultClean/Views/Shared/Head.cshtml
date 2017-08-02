@@ -12,16 +12,16 @@
     //add browser specific CSS files
     if (isIe8)
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/ie8.css", themeName));
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/ie8.css");
     }
     //add main CSS file
     if (supportRtl)
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/styles.rtl.css", themeName));
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.rtl.css");
     }
     else
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/styles.css", themeName));
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
     }
     //add jQuery UI css file
     Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");

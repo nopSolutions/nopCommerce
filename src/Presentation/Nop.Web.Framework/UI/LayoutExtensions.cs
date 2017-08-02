@@ -349,7 +349,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(classes))
                 return null;
 
-            var result = includeClassElement ? string.Format("class=\"{0}\"", classes) : classes;
+            var result = includeClassElement ? $"class=\"{classes}\"" : classes;
             return new HtmlString(result);
         }
 

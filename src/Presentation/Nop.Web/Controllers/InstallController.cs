@@ -92,9 +92,9 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = string.Format("CREATE DATABASE [{0}]", databaseName);
+                string query = $"CREATE DATABASE [{databaseName}]";
                 if (!String.IsNullOrWhiteSpace(collation))
-                    query = string.Format("{0} COLLATE {1}", query, collation);
+                    query = $"{query} COLLATE {collation}";
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
                     conn.Open();

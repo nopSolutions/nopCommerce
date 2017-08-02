@@ -112,17 +112,17 @@ namespace Nop.Plugin.Shipping.Fedex
 
                             //if (trackDetail.ShipmentWeight != null)
                             //{
-                            //    var shipmentWeight = string.Format("{0} {1}", trackDetail.ShipmentWeight.Value, trackDetail.ShipmentWeight.Units);
+                            //    var shipmentWeight = $"{trackDetail.ShipmentWeight.Value} {trackDetail.ShipmentWeight.Units}";
                             //}
                             //else
                             //{
-                            //    var shipmentWeight = string.Format("{0} {1}", trackDetail.PackageWeight.Value, trackDetail.PackageWeight.Units);
+                            //    var shipmentWeight = $"{trackDetail.PackageWeight.Value} {trackDetail.PackageWeight.Units}";
                             //}
 
                             //var shipDate = trackDetail.ShipTimestamp;
                             //var serviceType = trackDetail.ServiceInfo;
                             //var packageCount = int.Parse(trackDetail.PackageCount);
-                            //var destination = string.Format("{0}, {1} {2}", trackDetail.DestinationAddress.City, trackDetail.DestinationAddress.StateOrProvinceCode, trackDetail.DestinationAddress.CountryCode);
+                            //var destination = $"{trackDetail.DestinationAddress.City}, {trackDetail.DestinationAddress.StateOrProvinceCode} {trackDetail.DestinationAddress.CountryCode}";
                             //var deliveryDate = trackDetail.ActualDeliveryTimestamp;
 
                             //Set the TrackingActivity
@@ -134,7 +134,7 @@ namespace Nop.Plugin.Shipping.Fedex
                                 {
                                     sse.Date = trackevent.Timestamp;
                                 }
-                                sse.EventName = String.Format("{0} ({1})", trackevent.EventDescription, trackevent.EventType);
+                                sse.EventName = $"{trackevent.EventDescription} ({trackevent.EventType})";
                                 sse.Location = trackevent.Address.City;
                                 sse.CountryCode = trackevent.Address.CountryCode;
                                 //other properties (not used yet)
@@ -155,7 +155,7 @@ namespace Nop.Plugin.Shipping.Fedex
             }
             catch (Exception ex)
             {
-                _logger.Error(string.Format("Error while getting Fedex shipment tracking info - {0}", trackingNumber), ex);
+                _logger.Error($"Error while getting Fedex shipment tracking info - {trackingNumber}", ex);
             }
 
             return result;

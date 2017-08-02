@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ListRss(int languageId)
         {
             var feed = new RssFeed(
-                string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: News",
                 "News",
                 new Uri(_webHelper.GetStoreLocation(false)),
                 DateTime.UtcNow);
@@ -111,7 +111,7 @@ namespace Nop.Web.Controllers
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
+                items.Add(new RssItem(n.Title, n.Short, new Uri(newsUrl), $"urn:store:{_storeContext.CurrentStore.Id}:news:blog:{n.Id}", n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));

@@ -302,7 +302,7 @@ namespace Nop.Services.Tax
             {
                 foreach (var error in calculateTaxResult.Errors)
                 {
-                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
                 }
             }
         }

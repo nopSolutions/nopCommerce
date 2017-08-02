@@ -479,21 +479,21 @@ namespace Nop.Services.ExportImport
                 var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesNames.ToArray());
                 if (notExistingCategories.Any())
                 {
-                    throw new ArgumentException(string.Format("The following category name(s) don't exist - {0}", string.Join(", ", notExistingCategories)));
+                    throw new ArgumentException($"The following category name(s) don't exist - {string.Join(", ", notExistingCategories)}");
                 }
 
                 //performance optimization, the check for the existence of the manufacturers in one SQL request
                 var notExistingManufacturers = _manufacturerService.GetNotExistingManufacturers(allManufacturersNames.ToArray());
                 if (notExistingManufacturers.Any())
                 {
-                    throw new ArgumentException(string.Format("The following manufacturer name(s) don't exist - {0}", string.Join(", ", notExistingManufacturers)));
+                    throw new ArgumentException($"The following manufacturer name(s) don't exist - {string.Join(", ", notExistingManufacturers)}");
                 }
 
                 //performance optimization, the check for the existence of the product attributes in one SQL request
                 var notExistingProductAttributes = _productAttributeService.GetNotExistingAttributes(allAttributeIds.ToArray());
                 if (notExistingProductAttributes.Any())
                 {
-                    throw new ArgumentException(string.Format("The following product attribute ID(s) don't exist - {0}", string.Join(", ", notExistingProductAttributes)));
+                    throw new ArgumentException($"The following product attribute ID(s) don't exist - {string.Join(", ", notExistingProductAttributes)}");
                 }
 
                 //performance optimization, load all products by SKU in one SQL request

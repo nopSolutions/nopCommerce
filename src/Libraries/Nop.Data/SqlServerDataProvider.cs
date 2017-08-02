@@ -21,7 +21,7 @@ namespace Nop.Data
             if (!File.Exists(filePath))
             {
                 if (throwExceptionIfNonExists)
-                    throw new ArgumentException(string.Format("Specified file doesn't exist - {0}", filePath));
+                    throw new ArgumentException($"Specified file doesn't exist - {filePath}");
                 
                 return new string[0];
             }

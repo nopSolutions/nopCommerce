@@ -546,7 +546,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = backupFiles.Select(p => new {p.Name,
-                    Length = string.Format("{0:F2} Mb", p.Length / 1024f / 1024f),
+                    Length = $"{p.Length / 1024f / 1024f:F2} Mb",
                     Link = _webHelper.GetStoreLocation(false) + "db_backups/" + p.Name
                 }),
                 Total = backupFiles.Count

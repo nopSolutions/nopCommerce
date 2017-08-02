@@ -112,7 +112,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
 
-            string formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
+            string formContent = $"cmd=_notify-synch&at={_paypalStandardPaymentSettings.PdtToken}&tx={tx}";
             req.ContentLength = formContent.Length;
             
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -156,7 +156,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
 
-            var formContent = string.Format("cmd=_notify-validate&{0}", formString);
+            var formContent = $"cmd=_notify-validate&{formString}";
             req.ContentLength = formContent.Length;
             
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))

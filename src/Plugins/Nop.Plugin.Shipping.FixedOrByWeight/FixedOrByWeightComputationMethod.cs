@@ -64,7 +64,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// <returns>Rate</returns>
         private decimal GetRate(int shippingMethodId)
         {
-            var key = string.Format("ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{0}", shippingMethodId);
+            var key = $"ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{shippingMethodId}";
             var rate = _settingService.GetSettingByKey<decimal>(key);
             return rate;
         }

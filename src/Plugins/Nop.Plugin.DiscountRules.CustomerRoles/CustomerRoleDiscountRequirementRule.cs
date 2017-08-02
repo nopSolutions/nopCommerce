@@ -32,7 +32,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (request.Customer == null)
                 return result;
 
-            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", request.DiscountRequirementId));
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(
+                $"DiscountRequirement.MustBeAssignedToCustomerRole-{request.DiscountRequirementId}");
             if (restrictedToCustomerRoleId == 0)
                 return result;
 
@@ -58,7 +59,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesCustomerRoles/Configure/?discountId=" + discountId;
             if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+                result += $"&discountRequirementId={discountRequirementId.Value}";
             return result;
         }
 

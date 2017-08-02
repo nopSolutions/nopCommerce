@@ -34,7 +34,7 @@ namespace Nop.Core.Plugins
 
             if (string.IsNullOrWhiteSpace(logoExtension)) return null; //No logo file was found with any of the supported extensions.
 
-            string logoUrl = string.Format("{0}plugins/{1}/logo.{2}", webHelper.GetStoreLocation(), pluginDirectory.Name, logoExtension);
+            string logoUrl = $"{webHelper.GetStoreLocation()}plugins/{pluginDirectory.Name}/logo.{logoExtension}";
             return logoUrl;
         }
 

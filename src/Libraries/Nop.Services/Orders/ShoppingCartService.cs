@@ -656,7 +656,7 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        warnings.Add(string.Format("Associated product cannot be loaded - {0}", attributeValue.AssociatedProductId));
+                        warnings.Add($"Associated product cannot be loaded - {attributeValue.AssociatedProductId}");
                     }
                 }
             }

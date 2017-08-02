@@ -1546,7 +1546,7 @@ namespace Nop.Web.Factories
                             m.ValueRaw = psa.CustomValue;
                             break;
                         case SpecificationAttributeType.Hyperlink:
-                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
+                            m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
                             break;
                         default:
                             break;

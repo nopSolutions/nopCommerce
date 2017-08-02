@@ -867,7 +867,7 @@ namespace Nop.Services.Shipping
                         foreach (string error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
-                            _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
+                            _logger.Warning($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
                         }
                         //clear the shipping options in this case
                         srcmShippingOptions = new List<ShippingOption>();
@@ -933,7 +933,7 @@ namespace Nop.Services.Shipping
                     foreach (string error in pickPointsResponse.Errors)
                     {
                         result.AddError(error);
-                        _logger.Warning(string.Format("PickupPoints ({0}). {1}", provider.PluginDescriptor.FriendlyName, error));
+                        _logger.Warning($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
                     }
                 }
             }

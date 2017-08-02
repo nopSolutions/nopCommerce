@@ -84,14 +84,14 @@ namespace Nop.Services.Catalog
                 {
                     //not possible because "DisplayLocale" should be always specified
                     //but anyway let's just handle this behavior
-                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
+                    result = $"{amount.ToString("N")} ({targetCurrency.CurrencyCode})";
                     return result;
                 }
             }
 
             //display currency code?
             if (showCurrency && _currencySettings.DisplayCurrencyLabel)
-                result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
+                result = $"{result} ({targetCurrency.CurrencyCode})";
             return result;
         }
 

@@ -228,7 +228,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected virtual void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
         {
-            var dataKey = string.Format("nop.notifications.{0}", type);
+            var dataKey = $"nop.notifications.{type}";
 
             if (persistForTheNextRequest)
             {

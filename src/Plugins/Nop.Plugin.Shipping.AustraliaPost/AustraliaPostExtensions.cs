@@ -17,7 +17,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                     switch (property.Name.ToLower())
                     {
                         case "name":
-                            shippingOption.Name = string.Format("Australia Post. {0}", property.Value);
+                            shippingOption.Name = $"Australia Post. {property.Value}";
                             break;
                         case "price":
                             decimal rate;

@@ -840,7 +840,7 @@ namespace Nop.Plugin.Shipping.Fedex
                             reply.Notifications.Length > 0 &&
                             !String.IsNullOrEmpty(reply.Notifications[0].Message))
                         {
-                            response.AddError(string.Format("{0} (code: {1})", reply.Notifications[0].Message, reply.Notifications[0].Code));
+                            response.AddError($"{reply.Notifications[0].Message} (code: {reply.Notifications[0].Code})");
                             return response;
                         }
 

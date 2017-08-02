@@ -99,7 +99,7 @@ namespace Nop.Tests
         {
             if (!string.Equals(actual, expected, StringComparison.InvariantCultureIgnoreCase))
             {
-                var message = string.Format("Expected {0} but was {1}", expected, actual);
+                var message = $"Expected {expected} but was {actual}";
                 throw new AssertionException(message);
             }
         }
@@ -142,7 +142,7 @@ namespace Nop.Tests
                 if (filterByEntities.Any(f => f == propertyInfo.Name))
                     continue;
                
-                Assert.AreEqual(values[propertyInfo.Name], propertyInfo.GetValue(expected), string.Format("The property \"{0}.{1}\" of these objects is not equal", typeof(T).Name, propertyInfo.Name));
+                Assert.AreEqual(values[propertyInfo.Name], propertyInfo.GetValue(expected), $"The property \"{typeof(T).Name}.{propertyInfo.Name}\" of these objects is not equal");
             }
 
             return actual;

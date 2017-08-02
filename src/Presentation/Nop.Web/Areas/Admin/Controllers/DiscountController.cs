@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
+            string url = $"{_webHelper.GetStoreLocation()}{discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId)}";
             return url;
         }
         
@@ -535,7 +535,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //set identifier as group name (if not specified)
             if (string.IsNullOrEmpty(name))
             {
-                discountRequirementGroup.DiscountRequirementRuleSystemName = string.Format("#{0}", discountRequirementGroup.Id);
+                discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
                 _discountService.UpdateDiscount(discount);
             }
 

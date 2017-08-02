@@ -86,7 +86,7 @@ namespace Nop.Services.Messages
 
                 //wrap the value in quotes
                 if (stringWithQuotes && tokenValue is string)
-                    tokenValue = string.Format("\"{0}\"", tokenValue);
+                    tokenValue = $"\"{tokenValue}\"";
                 else
                 {
                     //do not encode URLs
@@ -94,7 +94,7 @@ namespace Nop.Services.Messages
                         tokenValue = WebUtility.HtmlEncode(tokenValue.ToString());
                 }
                 
-                template = Replace(template, string.Format(@"%{0}%", token.Key), tokenValue.ToString());
+                template = Replace(template, $@"%{token.Key}%", tokenValue.ToString());
             }
 
             return template;

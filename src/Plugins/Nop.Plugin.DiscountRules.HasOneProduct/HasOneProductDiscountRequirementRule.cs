@@ -31,7 +31,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirementId));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(
+                $"DiscountRequirement.RestrictedProductIds-{request.DiscountRequirementId}");
             if (String.IsNullOrWhiteSpace(restrictedProductIds))
             {
                 //valid
@@ -160,7 +161,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesHasOneProduct/Configure/?discountId=" + discountId;
             if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+                result += $"&discountRequirementId={discountRequirementId.Value}";
             return result;
         }
 

@@ -260,7 +260,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var orderTotalSentToPayPal = order.GetAttribute<decimal?>(PayPalHelper.OrderTotalSentToPayPal);
                     if (orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
-                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                        string errorStr =
+                            $"PayPal PDT. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                         //log
                         _logger.Error(errorStr);
                         //order note
@@ -441,7 +442,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             //failed payment
                                             var failedPaymentResult = new ProcessPaymentResult
                                             {
-                                                Errors = new[] { string.Format("PayPal IPN. Recurring payment is {0} .", payment_status) },
+                                                Errors = new[] {$"PayPal IPN. Recurring payment is {payment_status} ."},
                                                 RecurringPaymentFailed = true
                                             };
                                             _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
@@ -520,7 +521,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr =
+                                                    $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
@@ -551,7 +553,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr =
+                                                    $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note

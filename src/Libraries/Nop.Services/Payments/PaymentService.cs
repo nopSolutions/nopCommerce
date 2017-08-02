@@ -120,7 +120,7 @@ namespace Nop.Services.Payments
             if (paymentMethod == null)
                 throw new ArgumentNullException(nameof(paymentMethod));
 
-            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
             var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey);
             if (restictedCountryIds == null)
                 restictedCountryIds = new List<int>();
@@ -138,7 +138,7 @@ namespace Nop.Services.Payments
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             //we should be sure that countryIds is of type List<int> (not IList<int>)
-            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
             _settingService.SetSetting(settingKey, countryIds);
         }
 

@@ -816,7 +816,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 int stockQuantity = 0;
                 foreach (var formKey in formData.Keys)
                 {
-                    if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"warehouse_qty_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(formData[formKey], out stockQuantity);
                         break;
@@ -826,7 +826,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //parse reserved quantity
                 int reservedQuantity = 0;
                 foreach (string formKey in formData.Keys)
-                    if (formKey.Equals(string.Format("warehouse_reserved_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"warehouse_reserved_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(formData[formKey], out reservedQuantity);
                         break;
@@ -835,7 +835,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //parse "used" field
                 bool used = false;
                 foreach (string formKey in formData.Keys)
-                    if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"warehouse_used_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int tmp;
                         int.TryParse(formData[formKey], out tmp);
@@ -844,8 +844,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
 
                 //quantity change history message
-                var message = string.Format("{0} {1}", _localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses"),
-                        _localizationService.GetResource("Admin.StockQuantityHistory.Messages.Edit"));
+                var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {_localizationService.GetResource("Admin.StockQuantityHistory.Messages.Edit")}";
 
                 var existingPwI = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
                 if (existingPwI != null)
@@ -3374,9 +3373,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(x.ConditionAttributeXml).FirstOrDefault();
                     var conditionValue = _productAttributeParser.ParseProductAttributeValues(x.ConditionAttributeXml).FirstOrDefault();
                     if (conditionAttribute != null && conditionValue != null)
-                        attributeModel.ConditionString = string.Format("{0}: {1}",
-                            WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name),
-                            WebUtility.HtmlEncode(conditionValue.Name));
+                        attributeModel.ConditionString = $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
                     else
                         attributeModel.ConditionString = string.Empty;
                     return attributeModel;
@@ -3723,7 +3720,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
-                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    string controlId = $"product_attribute_{attribute.Id}";
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -3885,7 +3882,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         AttributeValueTypeName = x.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
                         AssociatedProductId = x.AssociatedProductId,
                         AssociatedProductName = associatedProduct != null ? associatedProduct.Name : "",
-                        Name = x.ProductAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                        Name = x.ProductAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : $"{x.Name} - {x.ColorSquaresRgb}",
                         ColorSquaresRgb = x.ColorSquaresRgb,
                         ImageSquaresPictureId = x.ImageSquaresPictureId,
                         PriceAdjustment = x.PriceAdjustment,
@@ -4498,7 +4495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .ToList();
                 foreach (var attribute in attributes)
                 {
-                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    string controlId = $"product_attribute_{attribute.Id}";
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:

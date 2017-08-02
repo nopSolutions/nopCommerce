@@ -322,9 +322,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
                             {
                                 Name = option.servicename,
                                 Rate = PriceToPrimaryStoreCurrency(option.pricedetails.due * totalParcels),
-                                Description = string.Format("Delivery {0}into {1} parcels", 
-                                    option.servicestandard != null && !string.IsNullOrEmpty(option.servicestandard.expectedtransittime) 
-                                    ? string.Format("in {0} days ", option.servicestandard.expectedtransittime) : string.Empty, totalParcels),
+                                Description =
+                                    $"Delivery {(option.servicestandard != null && !string.IsNullOrEmpty(option.servicestandard.expectedtransittime) ? $"in {option.servicestandard.expectedtransittime} days " : string.Empty)}into {totalParcels} parcels",
                             });
                         }
                     else

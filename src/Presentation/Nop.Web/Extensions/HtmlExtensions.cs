@@ -31,7 +31,7 @@ namespace Nop.Web.Extensions
             var sb = new StringBuilder();
 
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-            string bbEditorWebRoot = String.Format("{0}js/", storeLocation);
+            string bbEditorWebRoot = $"{storeLocation}js/";
 
             sb.AppendFormat("<script src=\"{0}js/bbeditor/ed.js\" type=\"{1}\"></script>", storeLocation, MimeTypes.TextJavascript);
             sb.AppendLine();

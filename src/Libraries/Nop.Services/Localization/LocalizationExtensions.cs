@@ -207,10 +207,7 @@ namespace Nop.Services.Localization
             if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            string resourceName = string.Format("Enums.{0}.{1}", 
-                typeof(T).ToString(), 
-                //Convert.ToInt32(enumValue)
-                enumValue.ToString());
+            string resourceName = $"Enums.{typeof(T).ToString()}.{enumValue.ToString()}";
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
@@ -255,7 +252,7 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(localizationService));
 
             //localized value
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            string resourceName = $"Permission.{permissionRecord.SystemName}";
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
@@ -280,7 +277,7 @@ namespace Nop.Services.Localization
             if (languageService == null)
                 throw new ArgumentNullException(nameof(languageService));
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            string resourceName = $"Permission.{permissionRecord.SystemName}";
             string resourceValue = permissionRecord.Name;
 
             foreach (var lang in languageService.GetAllLanguages(true))
@@ -319,7 +316,7 @@ namespace Nop.Services.Localization
             if (languageService == null)
                 throw new ArgumentNullException(nameof(languageService));
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            string resourceName = $"Permission.{permissionRecord.SystemName}";
             foreach (var lang in languageService.GetAllLanguages(true))
             {
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -455,8 +452,7 @@ namespace Nop.Services.Localization
 
             string systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}",
-                systemName);
+            string resourceName = $"Plugins.FriendlyName.{systemName}";
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
@@ -492,7 +488,7 @@ namespace Nop.Services.Localization
 
             string systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}", systemName);
+            string resourceName = $"Plugins.FriendlyName.{systemName}";
             var resource = localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)

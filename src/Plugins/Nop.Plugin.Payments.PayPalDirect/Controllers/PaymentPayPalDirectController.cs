@@ -95,7 +95,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 var webhook = new Webhook
                 {
                     event_types = new List<WebhookEventType> { new WebhookEventType { name = "*" } },
-                    url = string.Format("{0}Plugins/PaymentPayPalDirect/Webhook", _webHelper.GetStoreLocation(currentStore.SslEnabled))
+                    url = $"{_webHelper.GetStoreLocation(currentStore.SslEnabled)}Plugins/PaymentPayPalDirect/Webhook"
                 }.Create(apiContext);
 
                 return webhook.id;
@@ -107,9 +107,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        _logger.Error(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        _logger.Error($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => _logger.Error(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => _logger.Error($"{x.field} {x.issue}"));
                     }
                     else
                         _logger.Error(exc.InnerException != null ? exc.InnerException.Message : exc.Message);
@@ -311,7 +311,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         new ProcessPaymentResult { Errors = new[] { webhook.summary }, RecurringPaymentFailed = true });
                                 }
                                 else
-                                    _logger.Error(string.Format("PayPal error: Sale is {0} for the order #{1}", sale.state, initialOrder.Id));
+                                    _logger.Error(
+                                        $"PayPal error: Sale is {sale.state} for the order #{initialOrder.Id}");
                             }
                         }
                     }
@@ -333,19 +334,19 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             }
                             if (sale.state.ToLowerInvariant().Equals("denied"))
                             {
-                                var reason = string.Format("Payment is denied. {0}", sale.fmf_details != null ?
-                                    string.Format("Based on fraud filter: {0}. {1}", sale.fmf_details.name, sale.fmf_details.description) : string.Empty);
+                                var reason =
+                                    $"Payment is denied. {(sale.fmf_details != null ? $"Based on fraud filter: {sale.fmf_details.name}. {sale.fmf_details.description}" : string.Empty)}";
                                 order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = reason,
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow
                                 });
-                                _logger.Error(string.Format("PayPal error: {0}", reason));
+                                _logger.Error($"PayPal error: {reason}");
                             }
                         }
                         else
-                            _logger.Error(string.Format("PayPal error: Order with GUID {0} was not found", sale.invoice_number));
+                            _logger.Error($"PayPal error: Order with GUID {sale.invoice_number} was not found");
                     }
                 }
 
@@ -358,9 +359,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        _logger.Error(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        _logger.Error($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => _logger.Error(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => _logger.Error($"{x.field} {x.issue}"));
                     }
                     else
                         _logger.Error(exc.InnerException != null ? exc.InnerException.Message : exc.Message);

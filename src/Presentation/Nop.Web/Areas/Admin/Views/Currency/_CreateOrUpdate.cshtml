@@ -65,7 +65,7 @@
                                     .Select(x => new SelectListItem
                                     {
                                         Value = x.IetfLanguageTag,
-                                        Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                                        Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
                                     })
                                     .ToList();
                                 cultures.Insert(0, new SelectListItem

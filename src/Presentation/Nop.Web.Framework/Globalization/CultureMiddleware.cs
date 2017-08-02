@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Globalization
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            var adminAreaUrl = string.Format("{0}admin", webHelper.GetStoreLocation());
+            var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
             if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 //we set culture of admin area to 'en-US' because current implementation of Telerik grid doesn't work well in other cultures

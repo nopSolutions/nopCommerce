@@ -19,7 +19,7 @@
                 <span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
                 new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
-                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumGroupTitle"), Model.ForumGroupName) })
+                new { title = $"{T("Forum.Breadcrumb.ForumGroupTitle")}: {Model.ForumGroupName} " })
             </li>        
         }
         @if (Model.ForumId > 0)
@@ -28,7 +28,7 @@
                 <span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumName, "ForumSlug",
                 new { id = Model.ForumId, slug = Model.ForumSeName },
-                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumTitle"), Model.ForumName) })
+                new { title = $"{T("Forum.Breadcrumb.ForumTitle")}: {Model.ForumName} " })
             </li>
         }
         @if (Model.ForumTopicId > 0)
@@ -37,7 +37,7 @@
                 <span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
                 new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
-                new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.TopicTitle"), Model.ForumTopicSubject) })
+                new { title = $"{T("Forum.Breadcrumb.TopicTitle")}: {Model.ForumTopicSubject} " })
             </li>
         }
     </ul>

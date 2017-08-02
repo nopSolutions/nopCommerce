@@ -203,7 +203,7 @@ namespace Nop.Services.Messages
 
                 //do all databases support "Truncate command"?
                 string queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
-                _dbContext.ExecuteSqlCommand(String.Format("TRUNCATE TABLE [{0}]", queuedEmailTableName));
+                _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
             }
             else
             {

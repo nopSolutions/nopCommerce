@@ -49,7 +49,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(
+                $"DiscountRequirement.MustBeAssignedToCustomerRole-{(discountRequirementId.HasValue ? discountRequirementId.Value : 0)}");
             
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
@@ -67,8 +68,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 });
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}",
-                discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix =
+                $"DiscountRulesCustomerRoles{(discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0")}";
 
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
@@ -91,7 +92,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", discountRequirement.Id), customerRoleId);
+                _settingService.SetSetting($"DiscountRequirement.MustBeAssignedToCustomerRole-{discountRequirement.Id}", customerRoleId);
             }
             else
             {
@@ -103,7 +104,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
 
-                _settingService.SetSetting(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", discountRequirement.Id), customerRoleId);
+                _settingService.SetSetting($"DiscountRequirement.MustBeAssignedToCustomerRole-{discountRequirement.Id}", customerRoleId);
             }
 
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id });

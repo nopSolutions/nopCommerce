@@ -90,7 +90,7 @@ namespace Nop.Plugin.Shipping.UPS
             }
             catch (Exception exc)
             {
-                _logger.Error(string.Format("Error while getting UPS shipment tracking info - {0}", trackingNumber), exc);
+                _logger.Error($"Error while getting UPS shipment tracking info - {trackingNumber}", exc);
             }
             return result;
         }

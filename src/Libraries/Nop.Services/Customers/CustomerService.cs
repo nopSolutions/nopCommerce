@@ -323,7 +323,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             if (customer.IsSystemAccount)
-                throw new NopException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
+                throw new NopException($"System customer account ({customer.SystemName}) could not be deleted");
 
             customer.Deleted = true;
 

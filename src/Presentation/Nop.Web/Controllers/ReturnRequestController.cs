@@ -127,7 +127,7 @@ namespace Nop.Web.Controllers
             {
                 int quantity = 0; //parse quantity
                 foreach (string formKey in form.Keys)
-                    if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"quantity{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out quantity);
                         break;

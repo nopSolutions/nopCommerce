@@ -42,7 +42,7 @@ namespace Nop.Core.Plugins
         {
             string result = "";
             foreach (var sn in pluginSystemNames)
-                result += string.Format("{0}{1}", sn, Environment.NewLine);
+                result += $"{sn}{Environment.NewLine}";
 
             File.WriteAllText(filePath, result);
         }
@@ -162,10 +162,10 @@ namespace Nop.Core.Plugins
 
             //get the Description.txt file path
             if (plugin.OriginalAssemblyFile == null)
-                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
+                throw new Exception($"Cannot load original assembly path for {plugin.SystemName} plugin.");
             var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
             if (!File.Exists(filePath))
-                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
+                throw new Exception($"Description file for {plugin.SystemName} plugin does not exist. {filePath}");
 
             var keyValues = new List<KeyValuePair<string, string>>();
             keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));

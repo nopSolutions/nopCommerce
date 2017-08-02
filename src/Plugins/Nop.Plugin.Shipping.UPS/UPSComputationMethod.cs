@@ -688,7 +688,7 @@ namespace Nop.Plugin.Shipping.UPS
                             }
                         }
                         string service = GetServiceName(serviceCode);
-                        string serviceId = String.Format("[{0}]", serviceCode);
+                        string serviceId = $"[{serviceCode}]";
 
                         // Go to the next rate if the service ID is not in the list of services to offer
                         if (!saturdayDelivery && !String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
@@ -768,7 +768,7 @@ namespace Nop.Plugin.Shipping.UPS
                     foreach (var shippingOption in shippingOptions)
                     {
                         if (!shippingOption.Name.ToLower().StartsWith("ups"))
-                            shippingOption.Name = string.Format("UPS {0}", shippingOption.Name);
+                            shippingOption.Name = $"UPS {shippingOption.Name}";
                         shippingOption.Rate += _upsSettings.AdditionalHandlingCharge;
                         response.ShippingOptions.Add(shippingOption);
                     }
@@ -796,8 +796,8 @@ namespace Nop.Plugin.Shipping.UPS
                     {
                         foreach (var shippingOption in saturdayDeliveryShippingOptions)
                         {
-                            shippingOption.Name = string.Format("{0}{1} - Saturday Delivery",
-                                shippingOption.Name.ToLower().StartsWith("ups") ? string.Empty : "UPS ", shippingOption.Name);
+                            shippingOption.Name =
+                                $"{(shippingOption.Name.ToLower().StartsWith("ups") ? string.Empty : "UPS ")}{shippingOption.Name} - Saturday Delivery";
                             shippingOption.Rate += _upsSettings.AdditionalHandlingCharge;
                             response.ShippingOptions.Add(shippingOption);
                         }
@@ -811,14 +811,14 @@ namespace Nop.Plugin.Shipping.UPS
             }
             catch (Exception exc)
             {
-                response.AddError(string.Format("UPS Service is currently unavailable, try again later. {0}", exc.Message));
+                response.AddError($"UPS Service is currently unavailable, try again later. {exc.Message}");
             }
             finally
             {
                 if (_upsSettings.Tracing && _traceMessages.Length > 0)
                 {
-                    string shortMessage = String.Format("UPS Get Shipping Options for customer {0}.  {1} item(s) in cart",
-                        getShippingOptionRequest.Customer.Email, getShippingOptionRequest.Items.Count);
+                    string shortMessage =
+                        $"UPS Get Shipping Options for customer {getShippingOptionRequest.Customer.Email}.  {getShippingOptionRequest.Items.Count} item(s) in cart";
                     _logger.Information(shortMessage, new Exception(_traceMessages.ToString()), getShippingOptionRequest.Customer);
                 }
             }

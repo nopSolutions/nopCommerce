@@ -117,7 +117,8 @@ namespace Nop.Plugin.Shipping.USPS
         {
             var usedMeasureWeight = _measureService.GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
             if (usedMeasureWeight == null)
-                throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
+                throw new NopException(
+                    $"USPS shipping service. Could not load \"{MEASUREWEIGHTSYSTEMKEYWORD}\" measure weight");
 
             var baseusedMeasureWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (baseusedMeasureWeight == null)
@@ -125,7 +126,8 @@ namespace Nop.Plugin.Shipping.USPS
             
             var usedMeasureDimension = _measureService.GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
             if (usedMeasureDimension == null)
-                throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
+                throw new NopException(
+                    $"USPS shipping service. Could not load \"{MEASUREDIMENSIONSYSTEMKEYWORD}\" measure dimension");
 
             var baseusedMeasureDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (baseusedMeasureDimension == null)
@@ -523,7 +525,7 @@ namespace Nop.Plugin.Shipping.USPS
                                 if (tr.Name.Equals(classStr))
                                 {
                                     // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs                                    
-                                    serviceId = String.Format("[{0}]", tr.Value);
+                                    serviceId = $"[{tr.Value}]";
                                     break;
                                 }
                             }
@@ -633,7 +635,7 @@ namespace Nop.Plugin.Shipping.USPS
             }
             catch (Exception exc)
             {
-                response.AddError(string.Format("USPS Service is currently unavailable, try again later. {0}",exc.Message));
+                response.AddError($"USPS Service is currently unavailable, try again later. {exc.Message}");
                 return response;
             }
             string error = "";
@@ -643,7 +645,7 @@ namespace Nop.Plugin.Shipping.USPS
                 foreach (var shippingOption in shippingOptions)
                 {
                     if (!shippingOption.Name.ToLower().StartsWith("usps"))
-                        shippingOption.Name = string.Format("USPS {0}", shippingOption.Name);
+                        shippingOption.Name = $"USPS {shippingOption.Name}";
                     shippingOption.Rate += _uspsSettings.AdditionalHandlingCharge;
                     response.ShippingOptions.Add(shippingOption);
                 }

@@ -1641,7 +1641,7 @@ namespace Nop.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
+                            redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
                         });
                     }
 

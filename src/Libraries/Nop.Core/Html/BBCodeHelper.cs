@@ -67,11 +67,11 @@ namespace Nop.Core.Html
                 var newWindow = EngineContext.Current.Resolve<CommonSettings>().BbcodeEditorOpenLinksInNewWindow;
                 // format the URL tags: [url=http://www.nopCommerce.com]my site[/url]
                 // becomes: <a href="http://www.nopCommerce.com">my site</a>
-                text = regexUrl1.Replace(text, string.Format("<a href=\"$1\" rel=\"nofollow\"{0}>$2</a>", newWindow ? " target=_blank" : ""));
+                text = regexUrl1.Replace(text, $"<a href=\"$1\" rel=\"nofollow\"{(newWindow ? " target=_blank" : "")}>$2</a>");
 
                 // format the URL tags: [url]http://www.nopCommerce.com[/url]
                 // becomes: <a href="http://www.nopCommerce.com">http://www.nopCommerce.com</a>
-                text = regexUrl2.Replace(text, string.Format("<a href=\"$1\" rel=\"nofollow\"{0}>$1</a>", newWindow ? " target=_blank" : ""));
+                text = regexUrl2.Replace(text, $"<a href=\"$1\" rel=\"nofollow\"{(newWindow ? " target=_blank" : "")}>$1</a>");
             }
 
             if (replaceQuote)

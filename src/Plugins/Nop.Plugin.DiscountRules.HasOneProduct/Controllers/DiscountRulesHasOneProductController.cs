@@ -75,7 +75,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(
+                $"DiscountRequirement.RestrictedProductIds-{(discountRequirementId.HasValue ? discountRequirementId.Value : 0)}");
 
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
@@ -83,7 +84,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             model.Products = restrictedProductIds;
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasOneProduct{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix =
+                $"DiscountRulesHasOneProduct{(discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0")}";
 
             return View("~/Plugins/DiscountRules.HasOneProduct/Views/Configure.cshtml", model);
         }
@@ -106,7 +108,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirement.Id), productIds);
+                _settingService.SetSetting($"DiscountRequirement.RestrictedProductIds-{discountRequirement.Id}", productIds);
             }
             else
             {
@@ -118,7 +120,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
 
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirement.Id), productIds);
+                _settingService.SetSetting($"DiscountRequirement.RestrictedProductIds-{discountRequirement.Id}", productIds);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
         }

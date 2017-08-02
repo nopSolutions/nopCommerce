@@ -23,7 +23,7 @@ namespace Nop.Services.Affiliates
 
             string fullName = "";
             if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
-                fullName = string.Format("{0} {1}", firstName, lastName);
+                fullName = $"{firstName} {lastName}";
             else
             {
                 if (!String.IsNullOrWhiteSpace(firstName))
@@ -98,7 +98,7 @@ namespace Nop.Services.Affiliates
                 if (!reserved)
                     break;
 
-                tempName = string.Format("{0}-{1}", friendlyUrlName, i);
+                tempName = $"{friendlyUrlName}-{i}";
                 i++;
             }
             friendlyUrlName = tempName;

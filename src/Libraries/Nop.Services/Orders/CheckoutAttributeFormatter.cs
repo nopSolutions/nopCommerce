@@ -95,7 +95,7 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
@@ -108,17 +108,15 @@ namespace Nop.Services.Orders
                             {
                                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                                 string attributeText;
-                                var fileName = string.Format("{0}{1}",
-                                    download.Filename ?? download.DownloadGuid.ToString(),
-                                    download.Extension);
+                                var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
                                 //encode (if required)
                                 if (htmlEncode)
                                     fileName = WebUtility.HtmlEncode(fileName);
                                 if (allowHyperlinks)
                                 {
                                     //hyperlinks are allowed
-                                    var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
-                                    attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
+                                    var downloadLink = $"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}";
+                                    attributeText = $"<a href=\"{downloadLink}\" class=\"fileuploadattribute\">{fileName}</a>";
                                 }
                                 else
                                 {
@@ -129,13 +127,13 @@ namespace Nop.Services.Orders
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
-                                formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                formattedAttribute = $"{attributeName}: {attributeText}";
                             }
                         }
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -149,7 +147,7 @@ namespace Nop.Services.Orders
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
                             if (attributeValue != null)
                             {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = $"{attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
                                     decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
@@ -157,7 +155,7 @@ namespace Nop.Services.Orders
                                     if (priceAdjustmentBase > 0)
                                     {
                                         string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
-                                        formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                        formattedAttribute += $" [+{priceAdjustmentStr}]";
                                     }
                                 }
                             }

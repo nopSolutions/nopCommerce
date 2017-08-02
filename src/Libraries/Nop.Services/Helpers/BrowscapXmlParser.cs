@@ -91,7 +91,7 @@ namespace Nop.Services.Helpers
         {
             var sb = new StringBuilder(Regex.Escape(str));
             sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
-            return string.Format("^{0}$", sb);
+            return $"^{sb}$";
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var urlScheme = _webHelper.IsCurrentConnectionSecured() ? "https://" : "http://";
 
                 //compose start of URL with WWW
-                var urlWith3W = string.Format("{0}www.", urlScheme);
+                var urlWith3W = $"{urlScheme}www.";
 
                 //get requested URL
                 var currentUrl = _webHelper.GetThisPageUrl(true);
