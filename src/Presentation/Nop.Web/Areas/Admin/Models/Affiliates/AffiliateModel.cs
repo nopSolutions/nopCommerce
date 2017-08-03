@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Areas.Admin.Validators.Affiliates;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Affiliates
 {
+    [Validator(typeof(AffiliateValidator))]
     public partial class AffiliateModel : BaseNopEntityModel
     {
         public AffiliateModel()

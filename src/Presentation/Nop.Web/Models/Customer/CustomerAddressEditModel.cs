@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation.Attributes;
+using Microsoft.AspNetCore.Http;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
+using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
+    [Validator(typeof(CustomerAddressEditValidator))]
     public partial class CustomerAddressEditModel : BaseNopModel
     {
         public CustomerAddressEditModel()
