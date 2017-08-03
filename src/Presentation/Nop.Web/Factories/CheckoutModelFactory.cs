@@ -145,8 +145,8 @@ namespace Nop.Web.Factories
             }
 
             //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.NewAddress,
+            model.BillingNewAddress.CountryId = selectedCountryId;
+            _addressModelFactory.PrepareAddressModel(model.BillingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
@@ -249,8 +249,8 @@ namespace Nop.Web.Factories
             }
 
             //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.NewAddress,
+            model.ShippingNewAddress.CountryId = selectedCountryId;
+            _addressModelFactory.PrepareAddressModel(model.ShippingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,

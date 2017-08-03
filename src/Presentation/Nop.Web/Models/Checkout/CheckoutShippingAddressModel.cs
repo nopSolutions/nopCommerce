@@ -14,7 +14,7 @@ namespace Nop.Web.Models.Checkout
         {
             Warnings = new List<string>();
             ExistingAddresses = new List<AddressModel>();
-            NewAddress = new AddressModel();
+            ShippingNewAddress = new AddressModel();
             PickupPoints = new List<CheckoutPickupPointModel>();
         }
 
@@ -24,7 +24,7 @@ namespace Nop.Web.Models.Checkout
         public IList<string> Warnings { get; set; }
 
         public IList<AddressModel> ExistingAddresses { get; set; }
-        public AddressModel NewAddress { get; set; }
+        public AddressModel ShippingNewAddress { get; set; }
         public bool NewAddressPreselected { get; set; }
 
         public IList<CheckoutPickupPointModel> PickupPoints { get; set; }

@@ -270,7 +270,7 @@ namespace Nop.Web.Controllers
                 }
 
                 TryValidateModel(model);
-                TryValidateModel(model.NewAddress);
+                TryValidateModel(model.BillingNewAddress);
                 return NewBillingAddress(model);
             }
 
@@ -332,19 +332,21 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            var newAddress = model.BillingNewAddress;
+
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
                 var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                    model.NewAddress.CountryId, customAttributes);
+                    newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
+                    newAddress.Email, newAddress.FaxNumber, newAddress.Company,
+                    newAddress.Address1, newAddress.Address2, newAddress.City,
+                    newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                    newAddress.CountryId, customAttributes);
                 if (address == null)
                 {
                     //address is not found. let's create a new one
-                    address = model.NewAddress.ToEntity();
+                    address = newAddress.ToEntity();
                     address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     //some validation
@@ -375,7 +377,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model = _checkoutModelFactory.PrepareBillingAddressModel(cart,
-                selectedCountryId: model.NewAddress.CountryId,
+                selectedCountryId: newAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
         }
@@ -493,18 +495,20 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
+            var newAddress = model.ShippingNewAddress;
+
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
                 var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                    model.NewAddress.CountryId, customAttributes);
+                    newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
+                    newAddress.Email, newAddress.FaxNumber, newAddress.Company,
+                    newAddress.Address1, newAddress.Address2, newAddress.City,
+                    newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                    newAddress.CountryId, customAttributes);
                 if (address == null)
                 {
-                    address = model.NewAddress.ToEntity();
+                    address = newAddress.ToEntity();
                     address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     //some validation
@@ -523,7 +527,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model = _checkoutModelFactory.PrepareShippingAddressModel(
-                selectedCountryId: model.NewAddress.CountryId,
+                selectedCountryId: newAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
         }
@@ -1088,7 +1092,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        public virtual IActionResult OpcSaveBilling(IFormCollection form)
+        public virtual IActionResult OpcSaveBilling(CheckoutBillingAddressModel model)
         {
             try
             {
@@ -1107,7 +1111,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Anonymous checkout is not allowed");
 
                 int billingAddressId;
-                int.TryParse(form["billing_address_id"], out billingAddressId);
+                int.TryParse(model.Form["billing_address_id"], out billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1122,11 +1126,10 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //new address
-                    var model = new CheckoutBillingAddressModel();
-                    var updateResult = TryUpdateModelAsync(model.NewAddress, "BillingNewAddress").Result;
+                    var newAddress = model.BillingNewAddress;
 
                     //custom address attributes
-                    var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+                    var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
                     var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
@@ -1134,12 +1137,11 @@ namespace Nop.Web.Controllers
                     }
 
                     //validate model
-                    TryValidateModel(model.NewAddress);
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
                         var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart,
-                            selectedCountryId: model.NewAddress.CountryId,
+                            selectedCountryId: newAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
@@ -1155,15 +1157,15 @@ namespace Nop.Web.Controllers
 
                     //try to find an address with the same values (don't duplicate records)
                     var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                        model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                        model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                        model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                        model.NewAddress.CountryId, customAttributes);
+                        newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
+                        newAddress.Email, newAddress.FaxNumber, newAddress.Company,
+                        newAddress.Address1, newAddress.Address2, newAddress.City,
+                        newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                        newAddress.CountryId, customAttributes);
                     if (address == null)
                     {
                         //address is not found. let's create a new one
-                        address = model.NewAddress.ToEntity();
+                        address = newAddress.ToEntity();
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
                         //some validation
@@ -1184,8 +1186,6 @@ namespace Nop.Web.Controllers
                 if (cart.RequiresShipping())
                 {
                     //shipping is required
-                    var model = new CheckoutBillingAddressModel();
-                    var updateResult = TryUpdateModelAsync(model, "").Result;
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
                     {
                         //ship to the same address
@@ -1230,7 +1230,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcSaveShipping(IFormCollection form)
+        public virtual IActionResult OpcSaveShipping(CheckoutShippingAddressModel model)
         {
             try
             {
@@ -1254,15 +1254,13 @@ namespace Nop.Web.Controllers
                 //pickup point
                 if (_shippingSettings.AllowPickUpInStore)
                 {
-                    var model = new CheckoutShippingAddressModel();
-                    var updateResult = TryUpdateModelAsync(model).Result;
                     if (model.PickUpInStore)
                     {
                         //no shipping address selected
                         _workContext.CurrentCustomer.ShippingAddress = null;
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-                        var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+                        var pickupPoint = model.Form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
                         var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                             _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                         var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
@@ -1288,7 +1286,7 @@ namespace Nop.Web.Controllers
                 }
 
                 int shippingAddressId;
-                int.TryParse(form["shipping_address_id"], out shippingAddressId);
+                int.TryParse(model.Form["shipping_address_id"], out shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
@@ -1303,10 +1301,10 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //new address
-                    var model = new CheckoutShippingAddressModel();
-                    var updateResult = TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress").Result;
+                    var newAddress = model.ShippingNewAddress;
+
                     //custom address attributes
-                    var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+                    var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
                     var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
@@ -1314,12 +1312,11 @@ namespace Nop.Web.Controllers
                     }
 
                     //validate model
-                    TryValidateModel(model.NewAddress);
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
                         var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(
-                            selectedCountryId: model.NewAddress.CountryId,
+                            selectedCountryId: newAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
@@ -1334,14 +1331,14 @@ namespace Nop.Web.Controllers
 
                     //try to find an address with the same values (don't duplicate records)
                     var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                        model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                        model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                        model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                        model.NewAddress.CountryId, customAttributes);
+                        newAddress.FirstName, newAddress.LastName, newAddress.PhoneNumber,
+                        newAddress.Email, newAddress.FaxNumber, newAddress.Company,
+                        newAddress.Address1, newAddress.Address2, newAddress.City,
+                        newAddress.StateProvinceId, newAddress.ZipPostalCode,
+                        newAddress.CountryId, customAttributes);
                     if (address == null)
                     {
-                        address = model.NewAddress.ToEntity();
+                        address = newAddress.ToEntity();
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
                         //little hack here (TODO: find a better solution)
@@ -1373,7 +1370,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcSaveShippingMethod(IFormCollection form)
+        public virtual IActionResult OpcSaveShippingMethod(string shippingoption)
         {
             try
             {
@@ -1395,7 +1392,6 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 
-                string shippingoption = form["shippingoption"];
                 if (String.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
                 var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
@@ -1438,7 +1434,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcSavePaymentMethod(IFormCollection form)
+        public virtual IActionResult OpcSavePaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             try
             {
@@ -1456,14 +1452,10 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                string paymentmethod = form["paymentmethod"];
                 //payment method 
                 if (String.IsNullOrEmpty(paymentmethod))
                     throw new Exception("Selected payment method can't be parsed");
 
-
-                var model = new CheckoutPaymentMethodModel();
-                var updateResult = TryUpdateModelAsync(model).Result;
                 //reward points
                 if (_rewardPointsSettings.Enabled)
                 {

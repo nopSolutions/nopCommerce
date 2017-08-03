@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Checkout
         public CheckoutBillingAddressModel()
         {
             ExistingAddresses = new List<AddressModel>();
-            NewAddress = new AddressModel();
+            BillingNewAddress = new AddressModel();
         }
 
         //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
@@ -21,7 +21,7 @@ namespace Nop.Web.Models.Checkout
 
         public IList<AddressModel> ExistingAddresses { get; set; }
 
-        public AddressModel NewAddress { get; set; }
+        public AddressModel BillingNewAddress { get; set; }
 
 
         public bool ShipToSameAddress { get; set; }

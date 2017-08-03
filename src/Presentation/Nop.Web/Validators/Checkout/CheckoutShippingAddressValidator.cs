@@ -10,7 +10,7 @@ namespace Nop.Web.Validators.Checkout
         public CheckoutShippingAddressValidator()
         {
             var addressValidator = (AddressValidator)EngineContext.Current.ResolveUnregistered(typeof(AddressValidator));
-            RuleFor(x => x.NewAddress).SetValidator(addressValidator);
+            RuleFor(x => x.ShippingNewAddress).SetValidator(addressValidator);
         }
     }
 }
