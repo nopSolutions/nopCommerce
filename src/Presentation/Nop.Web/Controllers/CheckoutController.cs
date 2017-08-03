@@ -325,7 +325,7 @@ namespace Nop.Web.Controllers
                 return new UnauthorizedResult();
 
             //custom address attributes
-            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form?.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
