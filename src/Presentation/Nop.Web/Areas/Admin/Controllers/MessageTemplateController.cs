@@ -387,7 +387,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("TestTemplate")]
         [FormValueRequired("send-test")]
-        public virtual IActionResult TestTemplate(TestMessageTemplateModel model, IFormCollection form)
+        public virtual IActionResult TestTemplate(TestMessageTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -398,6 +398,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var tokens = new List<Token>();
+            var form = model.Form;
             foreach (var formKey in form.Keys)
                 if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
                 {

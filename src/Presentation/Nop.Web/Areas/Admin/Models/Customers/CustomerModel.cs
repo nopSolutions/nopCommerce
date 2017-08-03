@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Customers;
 using Nop.Core.Domain.Catalog;
@@ -30,7 +31,10 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             this.RewardPointsAvailableStores = new List<SelectListItem>();
         }
-       
+
+        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
+        public IFormCollection Form { get; set; }
+
         public bool UsernamesEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]

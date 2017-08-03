@@ -102,7 +102,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ReturnRequest")]
         [PublicAntiForgery]
-        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
+        public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -122,6 +122,7 @@ namespace Nop.Web.Controllers
             }
 
             //returnable products
+            var form = model.Form;
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {

@@ -541,7 +541,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
+        public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -562,7 +562,7 @@ namespace Nop.Web.Controllers
             customer.RegisteredInStoreId = _storeContext.CurrentStore.Id;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -871,7 +871,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
+        public virtual IActionResult Info(CustomerInfoModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new UnauthorizedResult();
@@ -879,7 +879,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributesXml = ParseCustomCustomerAttributes(model.Form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1168,7 +1168,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
+        public virtual IActionResult AddressAdd(CustomerAddressEditModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new UnauthorizedResult();
@@ -1176,7 +1176,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1235,7 +1235,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
+        public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new UnauthorizedResult();
@@ -1248,7 +1248,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

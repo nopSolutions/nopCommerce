@@ -3698,7 +3698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
+        public virtual IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3718,6 +3718,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             string attributesXml = null;
+            var form = model.Form;
             if (model.EnableCondition)
             {
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
@@ -4472,7 +4473,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddAttributeCombinationPopup(int productId, AddProductAttributeCombinationModel model, IFormCollection form)
+        public virtual IActionResult AddAttributeCombinationPopup(int productId, AddProductAttributeCombinationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4488,6 +4489,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             
             //attributes
             string attributesXml = "";
+            var form = model.Form;
             var warnings = new List<string>();
 
             #region Product attributes

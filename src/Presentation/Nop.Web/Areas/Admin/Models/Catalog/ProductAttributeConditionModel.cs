@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
@@ -11,6 +12,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         {
             ProductAttributes = new List<ProductAttributeModel>();
         }
+
+        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
+        public IFormCollection Form { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }

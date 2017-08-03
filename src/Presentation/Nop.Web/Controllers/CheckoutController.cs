@@ -241,7 +241,7 @@ namespace Nop.Web.Controllers
 
         #region Methods (multistep checkout)
 
-        public virtual IActionResult BillingAddress(IFormCollection form)
+        public virtual IActionResult BillingAddress()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -271,7 +271,7 @@ namespace Nop.Web.Controllers
 
                 TryValidateModel(model);
                 TryValidateModel(model.NewAddress);
-                return NewBillingAddress(model, form);
+                return NewBillingAddress(model);
             }
 
             return View(model);
@@ -308,7 +308,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual IActionResult NewBillingAddress(CheckoutBillingAddressModel model, IFormCollection form)
+        public virtual IActionResult NewBillingAddress(CheckoutBillingAddressModel model)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -325,7 +325,7 @@ namespace Nop.Web.Controllers
                 return new UnauthorizedResult();
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -428,7 +428,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public virtual IActionResult NewShippingAddress(CheckoutShippingAddressModel model, IFormCollection form)
+        public virtual IActionResult NewShippingAddress(CheckoutShippingAddressModel model)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -460,7 +460,7 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer.ShippingAddress = null;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-                    var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+                    var pickupPoint = model.Form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
                     var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                         _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
                     var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
@@ -486,7 +486,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

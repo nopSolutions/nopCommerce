@@ -429,8 +429,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <param name="form">Form</param>
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">End date</param>
-        protected virtual void ParseRentalDates(IFormCollection form,
-            out DateTime? startDate, out DateTime? endDate)
+        protected virtual void ParseRentalDates(IFormCollection form, out DateTime? startDate, out DateTime? endDate)
         {
             startDate = null;
             endDate = null;
@@ -2042,8 +2041,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         //currently we use this method on the add product to order details pages
         [HttpPost]
-        public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
-	        IFormCollection form)
+        public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions, IFormCollection form)
 	    {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -2912,7 +2910,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult AddressEdit(OrderAddressModel model, IFormCollection form)
+        public virtual IActionResult AddressEdit(OrderAddressModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2931,7 +2929,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No address found with the specified id");
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+            var customAttributes = model.Form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
