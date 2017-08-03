@@ -622,7 +622,7 @@ namespace Nop.Services.Discounts
                 return result;
             }
 
-            //requirements are exist, let's check them
+            //requirements exist, let's check them
             var errors = new List<string>();
             result.IsValid = GetValidationResult(requirementsForCaching, topLevelGroup.InteractionType.Value, customer, errors);
 
