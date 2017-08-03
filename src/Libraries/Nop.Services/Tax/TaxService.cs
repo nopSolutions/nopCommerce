@@ -10,7 +10,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Extensions;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -192,9 +191,9 @@ namespace Nop.Services.Tax
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         Country = country,
-                        CountryId = country.Return(c => c.Id, 0),
+                        CountryId = country?.Id ?? 0,
                         StateProvince = state,
-                        StateProvinceId = state.Return(sp => sp.Id, 0),
+                        StateProvinceId = state?.Id ?? 0,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };

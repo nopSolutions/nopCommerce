@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context?.HttpContext?.Request == null)
                     return;
 
                 //if form key with '_formKeyName' exists and value of this form parameter equals passed '_formValue', 

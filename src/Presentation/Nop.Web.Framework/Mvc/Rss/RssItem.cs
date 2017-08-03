@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Nop.Core;
-using Nop.Core.Extensions;
 
 namespace Nop.Web.Framework.Mvc.Rss
 {
@@ -30,13 +29,14 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <param name="item">XML view of rss item</param>
         public RssItem(XContainer item)
         {
-            var title = item.Element("title").Return(e => e.Value, string.Empty);
-            var content = item.Element("content").Return(e => e.Value, string.Empty);
+            var title = item.Element("title")?.Value ?? string.Empty;
+            var content = item.Element("content")?.Value ?? string.Empty;
             if (string.IsNullOrEmpty(content))
-                content = item.Element("description").Return(e => e.Value, string.Empty);
-            var link = new Uri(item.Element("link").Return(e => e.Value, string.Empty));
-            var pubDate = item.Element("pubDate").Return(e => DateTimeOffset.ParseExact(e.Value, "r", null), DateTimeOffset.Now);
-            var id = item.Element("guid").Return(e => e.Value, string.Empty);
+                content = item.Element("description")?.Value ?? string.Empty;
+            var link = new Uri(item.Element("link")?.Value ?? string.Empty);
+            var pubDateValue = item.Element("pubDate")?.Value;
+            var pubDate = pubDateValue == null ? DateTimeOffset.Now : DateTimeOffset.ParseExact(pubDateValue, "r", null);
+            var id = item.Element("guid")?.Value ?? string.Empty;
 
             Init(title, content, link, id, pubDate);
         }
@@ -82,11 +82,8 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <summary>
         /// Get title text
         /// </summary>
-        public string TitleText
-        {
-            get { return Title.Return(t => t.Value, string.Empty); }
-        }
-        
+        public string TitleText => Title?.Value ?? string.Empty;
+
         /// <summary>
         /// Content
         /// </summary>
@@ -95,11 +92,8 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <summary>
         /// Get content text
         /// </summary>
-        public string ContentText
-        {
-            get { return XmlHelper.XmlDecode(Content.Return(t => t.Value, string.Empty)); }
-        }
-        
+        public string ContentText => XmlHelper.XmlDecode(Content?.Value ?? string.Empty);
+
         /// <summary>
         /// Link
         /// </summary>
@@ -123,10 +117,7 @@ namespace Nop.Web.Framework.Mvc.Rss
         /// <summary>
         /// Publish date
         /// </summary>
-        public DateTimeOffset PublishDate
-        {
-            get { return PubDate.Return(e => DateTimeOffset.ParseExact(e.Value, "r", null), DateTimeOffset.Now); }
-        }
+        public DateTimeOffset PublishDate => PubDate?.Value == null ? DateTimeOffset.Now : DateTimeOffset.ParseExact(PubDate.Value, "r", null);
 
         /// <summary>
         /// Element extensions

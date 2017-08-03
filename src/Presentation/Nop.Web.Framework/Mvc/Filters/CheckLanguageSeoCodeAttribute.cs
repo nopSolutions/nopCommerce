@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context?.HttpContext?.Request == null)
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -77,9 +77,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 
                 //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData == null 
-                    || context.RouteData.Routers == null 
-                    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
+                if (context.RouteData?.Routers == null || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
                     return;
 
                 //check whether current page URL is already localized URL

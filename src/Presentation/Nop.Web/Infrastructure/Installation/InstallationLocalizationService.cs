@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Extensions;
 
 namespace Nop.Web.Infrastructure.Installation
 {
@@ -93,7 +92,7 @@ namespace Nop.Web.Infrastructure.Installation
             //let's find by current browser culture
             if (httpContext.Request.Headers.TryGetValue("Accept-Language", out var userLanguages))
             {
-                var userLanguage = userLanguages.FirstOrDefault().Return(l => l.Split(',')[0], string.Empty);
+                var userLanguage = userLanguages.FirstOrDefault()?.Split(',')[0] ?? string.Empty;
                 if (!string.IsNullOrEmpty(userLanguage))
                 {
                     //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)

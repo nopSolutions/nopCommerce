@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -9,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -118,7 +116,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
-            if (!language.Return(lang => lang.Published, false))
+            if (!language?.Published ?? false)
                 language = _workContext.WorkingLanguage;
 
             //home page

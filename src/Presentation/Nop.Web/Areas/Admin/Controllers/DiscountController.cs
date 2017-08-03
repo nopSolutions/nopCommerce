@@ -11,7 +11,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Extensions;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -451,7 +450,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                 {
                     var defaultGroupId = discount.DiscountRequirements.FirstOrDefault(requirement => 
-                        !requirement.ParentId.HasValue && requirement.IsGroup).Return(requirement => requirement.Id, 0);
+                        !requirement.ParentId.HasValue && requirement.IsGroup)?.Id ?? 0;
                     if (defaultGroupId == 0)
                     {
                         //add default requirement group
@@ -485,10 +484,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //get current requirements
-            var topLevelRequirements = discount.DiscountRequirements.Where(requirement => !requirement.ParentId.HasValue && requirement.IsGroup);
+            var topLevelRequirements = discount.DiscountRequirements.Where(requirement => !requirement.ParentId.HasValue && requirement.IsGroup).ToList();
 
             //get interaction type of top-level group
-            var interactionType = topLevelRequirements.FirstOrDefault().Return(requirement => requirement.InteractionType, null);
+            var interactionType = topLevelRequirements.FirstOrDefault()?.InteractionType;
 
             if (interactionType.HasValue)
                 requirements = GetReqirements(topLevelRequirements, interactionType.Value, discount).ToList();

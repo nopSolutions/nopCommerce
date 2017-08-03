@@ -986,12 +986,12 @@ namespace Nop.Services.ExportImport
                 //vendor can't change this field
                 new PropertyByName<Product>("Vendor", p => p.VendorId, IgnoreExportPoductProperty(p => p.Vendor) || _workContext.CurrentVendor != null)
                 {
-                    DropDownElements = _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)),
+                    DropDownElements = _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("ProductTemplate", p => p.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate))
                 {
-                    DropDownElements = _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)),
+                    DropDownElements = _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty),
                 },
                 //vendor can't change this field
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage, IgnoreExportPoductProperty(p => p.ShowOnHomePage) || _workContext.CurrentVendor != null),
@@ -1046,13 +1046,13 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge, IgnoreExportPoductProperty(p => p.AdditionalShippingCharge)),
                 new PropertyByName<Product>("DeliveryDate", p => p.DeliveryDateId, IgnoreExportPoductProperty(p => p.DeliveryDate))
                 {
-                    DropDownElements = _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)),
+                    DropDownElements = _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Product>("TaxCategory", p => p.TaxCategoryId)
                 {
-                    DropDownElements = _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)),
+                    DropDownElements = _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices, IgnoreExportPoductProperty(p => p.TelecommunicationsBroadcastingElectronicServices)),
@@ -1062,7 +1062,7 @@ namespace Nop.Services.ExportImport
                 },
                 new PropertyByName<Product>("ProductAvailabilityRange", p => p.ProductAvailabilityRangeId, IgnoreExportPoductProperty(p => p.ProductAvailabilityRange))
                 {
-                    DropDownElements = _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange).Return(range => range.Name, String.Empty)),
+                    DropDownElements = _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses, IgnoreExportPoductProperty(p => p.UseMultipleWarehouses)),
@@ -1101,13 +1101,13 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount, IgnoreExportPoductProperty(p => p.PAngV)),
                 new PropertyByName<Product>("BasepriceUnit", p => p.BasepriceUnitId, IgnoreExportPoductProperty(p => p.PAngV))
                 {
-                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)),
+                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount, IgnoreExportPoductProperty(p => p.PAngV)),
                 new PropertyByName<Product>("BasepriceBaseUnit", p => p.BasepriceBaseUnitId, IgnoreExportPoductProperty(p => p.PAngV))
                 {
-                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)),
+                    DropDownElements = _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty),
                     AllowBlank = true
                 },
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew, IgnoreExportPoductProperty(p => p.MarkAsNew)),
@@ -1311,30 +1311,30 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("CustomValuesXml", p => p.CustomValuesXml, ignore),
                 new PropertyByName<Order>("VatNumber", p => p.VatNumber, ignore),
                 new PropertyByName<Order>("CreatedOnUtc", p => p.CreatedOnUtc.ToOADate()),
-                new PropertyByName<Order>("BillingFirstName", p => p.BillingAddress.Return(billingAddress => billingAddress.FirstName, String.Empty)),
-                new PropertyByName<Order>("BillingLastName", p => p.BillingAddress.Return(billingAddress => billingAddress.LastName, String.Empty)),
-                new PropertyByName<Order>("BillingEmail", p => p.BillingAddress.Return(billingAddress => billingAddress.Email, String.Empty)),
-                new PropertyByName<Order>("BillingCompany", p => p.BillingAddress.Return(billingAddress => billingAddress.Company, String.Empty)),
-                new PropertyByName<Order>("BillingCountry", p => p.BillingAddress.Return(billingAddress => billingAddress.Country, null).Return(country => country.Name, String.Empty)),
-                new PropertyByName<Order>("BillingStateProvince", p => p.BillingAddress.Return(billingAddress => billingAddress.StateProvince, null).Return(stateProvince => stateProvince.Name, String.Empty)),
-                new PropertyByName<Order>("BillingCity", p => p.BillingAddress.Return(billingAddress => billingAddress.City, String.Empty)),
-                new PropertyByName<Order>("BillingAddress1", p => p.BillingAddress.Return(billingAddress => billingAddress.Address1, String.Empty)),
-                new PropertyByName<Order>("BillingAddress2", p => p.BillingAddress.Return(billingAddress => billingAddress.Address2, String.Empty)),
-                new PropertyByName<Order>("BillingZipPostalCode", p => p.BillingAddress.Return(billingAddress => billingAddress.ZipPostalCode, String.Empty)),
-                new PropertyByName<Order>("BillingPhoneNumber", p => p.BillingAddress.Return(billingAddress => billingAddress.PhoneNumber, String.Empty)),
-                new PropertyByName<Order>("BillingFaxNumber", p => p.BillingAddress.Return(billingAddress => billingAddress.FaxNumber, String.Empty)),
-                new PropertyByName<Order>("ShippingFirstName", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.FirstName, String.Empty)),
-                new PropertyByName<Order>("ShippingLastName", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.LastName, String.Empty)),
-                new PropertyByName<Order>("ShippingEmail", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Email, String.Empty)),
-                new PropertyByName<Order>("ShippingCompany", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Company, String.Empty)),
-                new PropertyByName<Order>("ShippingCountry", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Country, null).Return(country => country.Name, String.Empty)),
-                new PropertyByName<Order>("ShippingStateProvince", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.StateProvince, null).Return(stateProvince => stateProvince.Name, String.Empty)),
-                new PropertyByName<Order>("ShippingCity", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.City, String.Empty)),
-                new PropertyByName<Order>("ShippingAddress1", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Address1, String.Empty)),
-                new PropertyByName<Order>("ShippingAddress2", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.Address2, String.Empty)),
-                new PropertyByName<Order>("ShippingZipPostalCode", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.ZipPostalCode, String.Empty)),
-                new PropertyByName<Order>("ShippingPhoneNumber", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.PhoneNumber, String.Empty)),
-                new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress.Return(shippingAddress => shippingAddress.FaxNumber, String.Empty))
+                new PropertyByName<Order>("BillingFirstName", p => p.BillingAddress?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("BillingLastName", p => p.BillingAddress?.LastName ?? string.Empty),
+                new PropertyByName<Order>("BillingEmail", p => p.BillingAddress?.Email ?? string.Empty),
+                new PropertyByName<Order>("BillingCompany", p => p.BillingAddress?.Company ?? string.Empty),
+                new PropertyByName<Order>("BillingCountry", p => p.BillingAddress?.Country?.Name ?? string.Empty),
+                new PropertyByName<Order>("BillingStateProvince", p => p.BillingAddress?.StateProvince?.Name ?? string.Empty),
+                new PropertyByName<Order>("BillingCity", p => p.BillingAddress?.City ?? string.Empty),
+                new PropertyByName<Order>("BillingAddress1", p => p.BillingAddress?.Address1 ?? string.Empty),
+                new PropertyByName<Order>("BillingAddress2", p => p.BillingAddress?.Address2 ?? string.Empty),
+                new PropertyByName<Order>("BillingZipPostalCode", p => p.BillingAddress?.ZipPostalCode ?? string.Empty),
+                new PropertyByName<Order>("BillingPhoneNumber", p => p.BillingAddress?.PhoneNumber ?? string.Empty),
+                new PropertyByName<Order>("BillingFaxNumber", p => p.BillingAddress?.FaxNumber ?? string.Empty),
+                new PropertyByName<Order>("ShippingFirstName", p => p.ShippingAddress?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("ShippingLastName", p => p.ShippingAddress?.LastName ?? string.Empty),
+                new PropertyByName<Order>("ShippingEmail", p => p.ShippingAddress?.Email ?? string.Empty),
+                new PropertyByName<Order>("ShippingCompany", p => p.ShippingAddress?.Company ?? string.Empty),
+                new PropertyByName<Order>("ShippingCountry", p => p.ShippingAddress?.Country?.Name ?? string.Empty),
+                new PropertyByName<Order>("ShippingStateProvince", p => p.ShippingAddress?.StateProvince?.Name ?? string.Empty),
+                new PropertyByName<Order>("ShippingCity", p => p.ShippingAddress?.City ?? string.Empty),
+                new PropertyByName<Order>("ShippingAddress1", p => p.ShippingAddress?.Address1 ?? string.Empty),
+                new PropertyByName<Order>("ShippingAddress2", p => p.ShippingAddress?.Address2 ?? string.Empty),
+                new PropertyByName<Order>("ShippingZipPostalCode", p => p.ShippingAddress?.ZipPostalCode ?? string.Empty),
+                new PropertyByName<Order>("ShippingPhoneNumber", p => p.ShippingAddress?.PhoneNumber ?? string.Empty),
+                new PropertyByName<Order>("ShippingFaxNumber", p => p.ShippingAddress?.FaxNumber ?? string.Empty)
             };
 
             return _orderSettings.ExportWithProducts ? ExportOrderToXlsxWithProducts(properties, orders) : ExportToXlsx(properties, orders);
@@ -1353,9 +1353,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username),
-                new PropertyByName<Customer>("Password", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.Password, null)),
-                new PropertyByName<Customer>("PasswordFormatId", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.PasswordFormatId, 0)),
-                new PropertyByName<Customer>("PasswordSalt", p => _customerService.GetCurrentPassword(p.Id).Return(password => password.PasswordSalt, null)),
+                new PropertyByName<Customer>("Password", p => _customerService.GetCurrentPassword(p.Id)?.Password),
+                new PropertyByName<Customer>("PasswordFormatId", p => _customerService.GetCurrentPassword(p.Id)?.PasswordFormatId ?? 0),
+                new PropertyByName<Customer>("PasswordSalt", p => _customerService.GetCurrentPassword(p.Id)?.PasswordSalt),
                 new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
                 new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
                 new PropertyByName<Customer>("VendorId", p => p.VendorId),
@@ -1413,9 +1413,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Username", null, customer.Username);
 
                 var customerPassword = _customerService.GetCurrentPassword(customer.Id);
-                xmlWriter.WriteElementString("Password", null, customerPassword.Return(password => password.Password, null));
-                xmlWriter.WriteElementString("PasswordFormatId", null, customerPassword.Return(password => password.PasswordFormatId, 0).ToString());
-                xmlWriter.WriteElementString("PasswordSalt", null, customerPassword.Return(password => password.PasswordSalt, null));
+                xmlWriter.WriteElementString("Password", null, customerPassword?.Password);
+                xmlWriter.WriteElementString("PasswordFormatId", null, (customerPassword?.PasswordFormatId ?? 0).ToString());
+                xmlWriter.WriteElementString("PasswordSalt", null, customerPassword?.PasswordSalt);
 
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());

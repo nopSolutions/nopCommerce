@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Extensions;
 
 namespace Nop.Services.ExportImport.Help
 {
@@ -170,12 +169,12 @@ namespace Nop.Services.ExportImport.Help
 
         public string GetItemText(object id)
         {
-            return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString()).Return(ev => ev.Text, String.Empty);
+            return DropDownElements.FirstOrDefault(ev => ev.Value == id.ToString())?.Text ?? string.Empty;
         }
 
         public int GetItemId(object name)
         {
-            return DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
+            return Convert.ToInt32(DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == (name ?? string.Empty).ToString().Trim())?.Value ?? "0");
         }
         
         /// <summary>

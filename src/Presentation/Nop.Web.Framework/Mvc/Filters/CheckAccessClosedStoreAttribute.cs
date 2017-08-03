@@ -72,7 +72,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (_ignoreFilter)
                     return;
 
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context?.HttpContext?.Request == null)
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())

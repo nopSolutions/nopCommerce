@@ -112,9 +112,8 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)
-                    .Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
+                .Select(mapperConfiguration => (IMapperProfile) Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
@@ -183,7 +182,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -223,7 +222,7 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
+                .Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 

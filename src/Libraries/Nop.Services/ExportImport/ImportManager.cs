@@ -12,7 +12,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -373,14 +372,14 @@ namespace Nop.Services.ExportImport
                 var allSku = new List<string>();
 
                 var tempProperty = manager.GetProperty("Categories");
-                var categoryCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
+                var categoryCellNum = tempProperty?.PropertyOrderPosition ?? -1;
                 
                 tempProperty = manager.GetProperty("SKU");
-                var skuCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
+                var skuCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
                 var allManufacturersNames = new List<string>();
                 tempProperty = manager.GetProperty("Manufacturers");
-                var manufacturerCellNum = tempProperty.Return(p => p.PropertyOrderPosition, -1);
+                var manufacturerCellNum = tempProperty?.PropertyOrderPosition ?? -1;
 
                 manager.SetSelectList("ProductType", ProductType.SimpleProduct.ToSelectList(useLocalization: false));
                 manager.SetSelectList("GiftCardType", GiftCardType.Virtual.ToSelectList(useLocalization: false));
@@ -391,13 +390,13 @@ namespace Nop.Services.ExportImport
                 manager.SetSelectList("RecurringCyclePeriod", RecurringProductCyclePeriod.Days.ToSelectList(useLocalization: false));
                 manager.SetSelectList("RentalPricePeriod", RentalPricePeriod.Days.ToSelectList(useLocalization: false));
 
-                manager.SetSelectList("Vendor", _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor).Return(v => v.Name, String.Empty)));
-                manager.SetSelectList("ProductTemplate", _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate).Return(pt => pt.Name, String.Empty)));
-                manager.SetSelectList("DeliveryDate", _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate).Return(dd => dd.Name, String.Empty)));
-                manager.SetSelectList("ProductAvailabilityRange", _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange).Return(range => range.Name, String.Empty)));
-                manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory).Return(tc => tc.Name, String.Empty)));
-                manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
-                manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight).Return(mw => mw.Name, String.Empty)));
+                manager.SetSelectList("Vendor", _vendorService.GetAllVendors(showHidden: true).Select(v => v as BaseEntity).ToSelectList(p => (p as Vendor)?.Name ?? string.Empty));
+                manager.SetSelectList("ProductTemplate", _productTemplateService.GetAllProductTemplates().Select(pt => pt as BaseEntity).ToSelectList(p => (p as ProductTemplate)?.Name ?? string.Empty));
+                manager.SetSelectList("DeliveryDate", _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate)?.Name ?? string.Empty));
+                manager.SetSelectList("ProductAvailabilityRange", _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange)?.Name ?? string.Empty));
+                manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory)?.Name ?? string.Empty));
+                manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight)?.Name ?? string.Empty));
+                manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty));
 
                 var allAttributeIds = new List<int>();
                 var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
@@ -419,7 +418,7 @@ namespace Nop.Services.ExportImport
                         var cellValue = worksheet.Cells[endRow, attributeIdCellNum].Value;
                         try
                         {
-                            var aid = cellValue.Return(Convert.ToInt32, -1);
+                            var aid = Convert.ToInt32(cellValue ?? -1);
 
                             var productAttribute = _productAttributeService.GetProductAttributeById(aid);
 
@@ -428,7 +427,7 @@ namespace Nop.Services.ExportImport
                         }
                         catch (FormatException)
                         {
-                            if (cellValue.Return(cv => cv.ToString(), String.Empty) == "AttributeId")
+                            if ((cellValue ?? string.Empty).ToString() == "AttributeId")
                                 worksheet.Row(endRow).OutlineLevel = 1;
                         }
                     }
@@ -438,7 +437,7 @@ namespace Nop.Services.ExportImport
                         managerProductAttribute.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
                         if (!managerProductAttribute.IsCaption)
                         {
-                            var aid = worksheet.Cells[endRow, attributeIdCellNum].Value.Return(Convert.ToInt32, -1);
+                            var aid = Convert.ToInt32(worksheet.Cells[endRow, attributeIdCellNum].Value ?? -1);
                             allAttributeIds.Add(aid);
                         }
 
@@ -448,7 +447,7 @@ namespace Nop.Services.ExportImport
 
                     if (categoryCellNum > 0)
                     { 
-                        var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
+                        var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value?.ToString() ?? string.Empty;
 
                         if (!string.IsNullOrEmpty(categoryIds))
                             allCategoriesNames.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
@@ -456,7 +455,7 @@ namespace Nop.Services.ExportImport
 
                     if (skuCellNum > 0)
                     {
-                        var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
+                        var sku = worksheet.Cells[endRow, skuCellNum].Value?.ToString() ?? string.Empty;
 
                         if (!string.IsNullOrEmpty(sku))
                             allSku.Add(sku);
@@ -464,7 +463,7 @@ namespace Nop.Services.ExportImport
 
                     if (manufacturerCellNum > 0)
                     { 
-                        var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value.Return(p => p.ToString(), string.Empty);
+                        var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value?.ToString() ?? string.Empty;
                         if (!string.IsNullOrEmpty(manufacturerIds))
                             allManufacturersNames.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
@@ -497,7 +496,7 @@ namespace Nop.Services.ExportImport
                 }
 
                 //performance optimization, load all products by SKU in one SQL request
-                var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray(), _workContext.CurrentVendor.Return(v=>v.Id, 0));
+                var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray(), _workContext.CurrentVendor?.Id ?? 0);
 
                 //validate maximum number of products per vendor
                 if (_vendorSettings.MaximumProductNumber > 0 &&
@@ -1063,9 +1062,9 @@ namespace Nop.Services.ExportImport
                         _productTagService.UpdateProductTags(product, productTags);
                     }
 
-                    var picture1 = manager.GetProperty("Picture1").Return(p => p.StringValue, String.Empty);
-                    var picture2 = manager.GetProperty("Picture2").Return(p => p.StringValue, String.Empty);
-                    var picture3 = manager.GetProperty("Picture3").Return(p => p.StringValue, String.Empty);
+                    var picture1 = manager.GetProperty("Picture1")?.StringValue ?? string.Empty;
+                    var picture2 = manager.GetProperty("Picture2")?.StringValue ?? string.Empty;
+                    var picture3 = manager.GetProperty("Picture3")?.StringValue ?? string.Empty;
 
                     productPictureMetadata.Add(new ProductPictureMetadata
                     {

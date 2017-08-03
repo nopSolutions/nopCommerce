@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
@@ -43,7 +42,7 @@ namespace Nop.Web.Framework.Localization
                 .FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.InvariantCultureIgnoreCase));
 
             //if language exists and published passed URL is localized
-            return language.Return(urlLanguage => urlLanguage.Published, false);
+            return language?.Published ?? false;
         }
 
         /// <summary>
