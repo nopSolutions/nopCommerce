@@ -41,6 +41,7 @@ namespace Nop.Plugin.Payments.Manual.Components
             if (this.Request.Method != WebRequestMethods.Http.Get)
             {
                 var form = this.Request.Form;
+                model.CardholderName = form["CardholderName"];
                 model.CardNumber = form["CardNumber"];
                 model.CardCode = form["CardCode"];
                 var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
