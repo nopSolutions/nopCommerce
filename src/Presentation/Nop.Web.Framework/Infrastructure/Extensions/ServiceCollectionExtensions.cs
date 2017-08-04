@@ -8,7 +8,6 @@ using Newtonsoft.Json.Serialization;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;

@@ -573,6 +573,8 @@ namespace Nop.Services.Orders
             //sub total
             details.OrderSubTotalInclTax = details.InitialOrder.OrderSubtotalInclTax;
             details.OrderSubTotalExclTax = details.InitialOrder.OrderSubtotalExclTax;
+            details.OrderSubTotalDiscountExclTax = details.InitialOrder.OrderSubTotalDiscountExclTax;
+            details.OrderSubTotalDiscountInclTax = details.InitialOrder.OrderSubTotalDiscountInclTax;
 
             //shipping info
             if (details.InitialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired)
@@ -611,6 +613,14 @@ namespace Nop.Services.Orders
 
             //VAT number
             details.VatNumber = details.InitialOrder.VatNumber;
+
+            //discount history (the same)
+            foreach (var duh in details.InitialOrder.DiscountUsageHistory)
+            {
+                var d = _discountService.GetDiscountById(duh.DiscountId);
+                if (d != null)
+                    details.AppliedDiscounts.Add(d.MapDiscount());
+            }
 
             //order total
             details.OrderDiscountAmount = details.InitialOrder.OrderDiscount;
@@ -1215,8 +1225,7 @@ namespace Nop.Services.Orders
                 var details = PreparePlaceOrderDetails(processPaymentRequest);
 
                 #region Payment workflow
-
-
+                
                 //process payment
                 ProcessPaymentResult processPaymentResult = null;
                 //skip payment workflow if order total equals zero
@@ -1815,6 +1824,21 @@ namespace Nop.Services.Orders
                         //inventory
                         _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml,
                             string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
+                    }
+
+                    //discount usage history
+                    foreach (var discount in details.AppliedDiscounts)
+                    {
+                        var d = _discountService.GetDiscountById(discount.Id);
+                        if (d != null)
+                        {
+                            _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
+                            {
+                                Discount = d,
+                                Order = order,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                        }
                     }
 
                     //notifications
