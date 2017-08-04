@@ -2128,9 +2128,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        //do not validate request token (XSRF)
-        //for some reasons it does not work with "filtering" support
-        [AdminAntiForgery(true)] 
         public virtual IActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))

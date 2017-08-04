@@ -343,9 +343,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        //do not validate request token (XSRF)
-        //for some reasons it does not work with "filtering" support
-        [AdminAntiForgery(true)]
         public virtual IActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
