@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                RuleFor(x => x).Custom((x, context) =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country have states?
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
@@ -50,9 +50,11 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     {
                         //if yes, then ensure that a state is selected
                         if (x.StateProvinceId == 0)
-                            context.AddFailure(new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required")));
+                            return false;
                     }
-                });
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {

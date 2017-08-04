@@ -38,7 +38,7 @@ namespace Nop.Web.Validators.Customer
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {
-                RuleFor(x => x).Custom((x, context) =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country have states?
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
@@ -46,23 +46,35 @@ namespace Nop.Web.Validators.Customer
                     {
                         //if yes, then ensure that a state is selected
                         if (x.StateProvinceId == 0)
-                            context.AddFailure(new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required")));
+                            return false;
                     }
-                });
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
             }
-            if (customerSettings.DateOfBirthEnabled &&customerSettings.DateOfBirthRequired)
+            if (customerSettings.DateOfBirthEnabled && customerSettings.DateOfBirthRequired)
             {
-                RuleFor(x => x).Custom((x, context) =>
+                //entered?
+                RuleFor(x => x.DateOfBirthDay).Must((x, context) =>
                 {
                     var dateOfBirth = x.ParseDateOfBirth();
-                    //entered?
                     if (!dateOfBirth.HasValue)
-                        context.AddFailure(new ValidationFailure("DateOfBirthDay", localizationService.GetResource("Account.Fields.DateOfBirth.Required")));
-                    else
-                        //minimum age
-                        if (customerSettings.DateOfBirthMinimumAge.HasValue && CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) < customerSettings.DateOfBirthMinimumAge.Value)
-                            context.AddFailure(new ValidationFailure("DateOfBirthDay", string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge.Value)));
-                });
+                        return false;
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Account.Fields.DateOfBirth.Required"));
+
+                //minimum age
+                RuleFor(x => x.DateOfBirthDay).Must((x, context) =>
+                {
+                    var dateOfBirth = x.ParseDateOfBirth();
+                    if (dateOfBirth.HasValue && customerSettings.DateOfBirthMinimumAge.HasValue &&
+                        CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) <
+                        customerSettings.DateOfBirthMinimumAge.Value)
+                        return false;
+
+                    return true;
+                }).WithMessage(string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge));
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
