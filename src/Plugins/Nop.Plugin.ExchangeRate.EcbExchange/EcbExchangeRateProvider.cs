@@ -42,7 +42,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
         public IList<Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             if (exchangeRateCurrencyCode == null)
-                throw new ArgumentNullException("exchangeRateCurrencyCode");
+                throw new ArgumentNullException(nameof(exchangeRateCurrencyCode));
 
             //add euro with rate 1
             var ratesToEuro = new List<Core.Domain.Directory.ExchangeRate>

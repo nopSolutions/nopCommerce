@@ -89,7 +89,7 @@ namespace Nop.Services.Topics
         public virtual void DeleteTopic(Topic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Delete(topic);
 
@@ -199,7 +199,7 @@ namespace Nop.Services.Topics
         public virtual void InsertTopic(Topic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Insert(topic);
 
@@ -217,7 +217,7 @@ namespace Nop.Services.Topics
         public virtual void UpdateTopic(Topic topic)
         {
             if (topic == null)
-                throw new ArgumentNullException("topic");
+                throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Update(topic);
 

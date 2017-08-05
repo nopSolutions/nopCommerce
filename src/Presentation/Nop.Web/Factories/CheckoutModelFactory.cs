@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -146,8 +145,8 @@ namespace Nop.Web.Factories
             }
 
             //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.NewAddress,
+            model.BillingNewAddress.CountryId = selectedCountryId;
+            _addressModelFactory.PrepareAddressModel(model.BillingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
@@ -250,8 +249,8 @@ namespace Nop.Web.Factories
             }
 
             //new address
-            model.NewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.NewAddress,
+            model.ShippingNewAddress.CountryId = selectedCountryId;
+            _addressModelFactory.PrepareAddressModel(model.ShippingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
@@ -431,15 +430,14 @@ namespace Nop.Web.Factories
         /// <returns>Payment info model</returns>
         public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
-            var model = new CheckoutPaymentInfoModel();
-            string actionName;
-            string controllerName;
-            RouteValueDictionary routeValues;
-            paymentMethod.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
-            model.PaymentInfoActionName = actionName;
-            model.PaymentInfoControllerName = controllerName;
-            model.PaymentInfoRouteValues = routeValues;
-            model.DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab;
+            paymentMethod.GetPublicViewComponent(out string viewComponentName);
+
+            var model = new CheckoutPaymentInfoModel
+            {
+                PaymentViewComponentName = viewComponentName,
+                DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
+            };
+            
             return model;
         }
 
@@ -471,7 +469,7 @@ namespace Nop.Web.Factories
         public virtual CheckoutCompletedModel PrepareCheckoutCompletedModel(Order order)
         {
             if (order ==null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             var model = new CheckoutCompletedModel
             {
@@ -502,12 +500,13 @@ namespace Nop.Web.Factories
         public virtual OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw  new ArgumentNullException("cart");
+                throw  new ArgumentNullException(nameof(cart));
 
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = cart.RequiresShipping(),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
+                BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;
         }

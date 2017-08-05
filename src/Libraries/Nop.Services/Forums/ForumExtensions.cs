@@ -109,7 +109,7 @@ namespace Nop.Services.Forums
         public static ForumTopic GetLastTopic(this Forum forum, IForumService forumService)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
 
             return forumService.GetTopicById(forum.LastTopicId);
         }
@@ -123,7 +123,7 @@ namespace Nop.Services.Forums
         public static ForumPost GetLastPost(this Forum forum, IForumService forumService)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
 
             return forumService.GetPostById(forum.LastPostId);
         }
@@ -137,7 +137,7 @@ namespace Nop.Services.Forums
         public static ForumPost GetFirstPost(this ForumTopic forumTopic, IForumService forumService)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             var forumPosts = forumService.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
             if (forumPosts.Any())
@@ -155,7 +155,7 @@ namespace Nop.Services.Forums
         public static ForumPost GetLastPost(this ForumTopic forumTopic, IForumService forumService)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
 
             return forumService.GetPostById(forumTopic.LastPostId);
         }

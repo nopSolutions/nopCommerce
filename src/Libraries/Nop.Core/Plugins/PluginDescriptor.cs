@@ -101,11 +101,19 @@ namespace Nop.Core.Plugins
 
         public virtual T Instance<T>() where T : class, IPlugin
         {
-            object instance;
-            if (!EngineContext.Current.ContainerManager.TryResolve(PluginType, null, out instance))
+            object instance = null;
+            try
+            {
+                instance = EngineContext.Current.Resolve(PluginType);
+            }
+            catch
+            {
+                //try resolve
+            }
+            if (instance == null)
             {
                 //not resolved
-                instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType);
+                instance = EngineContext.Current.ResolveUnregistered(PluginType);
             }
             var typedInstance = instance as T;
             if (typedInstance != null)

@@ -1,0 +1,799 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Nop.Core
+@model ProductModel
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+
+<div id="productsettings-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productsettings-window-title">
+    <div class="modal-dialog editor-settings-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="productsettings-window-title">
+                    @T("Admin.Configuration.Settings.ProductEditor.ModalTitle")
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Product" asp-action="SaveProductEditorSettings" method="post">
+                    <input type="hidden" name="returnurl" value="@webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            @T("Admin.Configuration.Settings.ProductEditor.ModalDescription")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.CommonInfo")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Id" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Id" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Id"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductType" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductType" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductType"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductTemplate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductTemplate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductTemplate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.VisibleIndividually" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.VisibleIndividually" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.VisibleIndividually"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Published" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Published" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Published"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductTags" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductTags" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductTags"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.GTIN" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.GTIN" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.GTIN"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ManufacturerPartNumber" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ManufacturerPartNumber" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ManufacturerPartNumber"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ShowOnHomePage" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ShowOnHomePage" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ShowOnHomePage"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DisplayOrder" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DisplayOrder" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DisplayOrder"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AllowCustomerReviews" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AllowCustomerReviews" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AllowCustomerReviews"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AvailableStartDate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AvailableStartDate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AvailableStartDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AvailableEndDate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AvailableEndDate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AvailableEndDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.MarkAsNew" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MarkAsNew" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MarkAsNew"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10"> 
+                                                <nop-label asp-for="ProductEditorSettingsModel.MarkAsNewStartDate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MarkAsNewStartDate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MarkAsNewStartDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.MarkAsNewEndDate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MarkAsNewEndDate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MarkAsNewEndDate"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AdminComment" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AdminComment" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AdminComment"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.CreatedOn" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.CreatedOn" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.CreatedOn"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.UpdatedOn" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.UpdatedOn" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.UpdatedOn"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.AdvancedProductTypes")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.IsGiftCard" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.IsGiftCard" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.IsGiftCard"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DownloadableProduct" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DownloadableProduct" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DownloadableProduct"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.RecurringProduct" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.RecurringProduct" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.RecurringProduct"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.IsRental" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.IsRental" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.IsRental"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Price")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.OldPrice" />
+                                            </div>                                            
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.OldPrice" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.OldPrice"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductCost" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductCost" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductCost"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.TierPrices" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.TierPrices" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.TierPrices"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Discounts" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Discounts" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Discounts"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DisableBuyButton" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DisableBuyButton" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DisableBuyButton"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DisableWishlistButton" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DisableWishlistButton" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DisableWishlistButton"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AvailableForPreOrder" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AvailableForPreOrder" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AvailableForPreOrder"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.CallForPrice" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.CallForPrice" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.CallForPrice"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.CustomerEntersPrice" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.CustomerEntersPrice" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.CustomerEntersPrice"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.PAngV" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.PAngV" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.PAngV"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.TelecommunicationsBroadcastingElectronicServices"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Shipping")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Weight" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Weight" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Weight"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Dimensions" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Dimensions" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Dimensions"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.FreeShipping" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.FreeShipping" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.FreeShipping"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ShipSeparately" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ShipSeparately" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ShipSeparately"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AdditionalShippingCharge" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AdditionalShippingCharge" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AdditionalShippingCharge"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DeliveryDate" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DeliveryDate" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DeliveryDate"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Mappings")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Vendor" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Vendor" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Vendor"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Stores" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Stores" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Stores"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Manufacturers" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Manufacturers" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Manufacturers"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Inventory")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductAvailabilityRange" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductAvailabilityRange" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductAvailabilityRange"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.UseMultipleWarehouses" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.UseMultipleWarehouses" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.UseMultipleWarehouses"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Warehouse" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Warehouse" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Warehouse"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DisplayStockAvailability" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DisplayStockAvailability" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DisplayStockAvailability"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.DisplayStockQuantity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.DisplayStockQuantity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.DisplayStockQuantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.MinimumStockQuantity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MinimumStockQuantity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MinimumStockQuantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.LowStockActivity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.LowStockActivity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.LowStockActivity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.NotifyAdminForQuantityBelow" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.NotifyAdminForQuantityBelow" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.NotifyAdminForQuantityBelow"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Backorders" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Backorders" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Backorders"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AllowBackInStockSubscriptions" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AllowBackInStockSubscriptions" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AllowBackInStockSubscriptions"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.MinimumCartQuantity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MinimumCartQuantity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MinimumCartQuantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.MaximumCartQuantity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.MaximumCartQuantity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.MaximumCartQuantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AllowedQuantities" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AllowedQuantities" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AllowedQuantities"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.AllowAddingOnlyExistingAttributeCombinations"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.NotReturnable" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.NotReturnable" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.NotReturnable"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Security")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ACL" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ACL" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ACL"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.LinkedProducts")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.RelatedProducts" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.RelatedProducts" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.RelatedProducts"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.CrossSellsProducts" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.CrossSellsProducts" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.CrossSellsProducts"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading clearfix">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                @T("Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="checkbox" class="select-all-fields" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.Seo" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.Seo" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.Seo"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.PurchasedWithOrders" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.PurchasedWithOrders" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.PurchasedWithOrders"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.OneColumnProductPage" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.OneColumnProductPage" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.OneColumnProductPage"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.ProductAttributes" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.ProductAttributes" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.ProductAttributes"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.SpecificationAttributes" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.SpecificationAttributes" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.SpecificationAttributes"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.StockQuantityHistory" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.StockQuantityHistory" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.StockQuantityHistory"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center margin-t-5">
+                            <button type="submit" name="save-product-editor-settings" class="btn btn-lg bg-light-blue">Save</button>
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    $(document).ready(function () {
+                        $('input[type=checkbox].select-all-fields').each(function (index, value) {
+                            if ($('input[type=checkbox]:checked', $(this).closest('.panel')).length > 0) {
+                                $(this).attr('checked', true);
+                            }
+                        });
+
+                        $('input[type=checkbox].select-all-fields').on('click', function () {
+                            $('input[type=checkbox]', $(this).closest('.panel')).attr('checked', $(this).is(':checked'));
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

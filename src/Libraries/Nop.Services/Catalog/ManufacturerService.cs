@@ -121,7 +121,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
             
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
@@ -209,7 +209,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Insert(manufacturer);
 
@@ -228,7 +228,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Update(manufacturer);
 
@@ -248,7 +248,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Delete(productManufacturer);
 
@@ -411,7 +411,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Insert(productManufacturer);
 
@@ -430,7 +430,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Update(productManufacturer);
 
@@ -467,7 +467,7 @@ namespace Nop.Services.Catalog
         public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
         {
             if (manufacturerNames == null)
-                throw new ArgumentNullException("manufacturerNames");
+                throw new ArgumentNullException(nameof(manufacturerNames));
 
             var query = _manufacturerRepository.Table;
             var queryFilter = manufacturerNames.Distinct().ToArray();

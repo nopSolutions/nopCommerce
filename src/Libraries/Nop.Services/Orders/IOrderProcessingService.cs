@@ -252,14 +252,14 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Valdiate minimum order sub-total amount
+        /// Validate minimum order sub-total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order sub-total amount is not reached</returns>
         bool ValidateMinOrderSubtotalAmount(IList<ShoppingCartItem> cart);
 
         /// <summary>
-        /// Valdiate minimum order total amount
+        /// Validate minimum order total amount
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>

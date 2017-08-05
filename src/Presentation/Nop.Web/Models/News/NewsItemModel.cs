@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentValidation.Attributes;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.News;
 
 namespace Nop.Web.Models.News

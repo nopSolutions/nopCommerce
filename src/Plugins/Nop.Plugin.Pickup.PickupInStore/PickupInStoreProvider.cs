@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
@@ -26,6 +25,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         private readonly IStoreContext _storeContext;
         private readonly IStorePickupPointService _storePickupPointService;
         private readonly StorePickupPointObjectContext _objectContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -37,7 +37,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStorePickupPointService storePickupPointService,
-            StorePickupPointObjectContext objectContext)
+            StorePickupPointObjectContext objectContext, 
+            IWebHelper webHelper)
         {
             this._addressService = addressService;
             this._countryService = countryService;
@@ -46,6 +47,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
             this._storeContext = storeContext;
             this._storePickupPointService = storePickupPointService;
             this._objectContext = objectContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -100,16 +102,11 @@ namespace Nop.Plugin.Pickup.PickupInStore
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "PickupInStore";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Pickup.PickupInStore.Controllers" }, { "area", null } };
+            return _webHelper.GetStoreLocation() + "Admin/PickupInStore/Configure";
         }
 
         /// <summary>

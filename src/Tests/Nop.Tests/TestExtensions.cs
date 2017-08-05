@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
-using NUnit.Framework;
-using Nop.Core;
 using System.Collections.Generic;
-using Rhino.Mocks.Constraints;
+using System.Linq;
+using Nop.Core;
+using NUnit.Framework;
 
 namespace Nop.Tests
 {
@@ -110,7 +108,7 @@ namespace Nop.Tests
         {
             var properties = typeof (T).GetProperties().ToList();
 
-            var filterByEnteties = new List<string>();
+            var filterByEntities = new List<string>();
             var values = new Dictionary<string, object>();
 
             foreach (var propertyInfo in properties.ToList())
@@ -134,14 +132,14 @@ namespace Nop.Tests
                 if (!(value is BaseEntity))
                     continue;
 
-                //skip BaseEntity types and enteties Id
-                filterByEnteties.Add(propertyInfo.Name + "Id");
+                //skip BaseEntity types and entity Id
+                filterByEntities.Add(propertyInfo.Name + "Id");
                 properties.Remove(propertyInfo);
             }
 
             foreach (var propertyInfo in properties.Where(p=>values.ContainsKey(p.Name)))
             {
-                if (filterByEnteties.Any(f => f == propertyInfo.Name))
+                if (filterByEntities.Any(f => f == propertyInfo.Name))
                     continue;
                
                 Assert.AreEqual(values[propertyInfo.Name], propertyInfo.GetValue(expected), string.Format("The property \"{0}.{1}\" of these objects is not equal", typeof(T).Name, propertyInfo.Name));

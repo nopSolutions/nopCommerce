@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
@@ -16,11 +17,12 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
     public class DiscountRulesHasOneProductController : BasePluginController
     {
         private readonly IDiscountService _discountService;
@@ -57,7 +59,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             this._productService = productService;
         }
 
-        public ActionResult Configure(int discountId, int? discountRequirementId)
+        public IActionResult Configure(int discountId, int? discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -118,10 +120,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 
                 _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirement.Id), productIds);
             }
-            return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
+            return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
         }
 
-        public ActionResult ProductAddPopup(string btnId, string productIdsInput)
+        public ActionResult ProductAddPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("Access denied");
@@ -154,11 +156,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-
-
-            ViewBag.productIdsInput = productIdsInput;
-            ViewBag.btnId = btnId;
-
+            
             return View("~/Plugins/DiscountRules.HasOneProduct/Views/ProductAddPopup.cshtml", model);
         }
 
@@ -199,7 +197,6 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
         [AdminAntiForgery]
         public ActionResult LoadProductFriendlyNames(string productIds)
         {

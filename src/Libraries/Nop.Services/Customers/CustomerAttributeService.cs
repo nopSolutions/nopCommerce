@@ -90,7 +90,7 @@ namespace Nop.Services.Customers
         public virtual void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
+                throw new ArgumentNullException(nameof(customerAttribute));
 
             _customerAttributeRepository.Delete(customerAttribute);
 
@@ -138,7 +138,7 @@ namespace Nop.Services.Customers
         public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
+                throw new ArgumentNullException(nameof(customerAttribute));
 
             _customerAttributeRepository.Insert(customerAttribute);
 
@@ -156,7 +156,7 @@ namespace Nop.Services.Customers
         public virtual void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
         {
             if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
+                throw new ArgumentNullException(nameof(customerAttribute));
 
             _customerAttributeRepository.Update(customerAttribute);
 
@@ -174,7 +174,7 @@ namespace Nop.Services.Customers
         public virtual void DeleteCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
-                throw new ArgumentNullException("customerAttributeValue");
+                throw new ArgumentNullException(nameof(customerAttributeValue));
 
             _customerAttributeValueRepository.Delete(customerAttributeValue);
 
@@ -225,7 +225,7 @@ namespace Nop.Services.Customers
         public virtual void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
-                throw new ArgumentNullException("customerAttributeValue");
+                throw new ArgumentNullException(nameof(customerAttributeValue));
 
             _customerAttributeValueRepository.Insert(customerAttributeValue);
 
@@ -243,7 +243,7 @@ namespace Nop.Services.Customers
         public virtual void UpdateCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
         {
             if (customerAttributeValue == null)
-                throw new ArgumentNullException("customerAttributeValue");
+                throw new ArgumentNullException(nameof(customerAttributeValue));
 
             _customerAttributeValueRepository.Update(customerAttributeValue);
 

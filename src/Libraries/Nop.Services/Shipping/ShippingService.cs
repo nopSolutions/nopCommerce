@@ -9,6 +9,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Extensions;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -209,7 +210,7 @@ namespace Nop.Services.Shipping
         public virtual void DeleteShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
+                throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Delete(shippingMethod);
 
@@ -229,11 +230,11 @@ namespace Nop.Services.Shipping
 
             return _shippingMethodRepository.GetById(shippingMethodId);
         }
-        
+
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
-        /// <param name="filterByCountryId">The country indentifier to filter by</param>
+        /// <param name="filterByCountryId">The country identifier to filter by</param>
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
@@ -269,7 +270,7 @@ namespace Nop.Services.Shipping
         public virtual void InsertShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
+                throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Insert(shippingMethod);
 
@@ -284,7 +285,7 @@ namespace Nop.Services.Shipping
         public virtual void UpdateShippingMethod(ShippingMethod shippingMethod)
         {
             if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
+                throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Update(shippingMethod);
 
@@ -303,7 +304,7 @@ namespace Nop.Services.Shipping
         public virtual void DeleteWarehouse(Warehouse warehouse)
         {
             if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
+                throw new ArgumentNullException(nameof(warehouse));
 
             _warehouseRepository.Delete(warehouse);
 
@@ -348,7 +349,7 @@ namespace Nop.Services.Shipping
         public virtual void InsertWarehouse(Warehouse warehouse)
         {
             if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
+                throw new ArgumentNullException(nameof(warehouse));
 
             _warehouseRepository.Insert(warehouse);
 
@@ -366,7 +367,7 @@ namespace Nop.Services.Shipping
         public virtual void UpdateWarehouse(Warehouse warehouse)
         {
             if (warehouse == null)
-                throw new ArgumentNullException("warehouse");
+                throw new ArgumentNullException(nameof(warehouse));
 
             _warehouseRepository.Update(warehouse);
 
@@ -430,7 +431,7 @@ namespace Nop.Services.Shipping
         public virtual decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             if (shoppingCartItem.Product == null)
                 return decimal.Zero;
@@ -477,7 +478,7 @@ namespace Nop.Services.Shipping
         public virtual decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             Customer customer = request.Customer;
 
@@ -511,7 +512,7 @@ namespace Nop.Services.Shipping
             out decimal width, out decimal length, out decimal height)
         {
             if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
+                throw new ArgumentNullException(nameof(shoppingCartItem));
 
             width = length = height = decimal.Zero;
 
@@ -550,7 +551,7 @@ namespace Nop.Services.Shipping
             out decimal width, out decimal length, out decimal height)
         {
             if (packageItems == null)
-                throw new ArgumentNullException("packageItems");
+                throw new ArgumentNullException(nameof(packageItems));
 
             //calculate cube root of volume, in case if the number of items more than 1
             if (_shippingSettings.UseCubeRootMethod && AreMultipleItems(packageItems))
@@ -803,10 +804,10 @@ namespace Nop.Services.Shipping
             int storeId = 0)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var result = new GetShippingOptionResponse();
-            
+
             //create a package
             bool shippingFromMultipleLocations;
             var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);

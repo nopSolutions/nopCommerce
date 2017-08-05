@@ -19,7 +19,7 @@ namespace Nop.Web.Factories
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
 	    #endregion
 
@@ -29,7 +29,7 @@ namespace Nop.Web.Factories
             IStateProvinceService stateProvinceService, 
             ILocalizationService localizationService, 
             IWorkContext workContext,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -51,7 +51,7 @@ namespace Nop.Web.Factories
         public virtual dynamic GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             if (String.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException("countryId");
+                throw new ArgumentNullException(nameof(countryId));
 
             string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>

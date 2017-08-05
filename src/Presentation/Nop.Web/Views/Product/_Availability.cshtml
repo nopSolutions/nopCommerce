@@ -1,5 +1,4 @@
 ﻿@model ProductDetailsModel
-@using Nop.Web.Models.Catalog;
 @if (!String.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
 {
     <div class="availability">
@@ -10,6 +9,6 @@
                 <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
             </div>
         }
-        @Html.Partial("_BackInStockSubscription", Model)
+        @await Html.PartialAsync("_BackInStockSubscription", Model)
     </div>
 }

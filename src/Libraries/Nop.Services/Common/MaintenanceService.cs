@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Web;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -23,7 +23,8 @@ namespace Nop.Services.Common
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         #endregion
 
         #region Ctor
@@ -34,23 +35,26 @@ namespace Nop.Services.Common
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="httpContext">HTTP context</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         public MaintenanceService(IDataProvider dataProvider, IDbContext dbContext,
-            CommonSettings commonSettings, HttpContextBase httpContext)
+            CommonSettings commonSettings, IHostingEnvironment hostingEnvironment)
         {
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
-            this._httpContext = httpContext;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
 
         #region Utilities
 
-        protected virtual string GetBackupDirectoryPath()
+        protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
-            return string.Format("{0}Administration\\db_backups\\", _httpContext.Request.PhysicalApplicationPath);
+            var path = Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
+            if (ensureFolderCreated)
+                System.IO.Directory.CreateDirectory(path);
+            return path;
         }
 
         protected virtual void CheckBackupSupported()
@@ -59,9 +63,9 @@ namespace Nop.Services.Common
 
             throw new DataException("This database does not support backup");
         }
-
+        
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -196,7 +200,7 @@ namespace Nop.Services.Common
         {
             return Path.Combine(GetBackupDirectoryPath(), backupFileName);
         }
-
+        
         #endregion
     }
 }

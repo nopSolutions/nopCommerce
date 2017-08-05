@@ -19,6 +19,8 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private const int SALT_KEY_SIZE = 5;
+
         private readonly ICustomerService _customerService;
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
@@ -174,7 +176,7 @@ namespace Nop.Services.Customers
         public virtual CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             if (request.Customer == null)
                 throw new ArgumentException("Can't load current customer");
@@ -254,7 +256,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(5);
+                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -300,7 +302,7 @@ namespace Nop.Services.Customers
         public virtual ChangePasswordResult ChangePassword(ChangePasswordRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             var result = new ChangePasswordResult();
             if (String.IsNullOrWhiteSpace(request.Email))
@@ -362,7 +364,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        var saltKey = _encryptionService.CreateSaltKey(5);
+                        var saltKey = _encryptionService.CreateSaltKey(SALT_KEY_SIZE);
                         customerPassword.PasswordSalt = saltKey;
                         customerPassword.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -385,7 +387,7 @@ namespace Nop.Services.Customers
         public virtual void SetEmail(Customer customer, string newEmail, bool requireValidation)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (newEmail == null)
                 throw new NopException("Email cannot be null");
@@ -442,7 +444,7 @@ namespace Nop.Services.Customers
         public virtual void SetUsername(Customer customer, string newUsername)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!_customerSettings.UsernamesEnabled)
                 throw new NopException("Usernames are disabled");

@@ -35,11 +35,11 @@ namespace Nop.Services.Security
         /// <summary>
         /// Create a password hash
         /// </summary>
-        /// <param name="password">{assword</param>
+        /// <param name="password">Password</param>
         /// <param name="saltkey">Salk key</param>
         /// <param name="passwordFormat">Password format (hash algorithm)</param>
         /// <returns>Password hash</returns>
-        public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
+        public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat)
         {
             return CreateHash(Encoding.UTF8.GetBytes(String.Concat(password, saltkey)), passwordFormat);
         }
@@ -50,12 +50,11 @@ namespace Nop.Services.Security
         /// <param name="data">The data for calculating the hash</param>
         /// <param name="hashAlgorithm">Hash algorithm</param>
         /// <returns>Data hash</returns>
-        public virtual string CreateHash(byte[] data, string hashAlgorithm = "SHA1")
+        public virtual string CreateHash(byte[] data, string hashAlgorithm)
         {
             if (String.IsNullOrEmpty(hashAlgorithm))
-                hashAlgorithm = "SHA1";
+                throw new ArgumentNullException(nameof(hashAlgorithm));
            
-            //return FormsAuthentication.HashPasswordForStoringInConfigFile(saltAndPassword, passwordFormat);
             var algorithm = HashAlgorithm.Create(hashAlgorithm);
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");

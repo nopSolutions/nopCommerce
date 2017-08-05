@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -55,13 +55,13 @@ namespace Nop.Web.Factories
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
 
         #endregion
@@ -89,13 +89,13 @@ namespace Nop.Web.Factories
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
-            HttpContextBase httpContext,
+            IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
             BlogSettings blogSettings,
             ForumSettings  forumSettings,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings)
         {
             this._productModelFactory = productModelFactory;
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
-            this._httpContext = httpContext;
+            this._httpContextAccessor = httpContextAccessor;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -169,10 +169,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
             pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
@@ -194,7 +194,6 @@ namespace Nop.Web.Factories
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
-
                     var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
@@ -214,10 +213,10 @@ namespace Nop.Web.Factories
         public virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             pagingFilteringModel.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
 
@@ -258,10 +257,10 @@ namespace Nop.Web.Factories
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             if (command.PageNumber <= 0)
             {
@@ -318,7 +317,7 @@ namespace Nop.Web.Factories
 
                         if (command.PageSize <= 0)
                         {
-                            command.PageSize = int.Parse(pagingFilteringModel.PageSizeOptions.FirstOrDefault().Text);
+                            command.PageSize = int.Parse(pagingFilteringModel.PageSizeOptions.First().Text);
                         }
                     }
                 }
@@ -336,8 +335,8 @@ namespace Nop.Web.Factories
             }
         }
 
-        #endregion
-
+#endregion
+        
         #region Categories
 
         /// <summary>
@@ -349,7 +348,7 @@ namespace Nop.Web.Factories
         public virtual CategoryModel PrepareCategoryModel(Category category, CatalogPagingFilteringModel command)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var model = new CategoryModel
             {
@@ -602,7 +601,7 @@ namespace Nop.Web.Factories
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
                 _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                 .Where(t => t.IncludeInTopMenu)
-                .Select(t => new TopMenuModel.TopMenuTopicModel
+                .Select(t => new TopMenuModel.TopicModel
                 {
                     Id = t.Id,
                     Name = t.GetLocalized(x => x.Title),
@@ -760,9 +759,9 @@ namespace Nop.Web.Factories
 
             return result;
         }
-
+        
         #endregion
-
+        
         #region Manufacturers
 
         /// <summary>
@@ -774,7 +773,7 @@ namespace Nop.Web.Factories
         public virtual ManufacturerModel PrepareManufacturerModel(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             var model = new ManufacturerModel
             {
@@ -977,9 +976,9 @@ namespace Nop.Web.Factories
             
             return cachedModel;
         }
-
+        
         #endregion
-
+        
         #region Vendors
 
         /// <summary>
@@ -991,7 +990,7 @@ namespace Nop.Web.Factories
         public virtual VendorModel PrepareVendorModel(Vendor vendor, CatalogPagingFilteringModel command)
         {
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             var model = new VendorModel
             {
@@ -1105,9 +1104,9 @@ namespace Nop.Web.Factories
             
             return cachedModel;
         }
-
+        
         #endregion
-
+        
         #region Product tags
 
         /// <summary>
@@ -1161,7 +1160,7 @@ namespace Nop.Web.Factories
         public virtual ProductsByTagModel PrepareProductsByTagModel(ProductTag productTag, CatalogPagingFilteringModel command)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             var model = new ProductsByTagModel
             {
@@ -1223,9 +1222,9 @@ namespace Nop.Web.Factories
                 .ToList();
             return model;
         }
-
+        
         #endregion
-
+        
         #region Searching
 
         /// <summary>
@@ -1237,7 +1236,7 @@ namespace Nop.Web.Factories
         public virtual SearchModel PrepareSearchModel(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var searchTerms = model.q;
             if (searchTerms == null)
@@ -1342,21 +1341,9 @@ namespace Nop.Web.Factories
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            var isSearchTermSpecified = false;
-            try
-            {
-                // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-                isSearchTermSpecified = _httpContext.Request.Params["q"] != null;
-            }
-            catch
-            {
-                //the "A potentially dangerous Request.QueryString value was detected from the client" exception could be thrown here when some wrong char is specified (e.g. <)
-                //although we [ValidateInput(false)] attribute here we try to access "Request.Params" directly
-                //that's why we do not re-throw it
-
-                //just ensure that some search term is specified (0 length is not supported inthis case)
-                isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);
-            }
+            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
+            //we don't use "!String.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
+            var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
             {
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
@@ -1483,7 +1470,7 @@ namespace Nop.Web.Factories
             };
             return model;
         }
-
+        
         #endregion
     }
 }

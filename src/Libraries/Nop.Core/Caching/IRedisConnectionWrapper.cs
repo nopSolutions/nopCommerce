@@ -5,12 +5,23 @@ using StackExchange.Redis;
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Redis connection wrapper interface
+    /// Represents Redis connection wrapper
     /// </summary>
     public interface IRedisConnectionWrapper : IDisposable
     {
+        #region Properties
+
         /// <summary>
-        /// Obtain an interactive connection to a database inside redis
+        /// Get the key used to store the protection key list (used with the PersistDataProtectionKeysToRedis option enabled)
+        /// </summary>
+        string DataProtectionKeysName { get; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Obtain an interactive connection to a database inside Redis
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
@@ -43,5 +54,7 @@ namespace Nop.Core.Caching
         /// <param name="action">Action to be performed with locking</param>
         /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
         bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action);
+
+        #endregion
     }
 }

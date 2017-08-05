@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Web;
-using System.Web.Routing;
 using System.Xml;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -45,6 +45,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly GoogleProductObjectContext _objectContext;
+        private readonly IWebHelper _webHelper;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -65,7 +67,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
-            GoogleProductObjectContext objectContext)
+            GoogleProductObjectContext objectContext,
+            IWebHelper webHelper,
+            IHostingEnvironment hostingEnvironment
+            )
         {
             this._googleService = googleService;
             this._priceCalculationService = priceCalculationService;
@@ -83,6 +88,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this._googleShoppingSettings = googleShoppingSettings;
             this._currencySettings = currencySettings;
             this._objectContext = objectContext;
+            this._webHelper = webHelper;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -107,7 +114,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             //http://www.atensoftware.com/p90.php?q=182
 
             if (isHtmlEncoded)
-                input = HttpUtility.HtmlDecode(input);
+                input = WebUtility.HtmlDecode(input);
 
             input = input.Replace("¼", "");
             input = input.Replace("½", "");
@@ -122,7 +129,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             //input = input.Replace("°", "");
             
             if (isHtmlEncoded)
-                input = HttpUtility.HtmlEncode(input);
+                input = WebUtility.HtmlEncode(input);
 
             return input;
         }
@@ -139,16 +146,11 @@ namespace Nop.Plugin.Feed.GoogleShopping
         #region Methods
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "FeedGoogleShopping";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.GoogleShopping.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/FeedGoogleShopping/Configure";
         }
 
         /// <summary>
@@ -160,10 +162,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
         public void GenerateFeed(Stream stream, Store store)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             const string googleBaseNamespace = "http://base.google.com/ns/1.0";
 
@@ -565,7 +567,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory", "Default Google category");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.General", "General");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.GeneralInstructions", "<p><ul><li>At least two unique product identifiers are required. So each of your product shouldhave manufacturer (brand) and MPN (manufacturer part number) specified</li><li>Specify default tax values in your Google Merchant Center account settings</li><li>Specify default shipping values in your Google Merchant Center account settings</li><li>In order to get more info about required fields look at the following article <a href=\"http://www.google.com/support/merchants/bin/answer.py?answer=188494\" target=\"_blank\">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a></li></ul></p>");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.GeneralInstructions", "<p><ul><li>At least two unique product identifiers are required. So each of your product should have manufacturer (brand) and MPN (manufacturer part number) specified</li><li>Specify default tax values in your Google Merchant Center account settings</li><li>Specify default shipping values in your Google Merchant Center account settings</li><li>In order to get more info about required fields look at the following article <a href=\"http://www.google.com/support/merchants/bin/answer.py?answer=188494\" target=\"_blank\">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a></li></ul></p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Override", "Override product settings");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.OverrideInstructions", "<p>You can download the list of allowed Google product category attributes <a href=\"http://www.google.com/support/merchants/bin/answer.py?answer=160081\" target=\"_blank\">here</a></p>");
@@ -643,8 +645,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
         public virtual void GenerateStaticFile(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
-            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _googleShoppingSettings.StaticFileName);
+                throw new ArgumentNullException(nameof(store));
+            string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport", store.Id + "-" + _googleShoppingSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs, store);

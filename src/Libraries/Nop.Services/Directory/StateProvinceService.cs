@@ -67,7 +67,7 @@ namespace Nop.Services.Directory
         public virtual void DeleteStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
+                throw new ArgumentNullException(nameof(stateProvince));
             
             _stateProvinceRepository.Delete(stateProvince);
 
@@ -157,7 +157,7 @@ namespace Nop.Services.Directory
         public virtual void InsertStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
+                throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Insert(stateProvince);
 
@@ -174,7 +174,7 @@ namespace Nop.Services.Directory
         public virtual void UpdateStateProvince(StateProvince stateProvince)
         {
             if (stateProvince == null)
-                throw new ArgumentNullException("stateProvince");
+                throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Update(stateProvince);
 

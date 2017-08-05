@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        private ICacheManager _cacheManager;
+        private IStaticCacheManager _cacheManager;
         private IRepository<ActivityLog> _activityLogRepository;
         private IRepository<ActivityLogType> _activityLogTypeRepository;
         private IWorkContext _workContext;

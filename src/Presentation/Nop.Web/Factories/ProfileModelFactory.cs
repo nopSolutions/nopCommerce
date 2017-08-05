@@ -11,7 +11,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Extensions;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Profile;
 
@@ -69,7 +69,7 @@ namespace Nop.Web.Factories
         public virtual ProfileIndexModel PrepareProfileIndexModel(Customer customer, int? page)
         {
             if (customer == null)
-                throw  new ArgumentNullException("customer");
+                throw  new ArgumentNullException(nameof(customer));
 
             bool pagingPosts = false;
             int postsPage = 0;
@@ -102,7 +102,7 @@ namespace Nop.Web.Factories
         public virtual ProfileInfoModel PrepareProfileInfoModel(Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             //avatar
             var avatarUrl = "";
@@ -196,7 +196,7 @@ namespace Nop.Web.Factories
         public virtual ProfilePostsModel PrepareProfilePostsModel(Customer customer, int page)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (page > 0)
             {

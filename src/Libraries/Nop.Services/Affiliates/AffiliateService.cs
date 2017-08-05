@@ -54,11 +54,11 @@ namespace Nop.Services.Affiliates
             
             return _affiliateRepository.GetById(affiliateId);
         }
-        
+
         /// <summary>
-        /// Gets an affiliate by friendly url name
+        /// Gets an affiliate by friendly URL name
         /// </summary>
-        /// <param name="friendlyUrlName">Friendly url name</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
         {
@@ -80,7 +80,7 @@ namespace Nop.Services.Affiliates
         public virtual void DeleteAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             affiliate.Deleted = true;
             UpdateAffiliate(affiliate);
@@ -148,7 +148,7 @@ namespace Nop.Services.Affiliates
         public virtual void InsertAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             _affiliateRepository.Insert(affiliate);
 
@@ -163,7 +163,7 @@ namespace Nop.Services.Affiliates
         public virtual void UpdateAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             _affiliateRepository.Update(affiliate);
 

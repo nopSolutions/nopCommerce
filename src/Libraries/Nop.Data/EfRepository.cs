@@ -74,7 +74,7 @@ namespace Nop.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException("entity");
+                    throw new ArgumentNullException(nameof(entity));
 
                 this.Entities.Add(entity);
 
@@ -95,7 +95,7 @@ namespace Nop.Data
             try
             {
                 if (entities == null)
-                    throw new ArgumentNullException("entities");
+                    throw new ArgumentNullException(nameof(entities));
 
                 foreach (var entity in entities)
                     this.Entities.Add(entity);
@@ -117,7 +117,7 @@ namespace Nop.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException("entity");
+                    throw new ArgumentNullException(nameof(entity));
 
                 this._context.SaveChanges();
             }
@@ -136,7 +136,7 @@ namespace Nop.Data
             try
             {
                 if (entities == null)
-                    throw new ArgumentNullException("entities");
+                    throw new ArgumentNullException(nameof(entities));
 
                 this._context.SaveChanges();
             }
@@ -155,7 +155,7 @@ namespace Nop.Data
             try
             {
                 if (entity == null)
-                    throw new ArgumentNullException("entity");
+                    throw new ArgumentNullException(nameof(entity));
 
                 this.Entities.Remove(entity);
 
@@ -176,7 +176,7 @@ namespace Nop.Data
             try
             {
                 if (entities == null)
-                    throw new ArgumentNullException("entities");
+                    throw new ArgumentNullException(nameof(entities));
 
                 foreach (var entity in entities)
                     this.Entities.Remove(entity);

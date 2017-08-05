@@ -1,5 +1,4 @@
 ﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
-@using Nop.Web.Models.Catalog;
 @{
     var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
     var alreadyFilteredItemsGroups = Model.AlreadyFilteredItems.GroupBy(x => x.SpecificationAttributeName);

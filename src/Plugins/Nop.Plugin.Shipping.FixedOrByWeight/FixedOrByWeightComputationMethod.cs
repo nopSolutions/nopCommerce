@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -29,6 +28,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ShippingByWeightObjectContext _objectContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -40,7 +40,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             IShippingByWeightService shippingByWeightService,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
-        ShippingByWeightObjectContext objectContext)
+            ShippingByWeightObjectContext objectContext,
+            IWebHelper webHelper)
         {
             this._settingService = settingService;
             this._shippingService = shippingService;
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
             this._objectContext = objectContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -125,7 +127,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var response = new GetShippingOptionResponse();
 
@@ -218,7 +220,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 return null;
 
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
             var shippingMethods = _shippingService.GetAllShippingMethods(restrictByCountryId);
@@ -239,16 +241,11 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "FixedOrByWeight";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.FixedOrByWeight.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/FixedOrByWeight/Configure";
         }
 
         /// <summary>
@@ -361,10 +358,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
-            get
-            {
-                return ShippingRateComputationMethodType.Offline;
-            }
+            get { return ShippingRateComputationMethodType.Offline; }
         }
         
         /// <summary>

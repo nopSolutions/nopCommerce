@@ -16,7 +16,7 @@ namespace Nop.Services.Discounts
         public static decimal GetDiscountAmount(this DiscountForCaching discount, decimal amount)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             //calculate discount amount
             decimal result;
@@ -25,7 +25,7 @@ namespace Nop.Services.Discounts
             else
                 result = discount.DiscountAmount;
 
-            //validate maximum disocunt amount
+            //validate maximum discount amount
             if (discount.UsePercentage && 
                 discount.MaximumDiscountAmount.HasValue &&
                 result > discount.MaximumDiscountAmount.Value)
@@ -48,7 +48,7 @@ namespace Nop.Services.Discounts
             decimal amount, out decimal discountAmount)
         {
             if (discounts == null)
-                throw new ArgumentNullException("discounts");
+                throw new ArgumentNullException(nameof(discounts));
 
             var result = new List<DiscountForCaching>();
             discountAmount = decimal.Zero;
@@ -96,10 +96,10 @@ namespace Nop.Services.Discounts
             DiscountForCaching discount)
         {
             if (discounts == null)
-                throw new ArgumentNullException("discounts");
+                throw new ArgumentNullException(nameof(discounts));
 
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             foreach (var dis1 in discounts)
                 if (discount.Id == dis1.Id)
@@ -116,7 +116,7 @@ namespace Nop.Services.Discounts
         public static DiscountForCaching MapDiscount(this Discount discount)
         {
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
             return new DiscountForCaching
             {

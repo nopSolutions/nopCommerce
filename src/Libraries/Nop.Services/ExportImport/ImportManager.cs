@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.WebPages;
+using Microsoft.AspNetCore.StaticFiles;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -13,6 +12,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -36,6 +36,9 @@ namespace Nop.Services.ExportImport
     public partial class ImportManager : IImportManager
     {
         #region Fields
+
+        //it's quite fast hash (to cheaply distinguish between objects)
+        private const string IMAGE_HASH_ALGORITHM = "SHA1";
 
         private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
@@ -127,10 +130,10 @@ namespace Nop.Services.ExportImport
         protected virtual int GetColumnIndex(string[] properties, string columnName)
         {
             if (properties == null)
-                throw new ArgumentNullException("properties");
+                throw new ArgumentNullException(nameof(properties));
 
             if (columnName == null)
-                throw new ArgumentNullException("columnName");
+                throw new ArgumentNullException(nameof(columnName));
 
             for (int i = 0; i < properties.Length; i++)
                 if (properties[i].Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
@@ -148,12 +151,12 @@ namespace Nop.Services.ExportImport
 
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
-            var mimeType = MimeMapping.GetMimeMapping(filePath);
-
-            //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
-            if (mimeType == MimeTypes.ApplicationOctetStream)
+            //TODO test ne implementation
+            string mimeType;
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out mimeType);
+            //set to jpeg in case mime type cannot be found
+            if (mimeType == null)
                 mimeType = MimeTypes.ImageJpeg;
-
             return mimeType;
         }
 
@@ -260,8 +263,8 @@ namespace Nop.Services.ExportImport
                     var pictureAlreadyExists = false;
                     if (!product.IsNew)
                     {
-                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray());
-                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray());
+                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
+                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
 
                         var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                             ? productsImagesIds[product.ProductItem.Id]
@@ -447,7 +450,7 @@ namespace Nop.Services.ExportImport
                     { 
                         var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
 
-                        if (!categoryIds.IsEmpty())
+                        if (!string.IsNullOrEmpty(categoryIds))
                             allCategoriesNames.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
 
@@ -455,14 +458,14 @@ namespace Nop.Services.ExportImport
                     {
                         var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
 
-                        if (!sku.IsEmpty())
+                        if (!string.IsNullOrEmpty(sku))
                             allSku.Add(sku);
                     }
 
                     if (manufacturerCellNum > 0)
                     { 
                         var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value.Return(p => p.ToString(), string.Empty);
-                        if (!manufacturerIds.IsEmpty())
+                        if (!string.IsNullOrEmpty(manufacturerIds))
                             allManufacturersNames.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
                     }
 
@@ -1480,9 +1483,9 @@ namespace Nop.Services.ExportImport
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested classes
+#region Nested classes
 
         protected class ProductPictureMetadata
         {
@@ -1493,6 +1496,6 @@ namespace Nop.Services.ExportImport
             public bool IsNew { get; set; }
         }
 
-        #endregion
+#endregion
     }
 }

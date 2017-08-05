@@ -80,7 +80,7 @@ namespace Nop.Services.Common
         public virtual void DeleteAddress(Address address)
         {
             if (address == null)
-                throw new ArgumentNullException("address");
+                throw new ArgumentNullException(nameof(address));
 
             _addressRepository.Delete(address);
 
@@ -144,7 +144,7 @@ namespace Nop.Services.Common
         public virtual void InsertAddress(Address address)
         {
             if (address == null)
-                throw new ArgumentNullException("address");
+                throw new ArgumentNullException(nameof(address));
             
             address.CreatedOnUtc = DateTime.UtcNow;
 
@@ -170,7 +170,7 @@ namespace Nop.Services.Common
         public virtual void UpdateAddress(Address address)
         {
             if (address == null)
-                throw new ArgumentNullException("address");
+                throw new ArgumentNullException(nameof(address));
 
             //some validation
             if (address.CountryId == 0)
@@ -195,7 +195,7 @@ namespace Nop.Services.Common
         public virtual bool IsAddressValid(Address address)
         {
             if (address == null)
-                throw new ArgumentNullException("address");
+                throw new ArgumentNullException(nameof(address));
 
             if (String.IsNullOrWhiteSpace(address.FirstName))
                 return false;

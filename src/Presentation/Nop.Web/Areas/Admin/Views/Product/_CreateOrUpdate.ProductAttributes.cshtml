@@ -1,0 +1,39 @@
+﻿@model ProductModel
+
+<div class="panel-group">
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Hint")
+    </p>
+    @if (Model.Id > 0)
+    {
+        if (Model.AvailableProductAttributes.Count > 0)
+        {
+            <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
+                <nop-tab-header>
+                    <nop-tab-header-item asp-name="tab-attributes" asp-default="true">@T("Admin.Catalog.Products.ProductAttributes.Attributes")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-attribute-combinations">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")</nop-tab-header-item>
+                </nop-tab-header>
+                <nop-tab-content>
+                    <nop-tab-content-item asp-name="tab-attributes" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-attribute-combinations">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab-content-item>
+                </nop-tab-content>
+            </nop-tabs>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

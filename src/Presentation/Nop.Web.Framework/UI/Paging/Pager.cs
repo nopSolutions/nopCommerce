@@ -2,21 +2,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.UI.Paging
 {
-	/// <summary>
+    /// <summary>
     /// Renders a pager component from an IPageableModel datasource.
-	/// </summary>
-	public partial class Pager : IHtmlString
+    /// </summary>
+    public partial class Pager : IHtmlContent
 	{
         protected readonly IPageableModel model;
         protected readonly ViewContext viewContext;
@@ -30,14 +33,12 @@ namespace Nop.Web.Framework.UI.Paging
         protected bool showIndividualPages = true;
         protected bool renderEmptyParameters = true;
         protected int individualPagesDisplayedCount = 5;
-        protected Func<int, string> urlBuilder;
         protected IList<string> booleanParameterNames;
 
 		public Pager(IPageableModel model, ViewContext context)
 		{
             this.model = model;
             this.viewContext = context;
-            this.urlBuilder = CreateDefaultUrl;
             this.booleanParameterNames = new List<string>();
 		}
 
@@ -96,11 +97,6 @@ namespace Nop.Web.Framework.UI.Paging
             this.individualPagesDisplayedCount = value;
             return this;
         }
-		public Pager Link(Func<int, string> value)
-		{
-            this.urlBuilder = value;
-			return this;
-		}
         //little hack here due to ugly MVC implementation
         //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
         public Pager BooleanParameterName(string paramName)
@@ -109,11 +105,16 @@ namespace Nop.Web.Framework.UI.Paging
             return this;
         }
 
-        public override string ToString()
-        {
-            return ToHtmlString();
-        }
-		public virtual string ToHtmlString()
+	    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+	    {
+            var htmlString = GenerateHtmlString();
+	        writer.Write(htmlString);
+	    }
+	    public override string ToString()
+	    {
+	        return GenerateHtmlString();
+	    }
+        public virtual string GenerateHtmlString()
 		{
             if (model.TotalItems == 0) 
 				return null;
@@ -188,7 +189,7 @@ namespace Nop.Web.Framework.UI.Paging
 		}
 	    public virtual bool IsEmpty()
 	    {
-            var html = ToString();
+            var html = GenerateHtmlString();
 	        return string.IsNullOrEmpty(html);
 	    }
 
@@ -229,22 +230,22 @@ namespace Nop.Web.Framework.UI.Paging
             if (!String.IsNullOrWhiteSpace(cssClass))
                 liBuilder.AddCssClass(cssClass);
 
-			var aBuilder = new TagBuilder("a");
-            aBuilder.SetInnerText(text);
-            aBuilder.MergeAttribute("href", urlBuilder(pageNumber));
+            var aBuilder = new TagBuilder("a");
+            aBuilder.InnerHtml.AppendHtml(text);
+            aBuilder.MergeAttribute("href", CreateDefaultUrl(pageNumber));
 
-            liBuilder.InnerHtml += aBuilder;
-
-            return liBuilder.ToString(TagRenderMode.Normal);
+            liBuilder.InnerHtml.AppendHtml(aBuilder);
+		    return liBuilder.RenderHtmlContent();
 		}
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{
-			var routeValues = new RouteValueDictionary();
+            var routeValues = new RouteValueDictionary();
 
             var parametersWithEmptyValues = new List<string>();
-			foreach (var key in viewContext.RequestContext.HttpContext.Request.QueryString.AllKeys.Where(key => key != null))
+			foreach (var key in viewContext.HttpContext.Request.Query.Keys.Where(key => key != null))
 			{
-                var value = viewContext.RequestContext.HttpContext.Request.QueryString[key];
+			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
+                var value = viewContext.HttpContext.Request.Query[key].ToString();
                 if (renderEmptyParameters && String.IsNullOrEmpty(value))
 			    {
                     //we store query string parameters with empty values separately
@@ -279,11 +280,14 @@ namespace Nop.Web.Framework.UI.Paging
                 }
             }
 
-			var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
+		    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+		    var url = webHelper.GetThisPageUrl(false);
+		    foreach (var routeValue in routeValues)
+		    {
+		        url = webHelper.ModifyQueryString(url, routeValue.Key + "=" + routeValue.Value, null);
+		    }
             if (renderEmptyParameters && parametersWithEmptyValues.Any())
             {
-                //we add such parameters manually because UrlHelper.GenerateUrl() ignores them
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 foreach (var key in parametersWithEmptyValues)
                 {
                     url = webHelper.ModifyQueryString(url, key + "=", null);
@@ -291,5 +295,6 @@ namespace Nop.Web.Framework.UI.Paging
             }
 			return url;
 		}
-	}
+
+    }
 }

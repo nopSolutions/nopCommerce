@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -61,10 +61,10 @@ namespace Nop.Web.Factories
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHostingEnvironment _hostingEnvironment; 
 
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -96,10 +96,10 @@ namespace Nop.Web.Factories
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper,
             IPermissionService permissionService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IPageHeadBuilder pageHeadBuilder,
             IPictureService pictureService,
-            HttpContextBase httpContext,
+            IHostingEnvironment hostingEnvironment,
             CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
@@ -129,8 +129,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._pageHeadBuilder = pageHeadBuilder;
             this._pictureService = pictureService;
-            this._httpContext = httpContext;
-
+            this._hostingEnvironment = hostingEnvironment;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
@@ -435,7 +434,7 @@ namespace Nop.Web.Factories
         public virtual ContactUsModel PrepareContactUsModel(ContactUsModel model, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties)
             {
@@ -458,10 +457,10 @@ namespace Nop.Web.Factories
         public virtual ContactVendorModel PrepareContactVendorModel(ContactVendorModel model, Vendor vendor, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (vendor == null)
-                throw new ArgumentNullException("vendor");
+                throw new ArgumentNullException(nameof(vendor));
 
             if (!excludeProperties)
             {
@@ -559,7 +558,7 @@ namespace Nop.Web.Factories
         /// <param name="url">URL helper</param>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        public virtual string PrepareSitemapXml(UrlHelper url, int? id)
+        public virtual string PrepareSitemapXml(IUrlHelper url, int? id)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
@@ -601,13 +600,14 @@ namespace Nop.Web.Factories
             var model = new FaviconModel();
 
             //try loading a store specific favicon
+
             var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
-            var localFaviconPath = System.IO.Path.Combine(_httpContext.Request.PhysicalApplicationPath, faviconFileName);
+            var localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
             if (!System.IO.File.Exists(localFaviconPath))
             {
                 //try loading a generic favicon
                 faviconFileName = "favicon.ico";
-                localFaviconPath = System.IO.Path.Combine(_httpContext.Request.PhysicalApplicationPath, faviconFileName);
+                localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
                 if (!System.IO.File.Exists(localFaviconPath))
                 {
                     return model;
@@ -642,8 +642,8 @@ namespace Nop.Web.Factories
                 {
                     "/admin",
                     "/bin/",
-                    "/content/files/",
-                    "/content/files/exportimport/",
+                    "/files/",
+                    "/files/exportimport/",
                     "/country/getstatesbycountryid",
                     "/install",
                     "/setproductreviewhelpfulness",
@@ -766,6 +766,6 @@ namespace Nop.Web.Factories
             return sb.ToString();
         }
         
-        #endregion
+#endregion
     }
 }

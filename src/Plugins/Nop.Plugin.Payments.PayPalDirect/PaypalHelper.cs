@@ -4,7 +4,7 @@ using PayPal.Api;
 namespace Nop.Plugin.Payments.PayPalDirect
 {
     /// <summary>
-    /// Represents paypal helper
+    /// Represents PayPal helper
     /// </summary>
     public class PaypalHelper
     {

@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Web.Routing;
-using System.Web.Services.Protocols;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
@@ -48,6 +46,7 @@ namespace Nop.Plugin.Shipping.Fedex
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly ILogger _logger;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -56,7 +55,8 @@ namespace Nop.Plugin.Shipping.Fedex
             IShippingService shippingService, ISettingService settingService,
             FedexSettings fedexSettings, IOrderTotalCalculationService orderTotalCalculationService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
-            ILogger logger)
+            ILogger logger,
+            IWebHelper webHelper)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
@@ -66,6 +66,7 @@ namespace Nop.Plugin.Shipping.Fedex
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._logger = logger;
+            this._webHelper = webHelper;
         }
         #endregion
 
@@ -177,7 +178,7 @@ namespace Nop.Plugin.Shipping.Fedex
             //Saturday pickup is available for certain FedEx Express U.S. service types:
             //http://www.fedex.com/us/developer/product/WebServices/MyWebHelp/Services/Options/c_SaturdayShipAndDeliveryServiceDetails.html
             //If the customer orders on a Saturday, the rate calculation will use Saturday as the shipping date, and the rates will include a Saturday pickup surcharge
-            //More info: http://www.nopcommerce.com/boards/t/27348/fedex-rate-can-be-excessive-for-express-methods-if-calculated-on-a-saturday.aspx
+            //More info: https://www.nopcommerce.com/boards/t/27348/fedex-rate-can-be-excessive-for-express-methods-if-calculated-on-a-saturday.aspx
             var shipTimestamp = DateTime.Now;
             if (shipTimestamp.DayOfWeek == DayOfWeek.Saturday)
                 shipTimestamp = shipTimestamp.AddDays(2);
@@ -792,7 +793,7 @@ namespace Nop.Plugin.Shipping.Fedex
         public GetShippingOptionResponse GetShippingOptions(GetShippingOptionRequest getShippingOptionRequest)
         {
             if (getShippingOptionRequest == null)
-                throw new ArgumentNullException("getShippingOptionRequest");
+                throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
             var response = new GetShippingOptionResponse();
 
@@ -854,12 +855,6 @@ namespace Nop.Plugin.Shipping.Fedex
                     return response;
                 }
             }
-            catch (SoapException e)
-            {
-                Debug.WriteLine(e.Detail.InnerText);
-                response.AddError(e.Detail.InnerText);
-                return response;
-            }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
@@ -881,16 +876,11 @@ namespace Nop.Plugin.Shipping.Fedex
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Gets a configuration page URL
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public override string GetConfigurationPageUrl()
         {
-            actionName = "Configure";
-            controllerName = "ShippingFedex";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.Fedex.Controllers" }, { "area", null } };
+            return $"{_webHelper.GetStoreLocation()}Admin/ShippingFedex/Configure";
         }
 
         /// <summary>
@@ -1002,10 +992,7 @@ namespace Nop.Plugin.Shipping.Fedex
         /// </summary>
         public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
-            get
-            {
-                return ShippingRateComputationMethodType.Realtime;
-            }
+            get { return ShippingRateComputationMethodType.Realtime; }
         }
 
         /// <summary>

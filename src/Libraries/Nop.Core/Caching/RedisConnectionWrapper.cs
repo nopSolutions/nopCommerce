@@ -8,15 +8,15 @@ using StackExchange.Redis;
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Redis connection wrapper implementation
+    /// Represents Redis connection wrapper implementation
     /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper
     {
         #region Fields
 
         private readonly NopConfig _config;
-        private readonly Lazy<string> _connectionString;
 
+        private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
         private volatile RedisLockFactory _redisLockFactory;
         private readonly object _lock = new object();
@@ -28,9 +28,19 @@ namespace Nop.Core.Caching
         public RedisConnectionWrapper(NopConfig config)
         {
             this._config = config;
+
             this._connectionString = new Lazy<string>(GetConnectionString);
             this._redisLockFactory = CreateRedisLockFactory();
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Get the key used to store the protection key list (used with the PersistDataProtectionKeysToRedis option enabled)
+        /// </summary>
+        public string DataProtectionKeysName => "Nop.DataProtectionKeys";
 
         #endregion
 
@@ -79,7 +89,7 @@ namespace Nop.Core.Caching
             //get password and value whether to use ssl from connection string
             var password = string.Empty;
             var useSsl = false;
-            foreach (var option in GetConnectionString().Split(',').Where(option => option.Contains('=')))
+            foreach (var option in _connectionString.Value.Split(',').Where(option => option.Contains('=')))
             {
                 switch (option.Substring(0, option.IndexOf('=')).Trim().ToLowerInvariant())
                 {
@@ -106,13 +116,13 @@ namespace Nop.Core.Caching
         #region Methods
 
         /// <summary>
-        /// Obtain an interactive connection to a database inside redis
+        /// Obtain an interactive connection to a database inside Redis
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
         public IDatabase GetDatabase(int? db = null)
         {
-            return GetConnection().GetDatabase(db ?? -1); //_settings.DefaultDb);
+            return GetConnection().GetDatabase(db ?? -1);
         }
 
         /// <summary>
@@ -144,7 +154,7 @@ namespace Nop.Core.Caching
 
             foreach (var endPoint in endPoints)
             {
-                GetServer(endPoint).FlushDatabase(db ?? -1); //_settings.DefaultDb);
+                GetServer(endPoint).FlushDatabase(db ?? -1);
             }
         }
 
@@ -166,6 +176,7 @@ namespace Nop.Core.Caching
 
                 //perform action
                 action();
+
                 return true;
             }
         }

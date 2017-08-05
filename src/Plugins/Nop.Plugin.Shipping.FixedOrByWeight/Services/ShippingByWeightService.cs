@@ -40,7 +40,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Services
         public virtual void DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
-                throw new ArgumentNullException("shippingByWeightRecord");
+                throw new ArgumentNullException(nameof(shippingByWeightRecord));
 
             _sbwRepository.Delete(shippingByWeightRecord);
 
@@ -141,7 +141,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Services
         public virtual void InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
-                throw new ArgumentNullException("shippingByWeightRecord");
+                throw new ArgumentNullException(nameof(shippingByWeightRecord));
 
             _sbwRepository.Insert(shippingByWeightRecord);
 
@@ -151,7 +151,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Services
         public virtual void UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
-                throw new ArgumentNullException("shippingByWeightRecord");
+                throw new ArgumentNullException(nameof(shippingByWeightRecord));
 
             _sbwRepository.Update(shippingByWeightRecord);
 

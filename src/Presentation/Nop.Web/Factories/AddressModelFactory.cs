@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -163,10 +163,10 @@ namespace Nop.Web.Factories
             string overrideAttributesXml = "")
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (addressSettings == null)
-                throw new ArgumentNullException("addressSettings");
+                throw new ArgumentNullException(nameof(addressSettings));
 
             if (!excludeProperties && address != null)
             {

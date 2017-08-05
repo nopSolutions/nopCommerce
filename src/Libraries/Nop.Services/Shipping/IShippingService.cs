@@ -58,7 +58,7 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
-        /// <param name="filterByCountryId">The country indentifier to filter by</param>
+        /// <param name="filterByCountryId">The country identifier to filter by</param>
         /// <returns>Shipping methods</returns>
         IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null);
 

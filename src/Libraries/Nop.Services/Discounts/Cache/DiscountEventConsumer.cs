@@ -3,7 +3,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 
 namespace Nop.Services.Discounts.Cache
@@ -73,14 +72,11 @@ namespace Nop.Services.Discounts.Cache
         public const string DISCOUNT_MANUFACTURER_IDS_MODEL_KEY = "Nop.discounts.manufacturerids-{0}-{1}-{2}";
         public const string DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY = "Nop.discounts.manufacturerids";
 
+        private readonly IStaticCacheManager _cacheManager;
 
-
-        private readonly ICacheManager _cacheManager;
-
-        public DiscountEventConsumer()
+        public DiscountEventConsumer(IStaticCacheManager cacheManager)
         {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            this._cacheManager = cacheManager;
         }
 
         //discounts

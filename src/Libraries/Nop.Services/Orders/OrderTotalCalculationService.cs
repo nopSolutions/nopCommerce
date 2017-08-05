@@ -1010,7 +1010,7 @@ namespace Nop.Services.Orders
         public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             SortedDictionary<decimal, decimal> taxRates;
             return GetTaxTotal(cart, out taxRates, usePaymentMethodAdditionalFee);
@@ -1027,7 +1027,7 @@ namespace Nop.Services.Orders
             out SortedDictionary<decimal, decimal> taxRates, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             taxRates = new SortedDictionary<decimal, decimal>();
 

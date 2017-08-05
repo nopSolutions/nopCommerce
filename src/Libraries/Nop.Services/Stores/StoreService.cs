@@ -69,7 +69,7 @@ namespace Nop.Services.Stores
         public virtual void DeleteStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             var allStores = GetAllStores();
             if (allStores.Count == 1)
@@ -121,7 +121,7 @@ namespace Nop.Services.Stores
         public virtual void InsertStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             _storeRepository.Insert(store);
 
@@ -138,7 +138,7 @@ namespace Nop.Services.Stores
         public virtual void UpdateStore(Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             _storeRepository.Update(store);
 

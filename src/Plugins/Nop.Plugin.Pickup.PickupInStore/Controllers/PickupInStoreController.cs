@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
@@ -15,11 +16,13 @@ using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 {
-    [AdminAuthorize]
+    [Area("Admin")]
+    [AuthorizeAdmin]
     public class PickupInStoreController : BasePluginController
     {
         #region Fields
@@ -57,9 +60,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         #region Methods
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
@@ -68,7 +73,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult List(DataSourceRequest command)
+        public IActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return ErrorForKendoGridJson("Access denied");
@@ -95,10 +100,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             });
         }
 
-        public ActionResult Create()
+        public IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var model = new StorePickupPointModel();
 
@@ -126,10 +131,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Create(string btnId, string formId, StorePickupPointModel model)
+        public IActionResult Create(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var address = new Address
             {
@@ -154,16 +159,14 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             _storePickupPointService.InsertStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Create.cshtml", model);
         }
 
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(id);
             if (pickupPoint == null)
@@ -216,10 +219,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Edit(string btnId, string formId, StorePickupPointModel model)
+        public IActionResult Edit(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(model.Id);
             if (pickupPoint == null)
@@ -245,18 +248,16 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Pickup.PickupInStore/Views/Edit.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
+                return AccessDeniedView();
 
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(id);
             if (pickupPoint == null)

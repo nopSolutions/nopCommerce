@@ -31,6 +31,7 @@ namespace Nop.Services.Tests.Tax
         private ICountryService _countryService;
         private IStateProvinceService _stateProvinceService;
         private ILogger _logger;
+        private IWebHelper _webHelper;
         private CustomerSettings _customerSettings;
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
@@ -57,12 +58,14 @@ namespace Nop.Services.Tests.Tax
             _countryService = MockRepository.GenerateMock<ICountryService>();
             _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _logger = MockRepository.GenerateMock<ILogger>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
+
             _customerSettings = new CustomerSettings();
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger, _webHelper,
                 _customerSettings, _shippingSettings, _addressSettings);
         }
 

@@ -94,7 +94,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Delete(messageTemplate);
 
@@ -111,7 +111,7 @@ namespace Nop.Services.Messages
         public virtual void InsertMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Insert(messageTemplate);
 
@@ -128,7 +128,7 @@ namespace Nop.Services.Messages
         public virtual void UpdateMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Update(messageTemplate);
 
@@ -227,7 +227,7 @@ namespace Nop.Services.Messages
         public virtual MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate)
         {
             if (messageTemplate == null)
-                throw new ArgumentNullException("messageTemplate");
+                throw new ArgumentNullException(nameof(messageTemplate));
 
             var mtCopy = new MessageTemplate
             {

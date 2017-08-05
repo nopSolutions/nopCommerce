@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
 using System.Text.RegularExpressions;
-using System.Web;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
@@ -91,9 +91,9 @@ namespace Nop.Services.Messages
                 {
                     //do not encode URLs
                     if (htmlEncode && !token.NeverHtmlEncoded)
-                        tokenValue = HttpUtility.HtmlEncode(tokenValue);
+                        tokenValue = WebUtility.HtmlEncode(tokenValue.ToString());
                 }
-
+                
                 template = Replace(template, string.Format(@"%{0}%", token.Key), tokenValue.ToString());
             }
 
@@ -149,9 +149,9 @@ namespace Nop.Services.Messages
             return template;
         }
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Replace all of the token key occurences inside the specified template text with corresponded token values
@@ -163,10 +163,10 @@ namespace Nop.Services.Messages
         public string Replace(string template, IEnumerable<Token> tokens, bool htmlEncode)
         {
             if (string.IsNullOrWhiteSpace(template))
-                throw new ArgumentNullException("template");
+                throw new ArgumentNullException(nameof(template));
 
             if (tokens == null)
-                throw new ArgumentNullException("tokens");
+                throw new ArgumentNullException(nameof(tokens));
 
             //replace conditional statements
             template = ReplaceConditionalStatements(template, tokens);
@@ -177,6 +177,6 @@ namespace Nop.Services.Messages
             return template;
         }
 
-        #endregion
+#endregion
     }
 }

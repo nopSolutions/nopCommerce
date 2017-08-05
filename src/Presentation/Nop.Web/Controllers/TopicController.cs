@@ -1,9 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
@@ -39,11 +40,11 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
-
+        
         #region Methods
-
-        [NopHttpsRequirement(SslRequirement.No)]
-        public virtual ActionResult TopicDetails(int topicId)
+        
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult TopicDetails(int topicId)
         {
             var model = _topicModelFactory.PrepareTopicModelById(topicId);
             if (model == null)
@@ -58,7 +59,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        public virtual ActionResult TopicDetailsPopup(string systemName)
+        public virtual IActionResult TopicDetailsPopup(string systemName)
         {
             var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
             if (model == null)
@@ -71,19 +72,10 @@ namespace Nop.Web.Controllers
             return PartialView(templateViewPath, model);
         }
 
-        [ChildActionOnly]
-        public virtual ActionResult TopicBlock(string systemName)
-        {
-            var model = _topicModelFactory.PrepareTopicModelBySystemName(systemName);
-            if (model == null)
-                return Content("");
 
-            return PartialView(model);
-        }
-
-        [HttpPost, ValidateInput(false)]
+        [HttpPost]
         [PublicAntiForgery]
-        public virtual ActionResult Authenticate(int id, string password)
+        public virtual IActionResult Authenticate(int id, string password)
         {
             var authResult = false;
             var title = string.Empty;
@@ -113,7 +105,7 @@ namespace Nop.Web.Controllers
             }
             return Json(new { Authenticated = authResult, Title = title, Body = body, Error = error });
         }
-
+        
         #endregion
     }
 }

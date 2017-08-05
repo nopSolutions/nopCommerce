@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -62,7 +62,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
+
             public string AttributeInfo { get; set; }
 
             public string RecurringInfo { get; set; }

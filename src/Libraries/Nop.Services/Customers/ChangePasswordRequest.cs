@@ -3,7 +3,7 @@
 namespace Nop.Services.Customers
 {
     /// <summary>
-    /// Change password requst
+    /// Change password request
     /// </summary>
     public class ChangePasswordRequest
     {

@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Nop.Core
 {
     /// <summary>
-    /// Xml helper class
+    /// XML helper class
     /// </summary>
     public partial class XmlHelper
     {

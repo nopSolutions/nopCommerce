@@ -26,31 +26,10 @@ namespace Nop.Web.Framework.Themes
 
         #endregion
 
-        #region IThemeProvider
-
-        public ThemeConfiguration GetThemeConfiguration(string themeName)
-        {
-            return _themeConfigurations
-                .SingleOrDefault(x => x.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public IList<ThemeConfiguration> GetThemeConfigurations()
-        {
-            return _themeConfigurations;
-        }
-
-        public bool ThemeConfigurationExists(string themeName)
-        {
-            return GetThemeConfigurations().Any(configuration => configuration.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        #endregion
-
         #region Utility
 
         private void LoadConfigurations()
         {
-            //TODO:Use IFileStorage?
             foreach (string themeName in Directory.GetDirectories(_basePath))
             {
                 var configuration = CreateThemeConfiguration(themeName);
@@ -74,6 +53,26 @@ namespace Nop.Web.Framework.Themes
             }
 
             return null;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public ThemeConfiguration GetThemeConfiguration(string themeName)
+        {
+            return _themeConfigurations
+                .SingleOrDefault(x => x.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public IList<ThemeConfiguration> GetThemeConfigurations()
+        {
+            return _themeConfigurations;
+        }
+
+        public bool ThemeConfigurationExists(string themeName)
+        {
+            return GetThemeConfigurations().Any(configuration => configuration.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         #endregion

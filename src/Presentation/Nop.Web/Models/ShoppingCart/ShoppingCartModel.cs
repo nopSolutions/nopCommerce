@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -14,15 +13,12 @@ namespace Nop.Web.Models.ShoppingCart
         {
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
-            EstimateShipping = new EstimateShippingModel();
             DiscountBox = new DiscountBoxModel();
             GiftCardBox = new GiftCardBoxModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
             OrderReviewData = new OrderReviewDataModel();
 
-            ButtonPaymentMethodActionNames = new List<string>();
-            ButtonPaymentMethodControllerNames = new List<string>();
-            ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
+            ButtonPaymentMethodViewComponentNames = new List<string>();
         }
 
         public bool OnePageCheckoutEnabled { get; set; }
@@ -40,14 +36,11 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
-        public EstimateShippingModel EstimateShipping { get; set; }
         public DiscountBoxModel DiscountBox { get; set; }
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
 
-        public IList<string> ButtonPaymentMethodActionNames { get; set; }
-        public IList<string> ButtonPaymentMethodControllerNames { get; set; }
-        public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
+        public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
 
         public bool HideCheckoutButton { get; set; }
 
@@ -194,6 +187,6 @@ namespace Nop.Web.Models.ShoppingCart
 
             public Dictionary<string, object> CustomValues { get; set; }
         }
-		#endregion
+        #endregion
     }
 }

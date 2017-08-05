@@ -1,6 +1,6 @@
 using System;
+using System.Net;
 using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Html;
@@ -30,11 +30,11 @@ namespace Nop.Services.Common
         /// Formats attributes
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="serapator">Serapator</param>
+        /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
-            string serapator = "<br />", 
+            string separator = "<br />", 
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
@@ -57,7 +57,7 @@ namespace Nop.Services.Common
                             var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
-                                attributeName = HttpUtility.HtmlEncode(attributeName);
+                                attributeName = WebUtility.HtmlEncode(attributeName);
                             formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
@@ -72,7 +72,7 @@ namespace Nop.Services.Common
                             formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             //encode (if required)
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
                     else
@@ -87,14 +87,14 @@ namespace Nop.Services.Common
                             }
                             //encode (if required)
                             if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 
                     if (!String.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
-                            result.Append(serapator);
+                            result.Append(separator);
                         result.Append(formattedAttribute);
                     }
                 }

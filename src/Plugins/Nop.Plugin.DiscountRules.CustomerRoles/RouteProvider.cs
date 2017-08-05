@@ -1,17 +1,16 @@
-﻿using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Web.Framework.Mvc.Routes;
+﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Builder;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
     public partial class RouteProvider : IRouteProvider
     {
-        public void RegisterRoutes(RouteCollection routes)
+        public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            routes.MapRoute("Plugin.DiscountRules.CustomerRoles.Configure",
+            routeBuilder.MapRoute("Plugin.DiscountRules.CustomerRoles.Configure",
                  "Plugins/DiscountRulesCustomerRoles/Configure",
-                 new { controller = "DiscountRulesCustomerRoles", action = "Configure" },
-                 new[] { "Nop.Plugin.DiscountRules.CustomerRoles.Controllers" }
+                 new { controller = "DiscountRulesCustomerRoles", action = "Configure" }
             );
         }
         public int Priority

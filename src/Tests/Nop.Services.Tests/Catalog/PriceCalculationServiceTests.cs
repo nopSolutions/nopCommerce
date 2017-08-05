@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -10,7 +11,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Tests;
@@ -32,7 +32,7 @@ namespace Nop.Services.Tests.Catalog
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
-        private ICacheManager _cacheManager;
+        private IStaticCacheManager _cacheManager;
 
         private Store _store;
 
@@ -70,10 +70,11 @@ namespace Nop.Services.Tests.Catalog
                 _catalogSettings);
 
             var nopEngine = MockRepository.GenerateMock<NopEngine>();
-            var containe = MockRepository.GenerateMock<IContainer>();
-            var containerManager = MockRepository.GenerateMock<ContainerManager>(containe);
-            nopEngine.Expect(x => x.ContainerManager).Return(containerManager);
-            containerManager.Expect(x => x.Resolve<IWorkContext>()).Return(_workContext);
+            var serviceProvider = MockRepository.GenerateMock<IServiceProvider>();
+            var httpContextAccessor = MockRepository.GenerateMock<IHttpContextAccessor>();
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IHttpContextAccessor))).Return(httpContextAccessor);
+            serviceProvider.Expect(x => x.GetRequiredService(typeof(IWorkContext))).Return(_workContext);
+            nopEngine.Expect(x => x.ServiceProvider).Return(serviceProvider);
             EngineContext.Replace(nopEngine);
         }
 

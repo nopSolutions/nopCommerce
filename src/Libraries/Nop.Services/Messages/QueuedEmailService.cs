@@ -46,7 +46,7 @@ namespace Nop.Services.Messages
         public virtual void InsertQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
-                throw new ArgumentNullException("queuedEmail");
+                throw new ArgumentNullException(nameof(queuedEmail));
 
             _queuedEmailRepository.Insert(queuedEmail);
 
@@ -61,7 +61,7 @@ namespace Nop.Services.Messages
         public virtual void UpdateQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
-                throw new ArgumentNullException("queuedEmail");
+                throw new ArgumentNullException(nameof(queuedEmail));
 
             _queuedEmailRepository.Update(queuedEmail);
 
@@ -76,7 +76,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteQueuedEmail(QueuedEmail queuedEmail)
         {
             if (queuedEmail == null)
-                throw new ArgumentNullException("queuedEmail");
+                throw new ArgumentNullException(nameof(queuedEmail));
 
             _queuedEmailRepository.Delete(queuedEmail);
 
@@ -91,7 +91,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
         {
             if (queuedEmails == null)
-                throw new ArgumentNullException("queuedEmails");
+                throw new ArgumentNullException(nameof(queuedEmails));
 
             _queuedEmailRepository.Delete(queuedEmails);
 

@@ -1,0 +1,16 @@
+﻿@model CustomerAddressModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input type="hidden" asp-for="CustomerId"/>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <nop-editor asp-for="Address" asp-template="Address"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

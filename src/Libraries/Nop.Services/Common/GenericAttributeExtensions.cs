@@ -35,7 +35,7 @@ namespace Nop.Services.Common
             string key, IGenericAttributeService genericAttributeService, int storeId = 0)
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             string keyGroup = entity.GetUnproxiedEntityType().Name;
 

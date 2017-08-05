@@ -14,7 +14,8 @@ namespace Nop.Services.Messages
         private readonly ILogger _logger;
 
         public QueuedMessagesSendTask(IQueuedEmailService queuedEmailService,
-            IEmailSender emailSender, ILogger logger)
+            IEmailSender emailSender, 
+            ILogger logger)
         {
             this._queuedEmailService = queuedEmailService;
             this._emailSender = emailSender;

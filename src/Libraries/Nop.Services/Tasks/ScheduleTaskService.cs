@@ -35,7 +35,7 @@ namespace Nop.Services.Tasks
         public virtual void DeleteTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Delete(task);
         }
@@ -96,7 +96,7 @@ namespace Nop.Services.Tasks
         public virtual void InsertTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Insert(task);
         }
@@ -108,7 +108,7 @@ namespace Nop.Services.Tasks
         public virtual void UpdateTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Update(task);
         }

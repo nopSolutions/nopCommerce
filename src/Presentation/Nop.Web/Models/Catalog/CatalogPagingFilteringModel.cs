@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Infrastructure.Cache;
 
@@ -29,6 +29,7 @@ namespace Nop.Web.Models.Catalog
             this.AvailableSortOptions = new List<SelectListItem>();
             this.AvailableViewModes = new List<SelectListItem>();
             this.PageSizeOptions = new List<SelectListItem>();
+
             this.PriceRangeFilter = new PriceRangeFilterModel();
             this.SpecificationFilter = new SpecificationFilterModel();
         }
@@ -50,6 +51,7 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether product sorting is allowed
         /// </summary>
         public bool AllowProductSorting { get; set; }
+
         /// <summary>
         /// Available sort options
         /// </summary>
@@ -334,7 +336,7 @@ namespace Nop.Web.Models.Catalog
                     url = webHelper.RemoveQueryString(url, exclude);
                 return url;
             }
-            
+
             /// <summary>
             /// Generate URL of already filtered items
             /// </summary>

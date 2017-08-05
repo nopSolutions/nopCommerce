@@ -20,7 +20,7 @@ namespace Nop.Services.Tests
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //cache managers
-           builder.RegisterType<NopNullCache>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+            builder.RegisterType<NopNullCache>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
 
         }
 

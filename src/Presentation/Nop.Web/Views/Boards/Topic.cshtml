@@ -1,8 +1,6 @@
 ﻿@model ForumTopicPageModel
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(Model.Subject);
@@ -10,10 +8,10 @@
     Html.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
-    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    @Html.Partial("_ForumHeader")
-    @Html.Widget("boards_topic_after_header", Model.Id)
-    @Html.AntiForgeryToken()
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
+    <nop-antiforgery-token />
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
@@ -92,8 +90,8 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @Html.Widget("boards_topic_top", Model.Id)
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_top", additionalData = Model.Id })
+        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -139,14 +137,14 @@
                 </script>
             }
         </div>
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager lower">
                 @pager
             </div>
         }
     </div>
-    @Html.Widget("boards_topic_bottom", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_bottom", additionalData = Model.Id })
 </div>
 <script type="text/javascript">
     function deletepost(postId) {

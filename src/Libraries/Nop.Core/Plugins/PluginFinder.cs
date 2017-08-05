@@ -43,7 +43,7 @@ namespace Nop.Core.Plugins
         protected virtual bool CheckLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             switch (loadMode)
             {
@@ -68,7 +68,7 @@ namespace Nop.Core.Plugins
         protected virtual bool CheckGroup(PluginDescriptor pluginDescriptor, string group)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             if (String.IsNullOrEmpty(group))
                 return true;
@@ -89,7 +89,7 @@ namespace Nop.Core.Plugins
         public virtual bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             //no validation required
             if (storeId == 0)
@@ -110,7 +110,7 @@ namespace Nop.Core.Plugins
         public virtual bool AuthorizedForUser(PluginDescriptor pluginDescriptor, Customer customer)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
                 return true;

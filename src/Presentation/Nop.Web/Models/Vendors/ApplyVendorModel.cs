@@ -1,7 +1,6 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+﻿using FluentValidation.Attributes;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Vendors;
 
 namespace Nop.Web.Models.Vendors
@@ -10,15 +9,12 @@ namespace Nop.Web.Models.Vendors
     public partial class ApplyVendorModel : BaseNopModel
     {
         [NopResourceDisplayName("Vendors.ApplyAccount.Name")]
-        [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Vendors.ApplyAccount.Email")]
-        [AllowHtml]
         public string Email { get; set; }
 
         [NopResourceDisplayName("Vendors.ApplyAccount.Description")]
-        [AllowHtml]
         public string Description { get; set; }
         
         public bool DisplayCaptcha { get; set; }

@@ -1,0 +1,100 @@
+﻿@model Nop.Plugin.Feed.GoogleShopping.Models.FeedGoogleShoppingModel
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @T("Plugins.Feed.GoogleShopping.GeneralInstructions")
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="ProductPictureSize" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="ProductPictureSize" />
+                    <span asp-validation-for="ProductPictureSize"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="PassShippingInfoWeight" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PassShippingInfoWeight" />
+                    <span asp-validation-for="PassShippingInfoWeight"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="PassShippingInfoDimensions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PassShippingInfoDimensions" />
+                    <span asp-validation-for="PassShippingInfoDimensions"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="PricesConsiderPromotions" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="PricesConsiderPromotions" />
+                    <span asp-validation-for="PricesConsiderPromotions"></span>
+                </div>
+            </div>
+            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    <nop-label asp-for="StoreId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="CurrencyId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="CurrencyId" asp-items="Model.AvailableCurrencies" />
+                    <span asp-validation-for="CurrencyId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DefaultGoogleCategory" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="DefaultGoogleCategory" asp-items="Model.AvailableGoogleCategories" />
+                    <span asp-validation-for="DefaultGoogleCategory"></span>
+                </div>
+            </div>
+            @if (Model.GeneratedFiles.Count > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="GeneratedFiles" />
+                    </div>
+                    <div class="col-md-9">
+                        @for (int i = 0; i <= Model.GeneratedFiles.Count - 1; i++)
+                        {
+                            var generatedFile = Model.GeneratedFiles[i];
+                            @generatedFile.StoreName <text>-</text> <a href="@generatedFile.FileUrl" target="_blank">@generatedFile.FileUrl</a>
+                            if (i != Model.GeneratedFiles.Count - 1)
+                            {
+                                <br />
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    &nbsp;
+                </div>
+                <div class="col-md-9">
+                    <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    <input type="submit" name="generate" class="btn bg-green" value="@T("Plugins.Feed.GoogleShopping.Generate")" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

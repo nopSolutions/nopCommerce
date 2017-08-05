@@ -1,13 +1,12 @@
-﻿@{
+﻿@model Nop.Plugin.DiscountRules.HasOneProduct.Models.RequirementModel
+@{
     Layout = "";
 }
-@model Nop.Plugin.DiscountRules.HasOneProduct.Models.RequirementModel
-@using Nop.Web.Framework;
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('#saveHasOneProductrequirement@(Model.RequirementId)').click(function () {
-            var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
+            var productIds = $("#@Html.IdFor(model => model.Products)").val();
             var discountId = @Model.DiscountId;
             var requirementId = @Model.RequirementId;
 
@@ -32,7 +31,7 @@
                     }
                 },
                 error:function (xhr, ajaxOptions, thrownError){
-                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
                 }
             });
         });
@@ -41,17 +40,17 @@
 
 <div class="form-group">
     <div class="col-md-3 requirement-label-col">
-        @Html.NopLabelFor(model => model.Products)
+        <nop-label asp-for="Products"/>
     </div>
     <div class="col-md-9 requirement-data-col">
         <div class="requirement-data-input">
             <div class="input-group">
-                @Html.NopEditorFor(model => model.Products)
+                <nop-editor asp-for="Products"/>
                 <div class="input-group-btn">
                     <input type="submit"
                            id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                            value="@T("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew")"
-                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 850, true); return false;"
+                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.IdFor(model => model.Products)}))', 800, 850, true); return false;"
                            class="btn btn-info"/>
                     <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
                 </div>
@@ -89,7 +88,7 @@
         loadDiscountRequirementProductFriendlyNames@(Model.RequirementId)();
     });
     $(document).ready(function() {
-        $('#@Html.FieldIdFor(model => model.Products)')
+        $('#@Html.IdFor(model => model.Products)')
             .data('timeout', null)
             .keyup(function() {
                 clearTimeout($(this).data('timeout'));
@@ -99,7 +98,7 @@
     });
 
     function loadDiscountRequirementProductFriendlyNames@(Model.RequirementId)() {
-        var inputValue = $('#@Html.FieldIdFor(model => model.Products)').val();
+        var inputValue = $('#@Html.IdFor(model => model.Products)').val();
         if (inputValue) {
             //load friendly names
             $('#discountrequirement-products-check-progress@(Model.RequirementId)').show();

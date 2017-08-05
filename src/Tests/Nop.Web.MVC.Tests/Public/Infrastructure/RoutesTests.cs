@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET451
+using System;
 using Nop.Web.Controllers;
 using NUnit.Framework;
 
@@ -205,3 +206,4 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         //}
     }
 }
+#endif

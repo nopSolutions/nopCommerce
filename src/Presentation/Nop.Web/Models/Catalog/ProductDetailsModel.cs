@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
@@ -198,19 +198,19 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-            [AllowHtml]
+
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
-            [AllowHtml]
+
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-            [AllowHtml]
+
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
-            [AllowHtml]
+
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
-            [AllowHtml]
+
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }
@@ -304,6 +304,6 @@ namespace Nop.Web.Models.Catalog
             public int Quantity { get; set; }
         }
 
-		#endregion
+#endregion
     }
 }

@@ -14,7 +14,7 @@ namespace Nop.Services.Vendors
         public static string FormatVendorNoteText(this VendorNote vendorNote)
         {
             if (vendorNote == null)
-                throw new ArgumentNullException("vendorNote");
+                throw new ArgumentNullException(nameof(vendorNote));
 
             string text = vendorNote.Note;
 

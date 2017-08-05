@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -49,7 +50,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        public virtual ActionResult SubscribePopup(int productId)
+        public virtual IActionResult SubscribePopup(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -76,8 +77,9 @@ namespace Nop.Web.Controllers
             }
             return PartialView(model);
         }
+
         [HttpPost]
-        public virtual ActionResult SubscribePopupPOST(int productId)
+        public virtual IActionResult SubscribePopupPOST(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -138,7 +140,7 @@ namespace Nop.Web.Controllers
 
 
         // My account / Back in stock subscriptions
-        public virtual ActionResult CustomerSubscriptions(int? page)
+        public virtual IActionResult CustomerSubscriptions(int? page)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
@@ -189,9 +191,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public virtual ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
+        public virtual IActionResult CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
-            foreach (var key in formCollection.AllKeys)
+            foreach (var key in formCollection.Keys)
             {
                 var value = formCollection[key];
 

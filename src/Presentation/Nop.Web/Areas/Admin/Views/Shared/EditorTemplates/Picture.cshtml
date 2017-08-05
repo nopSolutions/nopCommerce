@@ -1,0 +1,104 @@
+﻿@model int
+@inject IPictureService pictureService
+
+@using Nop.Core;
+@using Nop.Services.Media
+@using Nop.Web.Framework.UI;
+
+@{
+    //register CSS and JS
+    Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
+    Html.AddScriptParts("~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+
+    //other variables
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    var picture = pictureService.GetPictureById(Model);
+
+    const int pictureSize = 100;
+}
+
+<div id="@(clientId + "value")">
+    <input type="hidden" asp-for="@Model" />
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="@(clientId + "image")" class="uploaded-image">
+            <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))"/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        @*fine uploader container*@
+        <div id="@clientId" class="upload-image-button pull-left margin-t-5">
+            <noscript>
+                <p>Please enable JavaScript to use file uploader.</p>
+            </noscript>
+        </div>
+        <div class="remove-image-button pull-left margin-t-5">
+            @if (picture != null)
+            {
+                <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
+            }
+            else
+            {
+                <span id="@(clientId + "remove")" class="btn bg-red" style="display: none;">@T("Admin.Picture.RemovePicture")</span>
+            }
+        </div>
+    </div>
+</div>
+
+@*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+<script type="text/template" id="@(clientId)-qq-template">
+    <div class="qq-uploader-selector qq-uploader">
+        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+            <span>@T("Common.FileUploader.DropFiles")</span>
+        </div>
+        <div class="qq-upload-button-selector qq-upload-button">
+            <div>@T("Common.FileUploader.Upload")</div>
+        </div>
+        <span class="qq-drop-processing-selector qq-drop-processing">
+            <span>@T("Common.FileUploader.Processing")</span>
+            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+        </span>
+        <ul class="qq-upload-list-selector qq-upload-list">
+            <li>
+                <div class="qq-progress-bar-container-selector">
+                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                </div>
+                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                <span class="qq-upload-file-selector qq-upload-file"></span>
+                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                <span class="qq-upload-size-selector qq-upload-size"></span>
+                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+            </li>
+        </ul>
+    </div>
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@(clientId)").fineUploader({
+            request: {
+                endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
+            },
+            template: "@(clientId)-qq-template",
+            multiple: false
+        }).on("complete", function(event, id, name, responseJSON, xhr) {
+            if (responseJSON.success) {
+                $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
+                $("#@(clientId + "value") input").val(responseJSON.pictureId);
+                $("#@(clientId + "remove")").show();
+            }
+        });
+        $("#@(clientId + "remove")").click(function(e) {
+            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
+            $("#@(clientId + "value") input").val(0);
+            $(this).hide();
+        });
+    });
+</script>

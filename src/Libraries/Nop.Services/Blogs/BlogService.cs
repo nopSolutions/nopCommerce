@@ -53,7 +53,7 @@ namespace Nop.Services.Blogs
         public virtual void DeleteBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Delete(blogPost);
 
@@ -213,7 +213,7 @@ namespace Nop.Services.Blogs
         public virtual void InsertBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Insert(blogPost);
 
@@ -228,7 +228,7 @@ namespace Nop.Services.Blogs
         public virtual void UpdateBlogPost(BlogPost blogPost)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Update(blogPost);
 
@@ -347,7 +347,7 @@ namespace Nop.Services.Blogs
         public virtual void DeleteBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)
-                throw new ArgumentNullException("blogComment");
+                throw new ArgumentNullException(nameof(blogComment));
 
             _blogCommentRepository.Delete(blogComment);
 
@@ -362,7 +362,7 @@ namespace Nop.Services.Blogs
         public virtual void DeleteBlogComments(IList<BlogComment> blogComments)
         {
             if (blogComments == null)
-                throw new ArgumentNullException("blogComments");
+                throw new ArgumentNullException(nameof(blogComments));
 
             foreach (var blogComment in blogComments)
             {

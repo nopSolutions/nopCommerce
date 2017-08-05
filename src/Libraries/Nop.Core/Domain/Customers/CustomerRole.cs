@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Customers
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the customer role is marked as free shiping
+        /// Gets or sets a value indicating whether the customer role is marked as free shippping
         /// </summary>
         public bool FreeShipping { get; set; }
 

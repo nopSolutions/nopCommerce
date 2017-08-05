@@ -43,7 +43,7 @@ namespace Nop.Services.Shipping.Tracking
             return _typeFinder.FindClassesOfType<IShipmentTracker>()
                 //exclude this one
                 .Where(x => x != typeof(GeneralShipmentTracker))
-                .Select(x => EngineContext.Current.ContainerManager.ResolveUnregistered(x) as IShipmentTracker)
+                .Select(x => EngineContext.Current.ResolveUnregistered(x) as IShipmentTracker)
                 .ToList();
         }
 
@@ -70,10 +70,10 @@ namespace Nop.Services.Shipping.Tracking
         }
 
         /// <summary>
-        /// Gets a url for a page to show tracking info (third party tracking page).
+        /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>A url to a tracking page.</returns>
+        /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
             var tracker = GetTrackerByTrackingNumber(trackingNumber);

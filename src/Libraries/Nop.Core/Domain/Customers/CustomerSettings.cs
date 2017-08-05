@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public PasswordFormat DefaultPasswordFormat { get; set; }
         /// <summary>
-        /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed
+        /// Gets or sets a customer password format (SHA1, MD5) when passwords are hashed (DO NOT edit in production environment)
         /// </summary>
         public string HashedPasswordFormat { get; set; }
         /// <summary>
@@ -87,9 +87,9 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'New customer' notification message should be sent to a store owner
         /// </summary>
         public bool NotifyNewCustomerRegistration { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets a value indicating whether to hide 'Downloable products' tab on 'My account' page
+        /// Gets or sets a value indicating whether to hide 'Downloadable products' tab on 'My account' page
         /// </summary>
         public bool HideDownloadableProductsTab { get; set; }
 
@@ -121,7 +121,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool HideNewsletterBlock { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether newsletter block should allow to unsubsribe
+        /// Gets or sets a value indicating whether newsletter block should allow to unsubscribe
         /// </summary>
         public bool NewsletterBlockAllowToUnsubscribe { get; set; }
 
@@ -134,7 +134,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating we should store last visited page URL for each customer
         /// </summary>
         public bool StoreLastVisitedPage { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating we should store IP addresses of customers
+        /// </summary>
+        public bool StoreIpAddresses { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>

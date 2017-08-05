@@ -19,10 +19,10 @@ namespace Nop.Core.Domain.Customers
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (String.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException("customerRoleSystemName");
+                throw new ArgumentNullException(nameof(customerRoleSystemName));
 
             var result = customer.CustomerRoles
                 .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
@@ -37,7 +37,7 @@ namespace Nop.Core.Domain.Customers
         public static bool IsSearchEngineAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
                 return false;
@@ -54,7 +54,7 @@ namespace Nop.Core.Domain.Customers
         public static bool IsBackgroundTaskAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
                 return false;

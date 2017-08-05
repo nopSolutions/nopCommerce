@@ -1,6 +1,5 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Web.Framework.Mvc;
+﻿using FluentValidation.Attributes;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.PrivateMessages;
 
 namespace Nop.Web.Models.PrivateMessages
@@ -13,11 +12,9 @@ namespace Nop.Web.Models.PrivateMessages
         public bool AllowViewingToProfile { get; set; }
 
         public int ReplyToMessageId { get; set; }
-
-        [AllowHtml]
+        
         public string Subject { get; set; }
-
-        [AllowHtml]
+        
         public string Message { get; set; }
     }
 }

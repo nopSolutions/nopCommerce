@@ -16,7 +16,7 @@ namespace Nop.Services.Affiliates
         public static string GetFullName(this Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             var firstName = affiliate.Address.FirstName;
             var lastName = affiliate.Address.LastName;
@@ -37,23 +37,23 @@ namespace Nop.Services.Affiliates
 
 
         /// <summary>
-        /// Generate affilaite URL
+        /// Generate affiliate URL
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
         /// <param name="webHelper">Web helper</param>
-        /// <returns>Generated affilaite URL</returns>
+        /// <returns>Generated affiliate URL</returns>
         public static string GenerateUrl(this Affiliate affiliate, IWebHelper webHelper)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             if (webHelper == null)
-                throw new ArgumentNullException("webHelper");
+                throw new ArgumentNullException(nameof(webHelper));
 
             var storeUrl = webHelper.GetStoreLocation(false);
             var url = !String.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null):
+                webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null) :
                 //use ID
                 webHelper.ModifyQueryString(storeUrl, "affiliateid=" + affiliate.Id, null);
 
@@ -69,7 +69,7 @@ namespace Nop.Services.Affiliates
         public static string ValidateFriendlyUrlName(this Affiliate affiliate, string friendlyUrlName)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             //ensure we have only valid chars
             friendlyUrlName = SeoExtensions.GetSeName(friendlyUrlName);

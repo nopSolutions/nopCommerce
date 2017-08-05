@@ -19,7 +19,7 @@ namespace Nop.Web.Factories
 
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace Nop.Web.Factories
 
         public PollModelFactory(IWorkContext workContext,
             IPollService pollService,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._workContext = workContext;
             this._pollService = pollService;
@@ -47,7 +47,7 @@ namespace Nop.Web.Factories
         public virtual PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
             if (poll == null)
-                throw new ArgumentNullException("poll");
+                throw new ArgumentNullException(nameof(poll));
 
             var model = new PollModel
             {

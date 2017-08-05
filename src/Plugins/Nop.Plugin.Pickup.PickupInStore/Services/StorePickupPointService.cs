@@ -85,7 +85,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         public virtual void InsertStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
-                throw new ArgumentNullException("pickupPoint");
+                throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Insert(pickupPoint);
             _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
@@ -98,7 +98,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         public virtual void UpdateStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
-                throw new ArgumentNullException("pickupPoint");
+                throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Update(pickupPoint);
             _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
@@ -111,7 +111,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         public virtual void DeleteStorePickupPoint(StorePickupPoint pickupPoint)
         {
             if (pickupPoint == null)
-                throw new ArgumentNullException("pickupPoint");
+                throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Delete(pickupPoint);
             _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);

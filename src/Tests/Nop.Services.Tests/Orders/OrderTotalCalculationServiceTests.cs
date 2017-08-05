@@ -65,6 +65,7 @@ namespace Nop.Services.Tests.Orders
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private IRewardPointService _rewardPointService;
+        private IWebHelper _webHelper;
 
         [SetUp]
         public new void SetUp()
@@ -98,6 +99,7 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
 
             //shipping
             _shippingSettings = new ShippingSettings();
@@ -145,7 +147,7 @@ namespace Nop.Services.Tests.Orders
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger, _webHelper,
                 _customerSettings, _shippingSettings, _addressSettings);
             _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
 

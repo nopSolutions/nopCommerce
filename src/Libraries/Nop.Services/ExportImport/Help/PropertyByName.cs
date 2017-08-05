@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Mvc;
-using Nop.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Extensions;
 
 namespace Nop.Services.ExportImport.Help
 {
@@ -160,6 +160,7 @@ namespace Nop.Services.ExportImport.Help
         public bool IsDropDownCell
         {
             get { return DropDownElements != null; }
+
         }
 
         public string[] GetDropDownElements()
@@ -176,7 +177,7 @@ namespace Nop.Services.ExportImport.Help
         {
             return DropDownElements.FirstOrDefault(ev => ev.Text.Trim() == name.Return(s => s.ToString(), String.Empty).Trim()).Return(ev => Convert.ToInt32(ev.Value), 0);
         }
-
+        
         /// <summary>
         /// Elements for a drop-down cell
         /// </summary>

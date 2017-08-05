@@ -65,7 +65,7 @@ namespace Nop.Services.Catalog
             bool showCurrency, Currency targetCurrency)
         {
             if (targetCurrency == null)
-                throw new ArgumentNullException("targetCurrency");
+                throw new ArgumentNullException(nameof(targetCurrency));
 
             string result;
             if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
@@ -241,7 +241,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatRentalProductPeriod(Product product, string price)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return price;

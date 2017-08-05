@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Shipping.UPS.Models
 {
-    public class UPSShippingModel
+    public class UPSShippingModel : BaseNopModel
     {
         public UPSShippingModel()
         {

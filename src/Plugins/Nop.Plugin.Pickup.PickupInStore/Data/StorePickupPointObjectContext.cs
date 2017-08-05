@@ -145,7 +145,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         public void Detach(object entity)
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
         }

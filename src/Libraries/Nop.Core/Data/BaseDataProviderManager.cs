@@ -14,7 +14,7 @@ namespace Nop.Core.Data
         protected BaseDataProviderManager(DataSettings settings)
         {
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             this.Settings = settings;
         }
 

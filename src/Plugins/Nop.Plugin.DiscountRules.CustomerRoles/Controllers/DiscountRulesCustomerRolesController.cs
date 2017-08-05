@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.CustomerRoles.Models;
 using Nop.Services.Configuration;
@@ -8,11 +9,12 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
         private readonly IDiscountService _discountService;
@@ -57,17 +59,23 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             //TODO localize "Select customer role"
             model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "0" });
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
-                model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
+                model.AvailableCustomerRoles.Add(new SelectListItem
+                {
+                    Text = cr.Name,
+                    Value = cr.Id.ToString(),
+                    Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId
+                });
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}",
+                discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
 
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
+        public IActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -97,7 +105,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
                 _settingService.SetSetting(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", discountRequirement.Id), customerRoleId);
             }
-            return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { Result = true, NewRequirementId = discountRequirement.Id });
         }
     }
 }

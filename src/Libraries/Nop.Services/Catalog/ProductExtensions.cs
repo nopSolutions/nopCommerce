@@ -85,16 +85,16 @@ namespace Nop.Services.Catalog
             ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (productAttributeParser == null)
-                throw new ArgumentNullException("productAttributeParser");
+                throw new ArgumentNullException(nameof(productAttributeParser));
 
             if (dateRangeService == null)
-                throw new ArgumentNullException("dateRangeService");
+                throw new ArgumentNullException(nameof(dateRangeService));
 
             string stockMessage = string.Empty;
 
@@ -211,7 +211,7 @@ namespace Nop.Services.Catalog
             int productTagId)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
             return result;
@@ -225,7 +225,7 @@ namespace Nop.Services.Catalog
         public static int[] ParseAllowedQuantities(this Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var result = new List<int>();
             if (!String.IsNullOrWhiteSpace(product.AllowedQuantities))
@@ -263,7 +263,7 @@ namespace Nop.Services.Catalog
             bool useReservedQuantity = true, int warehouseId = 0)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
             {
@@ -300,7 +300,7 @@ namespace Nop.Services.Catalog
             DateTime startDate, DateTime endDate)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return 1;
@@ -367,7 +367,7 @@ namespace Nop.Services.Catalog
             out string sku, out string manufacturerPartNumber, out string gtin)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             sku = null;
             manufacturerPartNumber = null;
@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
             {
                 //manage stock by attribute combinations
                 if (productAttributeParser == null)
-                    throw new ArgumentNullException("productAttributeParser");
+                    throw new ArgumentNullException(nameof(productAttributeParser));
 
                 //let's find appropriate record
                 var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
@@ -408,7 +408,7 @@ namespace Nop.Services.Catalog
         public static string FormatSku(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             string sku;
             string manufacturerPartNumber;
@@ -430,7 +430,7 @@ namespace Nop.Services.Catalog
         public static string FormatMpn(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             string sku;
             string manufacturerPartNumber;
@@ -452,7 +452,7 @@ namespace Nop.Services.Catalog
         public static string FormatGtin(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             string sku;
             string manufacturerPartNumber;
@@ -473,7 +473,7 @@ namespace Nop.Services.Catalog
         public static string FormatRentalDate(this Product product, DateTime date)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return null;
@@ -497,22 +497,22 @@ namespace Nop.Services.Catalog
             IWorkContext workContext, IPriceFormatter priceFormatter)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             
             if (measureService == null)
-                throw new ArgumentNullException("measureService");
+                throw new ArgumentNullException(nameof(measureService));
 
             if (currencyService == null)
-                throw new ArgumentNullException("currencyService");
+                throw new ArgumentNullException(nameof(currencyService));
 
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             if (priceFormatter == null)
-                throw new ArgumentNullException("priceFormatter");
+                throw new ArgumentNullException(nameof(priceFormatter));
 
             if (!product.BasepriceEnabled)
                 return null;

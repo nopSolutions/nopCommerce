@@ -18,6 +18,9 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Gets order of this startup task implementation
+        /// </summary>
         public int Order
         {
             //ensure that this task is run first 

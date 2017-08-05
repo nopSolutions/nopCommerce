@@ -172,7 +172,7 @@ namespace Nop.Web.Factories
         public virtual OrderDetailsModel PrepareOrderDetailsModel(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
             var model = new OrderDetailsModel();
 
             model.Id = order.Id;
@@ -444,7 +444,7 @@ namespace Nop.Web.Factories
         public virtual ShipmentDetailsModel PrepareShipmentDetailsModel(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             var order = shipment.Order;
             if (order == null)

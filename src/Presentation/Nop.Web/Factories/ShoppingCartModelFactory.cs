@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
@@ -15,6 +14,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Http.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -67,10 +67,10 @@ namespace Nop.Web.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -110,10 +110,10 @@ namespace Nop.Web.Factories
             IPaymentService paymentService,
             IPermissionService permissionService, 
             IDownloadService downloadService,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IWebHelper webHelper, 
             IGenericAttributeService genericAttributeService,
-            HttpContextBase httpContext,
+            IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -152,7 +152,7 @@ namespace Nop.Web.Factories
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
             this._genericAttributeService = genericAttributeService;
-            this._httpContext = httpContext;
+            this._httpContextAccessor = httpContextAccessor;
 
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -167,7 +167,7 @@ namespace Nop.Web.Factories
         }
 
         #endregion
-
+        
         #region Utilities
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Nop.Web.Factories
         protected virtual IList<ShoppingCartModel.CheckoutAttributeModel> PrepareCheckoutAttributeModels(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
 
@@ -316,74 +316,6 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
-        /// Prepare the estimate shipping model
-        /// </summary>
-        /// <param name="cart">List of the shopping cart item</param>
-        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
-        /// <returns>Estimate shipping model</returns>
-        protected virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
-        {
-            if (cart == null)
-                throw new ArgumentNullException("cart");
-
-            var model = new EstimateShippingModel();
-
-            model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
-            if (model.Enabled)
-            {
-                //countries
-                int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.CountryId
-                    : model.CountryId;
-                model.AvailableCountries.Add(new SelectListItem
-                {
-                    Text = _localizationService.GetResource("Address.SelectCountry"),
-                    Value = "0"
-                });
-                foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.GetLocalized(x => x.Name),
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == defaultEstimateCountryId
-                    });
-
-                //states
-                int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId
-                    : model.StateProvinceId;
-                var states = defaultEstimateCountryId.HasValue
-                    ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value,_workContext.WorkingLanguage.Id).ToList()
-                    : new List<StateProvince>();
-                if (states.Any())
-                {
-                    foreach (var s in states)
-                    {
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = s.GetLocalized(x => x.Name),
-                            Value = s.Id.ToString(),
-                            Selected = s.Id == defaultEstimateStateId
-                        });
-                    }
-                }
-                else
-                {
-                    model.AvailableStates.Add(new SelectListItem
-                    {
-                        Text = _localizationService.GetResource("Address.OtherNonUS"),
-                        Value = "0"
-                    });
-                }
-
-                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
-            }
-
-            return model;
-        }
-
-        /// <summary>
         /// Prepare the shopping cart item model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>
@@ -392,10 +324,10 @@ namespace Nop.Web.Factories
         protected virtual ShoppingCartModel.ShoppingCartItemModel PrepareShoppingCartItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (sci == null)
-                throw new ArgumentNullException("sci");
+                throw new ArgumentNullException(nameof(sci));
 
 
             var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
@@ -531,10 +463,10 @@ namespace Nop.Web.Factories
         protected virtual WishlistModel.ShoppingCartItemModel PrepareWishlistItemModel(IList<ShoppingCartItem> cart, ShoppingCartItem sci)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (sci == null)
-                throw new ArgumentNullException("sci");
+                throw new ArgumentNullException(nameof(sci));
 
             var cartItemModel = new WishlistModel.ShoppingCartItemModel
             {
@@ -667,7 +599,7 @@ namespace Nop.Web.Factories
         protected virtual ShoppingCartModel.OrderReviewDataModel PrepareOrderReviewDataModel(IList<ShoppingCartItem> cart)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             var model = new ShoppingCartModel.OrderReviewDataModel();
             model.Display = true;
@@ -727,11 +659,9 @@ namespace Nop.Web.Factories
                 : "";
 
             //custom values
-            var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+            var processPaymentRequest = _httpContextAccessor.HttpContext?.Session?.Get<ProcessPaymentRequest>("OrderPaymentInfo");
             if (processPaymentRequest != null)
-            {
                 model.CustomValues = processPaymentRequest.CustomValues;
-            }
 
             return model;
         }
@@ -739,6 +669,74 @@ namespace Nop.Web.Factories
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Prepare the estimate shipping model
+        /// </summary>
+        /// <param name="cart">List of the shopping cart item</param>
+        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
+        /// <returns>Estimate shipping model</returns>
+        public virtual EstimateShippingModel PrepareEstimateShippingModel(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true)
+        {
+            if (cart == null)
+                throw new ArgumentNullException(nameof(cart));
+
+            var model = new EstimateShippingModel();
+
+            model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
+            if (model.Enabled)
+            {
+                //countries
+                int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    ? _workContext.CurrentCustomer.ShippingAddress.CountryId
+                    : model.CountryId;
+                model.AvailableCountries.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Address.SelectCountry"),
+                    Value = "0"
+                });
+                foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
+                    model.AvailableCountries.Add(new SelectListItem
+                    {
+                        Text = c.GetLocalized(x => x.Name),
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == defaultEstimateCountryId
+                    });
+
+                //states
+                int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId
+                    : model.StateProvinceId;
+                var states = defaultEstimateCountryId.HasValue
+                    ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value, _workContext.WorkingLanguage.Id).ToList()
+                    : new List<StateProvince>();
+                if (states.Any())
+                {
+                    foreach (var s in states)
+                    {
+                        model.AvailableStates.Add(new SelectListItem
+                        {
+                            Text = s.GetLocalized(x => x.Name),
+                            Value = s.Id.ToString(),
+                            Selected = s.Id == defaultEstimateStateId
+                        });
+                    }
+                }
+                else
+                {
+                    model.AvailableStates.Add(new SelectListItem
+                    {
+                        Text = _localizationService.GetResource("Address.OtherNonUS"),
+                        Value = "0"
+                    });
+                }
+
+                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
+            }
+
+            return model;
+        }
 
         /// <summary>
         /// Prepare the cart item picture model
@@ -775,21 +773,18 @@ namespace Nop.Web.Factories
         /// <param name="cart">List of the shopping cart item</param>
         /// <param name="isEditable">Whether model is editable</param>
         /// <param name="validateCheckoutAttributes">Whether to validate checkout attributes</param>
-        /// <param name="prepareEstimateShippingIfEnabled">Whether to prepare estimate shipping model</param>
-        /// <param name="setEstimateShippingDefaultAddress">Whether to use customer default shipping address for estimating</param>
         /// <param name="prepareAndDisplayOrderReviewData">Whether to prepare and display order review data</param>
         /// <returns>Shopping cart model</returns>
         public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable = true, 
             bool validateCheckoutAttributes = false, 
-            bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true,
             bool prepareAndDisplayOrderReviewData = false)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //simple properties
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
@@ -818,11 +813,14 @@ namespace Nop.Web.Factories
                 var discount = _discountService.GetAllDiscountsForCaching(couponCode: couponCode)
                     .FirstOrDefault(d => d.RequiresCouponCode && _discountService.ValidateDiscount(d, _workContext.CurrentCustomer).IsValid);
 
-                model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
+                if (discount != null)
                 {
-                    Id = discount.Id,
-                    CouponCode = discount.CouponCode
-                });
+                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
+                    {
+                        Id = discount.Id,
+                        CouponCode = discount.CouponCode
+                    });
+                }
             }
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
@@ -834,12 +832,6 @@ namespace Nop.Web.Factories
             //checkout attributes
             model.CheckoutAttributes = PrepareCheckoutAttributeModels(cart);
     
-            //estimate shipping
-            if (prepareEstimateShippingIfEnabled)
-            {
-                model.EstimateShipping = PrepareEstimateShippingModel(cart, setEstimateShippingDefaultAddress);
-            }
-
             //cart items
             foreach (var sci in cart)
             {
@@ -862,23 +854,18 @@ namespace Nop.Web.Factories
             var buttonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
+
             foreach (var pm in buttonPaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
-                string actionName;
-                string controllerName;
-                RouteValueDictionary routeValues;
-                pm.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
-
-                model.ButtonPaymentMethodActionNames.Add(actionName);
-                model.ButtonPaymentMethodControllerNames.Add(controllerName);
-                model.ButtonPaymentMethodRouteValues.Add(routeValues);
+                pm.GetPublicViewComponent(out string viewComponentName);
+                model.ButtonPaymentMethodViewComponentNames.Add(viewComponentName);
             }
             //hide "Checkout" button if we have only "Button" payment methods
-            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodRouteValues.Any();
-
+            model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponentNames.Any();
+            
             #endregion
 
             //order review data
@@ -900,10 +887,10 @@ namespace Nop.Web.Factories
         public virtual WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
-                throw new ArgumentNullException("cart");
+                throw new ArgumentNullException(nameof(cart));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
             model.IsEditable = isEditable;
@@ -1308,7 +1295,7 @@ namespace Nop.Web.Factories
         public virtual WishlistEmailAFriendModel PrepareWishlistEmailAFriendModel(WishlistEmailAFriendModel model, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage;
             if (!excludeProperties)
@@ -1317,7 +1304,7 @@ namespace Nop.Web.Factories
             }
             return model;
         }
-
+        
         #endregion
     }
 }

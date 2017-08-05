@@ -1,13 +1,12 @@
 ﻿@model CompareProductsModel
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.CompareProducts").Text);
     //page class
     Html.AppendPageCssClassParts("html-compare-products-page");
 }
-@using Nop.Web.Models.Catalog;
 @{
     string columnWidth = "";
     if (Model.Products.Count > 0)

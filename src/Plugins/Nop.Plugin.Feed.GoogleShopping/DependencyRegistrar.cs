@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Autofac.Core;
 using Nop.Core.Configuration;
@@ -8,7 +9,7 @@ using Nop.Data;
 using Nop.Plugin.Feed.GoogleShopping.Data;
 using Nop.Plugin.Feed.GoogleShopping.Domain;
 using Nop.Plugin.Feed.GoogleShopping.Services;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Feed.GoogleShopping
 {
@@ -42,7 +43,10 @@ namespace Nop.Plugin.Feed.GoogleShopping
         /// </summary>
         public int Order
         {
-            get { return 1; }
+            get
+            {
+                return 1;
+            }
         }
     }
 }

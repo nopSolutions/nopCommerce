@@ -29,7 +29,7 @@ namespace Nop.Web.Factories
         private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -45,7 +45,7 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IPictureService pictureService, 
             IDateTimeHelper dateTimeHelper,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             MediaSettings mediaSettings, 
             NewsSettings newsSettings,
             CustomerSettings customerSettings,
@@ -76,7 +76,7 @@ namespace Nop.Web.Factories
         public virtual NewsCommentModel PrepareNewsCommentModel(NewsComment newsComment)
         {
             if (newsComment == null)
-                throw new ArgumentNullException("newsComment");
+                throw new ArgumentNullException(nameof(newsComment));
 
             var model = new NewsCommentModel
             {
@@ -110,10 +110,10 @@ namespace Nop.Web.Factories
         public virtual NewsItemModel PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException(nameof(newsItem));
 
             model.Id = newsItem.Id;
             model.MetaTitle = newsItem.MetaTitle;

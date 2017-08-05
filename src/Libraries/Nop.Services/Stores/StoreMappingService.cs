@@ -36,7 +36,7 @@ namespace Nop.Services.Stores
 
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
 
@@ -47,12 +47,12 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event publisher</param>
-        public StoreMappingService(ICacheManager cacheManager, 
+        public StoreMappingService(IStaticCacheManager cacheManager, 
             IStoreContext storeContext,
             IRepository<StoreMapping> storeMappingRepository,
             CatalogSettings catalogSettings,
@@ -76,7 +76,7 @@ namespace Nop.Services.Stores
         public virtual void DeleteStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Delete(storeMapping);
 
@@ -109,7 +109,7 @@ namespace Nop.Services.Stores
         public virtual IList<StoreMapping> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
@@ -130,7 +130,7 @@ namespace Nop.Services.Stores
         public virtual void InsertStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Insert(storeMapping);
 
@@ -150,7 +150,7 @@ namespace Nop.Services.Stores
         public virtual void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException("storeId");
@@ -175,7 +175,7 @@ namespace Nop.Services.Stores
         public virtual void UpdateStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
-                throw new ArgumentNullException("storeMapping");
+                throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Update(storeMapping);
 
@@ -190,12 +190,12 @@ namespace Nop.Services.Stores
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>Store identifiers</returns>
         public virtual int[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
@@ -215,7 +215,7 @@ namespace Nop.Services.Stores
         /// Authorize whether entity could be accessed in the current store (mapped to this store)
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
+        /// <param name="entity">Entity</param>
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {

@@ -24,7 +24,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             //invalid by default
             var result = new DiscountRequirementValidationResult();
