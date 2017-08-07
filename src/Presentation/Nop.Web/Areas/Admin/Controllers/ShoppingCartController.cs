@@ -107,8 +107,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = cart.Select(sci =>
                 {
-                    decimal taxRate;
-                    var store = _storeService.GetStoreById(sci.StoreId); 
+                    var store = _storeService.GetStoreById(sci.StoreId);
                     var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
@@ -117,7 +116,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         Quantity = sci.Quantity,
                         ProductName = sci.Product.Name,
                         AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
+                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out decimal taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                     };
@@ -177,8 +176,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = cart.Select(sci =>
                 {
-                    decimal taxRate;
-                    var store = _storeService.GetStoreById(sci.StoreId); 
+                    var store = _storeService.GetStoreById(sci.StoreId);
                     var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
@@ -187,7 +185,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         Quantity = sci.Quantity,
                         ProductName = sci.Product.Name,
                         AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
+                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out decimal taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                     };

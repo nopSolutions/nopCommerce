@@ -229,8 +229,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                     if (str2.Contains(":"))
                         str2 = str2.Substring(0, str2.IndexOf(":"));
 
-                    int tmp1;
-                    if (int.TryParse(str2, out tmp1))
+                    if (int.TryParse(str2, out int tmp1))
                         ids.Add(tmp1);
                 }
 

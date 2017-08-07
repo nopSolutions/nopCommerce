@@ -898,13 +898,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = new List<SortOptionModel>();
             foreach (int option in Enum.GetValues(typeof(ProductSortingEnum)))
             {
-                int value;
                 model.Add(new SortOptionModel()
                 {
                     Id = option,
                     Name = ((ProductSortingEnum)option).GetLocalizedEnum(_localizationService, _workContext),
                     IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option),
-                    DisplayOrder = catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(option, out value) ? value : option
+                    DisplayOrder = catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(option, out int value) ? value : option
                 });
             }
             var gridModel = new DataSourceResult

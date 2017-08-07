@@ -223,9 +223,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     item.sku = shoppingCartItem.Product.Sku;
 
                 //item price
-                decimal taxRate;
                 var unitPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem);
-                var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out taxRate);
+                var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out decimal _);
                 item.price = price.ToString("N", new CultureInfo("en-US"));
 
                 //quantity
@@ -300,11 +299,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         protected Item CreateItemForSubtotalDiscount(IList<ShoppingCartItem> shoppingCart)
         {
             //get subtotal discount amount
-            decimal discountAmount;
-            List<DiscountForCaching> discounts;
-            decimal withoutDiscount;
-            decimal subtotal;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(shoppingCart, false, out discountAmount, out discounts, out withoutDiscount, out subtotal);
+            _orderTotalCalculationService.GetShoppingCartSubTotal(shoppingCart, false, out decimal discountAmount, out List<DiscountForCaching> _, out decimal _, out decimal _);
 
             if (discountAmount <= decimal.Zero)
                 return null;
@@ -326,13 +321,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
         protected Item CreateItemForTotalDiscount(IList<ShoppingCartItem> shoppingCart)
         {
             //get total discount amount
-            decimal discountAmount;
-            List<AppliedGiftCard> giftCards;
-            List<DiscountForCaching> discounts;
-            int rewardPoints;
-            decimal rewardPointsAmount;
-            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, out discountAmount,
-                out discounts, out giftCards, out rewardPoints, out rewardPointsAmount);
+            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart,
+                out decimal discountAmount,
+                out List<DiscountForCaching> _, out List<AppliedGiftCard> _, out int _, out decimal _);
 
             if (discountAmount <= decimal.Zero)
                 return null;
@@ -359,20 +350,17 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             //get shipping total
             var shipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart, false);
-            var shippingTotal = shipping.HasValue ? shipping.Value : 0;
+            var shippingTotal = shipping ?? 0;
 
             //get tax total
-            SortedDictionary<decimal, decimal> taxRatesDictionary;
-            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxRatesDictionary);
+            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out SortedDictionary<decimal, decimal> _);
 
             //get subtotal
-            var subTotal = decimal.Zero;
+            decimal subTotal;
             if (items != null && items.Any())
             {
                 //items passed to PayPal, so calculate subtotal based on them
-                var tmpPrice = decimal.Zero;
-                var tmpQuantity = 0;
-                subTotal = items.Sum(item => !decimal.TryParse(item.price, out tmpPrice) || !int.TryParse(item.quantity, out tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
+                subTotal = items.Sum(item => !decimal.TryParse(item.price, out decimal tmpPrice) || !int.TryParse(item.quantity, out int tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
             }
             else
                 subTotal = paymentRequest.OrderTotal - shippingTotal - taxTotal;

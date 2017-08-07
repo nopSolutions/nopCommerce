@@ -370,8 +370,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int specId;
-                    int.TryParse(spec.Trim(), out specId);
+                    int.TryParse(spec.Trim(), out int specId);
                     if (!result.Contains(specId))
                         result.Add(specId);
                 }

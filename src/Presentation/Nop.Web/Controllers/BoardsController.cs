@@ -1007,8 +1007,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("fs", "").Trim();
-                    int forumSubscriptionId;
-                    if (Int32.TryParse(id, out forumSubscriptionId))
+                    if (Int32.TryParse(id, out int forumSubscriptionId))
                     {
                         var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
                         if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)

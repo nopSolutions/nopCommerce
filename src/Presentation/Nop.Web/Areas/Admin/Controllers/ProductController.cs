@@ -837,8 +837,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (string formKey in formData.Keys)
                     if (formKey.Equals($"warehouse_used_{warehouse.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int tmp;
-                        int.TryParse(formData[formKey], out tmp);
+                        int.TryParse(formData[formKey], out int tmp);
                         used = tmp == warehouse.Id;
                         break;
                     }
@@ -1442,8 +1441,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 foreach (string str1 in rangeArray)
                 {
-                    int tmp1;
-                    if (int.TryParse(str1, out tmp1))
+                    if (int.TryParse(str1, out int tmp1))
                         ids.Add(tmp1);
                 }
 
@@ -2402,8 +2400,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
             {
                 psa.AllowFiltering = model.AllowFiltering;
-                int specificationAttributeOptionId;
-                if (int.TryParse(model.ValueRaw, out specificationAttributeOptionId))
+                if (int.TryParse(model.ValueRaw, out int specificationAttributeOptionId))
                     psa.SpecificationAttributeOptionId = specificationAttributeOptionId;
             }
 

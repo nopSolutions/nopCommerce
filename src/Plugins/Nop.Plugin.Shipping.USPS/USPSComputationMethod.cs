@@ -133,10 +133,8 @@ namespace Nop.Plugin.Shipping.USPS
             if (baseusedMeasureDimension == null)
                 throw new NopException("Primary dimension can't be loaded");
 
-            decimal lengthTmp, widthTmp, heightTmp;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
-
-
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+            
             int length = Convert.ToInt32(Math.Ceiling(lengthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
             int height = Convert.ToInt32(Math.Ceiling(heightTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
             int width = Convert.ToInt32(Math.Ceiling(widthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));

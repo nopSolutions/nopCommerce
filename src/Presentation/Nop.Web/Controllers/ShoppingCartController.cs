@@ -239,8 +239,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid downloadGuid;
-                            Guid.TryParse(form[controlId], out downloadGuid);
+                            Guid.TryParse(form[controlId], out Guid downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -383,8 +382,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid downloadGuid;
-                            Guid.TryParse(form[controlId], out downloadGuid);
+                            Guid.TryParse(form[controlId], out Guid downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -761,8 +759,7 @@ namespace Nop.Web.Controllers
                 {
                     if (formKey.Equals($"addtocart_{productId}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        decimal customerEnteredPrice;
-                        if (decimal.TryParse(form[formKey], out customerEnteredPrice))
+                        if (decimal.TryParse(form[formKey], out decimal customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
                         break;
                     }
@@ -951,15 +948,13 @@ namespace Nop.Web.Controllers
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 List<DiscountForCaching> scDiscounts;
-                decimal discountAmount;
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out discountAmount, out scDiscounts);
-                decimal taxRate;
-                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
+                    true, out decimal _, out scDiscounts);
+                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }

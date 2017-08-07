@@ -1106,8 +1106,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int billingAddressId;
-                int.TryParse(form["billing_address_id"], out billingAddressId);
+                int.TryParse(form["billing_address_id"], out int billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1287,8 +1286,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, null, _storeContext.CurrentStore.Id);
                 }
 
-                int shippingAddressId;
-                int.TryParse(form["shipping_address_id"], out shippingAddressId);
+                int.TryParse(form["shipping_address_id"], out int shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {

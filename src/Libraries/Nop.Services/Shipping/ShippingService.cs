@@ -607,11 +607,7 @@ namespace Nop.Services.Shipping
                 foreach (var packageItem in packageItems)
                 {
                     //associated products
-                    decimal associatedProductsWidth;
-                    decimal associatedProductsLength;
-                    decimal associatedProductsHeight;
-                    GetAssociatedProductDimensions(packageItem.ShoppingCartItem,
-                        out associatedProductsWidth, out associatedProductsLength, out associatedProductsHeight);
+                    GetAssociatedProductDimensions(packageItem.ShoppingCartItem, out decimal associatedProductsWidth, out decimal associatedProductsLength, out decimal associatedProductsHeight);
 
                     var quantity = packageItem.GetQuantity();
                     width += (packageItem.ShoppingCartItem.Product.Width + associatedProductsWidth) * quantity;
@@ -808,8 +804,7 @@ namespace Nop.Services.Shipping
             var result = new GetShippingOptionResponse();
 
             //create a package
-            bool shippingFromMultipleLocations;
-            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
+            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out bool shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(customer, storeId);

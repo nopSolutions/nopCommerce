@@ -423,8 +423,7 @@ namespace Nop.Services.Tax
             }
 
 
-            bool isTaxable;
-            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
+            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out bool isTaxable);
 
             if (priceIncludesTax)
             {
@@ -498,8 +497,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetShippingPrice(price, includingTax, customer, out taxRate);
+            return GetShippingPrice(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -549,9 +547,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetPaymentMethodAdditionalFee(price, includingTax,
-                customer, out taxRate);
+            return GetPaymentMethodAdditionalFee(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -613,8 +609,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetCheckoutAttributePrice(cav, includingTax, customer, out taxRate);
+            return GetCheckoutAttributePrice(cav, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -656,8 +651,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string fullVatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(fullVatNumber, out name, out address);
+            return GetVatNumberStatus(fullVatNumber, out string _, out string _);
         }
 
         /// <summary>
@@ -697,8 +691,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
+            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out string _, out string _);
         }
 
         /// <summary>
@@ -727,8 +720,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
 
-            Exception exception;
-            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out exception);
+            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out Exception _);
         }
 
         /// <summary>

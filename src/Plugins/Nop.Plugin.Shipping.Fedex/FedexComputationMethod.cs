@@ -98,14 +98,12 @@ namespace Nop.Plugin.Shipping.Fedex
             request.CarrierCodes[0] = RateServiceWebReference.CarrierCodeType.FDXE;
             request.CarrierCodes[1] = RateServiceWebReference.CarrierCodeType.FDXG;
 
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
-            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
-                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            _orderTotalCalculationService.GetShoppingCartSubTotal(
+                getShippingOptionRequest.Items.Select(x => x.ShoppingCartItem).ToList(),
+                false, out decimal _, out List<DiscountForCaching> _, out decimal _,
+                out decimal subTotalWithDiscountBase);
+
             decimal subTotalBase = subTotalWithDiscountBase;
 
             request.RequestedShipment = new RequestedShipment();
@@ -284,8 +282,7 @@ namespace Nop.Plugin.Shipping.Fedex
             var usedMeasureWeight = GetUsedMeasureWeight();
             var usedMeasureDimension = GetUsedMeasureDimension();
 
-            decimal lengthTmp, widthTmp, heightTmp;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
             int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
             int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -402,11 +399,10 @@ namespace Nop.Plugin.Shipping.Fedex
                 var qty = packageItem.GetQuantity();
 
                 //get dimensions for qty 1
-                decimal lengthTmp, widthTmp, heightTmp;
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
                 int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                 int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -499,11 +495,10 @@ namespace Nop.Plugin.Shipping.Fedex
                 var sci = getShippingOptionRequest.Items[0].ShoppingCartItem;
 
                 //get dimensions for qty 1
-                decimal lengthTmp, widthTmp, heightTmp;
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
                 totalPackagesDims = 1;
                 length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
@@ -518,11 +513,10 @@ namespace Nop.Plugin.Shipping.Fedex
                     var sci = item.ShoppingCartItem;
 
                     //get dimensions for qty 1
-                    decimal lengthTmp, widthTmp, heightTmp;
                     _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
                     int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                     int productHeight = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -815,8 +809,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 return response;
             }
 
-            Currency requestedShipmentCurrency;
-            var request = CreateRateRequest(getShippingOptionRequest, out requestedShipmentCurrency);
+            var request = CreateRateRequest(getShippingOptionRequest, out Currency requestedShipmentCurrency);
             var service = new RateService(); // Initialize the service
             service.Url = _fedexSettings.Url;
             try

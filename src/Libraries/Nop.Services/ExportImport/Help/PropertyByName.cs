@@ -61,8 +61,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                int rez;
-                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out int rez))
                     return default(int);
                 return rez;
             }
@@ -75,8 +74,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                bool rez;
-                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out bool rez))
                     return default(bool);
                 return rez;
             }
@@ -100,8 +98,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out decimal rez))
                     return default(decimal);
                 return rez;
             }
@@ -114,8 +111,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                decimal rez;
-                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out decimal rez))
                     return null;
                 return rez;
             }
@@ -128,8 +124,7 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                double rez;
-                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out rez))
+                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out double rez))
                     return default(double);
                 return rez;
             }

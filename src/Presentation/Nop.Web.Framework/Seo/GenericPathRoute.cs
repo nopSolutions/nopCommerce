@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Seo
         {
             //remove language code from the path if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
-            if (this.SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+            if (this.SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
                 path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
             //parse route data

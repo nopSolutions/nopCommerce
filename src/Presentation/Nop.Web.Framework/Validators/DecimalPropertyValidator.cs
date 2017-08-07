@@ -9,8 +9,7 @@ namespace Nop.Web.Framework.Validators
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
-            decimal value;
-            if (decimal.TryParse(context.PropertyValue.ToString(), out value))
+            if (decimal.TryParse(context.PropertyValue.ToString(), out decimal value))
             {
                 return RoundingHelper.RoundPrice(value) < _maxValue;
             }

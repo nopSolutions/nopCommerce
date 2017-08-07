@@ -603,10 +603,8 @@ namespace Nop.Web.Controllers
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
 
-                        string vatName;
-                        string vatAddress;
-                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName,
-                            out vatAddress);
+                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _,
+    out string vatAddress);
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int)vatNumberStatus);
                         //send VAT number admin notification
                         if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
@@ -936,9 +934,7 @@ namespace Nop.Web.Controllers
                             model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
-                            string vatName;
-                            string vatAddress;
-                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
+                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
                             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int)vatNumberStatus);
                             //send VAT number admin notification
                             if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)

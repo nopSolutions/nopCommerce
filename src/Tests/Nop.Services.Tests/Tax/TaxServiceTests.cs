@@ -145,8 +145,7 @@ namespace Nop.Services.Tests.Tax
             var customer = new Customer();
             var product = new Product();
 
-            decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(1000);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out decimal taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1100);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
@@ -161,8 +160,7 @@ namespace Nop.Services.Tests.Tax
             //not taxable
             customer.IsTaxExempt = true;
 
-            decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out decimal taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
@@ -172,12 +170,9 @@ namespace Nop.Services.Tests.Tax
         public void Can_do_VAT_check()
         {
             //remove? this method requires Internet access
-
-            string name, address;
-            Exception exception;
-
+            
             VatNumberStatus vatNumberStatus1 = _taxService.DoVatCheck("GB", "523 2392 69",
-                out name, out address, out exception);
+                out string name, out string address, out Exception exception);
             vatNumberStatus1.ShouldEqual(VatNumberStatus.Valid);
             exception.ShouldBeNull();
 
@@ -191,10 +186,8 @@ namespace Nop.Services.Tests.Tax
         public void Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
         {
             _taxSettings.EuVatAssumeValid = true;
-            string name, address;
 
-            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00",
-                out name, out address);
+            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00", out string _, out string _);
             vatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
         }
     }

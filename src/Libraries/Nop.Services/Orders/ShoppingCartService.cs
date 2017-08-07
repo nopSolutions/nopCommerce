@@ -682,14 +682,7 @@ namespace Nop.Services.Orders
             //gift cards
             if (product.IsGiftCard)
             {
-                string giftCardRecipientName;
-                string giftCardRecipientEmail;
-                string giftCardSenderName;
-                string giftCardSenderEmail;
-                string giftCardMessage;
-                _productAttributeParser.GetGiftCardAttribute(attributesXml,
-                    out giftCardRecipientName, out giftCardRecipientEmail,
-                    out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string _);
 
                 if (String.IsNullOrEmpty(giftCardRecipientName))
                     warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientNameError"));
@@ -864,11 +857,7 @@ namespace Nop.Services.Orders
             //recurring cart validation
             if (hasRecurringProducts)
             {
-                int cycleLength;
-                RecurringProductCyclePeriod cyclePeriod;
-                int totalCycles;
-                string cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService,
-                    out cycleLength, out cyclePeriod, out totalCycles);
+                string cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService, out int _, out RecurringProductCyclePeriod _, out int _);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {
                     warnings.Add(cyclesError);
@@ -1002,25 +991,10 @@ namespace Nop.Services.Orders
                     bool giftCardInfoSame = true;
                     if (sci.Product.IsGiftCard)
                     {
-                        string giftCardRecipientName1;
-                        string giftCardRecipientEmail1;
-                        string giftCardSenderName1;
-                        string giftCardSenderEmail1;
-                        string giftCardMessage1;
-                        _productAttributeParser.GetGiftCardAttribute(attributesXml,
-                            out giftCardRecipientName1, out giftCardRecipientEmail1,
-                            out giftCardSenderName1, out giftCardSenderEmail1, out giftCardMessage1);
+                        _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName1, out string _, out string giftCardSenderName1, out string _, out string _);
 
-                        string giftCardRecipientName2;
-                        string giftCardRecipientEmail2;
-                        string giftCardSenderName2;
-                        string giftCardSenderEmail2;
-                        string giftCardMessage2;
-                        _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml,
-                            out giftCardRecipientName2, out giftCardRecipientEmail2,
-                            out giftCardSenderName2, out giftCardSenderEmail2, out giftCardMessage2);
-
-
+                        _productAttributeParser.GetGiftCardAttribute(sci.AttributesXml, out string giftCardRecipientName2, out string _, out string giftCardSenderName2, out string _, out string _);
+                        
                         if (giftCardRecipientName1.ToLowerInvariant() != giftCardRecipientName2.ToLowerInvariant() ||
                             giftCardSenderName1.ToLowerInvariant() != giftCardSenderName2.ToLowerInvariant())
                             giftCardInfoSame = false;

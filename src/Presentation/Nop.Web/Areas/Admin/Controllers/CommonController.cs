@@ -781,8 +781,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(seName))
                 return Json(new { Result = string.Empty });
 
-            int parsedEntityId;
-            int.TryParse(entityId, out parsedEntityId);
+            int.TryParse(entityId, out int parsedEntityId);
             var validatedSeName = SeoExtensions.ValidateSeName(parsedEntityId, entityName, seName, null, false);
 
             if (seName.Equals(validatedSeName, StringComparison.InvariantCultureIgnoreCase))

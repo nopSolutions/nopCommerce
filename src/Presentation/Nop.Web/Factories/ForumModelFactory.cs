@@ -738,17 +738,14 @@ namespace Nop.Web.Factories
                 }
             };
             model.WithinList = withinList;
-           
-            int forumIdSelected;
-            int.TryParse(forumId, out forumIdSelected);
+
+            int.TryParse(forumId, out int forumIdSelected);
             model.ForumIdSelected = forumIdSelected;
 
-            int withinSelected;
-            int.TryParse(within, out withinSelected);
+            int.TryParse(within, out int withinSelected);
             model.WithinSelected = withinSelected;
 
-            int limitDaysSelected;
-            int.TryParse(limitDays, out limitDaysSelected);
+            int.TryParse(limitDays, out int limitDaysSelected);
             model.LimitDaysSelected = limitDaysSelected;
 
             int searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;

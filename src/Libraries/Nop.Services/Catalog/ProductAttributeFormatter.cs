@@ -113,8 +113,7 @@ namespace Nop.Services.Catalog
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid downloadGuid;
-                                Guid.TryParse(value, out downloadGuid);
+                                Guid.TryParse(value, out Guid downloadGuid);
                                 var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
@@ -164,9 +163,8 @@ namespace Nop.Services.Catalog
 
                             if (renderPrices)
                             {
-                                decimal taxRate;
                                 var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
+                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
                                 var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                 if (priceAdjustmentBase > 0)
                                     formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
@@ -202,13 +200,7 @@ namespace Nop.Services.Catalog
             {
                 if (product.IsGiftCard)
                 {
-                    string giftCardRecipientName;
-                    string giftCardRecipientEmail;
-                    string giftCardSenderName;
-                    string giftCardSenderEmail;
-                    string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out giftCardRecipientName, out giftCardRecipientEmail,
-                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string _);
 
                     //sender
                     var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?

@@ -364,8 +364,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                                     _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
                             }
 
-                            decimal taxRate;
-                            finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                            finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out decimal _);
                         }
                         else
                         {

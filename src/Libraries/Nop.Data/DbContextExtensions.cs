@@ -158,13 +158,11 @@ namespace Nop.Data
         /// <returns></returns>
         public static IDictionary<string, int> GetColumnsMaxLength(this IDbContext context, string entityTypeName, params string[] columnNames)
         {
-            int temp;
-
             var fildFacets = GetFildFacets(context, entityTypeName, "String", columnNames);
 
             var queryResult = fildFacets
                 .Select(f => new { Name = f.Key, MaxLength = f.Value["MaxLength"].Value })
-                .Where(p => int.TryParse(p.MaxLength.ToString(), out temp))
+                .Where(p => int.TryParse(p.MaxLength.ToString(), out int _))
                 .ToDictionary(p => p.Name, p => Convert.ToInt32(p.MaxLength));
 
             return queryResult;

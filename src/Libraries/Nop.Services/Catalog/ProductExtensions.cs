@@ -235,8 +235,7 @@ namespace Nop.Services.Catalog
                     .ToList()
                     .ForEach(qtyStr =>
                     {
-                        int qty;
-                        if (int.TryParse(qtyStr.Trim(), out qty))
+                        if (int.TryParse(qtyStr.Trim(), out int qty))
                         {
                             result.Add(qty);
                         }
@@ -410,12 +409,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string sku, out string _, out string _);
 
             return sku;
         }
@@ -432,12 +426,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string _, out string manufacturerPartNumber, out string _);
 
             return manufacturerPartNumber;
         }
@@ -454,12 +443,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string _, out string _, out string gtin);
 
             return gtin;
         }

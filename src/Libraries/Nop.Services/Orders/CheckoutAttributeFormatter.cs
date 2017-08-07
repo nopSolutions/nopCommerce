@@ -101,8 +101,7 @@ namespace Nop.Services.Orders
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid downloadGuid;
-                            Guid.TryParse(valueStr, out downloadGuid);
+                            Guid.TryParse(valueStr, out Guid downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -141,8 +140,7 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
+                        if (int.TryParse(valueStr, out int attributeValueId))
                         {
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
                             if (attributeValue != null)

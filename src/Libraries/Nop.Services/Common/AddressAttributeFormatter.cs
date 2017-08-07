@@ -77,8 +77,7 @@ namespace Nop.Services.Common
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
+                        if (int.TryParse(valueStr, out int attributeValueId))
                         {
                             var attributeValue = _addressAttributeService.GetAddressAttributeValueById(attributeValueId);
                             if (attributeValue != null)

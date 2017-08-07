@@ -20,8 +20,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                             shippingOption.Name = $"Australia Post. {property.Value}";
                             break;
                         case "price":
-                            decimal rate;
-                            if (decimal.TryParse(property.Value.ToString(), out rate))
+                            if (decimal.TryParse(property.Value.ToString(), out decimal rate))
                             {
                                 var convertedRate = currencyService.ConvertToPrimaryStoreCurrency(rate, audCurrency);
                                 shippingOption.Rate = convertedRate;

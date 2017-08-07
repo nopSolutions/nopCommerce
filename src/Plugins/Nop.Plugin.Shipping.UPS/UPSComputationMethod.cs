@@ -158,14 +158,9 @@ namespace Nop.Plugin.Shipping.UPS
 
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
             //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
-            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
-                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x => x.ShoppingCartItem).ToList(),
+                false, out decimal _, out List<DiscountForCaching> _, out decimal subTotalWithoutDiscountBase, out decimal _);
 
             if (_upsSettings.Tracing)
                 _traceMessages.AppendLine(" Packing Type: " + _upsSettings.PackingType.ToString());
@@ -228,8 +223,7 @@ namespace Nop.Plugin.Shipping.UPS
             var usedMeasureWeight = GetUsedMeasureWeight();
             var usedMeasureDimension = GetUsedMeasureDimension();
 
-            decimal lengthTmp, widthTmp, heightTmp;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
             int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
             int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -307,11 +301,10 @@ namespace Nop.Plugin.Shipping.UPS
                 var qty = packageItem.GetQuantity();
 
                 //get dimensions for qty 1
-                decimal lengthTmp, widthTmp, heightTmp;
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
                 int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                 int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -366,11 +359,10 @@ namespace Nop.Plugin.Shipping.UPS
                 var sci = getShippingOptionRequest.Items[0].ShoppingCartItem;
 
                 //get dimensions for qty 1
-                decimal lengthTmp, widthTmp, heightTmp;
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
 
                 totalPackagesDims = 1;
                 length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
@@ -385,11 +377,10 @@ namespace Nop.Plugin.Shipping.UPS
                     var sci = item.ShoppingCartItem;
 
                     //get dimensions for qty 1
-                    decimal lengthTmp, widthTmp, heightTmp;
                     _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out widthTmp, out lengthTmp, out heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal _);
 
                     int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                     int productHeight = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);

@@ -43,8 +43,7 @@ namespace Nop.Services.Customers
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             ids.Add(id);
                         }
@@ -103,8 +102,7 @@ namespace Nop.Services.Customers
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
+                        if (int.TryParse(valueStr, out int id))
                         {
                             var value = _customerAttributeService.GetCustomerAttributeValueById(id);
                             if (value != null)
@@ -139,8 +137,7 @@ namespace Nop.Services.Customers
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == customerAttributeId)
                             {
@@ -194,8 +191,7 @@ namespace Nop.Services.Customers
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == ca.Id)
                             {

@@ -61,8 +61,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
         public static bool IsValidIpAddress(string ipAddress)
         {
-            IPAddress ip;
-            return IPAddress.TryParse(ipAddress, out ip);
+            return IPAddress.TryParse(ipAddress, out IPAddress _);
         }
 
         /// <summary>

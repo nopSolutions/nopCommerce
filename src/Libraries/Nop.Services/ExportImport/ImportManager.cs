@@ -151,8 +151,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
             //TODO test ne implementation
-            string mimeType;
-            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out mimeType);
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out string mimeType);
             //set to jpeg in case mime type cannot be found
             if (mimeType == null)
                 mimeType = MimeTypes.ImageJpeg;

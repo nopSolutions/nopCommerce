@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
-                if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language language))
+                if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language _))
                     return;
 
                 //not localized yet, so redirect to the page with working language SEO code

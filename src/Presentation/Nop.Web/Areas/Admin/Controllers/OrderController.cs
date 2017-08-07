@@ -394,8 +394,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid downloadGuid;
-                            Guid.TryParse(form[controlId], out downloadGuid);
+                            Guid.TryParse(form[controlId], out Guid downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -842,8 +841,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var presetQty = 1;
             var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
-            decimal taxRate;
-            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out taxRate);
+            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out decimal taxRate);
             decimal presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out taxRate);
 
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
@@ -2225,21 +2223,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order item found with the specified id");
 
 
-            decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
-            int quantity;
-            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out unitPriceInclTax))
+            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out decimal unitPriceInclTax))
                 unitPriceInclTax = orderItem.UnitPriceInclTax;
-            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out unitPriceExclTax))
+            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out decimal unitPriceExclTax))
                 unitPriceExclTax = orderItem.UnitPriceExclTax;
-            if (!int.TryParse(form["pvQuantity" + orderItemId], out quantity))
+            if (!int.TryParse(form["pvQuantity" + orderItemId], out int quantity))
                 quantity = orderItem.Quantity;
-            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out discountInclTax))
+            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out decimal discountInclTax))
                 discountInclTax = orderItem.DiscountAmountInclTax;
-            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out discountExclTax))
+            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out decimal discountExclTax))
                 discountExclTax = orderItem.DiscountAmountExclTax;
-            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out priceInclTax))
+            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out decimal priceInclTax))
                 priceInclTax = orderItem.PriceInclTax;
-            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out priceExclTax))
+            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out decimal priceExclTax))
                 priceExclTax = orderItem.PriceExclTax;
 
             if (quantity > 0)
@@ -2658,16 +2654,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //save order item
 
             //basic properties
-            decimal unitPriceInclTax;
-            decimal.TryParse(form["UnitPriceInclTax"], out unitPriceInclTax);
-            decimal unitPriceExclTax;
-            decimal.TryParse(form["UnitPriceExclTax"], out unitPriceExclTax);
-            int quantity;
-            int.TryParse(form["Quantity"], out quantity);
-            decimal priceInclTax;
-            decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
-            decimal priceExclTax;
-            decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
+            decimal.TryParse(form["UnitPriceInclTax"], out decimal unitPriceInclTax);
+            decimal.TryParse(form["UnitPriceExclTax"], out decimal unitPriceExclTax);
+            int.TryParse(form["Quantity"], out int quantity);
+            decimal.TryParse(form["SubTotalInclTax"], out decimal priceInclTax);
+            decimal.TryParse(form["SubTotalExclTax"], out decimal priceExclTax);
 
             //warnings
             var warnings = new List<string>();
