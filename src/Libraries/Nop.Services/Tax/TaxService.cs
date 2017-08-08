@@ -416,6 +416,9 @@ namespace Nop.Services.Tax
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate)
         {
+            bool isTaxable = false;
+            taxRate = decimal.Zero;
+
             //no need to calculate tax rate if passed "price" is 0
             if (price == decimal.Zero)
             {
@@ -423,12 +426,10 @@ namespace Nop.Services.Tax
                 return taxRate;
             }
 
-
-            bool isTaxable;
-            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
-
             if (priceIncludesTax)
             {
+                GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
+
                 //"price" already includes tax
                 if (includingTax)
                 {
@@ -451,6 +452,7 @@ namespace Nop.Services.Tax
                 //"price" doesn't include tax
                 if (includingTax)
                 {
+                    GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
                     //we should calculate price WITH tax
                     //do it only when price is taxable
                     if (isTaxable)
