@@ -1,0 +1,94 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl> 
+    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <RepositoryType>Git</RepositoryType>    
+    
+    <OutputPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web\bin\$(Configuration)</OutputPath>
+    <NopWebPath>$(MSBuildProjectDirectory)\..\Presentation\Nop.Web</NopWebPath>
+  </PropertyGroup>
+  
+  <!-- This task deletes files if they exist -->
+  <UsingTask TaskName="NopClearPluginsPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">  
+    <ParameterGroup>
+      <!-- Paths for search and delete files -->
+      <Paths ParameterType="System.String" Required="true" />  
+      <!-- File names without extensions for delete -->
+      <FileNames ParameterType="System.String" />  
+      <!-- Plugin path for cleaning. If it's set and not empty, then it replaces the "Paths" parameter -->
+      <PluginPath ParameterType="System.String" />
+    </ParameterGroup>    
+    <Task>         
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />  
+      <Code Type="Fragment" Language="cs">  
+        <![CDATA[
+        if(string.IsNullOrEmpty(FileNames))
+        {
+            return true;
+        }
+        if(!string.IsNullOrEmpty(PluginPath))
+        {
+            Paths = PluginPath;
+        }
+        var filesToDelete = "dotnet-bundle.exe;";
+        foreach (var pluginPath in Paths.Split(';'))
+        {  
+            try
+            {
+                foreach (var fileName in FileNames.Split(';'))
+                {
+                    //delete dll file if it exist in current path
+                    var dllfilePath = Path.Combine(pluginPath, fileName+".dll");               
+                    if(File.Exists(dllfilePath))
+                        File.Delete(dllfilePath);
+                    //delete pdb file if it exist in current path
+                    var pdbfilePath = Path.Combine(pluginPath, fileName + ".pdb");
+                    if (File.Exists(pdbfilePath))
+                        File.Delete(pdbfilePath);
+                }
+            
+                foreach(var fileName in filesToDelete.Split(';'))
+                {
+                    //delete file if it exist in current path
+                    var pdbfilePath = Path.Combine(pluginPath, fileName);
+                    if (File.Exists(pdbfilePath))
+                        File.Delete(pdbfilePath);
+                }
+            }
+            catch
+            {
+                continue;
+            }            
+        }
+        return true;
+        ]]>  
+      </Code>  
+    </Task>  
+  </UsingTask>
+
+  <Target Name="NopClear"> 
+    <ItemGroup>
+      <!-- Get all libraries from /bin/{version}/ directory -->
+      <BaseDllFiles Include="$(OutputPath)\*.dll;" />
+      <!-- Get file name without extension for all libraries from /bin/{version}/ directory-->
+      <DllFileNames Include="@(BaseDllFiles->'%(filename)')" />
+      <!-- Get plugin description files to get plugin paths -->
+      <PluginsDescription Include="$(NopWebPath)\Plugins\**\Description.txt;" />      
+      <!-- Get paths for all plugins -->
+      <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
+    </ItemGroup>  
+    
+    <!-- When .NET Core builds a project, it copies all referenced libraries to the output folder.
+    For plugins it creates too many unnecessary files that just take up space.
+    At the moment you can't disable this behavior. That's why we have to manually delete all unnecessary libraries from plugin output directories. -->
+    <NopClearPluginsPath Paths="@(PluginsFolders)" FileNames="@(DllFileNames)" PluginPath="$(PluginPath)" />        
+  </Target> 
+      
+</Project>
