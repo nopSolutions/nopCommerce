@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<configuration>
-	<resizer>
-	<plugins>
-	<add name="PrettyGifs" />
-	</plugins>
-	</resizer>
-</configuration>
