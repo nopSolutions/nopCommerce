@@ -1,0 +1,10 @@
+﻿@model List<ExternalAuthenticationMethodModel>
+@using Nop.Web.Models.Customer;
+@if (Model.Any())
+{
+    <div class="title">@T("Account.AssociatedExternalAuth.Or")</div>
+}
+@foreach (var eam in Model)
+{
+    @Html.Action(eam.ActionName, eam.ControllerName, eam.RouteValues)
+}

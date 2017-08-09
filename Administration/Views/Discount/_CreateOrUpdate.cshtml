@@ -1,0 +1,997 @@
+﻿@model DiscountModel
+
+@using Nop.Core.Domain.Discounts;
+@using Nop.Services
+@using Nop.Web.Framework.UI;
+
+@{
+    Html.AddScriptParts("~/Administration/Scripts/jquery.tmpl.min.js");
+}
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('discount-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="discount-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Promotions.Discounts.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-requirements", @T("Admin.Promotions.Discounts.Requirements"))
+                @Html.RenderBootstrapTabHeader("tab-applied-to-products", @T("Admin.Promotions.Discounts.AppliedToProducts"))
+                @Html.RenderBootstrapTabHeader("tab-applied-to-categories", @T("Admin.Promotions.Discounts.AppliedToCategories"))
+                @Html.RenderBootstrapTabHeader("tab-applied-to-manufacturers", @T("Admin.Promotions.Discounts.AppliedToManufacturers"))
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-history", @T("Admin.Promotions.Discounts.History"))
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-requirements", @TabRequirements())
+                @Html.RenderBootstrapTabContent("tab-applied-to-products", @TabAppliedToProducts())
+                @Html.RenderBootstrapTabContent("tab-applied-to-categories", @TabAppliedToCategories())
+                @Html.RenderBootstrapTabContent("tab-applied-to-manufacturers", @TabAppliedToManufacturers())
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-history", @TabHistory())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
+            $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+            $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+            $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+
+            toggleDiscountType();
+            toggleLimitation();
+            toggleUsePercentage();
+            toggleRequiresCouponCode();
+        });
+
+        function toggleDiscountType() {
+            var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
+            if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
+                $('[data-tab-name=tab-applied-to-categories]').show();
+            $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+            $('[data-tab-name=tab-applied-to-products]').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').show();
+        } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
+            $('[data-tab-name=tab-applied-to-categories]').hide();
+            $('[data-tab-name=tab-applied-to-manufacturers]').show();
+            $('[data-tab-name=tab-applied-to-products]').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').hide();
+        } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
+            $('[data-tab-name=tab-applied-to-categories]').hide();
+            $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+            $('[data-tab-name=tab-applied-to-products]').show();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').hide();
+        } else {
+                $('[data-tab-name=tab-applied-to-categories]').hide();
+        $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+        $('[data-tab-name=tab-applied-to-products]').hide();
+        $('#pnlMaximumDiscountedQuantity').hide();
+        $('#pnlAppliedToSubCategories').hide();
+        }
+        }
+
+        function toggleLimitation() {
+            var selectedDiscountLimitationId = $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").val();
+            if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
+                //'N Times Only' or 'N Times Per Customer'
+                $('#pnlLimitationTimes').show();
+        } else {
+                $('#pnlLimitationTimes').hide();
+        }
+        }
+
+        function toggleUsePercentage() {
+            if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
+                $('#pnlDiscountPercentage').show();
+                $('#pnlDiscountAmount').hide();
+                $('#pnlMaximumDiscountAmount').show();
+            } else {
+                $('#pnlDiscountPercentage').hide();
+                $('#pnlDiscountAmount').show();
+                $('#pnlMaximumDiscountAmount').hide();
+            }
+        }
+
+        function toggleRequiresCouponCode() {
+            if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
+                $('#pnlCouponCode').show();
+            } else {
+                $('#pnlCouponCode').hide();
+            }
+        }
+    </script>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Name, required: true)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DiscountTypeId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.DiscountTypeId)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlAppliedToSubCategories">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.AppliedToSubCategories)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AppliedToSubCategories)
+                        @Html.ValidationMessageFor(model => model.AppliedToSubCategories)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.UsePercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UsePercentage)
+                        @Html.ValidationMessageFor(model => model.UsePercentage)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlDiscountAmount">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DiscountAmount)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DiscountAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.DiscountAmount)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlDiscountPercentage">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DiscountPercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DiscountPercentage)
+                        @Html.ValidationMessageFor(model => model.DiscountPercentage)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlMaximumDiscountAmount">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MaximumDiscountAmount)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MaximumDiscountAmount, Model.PrimaryStoreCurrencyCode)
+                        @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.RequiresCouponCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.RequiresCouponCode)
+                        @Html.ValidationMessageFor(model => model.RequiresCouponCode)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlCouponCode">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.CouponCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.CouponCode)
+                        @Html.ValidationMessageFor(model => model.CouponCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.StartDateUtc)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.StartDateUtc)
+                        @Html.ValidationMessageFor(model => model.StartDateUtc)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.EndDateUtc)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EndDateUtc)
+                        @Html.ValidationMessageFor(model => model.EndDateUtc)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.IsCumulative)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IsCumulative)
+                        @Html.ValidationMessageFor(model => model.IsCumulative)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DiscountLimitationId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.DiscountLimitationId)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlLimitationTimes">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LimitationTimes)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.LimitationTimes)
+                        @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+                    </div>
+                </div>
+                <div class="form-group" id="pnlMaximumDiscountedQuantity">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.MaximumDiscountedQuantity)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.MaximumDiscountedQuantity)
+                        @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabRequirements()
+{
+    <div class="panel-group">
+        @if (Model.Id > 0)
+        {
+            <p>
+                @T("Admin.Promotions.Discounts.Requirements.Description")
+            </p>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
+
+                    //load add requirement box
+                    loadNewRequirementBox();
+
+                    //load existing requirements
+                    loadRequirements();
+
+                    //adding requirement event
+                    $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+                        var parentId = $("#@Html.FieldIdFor(model => model.RequirementGroupId)").val();
+                        loadRequirements(newRequirementId, parentId);
+                    });
+                });
+
+                //load HTML for adding requirement
+                function loadNewRequirementBox() {
+                    //load URL
+                    var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
+                    if (ruleSystemName) {
+                        var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
+                        if (groupsElement.find('option').length > 1) {
+                            $("#pnlGroup").show();
+                        }
+                        else {
+                            $("#pnlGroup").hide();
+                        }
+                        if (ruleSystemName == 'AddGroup') {
+                            $("#pnlAddNewGroup").show();
+                            $("#pnlGroupName").show();
+                            $('#addrequirementplaceholder').html('');
+                        }
+                        else {
+                            $("#pnlAddNewGroup").hide();
+                            $("#pnlGroupName").hide();
+                            $.ajax({
+                                cache: false,
+                                url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
+                                data: { "systemName": ruleSystemName, "discountId": @Model.Id },
+                                success: function(result) {
+                                    loadRequirementIntoBox(result.url, '#addrequirementplaceholder');
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    $('#addrequirementplaceholder').html('Failed to load requirement URL');
+                                }
+                            });
+                        }
+                    } else {
+                        $("#pnlGroupName").hide();
+                        $("#pnlGroup").hide();
+                        $("#pnlAddNewGroup").hide();
+                        $('#addrequirementplaceholder').html('');
+                    }
+                };
+
+                //load requirement HTML
+                function loadRequirementIntoBox(configureRuleUrl, placeholderName) {
+                    $.ajax({
+                        cache: false,
+                        url: configureRuleUrl,
+                        dataType: "html",
+                        success: function(result) {
+                            $(placeholderName).html(result);
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            $(placeholderName).html('Failed to load requirement content.');
+                        }
+                    });
+                };
+
+                function loadRequirements(discountRequirementId, parentId, interactionTypeId, deleteRequirement) {
+                    var postData = {
+                        discountId: @Model.Id,
+                        discountRequirementId: (typeof discountRequirementId === 'undefined' ? 0 : discountRequirementId),
+                        parentId: (typeof parentId === 'undefined' ? null : parentId),
+                        interactionTypeId: (typeof interactionTypeId === 'undefined' ? null : interactionTypeId),
+                        deleteRequirement: (typeof deleteRequirement === 'undefined' ? false : deleteRequirement)
+                    };
+
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("GetDiscountRequirements", "Discount"))",
+                        data: postData,
+                        success: function(result) {
+                            //set requirements
+                            loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
+
+                            //set available groups
+                            var groupsElement = $("#@Html.FieldIdFor(model => model.RequirementGroupId)");
+                            groupsElement.html('');
+                            $.each(result.AvailableGroups, function (id, option) {
+                                groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
+                            });
+                            var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
+                            if (ruleSystemName && groupsElement.find('option').length > 1) {
+                                $("#pnlGroup").show();
+                            }
+                            else {
+                                $("#pnlGroup").hide();
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to load requirements info. Please refresh the page');
+                        }
+                    });
+                };
+
+                //load HTML for exisiting requirements
+                function loadRequirementBoxes(requirements, placeholder, hideEmptyString) {
+                    if(requirements.length > 0 || hideEmptyString)
+                        $(placeholder).html('');
+                    else
+                        $(placeholder).html('@T("Admin.Promotions.Discounts.Requirements.GroupIsEmpty")');
+
+                    $("#discountRequirementTemplate").tmpl(requirements).appendTo(placeholder);
+
+                    for (var i = 0; i < requirements.length; i++) {
+                        var placeholderName = '#editrequirementplaceholder' + requirements[i].DiscountRequirementId;
+                        $(placeholderName).html('loading...');
+                        if (requirements[i].IsGroup) {
+                            loadRequirementBoxes(requirements[i].ChildRequirements, placeholderName, false);
+                        }
+                        else {
+                            loadRequirementIntoBox(requirements[i].ConfigurationUrl, placeholderName);
+                        }
+                    }
+                };
+
+                //add new group
+                function addNewGroup() {
+                    var postData = {
+                        discountId: @Model.Id,
+                        name: $("#@Html.FieldIdFor(model => model.GroupName)").val(),
+                    };
+
+                    addAntiForgeryToken(postData);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        data: postData,
+                        url: "@(Url.Action("AddNewGroup", "Discount"))",
+                        success: function (data) {
+                            $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
+                        },
+                        error:function (xhr, ajaxOptions, thrownError) {
+                            alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                        }
+                    });
+                };
+
+                //delete requirement rule
+                function deleteRequirement(discountRequirementId) {
+                    loadRequirements(discountRequirementId, null, null, true);
+                };
+
+                //change interaction type
+                function changeInteraction(discountRequirementId, parentId, typeId) {
+                    loadRequirements(discountRequirementId, parentId, typeId);
+                };
+            </script>
+
+            <!-- Template container -->
+            <div id="discountRequirementContainer"></div>
+
+            <!-- Discount requirement template -->
+            <script id="discountRequirementTemplate" type="text/html">
+                <div class="requirement-container {{if IsGroup}}requirement-group{{/if}}" id="editrequirement{{= DiscountRequirementId }}">
+                    <div class="requirement-heading clearfix">
+                        {{if IsGroup}}
+                        <span class="pull-left margin-r-5">
+                            @T("Admin.Promotions.Discounts.Requirements.RequirementGroup.Title")
+                            <i>{{= RuleName }}</i>
+                        </span>
+                        <div class="interaction-type pull-left clearfix">
+                            <span class="pull-left margin-r-10">@T("Admin.Promotions.Discounts.Requirements.InteractionTypeInGroup")</span>
+                            <select class="form-control input-sm pull-left" id="interactiontype{{= DiscountRequirementId }}" name="interactiontype{{= DiscountRequirementId }}"
+                                    onchange="changeInteraction({{= DiscountRequirementId }}, ${ParentId ? ParentId : 'null'}, this.value)">
+                                {{each AvailableInteractionTypes}}
+                                    <option value="${Value}" ${Selected == true ? 'selected' : '' }>${Text}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{else}}
+                        <div class="pull-left">
+                            @T("Admin.Promotions.Discounts.Requirements.Requirement.Title")
+                            <i>{{= RuleName }}</i>
+                        </div>
+                        {{/if}}
+                        {{if ParentId}}
+                            <button type="button" class="btn btn-link" id="deleterequirement{{= DiscountRequirementId }}" onclick="deleteRequirement({{= DiscountRequirementId }})">
+                                <i class="fa fa-trash"></i>
+                                {{if IsGroup}}
+                                    @T("Admin.Promotions.Discounts.Requirements.RemoveGroup")
+                                {{else}}
+                                    @T("Admin.Promotions.Discounts.Requirements.RemoveRequirement")
+                                {{/if}}
+                            </button>
+                        {{/if}}
+                    </div>
+                    <div class="requirement-body">
+                        <div id="editrequirementplaceholder{{= DiscountRequirementId }}"></div>
+                    </div>
+                </div>
+                {{if !IsLastInGroup}}
+                    <div class="interaction-type-label">
+                        {{each AvailableInteractionTypes}}
+                            {{if Value == InteractionTypeId}}
+                                ${Text}
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </script>
+
+            <div class="panel panel-default panel-add-requirement">
+                <div class="panel-heading">
+                    @T("Admin.Promotions.Discounts.Requirements.AddNew")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AddDiscountRequirement)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                            @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlGroup" style="display: none">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.RequirementGroupId)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDropDownListFor(model => model.RequirementGroupId, Model.AvailableRequirementGroups)
+                            @Html.ValidationMessageFor(model => model.RequirementGroupId)
+                        </div>
+                    </div>
+                    <div id="addrequirementplaceholder"></div>
+                    <div class="form-group" id="pnlGroupName" style="display: none">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.GroupName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.GroupName)
+                            @Html.ValidationMessageFor(model => model.GroupName)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlAddNewGroup" style="display: none">
+                        <div class="col-md-9 col-md-offset-3">
+                            <input type="button" id="saverequirement" class="btn btn-primary" value="@T("Admin.Common.Save")" onclick="addNewGroup()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@helper TabAppliedToProducts()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="products-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ProductDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ProductId",
+                                            fields: {
+                                                ProductName: { editable: false, type: "string" },
+                                                ProductId: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ProductName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
+                                    }, {
+                                        field: "ProductId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshProducts" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshProducts').click(function() {
+                                //refresh grid
+                                var grid = $("#products-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper TabAppliedToCategories()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="categories-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#categories-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CategoryList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "CategoryId",
+                                            fields: {
+                                                CategoryName: { editable: false, type: "string" },
+                                                CategoryId: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "CategoryName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
+                                    }, {
+                                        field: "CategoryId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewCategory" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshCategories" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshCategories').click(function() {
+                                //refresh grid
+                                var grid = $("#categories-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper TabAppliedToManufacturers()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="manufacturers-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#manufacturers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ManufacturerId",
+                                            fields: {
+                                                ManufacturerName: { editable: false, type: "string" },
+                                                ManufacturerId: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ManufacturerName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
+                                    }, {
+                                        field: "ManufacturerId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" id="btnAddNewManufacturer" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                        @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
+                    </button>
+                    <input type="submit" id="btnRefreshManufacturers" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshManufacturers').click(function() {
+                                //refresh grid
+                                var grid = $("#manufacturers-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper TabHistory()
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="usagehistory-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#usagehistory-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("UsageHistoryList", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("UsageHistoryDelete", "Discount"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            //do not implicitly specify all fields
+                                            //we do it only for fields which implicitly require it
+                                            //otherwise, they'll be formatted wrong way
+                                            CreatedOn: { type: "date" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)],
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Promotions.Discounts.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.Promotions.Discounts.History.CustomOrderNumber")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderTotal",
+                                title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
+                                width: 200
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}

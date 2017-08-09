@@ -1,0 +1,9 @@
+﻿Group: Shipping rate computation
+FriendlyName: Australia Post
+SystemName: Shipping.AustraliaPost
+Version: 1.20
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Shipping.AustraliaPost.dll
+Description: This plugin offers shipping rates by Australia Post

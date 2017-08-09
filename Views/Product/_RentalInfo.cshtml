@@ -1,0 +1,85 @@
+﻿@model ProductDetailsModel
+@using System.Globalization
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog
+@if (Model.IsRental)
+{
+    <div class="attributes rental-attributes">
+        @{
+            string startDateControlId = string.Format("rental_start_date_{0}", Model.Id);
+            string endDateControlId = string.Format("rental_end_date_{0}", Model.Id);
+            //currenly we support only this format
+            //java-script format
+            const string datePickerFormat = "mm/dd/yy";
+            //C# format for ToString method
+            const string datePickerFormat2 = "MM/dd/yyyy";
+            <div class="attribute-item">
+                <div class="attribute-label">
+                    <label class="text-prompt">
+                        @T("Products.RentalStartDate"):
+                    </label>
+                    <span class="required">*</span>
+                </div>
+                <div class="attribute-data">
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="attribute-item">
+                <div class="attribute-label">
+                    <label class="text-prompt">
+                        @T("Products.RentalEndDate"):
+                    </label>
+                    <span class="required">*</span>
+                </div>
+                <div class="attribute-data">
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
+                        });
+                    </script>
+                </div>
+            </div>
+        }
+
+        <script>
+            function onRentalDatePickerSelect() {
+                @{
+                    //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
+                    var productId = Model.Id;
+                    if (EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange)
+                    {
+                        <text>
+                        $.ajax({
+                            cache: false,
+                            url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = false, loadPicture = false }))',
+                            data: $('#product-details-form').serialize(),
+                            type: 'post',
+                            success: function(data) {
+                                if (data.sku) {
+                                    $('#sku-@productId').text(data.sku);
+                                }
+                                if (data.mpn) {
+                                    $('#mpn-@productId').text(data.mpn);
+                                }
+                                if (data.gtin) {
+                                    $('#gtin-@productId').text(data.gtin);
+                                }
+                                if (data.price) {
+                                    $('.price-value-@productId').text(data.price);
+                                }
+                            }
+                        });
+                        </text>
+                    }
+                }
+            }
+        </script>
+    </div>
+}

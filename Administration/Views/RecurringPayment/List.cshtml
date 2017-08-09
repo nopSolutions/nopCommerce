@@ -1,0 +1,129 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.RecurringPayments").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Recurring payments");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.RecurringPayments")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.RecurringPayments.Description")
+                    </p>
+                    <div id="recurringpayments-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#recurringpayments-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "RecurringPayment"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Id",
+                                        title: "@T("Admin.RecurringPayments.Fields.ID")",
+                                        width: 50
+                                    }, {
+                                        field: "CustomerId",
+                                        title: "@T("Admin.RecurringPayments.Fields.Customer")",
+                                        width: 200,
+                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                                    }, {
+                                        field: "CycleLength",
+                                        title: "@T("Admin.RecurringPayments.Fields.CycleLength")",
+                                        width: 100
+                                    }, {
+                                        field: "CyclePeriodStr",
+                                        title: "@T("Admin.RecurringPayments.Fields.CyclePeriod")",
+                                        width: 100
+                                    }, {
+                                        field: "IsActive",
+                                        title: "@T("Admin.RecurringPayments.Fields.IsActive")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "StartDate",
+                                        title: "@T("Admin.RecurringPayments.Fields.StartDate")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "NextPaymentDate",
+                                        title: "@T("Admin.RecurringPayments.Fields.NextPaymentDate")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "TotalCycles",
+                                        title: "@T("Admin.RecurringPayments.Fields.TotalCycles")",
+                                        width: 100
+                                    }, {
+                                        field: "CyclesRemaining",
+                                        title: "@T("Admin.RecurringPayments.Fields.CyclesRemaining")",
+                                        width: 100
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

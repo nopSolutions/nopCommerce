@@ -1,0 +1,77 @@
+﻿@using Nop.Web.Framework.UI;
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Localization
+
+@{
+    var kendoVersion = "2014.1.318";
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+
+    //CSS resources
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
+        Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.rtl.css");
+        Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Administration/Content/styles.css");
+        Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
+        Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.min.css");
+    }
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Administration/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
+    Html.AppendCssFileParts("~/Administration/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
+    <!-- AdminLTE Skins (choose a skin from the css/skins) -->
+    Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
+
+    //scripts
+    Html.AppendScriptParts(string.Format("~/Administration/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
+    Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-1.10.2.min.js");
+
+    //page title
+    string adminPageTitle = !String.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    adminPageTitle += T("Admin.PageTitle").Text;
+
+    //X-UA-Compatible tag
+    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+    }
+}
+
+<!DOCTYPE html>
+<html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+    @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+</head>
+<body class="hold-transition skin-blue sidebar-collapse">
+    <div class="wrapper">
+        <div class="content-wrapper">
+            @Html.Partial("Notifications")
+            @RenderBody()
+        </div>
+    </div>
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
+</body>
+</html>
+

@@ -1,0 +1,87 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Address.AddressAttributes")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Address.AddressAttributes.Description")</em>
+        </p>
+        <div id="addressattributes-grid"></div>
+
+        <script>
+                $(document).ready(function () {
+                    $("#addressattributes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "AddressAttribute"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Address.AddressAttributes.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "AttributeControlTypeName",
+                            title: "@T("Admin.Address.AddressAttributes.Fields.AttributeControlType")",
+                            width: 200
+                        },{
+                            field: "IsRequired",
+                            title: "@T("Admin.Address.AddressAttributes.Fields.IsRequired")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Address.AddressAttributes.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 80,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/AddressAttribute/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("Create", "AddressAttribute")" class="btn btn-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

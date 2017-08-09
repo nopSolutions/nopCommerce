@@ -1,0 +1,13 @@
+﻿@{
+    var openAuthParameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(false);
+}
+@using Nop.Core
+@using Nop.Services.Authentication.External;
+@if (openAuthParameters != null)
+{
+    <div class="external-auth-association">
+        <label>@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo")</label>
+        <span class="identifier">@CommonHelper.EnsureMaximumLength(openAuthParameters.ExternalIdentifier, 40, "...")</span>
+        <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = HttpContext.Current.Request.RawUrl })" class="remove">@T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove")</a>
+    </div>
+}

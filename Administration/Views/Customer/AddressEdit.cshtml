@@ -1,0 +1,26 @@
+﻿@model CustomerAddressModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Customers.Addresses.EditAddress").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customers list");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Customers.Customers.Addresses.EditAddress") 
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.Customers.Addresses.BackToCustomer").Text, "Edit", new { id = Model.CustomerId })</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateAddress", Model)
+}

@@ -1,0 +1,128 @@
+﻿@model AddProductAttributeCombinationModel
+
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
+        } catch (e) {
+        }
+        window.close();
+    </script>
+}
+
+    @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
+    @using (Html.BeginForm(null, null,
+                                        new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                                        FormMethod.Post,
+                                        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
+            </h1>
+            <div class="pull-right">
+                &nbsp;
+            </div>
+        </div>
+        <div class="content">
+            @Html.ValidationSummary(false)
+            <div class="form-horizontal">
+                <div class="panel-group">
+                    <div class="panel panel-default panel-popup">
+                        <div class="panel-body">
+                            @if (Model.Warnings.Count > 0)
+                            {
+                                <div class="alert alert-warning alert-dismissible">
+                                    @foreach (var warning in Model.Warnings)
+                                    {
+                                        @warning
+                                    }
+                                </div>
+                            }
+
+                            @Html.Partial("_ProductAttributes", Model.ProductAttributes)
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.StockQuantity)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.StockQuantity)
+                                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.AllowOutOfStockOrders)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.AllowOutOfStockOrders)
+                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.Sku)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.Sku)
+                                    @Html.ValidationMessageFor(model => model.Sku)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.ManufacturerPartNumber)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.ManufacturerPartNumber)
+                                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.Gtin)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.Gtin)
+                                    @Html.ValidationMessageFor(model => model.Gtin)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.OverriddenPrice)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.OverriddenPrice)
+                                    @Html.ValidationMessageFor(model => model.OverriddenPrice)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    @Html.NopLabelFor(model => model.NotifyAdminForQuantityBelow)
+                                </div>
+                                <div class="col-sm-8">
+                                    @Html.NopEditorFor(model => model.NotifyAdminForQuantityBelow)
+                                    @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <button type="submit" id="add-attribute-combination" name="add-attribute-combination" class="btn btn-primary">
+                                        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

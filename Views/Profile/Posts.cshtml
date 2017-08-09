@@ -1,0 +1,40 @@
+﻿@model ProfilePostsModel
+@using Nop.Web.Models.Profile;
+
+@if (Model.Posts.Count > 0)
+{
+    <div class="latest-posts">
+
+        @foreach (var item in Model.Posts)
+        {
+            <div class="topic">
+                <div class="topic-title">
+                    <label>@T("Profile.Topic"):</label>
+                    @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+                </div>
+                <div class="topic-body">
+                    <p>@Html.Raw(item.ForumPostText)</p>
+                </div>
+                <div class="topic-data">
+                    <label>@T("Profile.PostedOn"):</label>
+                    <span>@item.Posted</span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="no-data">
+        @T("Profile.LatestPosts.NoPosts")
+    </div>
+}
+@{
+    var pager = Html.Pager(Model.PagerModel);
+}
+@if (!MvcHtmlString.IsNullOrEmpty(pager))
+{
+    <div class="pager">
+        @pager
+    </div>
+}

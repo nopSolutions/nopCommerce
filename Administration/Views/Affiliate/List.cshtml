@@ -1,0 +1,222 @@
+﻿@model AffiliateListModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Affiliates").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Affiliates");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Affiliates")
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
+        toggleLoadOnlyWithOrders();
+    });
+
+    function toggleLoadOnlyWithOrders() {
+        if ($('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
+            $('#pnlOrdersCreatedFromUtc').show();
+            $('#pnlOrdersCreatedToUtc').show();
+        } else {
+            $('#pnlOrdersCreatedFromUtc').hide();
+            $('#pnlOrdersCreatedToUtc').hide();
+        }
+    }
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.Affiliates.Description")
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchFirstName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchFirstName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchLastName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchLastName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchFriendlyUrlName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SearchFriendlyUrlName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.LoadOnlyWithOrders)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.LoadOnlyWithOrders)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlOrdersCreatedFromUtc">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.OrdersCreatedFromUtc)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.OrdersCreatedFromUtc)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlOrdersCreatedToUtc">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.OrdersCreatedToUtc)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.OrdersCreatedToUtc)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-affiliates" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="affiliates-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#affiliates-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "Affiliate"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Address.FirstName",
+                                    title: "@T("Admin.Address.Fields.FirstName")",
+                                    width: 200
+                                }, {
+                                    field: "Address.LastName",
+                                    title: "@T("Admin.Address.Fields.LastName")",
+                                    width: 200
+                                }, {
+                                    field: "Active",
+                                    title: "@T("Admin.Affiliates.Fields.Active")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 80,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+
+                            $('#search-affiliates').click(function() {
+                                var grid = $('#affiliates-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+
+
+                        $("".concat("#@Html.FieldIdFor(model => model.SearchFirstName),",
+                            "#@Html.FieldIdFor(model => model.SearchLastName),",
+                            "#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)")).keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#search-affiliates").click();
+                                    return false;
+                                }
+                            });
+
+                        function additionalData() {
+                            var data = {
+                                SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
+                                SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
+                                SearchFriendlyUrlName: $('#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)').val(),
+                                LoadOnlyWithOrders: $('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
+                                OrdersCreatedFromUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedFromUtc)').val(),
+                                OrdersCreatedToUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedToUtc)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

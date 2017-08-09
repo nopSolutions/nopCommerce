@@ -1,0 +1,386 @@
+﻿@model TaxSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Tax settings");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Tax")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
+            @Html.ValidationSummary(false)
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
+                                @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxBasedOn)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
+                                @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOnPickupPointAddress_OverrideForStore, model => model.TaxBasedOnPickupPointAddress, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxBasedOnPickupPointAddress)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.TaxBasedOnPickupPointAddress)
+                                @Html.ValidationMessageFor(model => model.TaxBasedOnPickupPointAddress)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                        @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
+                    </div>
+                    <div class="panel-body">
+                        <div id="pnlDefaultTaxAddress">
+                            @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.TaxDispaying")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlTaxDisplayType">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.TaxDisplayType)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
+                                @Html.ValidationMessageFor(model => model.TaxDisplayType)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PricesIncludeTax)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PricesIncludeTax)
+                                @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayTaxSuffix)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayTaxSuffix)
+                                @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayTaxRates)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.DisplayTaxRates)
+                                @Html.ValidationMessageFor(model => model.DisplayTaxRates)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.HideZeroTax)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.HideZeroTax)
+                                @Html.ValidationMessageFor(model => model.HideZeroTax)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.HideTaxInOrderSummary)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.HideTaxInOrderSummary)
+                                @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+                            toggleTaxDisplayType();
+                        });
+
+                        function toggleTaxDisplayType() {
+                            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+                                $('#pnlTaxDisplayType').hide();
+                            } else {
+                                $('#pnlTaxDisplayType').show();
+                            }
+                        }
+
+                    </script>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Shipping")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShippingIsTaxable)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShippingIsTaxable)
+                                @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlShippingPriceIncludesTax">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShippingPriceIncludesTax)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShippingPriceIncludesTax)
+                                @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlShippingTaxClass">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShippingTaxClassId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.ShippingTaxClassId, Model.TaxCategories)
+                                @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+
+                            toggleShipping();
+                        });
+
+                        function toggleShipping() {
+                            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+                                $('#pnlShippingPriceIncludesTax').show();
+                                $('#pnlShippingTaxClass').show();
+                            } else {
+                                $('#pnlShippingPriceIncludesTax').hide();
+                                $('#pnlShippingTaxClass').hide();
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
+                                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+
+                            togglePayment();
+                        });
+
+
+                        function togglePayment() {
+                            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+                                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+                            } else {
+                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+                                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatEnabled)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EuVatEnabled)
+                                @Html.ValidationMessageFor(model => model.EuVatEnabled)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlEuVatShopCountry">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatShopCountryId)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
+                                @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlEuVatAllowVATExemption">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatAllowVatExemption)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EuVatAllowVatExemption)
+                                @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlEuVatAssumeValid">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatAssumeValid)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EuVatAssumeValid)
+                                @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlEuVatUseWebService">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatUseWebService)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EuVatUseWebService)
+                                @Html.ValidationMessageFor(model => model.EuVatUseWebService)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+
+                                toggleEUVAT();
+                            });
+
+
+                            function toggleEUVAT() {
+                                if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
+                                    $('#pnlEuVatShopCountry').show();
+                                    $('#pnlEuVatAllowVATExemption').show();
+                                    $('#pnlEuVatAssumeValid').show();
+                                    $('#pnlEuVatUseWebService').show();
+                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+                                } else {
+                                    $('#pnlEuVatShopCountry').hide();
+                                    $('#pnlEuVatAllowVATExemption').hide();
+                                    $('#pnlEuVatAssumeValid').hide();
+                                    $('#pnlEuVatUseWebService').hide();
+                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

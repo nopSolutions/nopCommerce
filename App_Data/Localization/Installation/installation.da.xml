@@ -1,0 +1,143 @@
+﻿<Language Name="Dansk" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admin bruger email</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Indtast admin email</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Admin bruger password</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Indtast admin password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Kontoen'{0}' er ikke tildelt rettigheder for at ændre i mappen '{1}'. Venligst konfigurer tilladelser.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Kontoen'{0}' er ikke tildelt rettigheder for at ændre i filen '{1}'. Venligst konfigurer tilladelser.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Bekræft password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Indtast bekræft password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>En SQL connection string er påkrævet</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Indtast SQL connection værdier</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Forkert SQL connection string format</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Opret database hvis den ikke eksisterer</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Opret prøve data</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specificer SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Der opstod en fejl ved oprettelse af database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Database information</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Database navn</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Database navn er påkrævet</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database eksisterer ikke eller du har ikke rettigheder til at forbinde til den</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Vælg data udbyder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Har du brug for information om hvordan du bruger nopCommerce, så besøg</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentations sektionen på nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Eksempel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Installér</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installerer nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Passwords er ikke ens</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Indtast rå connection string (avanceret)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Anbefalet]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Genstart installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klik for at genstarte installationsprocessen (ryd værdier i cache)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Installationen fejlede: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Brug SQL Server konto</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Brug indbygget data-lagring (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server navn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server navn er påkrævet</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Password er påkrævet</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Brugernavn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Brugernavn er påkrævet</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Brug SQL Server (eller SQL Express) database</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Butiks-information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce er den førende ASP.NET online shop e-commerce løsning. Denne wizard vil guide dig gennem processen for konfigurering af nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>For at fuldføre denne wizard skal du vide nogle informationer om din database server ("connection string"). Venligst kontakt din webudbyder herom såfremt nødvendigt. Installerer du på en lokal maskine eller server behøver du måske information fra din System Administrator.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Brug integreret Windows godkendelse</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,306 @@
+﻿@model MessageTemplateModel
+
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Messages;
+@using Nop.Services
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<div class="content">
+    <div class="form-horizontal">
+        @Html.Action("Mode", "Setting", new { modeName = "messagetemplate-advanced-mode" })
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="margin-bottom"><em>@T(string.Format("Admin.ContentManagement.MessageTemplates.Description.{0}", Model.Name))</em></div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AllowedTokens)
+                        </div>
+                        <div class="col-md-9">
+                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                            <div id="pnlAllowedTokens" style="display: none; white-space: pre-line">
+                                @Html.NopDisplayFor(model => model.AllowedTokens)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.Name)
+                            @Html.HiddenFor(model => model.Name)
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function toggleLoadedAllowedTokens() {
+                            $('#pnlAllowedTokens').toggle();
+                            if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                            } else {
+                                $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                            }
+                        }
+                    </script>
+
+                    @(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
+                  @<div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].Subject)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.Locales[item].Subject)
+                              @Html.ValidationMessageFor(model => model.Locales[item].Subject)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].Body)
+                          </div>
+                          <div class="col-md-9">
+                              @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                              {
+                                  @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
+                              }
+                              else
+                              {
+                                  @Html.NopTextAreaFor(model => model.Locales[item].Body);
+                                  <text>
+                                      <script type="text/javascript">
+                                          $(document).ready(function () {
+                                              $('#@Html.FieldIdFor(model => model.Locales[item].Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                          });
+                                      </script>
+                                  </text>
+                              }
+                              @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                          </div>
+                      </div>
+                      <div class="form-group advanced-setting">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.Locales[item].BccEmailAddresses)
+                              @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
+                          </div>
+                      </div>
+                      <div class="form-group advanced-setting">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Locales[item].EmailAccountId)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopDropDownListFor(model => model.Locales[item].EmailAccountId, Model.Locales[item].AvailableEmailAccounts)
+                              @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              <div class="label-wrapper">
+                                  <label class="control-label">
+                                      @T("Admin.ContentManagement.MessageTemplates.Test")
+                                  </label>
+                              </div>
+                          </div>
+                          <div class="col-md-9">
+                              <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id, languageId = Model.Locales[item].LanguageId}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
+                          </div>
+                      </div>
+                      @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                  </div>
+                    ,
+                  @<div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Subject)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.Subject, required: true)
+                              @Html.ValidationMessageFor(model => model.Subject)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.Body)
+                          </div>
+                          <div class="col-md-9">
+                              @if (EngineContext.Current.Resolve<AdminAreaSettings>().UseRichEditorInMessageTemplates)
+                              {
+                                  <div class="input-group input-group-required">
+                                      @Html.EditorFor(model => model.Body, "RichEditor")
+                                      <div class="input-group-btn">
+                                          @Html.RequiredHint()
+                                      </div>
+                                  </div>
+                              }
+                              else
+                              {
+                                  @Html.NopTextAreaFor(model => model.Body, required: true);
+                                  <text>
+                                      <script type="text/javascript">
+                                          $(document).ready(function () {
+                                              $('#@Html.FieldIdFor(model => model.Body)').height($('#@Html.FieldIdFor(model => model.Body)')[0].scrollHeight);
+                                          });
+                                      </script>
+                                  </text>
+                              }
+                              @Html.ValidationMessageFor(model => model.Body)
+                          </div>
+                      </div>
+                      <div class="form-group advanced-setting">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.BccEmailAddresses)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopEditorFor(model => model.BccEmailAddresses)
+                              @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+                          </div>
+                      </div>
+                      <div class="form-group advanced-setting">
+                          <div class="col-md-3">
+                              @Html.NopLabelFor(model => model.EmailAccountId)
+                          </div>
+                          <div class="col-md-9">
+                              @Html.NopDropDownListFor(model => model.EmailAccountId, Model.AvailableEmailAccounts)
+                              @Html.ValidationMessageFor(model => model.EmailAccountId)
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-md-3">
+                              <div class="label-wrapper">
+                                  <label class="control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
+                              </div>
+                          </div>
+                          <div class="col-md-9">
+                              <button type="button" class="btn btn-primary" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id}))')">@T("Admin.ContentManagement.MessageTemplates.Test")</button>
+                          </div>
+                      </div>
+                  </div>
+                  ))
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.IsActive)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.IsActive)
+                            @Html.ValidationMessageFor(model => model.IsActive)
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SendImmediately)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.SendImmediately)
+                            @Html.ValidationMessageFor(model => model.SendImmediately)
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting" id="pnl-send-after">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.DelayBeforeSend)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    @Html.NopEditorFor(model => model.DelayBeforeSend)
+                                    @Html.ValidationMessageFor(model => model.DelayBeforeSend)
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod) Model.DelayPeriodId).ToSelectList(), htmlAttributes: new {style = "max-width: 200px;"})
+                                    @Html.ValidationMessageFor(model => model.DelayPeriodId)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.AttachedDownloadId)
+                        </div>
+                        <div class="col-md-9">
+                            @{
+                        //Static file attachments do not support URLs yet
+                        //A store owner have to upload a file
+                        //we store a value into "ViewData" and then use it in the Download.cshtml file
+                        ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                            }
+                            <div class="checkbox">
+                                <label>
+                                    @Html.NopEditorFor(model => model.HasAttachedDownload)
+                                    @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                                </label>
+                            </div>
+                            <div id="pnlAttachedDownload">
+                                @Html.NopEditorFor(model => model.AttachedDownloadId)
+                                @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group advanced-setting">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SelectedStoreIds)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores
+                                    })
+                                    <script>
+                                        $(document).ready(function () {
+                                            var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                            storesIdsInput.setOptions({
+                                                autoClose: false
+                                            });
+
+                                            @if (Model.AvailableStores.Count == 0)
+                                    {
+                                        <text>
+                                            storesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: 'No stores available'
+                                            });
+                                            storesIdsInput._placeholder();
+                                            storesIdsInput._enable();
+                                            </text>
+                                    }
+                                        });
+                                    </script>
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.Action("MultistoreDisabledWarning", "Common")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+                $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+                toggleHasAttachedDownload();
+                sendImmediately();
+            });
+
+            function toggleHasAttachedDownload() {
+                if ($('#@Html.FieldIdFor(model => model.HasAttachedDownload)').is(':checked')) {
+                    $('#pnlAttachedDownload').show();
+                }
+                else {
+                    $('#pnlAttachedDownload').hide();
+                }
+            }
+
+            function sendImmediately() {
+                if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                    $('#pnl-send-after').hide();
+                else
+                    $('#pnl-send-after').show();
+            }   
+        </script>
+    </div>
+</div>

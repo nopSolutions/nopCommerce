@@ -1,0 +1,22 @@
+﻿@model BoardsIndexModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-forums-main-page");
+}
+<div class="page forums-main-page">
+    @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
+    @Html.Partial("_ForumHeader")
+    @Html.Widget("boards_main_after_header")
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        Html.RenderPartial("_ForumGroup", forumGroup);
+    }
+    @Html.Widget("boards_main_before_activediscussions")
+    @Html.Action("ActiveDiscussionsSmall")
+    @Html.Widget("boards_main_after_activediscussions")
+</div>

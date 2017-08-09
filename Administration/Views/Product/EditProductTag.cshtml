@@ -1,0 +1,25 @@
+﻿@model ProductTagModel
+
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.ProductTags.EditTagDetails")- @Model.Name
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateProductTag", Model)
+}

@@ -1,0 +1,29 @@
+﻿@model CategoryModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Categories.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Categories");
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Categories.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Categories.BackToList").Text, "List")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}

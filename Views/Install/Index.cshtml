@@ -1,0 +1,389 @@
+﻿@model InstallModel
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Install;
+@using Nop.Web.Infrastructure.Installation;
+@{
+    Layout = null;
+    //localization service for installation service
+    //we do not use standard nopCommerce localization because database is not installed yet
+    //locale resources for installation process are stored into \App_Data\Localization\Installation directory
+    var ILS = EngineContext.Current.Resolve<IInstallationLocalizationService>();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ILS.GetResource("Title")</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @if (ILS.GetCurrentLanguage().IsRightToLeft)
+    {
+        <link href="@Url.Content("~/Administration/Content/bootstrap/css/bootstrap.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/Administration/Content/adminLTE/AdminLTE-2.3.0.rtl.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/Content/Install/style.rtl.css")" type="text/css" rel="stylesheet" />
+    }
+    else
+    {
+        <link href="@Url.Content("~/Administration/Content/bootstrap/css/bootstrap.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css")" type="text/css" rel="stylesheet" />
+        <link href="@Url.Content("~/Content/Install/style.css")" type="text/css" rel="stylesheet" />
+    }
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
+</head>
+<body class="skin-blue">
+    <div class="wrapper">
+        <div class="content-header clearfix">
+            <div class="row">
+                <div class="col-xs-offset-9 col-xs-3">
+                    @Html.NopDropDownList("language", Model.AvailableLanguages, htmlAttributes: new { onchange = "window.location.href = this.value;", @class = "language-selector" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="logo-wrapper">
+                        <div class="logo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
+            {
+            <div class="content">
+                @Html.ValidationSummary(false)
+
+                @*<p>@ILS.GetResource("Tooltip1")</p>*@
+                <p>@ILS.GetResource("Tooltip2")</p>
+                <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
+
+                <script type="text/javascript">
+                    function showThrobber(message) {
+                        $('.throbber-header').html(message);
+                        window.setTimeout(function () {
+                            $(".throbber").show();
+                        }, 1000);
+                    }
+
+                    $(document).ready(function () {
+                        $('#installation-form').submit(function () {
+                            if ($('#installation-form').valid()) {
+                                $("html, body").animate({ scrollTop: 0 }, 400);
+                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(ILS.GetResource("Installing")))');
+                                $('input[type=submit]', this).attr('disabled', 'disabled');
+                            }
+                        });
+                    });
+
+                    $(document).ready(function () {
+                        $('#restart-form').submit(function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode("Restarting..."))');
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        });
+                    });
+
+                    $(document).ready(function () {
+                        $('input:radio[name=DataProvider]').click(toggleProvider);
+                        $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
+                        $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
+                        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
+
+                        toggleProvider();
+                        toggleSqlConnectionInfo();
+                        toggleSqlAuthenticationType();
+                        toggleCollation();
+                    });
+
+
+                    function toggleProvider() {
+                        var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
+                        if (selectedProvider == 'provider_sqlce') {
+                            $('#sqlConnectionInfo').hide();
+                        } else if (selectedProvider == 'provider_sqlserver') {
+                            $('#sqlConnectionInfo').show();
+                        }
+                    }
+
+                    function toggleSqlConnectionInfo() {
+                        var selectedProvider = $("input[name=SqlConnectionInfo]:checked").attr('id');
+                        if (selectedProvider == 'sqlconnectioninfo_values') {
+                            $('#sqlDatabaseInfo').show();
+                            $('#sqlDatabaseConnectionString').hide();
+                        } else if (selectedProvider == 'sqlconnectioninfo_raw') {
+                            $('#sqlDatabaseInfo').hide();
+                            $('#sqlDatabaseConnectionString').show();
+                        }
+                    }
+
+                    function toggleSqlAuthenticationType() {
+                        var selectedProvider = $("input[name=SqlAuthenticationType]:checked").attr('id');
+                        if (selectedProvider == 'sqlauthenticationtype_sql') {
+                            $('#pnlSqlServerCredentials').show();
+                        } else if (selectedProvider == 'sqlauthenticationtype_windows') {
+                            $('#pnlSqlServerCredentials').hide();
+                        }
+                    }
+
+
+                    function toggleCollation() {
+                        if ($('#UseCustomCollation').is(':checked')) {
+                            $('#Collation').show();
+                        } else {
+                            $('#Collation').hide();
+                        }
+                    }
+
+                </script>
+
+                <div class="form-horizontal">
+                    <div class="panel margin-t-30">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-4 text-right">
+                                    @ILS.GetResource("StoreInformation")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-xs-4">
+                                    <label class="control-label">
+                                        @ILS.GetResource("AdminEmail")
+                                    </label>
+                                </div>
+                                <div class="col-xs-7">
+                                    @Html.NopEditorFor(x => x.AdminEmail)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-4">
+                                    <label class="control-label">
+                                        @ILS.GetResource("AdminPassword")
+                                    </label>
+                                </div>
+                                <div class="col-xs-7">
+                                    @Html.PasswordFor(x => x.AdminPassword, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-4">
+                                    <label class="control-label">
+                                        @ILS.GetResource("ConfirmPassword")
+                                    </label>
+                                </div>
+                                <div class="col-xs-7">
+                                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            @if (!Model.DisableSampleDataOption)
+                            {
+                                <div class="form-group">
+                                    <div class="col-xs-7 col-xs-offset-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(x => x.InstallSampleData)
+                                                @ILS.GetResource("CreateSampleData")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="panel margin-t-10">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-4 text-right">
+                                    @ILS.GetResource("DatabaseInformation")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="col-xs-4">
+                                    <label class="control-label">
+                                        @ILS.GetResource("Database")
+                                    </label>
+                                </div>
+                                <div class="col-xs-7">
+                                    @if (!Model.DisableSqlCompact)
+                                    {
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
+                                                @ILS.GetResource("SqlCompact")
+                                            </label>
+                                        </div>
+                                    }
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
+                                            @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="sqlConnectionInfo">
+                                <hr />
+                                <div class="form-group">
+                                    <div class="col-xs-7 col-xs-offset-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(x => x.SqlServerCreateDatabase)
+                                                @ILS.GetResource("CreateDatabaseIfDoesNotExist")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-4">
+                                        <label class="control-label">
+                                            @ILS.GetResource("ConnectionString")
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_values", (Model.SqlConnectionInfo == "sqlconnectioninfo_values"), new { id = "sqlconnectioninfo_values" })
+                                                @ILS.GetResource("ConnectionStringValues")
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_raw", (Model.SqlConnectionInfo == "sqlconnectioninfo_raw"), new { id = "sqlconnectioninfo_raw" })
+                                                @ILS.GetResource("RawConnectionString")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="sqlDatabaseInfo">
+                                    <div class="credentials">
+                                        <div class="form-group">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">
+                                                    @ILS.GetResource("SqlServerName")
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                @Html.TextBoxFor(x => x.SqlServerName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">
+                                                    @ILS.GetResource("DatabaseName")
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                @Html.TextBoxFor(x => x.SqlDatabaseName, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-4">
+                                            <label class="control-label">
+                                                @ILS.GetResource("SqlServerName")
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <div class="radio">
+                                                <label>
+                                                    @Html.RadioButton("SqlAuthenticationType", "sqlauthentication", (Model.SqlAuthenticationType == "sqlauthentication"), new { id = "sqlauthenticationtype_sql" })
+                                                    @ILS.GetResource("SqlAuthentication")
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    @Html.RadioButton("SqlAuthenticationType", "windowsauthentication", (Model.SqlAuthenticationType == "windowsauthentication"), new { id = "sqlauthenticationtype_windows" })
+                                                    @ILS.GetResource("WindowsAuthentication")
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="credentials" id="pnlSqlServerCredentials">
+                                        <div class="form-group">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">
+                                                    @ILS.GetResource("SqlServerUsername")
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                @Html.TextBoxFor(x => x.SqlServerUsername, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-xs-4">
+                                                <label class="control-label">
+                                                    @ILS.GetResource("SqlServerPassword")
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                @Html.PasswordFor(x => x.SqlServerPassword, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="sqlDatabaseConnectionString">
+                                    <div class="col-xs-4">
+                                        <label class="control-label">
+                                            @ILS.GetResource("ConnectionString")
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "form-control" })
+                                        <span class="hint">
+                                            @ILS.GetResource("Example"):<br />
+                                            Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
+                                            ID=userName;Password=password
+                                            <br />
+                                            Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="sqlConnectionInfo">
+                                    <div class="col-xs-7 col-xs-offset-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                @Html.CheckBoxFor(x => x.UseCustomCollation)
+                                                @ILS.GetResource("CustomCollation")
+                                            </label>
+                                            @Html.TextBoxFor(x => x.Collation, new { @class = "form-control margin-t-10" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group margin-t-30">
+                                <div class="col-xs-12 text-center">
+                                    <button type="submit" class="btn btn-md btn-install margin-l-5">@ILS.GetResource("Install")</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="content-footer">
+            @using (Html.BeginForm("RestartInstall", "Install", FormMethod.Post, new { id = "restart-form" }))
+            {
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" class="btn btn-md btn-default" title="@ILS.GetResource("RestartInstallationTooltip")">@ILS.GetResource("RestartInstallation")</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">Wait...</h1>
+                    <p><img src="@Url.Content("~/content/install/images/install-synchronizing.gif")" alt="" /></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

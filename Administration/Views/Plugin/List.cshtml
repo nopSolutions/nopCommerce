@@ -1,0 +1,226 @@
+﻿@model PluginListModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Plugins.Local")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="plugin-reload-grid" class="btn bg-blue">@T("Admin.Configuration.Plugins.ReloadList")</button>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("button[name='plugin-reload-grid']").on("click", function (e) {
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.ReloadList.Progress").Text))');
+                    });
+                });
+            </script>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    //install a plugin
+                    $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                        return true;
+                    });
+
+                    //uninstall a plugin
+                    $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                        return true;
+                    });
+                });
+            </script>
+
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    <h4>@T("Admin.Configuration.Plugins.Description")</h4>
+                                    <ol>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                                    </ol>
+                                </p>
+                                @T("Admin.Configuration.Plugins.Description.DownloadMorePlugins")
+
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchLoadModeId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchGroup)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-plugins" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="plugins-grid"></div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#plugins-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: additionalData
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false,
+                                        @Html.Partial("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "Group",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Group")",
+                                            width: 150
+                                        }, {
+                                            field: "LogoUrl",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
+                                            width: 200,
+                                            template: '<img src="#=LogoUrl#" />',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" }
+                                        }, {
+                                            field: "Description",
+                                            title: "@T("Admin.Configuration.Plugins.Info")",
+                                            template: '<b>#:FriendlyName#</b>' +
+                                                '# if(Description) {# <br />#:Description# #} #' +
+                                                //allow configuration only when a plugin has a configuration URL specified
+                                                '<br /> # if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default margin-r-5" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Plugins.Fields.Configure")</a>#} #' +
+                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>',
+                                            attributes: { style: "vertical-align:top;" },
+                                            width: 400
+                                        }, {
+                                            field: "FriendlyName",
+                                            title: "@T("Admin.Configuration.Plugins.AdditionalInfo")",
+                                            template: '<ul class="common-list">' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed"):  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled"): # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
+                                                '</ul>'
+                                        }, {
+                                            field: "Installed",
+                                            title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> #} #',
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            width: 150
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+                    </div>
+
+                    <div>
+                        <input type="submit" id="btnRefresh" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#btnRefresh').click(function () {
+                                    //refresh grid
+                                    var grid = $("#plugins-grid").data('kendoGrid');
+                                    grid.dataSource.read();
+                                   
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                            });
+                        </script>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                //search button
+                                $('#search-plugins').click(function () {
+                                    //search
+                                    var grid = $('#plugins-grid').data('kendoGrid');
+                                    grid.dataSource.read();
+
+                                    return false;
+                                });
+                            });
+
+                            function additionalData() {
+                                var data = {
+                                    SearchLoadModeId: $('#SearchLoadModeId').val(),
+                                    SearchGroup: $('#SearchGroup').val()
+                                };
+                                addAntiForgeryToken(data);
+                                return data;
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

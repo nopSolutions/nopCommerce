@@ -1,0 +1,17 @@
+﻿@model StoreThemeSelectorModel
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Common;
+@if (Model.AvailableStoreThemes.Count > 1)
+{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
+    {
+        Text = x.Title,
+        Value = webHelper.ModifyQueryString(Url.Action("SetStoreTheme", "Common", new { themename = x.Name }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
+    });
+    <div class="theme-selector">
+        @Html.DropDownList("store-theme", themes, new { onchange = "setLocation(this.value);" })
+    </div>
+}

@@ -1,0 +1,143 @@
+﻿<Language Name="Français" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>E-mail l'utilisateur Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Entrez courriel de l'administrateur</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Mot de passe d'utilisateur Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Entrez mot de passe admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Le '{0}'compte n'est pas accordé avec l'autorisation de modification sur le dossier '{1}'. S'il vous plaît configurer ces autorisations</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Le '{0}'compte n'est pas accordé avec l'autorisation de modification sur le fichier '{1}'. S'il vous plaît configurer ces autorisations</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Confirmez le mot de passe</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Entrez le mot de passe de confirmer</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>chaîne de connexion</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Une chaîne de connexion SQL est requise</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Entrez les valeurs de connexion SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Mauvaise format de chaîne de connexion SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Créer base de données si elle n'existe pas</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Créer données-échantillon</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Spécifiez personnalisée classement SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Une erreur s'est produite lors de la création de base de données: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Base de données</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>base de données des informations</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>nom de la base</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Nom de la base est nécessaire</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Base de données n'existe pas ou vous ne disposez pas des autorisations pour se connecter à l'</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Sélectionnez le fournisseur de données</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Si vous avez besoin d'informations sur la façon d'utiliser nopCommerce, visitez le site</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>la section de documentation sur nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>exemple</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>installer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installation nopCommerce ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Les mots de passe ne correspondent pas</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Entrez la chaîne de connexion brut (avancé)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Recommandé]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>redémarrez l'installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Cliquez ici pour redémarrer le processus d'installation (effacer toutes les valeurs mises en cache)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Échec du programme: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Utiliser un compte SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Utilisez la fonction de stockage de données (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Nom du serveur SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Nom du serveur SQL est requise</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Mot de passe</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Mot de passe SQL est requise</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Nom d'utilisateur SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Nom d'utilisateur SQL est requise</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Utilisez SQL Server (ou SQL Express) base de données</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>informations sur le magasin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>l'installation nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce est le leader ASP.NET boutique en ligne solution e-commerce. Cet assistant va vous guider à travers le processus de configuration nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). S'il vous plaît contactez votre FAI si nécessaire. Si vous installez sur une machine locale ou serveur que vous pourriez avoir besoin d'informations à partir de votre système d'administration</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Utilisez l'authentification Windows intégrée</Value>
+  </LocaleResource>
+</Language>

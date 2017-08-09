@@ -1,0 +1,9 @@
+﻿Group: Payment methods
+FriendlyName: Credit Card
+SystemName: Payments.PayPalDirect
+Version: 2.14
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Payments.PayPalDirect.dll
+Description: This plugin allows paying with PayPal Direct

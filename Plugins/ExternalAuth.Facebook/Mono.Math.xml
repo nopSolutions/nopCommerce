@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mono.Math</name>
+    </assembly>
+    <members>
+        <member name="F:Mono.Math.BigInteger.DEFAULT_LEN">
+            <summary>
+            Default length of a BigInteger in bytes
+            </summary>
+        </member>
+        <member name="F:Mono.Math.BigInteger.length">
+            <summary>
+            The Length of this BigInteger
+            </summary>
+        </member>
+        <member name="F:Mono.Math.BigInteger.data">
+            <summary>
+            The data for this BigInteger
+            </summary>
+        </member>
+        <member name="F:Mono.Math.BigInteger.smallPrimes">
+            <summary>
+            	Table of primes below 2000.
+            </summary>
+            <remarks>
+            	<para>
+            	This table was generated using Mathematica 4.1 using the following function:
+            	</para>
+            	<para>
+            		<code>
+            		PrimeTable [x_] := Prime [Range [1, PrimePi [x]]]
+            		PrimeTable [6000]
+            		</code>
+            	</para>
+            </remarks>
+        </member>
+        <member name="M:Mono.Math.BigInteger.genRandom(System.Int32,System.Security.Cryptography.RandomNumberGenerator)">
+            <summary>
+            Generates a new, random BigInteger of the specified length.
+            </summary>
+            <param name="bits">The number of bits for the new number.</param>
+            <param name="rng">A random number generator to use to obtain the bits.</param>
+            <returns>A random number of the specified length.</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.genRandom(System.Int32)">
+            <summary>
+            Generates a new, random BigInteger of the specified length using the default RNG crypto service provider.
+            </summary>
+            <param name="bits">The number of bits for the new number.</param>
+            <returns>A random number of the specified length.</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.randomize(System.Security.Cryptography.RandomNumberGenerator)">
+            <summary>
+            Randomizes the bits in "this" from the specified RNG.
+            </summary>
+            <param name="rng">A RNG.</param>
+        </member>
+        <member name="M:Mono.Math.BigInteger.randomize">
+            <summary>
+            Randomizes the bits in "this" from the default RNG.
+            </summary>
+        </member>
+        <member name="M:Mono.Math.BigInteger.testBit(System.UInt32)">
+            <summary>
+            Tests if the specified bit is 1.
+            </summary>
+            <param name="bitNum">The bit to test. The least significant bit is 0.</param>
+            <returns>True if bitNum is set to 1, else false.</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Normalize">
+            <summary>
+                Normalizes this by setting the length to the actual number of
+                uints used in data and by setting the sign to Sign.Zero if the
+                value of this is 0.
+            </summary>
+        </member>
+        <member name="M:Mono.Math.BigInteger.NextHightestPrime(Mono.Math.BigInteger)">
+            <summary>
+            Generates the smallest prime >= bi
+            </summary>
+            <param name="bi">A BigInteger</param>
+            <returns>The smallest prime >= bi. More mathematically, if bi is prime: bi, else Prime [PrimePi [bi] + 1].</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Incr2">
+            <summary>
+            Increments this by two
+            </summary>
+        </member>
+        <member name="T:Mono.Math.BigInteger.Kernel">
+            <summary>
+            Low level functions for the BigInteger
+            </summary>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Kernel.AddSameSign(Mono.Math.BigInteger,Mono.Math.BigInteger)">
+            <summary>
+            Adds two numbers with the same sign.
+            </summary>
+            <param name="bi1">A BigInteger</param>
+            <param name="bi2">A BigInteger</param>
+            <returns>bi1 + bi2</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Kernel.Compare(Mono.Math.BigInteger,Mono.Math.BigInteger)">
+            <summary>
+            Compares two BigInteger
+            </summary>
+            <param name="bi1">A BigInteger</param>
+            <param name="bi2">A BigInteger</param>
+            <returns>The sign of bi1 - bi2</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Kernel.SingleByteDivideInPlace(Mono.Math.BigInteger,System.UInt32)">
+            <summary>
+            Performs n / d and n % d in one operation.
+            </summary>
+            <param name="n">A BigInteger, upon exit this will hold n / d</param>
+            <param name="d">The divisor</param>
+            <returns>n % d</returns>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Kernel.Multiply(System.UInt32[],System.UInt32,System.UInt32,System.UInt32[],System.UInt32,System.UInt32,System.UInt32[],System.UInt32)">
+            <summary>
+            Multiplies the data in x [xOffset:xOffset+xLen] by
+            y [yOffset:yOffset+yLen] and puts it into
+            d [dOffset:dOffset+xLen+yLen].
+            </summary>
+        </member>
+        <member name="M:Mono.Math.BigInteger.Kernel.MultiplyMod2p32pmod(System.UInt32[],System.Int32,System.Int32,System.UInt32[],System.Int32,System.Int32,System.UInt32[],System.Int32,System.Int32)">
+            <summary>
+            Multiplies the data in x [xOffset:xOffset+xLen] by
+            y [yOffset:yOffset+yLen] and puts the low mod words into
+            d [dOffset:dOffset+mod].
+            </summary>
+        </member>
+        <member name="T:Mono.Math.Prime.ConfidenceFactor">
+            <summary>
+            A factor of confidence.
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.ExtraLow">
+            <summary>
+            Only suitable for development use, probability of failure may be greater than 1/2^20.
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.Low">
+            <summary>
+            Suitable only for transactions which do not require forward secrecy.  Probability of failure about 1/2^40
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.Medium">
+            <summary>
+            Designed for production use. Probability of failure about 1/2^80.
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.High">
+            <summary>
+            Suitable for sensitive data. Probability of failure about 1/2^160.
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.ExtraHigh">
+            <summary>
+            Use only if you have lots of time! Probability of failure about 1/2^320.
+            </summary>
+        </member>
+        <member name="F:Mono.Math.Prime.ConfidenceFactor.Provable">
+            <summary>
+            Only use methods which generate provable primes. Not yet implemented.
+            </summary>
+        </member>
+        <member name="T:Mono.Math.Prime.Generator.NextPrimeFinder">
+            <summary>
+            Finds the next prime after a given number.
+            </summary>
+        </member>
+        <member name="M:Mono.Math.Prime.Generator.PrimeGeneratorBase.PostTrialDivisionTests(Mono.Math.BigInteger)">
+            <summary>
+            Performs primality tests on bi, assumes trial division has been done.
+            </summary>
+            <param name="bi">A BigInteger that has been subjected to and passed trial division</param>
+            <returns>False if bi is composite, true if it may be prime.</returns>
+            <remarks>The speed of this method is dependent on Confidence</remarks>
+        </member>
+        <member name="M:Mono.Math.Prime.PrimalityTests.RabinMillerTest(Mono.Math.BigInteger,Mono.Math.Prime.ConfidenceFactor)">
+            <summary>
+                Probabilistic prime test based on Rabin-Miller's test
+            </summary>
+            <param name="bi" type="BigInteger.BigInteger">
+                <para>
+                    The number to test.
+                </para>
+            </param>
+            <param name="confidence" type="int">
+                <para>
+            The number of chosen bases. The test has at least a
+            1/4^confidence chance of falsely returning True.
+                </para>
+            </param>
+            <returns>
+            <para>
+            	True if "this" is a strong pseudoprime to randomly chosen bases.
+            </para>
+            <para>
+            	False if "this" is definitely NOT prime.
+            </para>
+            </returns>
+        </member>
+    </members>
+</doc>

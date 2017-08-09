@@ -1,0 +1,9 @@
+﻿Group: Payment methods
+FriendlyName: Purchase Order
+SystemName: Payments.PurchaseOrder
+Version: 1.21
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Payments.PurchaseOrder.dll
+Description: This plugin allows paying with Purchase Orders

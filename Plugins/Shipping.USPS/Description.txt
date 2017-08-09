@@ -1,0 +1,9 @@
+﻿Group: Shipping rate computation
+FriendlyName: USPS (US Postal Service)
+SystemName: Shipping.USPS
+Version: 1.30
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.Shipping.USPS.dll
+Description: This plugin offers shipping rates by USPS

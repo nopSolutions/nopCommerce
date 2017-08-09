@@ -1,0 +1,97 @@
+﻿@model BlogPostListModel
+@using Nop.Web.Models.Blogs;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Blog").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-blog-page");
+}
+@section left {
+    @Html.Widget("left_side_column_blog_before")
+    @Html.Action("BlogMonths", "Blog")
+    @Html.Widget("left_side_column_after_blog_archive")
+    @Html.Action("BlogTags", "Blog")
+    @Html.Widget("left_side_column_blog_after")
+}
+<div class="page blog-page">
+    <div class="page-title">
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <h1>
+            @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                {
+                @String.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                }
+                else
+                {
+                @T("Blog")
+                }
+            }
+            else
+            {
+                @String.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @Html.Widget("bloglist_page_before_posts")
+        <div class="blog-posts">
+            @foreach (var item in Model.BlogPosts)
+            {
+                @Html.Widget("bloglist_page_before_post", item.Id)
+                <div class="post">
+                    <div class="post-head">
+                        <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
+                        <span class="post-date">-@item.CreatedOn.ToString("D")</span>
+                    </div>
+                    @Html.Widget("bloglist_page_before_post_body", item.Id)
+                    <div class="post-body">
+                        @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+                    </div>
+                    @Html.Widget("bloglist_page_after_post_body", item.Id)
+                    <div class="blog-details">
+                        @if (item.Tags.Count > 0)
+                        {
+                            <div class="tags">
+                                <label>@T("Blog.Tags"):</label>
+                                <ul>
+                                    @for (int i = 0; i < item.Tags.Count; i++)
+                                    {
+                                        var tag = item.Tags[i];
+                                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                                        if (i != item.Tags.Count - 1)
+                                        {
+                                            <li class="separator">,</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        <div class="buttons">
+                            @if (item.AllowComments)
+                            {
+                                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            }
+                            <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-more">@T("Blog.MoreInfo")</a>
+                        </div>
+                    </div>
+                    @Html.Widget("bloglist_page_inside_post", item.Id)
+                </div>
+                @Html.Widget("bloglist_page_after_post", item.Id)
+            }
+        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!pager.IsEmpty())
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
+        @Html.Widget("bloglist_page_after_posts")
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@model ProductModel.ProductAttributeMappingModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text;
+
+    var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
+        } catch (e) {
+        }
+        window.close();
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
+    </div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-popup">
+                    <div class="panel-body">
+                        @if (!Model.ValidationRulesAllowed)
+                        {
+                            <p>This attribute type cannot have validation rules</p>
+                        }
+
+                        <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ValidationMinLength)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ValidationMinLength)
+                                @Html.ValidationMessageFor(model => model.ValidationMinLength)
+                            </div>
+                        </div>
+                        <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ValidationMaxLength)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ValidationMaxLength)
+                                @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+                            </div>
+                        </div>
+                        <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ValidationFileAllowedExtensions)
+                                @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+                            </div>
+                        </div>
+                        <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ValidationFileMaximumSize)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ValidationFileMaximumSize)
+                                @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
+                            </div>
+                        </div>
+                        <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.DefaultValue)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.DefaultValue)
+                                @Html.ValidationMessageFor(model => model.DefaultValue)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-9 col-sm-offset-3">
+                                <button type="submit" class="btn btn-primary">
+                                    @T("Admin.Common.Save")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

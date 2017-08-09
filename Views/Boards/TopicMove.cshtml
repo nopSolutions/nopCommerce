@@ -1,0 +1,35 @@
+﻿@model TopicMoveModel
+@using Nop.Web.Models.Boards;
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-move-topic-page");
+}
+@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+<div class="page move-topic-page">
+    <div class="page-title">
+        <h1>@T("Forum.MoveTopic")</h1>
+    </div>
+    <div class="page-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
+                        @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
+                <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })')" />
+            </div>
+        }
+    </div>
+</div>

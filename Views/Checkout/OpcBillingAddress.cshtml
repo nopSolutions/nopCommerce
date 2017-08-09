@@ -1,0 +1,74 @@
+﻿@model CheckoutBillingAddressModel
+@using Nop.Web.Models.Checkout;
+<div class="checkout-data">
+    @Html.Widget("op_checkout_billing_address_top")
+    @if (Model.ShipToSameAddressAllowed)
+    {
+        <div class="section ship-to-same-address">
+            <p class="selector">
+                @Html.CheckBoxFor(x => x.ShipToSameAddress)
+                <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+            </p>
+        </div>
+    }
+    @if (Model.ExistingAddresses.Count > 0)
+    {
+        <div class="section select-billing-address">
+            <label for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
+            <div>
+                <select name="billing_address_id" id="billing-address-select" class="address-select"
+                        title="" onchange="Billing.newAddress(!this.value)">
+                    @foreach (var address in Model.ExistingAddresses)
+                    {
+                        var addressLine = "";
+                        addressLine += address.FirstName;
+                        addressLine += " " + address.LastName;
+                        if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                        {
+                            addressLine += ", " + address.Address1;
+                        }
+                        if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                        {
+                            addressLine += ", " + address.City;
+                        }
+                        if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                        {
+                            addressLine += ", " + address.StateProvinceName;
+                        }
+                        if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                        {
+                            addressLine += " " + address.ZipPostalCode;
+                        }
+                        if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                        {
+                            addressLine += ", " + address.CountryName;
+                        }
+                        //how should we render "FormattedCustomAddressAttributes" here?
+                        <option value="@(address.Id)">@(addressLine)</option>
+                    }
+                    <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                </select>
+            </div>
+        </div>
+    }
+    @Html.Widget("op_checkout_billing_address_middle")
+    <div class="section new-billing-address" id="billing-new-address-form">
+        <div class="enter-address">
+            @{
+                var validationSummary = Html.ValidationSummary(true);
+            }
+            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div>
+            }
+            @{
+                var dataDictAddress = new ViewDataDictionary();
+                //Merge ModelState (required for validation)
+                dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
+                @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+            }
+        </div>
+    </div>
+    @Html.Widget("op_checkout_billing_address_bottom")
+</div>

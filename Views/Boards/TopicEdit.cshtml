@@ -1,0 +1,10 @@
+﻿@model EditForumTopicModel
+@using Nop.Web.Models.Boards;
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);
+}
+@Html.Widget("boards_topicedit_before", Model.Id)
+@Html.Partial("_CreateUpdateTopic", Model)
+@Html.Widget("boards_topicedit_after", Model.Id)

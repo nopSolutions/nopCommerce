@@ -1,0 +1,67 @@
+﻿@model BackInStockSubscribeModel
+@using Nop.Web.Models.Catalog;
+
+<div class="page back-in-stock-subscription-page">
+    <div class="page-title">
+        <h1>
+            @if (Model.AlreadySubscribed)
+            {
+                @T("BackInStockSubscriptions.AlreadySubscribed")
+            }
+            else
+            {
+                @T("BackInStockSubscriptions.PopupTitle")
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @if (!Model.SubscriptionAllowed)
+            {
+            <div>
+                @T("BackInStockSubscriptions.NotAllowed")
+            </div>
+        }
+        else if (!Model.IsCurrentCustomerRegistered)
+        {
+            <div>
+                @T("BackInStockSubscriptions.OnlyRegistered")
+            </div>
+        }
+        else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+        {
+            <div>
+                @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)
+            </div>
+        }
+        else
+        {
+            if (!Model.AlreadySubscribed)
+            {
+                <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
+            }
+            <button type="submit" id="back-in-stock-notify-me" class="button-1 notify-me-button">
+                @(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)
+            </button>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#back-in-stock-notify-me").on('click', function () {
+                        var subscribeButton = this;
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.RouteUrl("BackInStockSubscribeSend"))",
+                            data: { "productId": '@Model.ProductId' },
+                            success: function (data) {
+                                $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert('Failed to change subscription.');
+                            }
+                        });
+
+                    });
+                });
+            </script>
+        }
+    </div>
+</div>

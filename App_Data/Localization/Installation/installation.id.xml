@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Language Name="Bahasa Indonesia" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Masukkan email admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Kata sandi admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Masukkan kata sandi admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Akun '{0}' tidak mendapat hak untuk mengubah izin atas folder '{1}'. Harap menyetel izin tersebut.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>The '{0}' tidak mendapat hak untuk mengubah izin atas  file '{1}'. Harap menyetel izin tersebut.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Konfirmasi ulang password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Masukkan konfirmasi ulang password</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Connection string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL connection string harus diisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Masukkan isi SQL connection</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Format SQL connection string salah</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Buat database jika belum ada</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Buat data contoh</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Menentukan adat SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Error terjadi ketika membuat database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Informasi database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Nama database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Nama database diperlukan</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database tidak ditemukan atau anda tidak memiliki izin untuk mengaksesnya</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Pilih provider data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Jika anda memerlukan informasi mengenai cara penggunaan nopCommerce, kunjungi</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>bagian dokumentasi di nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Contoh</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Pasang</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Memasang nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Kata sandi tidak cocok</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Masukkan connection string mentah (lanjutan)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Direkomendasikan]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Ulang pemasangan</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klik untuk mengulang proses pemasangan (membersihkan semua nilai cached)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Pemasangan gagal: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Gunakan akun SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Gunakan penyimpanan data built-in (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Nama SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Nama SQL Server diperlukan</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>Kata sandi SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Kata sandi SQL diperlukan</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Nama user SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Nama user SQL diperlukan</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Gunakan database SQL Server (or SQL Express)</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informasi Toko</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Pemasangan nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce merupakan solusi terkemuka toko online e-commerce ASP.NET. Panduan berikut akan mengarahkan anda melewati proses penyetelan nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Untuk menyelesaikan panduan ini, anda harus mempunyai informasi mengenai server database anda ("connection string"). Harap menghubungi ISP anda jika diperlukan. Jika anda memasang di mesin atau server lokal, anda mungkin memerlukan informasi dari Sistem Admin anda.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Gunakan integrated Windows authentication</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,103 @@
+﻿@model ProductModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        bindBootstrapTabSelectEvent('product-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @Html.Action("Mode", "Setting", new {modeName = "product-advanced-mode"})
+                </div>
+                @if (!Model.IsLoggedInAsVendor)
+                {
+                    <button type="button" class="btn btn-info pull-left margin-l-10" id="product-editor-settings" data-toggle="modal" data-target="#productsettings-window">
+                        <i class="fa fa-gear"></i>
+                        @T("Admin.Configuration.Settings.ProductEditor.Button")
+                    </button>
+                }
+            </div>
+        </div>
+        <div id="product-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"), customCssClass:  Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")
+                @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
+                @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"), customCssClass: Model.ProductEditorSettingsModel.ProductAttributes ? "" : "advanced-setting")
+                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"), customCssClass: Model.ProductEditorSettingsModel.SpecificationAttributes ? "" : "advanced-setting")
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"), customCssClass: Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")
+                    @Html.RenderBootstrapTabHeader("tab-stock-quantity-history", @T("Admin.Catalog.Products.StockQuantityHistory"), customCssClass: Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")
+                }
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @Html.RenderBootstrapTabContent("tab-pictures", @TabPictures())
+                @Html.RenderBootstrapTabContent("tab-specification-attributes", @TabSpecificationAttributes())
+                @Html.RenderBootstrapTabContent("tab-product-attributes", @TabProductAttributes())
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
+                    @Html.RenderBootstrapTabContent("tab-stock-quantity-history", @TabStockQuantityHistory())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    @Html.Partial("_CreateOrUpdate.Info", Model)
+}
+
+@helper TabSeo()
+{
+    @Html.Partial("_CreateOrUpdate.SEO", Model)
+}
+
+@helper TabPictures()
+{
+    @Html.Partial("_CreateOrUpdate.Pictures", Model)
+}
+
+@helper TabProductAttributes()
+{
+    @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
+}
+
+@helper TabSpecificationAttributes()
+{
+    @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
+}
+
+@helper TabPurchasedWithOrders()
+{
+    @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
+}
+
+@helper TabStockQuantityHistory()
+{
+    @Html.Partial("_CreateOrUpdate._StockQuantityHistory", Model)
+}

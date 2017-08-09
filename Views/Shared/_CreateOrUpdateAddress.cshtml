@@ -1,0 +1,162 @@
+﻿@model AddressModel
+@using Nop.Web.Models.Common;
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@Html.HiddenFor(model => model.Id)
+<div class="edit-address">
+    <div class="inputs">
+        @Html.LabelFor(model => model.FirstName, new { }, ":")
+            @Html.EditorFor(model => model.FirstName)
+        @Html.RequiredHint()
+        @Html.ValidationMessageFor(model => model.FirstName)
+    </div>
+    <div class="inputs">
+        @Html.LabelFor(model => model.LastName, new { }, ":")
+            @Html.EditorFor(model => model.LastName)
+        @Html.RequiredHint()
+        @Html.ValidationMessageFor(model => model.LastName)
+
+    </div>
+    <div class="inputs">
+        @Html.LabelFor(model => model.Email, new { }, ":")
+            @Html.EditorFor(model => model.Email)
+        @Html.RequiredHint()
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+    @if (Model.CompanyEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.Company, new { }, ":")
+                @Html.EditorFor(model => model.Company)
+            @if (Model.CompanyRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.Company)
+        </div>
+    }
+    @if (Model.CountryEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.CountryId, new { }, ":")
+                @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+            @Html.RequiredHint()
+            @Html.ValidationMessageFor(model => model.CountryId)
+        </div>
+    }
+
+    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
+                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            @Html.ValidationMessageFor(model => model.StateProvinceId)
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.City, new { }, ":")
+                @Html.EditorFor(model => model.City)
+
+            @if (Model.CityRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.Address1, new { }, ":")
+                @Html.EditorFor(model => model.Address1)
+            @if (Model.StreetAddressRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.Address1)
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.Address2, new { }, ":")
+                @Html.EditorFor(model => model.Address2)
+            @if (Model.StreetAddress2Required)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.Address2)
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
+                @Html.EditorFor(model => model.ZipPostalCode)
+            @if (Model.ZipPostalCodeRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.ZipPostalCode)
+        </div>
+    }
+    @if (Model.PhoneEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.PhoneNumber, new { }, ":")
+                @Html.EditorFor(model => model.PhoneNumber)
+            @if (Model.PhoneRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.PhoneNumber)
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="inputs">
+            @Html.LabelFor(model => model.FaxNumber, new { }, ":")
+                @Html.EditorFor(model => model.FaxNumber)
+            @if (Model.FaxRequired)
+            {
+                @Html.RequiredHint()
+            }
+            @Html.ValidationMessageFor(model => model.FaxNumber)
+        </div>
+    }
+    @if (Model.CustomAddressAttributes.Count > 0)
+    {
+        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+    }
+</div>

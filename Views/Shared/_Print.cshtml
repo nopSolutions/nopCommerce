@@ -1,0 +1,17 @@
+﻿@using Nop.Core.Infrastructure
+@using Nop.Web.Framework.Themes
+@{
+    var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+}
+<!DOCTYPE html>
+<html @Html.NopPageCssClasses()>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link href="@Url.Content(string.Format("~/Themes/{0}/Content/css/print.css", themeName))" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

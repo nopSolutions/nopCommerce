@@ -1,0 +1,38 @@
+﻿@model LanguageSelectorModel
+@using Nop.Web.Models.Common;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@if (Model.AvailableLanguages.Count > 1)
+{
+    <div class="language-selector">
+    @{
+        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+        if (Model.UseImages)
+        {
+            <ul class="language-list">
+                @foreach (var lang in Model.AvailableLanguages)
+                {
+                    <li>
+                        <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" title="@lang.Name">
+                            <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
+                                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
+            {
+                Text = lang.Name,
+                Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+                Selected = lang.Id.Equals(Model.CurrentLanguageId)
+            });
+
+            @Html.DropDownList("customerlanguage", languages, new { onchange = "setLocation(this.value);" })
+        }
+    }
+    </div>
+}

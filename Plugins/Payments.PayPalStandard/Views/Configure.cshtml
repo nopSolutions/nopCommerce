@@ -1,0 +1,163 @@
+﻿@{
+    Layout = "";
+}
+@model ConfigurationModel
+@using Nop.Plugin.Payments.PayPalStandard.Models;
+@using Nop.Web.Framework;
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#@Html.FieldIdFor(model => model.EnableIpn)").click(toggleEnableIpn);
+        $("#@Html.FieldIdFor(model => model.PassProductNamesAndTotals)").click(togglePassProductNamesAndTotals);
+	    toggleEnableIpn();
+	    togglePassProductNamesAndTotals();
+	});
+
+	function toggleEnableIpn() {
+	    if ($('#@Html.FieldIdFor(model => model.EnableIpn)').is(':checked')) {
+			$('#pnlIpnUrl').show();
+		}
+		else {
+			$('#pnlIpnUrl').hide();
+		}
+	}
+
+    function togglePassProductNamesAndTotals() {
+        warningValidation('@Url.Action("RoundingWarning", "PaymentPayPalStandard")', '@Html.FieldNameFor(model => model.PassProductNamesAndTotals)',
+            { passProductNamesAndTotals: $('#@Html.FieldIdFor(model => model.PassProductNamesAndTotals)').is(':checked') });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Plugins.Payments.PayPalStandard.Instructions")
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.UseSandbox)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UseSandbox)
+                        @Html.ValidationMessageFor(model => model.UseSandbox)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.BusinessEmail_OverrideForStore, model => model.BusinessEmail, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.BusinessEmail)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.BusinessEmail)
+                        @Html.ValidationMessageFor(model => model.BusinessEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdtToken_OverrideForStore, model => model.PdtToken, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdtToken)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdtToken)
+                        @Html.ValidationMessageFor(model => model.PdtToken)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdtValidateOrderTotal_OverrideForStore, model => model.PdtValidateOrderTotal, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdtValidateOrderTotal)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PdtValidateOrderTotal)
+                        @Html.ValidationMessageFor(model => model.PdtValidateOrderTotal)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFee)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFee)
+                        @Html.ValidationMessageFor(model => model.AdditionalFee)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AdditionalFeePercentage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AdditionalFeePercentage)
+                        @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PassProductNamesAndTotals_OverrideForStore, model => model.PassProductNamesAndTotals, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PassProductNamesAndTotals)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.PassProductNamesAndTotals)
+                        @Html.ValidationMessageFor(model => model.PassProductNamesAndTotals)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.EnableIpn_OverrideForStore, model => model.EnableIpn, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.EnableIpn)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.EnableIpn)
+                        @Html.ValidationMessageFor(model => model.EnableIpn)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlIpnUrl">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IpnUrl)
+                        @*TODO: Move to hint <em>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</em>*@
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.IpnUrl)
+                        @Html.ValidationMessageFor(model => model.IpnUrl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AddressOverride_OverrideForStore, model => model.AddressOverride, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AddressOverride)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.AddressOverride)
+                        @Html.ValidationMessageFor(model => model.AddressOverride)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                        @Html.ValidationMessageFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

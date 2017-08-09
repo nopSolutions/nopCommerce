@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Svenska">
+  <LocaleResource Name="AdminEmail">
+    <Value>Administratör epost</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Ange administratörens epost</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Administratör lösenord</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Ange administratörens lösenord</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Kontot '{0}' har inte ändringsbehörighet på katalogen '{1}'. Vänligen konfigurera dessa rättigheter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Kontot '{0}' har inte ändringsbehörighet på fil '{1}'. Vänligen konfigurera dessa rättigheter.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Bekräfta lösenord</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Ange bekräfta lösenord</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Anslutningssträng</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>En SQL anslutningssträng behövs</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Ange SQL anslutningsvärden</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Fel format på SQL anslutningssträngen</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Skapa databasen om den inte existerar</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Skapa exempeldata</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Ange egen SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Ett fel uppstod när databasen skulle skapas: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Databas</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Databasinformation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Databasnamn</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Databasnamn måste anges</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Databasen existerar inte eller du saknar behörighet att ansluta till den</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Välj data provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Om du behöver information om hur du använder nopCommerce, besök</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentationsavdelningen på nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Exempel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Installera</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Installerar nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Lösenorden matchar inte</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Ange manuell anslutningssträng (avancerat)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Rekommenderat]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Starta om installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klicka för att starta om installationsprocessen (rensa alla cachade värden)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Installation misslyckades: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Använd SQL Server-konto</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Använd inbyggd datalagring (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server namn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server namn måste anges.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Lösenord</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Lösenord måste anges</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Användarnamn</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Användarnamn måste anges</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Använd SQL Server (eller SQL Express) databas</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Butiksinformation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce installation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce är den ledande ASP.NET-lösningen för onlinebutik och e-handel. Den här guiden hjälper dig igenom processen att konfigurera nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>För att genomföra den här guiden behöver du känna till en del information om din databasserver ("anslutningssträng"). Vänligen kontakta din internetleverantör vid behov. Om du installerar på en lokal maskin eller server, kanske du behöver kontakta din systemadministratör.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Använd integrerad Windowsautenticering</Value>
+  </LocaleResource>
+</Language>

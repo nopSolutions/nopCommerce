@@ -1,0 +1,123 @@
+﻿@model EmailAccountModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Email)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Email, required: true)
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.DisplayName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.DisplayName, required: true)
+                            @Html.ValidationMessageFor(model => model.DisplayName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Host)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Host)
+                            @Html.ValidationMessageFor(model => model.Host)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Port)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Port)
+                            @Html.ValidationMessageFor(model => model.Port)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Username)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Username)
+                            @Html.ValidationMessageFor(model => model.Username)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Password)
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                @Html.NopEditorFor(model => model.Password)
+                                <div class="input-group-btn">
+                                    @if (Model.Id > 0)
+                                    {
+                                        <button type="submit" name="changepassword" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Password)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.EnableSsl)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.EnableSsl)
+                            @Html.ValidationMessageFor(model => model.EnableSsl)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.UseDefaultCredentials)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.UseDefaultCredentials)
+                            @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.EmailAccounts.SendTestEmail")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SendTestEmailTo)
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    @Html.NopEditorFor(model => model.SendTestEmailTo)
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="sendtestemail" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
+                                        </button>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.SendTestEmailTo)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

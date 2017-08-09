@@ -1,0 +1,43 @@
+﻿@model CheckoutPaymentInfoModel
+@using Nop.Web.Models.Checkout;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-checkout-page");
+    Html.AppendPageCssClassParts("html-payment-info-page");
+}
+<div class="page checkout-page payment-info-page">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
+    <div class="page-title">
+        <h1>@T("Checkout.PaymentInfo")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @Html.Widget("checkout_payment_info_top")
+        <div class="section payment-info">
+            @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
+            {
+                var validationSummary = Html.ValidationSummary(false);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                <div class="info">
+                    @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button" />
+                </div>
+            }
+        </div>
+        @Html.Widget("checkout_payment_info_bottom")
+        <div class="section order-summary">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
+    </div>
+</div>

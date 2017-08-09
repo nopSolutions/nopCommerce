@@ -1,0 +1,76 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Configuration.Settings.Order.ReturnRequestActions")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
+        </p>
+        <div id="returnrequestactions-grid"></div>
+
+        <script>
+                $(document).ready(function () {
+                    $("#returnrequestactions-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ReturnRequestActionList"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @Html.Partial("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")",
+                            width: 300
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Setting/ReturnRequestActionEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("ReturnRequestActionCreate")" class="btn btn-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
+@using Nop.Web.Models.Catalog;
+@{
+    var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+    var alreadyFilteredItemsGroups = Model.AlreadyFilteredItems.GroupBy(x => x.SpecificationAttributeName);
+}
+@if (Model.Enabled)
+{
+    <div class="product-filter product-spec-filter">
+        <div class="filter-title">
+            <strong>@T("Filtering.SpecificationFilter")</strong>
+        </div>
+        <div class="filter-content">
+            @if (Model.NotFilteredItems.Count > 0)
+            {
+                <div class="available-items">
+                    @foreach (var group in notFilteredItemsGroups)
+                    {
+                        var groupList = group.ToList();
+                        
+                        <ul class="group product-spec-group @(groupList.Any(x => !string.IsNullOrEmpty(x.SpecificationAttributeOptionColorRgb)) ? "product-spec-color" : null )">
+                            <li class="title">
+                                <strong>@groupList[0].SpecificationAttributeName</strong>
+                            </li>
+                            @foreach (var spec in groupList)
+                            {
+                                <li class="item @(!String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
+                                    <a href="@spec.FilterUrl">
+                                        @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                        {
+                                            @spec.SpecificationAttributeOptionName
+                                        }
+                                        else
+                                        {
+                                            <div class="attribute-squares color-squares">
+                                                <span class="attribute-square-container" title="@spec.SpecificationAttributeOptionName">
+                                                    <span class="attribute-square" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                                </span>
+                                            </div>
+                                        }
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+            @if (Model.AlreadyFilteredItems.Count > 0)
+            {
+                <div class="filtered-items">
+                    <ul>
+                        <li class="title">
+                            @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
+                        </li>
+                        @foreach (var group in alreadyFilteredItemsGroups)
+                        {
+                            <li class="item">
+                                <strong>@group.First().SpecificationAttributeName</strong>: 
+                                @group.ToList().Aggregate(string.Empty, (current, next) =>
+                                    string.Format("{0}{1}", string.IsNullOrEmpty(current) ? string.Empty 
+                                    : string.Format("{0} {1}", current, T("Filtering.SpecificationFilter.Separator")), next.SpecificationAttributeOptionName))
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="remove-filter">
+                    <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
+                </div>
+            }
+        </div>
+    </div>
+}

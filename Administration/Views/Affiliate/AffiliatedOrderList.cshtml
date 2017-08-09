@@ -1,0 +1,176 @@
+﻿@model AffiliatedOrderListModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default panel-search">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.StartDate)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.StartDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.EndDate)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopEditorFor(model => model.EndDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.OrderStatusId)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopDropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.PaymentStatusId)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopDropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            @Html.NopLabelFor(model => model.ShippingStatusId)
+                        </div>
+                        <div class="col-md-8">
+                            @Html.NopDropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="button" id="search-orders" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="orders-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#orders-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AffiliatedOrderListGrid", "Affiliate"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @Html.Partial("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "CustomOrderNumber",
+                            title: "@T("Admin.Affiliates.Orders.CustomOrderNumber")",
+                            width: 200
+                        }, {
+                            field: "OrderStatus",
+                            title: "@T("Admin.Affiliates.Orders.OrderStatus")",
+                            template: '<span class="grid-report-item ' +
+                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                    '# if(OrderStatusId == 20) {# blue #} #' +
+                                                    '# if(OrderStatusId == 30) {# green #} #' +
+                                                    '# if(OrderStatusId == 40) {# red #} #' +
+                                                    '">#=OrderStatus#</span>'
+                        }, {
+                            field: "PaymentStatus",
+                            title: "@T("Admin.Affiliates.Orders.PaymentStatus")"
+                        },{
+                            field: "ShippingStatus",
+                            title: "@T("Admin.Affiliates.Orders.ShippingStatus")"
+                        },{
+                            field: "OrderTotal",
+                            title: "@T("Admin.Affiliates.Orders.OrderTotal")"
+                        },{
+                            field: "CreatedOn",
+                            title: "@T("Admin.Affiliates.Orders.CreatedOn")",
+                            type: "date",
+                            format: "{0:G}"
+                        },{
+                            field: "Id",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        }]
+                    });
+                });
+            </script>
+
+            <script type="text/javascript">
+                var selectedIds = [];
+                var reportAggregates = "";
+
+                $(document).ready(function () {
+                    //search button
+                    $('#search-orders').click(function () {
+                        //search
+                        var grid = $('#orders-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        return false;
+                    });
+                });
+
+                function additionalData() {
+                    var data = {
+                        AffliateId: @(Model.AffliateId),
+                        StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                        EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                        OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                        PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+                        ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+            </script>
+        </div>
+    </div>
+</div>

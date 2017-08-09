@@ -1,0 +1,174 @@
+﻿@model ForumTopicPageModel
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.Subject);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-topic-page");
+}
+<div class="page forum-topic-page">
+    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @Html.Partial("_ForumHeader")
+    @Html.Widget("boards_topic_after_header", Model.Id)
+    @Html.AntiForgeryToken()
+    <div class="topic-name">
+        <h1>@Model.Subject</h1>
+    </div>
+    <div class="topic-actions upper">
+        <div class="actions">
+            @if (Model.IsCustomerAllowedToEditTopic)
+            {
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
+            }
+            @if (Model.IsCustomerAllowedToDeleteTopic)
+            {
+                <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
+                <script type="text/javascript">
+                    function deletetopic(topicId) {
+                        if (confirm('@T("Common.AreYouSure")')) {
+                            var postData = {
+                                id: topicId
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("TopicDelete", "Boards")',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    location.href = data.redirect;
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to delete');
+                                }
+                            });
+                        }
+                        return false;
+                    }
+                </script>
+            }
+            @if (Model.IsCustomerAllowedToMoveTopic)
+            {
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-button" })
+            }
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#watch-topic-top').click(function () {
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                                dataType: 'json',
+                                success: function (data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
+                        });
+                    });
+                </script>
+            }
+        </div>
+        @{
+            var pager = Html.Pager(new PagerModel
+            {
+                PageSize = Model.PostsPageSize,
+                TotalRecords = Model.PostsTotalRecords,
+                PageIndex = Model.PostsPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "TopicSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+            });
+        }
+        @Html.Widget("boards_topic_top", Model.Id)
+        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        {
+            <div class="pager upper">
+                @pager
+            </div>
+        }
+    </div>
+
+    <div class="topic-posts">
+        @foreach (var post in @Model.ForumPostModels)
+        {
+            Html.RenderPartial("_ForumPost", post);
+        }
+    </div>
+
+    <div class="topic-actions lower">
+        <div class="actions">
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#watch-topic-bottom').click(function() {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new {id = Model.Id})',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
+                        });
+                    });
+                </script>
+            }
+        </div>
+        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        {
+            <div class="pager lower">
+                @pager
+            </div>
+        }
+    </div>
+    @Html.Widget("boards_topic_bottom", Model.Id)
+</div>
+<script type="text/javascript">
+    function deletepost(postId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: postId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("PostDelete", "Boards")',
+                data: postData,
+                dataType: 'json',
+                success: function (data) {
+                    location.href = data.redirect;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+        return false;
+    }
+</script>

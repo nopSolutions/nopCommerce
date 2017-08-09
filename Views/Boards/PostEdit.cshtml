@@ -1,0 +1,10 @@
+﻿@model EditForumPostModel
+@using Nop.Web.Models.Boards;
+@{   
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+}
+@Html.Widget("boards_postedit_before", Model.Id)
+@Html.Partial("_CreateUpdatePost", Model)
+@Html.Widget("boards_postedit_after", Model.Id)

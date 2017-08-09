@@ -1,0 +1,9 @@
+﻿Group: Discount requirements
+FriendlyName: Customer has one of these products in the cart
+SystemName: DiscountRequirement.HasOneProduct
+Version: 1.22
+SupportedVersions: 3.90
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.DiscountRules.HasOneProduct.dll
+Description: This plugin allows you to configure discounts for customers who have one of a certain product in the cart

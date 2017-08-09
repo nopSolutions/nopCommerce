@@ -1,0 +1,64 @@
+﻿@model TestMessageTemplateModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.TestDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Message templates");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.MessageTemplates.TestDetails")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate").Text, "Edit", new { id = Model.Id })</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="send-test" class="btn bg-blue">
+                @T("Admin.ContentManagement.MessageTemplates.Test.Send")
+            </button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.Id)
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SendTo)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.SendTo, required: true)
+                                @Html.ValidationMessageFor(model => model.SendTo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                @T("Admin.ContentManagement.MessageTemplates.Test.Tokens.Description")
+                            </div>
+                        </div>
+                        @foreach (var token in Model.Tokens)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <div class="label-wrapper">
+                                        <label class="control-label">
+                                            @token
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" name="token_@(token)" class="form-control" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

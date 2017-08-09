@@ -1,0 +1,128 @@
+﻿@model BlogSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Blog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog settings");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Blog")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.Action("Mode", "Setting")
+            @Html.ValidationSummary(false)
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Blog.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.Enabled)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.Enabled)
+                                @Html.ValidationMessageFor(model => model.Enabled)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PostsPageSize)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.PostsPageSize)
+                                @Html.ValidationMessageFor(model => model.PostsPageSize)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NumberOfTags_OverrideForStore, model => model.NumberOfTags, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NumberOfTags)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NumberOfTags)
+                                @Html.ValidationMessageFor(model => model.NumberOfTags)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowHeaderRssUrl)
+                                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Blog.BlockTitle.BlogComments")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.BlogCommentsMustBeApproved_OverrideForStore, model => model.BlogCommentsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.BlogCommentsMustBeApproved)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.BlogCommentsMustBeApproved)
+                                @Html.ValidationMessageFor(model => model.BlogCommentsMustBeApproved)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.NotifyAboutNewBlogComments)
+                                @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShowBlogCommentsPerStore)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.ShowBlogCommentsPerStore)
+                                @Html.ValidationMessageFor(model => model.ShowBlogCommentsPerStore)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

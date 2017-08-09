@@ -1,0 +1,76 @@
+﻿@{
+    //success messages
+    var successMessages = new List<string>();
+    if (TempData[string.Format("nop.notifications.{0}", NotifyType.Success)] != null)
+    {
+        successMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Success)] as IList<string>);
+    }
+    if (ViewData[string.Format("nop.notifications.{0}", NotifyType.Success)] != null)
+    {
+        successMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Success)] as IList<string>);
+    }
+
+
+    //error messages
+    var errorMessages = new List<string>();
+    if (TempData[string.Format("nop.notifications.{0}", NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
+    }
+    if (ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] != null)
+    {
+        errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
+    }
+
+
+    //warning messages
+    var warningMessages = new List<string>();
+    if (TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null)
+    {
+        warningMessages.AddRange(TempData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
+    if (ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] != null)
+    {
+        warningMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Warning)] as IList<string>);
+    }
+}
+@if (successMessages.Count > 0)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var msg = [ @Html.Raw("'" + string.Join("', '", successMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            displayPopupNotification(msg, 'success', false);
+        });
+    </script>
+}
+@if (errorMessages.Count > 0)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var msg = [ @Html.Raw("'" + string.Join("', '", errorMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            displayPopupNotification(msg, 'error', false);
+        });
+    </script>
+}
+@if (warningMessages.Count > 0)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var msg = [ @Html.Raw("'" + string.Join("', '", warningMessages.Select(x => HttpUtility.JavaScriptStringEncode(x)).ToList()) + "'")];
+            displayPopupNotification(msg, 'warning', false);
+        });
+    </script>
+}
+
+<div class="ajax-loading-block-window" style="display: none">
+</div>
+<div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
+</div>
+<div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
+</div>
+<div id="dialog-notifications-warning" title="@T("Common.Warning")" style="display:none;">
+</div>
+<div id="bar-notification" class="bar-notification">
+    <span class="close" title="@T("Common.Close")">&nbsp;</span>
+</div>
+@Html.Widget("notifications")

@@ -1,0 +1,145 @@
+<Language Name="Русский" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Введите Email администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Пароль администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Введите пароль администратора</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>У системного пользователя '{0}' нет прав записи на папку '{1}'. Пожалуйста, настройте данные разрешения.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>У системного пользователя '{0}' нет прав записи на файл '{1}'. Пожалуйста, настройте данные разрешения.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Подтвердите пароль</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Подтвердите пароль</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Строка соединения</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Введите строку соединения с базой данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Ввести параметры соединения с базой данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Неверный формат строки соединенияс базой данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Создать базу данных, если её не существует</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Создать тестовые данные (продукты, категории и т.п.)</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Указать SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Ошибка при создании базы данных: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>База данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Информация о базе данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Название базы данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Введите название базы данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Указанная база данных не существует или у вас нет разрешения для соединения с ней</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Выберите провайдер данных</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Если вам необходима информация о том, как пользоваться и настраивать nopCommerce, пожалуйста, посетите</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>раздел "Документация" на сайте nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Пример</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Установить</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Установка nopCommerce...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Пароли не совпадают</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Указать строку соединения (raw)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Рекомендовано]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Перезапустить процесс установки</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Нажмите, чтобы начать процесс установки заново (очищает все закешированные значения)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Ошибка установки: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Проверка подлинности SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>SQL Server Compact</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Имя или сетевой адрес экземпляра SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Введите имя или сетевой адрес экземпляра SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>Пароль для учетной записи SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Введите пароль для учетной записи SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Учетная запись SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Введите учетную запись SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>SQL Server или SQL Express</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Информация о магазине</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Установка nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce - это ведущее ASP.NET решение для создания интернет-магазина. На этой странице вы сможете установить nopCommerce.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Для того, что успешно установить nopCommerce, вам необходимо знать строку подключения к вашей базе данных. Если у вас нет этой информации, то вы можете узнать ее у вашего хостинг-провайдера. Если же вы устанавливаете nopCommerce на локальный компьютер, то вы можете узнать её у вашего системного администратора.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>
+      Проверка подлинности Windows
+    </Value>
+  </LocaleResource>
+</Language>

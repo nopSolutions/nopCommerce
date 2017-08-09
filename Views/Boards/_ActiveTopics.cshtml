@@ -1,0 +1,126 @@
+﻿@model ActiveDiscussionsModel
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Common;
+<div class="forums-table-section topic-group active-discussions">
+    <div class="forums-table-section-title">
+        @if (Model.ActiveDiscussionsFeedEnabled)
+        {
+            <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")">@T("Forum.RSS")</a>
+        }
+        <strong>@T("Forum.ActiveDiscussions")</strong>
+    </div>
+        @{
+            var pager = Html.Pager(new PagerModel
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ActiveDiscussionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new ForumActiveDiscussionsRouteValues()
+            });
+        }
+    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    {
+        <div class="pager upper">
+            @pager
+        </div>
+    }
+    <div class="forums-table-section-body">
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="forum-table">
+                    <colgroup>
+                        <col />
+                        <col width="1" />
+                        <col width="1" />
+                        <col width="1" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="topic-details">
+                                @T("Forum.TopicTitle")
+                            </th>
+                            <th class="replies">
+                                @T("Forum.Replies")
+                            </th>
+                            <th class="views">
+                                @T("Forum.Views")
+                            </th>
+                            @if (Model.AllowPostVoting)
+                            {
+                                <th class="votes">
+                                    @T("Forum.Votes")
+                                </th>
+                            }
+                            <th class="latest-post">
+                                @T("Forum.LatestPost")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var topic in Model.ForumTopics)
+                        {
+                            <tr>
+                                <td class="topic-details">
+                                    <div class="topic-title">
+                                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
+                                    </div>
+                                    @if (topic.NumPosts > Model.PostsPageSize)
+                                    {
+                                        <div class="topic-pager">
+                                            @Html.ForumTopicSmallPager(topic)
+                                        </div>
+                                    }
+                                    <div class="topic-starter">
+                                        @if (topic.CustomerId > 0)
+                                        {
+                                            <label>@T("Forum.Author"):</label>
+                                            if (topic.AllowViewingProfiles)
+                                            {
+                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                            }
+                                            else
+                                            {
+                                                @topic.CustomerName
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                                <td class="replies">
+                                    @topic.NumReplies
+                                </td>
+                                <td class="views">
+                                    @topic.Views
+                                </td>
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <td class="votes">
+                                        @topic.Votes
+                                    </td>
+                                }
+                                <td class="latest-post">
+                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    {
+        <div class="pager lower">
+            @pager
+        </div>
+    }
+    @if (Model.ViewAllLinkEnabled)
+    {
+        <div class="view-all">
+            @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions", null)
+        </div>
+    }
+</div>

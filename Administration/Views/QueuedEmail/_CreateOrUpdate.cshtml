@@ -1,0 +1,215 @@
+﻿@model QueuedEmailModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.PriorityName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.PriorityName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.From)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.From, required: true)
+                            @Html.ValidationMessageFor(model => model.From)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.FromName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.FromName)
+                            @Html.ValidationMessageFor(model => model.FromName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.To)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.To, required: true)
+                            @Html.ValidationMessageFor(model => model.To)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ToName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ToName)
+                            @Html.ValidationMessageFor(model => model.ToName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ReplyTo)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ReplyTo)
+                            @Html.ValidationMessageFor(model => model.ReplyTo)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.ReplyToName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.ReplyToName)
+                            @Html.ValidationMessageFor(model => model.ReplyToName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CC)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.CC)
+                            @Html.ValidationMessageFor(model => model.CC)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Bcc)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Bcc)
+                            @Html.ValidationMessageFor(model => model.Bcc)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Subject)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.Subject)
+                            @Html.ValidationMessageFor(model => model.Subject)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.Body)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
+                    </div>
+                    @if (!String.IsNullOrEmpty(Model.AttachmentFilePath))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.AttachmentFilePath)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.AttachmentFilePath)
+                            </div>
+                        </div>
+                    }
+                    @if (Model.AttachedDownloadId > 0)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.AttachedDownloadId)
+                            </div>
+                            <div class="col-md-9">
+                                @{
+                                    //Static file attachments do not support URLs yet
+                                    //A store owner have to upload a file
+                                    //we store a value into "ViewData" and then use it in the Download.cshtml file
+                                    ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                                }
+                                <div>
+                                    @Html.NopEditorFor(model => model.AttachedDownloadId)
+                                    @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.CreatedOn)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.CreatedOn)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SendImmediately)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.SendImmediately)
+                            @Html.ValidationMessageFor(model => model.SendImmediately)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnl-send-date">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.DontSendBeforeDate)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.DontSendBeforeDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SentTries)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopEditorFor(model => model.SentTries)
+                            @Html.ValidationMessageFor(model => model.SentTries)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.SentOn)
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.SentOn.HasValue)
+                            {
+                                @Html.NopDisplayFor(model => model.SentOn)
+                            }
+                            else
+                            {
+                                <div class="form-text-row">@T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.NopLabelFor(model => model.EmailAccountName)
+                        </div>
+                        <div class="col-md-9">
+                            @Html.NopDisplayFor(model => model.EmailAccountName)
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+                        sendImmediately();
+                    });
+
+                    function sendImmediately() {
+                        if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                            $('#pnl-send-date').hide();
+                        else
+                            $('#pnl-send-date').show();
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

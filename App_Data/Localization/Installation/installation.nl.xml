@@ -1,0 +1,143 @@
+﻿<Language Name="Nederlands" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>E-mailadres beheerder</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Vul e-mailadres beheerder in</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Wachtwoord beheerder</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Vul het beheerders wachtwoord in</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Het '{0}' account heeft geen Modify rechten op de '{1}' map. Stel deze rechten alstublieft zodanig in.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Het '{0}' account heeft geen Modify rechten op het bestand '{1}'. Stel deze rechten alstublieft zodanig in.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Bevestig het wachtwoord</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Vul  het wachtwoord ter bevestiging in</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Connectie string</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Een SQL connectie string is vereist</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Vul de SQL connectie waarden in</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Verkeerd SQL connectie string formaat</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Maak de database aan als deze niet bestaat</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Genereer voorbeeld data</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specificeer aangepaste SQL Server collation</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Er is een fout opgetreden bij het aanmaken van de database: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>Database</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Database informatie</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Database naam</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Database naam is vereist</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Database bestaat niet of u heeft geen rechten om ermee te verbinden</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Selecteer de data provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Als u informatie nodig heeft over hoe nopCommerce te gebruiken, bezoek</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>de Documentatie sectie op nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Voorbeeld</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Installeer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce installeren...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>De wachtwoord komen niet overeen</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Geef eigen connectie string in (geavanceerd)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Heeft de voorkeur]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Opnieuw installeren</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Klik om het installatie proces opnieuw te beginnen (verwijder alle gecachte waarden)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Setup mislukt: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Gebruik een SQL Server account</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Gebruik built-in data opslag (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server naam</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server naam is vereist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Wachtwoord</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Wachtwoord is vereist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Gebruikersnaam</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Gebruikersnaam is vereist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Gebruik SQL Server (of SQL Express) database</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Webshop informatie</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce installatie</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce is de toonaangevende ASP.NET webshop e-commerce oplossing. Deze wizard zal u  door de nopCommerce configuratie stappen leiden</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Om deze wizard volledig en succesvol te doorlopen, heeft u wat informatie over uw database nodig (de "connectie string"). Indien nodig, neem contact hierover op met uw ISP. Als u nopCommerce op een lokaal systeem installeert, heeft u wellicht informatie van uw Systeembeheerder nodig.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Gebruik geïntegreerde Windows authenticatie</Value>
+  </LocaleResource>
+</Language>

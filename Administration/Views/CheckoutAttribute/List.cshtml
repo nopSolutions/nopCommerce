@@ -1,0 +1,103 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Checkout attributes");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.Attributes.CheckoutAttributes")
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Description")
+                </p>
+                <div id="checkoutattributes-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#checkoutattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("List", "CheckoutAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @Html.Partial("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "Name",
+                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")"
+                            }, {
+                                field: "AttributeControlTypeName",
+                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")",
+                                width: 200
+                            }, {
+                                field: "IsRequired",
+                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

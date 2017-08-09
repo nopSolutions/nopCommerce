@@ -1,0 +1,20 @@
+﻿@model EmailRevalidationModel
+@using Nop.Web.Models.Customer;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-email-revalidation-page");
+}
+<div class="page email-revalidation-page">
+    <div class="page-title">
+        <h1>@T("Account.EmailRevalidation")</h1>
+    </div>
+    <div class="page-body">
+        <div class="result">
+            @Model.Result
+        </div>
+    </div>
+</div>

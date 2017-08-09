@@ -1,0 +1,97 @@
+﻿@model ProductModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products");
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Products.BackToList").Text, "List")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+                <i class="fa fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" name="copyproduct" class="btn bg-olive" data-toggle="modal" data-target="#copyproduct-window">
+                <i class="fa fa-clone"></i>
+                @T("Admin.Catalog.Products.Copy")
+            </button>
+            <span id="product-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("product-delete")
+@if (!Model.IsLoggedInAsVendor)
+{
+    //product editor settings modal
+    @Html.Partial("_ProductEditorSettingsModal", Model)
+}
+@*copy product form*@
+<div id="copyproduct-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copyproduct-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
+            </div>
+            @using (Html.BeginForm("CopyProduct", "Product"))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.CopyProductModel.Id)
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.Name)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.Published)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.Published)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.CopyImages)
+                            </div>
+                            <div class="col-md-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.CopyImages)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Catalog.Products.Copy")
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@model ReturnRequestReasonModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Order settings");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList").Text, "ReturnRequestReasonList")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdate.ReturnRequestReason", Model)
+        </div>
+    </div>
+}

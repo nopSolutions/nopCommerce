@@ -1,0 +1,71 @@
+﻿@model ApplyVendorModel
+@using Nop.Web.Models.Vendors;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-apply-vendor-page");
+}
+<div class="page apply-vendor-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.Vendors.Apply")</h1>
+    </div>
+    <div class="page-body">
+        @Html.Action("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
+        @Html.Widget("applyvendor_top")
+        @if (Model.DisableFormInput)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm(null, null, FormMethod.Post, new RouteValueDictionary { { "enctype", "multipart/form-data" } }))
+            {
+                @Html.AntiForgeryToken()
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div> 
+                }
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Name)
+                            @Html.TextBoxFor(model => model.Name, new { @class = "name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Description)
+                            @Html.TextAreaFor(model => model.Description, new { @class = "description" })
+                        </div>
+                        <div class="inputs">
+                            @Html.Label(T("Vendors.ApplyAccount.Picture").Text)
+                            <input name="uploadedFile" type="file"/>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                </div>
+            }
+        }
+        @Html.Widget("applyvendor_bottom")
+    </div>
+</div>

@@ -1,0 +1,177 @@
+﻿@model CustomerModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customers list");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.Customers.BackToList").Text, "List")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendemail-window">
+                <i class="fa fa-at"></i>
+                @T("Admin.Customers.Customers.SendEmail")
+            </button>
+            <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendprivatemessage-window">
+                <i class="fa fa-envelope-o"></i>
+                @T("Admin.Customers.Customers.SendPM")
+            </button>
+            @if (Model.AllowSendingOfWelcomeMessage)
+            {
+                <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn bg-green">
+                    <i class="fa fa-smile-o"></i>
+                    @T("Admin.Customers.Customers.SendWelcomeMessage")
+                </button>
+                @Html.ActionConfirmation("send-welcome-message")
+            }
+            @if (Model.AllowReSendingOfActivationMessage)
+            {
+                <button type="submit" id="resend-activation-message" name="resend-activation-message" class="btn bg-green">
+                    <i class="fa fa-check-circle"></i>
+                    @T("Admin.Customers.Customers.ReSendActivationMessage")
+                </button>
+                @Html.ActionConfirmation("resend-activation-message")
+            }
+            <span id="customer-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("customer-delete")
+
+@*send email form*@
+<div id="sendemail-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendemail-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="sendemail-window-title">@T("Admin.Customers.Customers.SendEmail")</h4>
+            </div>
+            @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                @Html.NopLabelFor(model => model.SendEmail.Subject)
+                            </div>
+                            <div class="col-md-7">
+                                @Html.NopEditorFor(model => model.SendEmail.Subject)
+                                @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                @Html.NopLabelFor(model => model.SendEmail.Body)
+                            </div>
+                            <div class="col-md-7">
+                                @Html.NopTextAreaFor(model => model.SendEmail.Body)
+                                @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-5">
+                                @Html.NopLabelFor(model => model.SendEmail.SendImmediately)
+                            </div>
+                            <div class="col-md-7">
+                                @Html.NopEditorFor(model => model.SendEmail.SendImmediately)
+                                @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnl-send-date">
+                            <div class="col-md-5">
+                                @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate)
+                            </div>
+                            <div class="col-md-7">
+                                @Html.NopEditorFor(model => model.SendEmail.DontSendBeforeDate)
+                                @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.SendEmail")
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#sendemail-window').on('show.bs.modal', function (e) {
+        $("#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
+        sendImmediately();
+    });
+
+    function sendImmediately() {
+        if ($('#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
+            $('#pnl-send-date').hide();
+        else
+            $('#pnl-send-date').show();
+    }
+</script>
+
+@*send PM form*@
+<div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
+            </div>
+            @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SendPm.Subject)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopEditorFor(model => model.SendPm.Subject)
+                                @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.SendPm.Message)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopTextAreaFor(model => model.SendPm.Message)
+                                @Html.ValidationMessageFor(model => model.SendPm.Message)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.SendPM")
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

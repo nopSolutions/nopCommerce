@@ -1,0 +1,38 @@
+﻿@model PrivateMessageIndexModel
+@using Nop.Web.Models.PrivateMessages;
+@{    
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-private-messages");
+    Html.AppendPageCssClassParts("html-private-messages-page");
+}
+<div class="page private-messages private-messages-page">
+    <div class="page-title">
+        <h1>@T("PrivateMessages.PrivateMessages")</h1>
+    </div>
+    <div class="page-body">
+        @{
+            var selectSentTab = Model.SentItemsTabSelected ? ".tabs( 'option', 'active', 1 )" : "";
+        }
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#tabs").tabs()@Html.Raw(selectSentTab);
+            });
+        </script>
+        <div class="tabs inbox-tabs" id="tabs">
+            <ul class="tabs-header">
+                <li><a href="#tabs-1">@T("PrivateMessages.Inbox")</a></li>
+                <li><a href="#tabs-2">@T("PrivateMessages.SentItems")</a></li>
+            </ul>
+            <div id="tabs-1" class="tab-content">
+                @Html.Action("Inbox", new { page = Model.InboxPage, tab = "inbox" })
+            </div>
+            <div id="tabs-2" class="tab-content">
+                @Html.Action("SentItems", new { page = Model.SentItemsPage, tab = "sent" })
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿@model SubscriptionActivationModel
+@using Nop.Web.Models.Newsletter;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //page class
+    Html.AppendPageCssClassParts("html-newsletter-page");
+}
+<div class="page newsletter-page">
+    <div class="page-title">
+        <h1>@T("Newsletter.Title")</h1>
+    </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
+    </div>
+</div>

@@ -1,0 +1,191 @@
+﻿@model ProductAttributeConditionModel
+
+@using Nop.Core.Domain.Catalog
+
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
+        } catch (e) {
+        }
+        window.close();
+    </script>
+}
+
+    @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
+    @using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
+                        new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                        FormMethod.Post,
+                        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")
+            </h1>
+            <div class="pull-right">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="content">
+            @Html.ValidationSummary(false)
+            <div class="form-horizontal">
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#@Html.FieldIdFor(model => model.EnableCondition)").click(toggleEnableCondition);
+                        toggleEnableCondition();
+                    });
+
+                    function toggleEnableCondition() {
+                        if ($('#@Html.FieldIdFor(model => model.EnableCondition)').is(':checked')) {
+                            $('#pnlAttributes').show();
+                        } else {
+                            $('#pnlAttributes').hide();
+                        }
+                    }
+                </script>
+
+                <div class="panel-group">
+                    <div class="panel panel-default panel-popup">
+                        <div class="panel-body">
+                            <p>
+                                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Description")
+                            </p>
+
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    @Html.NopLabelFor(model => model.EnableCondition)
+                                </div>
+                                <div class="col-sm-9">
+                                    @Html.NopEditorFor(model => model.EnableCondition)
+                                    @Html.ValidationMessageFor(model => model.EnableCondition)
+                                </div>
+                            </div>
+
+                            <div id="pnlAttributes" style="margin-bottom: 10px;">
+                                @if (Model.ProductAttributes.Count > 0)
+                                {
+                                    var attributesList = new List<SelectListItem>();
+                                    foreach (var attribute in Model.ProductAttributes)
+                                    {
+                                        attributesList.Add(new SelectListItem { Text = attribute.Name, Value = attribute.Id.ToString() });
+                                    }
+                                    <div class="form-group" id="pnlBasepriceUnit">
+                                        <div class="col-sm-3">
+                                            @Html.NopLabelFor(model => model.SelectedProductAttributeId)
+                                        </div>
+                                        <div class="col-sm-9">
+                                            @Html.NopDropDownListFor(model => model.SelectedProductAttributeId, attributesList)
+
+                                            <script type="text/javascript">
+                                                $(document).ready(function() {
+                                                    $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
+
+                                                    toggleProductAttributes();
+                                                });
+
+                                                function toggleProductAttributes() {
+                                                    var selectedProductAttributeId = $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").val();
+                                                    $('[id^="pnl_attribute_values_"]').hide();
+                                                    $('#pnl_attribute_values_' + selectedProductAttributeId).show();
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            @foreach (var attribute in Model.ProductAttributes)
+                                            {
+                                                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                                                <div id="@string.Format("pnl_attribute_values_{0}", attribute.Id)">
+                                                    @switch (attribute.AttributeControlType)
+                                                    {
+                                                        case AttributeControlType.DropdownList:
+                                                            {
+                                                                <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                                                    @if (!attribute.IsRequired)
+                                                                    {
+                                                                        <option value="0">---</option>
+                                                                    }
+                                                                    @foreach (var attributeValue in attribute.Values)
+                                                                    {
+                                                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                                                            @attributeValue.Name
+                                                                        </option>
+                                                                    }
+                                                                </select>
+                                                            }
+                                                            break;
+                                                        case AttributeControlType.RadioList:
+                                                        case AttributeControlType.ColorSquares:
+                                                        case AttributeControlType.ImageSquares:
+                                                            {
+                                                                foreach (var attributeValue in attribute.Values)
+                                                                {
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            break;
+                                                        case AttributeControlType.Checkboxes:
+                                                            {
+                                                                foreach (var attributeValue in attribute.Values)
+                                                                {
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                            break;
+                                                        case AttributeControlType.ReadonlyCheckboxes:
+                                                        case AttributeControlType.TextBox:
+                                                        case AttributeControlType.MultilineTextbox:
+                                                        case AttributeControlType.Datepicker:
+                                                        case AttributeControlType.FileUpload:
+                                                        default:
+                                                            //not supported as conditions
+                                                            break;
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group" id="pnlBasepriceUnit">
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            No attribute exists that could be used as condition
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        @T("Admin.Common.Save")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

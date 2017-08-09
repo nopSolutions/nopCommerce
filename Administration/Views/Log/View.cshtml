@@ -1,0 +1,105 @@
+﻿@model LogModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Log.ViewLogDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Log");
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.System.Log.ViewLogDetails")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")</small>
+        </h1>
+        <div class="pull-right">
+            <span id="log-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    @Html.ValidationSummary(true)
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.LogLevel)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.LogLevel)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ShortMessage)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.ShortMessage)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.FullMessage)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.FullMessage)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.IpAddress)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.IpAddress)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.CustomerId)
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.CustomerId.HasValue)
+                                {
+                                    @Html.ActionLink(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.PageUrl)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.PageUrl)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.ReferrerUrl)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.ReferrerUrl)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                @Html.NopLabelFor(model => model.CreatedOn)
+                            </div>
+                            <div class="col-md-9">
+                                @Html.NopDisplayFor(model => model.CreatedOn)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@Html.DeleteConfirmation("log-delete")

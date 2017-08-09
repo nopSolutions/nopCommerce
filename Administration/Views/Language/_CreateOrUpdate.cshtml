@@ -1,0 +1,383 @@
+﻿@model LanguageModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('language-edit');
+    });
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="language-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Languages.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-resources", @T("Admin.Configuration.Languages.Resources"))
+            </ul>
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-resources", @TabResources())
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "language-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+@helper TabInfo()
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Name, required: true)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.LanguageCulture)
+                    </div>
+                    <div class="col-md-9">
+                        @{
+                            var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                                .OrderBy(x => x.EnglishName)
+                                .Select(x => new SelectListItem
+                                {
+                                    Value = x.IetfLanguageTag,
+                                    Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                                });
+                        }
+                        @Html.NopDropDownListFor(model => model.LanguageCulture, cultures)
+                        @Html.ValidationMessageFor(model => model.LanguageCulture)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.UniqueSeoCode)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.UniqueSeoCode, required: true)
+                        @Html.ValidationMessageFor(model => model.UniqueSeoCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.FlagImageFileName)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.FlagImageFileName, renderFormControlClass: false)
+                        @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                        <script>
+                            $(function() {
+                                $('#FlagImageFileName').kendoDropDownList({
+                                    dataTextField: "Text",
+                                    dataValueField: "Value",
+                                    valueTemplate: '<span class="image" style="background-image: url(\'@Url.Content("~/Content/Images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                    template: '<span class="image" style="background-image: url(\'@Url.Content("~/Content/Images/flags/#:data.Text#")\'); width: 16px; height: 11px;"></span><span>#:data.Value#</span>',
+                                    dataSource: {
+                                        transport: {
+                                            type: "json",
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("GetAvailableFlagFileNames", "Language"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        }
+                                    }
+                                }).data("kendoDropDownList");
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Rtl)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Rtl)
+                        @Html.ValidationMessageFor(model => model.Rtl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DefaultCurrencyId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopDropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
+                        @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.SelectedStoreIds)
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.SelectedStoreIds, new {SelectList = Model.AvailableStores})
+                                <script>
+                                    $(document).ready(function() {
+                                        var storesIdsInput = $('#@Html.FieldIdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.AvailableStores.Count == 0)
+                                        {
+                                            <text>
+                                    storesIdsInput.setOptions({
+                                        enable: false,
+                                        placeholder: 'No stores available'
+                                    });
+                                    storesIdsInput._placeholder();
+                                    storesIdsInput._enable();
+                                    </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-9">
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.Published)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.Published)
+                        @Html.ValidationMessageFor(model => model.Published)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabResources()
+{
+    <div class="panel-group">
+        <div class="panel panel-default panel-search">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.Search.SearchResourceName)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.Search.SearchResourceName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    @Html.NopLabelFor(model => model.Search.SearchResourceValue)
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.NopEditorFor(model => model.Search.SearchResourceValue)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-9 col-md-offset-4">
+                                    <button type="button" id="search-resources" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Id > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @{
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    }
+
+                    <div id="resources-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#resources-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            data: additionalData
+                                        },
+                                        create: {
+                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("ResourceUpdate", "Language"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ResourceDelete", "Language"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        parameterMap: function(data, operation) {
+                                            if (operation != "read") {
+                                                return data;
+                                            } else {
+                                                //for some reasons only such "Filter" data be parsed
+                                                return JSON.stringify(data);
+                                            }
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                Value: { editable: true, type: "string" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "Value",
+                                        title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
+                                        width: 300
+
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#search-resources').click(function() {
+                                var grid = $('#resources-grid').data('kendoGrid');
+                                grid.dataSource.page(1);
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchResourceName: $('#@Html.FieldIdFor(model => model.Search.SearchResourceName)').val(),
+                                SearchResourceValue: $('#@Html.FieldIdFor(model => model.Search.SearchResourceValue)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
+                            "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
+                            if (event.keyCode === 13) {
+                                $("#search-resources").click();
+                                return false;
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        }
+    </div>
+}

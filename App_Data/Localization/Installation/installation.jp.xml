@@ -1,0 +1,143 @@
+﻿<Language Name="日本語" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>管理者用Emailアドレス</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>管理者用Emailアドレスを入力してください</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>管理者用パスワード</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>管理者用パスワードを入力してください</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>このアカウント('{0}')にはフォルダ('{1}')に対する書き込み権限がありません。書込み権限を設定してください。</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>このアカウント('{0}')にはフォルダ('{1}')に対する書き込み権限がありません。書込み権限を設定してください。</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>パスワードの確認</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>パスワードの確認</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>接続文字列</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQLServer用の接続文字列が必要です</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>SQLServer用接続文字列の入力</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>SQLServer用接続文字列の書式が間違っています</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>データベースが存在しない場合、新たに作成</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>サンプルデータの作成</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>SQLServerの照合順序の指定</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>データベース({0})を生成中にエラーが発生しました</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>データベース</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>データベース情報</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>データベース名</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>データベース名は必須です</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>データベースが存在しないか、そのデータベースに対する接続権限がありません</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>データプロバイダの選択</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>nopCommerceの利用方法に関する情報については、</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.comサイトにおけるドキュメンテーション・セクションを参照</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>例</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>インストール</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerceをインストール中...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>パスワードが違います</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>接続文字列をそのまま入力(上級者向け)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[推奨]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>インストールの再開</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>インストールを再開する場合はクリック(キャッシュされた値はクリアされます)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>セットアップに失敗しました: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>SQLServerのアカウントを使用</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>組み込みデータストレージを使用(SQLServer Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQLServer名</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQLServer名は必須です</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQLServerのパスワード</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQLServerのパスワードは必須です</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQLServerのユーザ名</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQLServerのユーザ名は必須です</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>SQLServer (又はSQL Express)データベースを使用</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>ストア情報</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerceのインストール</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerceはASP.NETをベースとするリーディングeCommerceソリューションです。このウィザードにより、nopCommerceの設定を行っていってください。</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>このウィザードを完了するためには、データベースに関する情報(接続文字列)などを取得しておく必要があります。必要に応じて、ご契約先のISPに確認をしてください。ローカルのマシン又はサーバにインストールする場合には、システム管理者から情報を得る必要があるかもしれません。</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Windowsの統合認証を使用</Value>
+  </LocaleResource>
+</Language>

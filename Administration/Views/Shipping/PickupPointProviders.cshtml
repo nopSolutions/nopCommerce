@@ -1,0 +1,142 @@
+﻿@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.PickupPointProviders").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Pickup points");
+}
+
+@Html.AntiForgeryToken()
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Shipping.PickupPointProviders")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="pickup-point-providers-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#pickup-point-providers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("PickupPointProviders", "Shipping"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("PickupPointProviderUpdate", "Shipping"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "SystemName",
+                                            fields: {
+                                                FriendlyName: { editable: false, type: "string" },
+                                                SystemName: { editable: false, type: "string" },
+                                                LogoUrl: { editable: false, type: "string" },
+                                                DisplayOrder: { editable: true, type: "number" },
+                                                IsActive: { editable: true, type: "boolean" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @Html.Partial("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "FriendlyName",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName")",
+                                    width: 250
+                                }, {
+                                    field: "SystemName",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName")",
+                                    width: 250
+                                }, {
+                                    field: "LogoUrl",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo")",
+                                    width: 100,
+                                    template: '<img src="#=LogoUrl#" />',
+                                    attributes: { style: "text-align:center" }
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder")",
+                                    //integer format
+                                    format: "{0:0}",
+                                    width: 100
+                                }, {
+                                    field: "IsActive",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "SystemName",
+                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="ConfigurePickupPointProvider?systemName=#=SystemName#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>'
+                                }, {
+                                    command: {
+                                        name: "edit",
+                                        text: {
+                                            edit: "@T("Admin.Common.Edit")",
+                                            update: "@T("Admin.Common.Update")",
+                                            cancel: "@T("Admin.Common.Cancel")"
+                                        }
+                                    },
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
