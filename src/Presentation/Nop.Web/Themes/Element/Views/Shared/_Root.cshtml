@@ -1,0 +1,104 @@
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using Nop.Services.Orders;
+@using Nop.Services.Security;
+
+@{
+    Layout = "~/Views/Shared/_Root.Head.cshtml";
+
+    string controllerName = HttpContext.Current.Request.RequestContext.RouteData.GetRequiredString("controller");
+    bool isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase);
+
+    ISettingService settingService = EngineContext.Current.ContainerManager.Resolve<ISettingService>();
+    IStoreContext storeContext = EngineContext.Current.ContainerManager.Resolve<IStoreContext>();
+
+    int storeId = storeContext.CurrentStore.Id;
+
+    string layoutDesign = settingService.GetSettingByKey("elementthemesettings.layout", "earth-theme", storeId, true);
+    string layoutVariant = settingService.GetSettingByKey("elementthemesettings.variant", "variant-1", storeId, true);
+
+    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+    var wishlistEnabled = permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+    var shoppingCartEnabled = permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+
+    var customer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+    var shoppingCartItems = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == Nop.Core.Domain.Orders.ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id)
+                    .ToList()
+                    .GetTotalProducts();
+
+    ViewBag.LayoutDesign = layoutDesign;
+    ViewBag.LayoutVariant = layoutVariant;
+    ViewBag.IsHomePage = isHomePage;
+    ViewBag.WishlistEnabled = wishlistEnabled;
+    ViewBag.ShoppingCartEnabled = shoppingCartEnabled;
+    ViewBag.ShoppingCartItems = shoppingCartItems;
+}
+
+@Html.Widget("body_start_html_tag_after")
+@Html.Partial("_Notifications")
+@Html.Action("JavaScriptDisabledWarning", "Common")
+@Html.Partial("OldInternetExplorerWarning")
+
+<div class="master-wrapper-page">
+    @Html.Action("AdminHeaderLinks", "Common")
+    <div class="master-header-wrapper">
+        
+        @if (layoutDesign == "earth-theme")
+        {
+            if (layoutVariant == "variant-1")
+            {
+                @Html.Partial("_EarthVariant1")
+            }
+            else
+            {
+                @Html.Partial("_EarthVariant2")
+            }
+        }
+        else if (layoutDesign == "air-theme")
+        {
+            if (layoutVariant == "variant-1")
+            {
+                @Html.Partial("_AirVariant1")
+            }
+            else
+            {
+                @Html.Partial("_AirVariant2")
+            }
+        }
+    </div>
+    <script type="text/javascript">
+        (function () {
+            AjaxCart.init(false, '.shopping-cart-link .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+        })();
+    </script>
+    <div class="overlayOffCanvas"></div>
+    @if (isHomePage)
+    {
+        @Html.Widget("home_page_main_slider");
+    }
+    
+    @if (layoutDesign == "air-theme" && layoutVariant == "variant-2" && isHomePage)
+    {
+        <div class="search-box store-search-box static">
+            @Html.Action("SearchBox", "Catalog")
+        </div>
+    }
+
+    <div class="master-wrapper-content">
+        @Html.Widget("content_before")
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        <div class="master-column-wrapper">
+            @RenderBody()
+        </div>
+        @Html.Widget("content_after")
+    </div>
+    @Html.Action("Footer", "Common")
+</div>
+@Html.Action("EuCookieLaw", "Common")
+@Html.Widget("body_end_html_tag_before")

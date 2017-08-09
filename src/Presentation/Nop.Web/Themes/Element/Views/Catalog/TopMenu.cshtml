@@ -1,0 +1,82 @@
+﻿@using Nop.Web.Models.Catalog
+
+@model TopMenuModel
+
+@helper RenderCategoryLine(CategorySimpleModel category)
+{
+    <li>
+        @if (category.SubCategories.Count > 0)
+        {
+            <a class="with-subcategories" href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name</a>
+            <div class="plus-button"></div>
+            <div class="sublist-wrap">
+                <ul class="sublist">
+                    <li class="back-button">
+                        <span>@T("SevenSpikes.Themes.Common.BackSublist")</span>
+                    </li>
+                    @foreach (var subCategory in category.SubCategories)
+                    {
+                        @RenderCategoryLine(subCategory)
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            if (category.NumberOfProducts.HasValue)
+            {
+                <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name @T("Categories.TotalProducts", category.NumberOfProducts.Value)</a>
+            }
+            else
+            {
+                <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name</a>
+            }
+        }
+    </li>
+}
+
+<ul class="top-menu">
+    @Html.Widget("header_menu_before")
+    @if (Model.DisplayHomePageMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+    }
+    @{
+        var topMenuCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+    }
+    @foreach (var category in topMenuCategories)
+    {
+        @RenderCategoryLine(category)
+    }
+
+    @foreach (var topic in Model.Topics)
+    {
+        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+    }
+    @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+    }
+    @if (Model.DisplayProductSearchMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+    }
+    @if (Model.DisplayCustomerInfoMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+    }
+    @if (Model.BlogEnabled && Model.DisplayBlogMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+    }
+    @if (Model.ForumEnabled && Model.DisplayForumsMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+    }
+    @if (Model.DisplayContactUsMenuItem)
+    {
+        <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+    }
+
+    @Html.Widget("header_menu_after")
+</ul>
