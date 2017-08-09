@@ -1,0 +1,27 @@
+﻿<div class="header">
+    @Html.Widget("header")
+    <div class="header-logo">
+        @Html.Action("Logo", "Common")
+    </div>
+
+    @if (!(ViewBag.LayoutDesign == "air-theme" && ViewBag.LayoutVariant == "variant-2" && ViewBag.IsHomePage))
+    {
+        <div class="search-box store-search-box">
+            @Html.Action("SearchBox", "Catalog")
+            <span class="close">&nbsp;</span>
+        </div>
+    }
+
+    <div class="header-options">
+        <div class="header-selectors-wrapper">
+            @Html.Action("TaxTypeSelector", "Common")
+            @Html.Action("CurrencySelector", "Common")
+            @Html.Action("LanguageSelector", "Common")
+            @Html.Widget("header_selectors")
+        </div>
+        <div class="header-links-wrapper">
+            @Html.Action("HeaderLinks", "Common")
+        </div>
+    </div>
+    @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+</div>

@@ -1,0 +1,91 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using Nop.Web.Models.Common
+
+@model FooterModel
+
+@{
+    var storeId = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id;
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var removeCopyright = settingService.GetSettingByKey("elementthemesettings.removecopyright", false, storeId, true);
+    var removeDesignedBy = settingService.GetSettingByKey("elementthemesettings.removedesignedby", false, storeId, true);
+}
+
+<div class="footer-wrapper">
+    <div class="footer">
+        <div class="footer-upper">
+            @Html.Action("NewsletterBox", "Newsletter")
+        </div>
+        <div class="footer-middle">
+            <div class="center">
+                <div class="social-sharing">
+                    <div class="title">
+                        <strong>@T("Footer.SocialSharing")</strong>
+                    </div>
+                    @Html.Action("Social", "Common")
+                </div>
+                <div class="footer-block footer-block-left">
+                    <div class="title">
+                        <strong>@T("Footer.CustomerService")</strong>
+                    </div>
+                    <ul class="list">
+                        @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
+                        {
+                            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="footer-block footer-block-right">
+                    <div class="title">
+                        <strong>@T("Footer.MyAccount")</strong>
+                    </div>
+                    <ul class="list">
+                        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.CustomerInfo")</a></li>
+                        <li><a href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
+                        <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
+
+                        @if (Model.WishlistEnabled)
+                        {
+                            <li><a href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
+                        }
+                        @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                        {
+                            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-lower">
+            @if(!removeCopyright)
+            { 
+                <p class="footer-text footer-powered-by">
+                    Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info here http://www.nopcommerce.com/copyrightremoval.aspx*@
+                </p>
+            }
+            @if (!removeDesignedBy)
+            {
+                <p class="footer-text footer-designed-by">
+                    Designed by <a href="http://www.nop-templates.com/" target="_blank">Nop-Templates.com</a>
+                </p>
+            }
+            <p class="footer-text footer-disclaimer">
+                @T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)
+            </p>
+            @if (Model.DisplayTaxShippingInfoFooter)
+            {
+                var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                <p class="footer-text footer-tax-shipping">
+                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </p>
+            }
+
+            @Html.Action("StoreThemeSelector", "Common")
+        </div>
+        @Html.Widget("footer")
+    </div>
+</div>

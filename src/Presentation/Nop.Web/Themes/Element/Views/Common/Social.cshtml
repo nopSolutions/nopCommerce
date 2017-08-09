@@ -1,0 +1,48 @@
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+
+@model Nop.Web.Models.Common.SocialModel
+
+@{
+    var storeId = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Id;
+    var settingService = EngineContext.Current.Resolve<ISettingService>();
+    var instagramUrl = settingService.GetSettingByKey("elementthemesettings.instagramurl", String.Empty, storeId, true);
+    var pinterestUrl = settingService.GetSettingByKey("elementthemesettings.pinteresturl", String.Empty, storeId, true);
+    var vimeoUrl = settingService.GetSettingByKey("elementthemesettings.vimeourl", String.Empty, storeId, true);
+}
+
+<ul>
+    @if (!String.IsNullOrEmpty(Model.FacebookLink))
+    {
+        <li><a target="_blank" class="facebook" href="@Model.FacebookLink"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(Model.TwitterLink))
+    {
+        <li><a target="_blank" class="twitter" href="@Model.TwitterLink"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(pinterestUrl))
+    {
+        <li><a target="_blank" class="pinterest" href="@pinterestUrl"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(instagramUrl))
+    {
+        <li><a target="_blank" class="instagram" href="@instagramUrl"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(vimeoUrl))
+    {
+        <li><a target="_blank" class="vimeo" href="@vimeoUrl"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(Model.GooglePlusLink))
+    {
+        <li><a target="_blank" class="google" href="@Model.GooglePlusLink"></a></li>
+    }
+    @if (!String.IsNullOrEmpty(Model.YoutubeLink))
+    {
+        <li><a target="_blank" class="youtube" href="@Model.YoutubeLink"></a></li>
+    }
+    @if (Model.NewsEnabled)
+    {
+        <li><a target="_blank" class="rss" href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})"></a></li>
+    }
+</ul>
