@@ -60,9 +60,7 @@ namespace Nop.Data
         /// <returns>Entity</returns>
         public virtual T GetById(object id)
         {
-            //see some suggested performance optimization (not tested)
-            //http://stackoverflow.com/questions/11686225/dbset-find-method-ridiculously-slow-compared-to-singleordefault-on-id/11688189#comment34876113_11688189
-            return this.Entities.Find(id);
+            return Entities.SingleOrDefault(e => e.Id == (int)id);
         }
 
         /// <summary>
