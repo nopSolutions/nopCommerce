@@ -771,16 +771,12 @@ namespace Nop.Services.Catalog
                         query = query.Where(p => p.Published);
                     }
                 }
-                else if (overridePublished.Value)
+                else
                 {
-                    //published only
-                    query = query.Where(p => p.Published);
+                    bool op = overridePublished.Value;
+                    query = query.Where(p => p.Published == op);
                 }
-                else if (!overridePublished.Value)
-                {
-                    //unpublished only
-                    query = query.Where(p => !p.Published);
-                }
+
                 if (visibleIndividuallyOnly)
                 {
                     query = query.Where(p => p.VisibleIndividually);

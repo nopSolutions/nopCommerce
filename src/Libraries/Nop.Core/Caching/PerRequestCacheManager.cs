@@ -34,10 +34,7 @@ namespace Nop.Core.Caching
         /// </summary>
         protected virtual IDictionary<object, object> GetItems()
         {
-            if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext != null)
-                return _httpContextAccessor.HttpContext.Items;
-
-            return null;
+            return _httpContextAccessor.HttpContext?.Items;
         }
 
         #endregion

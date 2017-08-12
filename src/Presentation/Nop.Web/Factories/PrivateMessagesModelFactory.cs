@@ -212,6 +212,12 @@ namespace Nop.Web.Factories
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
+            if (pm.FromCustomer == null)
+                throw new ArgumentNullException(nameof(pm.FromCustomer));
+
+            if (pm.ToCustomer == null)
+                throw new ArgumentNullException(nameof(pm.ToCustomer));
+
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,

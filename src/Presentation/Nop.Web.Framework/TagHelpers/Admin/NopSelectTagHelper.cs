@@ -97,7 +97,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     !attribute.Name.Equals(NameAttributeName) &&
                     !attribute.Name.Equals(ItemsAttributeName) &&
                     !attribute.Name.Equals(DisabledAttributeName) &&
-                    !attribute.Name.Equals(ForAttributeName))
+                    !attribute.Name.Equals(RequiredAttributeName))
                 {
                     htmlAttributes.Add(attribute.Name, attribute.Value);
                 }
