@@ -65,9 +65,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml");
         }
 

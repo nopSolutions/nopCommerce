@@ -74,12 +74,8 @@ namespace Nop.Core.Plugins
         /// <param name="config">Config</param>
         public static void Initialize(ApplicationPartManager applicationPartManager, NopConfig config)
         {
-            if (applicationPartManager == null)
-                throw new ArgumentNullException(nameof(applicationPartManager));
-
-            if (applicationPartManager == null)
+            if (config == null)
                 throw new ArgumentNullException(nameof(config));
-
 
             using (new WriteLockDisposable(Locker))
             {

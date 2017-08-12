@@ -419,7 +419,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     .LimitPerStore(processPaymentRequest.StoreId).ToList();
 
                 //items
-                var items = GetItems(shoppingCart, customer, processPaymentRequest.StoreId, currency.CurrencyCode);
+                var items = GetItems(shoppingCart, customer, processPaymentRequest.StoreId, currency?.CurrencyCode);
 
                 //amount details
                 var amountDetails = GetAmountDetails(processPaymentRequest, shoppingCart, items);
@@ -493,7 +493,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                             {
                                 details = amountDetails,
                                 total = processPaymentRequest.OrderTotal.ToString("N", new CultureInfo("en-US")),
-                                currency = currency != null ? currency.CurrencyCode : null
+                                currency = currency?.CurrencyCode
                             },
 
                             #endregion

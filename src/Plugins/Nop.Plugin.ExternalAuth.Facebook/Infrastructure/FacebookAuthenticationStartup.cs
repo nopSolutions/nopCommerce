@@ -26,7 +26,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
-            if (string.IsNullOrEmpty(settings?.ClientKeyIdentifier) || string.IsNullOrEmpty(settings?.ClientSecret))
+            if (string.IsNullOrEmpty(settings?.ClientKeyIdentifier) || string.IsNullOrEmpty(settings.ClientSecret))
                 return;
 
             //add Facebook middleware
