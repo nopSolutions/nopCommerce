@@ -1,0 +1,96 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+.previous-product,
+.next-product {
+    overflow: hidden;
+    margin: 30px 0;
+}
+.previous-product {
+	float: left;
+	width: 49%;
+	margin-bottom: 10px;
+}
+.next-product {
+	float: right;
+	width: 49%;
+	margin-bottom: 10px;
+}
+.previous-product a,
+.next-product a{
+    display: block;
+	border: 3px solid #ddd;
+    height: 50px;
+    width: 50px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 0;
+}
+.previous-product a {
+    float: right;
+	background: url('images/prev.png') center top 18px no-repeat;
+	text-align: left;
+}
+.next-product a {
+    float: left;
+	background: url('images/next.png') center top 18px no-repeat;
+	text-align: right;
+}
+.previous-product-label,
+.next-product-label {
+	/*display: inline-block;
+	white-space: nowrap;*/
+	display: none;
+}
+
+@media all and (min-width: 1000px) {
+
+    .previous-product a,
+    .next-product a {
+        width: 480px;
+        height: 43px;
+        text-indent: 0;
+        font-size: 14px;
+        line-height: 1em;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #444;
+        -webkit-transition: all .10s ease-in-out;
+        -moz-transition: all .10s ease-in-out;
+        transition: all .10s ease-in-out;
+    }
+    .previous-product a {
+	    background-position: left 20px top 14px;
+        padding: 12px 12px 12px 40px;
+    }
+    .previous-product a:hover {
+        background-position: left 20px top -21px;
+    }
+    .next-product a {
+        background-position: right 20px top 14px;
+        padding: 12px 40px 12px 12px;
+    }
+    .next-product a:hover{
+        background-position: right 20px top -21px;
+    }
+    .previous-product a:hover,
+    .next-product a:hover {
+        color: #fff;
+        border-color: #75bfa1;
+        background-color: #75bfa1;
+    }
+
+}
+
+@media all and (min-width: 1250px) {
+
+    .previous-product a,
+    .next-product a {
+        width: 565px;
+    }
+
+}

@@ -1,0 +1,80 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+@media all and (min-width: 240px) {
+
+.overview .product-name{
+    overflow: hidden;
+}
+
+.previous-product,
+.next-product {
+	overflow: hidden;
+    width: 49%;
+    display: inline-block;
+    margin: 15px 0;
+}
+.previous-product a,
+.next-product a{
+    display: block;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    text-shadow: 1px 1px #fff;
+    white-space: nowrap;
+    border: 1px solid #aaa;
+    box-shadow: inset 0 1px #fff;
+}
+.previous-product a{
+    background:  url(img/prev.png) no-repeat left 10px center, linear-gradient(to bottom, #eeeeee 0%, #dddddd 100%);
+    padding-left: 40px;
+}
+    .previous-product a:hover{
+        background:  url(img/prev.png) no-repeat left 10px center, linear-gradient(to bottom, #dddddd 0%, #eeeeee 100%);
+    }
+.next-product a {
+    background:  url(img/next.png) no-repeat right 10px center, linear-gradient(to bottom, #eeeeee 0%, #dddddd 100%);
+    padding-right: 40px;
+}
+    .next-product a:hover {
+        background:  url(img/next.png) no-repeat right 10px center, linear-gradient(to bottom,  #dddddd 0%, #eeeeee 100%);
+    }
+
+.previous-product a .previous-product-label, 
+.next-product a .next-product-label {
+    display: none;
+}
+
+}
+
+@media all and (min-width: 240px) and (max-width: 980px) {
+
+    .previous-product a > span,
+    .next-product a > span{
+        display: none;
+    }
+
+    .previous-product a,
+    .next-product a{
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        background-position: center;
+    }
+    .previous-product a:hover,
+    .next-product a:hover{
+        background-position: center;
+    }
+
+    .previous-product a {
+        float: right;
+    }
+    .next-product a {
+        float: left;
+    }
+
+}

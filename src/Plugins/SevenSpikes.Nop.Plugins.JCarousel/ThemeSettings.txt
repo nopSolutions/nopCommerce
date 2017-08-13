@@ -1,0 +1,653 @@
+Alfresco:
+
+responsive: [
+                                {
+                                    breakpoint: 740,
+                                    settings: {
+                                        slidesToShow: 3
+                                        }
+                                },
+                                {
+                                    breakpoint: 648,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 480,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+------------------------------------------------------------------------
+
+Alicante:
+
+                responsive: [
+                                {
+                                    breakpoint: 710,
+                                    settings: {
+                                        slidesToShow: 3
+                                        }
+                                },
+                                {
+                                    breakpoint: 648,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 439,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Allure:
+
+				responsive: [
+								{
+									breakpoint: 755,
+									settings: {
+										slidesToShow: 3
+										}
+								},
+								{
+									breakpoint: 648,
+									settings: {
+										slidesToShow: 2
+									}
+								},
+								{
+									breakpoint: 440,
+									settings: {
+										slidesToShow: 1
+									}
+								}
+				]
+
+
+--------------------------------------------------------------------------
+
+ArtFactory:
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 745,
+                                    settings: {
+                                        slidesToShow: 3
+                                        }
+                                },
+                                {
+                                    breakpoint: 648,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 440,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+---------------------------------------------------------------------------
+
+Beauty:
+
+				responsive: [
+                                {
+                                    breakpoint: 700,
+                                    settings: {
+                                        slidesToShow: 3
+                                        }
+                                },
+                                {
+                                    breakpoint: 542,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 364,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+----------------------------------------------------------------------------
+
+Brooklyn:
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 936,
+                                    settings: {
+                                        slidesToShow: 3
+                                        }
+                                },
+                                {
+                                    breakpoint: 713,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 416,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+		include: 
+			centerMode: true,
+			centerPadding: '0px',
+
+		for center-mode to work:
+			infinite: true,
+		always
+
+--------------------------------------------------------------------------
+
+Electronics:
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 437,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 214,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Fashion:
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 740,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 593,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 335,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+
+Jewelry:
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 660,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 505,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 325,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+-------------------------------------------------------------------------
+
+
+Lavella:
+
+			responsive: [
+                                {
+                                    breakpoint: 730,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 550,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 436,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+-------------------------------------------------------------------------
+
+
+Lighthouse: 
+
+			responsive: [
+                                {
+                                    breakpoint: 715,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 550,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 420,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+
+Minimal: 
+
+			responsive: [
+                                {
+                                    breakpoint: 1561,
+                                    settings: {
+                                        slidesToShow: 5
+                                    }
+                                },
+                                {
+                                    breakpoint: 1001,
+                                    settings: {
+                                        slidesToShow: 4
+                                    }
+                                },
+                                {
+                                    breakpoint: 769,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 661,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 481,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+				
+
+		Categories:
+
+				responsive: [
+                                {
+                                    breakpoint: 1000,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+Motion: 
+
+		responsive: [
+						{
+							breakpoint: 730,
+							settings: {
+								slidesToShow: 3
+							}
+						},
+						{
+							breakpoint: 600,
+							settings: {
+								slidesToShow: 2
+							}
+						},
+						{
+							breakpoint: 440,
+							settings: {
+								slidesToShow: 1
+							}
+						}
+		]
+
+
+--------------------------------------------------------------------------
+
+
+
+Native:
+
+                responsive: [
+                                {
+                                    breakpoint: 675,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 416,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+Neo Fashion
+
+			responsive: [
+                                {
+                                    breakpoint: 730,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 599,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 418,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+Nitro
+
+			arrowsContainer = $("#@carouselHtmlElementId .slick-carousel");
+
+			responsive: [
+                                {
+                                    breakpoint: 627,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 440,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+
+Pavilion:
+
+			responsive: [
+                                {
+                                    breakpoint: 890,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 711,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 425,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+
+Playground:
+
+                responsive: [
+                                {
+                                    breakpoint: 705,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 436,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Poppy:
+
+				responsive: [
+                                {
+                                    breakpoint: 789,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 403,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+ShopAll:
+
+                responsive: [
+                                {
+                                    breakpoint: 431,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Smart:
+                responsive: [
+                                {
+                                    breakpoint: 634,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 361,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+
+Tiffany:
+
+                responsive: [
+                                {
+                                    breakpoint: 745,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 520,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 439,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Traction 
+
+			responsive: [
+                                {
+                                    breakpoint: 700,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 699,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 463,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+
+--------------------------------------------------------------------------
+
+Uptown: 
+				responsive: [
+                                {
+                                    breakpoint: 1200,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 675,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 417,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]
+
+
+--------------------------------------------------------------------------
+
+Urban:
+				 responsive: [
+                                {
+                                    breakpoint: 869,
+                                    settings: {
+                                        slidesToShow: 3
+                                    }
+                                },
+                                {
+                                    breakpoint: 616,
+                                    settings: {
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 443,
+                                    settings: {
+                                        slidesToShow: 1
+                                    }
+                                }
+                ]

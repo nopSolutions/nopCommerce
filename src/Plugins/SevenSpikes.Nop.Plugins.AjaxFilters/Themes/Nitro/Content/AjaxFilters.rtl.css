@@ -1,0 +1,156 @@
+﻿
+.clearFilterOptionsAll {
+	float: left;
+}
+
+.filtersGroupPanel li.checkbox-item label {
+	padding: 9px 42px 9px 10px;
+	text-align: right;
+}
+.filtersGroupPanel li.checkbox-item label:before {
+	right: 15px;
+	left: auto;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+    padding: 9px 3px 9px 20px;
+    margin: 0 0 0 6px;
+    background-position: top 13.5px left 4px;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color {
+	left: 15px;
+	right: auto;
+}
+.colorOptions .defaultColor{
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(50%, #ffffff), color-stop(50%, #000000), color-stop(100%, #000000));
+}
+
+/* DROPDOWN MODE */
+
+.filtersDropDownPanel .select-wrap select {
+	left: auto;
+	right: 0;
+}
+.filtersDropDownPanel .select-wrap .select-box {
+	padding: 7px 12px 7px 32px;
+	text-align: right;
+}
+.filtersDropDownPanel .select-wrap .select-box:after {
+	right: auto;
+	left: 0;
+}
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy{
+	right: 0;
+	left: auto;
+}
+.ajaxFilters .k-window-actions{
+	left: 10px;
+	right: auto;
+}
+
+
+@media all and (max-width: 980px) {
+
+	.nopAjaxFilters7Spikes .close-filters span{
+		text-align: left;
+	}
+        .nopAjaxFilters7Spikes .close-filters span:before {
+            left: auto;
+            right: 10px;
+        }
+	.nopAjaxFilters7Spikes {
+		right: 0;
+		left: auto;
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes {
+		-webkit-transform: translate(320px);
+		-ms-transform: translate(320px);
+		transform: translate(320px);
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes.open {
+		-webkit-transform: translate(0);
+		-ms-transform: translate(0);
+		transform: translate(0);
+	}
+	.android23 .nopAjaxFilters7Spikes {
+		right: -320px;
+	}
+	.android23 .nopAjaxFilters7Spikes.open {
+		right: 0;
+	}
+	.filter-block a.toggleControl{
+		padding: 12px 15px 12px 42px;
+		text-align: right;
+		background-position: 20px center;
+	}
+	.filter-block a.clearFilterOptions,
+			.filter-block a.clearPriceRangeFilter{
+		left: 7px;
+		right: auto;
+	}
+
+}
+
+
+
+/*=====================================================
+    
+    DESKTOP
+
+=====================================================*/
+
+@media all and (min-width: 981px) {
+
+    .filter-block .title:before{
+	    right: 50%;
+	    left: auto;
+	    margin-right: -27px;
+	    margin-left: 0;
+    }
+    .filter-block a.clearFilterOptions, 
+    .filter-block a.clearPriceRangeFilter{
+	    left: 10px;
+	    right: auto;
+    }
+    .jDropDown > div{
+	    padding: 4px 7px 4px 26px;
+    }
+    /* dropdowns mode */
+
+    .filtersDropDown.jDropDown a{
+	    padding: 4px 7px 4px 26px !important;
+    }
+    .selected-options-list > li span {
+        padding: 5px 3px 5px 20px;
+        background-position: top 9.5px left 4px;
+    }
+
+
+}

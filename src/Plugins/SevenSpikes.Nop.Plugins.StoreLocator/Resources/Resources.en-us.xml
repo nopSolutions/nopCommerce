@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.StoreLocator.Admin.Menu.MenuName">
+    <Value>Store Locator</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.Storelocator.Admin.Settings.Common">
+    <Value>Nop Store Locator Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.storelocator.admin.submenus.settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.storelocator.admin.submenus.manageshops">
+    <Value>Manage Shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Enabled.Hint">
+    <Value>If checked the Store Locator plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.HeaderMenuIntegration">
+    <Value>Header Menu Integration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.HeaderMenuIntegration.Hint">
+    <Value>Choose where to show the Store Locator in the main menu. This will provide menu with all available shops. Choose "None" if you do not want to show the Store Locator in the menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.HomePageIntegration">
+    <Value>Home Page Integration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.HomePageIntegration.Hint">
+    <Value>Choose where to show the Store Locator map on the Home page. It will include only the shops that have checked the "Show On Home Page" setting. Choose "None" if you do not want to show the Store Locator on this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ContactUsPageIntegration">
+    <Value>Contact Us Page Integration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ContactUsPageIntegration.Hint">
+    <Value>Choose where to show the Store Locator map on the Contact Us page. Choose "None" if you do not want to show the Store Locator on this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.UnitsSystem">
+    <Value>Units System</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.UnitsSystem.Hint">
+    <Value>Set the default measure units system (kilometers or miles).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.DefaultDistanceRadius">
+    <Value>Default Distance Radius</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.DefaultDistanceRadius.Hint">
+    <Value>Set the default distance radius that will be pre-filled in the search input.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.GoogleApiKey">
+    <Value>Google API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.GoogleApiKey.Hint">
+    <Value>
+      You can read more about this key in our documentation.
+      https://www.nop-templates.com/store-locator-plugin-for-nopcommerce-documentation#settings
+    </Value>
+  </LocaleResource> 
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ManuallySetMapBounds">
+    <Value>Manually Set Map Bounds (initial map position)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ManuallySetMapBounds.Hint">
+    <Value>Choose to manually set the map bounds. If checked you will be able to enter the Latitude and Longitude of the center of the map and the exact Zoom level.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Latitude.Hint">
+    <Value>This is the latitude of the center of the map</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Longitude.Hint">
+    <Value>This is the longitude of the center of the map</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.MapZoomLevel">
+    <Value>Map Zoom Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.MapZoomLevel.Hint">
+    <Value>The zoom level for the map. It will be exactly as specified only if Manually Set Map Bounds is checked otherwise the map will automatically extend the bounds to fit all markers and the zoom level might be overridden.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.DefaultShopImageId">
+    <Value>Default Shop Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.DefaultShopImageId.Hint">
+    <Value>Set the default shop image to be shown when the shop does not have images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.AllShopsPageImageSize">
+    <Value>All Shops Page Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.AllShopsPageImageSize.Hint">
+    <Value>Set the shops image size for the All Shop page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ShopDetailsPageImageSize">
+    <Value>Shop Details Page Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.ShopDetailsPageImageSize.Hint">
+    <Value>Set the shops image size for the Shop Details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.CustomMapStyles">
+    <Value>Custom Map Styles [JSON Format]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.CustomMapStyles.Hint">
+    <Value>Insert custom styles for the Google Maps in JSON format.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.Common.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Stores.ShopName">
+    <Value>Shop Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Stores.ShopCoordinates">
+    <Value>Coordinates</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Stores.ShopIsVisible">
+    <Value>Is Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Stores.ShopIsPickupPoint">
+    <Value>Is Pickup Point</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.AddNew">
+    <Value>Add New</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.BackToList">
+    <Value>Back to shops list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.StoreLocator.Fields.ShopName.IsRequired">
+    <Value>The shop must have a name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Fields.Picture.IsRequired">
+    <Value>You must choose a picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.IsVisible">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.IsVisible.Hint">
+    <Value>If checked the shop will be visible in the public site.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Name.Hint">
+    <Value>This is the name of your shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Latitude.Hint">
+    <Value>This is the latitude of your shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Longitude.Hint">
+    <Value>This is the longitude of your shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.ShortDescription">
+    <Value>Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.ShortDescription.Hint">
+    <Value>The short description is shown on the all shops page and also in the marker on the map.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.FullDescription">
+    <Value>Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.FullDescription.Hint">
+    <Value>The full description is shown on the shop page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.ShowOnHomeContactUsPage">
+    <Value>Show On Home / Contact Us Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.ShowOnHomeContactUsPage.Hint">
+    <Value>Check the setting to show the store on the home page / contact us map.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Tags">
+    <Value>Shop Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Tags.Hint">
+    <Value>Shop tags are keywords that this shop can also be identified by. Enter a comma separated list of the tags to be associated with this shop.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.DisplayOrder.Hint">
+    <Value>This determines the order in which your shops are shown</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.SeName.Hint">
+    <Value>Search Engine Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaTitle">
+    <Value>Meta Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaTitle.Hint">
+    <Value>Set the Meta Title for this shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaDescription">
+    <Value>Meta Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaDescription.Hint">
+    <Value>Set the Meta Description for this shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaKeywords">
+    <Value>Meta Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MetaKeywords.Hint">
+    <Value>Set the Meta Keywords for this shop separated by commas</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Seo.PutStoreOnMap">
+    <Value>Search by address or click on the map to place the marker exactly where you want it or manually enter coordinates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.Plugins.Storelocator.Admin.Shopimage.Addnew">
+    <Value>Add New</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Picture.Hint">
+    <Value>Shop picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Visible">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Visible.Hint">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.DisplayOrder.Hint">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Alt">
+    <Value>Alt</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopImage.Alt.Hint">
+    <Value>Alt</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.UseAsPickupPoint">
+    <Value>Use as pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.UseAsPickupPoint.Hint">
+    <Value>Use as pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.PickupFee">
+    <Value>Pickup fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.PickupFee.Hint">
+    <Value>Pickup fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.OpeningHours">
+    <Value>Opening hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.ShopPickupPoint.OpeningHours.Hint">
+    <Value>Opening hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.MapLocation">
+    <Value>Map Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.PickupPoint">
+    <Value>Pickup Point</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Pictures">
+    <Value>Pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.TabTitle.Seo">
+    <Value>Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Settings.Title">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.MapLocation.Title">
+    <Value>Map Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.ShopSeo.Title">
+    <Value>Shop Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.SaveBeforeEdit">
+    <Value>You need to save the Shop first.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Stores.SaveBeforeEdit">
+    <Value>You need to save the Shop, before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Created">
+    <Value>Shop created successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Updated">
+    <Value>Shop updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Shop.Deleted">
+    <Value>Shop deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Admin.Settings.WidgetZones.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.Title">
+    <Value>Our shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AnywhereMap.Title">
+    <Value>Our shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.YouAreHere">
+    <Value>You are here</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.Accuracy">
+    <Value>Accuracy</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.GeoLocationNotSupported">
+    <Value>Geolocation is not supported by your browser.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AllShops.PageTitle">
+    <Value>All our shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AllShops.LinkTitle">
+    <Value>All Shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AllShops.PageMetaDescription">
+    <Value>All shops that offer our products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AllShops.PageMetaKeywords">
+    <Value>shop, commerce, online, locator</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.ReadMore">
+    <Value>Read More</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.BackToAllShops">
+    <Value>Back to all shops</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.NoShops">
+    <Value>We don't have any shops yet.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.NoShopsAfterFiltering">
+    <Value>There are no shops that match this search criteria.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SearchByTag">
+    <Value>Search By Tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.ShowDirections">
+    <Value>Show Directions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.ShowOnMap">
+    <Value>Show On The Map</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.UseMyLocation">
+    <Value>Use My Current Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.UseMyLocation.Hint">
+    <Value>(maybe you will be asked for confirmation by the browser)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.ShowMyLocation">
+    <Value>Show My Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SearchMyLocation">
+    <Value>Search my location</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.AlignMap">
+    <Value>Align Map</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.TagsTitle">
+    <Value>Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.BackToResults">
+    <Value>&#171; Back To Results</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.Sortby">
+    <Value>Sort by</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SortMethod.Distance">
+    <Value>Distance</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SortMethod.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SortMethod.DefaultOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SortMethod.SearchForShopInRadius">
+    <Value>Search for shops in radius of</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.Units.Kilometers">
+    <Value>km.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.Units.Miles">
+    <Value>mi.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.SortMethod.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.ClearFilters">
+    <Value>Clear Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.StoreLocator.Public.MenuBackButton">
+    <Value>back</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.StoreLocator.Domain.Enums.UnitsSystems.Metric">
+    <Value>Metric (kilometers)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.StoreLocator.Domain.Enums.UnitsSystems.Imperial">
+    <Value>Imperial (miles)</Value>
+  </LocaleResource>
+</Language>

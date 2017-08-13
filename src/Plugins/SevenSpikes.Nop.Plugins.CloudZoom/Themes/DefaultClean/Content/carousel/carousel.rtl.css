@@ -1,0 +1,17 @@
+/*
+* Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.picture-thumbs .slick-prev {
+    right: 0;
+    left: auto;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMBAMAAABcu7ojAAAALVBMVEUAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaTgChpAAAAD3RSTlMA6+QxJN6reW9mW1E8SkmTKKYaAAAAKUlEQVQI12PIZQCCgxuABLMUiGk0AUiwaICYrgVgAsQFS4CUwBTnATEA244HPpGnGTQAAAAASUVORK5CYII=') 
+                    right center no-repeat, #fff;
+}
+.picture-thumbs .slick-next {
+    left: 0;
+    right: auto;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMBAMAAABcu7ojAAAALVBMVEUAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaTgChpAAAAD3RSTlMA6+QxJN6reW9mW1E8SkmTKKYaAAAALElEQVQI12NgYOBLABIbDzAwcAkDGZMMGBg4VICMUgcIAeZCJMBKoIoZeBMA15MHPhiEPR8AAAAASUVORK5CYII=') 
+                    left center no-repeat, #fff;
+}

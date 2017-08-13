@@ -1,0 +1,114 @@
+.blog-search-box span.search-box-text {
+	float: right;
+}
+.blog-search-box input.search-box-text {
+	float: right;
+}
+.blog-search-box .instant-search-busy {
+    background: #fff url('images/ajax-loader-small.gif') left center no-repeat !important;
+}
+.blog-search-box .search-box-button {
+	float: right;
+}
+.post-relations label {
+    margin: 0 0 0 10px;
+}
+.post-relations li.separator {
+    margin: 0 0 0 5px;
+}
+/*.share-post .twitter a {
+	background-position: 32px 0;
+}
+.share-post .pinterest a {
+	background-position: 64px 0;
+}
+.share-post .linkedin a {
+	background-position: 96px 0;
+}
+.share-post .google a {
+	background-position: 128px 0;
+}*/
+.post-navigation .prev {
+	float: right;
+}
+.post-navigation .next {
+	float: left;
+}
+.post-navigation .prev:before {
+	right: 0;
+    left: auto;
+	border-width: 0 0 0 1px;
+}
+.post-navigation .next:before {
+	right: auto;
+    left: 0;
+	border-width: 0 1px 0 0;
+}
+.post-navigation .next::before {
+    background: rgba(0, 0, 0, 0) url("images/prev.png") no-repeat scroll center center;
+}
+.post-navigation .prev::before {
+    background: rgba(0, 0, 0, 0) url("images/next.png") no-repeat scroll center center;
+}
+
+@media all and (min-width: 769px) {
+
+.blog-page .post-title {
+	float: right;
+}
+.blog-page .post-date {
+	float: left;
+}
+.blog-page .buttons .read-comments {
+    float: right;
+}
+.post-relations {
+	float: right;
+}
+.post-actions {
+    float: left;
+}
+.blog-page .post-actions .read-more {
+	float: right;
+}
+.blog-page .post-actions .share-post {
+	float: left;
+}
+.post-navigation .prev {
+	padding: 8px 40px 8px 12px;
+	text-align: right;
+}
+.post-navigation .next {
+	padding: 8px 12px 8px 40px;
+	text-align: left;
+}
+.rich-blog-homepage .blog-post {
+    float: right;
+}
+.rich-blog-homepage .blog-post:first-child, 
+.rich-blog-homepage .blog-post:nth-child(2n-1) {
+    margin-left: 0.1%;
+    margin-right: auto;
+}
+.comment-info + .comment-content {
+    margin: 0 205px 0 0;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.rich-blog-homepage .blog-post:nth-child(3n+1) {
+	margin-left: auto;
+    margin-right: 0;
+}
+.rich-blog-homepage .post-description {
+	text-align: right;
+}
+.blog-search-box input.search-box-text {
+	margin: 0 0 0 -1px;
+}
+	
+}
+
+

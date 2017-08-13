@@ -1,0 +1,51 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model SevenSpikes.Nop.Plugins.NopQuickTabs.Models.TabSettingsModel
+
+@{
+    Layout = "";
+}
+
+<style>
+    @if (Model.EnableProductFullDescriptionTab)
+    {
+    <text>
+    .product-details-page .full-description {
+        display: none;
+    }
+    .product-details-page .ui-tabs .full-description {
+        display: block;
+    }
+    .product-details-page .tabhead-full-description {
+        display: none;
+    }
+    </text>
+    }
+
+    @if (Model.EnableProductSpecificationsTab)
+    {
+    <text>
+    .product-details-page .product-specs-box {
+        display: none;
+    }
+    .product-details-page .ui-tabs .product-specs-box {
+        display: block;
+    }
+    .product-details-page .ui-tabs .product-specs-box .title {
+        display: none;
+    }
+    </text>
+    }
+
+    @if (Model.EnableProductReviewsTab)
+    {
+    <text>
+    .product-details-page .product-no-reviews,
+    .product-details-page .product-review-links {
+        display: none;
+    }
+    </text>
+    }
+</style>

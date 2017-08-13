@@ -1,0 +1,8 @@
+﻿Group: 7Spikes
+FriendlyName: Nop Instant Search
+SystemName: SevenSpikes.Nop.Plugins.InstantSearch
+Version: 3.90
+SupportedVersions: 3.90
+Author: Seven Spikes
+DisplayOrder: 1
+FileName: SevenSpikes.Nop.Plugins.InstantSearch.dll

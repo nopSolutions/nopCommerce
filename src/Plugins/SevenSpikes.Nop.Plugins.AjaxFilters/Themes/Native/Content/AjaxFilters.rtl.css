@@ -1,0 +1,172 @@
+﻿
+.clearFilterOptionsAll {
+	float: left;
+}
+
+.filter-block .title {
+	margin: 0 0 0 60px;
+}
+.filter-block a.toggleControl {
+	padding: 15px 8px 15px 10px;
+	text-align: right;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 5px;
+	right: auto;
+}
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	float: right;
+    padding: 10px 0 10px 17px;
+    margin: 0 0 0 10px;
+    background: url('images/clear.png') top 12px left 1px no-repeat;
+}
+
+.priceRangeMinPanel {
+	float: right;
+}
+.priceRangeMaxPanel {
+	float: left;
+}
+
+.ui-slider-handle {
+    margin-right: -3px;
+	margin-left: 0;
+}
+
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: left;
+}
+
+.filtersGroupPanel li > label {
+	padding: 12px 38px 12px 10px;
+	text-align: right;
+}
+.filtersGroupPanel.imageOptions li > label {
+    padding: 12px 43px 12px 10px;
+}
+.filtersGroupPanel li label:before {
+	right: 2px;
+    left: auto;
+}
+
+.filtersGroupPanel .select-wrap {
+    text-align: right;
+}
+.filtersGroupPanel li .color {
+    right: 2px;
+    left:auto;
+}
+.filtersGroupPanel .select-inner {
+    background-position: 15px center;
+}
+.filtersGroupPanel li .defaultColor {
+    right: 2px;
+    left: auto;
+}
+
+.productPanelAjaxBusy {
+	right: 0;
+	left: auto;
+}
+
+.k-overlay {
+    right: 0;
+    left: auto;
+}
+.ajaxFilters .k-window-titlebar {
+    padding: 10px 0 10px 40px;
+}
+.ajaxFilters .k-window-actions {
+	left: -1px;
+    right: auto;
+}
+
+@media all and (max-width: 1000px) {
+
+    .nopAjaxFilters7Spikes {
+        right: 0;
+        left: auto;
+    }
+
+    .android23 .nopAjaxFilters7Spikes {
+        right: -320px;
+    }
+
+    .nopAjaxFilters7Spikes.open {
+        box-shadow: -1px 0 5px rgba(0,0,0,0.5);
+    }
+
+    .notAndroid23 .nopAjaxFilters7Spikes{
+	    -webkit-transform: translate(320px);
+	    -ms-transform: translate(320px);
+	    transform: translate(320px);
+    }
+    .android23 .nopAjaxFilters7Spikes{
+	    left: -320px;
+    }
+
+    .notAndroid23 .nopAjaxFilters7Spikes.open{
+	    -webkit-transform: translate(0);
+	    -ms-transform: translate(0);
+	    transform: translate(0);
+    }
+    .android23 .nopAjaxFilters7Spikes.open{
+	    left: 0;
+    }
+
+    .android23 .nopAjaxFilters7Spikes.open {
+        right: 0;
+    }
+
+    .nopAjaxFilters7Spikes .close-filters {
+        box-shadow: -3px 0 3px rgba(0,0,0,.1);
+    }
+
+        .nopAjaxFilters7Spikes .close-filters span {
+            padding: 17.5px 20px 17.5px 40px;
+            background: url(images/close-btn.png) no-repeat left 15px center;
+        }
+        
+    .filter-block a.toggleControl:after {
+        left: -51px;
+        right: auto;
+    }
+
+    .filtersGroupPanel {
+        margin: 0 0 0 24px;
+    }
+}
+
+@media all and (min-width: 1001px) {
+
+    .filter-block .title {
+        padding: 10px 0 10px 35px;
+        margin: 0;
+    }
+
+    .filter-block a.clearFilterOptions,
+    .filter-block a.clearPriceRangeFilter {
+        left: 0;
+        right: auto;
+    }
+    .filter-block a.toggleControl{
+        padding: 0;
+    }
+
+    .filtersGroupPanel li > a {
+        padding: 10px 33px 10px 10px;
+    }
+
+    .selected-options-list > li span {
+        padding: 5px 0 5px 17px;
+        background-position: top 7px left 3px;
+    }
+}

@@ -1,0 +1,130 @@
+@using SevenSpikes.Nop.Plugins.Attachments.Models;
+@using SevenSpikes.Nop.Plugins.Attachments.MVC;
+@using SevenSpikes.Nop.Framework.MVCExtensions;
+@using SevenSpikes.Nop.Framework
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+
+@model AttachmentPublicFullModel
+
+@{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.Attachments/Styles/common.css");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.Attachments/Themes/" + Model.Theme + "/Content/Attachments.css");
+
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.Attachments/Themes/" + Model.Theme + "/Content/Attachments.rtl.css");
+    }
+}
+
+@if (Model.Attachments.Count() > 0 && Model.Attachments.Any(x => !String.IsNullOrEmpty(x.VideoEmbedCode)))
+{
+    <script type="text/javascript" language="javascript">
+
+        $(document).ready(function () {
+
+            $("a.attachmentLink[data-videoEmbedCode!='']").click(function (event) {
+
+                event.preventDefault();
+
+                var videoEmbedCode = $(this).attr("data-videoEmbedCode");
+
+                $.magnificPopup.open(
+                {
+                    items: {
+                        src: videoEmbedCode,
+                        type: 'inline'
+                    },
+                    closeBtnInside: false
+                }); 
+            });
+        });
+
+    </script>
+}
+
+@if (Model.Attachments.Count() > 0)
+{
+    <div class="file-attachments">
+        <div class="title">
+            <strong>@Model.GeneralSettings.ProductAttachmentsPanelTitle</strong>
+        </div>
+        <div class="attachments-content">
+            @if (Model.GeneralSettings.GroupAttachmentsByCategory)
+            {
+                foreach (CategoryPublicModel category in Model.Categories)
+                {
+                    var categoryAttachments = Model.Attachments.Where(x => x.CategoryId == category.Id);
+
+                    if (categoryAttachments.Count() > 0)
+                    {
+                        <div class="attachment-category">
+                            <div class="name">
+                                <strong>@category.Name</strong>
+                            </div>
+                            @BuildAttachmentsMarkup(categoryAttachments)
+                        </div>
+                    }
+                }
+
+                var nonCategorizedAttachments = Model.Attachments.Where(x => x.CategoryId == null);
+
+                if (nonCategorizedAttachments.Count() > 0)
+                {
+                    @*Non categorized file attachments*@
+                    <div class="attachment-category">
+                        @BuildAttachmentsMarkup(nonCategorizedAttachments)
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="attachment-category">
+                    @BuildAttachmentsMarkup(Model.Attachments)
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@helper BuildAttachmentsMarkup(IEnumerable<AttachmentPublicModel> attachmentPublicModels)
+{
+string openLinksInNewWindow = "_self";
+
+if (Model.GeneralSettings.OpenLinksInNewWindow)
+{
+    openLinksInNewWindow = "_blank";
+}
+
+    <ul>
+        @foreach (AttachmentPublicModel attachment in attachmentPublicModels)
+        {
+            string url = String.Empty;
+            string videoEmbedCode = String.Empty;
+
+            if (String.IsNullOrEmpty(attachment.VideoEmbedCode) && attachment.DownloadId > 0)
+            {
+                url = Url.Content("~/Attachment/DownloadFile?downloadId=") + attachment.DownloadId;
+            }
+
+            if (!String.IsNullOrEmpty(attachment.VideoEmbedCode))
+            {
+                videoEmbedCode = attachment.VideoEmbedCode;
+            }
+
+            <li>
+                @if (!string.IsNullOrEmpty(attachment.ImageUrl))
+                {
+                    <a class="attachmentLink attachmentLinkImg" href="@url" title="@attachment.ShortDescription" data-videoembedcode="@videoEmbedCode" target="@openLinksInNewWindow">
+                        <img src="@attachment.ImageUrl" alt="@attachment.Name" />
+                    </a>
+                }
+
+                <a class="attachmentLink" href="@url" title="@attachment.ShortDescription" data-videoembedcode="@videoEmbedCode" target="@openLinksInNewWindow">@attachment.Name</a>
+            </li>
+        }
+    </ul>
+}

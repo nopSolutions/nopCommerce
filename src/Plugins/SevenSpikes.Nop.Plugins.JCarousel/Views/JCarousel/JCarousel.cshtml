@@ -1,0 +1,189 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration
+
+@model SevenSpikes.Nop.Plugins.JCarousel.Models.JCarouselModel
+
+@if (Model.Items.Count <= 0)
+{
+    return;
+}
+@{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Styles/slick.css");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Themes/" + Model.Theme + "/Content/JCarousel.css");
+
+    bool supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Themes/" + Model.Theme + "/Content/JCarousel.rtl.css");
+    }
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.JCarousel/Scripts/slick.min.js");
+
+    var carouselHtmlElementId = Model.Settings.CarouselHtmlElementId;
+
+    string carouselArrowsContainer = "#" + carouselHtmlElementId + " " + Model.NavigationArrowsSelector;
+
+    var controllerName = System.Web.HttpContext.Current.Request.RequestContext.RouteData.GetRequiredString("controller");
+    var actionName = System.Web.HttpContext.Current.Request.RequestContext.RouteData.GetRequiredString("action");
+
+    var isHomePage = controllerName.Equals("home", StringComparison.InvariantCultureIgnoreCase) &&
+                    actionName.Equals("index", StringComparison.InvariantCultureIgnoreCase);
+
+    var homePageCategoryClass = string.Empty;
+
+    if (Model.DataSourceTypeClass == "category-grid")
+    {
+        if (isHomePage)
+        {
+            homePageCategoryClass = "home-page-category-grid";
+        }
+        else
+        {
+            homePageCategoryClass = "sub-category-grid";
+        }
+    }
+    
+    var homePageProductGridClass = string.Empty;
+    
+    if (Model.DataSourceTypeClass == "product-grid")
+    {
+        if (isHomePage)
+        {
+            homePageProductGridClass = "home-page-product-grid";
+        }
+    }  
+}
+
+<script>
+    $(document)
+        .ready(function () {
+            var jCarousel = $("#@carouselHtmlElementId .slick-carousel");
+
+            if (jCarousel.length === 0) {
+                return;
+            }
+
+            var numOfSlidesToScroll = @Model.Settings.JCarouselEntitySettings.ScrollItems;
+            var loopItems = @Model.Settings.JCarouselEntitySettings.LoopItems.ToString().ToLowerInvariant();
+            var pauseOnHover = @Model.Settings.JCarouselEntitySettings.AutoscrollHoverPause.ToString().ToLowerInvariant();
+            var isRtl = @supportRtl.ToString().ToLowerInvariant();
+            var autoscrollTimeout = @Model.Settings.JCarouselEntitySettings.Autoscroll.ToString().ToLowerInvariant();
+            var autoscroll = autoscrollTimeout > 0 ? true : false;
+            var navigationArrows = @Model.Settings.JCarouselEntitySettings.NavigationArrows.ToString().ToLowerInvariant();
+            var navigationDots = @Model.Settings.JCarouselEntitySettings.NavigationDots.ToString().ToLowerInvariant();
+            // TODO: Make a validator for this setting.
+            var numberOfVisibleItems = @Model.Settings.JCarouselEntitySettings.NumberOfVisibleItems < 1 ? 1 : @Model.Settings.JCarouselEntitySettings.NumberOfVisibleItems;
+            var animationSpeedString = '@Model.Settings.JCarouselEntitySettings.AnimationSpeed';
+            var prevArrowHtml = '<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">@T("SevenSpikes.JCarousel.Public.PreviousArrow")</button>';
+            var nextArrowHtml = '<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">@T("SevenSpikes.JCarousel.Public.NextArrow")</button>';
+            var animationSpeed;
+
+            switch(animationSpeedString) {
+            case 'slow':
+                animationSpeed = 300;
+                break;
+            case 'fast':
+                animationSpeed = 150;
+                break;
+            default:
+                animationSpeed = 0;
+            }
+
+            var responsiveBreakpointsObj = {};
+
+            try {
+
+                responsiveBreakpointsObj = JSON.parse('@Html.Raw(@Model.ResponsiveBreakpoints)');
+
+                for (var i = 0; i < responsiveBreakpointsObj.length; i++) {
+                    if (responsiveBreakpointsObj[i].settings.slidesToShow < numOfSlidesToScroll) {
+                        responsiveBreakpointsObj[i].settings.slidesToScroll = responsiveBreakpointsObj[i].settings.slidesToShow;
+                    }
+                }
+            }
+            catch (e) {
+                console.log('Invalid slick slider responsive breakpoints setting value!');
+            }
+
+            jCarousel.on('init', function() {
+                $.event.trigger({ type: "newProductsAddedToPageEvent" });
+                $(".carousel-title").show();
+            });
+
+            jCarousel.slick({
+                rtl: isRtl,
+                infinite: loopItems,
+                slidesToShow: numberOfVisibleItems,
+                slidesToScroll: numOfSlidesToScroll,
+                dots: navigationDots,
+                speed: animationSpeed,
+                autoplay: autoscroll,
+                autoplaySpeed: autoscrollTimeout * 1000,
+                arrows: navigationArrows,
+                appendArrows: '@carouselArrowsContainer',
+                cssEase: 'linear',
+                respondTo: 'slider',
+                edgeFriction: 0.05,
+                initialSlide: @Model.Settings.JCarouselEntitySettings.StartIndex - 1,
+                pauseOnHover: pauseOnHover,
+                draggable: false,
+                prevArrow: prevArrowHtml,
+                nextArrow: nextArrowHtml,
+                responsive: responsiveBreakpointsObj
+            });
+
+           var slidesCount = jCarousel.slick('getSlick').slideCount;
+
+           if (slidesCount > numberOfVisibleItems && navigationArrows) {
+               $('#@carouselHtmlElementId .carousel-title').addClass('has-navigation');
+           }
+        });
+</script>
+
+<div id="@carouselHtmlElementId" class="jCarouselMainWrapper @Model.Settings.JCarouselEntitySettings.Skin">
+    <div class="nop-jcarousel @Model.DataSourceTypeClass @homePageCategoryClass @homePageProductGridClass">
+
+        <div class="title carousel-title">
+            @if (!string.IsNullOrEmpty(Model.Settings.Title) && Model.Settings.JCarouselEntitySettings.ShowTitle)
+            {
+                <strong>@Model.Settings.Title</strong>
+            }
+            else
+            {
+                <text>&nbsp</text>
+            }
+        </div>
+
+        <div class="slick-carousel item-grid">
+            @foreach (var item in Model.Items)
+            {
+                <div class="carousel-item">
+                    <div class="item-box">
+                        @switch (Model.DataSourceTypeClass)
+                        {
+                            case "product-grid":
+                                @Html.Partial("_ProductBox", item.ProductOverviewModel);
+                                break;
+                            case "category-grid":
+                                @Html.Partial("_CategoryBox", item.CategoryModel);
+                                break;
+                            case "manufacturer-grid":
+                                @Html.Partial("_ManufacturerBox", item.ManufacturerModel);
+                                break;
+                            case "vendor-grid":
+                                @Html.Partial("_VendorBox", item.VendorModel);
+                                break;
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

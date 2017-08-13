@@ -1,0 +1,169 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Core;
+@using Nop.Core.Infrastructure
+@using SevenSpikes.Nop.Plugins.AnywhereSliders.Models.Nivo
+@using SevenSpikes.Nop.Plugins.AnywhereSliders.Models.Sliders
+@using System.Text.RegularExpressions
+
+@model NivoModel
+
+@{
+    Layout = null;
+
+    string skin = Model.Settings.Theme ?? string.Empty;
+    string showCaptionsClass = Model.Settings.ShowCaption ? string.Empty : "no-captions";
+}
+
+@* Used for nivo slider images in the case when we have more than one image *@
+
+@helper RenderSliderLine(string pictureUrl, string text, string alt, bool haveLink, string link)
+{
+    if (!string.IsNullOrEmpty(pictureUrl))
+    {
+        if (string.IsNullOrWhiteSpace(alt))
+        {
+            alt = "slider image";
+        }
+
+        if (haveLink && !string.IsNullOrEmpty(link))
+        {
+            if (Model.Settings.ShowCaption)
+            {
+                <a href="@link">
+                    <img src="@pictureUrl" data-thumb="@pictureUrl" alt="@alt" title="@text" />
+                </a>
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    text = Regex.Replace(text, @"<[^>]*(>|$)", String.Empty);
+                }
+
+                <a href="@link" title="@text">
+                    <img src="@pictureUrl" data-thumb="@pictureUrl" alt="@alt" />
+                </a>
+            }
+        }
+        else
+        {
+            <img src="@pictureUrl" data-thumb="@pictureUrl" alt="@alt" title="@text" />
+        }
+    }
+}
+
+@* Used when we have only one image, so that we do not initialize the nivo slider, but just display the image.
+    Used this helper also when we have a slider with more than one image so that we first render the first image and on document ready initialize the nivo slider.
+    Thus there will be no issue on load page - when page is loaded and after that the slider is initialized *@
+@helper RenderSingleSliderImageLine(SliderImageModel sliderImage)
+{
+    var alt = String.IsNullOrEmpty(sliderImage.Alt) ? "banner" : sliderImage.Alt;
+    var strippedDisplayText = sliderImage.DisplayText;
+
+    if (!string.IsNullOrEmpty(strippedDisplayText))
+    {
+        strippedDisplayText = Regex.Replace(strippedDisplayText, @"<[^>]*(>|$)", String.Empty);
+    }
+
+    if (Model.Settings.Links && !String.IsNullOrEmpty(sliderImage.Url))
+    {
+        if (Model.Settings.ShowCaption)
+        {
+            <a href="@sliderImage.Url">
+                <img class="nivo-main-image" src="@sliderImage.PicturePath" alt="@alt" />
+            </a>
+        }
+        else
+        {
+            <a href="@sliderImage.Url" title="@strippedDisplayText">
+                <img class="nivo-main-image" src="@sliderImage.PicturePath" alt="@alt" />
+            </a>
+        }
+    }
+    else
+    {
+        <img class="nivo-main-image" src="@sliderImage.PicturePath" alt="@alt" title="@strippedDisplayText" />
+    }
+
+    <div class="nivo-caption" style="display: block;">@Html.Raw(sliderImage.DisplayText)</div>
+}
+
+@if (Model.SliderImages != null && Model.SliderImages.Count > 0)
+{
+    if (Request.Browser.Browser == "IE" && Request.Browser.MajorVersion == 8)
+    {
+        Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Styles/nivo/ie8-fix.css");
+    }
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Styles/nivo/nivo-slider.css");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Themes/" + Model.Theme + "/Content/nivo/nivo.css");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Styles/nivo/nivo.rtl.css");
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Themes/" + Model.Theme + "/Content/nivo/nivo.rtl.css");
+    }
+
+    var imagesString = string.Empty;
+
+    foreach (var sliderImage1 in Model.SliderImages)
+    {
+        imagesString += RenderSliderLine(sliderImage1.PicturePath, sliderImage1.DisplayText, sliderImage1.Alt, Model.Settings.Links, sliderImage1.Url);
+    }
+
+    imagesString = imagesString.Replace(Environment.NewLine, string.Empty).Trim();
+
+    <div class="slider-wrapper anywhere-sliders-nivo-slider theme-@skin @showCaptionsClass"
+         data-imagesCount="@Model.SliderImages.Count"
+         data-sliderHtmlElementId="@Model.SliderHtmlElementId"
+         data-imagesString="@imagesString"
+         data-effect="@Model.Settings.Effect"
+         data-slices="@Model.Settings.Slices"
+         data-boxCols="@Model.Settings.BoxCols"
+         data-boxRows="@Model.Settings.BoxRows"
+         data-animSpeed="@Model.Settings.AnimationSpeed"
+         data-pauseTime="@Model.Settings.AutoSlideInterval"
+         data-directionNav="@Model.Settings.EnableDirectionNavigation.ToString().ToLowerInvariant()"
+         data-controlNav="@Model.Settings.EnableControlNavigation.ToString().ToLowerInvariant()"
+         data-controlNavThumbs="@Model.Settings.EnableControlNavigationThumbs.ToString().ToLowerInvariant()"
+         data-pauseOnHover="@Model.Settings.PauseOnHover.ToString().ToLowerInvariant()"
+         data-prevText="@Model.Settings.PrevText"
+         data-nextText="@Model.Settings.NextText">
+
+        @if (Model.SliderImages.Count == 1)
+        {
+            @RenderSingleSliderImageLine(Model.SliderImages[0])
+        }
+        else
+        {
+            // add javascript
+            Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+            Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/nivo/jquery.nivo.slider.js");
+
+            if (Model.Settings.RandomStart)
+            {
+                Random r = new Random();
+                int randomIndex = r.Next(0, Model.SliderImages.Count - 1);
+
+                // the idea is to reorganize the slider images so that the random becomes the first
+                var randomStartSlideModels = new List<SliderImageModel>();
+                // take the random start image and all after it
+                randomStartSlideModels.AddRange(Model.SliderImages.Skip(randomIndex));
+                // take all other images form the beginning to the random start
+                randomStartSlideModels.AddRange(Model.SliderImages.Take(randomIndex));
+
+                Model.SliderImages = randomStartSlideModels;
+            }
+
+            <div id="@Model.SliderHtmlElementId" class="nivoSlider">
+                @RenderSingleSliderImageLine(Model.SliderImages[0])
+            </div>
+        }
+    </div>
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/AnywhereSliders.js");
+}

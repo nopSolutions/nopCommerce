@@ -1,0 +1,94 @@
+/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block a.toggleControl {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAkCAYAAACE7WrnAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzkyNkMwM0M3MUREMTFFN0EyQkJGQkQ1OTdEQkU4QTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzkyNkMwM0Q3MUREMTFFN0EyQkJGQkQ1OTdEQkU4QTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3OTI2QzAzQTcxREQxMUU3QTJCQkZCRDU5N0RCRThBMSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3OTI2QzAzQjcxREQxMUU3QTJCQkZCRDU5N0RCRThBMSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgyVL30AAAC8SURBVHja7JTNCoMwEIQ3fRbpQYjgyfe/ePLgSwglvfgG212Ygi1Js/5QUDIwqCH5CIM7jpnpCN3oIJ0TNFlAzhC2bnDXyahOrPt0AJJRxEHc4p3x7LAePZMCjeL5C6Tfw1qQFz/5U3qbei1I3eCw6gE4bQGp7+JeXGX2mX7IMv0FdB2Q9s4oDj+6KdtHDSZ/XnRS1rEhDYsOoq2gnvOaLKAK3bP7Ru92DMio2wMiVOoAoLeASrH9EfQSYABORoWZLBYHoAAAAABJRU5ErkJggg==')
+	right top no-repeat;
+	padding-right: 22px;
+	padding-left: 0;
+}
+.filter-block a.toggleControl.closed {
+	background-position: right -18px;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 5px;
+	right: auto;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li span {
+	margin: 0 0 0 10px;
+	padding: 5px 0 5px 15px;
+	background-position: left center;
+}
+
+/* PRICE RANGE SLIDER */
+
+.priceRangeMinPanel {
+	float: right;
+}
+.priceRangeMaxPanel {
+	float: left;
+}
+.currentMinPrice {
+	float: right;
+}
+.currentMaxPrice {
+	float: left;
+}
+
+/* CHECKBOX MODE */
+
+.filtersGroupPanel li label {
+	padding: 10px 30px 10px 10px;
+}
+.filtersGroupPanel.imageOptions li label {
+	padding-right: 40px;
+	padding-left: 0;
+}
+.filtersGroupPanel li input[type='checkbox'] {
+	right: 10px;
+	left: auto;
+}
+.filtersGroupPanel li label:before {
+	right: 10px;
+	left: auto;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.filtersGroupPanel li .color {
+	right: 10px;
+	left: auto;
+}
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters .k-window-titlebar span {
+	float: right;
+}
+.ajaxFilters .k-window-actions {
+	float: left;
+}
+
+
+
+@media all and (max-width: 768px) {
+
+.filter-block a.toggleControl {
+	padding: 5px 28px 5px 0;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REI1ODk2QzgxQjg5MTFFM0FEN0VFMUE0NEI4QjE0QTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REI1ODk2QzkxQjg5MTFFM0FEN0VFMUE0NEI4QjE0QTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpEQjU4OTZDNjFCODkxMUUzQUQ3RUUxQTQ0QjhCMTRBMSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpEQjU4OTZDNzFCODkxMUUzQUQ3RUUxQTQ0QjhCMTRBMSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuttsqoAAABrSURBVHjaYvz//z8DNQDjqEH0M4gJj5wWEJ8B4ldArEvQJJCLsGBdIH4FxB+A2ByHGhSMTVAFiF/8hwAGYjE2wWP/CYOnxBikBvUWxS4CYT0gfg0NI0NKDIIF+AWo67QIGTSaRehoEECAAQBe2noLB8SDQAAAAABJRU5ErkJggg==')
+	right 3px center no-repeat;
+}
+.filter-block a.toggleControl.closed {
+	background-position: right 3px center;
+}
+
+}

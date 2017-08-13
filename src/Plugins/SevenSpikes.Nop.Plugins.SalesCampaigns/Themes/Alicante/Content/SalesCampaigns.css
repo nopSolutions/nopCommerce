@@ -1,0 +1,24 @@
+﻿/*common styles*/
+.vertical-align-middle:before {
+    display: none;
+}
+.vertical-align-middle,
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    bottom: 0;
+    height: 142px;
+    margin: auto;
+}
+
+/*counter in the JCaraousel*/
+
+.jcarousel-item:hover .countdownTimer {
+    opacity: 0;
+}
+
+/*product page grouped*/
+
+.product-variant-list .countdownTimer {
+    left: 0;
+    right: 0;
+}

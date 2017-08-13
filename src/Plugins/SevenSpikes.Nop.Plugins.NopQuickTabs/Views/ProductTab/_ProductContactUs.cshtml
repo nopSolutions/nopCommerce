@@ -1,0 +1,42 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.NopQuickTabs.Models;
+
+@model ContactUsModel
+
+
+<div id="contact-us-tab" class="write-review">
+    @*<div class="message-error">
+        @Html.ValidationSummary(true)
+    </div>*@
+    <div class="form-fields">
+        <div class="inputs">
+            @Html.LabelFor(model => model.FullName)
+            @Html.TextBoxFor(model => model.FullName, new { @class = "contact_tab_fullname review-title", placeholder = T("ContactUs.FullName.Hint") })
+            @Html.ValidationMessageFor(model => model.FullName)
+        </div>
+        <div class="inputs">
+            @Html.LabelFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email, new { @class = "contact_tab_email review-title", placeholder = T("ContactUs.Email.Hint") })
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+        @if (Model.SubjectEnabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.Subject)
+                @Html.TextBoxFor(model => model.Subject, new { @class = "contact_tab_subject subject", placeholder = T("ContactUs.Subject.Hint") })
+                @Html.ValidationMessageFor(model => model.Subject)
+            </div>
+        }
+        <div class="inputs">
+            @Html.LabelFor(model => model.Enquiry)
+            @Html.TextAreaFor(model => model.Enquiry, new { @class = "contact_tab_enquiry review-text", placeholder = T("ContactUs.Enquiry.Hint") })
+            @Html.ValidationMessageFor(model => model.Enquiry)
+        </div>
+    </div>
+    <div class="buttons">
+        <input type="button" id="send-contact-us-form" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
+    </div>
+</div>

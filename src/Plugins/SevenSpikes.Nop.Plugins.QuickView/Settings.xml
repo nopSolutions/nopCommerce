@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="QuickViewSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductItemSelector">
+    <Value>.product-item</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductItemSelectorChild">
+    <Value>.picture</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.MakeQuickViewPopupDraggable">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.EnableQuickViewPopupOverlay">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductDetailsPictureSize">
+    <Value>210</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ProductThumbPictureSize">
+    <Value>65</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowShortProductDescription">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowFullProductDescription">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowProductSpecification">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowProductsAlsoPurchased">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowRelatedProducts">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowCompareProductsButton">
+    <Value>true</Value>
+  </Setting>  
+  <Setting Name="QuickViewSettings.AccordionPanelsHeightStyle">
+    <Value>content</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.ShowAddToWishlistButton">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="QuickViewSettings.EnableCloudZoom">
+    <Value>true</Value>
+  </Setting>
+</Settings>

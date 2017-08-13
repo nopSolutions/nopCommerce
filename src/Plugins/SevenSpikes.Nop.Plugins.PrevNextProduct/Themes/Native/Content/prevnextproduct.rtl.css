@@ -1,0 +1,43 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+.previous-product {
+	float: right;
+	width: 49%;
+}
+.next-product {
+	float: left;
+	width: 49%;
+}
+.previous-product a {
+    float: left;
+    background: url('images/next.png') center top 18px no-repeat;
+	text-align: right;
+}
+.next-product a {
+    float: right;
+    background: url('images/prev.png') center top 18px no-repeat;
+	text-align: left;
+}
+
+@media all and (min-width: 1000px) {
+
+    .previous-product a {
+	    background-position: right 20px top 14px;
+        padding: 12px 40px 12px 12px;
+    }
+    .previous-product a:hover {
+        background-position: right 20px top -21px;
+    }
+    .next-product a {
+        background-position: left 20px top 14px;
+        padding: 12px 12px 12px 40px;
+    }
+    .next-product a:hover{
+        background-position: left 20px top -21px;
+    }
+
+}

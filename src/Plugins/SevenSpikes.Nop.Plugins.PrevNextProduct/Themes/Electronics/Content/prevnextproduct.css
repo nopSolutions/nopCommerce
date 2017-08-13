@@ -1,0 +1,100 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+@media all and (min-width: 240px) {
+
+.overview .product-name{
+    overflow: hidden;
+}
+
+.previous-product,
+.next-product {
+	overflow: hidden;
+    width: 49%;
+    display: inline-block;
+    margin: 15px 0;
+}
+.previous-product a,
+.next-product a{
+    display: block;
+    padding: 10px;
+    border: 1px solid #d5d5d5;
+    border-radius: 5px 5px 4px 4px;
+    background-color: #e3e3e3;
+    text-shadow: 1px 1px 0 #FFFFFF;
+    font: bold 13px/1.5 Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+.previous-product a{
+    padding-left: 30px;
+    background-repeat: no-repeat;
+    background-position: 3% center;
+    background-image: url(img/prev.png), -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.15) 100%);
+    background-image: url(img/prev.png), linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.15) 100%);
+    filter: url(img/prev.png), progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#26000000',GradientType=0 );
+}
+    .previous-product a:hover{
+        background-image: url(img/prev.png), -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%);
+        background-image: url(img/prev.png), linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%);
+        filter: url(img/prev.png), progid:DXImageTransform.Microsoft.gradient( startColorstr='#26000000', endColorstr='#00000000',GradientType=0 );
+    }
+.next-product a {
+    padding-right: 30px; 
+    background-repeat: no-repeat;
+    background-position: 97% center;
+    background-image: url(img/next.png), -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.15) 100%);
+    background-image: url(img/next.png), linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.15) 100%);
+    filter: url(img/next.png), progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#26000000',GradientType=0 );
+}
+    .next-product a:hover{
+        background-image: url(img/next.png), -webkit-linear-gradient(top, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%);
+        background-image: url(img/next.png), linear-gradient(to bottom, rgba(0,0,0,0.15) 0%,rgba(0,0,0,0) 100%);
+        filter: url(img/next.png), progid:DXImageTransform.Microsoft.gradient( startColorstr='#26000000', endColorstr='#00000000',GradientType=0 );
+    }
+
+.previous-product a .previous-product-label, 
+.next-product a .next-product-label {
+    display: none;
+}
+
+}
+
+@media all and (min-width: 240px) and (max-width: 980px) {
+
+    .previous-product a > span,
+    .next-product a > span{
+        display: none;
+    }
+
+    .previous-product a,
+    .next-product a{
+        width: 39px;
+        height: 39px;
+        padding: 0;
+        background: url(img/background.png) bottom repeat-x
+    }
+
+    .previous-product a {
+        float: right;
+        background:  url(img/prev.png) center no-repeat,
+             url(img/background.png) top repeat-x;
+    }
+        .previous-product a:hover{
+            background:  url(img/prev.png) center no-repeat,
+            url(img/background.png) bottom repeat-x;
+        }
+    .next-product a {
+        float: left;
+        background: url(img/next.png) center no-repeat, 
+            url(img/background.png) top repeat-x;
+    }
+        .next-product a:hover{
+            background: url(img/next.png) center no-repeat,
+            url(img/background.png) bottom repeat-x;
+        }
+
+}

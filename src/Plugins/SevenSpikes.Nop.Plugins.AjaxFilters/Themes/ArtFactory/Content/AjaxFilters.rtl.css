@@ -1,0 +1,154 @@
+﻿/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+@media all and (min-width: 240px) {
+
+    .clearFilterOptionsAll
+    {
+	    float: left;
+    }
+
+    .filter-block a.toggleControl{
+	    padding: 10px 18px 10px 60px;
+	    text-align: right;
+        background-position: 10px center;
+    }
+    a.clearFilterOptions, .filter-block a.clearPriceRangeFilter{
+	    left: 0;
+	    right: auto;
+    }
+	
+/* SEARCH CRITERIA */
+
+	.selected-options-list > li {
+		text-align: right;
+	}
+	.selected-options-list > li span {
+        float: right;
+		padding: 8px 2px 8px 17px;
+        margin: 0 0 0 13px;
+        background-position: top 12px left;
+	}
+
+/* PRICE RANGE SLIDER */
+ 
+    .priceRangeMinPanel {
+        float: right;
+    }
+    .priceRangeMaxPanel {
+        float: left;
+    }
+    .priceRangeCurrentPricesPanel .currentMinPrice {
+        float: right;
+    }
+    .priceRangeCurrentPricesPanel .currentMaxPrice {
+        float: left;
+    }
+
+
+/* CHECKBOX MODE */
+
+    .filtersGroupPanel input[type="checkbox"] + label {
+        padding: 7px 32px 7px 10px;
+        text-align: right;
+    }
+    .filtersGroupPanel input[type="checkbox"] + label:before {
+        left: auto;
+        right: 8px;
+    }
+
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        right: auto;
+        left: 16px;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersDropDownPanel .select-wrap {
+        text-align: right;
+    }
+    .filtersDropDownPanel .select-inner {
+        padding: 5px 12px 5px 32px;
+        text-align: right;
+        background-position: left center;
+    }
+
+
+
+/* AJAX LOADER */
+
+    .productPanelAjaxBusy{
+	    right: 0;
+	    left: auto;
+    }
+    .ajaxFilters .k-window-actions{
+	    left: 10px;
+	    right: auto;
+    }
+
+}
+
+
+@media all and (max-width: 1000px) {
+
+    .nopAjaxFilters7Spikes {
+		right: 0;
+		left: auto;
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes {
+		-webkit-transform: translate(320px);
+		-ms-transform: translate(320px);
+		transform: translate(320px);
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes.open {
+		-webkit-transform: translate(0);
+		-ms-transform: translate(0);
+		transform: translate(0);
+	}
+	.android23 .nopAjaxFilters7Spikes {
+		right: -320px;
+	}
+	.android23 .nopAjaxFilters7Spikes.open {
+		right: 0;
+	}
+
+    .nopAjaxFilters7Spikes .close-filters span {
+        text-align: left;
+        background-image: url(images/arrow-white-right.png);
+        background-position: 97.5% center;
+    }
+
+    a.clearFilterOptions,
+	.filter-block a.clearPriceRangeFilter{
+	    left: 1px;
+	    right: auto;
+    }
+
+}
+
+/*=====================================================
+    
+    DESKTOP
+
+=====================================================*/
+
+@media all and (min-width: 1001px) {
+
+    .filter-block a.toggleControl{
+	    padding: 5px 5px 5px 60px;
+    }
+    .selected-options-list > li span {
+        padding: 5px 2px 5px 17px;
+        background-position: top 9px left;
+	}
+    
+}

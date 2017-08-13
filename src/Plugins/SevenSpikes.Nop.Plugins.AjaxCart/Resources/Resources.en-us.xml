@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.AjaxCart.Admin.Menu.MenuName">
+    <Value>Ajax Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin">
+    <Value>Nop Ajax Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings">
+    <Value>Nop Ajax Cart Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.AjaxCartAvailabilitySettings">
+    <Value>Ajax Cart Availability Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.AjaxCartSelectorsSettings">
+    <Value>Ajax Cart Selectors Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableNopAjaxCart">
+    <Value>Enable Nop Ajax Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableNopAjaxCart.Hint">
+    <Value>If checked the Nop Ajax Cart plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableOnMobileDevices">
+    <Value>Enable on mobile devices</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableOnMobileDevices.Hint">
+    <Value>If checked the Nop Ajax Cart will be available on mobile devices.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCartWishlistOnProductPage">
+    <Value>Enable Nop Ajax Cart and Ajax Wishlist on Product Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCartWishlistOnProductPage.Hint">
+    <Value>Specifies whether the Nop Ajax Cart and Ajax Wishlist functionalities are enabled on product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCartWishlistOnCatalogPages">
+    <Value>Enable Nop Ajax Cart and Ajax Wishlist On Pages With Product Boxes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCartWishlistOnCatalogPages.Hint">
+    <Value>Specifies whether the Nop Ajax Cart and Ajax Wishlist functionalities are enabled on pages such as category, manufacturer, recently viewed, recently added, etc. pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableProductQuantityTextBox">
+    <Value>Enable Product Quantity Text Box On Pages With Product Boxes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableProductQuantityTextBox.Hint">
+    <Value>Specifies whether the product quantity text box is enabled for products in product boxes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.FlyoutCartPanelSelector">
+    <Value>Flyout Shopping Cart Element Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.FlyoutCartPanelSelector.Hint">
+    <Value>The selector for the flyout shopping cart element. It is used by the Nop Ajax Cart plugin to update the flyout shopping cart after a product has been added to the shopping cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.GeneralSettingsTitle">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.MiniProductDetailsViewImageSizeInPixels">
+    <Value>Mini Product Details View Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.MiniProductDetailsViewImageSizeInPixels.Hint">
+    <Value>Specify the image size of the images displayed on the mini product details window (show for multi product variants) (in pixels).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableRelatedProductsInPopup">
+    <Value>Show Related Products In Popup</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableRelatedProductsInPopup.Hint">
+    <Value>Show related products in the popup after adding product to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.NumberOfRelatedProductsInPopup">
+    <Value>Number Of Related Products In Popup</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.NumberOfRelatedProductsInPopup.Hint">
+    <Value>Set the number of Related Products in the popup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCrossSellProductsInPopup">
+    <Value>Show Cross Sell Products In Popup</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.EnableCrossSellProductsInPopup.Hint">
+    <Value>Show cross sell products in the popup after adding product to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.NumberOfCrossSellProductsInPopup">
+    <Value>Number Of Cross Sell Products In Popup</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.NumberOfCrossSellProductsInPopup.Hint">
+    <Value>Set the number of Cross Sell Products in the popup.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.PageElementSelector">
+    <Value>Page Element Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.PageElementSelector.Hint">
+    <Value>The selector for the html element of the page. This selector should be available on all pages. The Nop Ajax Cart plugin uses this element to add dynamic content to it, like modal dialogs and ajax busy animation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductAddedToCartImageSizeInPixels">
+    <Value>Product Added To Cart Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductAddedToCartImageSizeInPixels.Hint">
+    <Value>Specify the image size of the image displayed on the product added to cart window.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductAddedToCartPopupSettings">
+    <Value>Product Added To Cart Popup Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductBoxAddToCartButtonSelector">
+    <Value>Product Box "Add To Cart" Button Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductBoxAddToCartButtonSelector.Hint">
+    <Value>The selector for the product box "Add to cart" button. The product box is used for listing products on pages like category page, manufacturer page, home page, etc. It is used by the integration of the Nop Ajax Cart plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductBoxProductItemElementSelector">
+    <Value>Product Box Product Item Element Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductBoxProductItemElementSelector.Hint">
+    <Value>The product item element within the product box holds the ID of the product. The Ajax Cart need this ID in order to work."</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductPageAddToCartButtonSelector">
+    <Value>Product Page "Add To Cart" Button Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ProductPageAddToCartButtonSelector.Hint">
+    <Value>The selector for the product page "Add to cart" button on the product details page. It is used by the integration of the Nop Ajax Cart plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.WishlistMenuLinkSelector">
+    <Value>Wishlist Menu Link Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.WishlistMenuLinkSelector.Hint">
+    <Value>The selector for the html element in the header link, which contains information about the number of items in the wishlist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.AddToWishlistButtonSelector">
+    <Value>"Add To Wishlist" Button Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.AddToWishlistButtonSelector.Hint">
+    <Value>The selector for the "Add to wishlist" button on all pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ShoppingCartMenuLinkSelector">
+    <Value>Shopping Cart Menu Link Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.ShoppingCartMenuLinkSelector.Hint">
+    <Value>The selector for the html element in the header link, which contains information about the number of items in the shopping cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.Theme">
+    <Value>Theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Settings.Theme.Hint">
+    <Value>Select the theme for the Ajax Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxContinueShopping">
+    <Value>Continue Shopping</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxQuantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.PerUnit">
+    <Value>/ per unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxTitle">
+    <Value>Just Added To Your Basket</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.WishlistNotificationBoxTitle">
+    <Value>Just Added To Your Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxViewYourBasket">
+    <Value>View Your Basket</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.PopupTitle.Error">
+    <Value>Add to cart failed due to following errors</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.PopupTitle.Warning">
+    <Value>Add to cart failed due to following warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxCart.ItemBoxQty">
+    <Value>Qty.</Value>
+  </LocaleResource>
+</Language>

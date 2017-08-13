@@ -1,0 +1,13 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model IList<SevenSpikes.Nop.Plugins.InstantSearch.Models.VendorSimpleModel>
+
+<select class="search-box-select" id="instant-search-vendors">
+    <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllCategories")</option>
+    @foreach (var vendor in Model)
+    {
+        <option value="@vendor.Id">@vendor.Name</option>
+    }
+</select>

@@ -1,0 +1,203 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.product-details-page-body .breadcrumb {
+    font-size: 0;
+    padding-bottom: 0;
+}
+.previous-product,
+.next-product {
+    display: inline-block;
+    width: 50%;
+    border-top: 1px solid #eee;
+    margin: 10px 0 0;
+}
+.previous-product {
+}
+.next-product {
+
+}
+
+.previous-product a,
+.next-product a {
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    color: #343642 !important;
+    width: 100%;
+    padding: 0;
+    font-style: normal;
+    text-transform: uppercase;
+}
+.previous-product a span,
+.next-product a span{
+    position: relative;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+    .previous-product a span:before,
+    .next-product a span:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 57px;
+    }
+.previous-product a span {
+	padding: 18px 10px 18px 57px;
+	text-align: left;
+}
+    .previous-product a span:before {
+        left: 0;
+        background: url(images/arrow-prev.png) no-repeat left 32px center;
+    }
+.next-product a span {
+	padding: 18px 57px 18px 10px;
+	text-align: right;
+}
+    .next-product a span:before {
+        right: 0;
+        background: url(images/arrow-next.png) no-repeat right 32px center;        
+    }
+
+.previous-product .previous-product-title,
+.next-product .next-product-title {
+	display: none;
+}
+
+@media all and (min-width: 1001px) {
+    
+    .product-details-page-body .breadcrumb {
+        padding: 10px 0;
+        position: relative;
+    }
+    .product-details-page-body .breadcrumb ul {
+        width: 600px;
+        margin: auto;
+    }
+    .previous-product,
+    .next-product {
+        width: 200px;
+        height: 38px;
+        border: none;
+        position: absolute;
+        top: -4px;
+        left: 50%;
+    }
+    .previous-product {
+        margin-left: -500px;
+    }
+    .next-product {
+        margin-left: 300px;
+    }
+    .previous-product a,
+    .next-product a {
+        height: 38px;
+    }
+
+    .previous-product a {
+        padding: 0;
+    }
+    .next-product a {
+        padding: 0;
+    }
+    .previous-product a,
+    .next-product a {
+        -webkit-transition: -webkit-transform .5s;
+        transition: transform .5s;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .previous-product a:hover,
+    .next-product a:hover {
+        -webkit-transform: rotateX(89deg);
+        transform: rotateX(89deg);
+    }
+    .previous-product a span,
+    .next-product a span {
+        width: 200px;
+        height: 38px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .previous-product a span {
+        padding: 11.5px 23px 11.5px 46px;
+    }
+    .next-product a span {
+        padding: 11.5px 46px 11.5px 23px;
+    }
+    .previous-product-label,
+    .next-product-label {
+        background: #f8f8f8;
+        -webkit-transform: translateZ(19px);
+        transform: translateZ(19px);
+    }
+    .previous-product .previous-product-title,
+    .next-product .next-product-title {
+	    display: block;
+    }
+    .previous-product-title,
+    .next-product-title {
+        background-color: #e56363 ;
+        color: #fff;
+        -webkit-transform: rotateX(-90deg) translateZ(-19px);
+        transform: rotateX(-90deg) translateZ(-19px);
+    }
+    .previous-product .previous-product-title:before{
+        background-image: url(images/arrow-prev-hover.png);
+    }
+    .next-product .next-product-title:before {
+        background-image: url(images/arrow-next-hover.png);
+    }
+
+    .previous-product a span:before,
+    .next-product a span:before {
+        width: 46px;
+    }
+    .previous-product a span:before {        
+        background-position: left 20px center;
+    }
+    .next-product a span:before {        
+        background-position: right 20px center;
+    }
+
+    .previous-product-title,
+    .next-product-title {
+	    display: block;
+    }
+
+}
+
+@media all and (min-width: 1281px) {
+
+    .product-details-page-body .breadcrumb {
+        padding: 10px 0;
+    }
+    .product-details-page-body .breadcrumb ul {
+        width: 650px;
+    }
+    .previous-product {
+        margin-left: -600px;
+    }
+    .next-product {
+        margin-left: 325px;
+    }
+
+    .previous-product,
+    .next-product {
+        width: 275px;
+    }
+    .previous-product a span,
+    .next-product a span {
+        width: 275px;
+    }
+
+
+}

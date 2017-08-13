@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.Attachments.Admin.Menu.MenuName">
+    <Value>Attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Common.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Common.None">
+    <Value>[None]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities">
+    <Value>Nop Attachments Entities</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment">
+    <Value>Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.AddNew">
+    <Value>Add new Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.AttachmentMode">
+    <Value>Select products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.AttachmentMode.Hint">
+    <Value>How would you like to select products?</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.BackToList">
+    <Value>Back to Attachment list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.CategoryId">
+    <Value>Attachment Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.CategoryId.Hint">
+    <Value>
+      The attachment category. All attachments in a given category will be grouped together if the category grouping is enabled from the Settings of the plugin.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.DisplayOrder.Hint">
+    <Value>The display order of the attachment. It is used when ordering the attachments on the public website.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.DownloadId">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.DownloadId.Hint">
+    <Value>
+      The download file for the attachment. To upload a file, you need to have write permissions to directory: "/Content/Files/Attachments".
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.EditAttachmentDetails">
+    <Value>Edit Attachment Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.FieldValidationMessages.DownloadId">
+    <Value>You need to specify a file to download or video embed code for the attachment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.FieldValidationMessages.Name">
+    <Value>The attachment name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ImageId">
+    <Value>Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ImageId.Hint">
+    <Value>
+      The image which is displayed beside the attachment link on the public website.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.IsShared">
+    <Value>Is Shared Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.IsShared.Hint">
+    <Value>If checked this attachment will be shared between multiple products based on a condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.LanguageId">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.LanguageId.Hint">
+    <Value>
+      The language for which this attachment will be shown.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.Name.Hint">
+    <Value>The name of the attachment, which will be shown as a title for the attachment link on the public website.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ProductsMappingTabTitle">
+    <Value>Products Mapping</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ProductsMappingTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Attachment before you can add product mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.SettingsTabTitle">
+    <Value>Attachment Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ShortDescription">
+    <Value>Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.ShortDescription.Hint">
+    <Value>
+      The short description could be used primarily for administration purposes to remind the store owners of the purpose of the attachment.
+      This description could also be shown on the public website with the attachment link itself.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.StoresTabTitle">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.StoresTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Attachment before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.SuccessfullyCreated">
+    <Value>Attachment successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.SuccessfullyDeleted">
+    <Value>Attachment successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.SuccessfullyEdited">
+    <Value>Attachment successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.VideoEmbedCode">
+    <Value>Video Embed code</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.VideoEmbedCode.Hint">
+    <Value>
+      The video embed code for the attachment. It is used to play the video.
+      If a video embed code is specified the download file for the attachment will be ignored.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.Visible">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.Visible.Hint">
+    <Value>
+      Specifies whether the attachment is visible in the public website.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.WidgetsTabTitle">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.Attachment.WidgetsTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Attachment before you can add it to the widget zones.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory">
+    <Value>Attachment Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.AddNew">
+    <Value>Add new Attachment Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.BackToList">
+    <Value>Back to Attachment Category list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.DisplayOrder.Hint">
+    <Value>
+      The display order of the attachment category.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.EditAttachmentCategoryDetails">
+    <Value>Edit Attachment Category Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.FieldValidationMessages.Name">
+    <Value>The attachment category name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.Name.Hint">
+    <Value>
+      The name of the attachment category.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.SettingsTabTitle">
+    <Value>Attachment Category Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.StoresTabTitle">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.StoresTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Attachment Category before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.SuccessfullyCreated">
+    <Value>Attachment Category successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.SuccessfullyDeleted">
+    <Value>Attachment Category successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentCategory.SuccessfullyEdited">
+    <Value>Attachment Category successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentWidget">
+    <Value>Attachment Widget</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentWidget.AddAttachment">
+    <Value>Add the attachment to the new widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentWidget.Description">
+    <Value>You can add the attachment to as many widget zones as you would like. Just create a new widget by selecting the desired widget zone and click the 'Add new' button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentWidget.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.AttachmentWidget.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage">
+    <Value>File Extension Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.AddNew">
+    <Value>Add new File Extension Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.BackToList">
+    <Value>Back to File Extension Image list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.EditFileExtensionImageDetails">
+    <Value>Edit File Extension Image Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.FieldValidationMessages.FileExtensions">
+    <Value>The file extensions for the image is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.FieldValidationMessages.ImageId">
+    <Value>The image for the file extensions image is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.FieldValidationMessages.Name">
+    <Value>The name for the file extensions image is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.FileExtensions">
+    <Value>File Extensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.FileExtensions.Hint">
+    <Value>
+      The file extensions to which this image is mapped. The extensions should not contain a leading dot and need to be separated by a semicolon. For example: pdf;doc;xls.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.ImageId">
+    <Value>Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.ImageId.Hint">
+    <Value>
+      The image which will be shown for the specified file extensions.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.Name.Hint">
+    <Value>
+      The name for this image, which is shown only in the nopCommerce administration.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.SettingsTabTitle">
+    <Value>File Extension Image Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.StoresTabTitle">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.StoresTabTitle.SaveBeforeEdit">
+    <Value>You need to save the File Extension Image before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.SuccessfullyCreated">
+    <Value>File Extension Image successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.SuccessfullyDeleted">
+    <Value>File Extension Image successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.FileExtensionImage.SuccessfullyEdited">
+    <Value>File Extension Image successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.ProductAttachment">
+    <Value>Product Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.ProductAttachment.AttachmentName">
+    <Value>Attachment Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.ProductAttachment.AttachmentName.Hint">
+    <Value>The name of the attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.ProductAttachment.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Entities.ProductAttachment.DisplayOrder.Hint">
+    <Value>The display order of the attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle">
+    <Value>Attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.AddExistingAttachment">
+    <Value>Add existing attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.AddNewAttachment">
+    <Value>Add new attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.ProductSpecificAttachments">
+    <Value>Product specific attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.SaveBeforeEdit">
+    <Value>You need to save the product before you can add attachments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.SharedAttachments">
+    <Value>Shared attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.NopProductsTabTitle.ViewAttachment">
+    <Value>View attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings">
+    <Value>Nop Attachments Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.AddFilesInOrderCompleteEmails">
+    <Value>Add attachment links in Order Complete Emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.AddFilesInOrderCompleteEmails.Hint">
+    <Value>
+      Specifies whether attachment files are linked in the order complete emails for the products.
+      You need to use the %Order.Attachments% token in your OrderCompleted.CustomerNotification message template.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.AddFilesInOrderPlaceEmails">
+    <Value>Add attachment links in Order Placed Emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.AddFilesInOrderPlaceEmails.Hint">
+    <Value>
+      Specifies whether attachment files are linked with the order placed emails for the products.
+      You need to use the %Order.Attachments% token in your OrderPlaced.CustomerNotificationS message template.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.DefaultWidgetZone">
+    <Value>Default Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.DefaultWidgetZone.Hint">
+    <Value>The widget zone on the product details page, where the attachments will appear.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.Enable">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.Enable.Hint">
+    <Value>Enables the Nop Attachments plugin. This setting can be overridden per store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.GroupAttachmentsByCategory">
+    <Value>Group Attachments By Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.GroupAttachmentsByCategory.Hint">
+    <Value>Specifies whether the attachments should be grouped by their category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.OpenLinksInNewWindow">
+    <Value>Open links in a new window</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.OpenLinksInNewWindow.Hint">
+    <Value>
+      Specifies whether the attachment links will be open in a new window.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.ProductAttachmentsPanelTitle">
+    <Value>Product Attachments Panel Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.ProductAttachmentsPanelTitle.Hint">
+    <Value>The title for the panel where the attachments will appear on the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase">
+    <Value>Files are stored into...:</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase.Change">
+    <Value>Change</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase.Database">
+    <Value>database</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase.FileSystem">
+    <Value>file system</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase.Hint">
+    <Value>A value indicating whether files are stored in the database or the file system.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Settings.StoreFilesInDatabase.Note">
+    <Value>NOTE: Do not forget to backup your database before changing this option</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Submenus.ManageAttachmentCategories">
+    <Value>Manage Attachment Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Submenus.ManageAttachments">
+    <Value>Manage Attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Submenus.ManageDefaultImagesForFileAttachments">
+    <Value>Manage Default Images for File Attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.NopAttachments.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.Attachments.Domain.AttachmentMode.Automatic">
+    <Value>Automatically select products based on conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.Attachments.Domain.AttachmentMode.Manual">
+    <Value>Manually select products</Value>
+  </LocaleResource>
+</Language>

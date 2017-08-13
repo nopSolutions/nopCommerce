@@ -1,0 +1,89 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+@media all and (min-width: 240px) {
+
+.overview .product-name{
+    overflow: hidden;
+}
+
+.previous-product,
+.next-product {
+	overflow: hidden;
+    width: 49%;
+    display: inline-block;
+    margin: 15px 0;
+}
+.previous-product a,
+.next-product a{
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 5px;    
+    box-shadow: inset 0 1px 0 #fff;
+    padding: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #c8c;
+    text-shadow: 1px 1px 0 #fff;
+    height: 42px;
+    line-height: 42px;
+}
+
+.previous-product a{	
+    padding: 0 10px 0 35px;
+    background:url(img/prev-desktop.png) top 11px left 9px no-repeat,         url(img/boxpad3.png) top repeat-x,        url(img/boxpad2.png) bottom repeat-x;        
+}
+.previous-product a:hover{
+    background:url(img/prev-desktop.png) top 11px left 9px no-repeat,         url(img/boxpad2.png) top repeat-x,        url(img/boxpad3.png) bottom repeat-x;        
+}
+.next-product a {
+	padding: 0 35px 0 10px;
+    text-align: right;
+    background:url(img/next-desktop.png) top 11px right 9px no-repeat,         url(img/boxpad3.png) top repeat-x,        url(img/boxpad2.png) bottom repeat-x;
+}
+.next-product a:hover {
+    text-align: right;
+    background:url(img/next-desktop.png) top 11px right 9px no-repeat,         url(img/boxpad2.png) top repeat-x,        url(img/boxpad3.png) bottom repeat-x;
+}
+
+.previous-product a .previous-product-label, 
+.next-product a .next-product-label {
+    display: none;
+}
+
+}
+
+@media all and (min-width: 240px) and (max-width: 980px) {
+
+    .previous-product a > span,
+    .next-product a > span{
+        display: none;
+    }
+
+    .previous-product a,
+    .next-product a{
+        width: 43px;
+        height: 43px;
+        padding: 0;
+        border: none;
+    }
+
+    .previous-product a {
+        float: right;
+        background: url(img/prev.png) top 1px left no-repeat;
+    }
+    .next-product a {
+        float: left;
+        background: url(img//next.png) top 1px left no-repeat;
+    }
+    .previous-product a:hover{
+        background: url(img/prev.png) bottom left no-repeat;
+    }
+    .next-product a:hover {
+        background: url(img//next.png) bottom left no-repeat;
+    }
+
+}

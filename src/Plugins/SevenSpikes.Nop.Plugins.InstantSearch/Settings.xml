@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="InstantSearchSettings.Enable">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.SearchOption">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.NumberOfProducts">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.NumberOfVisibleProducts">
+    <Value>5</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.DefaultProductSortOption">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.PictureSize">
+    <Value>60</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.ShowSku">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.HighlightFirstFoundElementToBeSelected">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.SearchDescriptions">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.SearchProductTags">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.MinKeywordLength">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.VisibleIndividuallyOnly">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="InstantSearchSettings.PrepareSpecificationAttributes">
+    <Value>true</Value>
+  </Setting>
+</Settings>

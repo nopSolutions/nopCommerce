@@ -1,0 +1,228 @@
+﻿/*
+* Copyright 2012 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+   ADMIN 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+table.adminContent td.adminTitle {
+    padding: 10px !important;
+    width: 300px;
+}
+
+    table.adminContent td.adminTitle label {
+        font-weight: bold;
+    }
+
+table.adminContent td.adminContent {
+    padding: 10px !important;
+}
+
+.localizedResource {
+    margin-top: 10px;
+    width: 710px;
+}
+
+.adminHint {
+    padding: 0;
+}
+
+    .adminHint p {
+        margin: 0;
+        margin-left: 40px;
+        margin-bottom: 15px;
+        font-style: italic;
+    }
+
+.controlTitle {
+    padding-left: 10px;
+    margin-bottom: 4px;
+    background-color: #E7EFEF;
+    width: 800px;
+    height: 25px;
+    line-height: 25px;
+}
+
+    .controlTitle:hover {
+        background-color: #e1e9e9;
+    }
+
+    .controlTitle a.toggleControl {
+        background: url("images/adminGroupToggle.png") left top no-repeat;
+        display: block;
+        padding: 0 0 0 25px;
+        cursor: pointer;
+        font: normal bold 12px/25px arial;
+        color: #333;
+        text-shadow: 1px 1px 0 #f9f9f9;
+    }
+
+        .controlTitle a.toggleControl:hover {
+            text-decoration: none;
+        }
+
+        .controlTitle a.toggleControl.closed {
+            background-position: left bottom;
+        }
+
+.adminGroupPanel {
+    margin: 20px 0;
+}
+
+.adminGroup {
+    overflow: hidden;
+}
+
+#logo-image {
+    position: relative;
+}
+
+.upload-image-overlay {
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    opacity: 0.5;
+}
+
+.go-to-list {
+    margin-bottom: 10px;
+    margin-left: 25px;
+}
+
+    .go-to-list a {
+        color: #c00;
+        font: normal bold 13px/25px arial;
+    }
+
+.hidden {
+    display: none !important;
+}
+
+tr.small-inputs .k-numerictextbox {
+  width: 50px;
+}
+
+.middleAligned { 
+    vertical-align: middle;
+}
+
+.downloadText {
+    width: 120px !important;
+}
+
+.downloadLink {
+    width: 380px !important;
+}
+
+.custom-fields-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    opacity: 0.5;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    z-index: 2;
+}
+
+.reset-default-settings .stores-wrapper:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.reset-default-settings .form-group:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.reset-default-settings .form-group select {
+    max-width: 100%;
+    padding: 0;
+}
+.reset-default-settings .multistore-configuration {
+    float: left;
+    max-width: 390px;
+    margin: 0 0 10px;
+    width: 100%;
+}
+.reset-default-settings .multistore-configuration:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.reset-default-settings .multistore-configuration label {
+    margin: 9px 0;
+}
+.reset-default-settings .multistore-configuration > div {
+    width: 50%;
+    float: left;
+}
+.reset-default-settings .buttons-wrapper {
+    float: right;
+}
+.reset-default-settings .callout {
+    border-width: 0;
+}
+.reset-default-settings .current-value strong:first-child,
+#default-settings-grid .current-value {
+    color: #cd2524;
+}
+.reset-default-settings .default-value strong:first-child,
+#default-settings-grid .default-value {
+    color: #25b023;
+}
+
+.spikes-admin-wrapper .col-md-9 {
+    min-height: 34px;
+}
+.spikes-admin-wrapper .callout.bg-gray-light {
+    border: 0;
+    padding-left: 28px;
+    background: #f5f5f5;
+    position: relative;
+}
+.spikes-admin-wrapper .callout.bg-gray-light:before {
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    color: #66acd4;
+    content: "\e086";
+    position: absolute;
+    top: 11px;
+    left: 8px;
+}
+
+.spikes-admin-wrapper .col-md-9.col-md-offset-3 .callout.bg-gray-light {
+    margin: 0 !important;
+}
+
+.upload-box-item {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0 5px;
+}
+
+.save-before-edit {
+    padding: 5px
+}
+
+#condition .callout.bg-gray-light {
+    padding-left: 35px;
+}
+#condition .callout.bg-gray-light:before {
+    top: 18px;
+    left: 12px;
+}
+
+.group-dependancy-text p {
+    padding: 15px;
+    text-align: center;
+}

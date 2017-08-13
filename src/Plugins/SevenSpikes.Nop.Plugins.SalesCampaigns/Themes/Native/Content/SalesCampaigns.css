@@ -1,0 +1,30 @@
+﻿/*product page grouped*/ 
+
+.product-variant-line {
+    min-height: 0;
+}
+
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    right: 0;
+}
+
+.product-variant-list .vertical-align-middle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+.vertical-align-middle > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 125px;
+    margin: auto;
+}
+
+/*jcarousel*/
+
+.products-carousel .item-picture {
+    position: relative;
+}

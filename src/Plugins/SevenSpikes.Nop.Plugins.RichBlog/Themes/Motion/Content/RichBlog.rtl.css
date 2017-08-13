@@ -1,0 +1,131 @@
+.blog-search-box span.search-box-text,
+.blog-search-box .search-box-button,
+.blog-page .tags label, 
+.blogpost-page .tags label {
+	float: right;
+}
+.blog-search-box .search-box-button {
+    border-width: 1px 0 1px 1px;
+}
+.rich-blog-homepage .post-date,
+.rich-blog-homepage .post-description {
+	text-align: right;
+}
+.rich-blog-homepage .post-title{
+	padding: 0 15px 0 0;
+	text-align: right;
+}
+.rich-blog-homepage .post-picture img{
+	left: 0;
+	right: 0;
+}
+.blog-search-box input.search-box-text{
+	float: right;
+	margin: 0 0 0 -1px;
+    border-right: 1px solid #c9c9c9;
+
+}
+.blog-search-box .instant-search-busy{
+	background: #fff url('images/ajax-loader-small.gif') left center no-repeat !important;
+}
+.blog-page .post-title{
+	padding: 0 15px 0 0;
+}
+.post-relations label{
+	float: right;
+	margin: 0 0 0 10px;
+	padding: 0 15px 0 0;
+	text-align: right;
+}
+.post-relations label:before{
+	right: 0;
+	left: auto;
+}
+.post-relations li.separator{
+	margin: 0 0 0 5px;
+}
+.post-navigation .prev{
+	float: right;
+	padding: 8px 54px 8px 12px;
+	text-align: right;
+}
+.post-navigation .next{
+	float: left;
+	padding: 8px 12px 8px 54px;
+	text-align: left;
+}
+.post-navigation .prev:before{
+	right: 0;
+	left: auto;
+}
+.post-navigation .next:before{
+	left: 0;
+	right: auto;
+}
+.blog-search-results li a:before{
+	right: 0;
+	left: auto;
+}
+.post-navigation .prev:before {
+    background: #dcdcdc url('images/next.png') center no-repeat;
+}
+.post-navigation .next:before {
+	background: #dcdcdc url('images/prev.png') center no-repeat;
+}
+.read-comments {
+    float: right;
+    padding: 0 15px 0 0;
+}
+ .read-comments:before {
+     left: auto;
+     right: 0;
+ }
+
+
+@media all and (min-width:481px) {
+	
+.blog-page .post-actions .read-more {
+	float: right;
+}
+.blog-page .post-actions .share-post {
+	float: left;
+}
+.blog-search-box {
+    margin: 0 0 2% 0;
+}
+
+}
+
+@media all and (min-width:769px) {
+	
+.blog-page .post-title {
+	float: right;
+}
+.blog-page .post-date,
+.blogpost-page .post-actions {
+	float: left;
+}
+
+.blogpost-page .post-relations{
+	float: right;
+	text-align: right;
+}
+
+
+}
+
+@media all and (min-width:1001px) {
+	
+.rich-blog-homepage .blog-post {
+	float: right;
+}
+.blog-search-results {
+	text-align: right;
+}
+.rich-blog-homepage .view-all{
+	left: 8px;
+	right: auto;
+}
+
+
+}

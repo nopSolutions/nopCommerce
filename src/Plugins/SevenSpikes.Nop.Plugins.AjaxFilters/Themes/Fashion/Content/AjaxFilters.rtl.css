@@ -1,0 +1,106 @@
+﻿.pager li {
+    line-height: 20px !important;
+}
+
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions,
+.clearPriceRangeFilter {
+    float: left !important;
+}
+
+
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+    left: 12px;
+    right: auto;
+}
+
+/* CHECKBOX MODE */
+
+    .filtersGroupPanel input[type="checkbox"] + label {
+        padding: 0 20px 0 8px;
+    }
+    .filtersGroupPanel input[type="checkbox"] + label:before {
+        left: auto;
+        right: 0;
+    }
+
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        right: 0;
+        left: auto;
+    }
+    .filtersGroupPanel.imageOptions input[type="checkbox"] + label {
+        padding-right: 26px;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersDropDownPanel .select-wrap {
+        text-align: right;
+    }
+    .filtersDropDownPanel .select-inner {
+        padding: 2px 5px 2px 22px;
+        text-align: right;
+    }
+        .filtersDropDownPanel .select-inner:after {
+            right: auto;
+            left: 7px;
+        }
+
+
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+    padding: 2px 2px 2px 15px;
+    margin: 0 0 0 7px;
+    background-position: top 3px left;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters .k-window-actions {
+    right: inherit !important;
+    left: 9px;
+}
+
+
+.nopAjaxFilters7Spikes .block .title a.toggleControl {
+    background: url('images/filterGroupToggleOnRTL.png') 97% center no-repeat !important;
+    padding: 0 25px 0 0 !important;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl.closed {
+    background: url('images/filterGroupToggleOff.png') 97% center no-repeat !important;
+}
+
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+    right: auto;
+    left: 5px;
+    padding: 0 5px;
+}

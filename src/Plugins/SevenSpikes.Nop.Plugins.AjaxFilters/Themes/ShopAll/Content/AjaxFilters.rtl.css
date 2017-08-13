@@ -1,0 +1,163 @@
+﻿.nopAjaxFilters7Spikes .filtersTitle,
+.colorOptions .color,
+.sortOptionsDropDown,
+.viewOptionsDropDown,
+.productsPageSizeDropDown,
+.product-sorting > span,
+.product-viewmode > span,
+.product-page-size > span {
+	float: right;
+    background-position: center;
+}
+.nopAjaxFilters7Spikes .clearFilterOptionsAll {
+	float: left;
+}
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	float: right;
+	margin: 0 5px 0 0;
+	padding: 0 0 0 25px;
+}
+.selected-options-list > li span:after {
+	right: auto;
+	left: 0;
+}
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters.k-window,
+.ajaxFilters .k-window-titlebar span {
+	text-align: right;
+}
+
+.filtersPanel .filtersGroupPanel li a{
+	padding: 5px 20px 5px 5px;
+}
+.nopAjaxFilters7Spikes .filtersTitlePanel{
+	padding: 0 3px 10px 0;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl:after{
+	background-position: -10px center;
+	left: 12px;
+	right: auto;
+}
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions{
+	left: 0;
+	right: auto;
+}
+.nopAjaxFilters7Spikes .block .title a.clearPriceRangeFilter{
+	left: 0;
+	right: auto;
+}
+
+/* CHECKBOX MODE */
+
+.nopAjaxFilters7Spikes .filtersGroupPanel a{
+	padding-right: 20px;
+	padding-left: 0;
+    background-position:right center;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelected{
+    background-position:right center;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelectedDisabled{
+	background-position: right -18px;
+}
+.filtersCheckboxPanel .checkbox-list label {
+    padding: 6px 20px 6px 6px;
+}
+.filtersCheckboxPanel.imageOptions .checkbox-list label {
+    padding: 6px 30px 6px 6px;
+}
+.filtersCheckboxPanel .checkbox-list label::before,
+.filtersCheckboxPanel .checkbox-list .color {
+    left: auto;
+    right: 0;
+}
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions a{
+	padding-right: 0 !important;
+}
+.colorOptions .color-container{
+	float: right;
+	margin: 5px 0 0 8px;
+}
+.ajaxFilters .k-window-actions a{
+	left: 9px;
+	right: auto;
+}
+
+/* PRODUCT GRID SELECTORS */
+
+.productViewOptionsPanel > div{
+	margin: 0 70px 0 0;
+}
+.productViewOptionsPanel > div:first-child{
+	margin: 0 10px 0 0;
+}
+.productViewOptionsPanel .pager{
+	margin: 0 0 0 12px;
+}
+.filtersDropDown div p{
+	padding: 0 10px 0 0;
+}
+.filtersDropDown ul li a{
+	padding-right: 10px !important;
+	padding-left: 0 !important;
+}
+.select-wrap {
+    padding: 5px 5px 5px 15px;
+    background-position: 7px center;
+}
+/* AJAX LOADER */
+
+.productPanelAjaxBusy{
+	right: 0;
+	left: auto;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+@media all and (max-width: 980px){
+
+.nopAjaxFilters7Spikes{
+	right: 0;
+	left: auto;
+}
+
+    .notAndroid23 .nopAjaxFilters7Spikes{
+        -webkit-transform: translate(320px);
+        -ms-transform: translate(320px);
+        transform: translate(320px);
+    }
+    .android23 .nopAjaxFilters7Spikes{
+        right: -320px;
+    }
+    .android23 .nopAjaxFilters7Spikes.open{
+        right: 0;
+    }
+
+.close-filters{
+	background: url("images/arrow-right.png") #CCCCCC;
+	background-position: 95% center;
+	text-align: left;
+}
+
+}

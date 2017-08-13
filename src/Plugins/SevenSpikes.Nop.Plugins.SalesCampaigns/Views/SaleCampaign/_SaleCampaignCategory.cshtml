@@ -1,0 +1,131 @@
+﻿@using System.Text
+@using SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums
+@using SevenSpikes.Nop.Plugins.SaleCampaigns.Models
+@using SevenSpikes.Nop.Plugins.SalesCampaigns.Models
+
+@model IList<SaleCampaignPublicModel>
+
+@if (Model.Count > 0)
+{
+    foreach (SaleCampaignPublicModel saleCampaignModel in Model)
+    {
+        if (saleCampaignModel.DateDifferenceInSeconds > 0)
+        {
+            SaleCampaignClockType clockType = saleCampaignModel.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType;
+
+            string wrapperPosition = string.Format("vertical-align-{0}",
+                saleCampaignModel.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPosition.ToString().ToLowerInvariant());
+
+            string wrapperStyling = GetWrapperStyling(saleCampaignModel.SaleCampaignCategoryPageCustomization);
+            string campaignLabelStyling = GetCampaignLabelStyling(saleCampaignModel.SaleCampaignCategoryPageCustomization);
+            string campaignTextStyling = GetCampaignTextStyling(saleCampaignModel.SaleCampaignCategoryPageCustomization);
+
+            if (clockType == SaleCampaignClockType.DaysHoursMinutesSeconds || clockType == SaleCampaignClockType.HoursMinutesSeconds || clockType == SaleCampaignClockType.OnlyDays)
+            {
+                string numberBoxStyling = GetNumberBoxStyling(saleCampaignModel.SaleCampaignCategoryPageCustomization);
+
+                <text>
+                    <div class="countdownTimer category-countdown @wrapperPosition" data-productid="@saleCampaignModel.ProductId" data-campaignid="@saleCampaignModel.Id" data-time="@saleCampaignModel.DateDifferenceInSeconds" data-clocktype="@((int) clockType)">
+                        <div style="@wrapperStyling">
+                            <div class="sale-campaign-label" style="@campaignLabelStyling">
+                                @T("SevenSpikes.Plugins.SaleCampaigns.Public.SaleEndsIn")
+                            </div>
+                            <div class="sale-campaign-text">
+                                @if (clockType == SaleCampaignClockType.DaysHoursMinutesSeconds || clockType == SaleCampaignClockType.OnlyDays)
+                                {
+                                    <div class="sale-campaign-box-wrapper days">
+                                        <span class="sale-campaign-box" style="@numberBoxStyling"></span>
+                                        <span class="sale-campaign-box-label" style="@campaignTextStyling"></span>
+                                    </div>
+                                }
+
+                                @if (clockType != SaleCampaignClockType.OnlyDays)
+                                {
+                                    <div class="sale-campaign-box-wrapper hours">
+                                        <span class="sale-campaign-box" style="@numberBoxStyling"></span>
+                                        <span class="sale-campaign-box-label" style="@campaignTextStyling"></span>
+                                    </div>
+                                    <div class="sale-campaign-box-wrapper minutes">
+                                        <span class="sale-campaign-box" style="@numberBoxStyling"></span>
+                                        <span class="sale-campaign-box-label" style="@campaignTextStyling"></span>
+                                    </div>
+                                    <div class="sale-campaign-box-wrapper seconds">
+                                        <span class="sale-campaign-box" style="@numberBoxStyling"></span>
+                                        <span class="sale-campaign-box-label" style="@campaignTextStyling"></span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </text>
+            }
+            else
+            {
+                <text>
+                    <div class="category-countdown @wrapperPosition" data-productid="@saleCampaignModel.ProductId">
+                        <div style="@wrapperStyling">
+                            <div class="sale-campaign-label" style="@campaignLabelStyling">
+                                @T("SevenSpikes.Plugins.SaleCampaigns.Public.OnSaleUntil")
+                            </div>
+                            <div class="sale-campaign-text" style="@campaignTextStyling">
+                                @saleCampaignModel.DateUntil
+                            </div>
+                        </div>
+                    </div>
+                </text>
+            }
+        }
+    }
+}
+
+@functions{
+    private string GetWrapperStyling(SaleCampaignCategoryPageCustomizationModel categoryPageCustomizationModel)
+    {
+        var sb = new StringBuilder();
+
+        sb.Append("text-align: center; ");
+        sb.Append(string.Format("background-color: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryWrapperBackgroundColor));
+        sb.Append(string.Format("border: {0}px {1} {2}; ", categoryPageCustomizationModel.SaleCampaignCategoryWrapperBorderInput, categoryPageCustomizationModel.SaleCampaignCategoryWrapperBorderType, categoryPageCustomizationModel.SaleCampaignCategoryWrapperBorderColor));
+        sb.Append(string.Format("padding: {0}px {1}px {2}px {3}px; ", categoryPageCustomizationModel.SaleCampaignCategoryWrapperPaddingTop, categoryPageCustomizationModel.SaleCampaignCategoryWrapperPaddingRight, categoryPageCustomizationModel.SaleCampaignCategoryWrapperPaddingBottom, categoryPageCustomizationModel.SaleCampaignCategoryWrapperPaddingLeft));
+
+        return sb.ToString();
+    }
+
+    private string GetCampaignLabelStyling(SaleCampaignCategoryPageCustomizationModel categoryPageCustomizationModel)
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(string.Format("font-weight: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryClockFontWeight));
+        sb.Append(string.Format("font-style: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryClockFontStyle));
+        sb.Append(string.Format("font-size: {0}{1}; ", categoryPageCustomizationModel.SaleCampaignCategoryClockFontSize, categoryPageCustomizationModel.SaleCampaignCategoryClockFontSizeUnit));
+        sb.Append(string.Format("color: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryClockFontColor));
+
+        return sb.ToString();
+    }
+
+    private string GetCampaignTextStyling(SaleCampaignCategoryPageCustomizationModel categoryPageCustomizationModel)
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(string.Format("font-weight: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryCampaignTextFontWeight));
+        sb.Append(string.Format("font-style: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryCampaignTextFontStyle));
+        sb.Append(string.Format("font-size: {0}{1}; ", categoryPageCustomizationModel.SaleCampaignCategoryCampaignTextFontSize, categoryPageCustomizationModel.SaleCampaignCategoryCampaignTextFontSizeUnit));
+        sb.Append(string.Format("color: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryCampaignTextFontColor));
+
+        return sb.ToString();
+    }
+
+    private string GetNumberBoxStyling(SaleCampaignCategoryPageCustomizationModel categoryPageCustomizationModel)
+    {
+        var sb = new StringBuilder();
+
+        sb.Append(string.Format("background-color: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxBackgroundColor));
+        sb.Append(string.Format("border: {0}px {1} {2}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxBorderInput, categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxBorderType, categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxBorderColor));
+        sb.Append(string.Format("font-weight: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxFontWeight));
+        sb.Append(string.Format("font-style: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxFontStyle));
+        sb.Append(string.Format("font-size: {0}{1}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxFontSize, categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxFontSizeUnit));
+        sb.Append(string.Format("color: {0}; ", categoryPageCustomizationModel.SaleCampaignCategoryNumberBoxFontColor));
+
+        return sb.ToString();
+    }
+}

@@ -1,0 +1,138 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.clearFilterOptionsAll {
+	float: left;
+}
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	background-position: left center;
+	padding: 10px 3px 10px 17px;
+}
+.ui-slider-handle {
+    margin: 0 0 0 -7px;
+}
+.ui-slider-handle + .ui-slider-handle {
+	margin-left: -7px;
+}
+
+.filtersGroupPanel li > a {
+	padding: 6px 38px 6px 10px;
+	text-align: right;
+}
+.filtersGroupPanel li a:before {
+	right: 12px;
+}
+.colorOptions .color-container {
+	right: auto;
+	left: 12px;
+}
+.jDropDown > div {
+	background-position: left center;
+	text-align: right;
+}
+.jDropDown ul {
+	text-align: right;
+}
+.filtersDropDown.jDropDown a {
+	padding: 7px 10px 7px 16px;
+}
+.ajaxFilters .k-window-actions {
+	right: auto;
+	left: 8px;
+}
+.checkbox-list li label {
+    padding: 6px 38px 6px 10px;
+    text-align: right;
+}
+.imageOptions .checkbox-list li label {
+    padding-left: 10px;
+    padding-right: 47px;
+}
+.checkbox-list li input,
+.checkbox-list li label::before,
+.checkbox-list li span.color {
+    left: auto;
+    right: 12px;
+}
+.select-wrap {
+    text-align: right;
+    background-position: left center;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+
+@media all and (max-width:1000px) {
+	
+.nopAjaxFilters7Spikes {
+	right: 0;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(320px);
+	-moz-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0px);
+	-moz-transform: translate(0px);
+	-ms-transform: translate(0px);
+	transform: translate(0px);
+}
+.android23 .nopAjaxFilters7Spikes {
+	right: -320px;
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	right: 0;
+}
+.nopAjaxFilters7Spikes .close-filters {
+	text-align: left;
+}
+
+}
+
+
+@media all and (min-width:1001px) {
+	
+.filter-block a.toggleControl {
+	background-position: left center !important;
+	padding: 5px 7px 5px 70px;
+	text-align: right;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 30px;
+	right: auto;
+}
+.filtersGroupPanel li > a {
+	padding: 10px 38px 10px 10px;
+}
+.selected-options-list > li span {
+	margin: 0 0 0 5px;
+	padding: 5px 3px 5px 17px;
+}
+.checkbox-list li label {
+    padding: 10px 38px 10px 10px;
+}
+
+
+}

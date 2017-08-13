@@ -1,0 +1,45 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using SevenSpikes.Nop.Plugins.NopQuickTabs
+@using SevenSpikes.Nop.Plugins.NopQuickTabs.Models
+
+@model TabUIModel
+
+@{
+    if (Model.Tabs.Count == 0)
+    {
+        return;
+    }
+
+    Html.AddScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.NopQuickTabs/Scripts/ProductTabs.min.js");
+
+    Html.AddCssFileParts(String.Format("~/Plugins/{0}/Themes/{1}/Content/QuickTabs.css", Constants.PluginFolderName, Model.Settings.Theme));
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts(String.Format("~/Plugins/{0}/Themes/{1}/Content/QuickTabs.rtl.css", Constants.PluginFolderName, Model.Settings.Theme));
+    }
+
+    var additionalClass = "";
+    if (Model.Tabs.Any(x => x.TabKey == "picture"))
+    {
+        additionalClass = "withPicture";
+    }
+
+    var productTabsPartialView = Model.Settings.EnableAjax ? Constants.ViewProductTabsWithAjaxPartial : Constants.ViewProductTabsWithoutAjaxPartial;
+
+    <div id="quickTabs" class="productTabs @additionalClass"
+         data-ajaxEnabled="@Model.Settings.EnableAjax.ToString().ToLowerInvariant()"
+         data-productReviewsAddNewUrl="@Url.Action("ProductReviewsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-productContactUsUrl="@Url.Action("ProductContactUsTabAddNew", "ProductTab", new { id = Model.ProductId})"
+         data-couldNotLoadTabErrorMessage="@T("SevenSpikes.NopQuickTabs.Client.Tabs.CouldNotLoadTabErrorMessage").ToString()">
+        @Html.Partial(productTabsPartialView)
+    </div>
+}

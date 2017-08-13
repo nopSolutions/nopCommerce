@@ -1,0 +1,149 @@
+﻿.filtersTitlePanel p {
+    float: right !important;
+}
+
+.clearFilterOptionsAll,
+.clearFilterOptions,
+.clearPriceRangeFilter {
+    float: left !important;
+}
+.toggleControl {
+    float: right !important;
+}
+.block .title {
+    overflow: hidden;
+}
+
+
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+	padding: 2px 2px 2px 12px;
+    margin: 0 0 0 6px;
+    background-position: top 6px left 2px;
+}
+.filtersGroupPanel.imageOptions input[type="checkbox"] + label {
+    padding-left: 2px;
+    padding-right: 35px;
+}
+
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+
+/* CHECKBOX MODE */
+
+    .filtersGroupPanel input[type="checkbox"] + label {
+        padding: 5px 26px 5px 0;
+    }
+    .filtersGroupPanel input[type="checkbox"] + label:before {
+        left: auto;
+        right: 8px;
+    }
+
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        left: auto;
+        right: 8px;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersDropDownPanel .select-wrap {
+        text-align: right;
+    }
+    .filtersDropDownPanel .select-inner {
+        padding: 4px 4px 4px 30px;
+        text-align: right;
+    }
+        .filtersDropDownPanel .select-inner:after {
+            right: auto;
+            left: 5px;
+        }
+
+
+
+/* POP UP */
+
+.ajaxFilters .k-window-actions {
+    right: inherit !important;
+    left: 10px;
+}
+
+
+
+/*=====================================================
+    
+    TABLETS LANDSCAPE & NETBOOKS
+
+=====================================================*/
+
+@media all and (max-width: 980px) and (min-width: 769px) {
+
+    .selected-options-list > li span {
+	    padding: 6px 2px 6px 12px;
+        margin: 0 0 0 10px;
+        background-position: top 12px left 2px;
+    }
+
+}
+
+
+
+
+/*=====================================================
+    
+    TABLETS PORTRAIT & SMARTPHONES LANDSCAPE
+
+=====================================================*/
+
+@media all and (max-width: 768px) and (min-width: 481px) {
+    
+    .selected-options-list > li span {
+	    padding: 6px 2px 6px 12px;
+        margin: 0 0 0 10px;
+        background-position: top 12px left 2px;
+    }
+
+}
+
+
+
+/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+@media all and (max-width: 480px) {
+
+    .selected-options-list > li span {
+	    padding: 6px 2px 6px 12px;
+        margin: 0 0 0 10px;
+        background-position: top 12px left 2px;
+    }
+
+}

@@ -1,0 +1,128 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+    padding: 9px 3px 9px 20px;
+    margin: 0 0 0 6px;
+    background-position: top 12px left 4px;
+}
+
+.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block,
+.filter-block .title {
+	text-align: right;
+}
+.filter-block a.toggleControl.closed {
+	background-position: right -18px;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 6px;
+	right: auto;
+}
+.imageOptions li.checkbox-item .filter-item-name {
+    padding: 9px 50px 9px 9px;
+}
+.imageOptions li.checkbox-item .color {
+    right: 10px;
+    left: auto;
+}
+.filtersGroupPanel li.checkbox-item label:before {
+	margin-left: 8px;
+	margin-right: 0;
+}
+.filtersGroupPanel li.checkbox-item .color {
+	margin-left: 8px;
+	margin-right: 0;
+}
+.filtersDropDownPanel .select-wrap .select-box {
+	text-align: right;
+}
+.filtersDropDownPanel .select-wrap .select-box:after {
+	left: 5px;
+	right: auto;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy {
+	right: 0;
+	left: auto;
+}
+.ajaxFilters .k-window-actions {
+	left: 10px;
+	right: auto;
+}
+
+
+@media all and (max-width: 1000px) {
+
+.nopAjaxFilters7Spikes {
+	right: 0;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0);
+	-ms-transform: translate(0);
+	transform: translate(0);
+}
+.android23 .nopAjaxFilters7Spikes {
+	right: -320px;
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	right: 0;
+}
+.nopAjaxFilters7Spikes .close-filters {
+	text-align: left;
+}
+.nopAjaxFilters7Spikes .close-filters:before {
+	right: 10px;
+	left: auto;
+}
+
+}
+
+@media all and (min-width: 981px) {
+
+.selected-options-list > li span {
+	padding: 5px 3px 5px 20px;
+	background-position: top 8px left 4px;
+}
+    
+}

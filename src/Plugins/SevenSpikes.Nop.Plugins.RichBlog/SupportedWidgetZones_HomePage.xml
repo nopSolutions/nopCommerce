@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>home_page_top</WidgetZone>
+  <WidgetZone>home_page_before_categories</WidgetZone>
+  <WidgetZone>home_page_before_products</WidgetZone>
+  <WidgetZone>home_page_before_best_sellers</WidgetZone>
+  <WidgetZone>home_page_before_news</WidgetZone>
+  <WidgetZone>home_page_before_poll</WidgetZone>
+  <WidgetZone>home_page_bottom</WidgetZone>
+</SupportedWidgetZones>

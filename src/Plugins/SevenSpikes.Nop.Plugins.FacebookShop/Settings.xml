@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="FacebookShopSettings.CategoryPageSize">
+    <Value>8</Value>
+  </Setting>
+  <Setting Name="FacebookShopSettings.NumberOfItemBoxesPerRow">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="FacebookShopSettings.NumberOfMainMenuCategoryItems">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="FacebookShopSettings.NumberOfRelatedProducts">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="FacebookShopSettings.ShowShortDescription">
+    <Value>true</Value>
+  </Setting>
+</Settings>

@@ -1,0 +1,104 @@
+﻿@using SevenSpikes.Nop.Framework.Model;
+
+@model CopyModel
+
+@*copy entity form*@
+<div id="copyentity-window" style="display:none;">
+    @using (Html.BeginForm(Model.ActionName, Model.ControllerName))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.Id)
+
+       <table class="adminContent">
+
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Name):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Name)
+                </td>
+            </tr>
+           <tr>
+               <td class="adminHint" colspan="2">
+                   <p>@T("SevenSpikes.Plugins.Admin.Copy.Name.Hint")</p>
+               </td>
+           </tr>
+
+            @if (Model.SupportCopyConditions)
+            {
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.CopyConditions):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.CopyConditions)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminHint" colspan="2">
+                        <p>@T("SevenSpikes.Plugins.Admin.Copy.CopyConditions.Hint")</p>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.SupportCopyMappings)
+            {
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.CopyMappings):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.CopyMappings)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminHint" colspan="2">
+                        <p>@T("SevenSpikes.Plugins.Admin.Copy.CopyMappings.Hint")</p>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.SupportCopyScheduling)
+            {
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.CopyScheduling):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.CopyScheduling)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminHint" colspan="2">
+                        <p>@T("SevenSpikes.Plugins.Admin.Copy.CopyScheduling.Hint")</p>
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="k-button" value="@T("SevenSpikes.Plugins.Admin.Copy")" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#copyentity").click(function (e) {
+            e.preventDefault();
+            var window = $("#copyentity-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "650px",
+                    title: "@T("SevenSpikes.Plugins.Admin.Copy")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>

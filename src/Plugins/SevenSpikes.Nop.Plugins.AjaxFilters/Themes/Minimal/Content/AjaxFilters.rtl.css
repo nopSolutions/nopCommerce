@@ -1,0 +1,251 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+* {
+	direction: rtl;
+}
+.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block a.toggleControl {
+	text-align: right;
+}
+.nopAjaxFilters7Spikes .filter-block a.clearFilterOptions,
+.nopAjaxFilters7Spikes .filter-block a.clearPriceRangeFilter {
+	left: 20px;
+	right: auto !important;
+	padding-left: 20px;
+	padding-right: 0;
+	background: #fff  url(images/clear-button.png) no-repeat left 10px !important;
+	text-align: right;
+}
+.checkbox-list .checkbox-item label:before,
+.checkbox-list .checkbox-item input {
+	right: 0;
+	left: auto;
+}
+.checkbox-list .checkbox-item label {
+	padding: 9px 28px 9px 9px;
+	text-align: right;
+}
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	float: right;
+	padding: 10px 3px 10px 20px;
+	margin: 0 0 0 12px;
+	background: url('images/clear.png') top 13px left 1px no-repeat;
+}
+.priceRangeMinPanel {
+	float: right;
+}
+.priceRangeMaxPanel {
+	float: left;
+}
+.ui-slider-handle {
+	margin-right: -10px;
+	margin-left: 0;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: left;
+}
+.filtersGroupPanel li > label {
+	padding: 12px 38px 12px 10px;
+	text-align: right;
+}
+.filtersGroupPanel li a:before {
+	right: 12px;
+	left: auto;
+}
+.colorOptions .checkbox-list {
+	text-align: right;
+}
+.colorOptions .checkbox-item {
+	margin: 0 0 5px 2px;
+}
+.colorOptions .checkbox-item label {
+	right: 0;
+	left: auto;
+}
+.colorOptions .color-container {
+	left: 12px;
+	right: auto;
+}
+.colorOptions .color ~ label {
+	left: 0;
+	right: 0;
+}
+.colorOptions .color ~ input {
+	right: 9px;
+	left: auto;
+}
+.colorOptions .defaultColor {
+	background: -moz-linear-gradient(-45deg, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);
+	background: #ffffff   -webkit-gradient(linear, left top, left bottom, color-stop(0%, ), color-stop(50%, ), color-stop(50%, #000000), color-stop(100%, #000000));
+	background: -webkit-linear-gradient(-45deg, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);
+	background: -o-linear-gradient(-45deg, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);
+	background: -ms-linear-gradient(-45deg, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);
+	background: linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);
+}
+.filter-block .select-wrap:before,
+.filter-block .select-wrap:after {
+	right: 0;
+	left: auto;
+}
+.filter-block  .select-wrap:after {
+	right: auto;
+	left: 0;
+}
+.filter-block .select-wrap {
+	background: url(images/drop-down-button.png) no-repeat left center;
+}
+.filter-block .select-wrap select {
+	left: 0;
+	right: 0;
+}
+.filter-block .select-wrap span {
+	padding: 7px 10px 7px 30px;
+	text-align: right;
+}
+.filtersDropDown div {
+	background-position: 100% center !important;
+}
+.productPanelAjaxBusy {
+	right: 0;
+	left: auto;
+	background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+}
+.infinite-scroll-loader {
+	background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+}
+.k-overlay {
+	right: 0;
+	left: auto;
+}
+.ajaxFilters .k-window-actions {
+	left: 0;
+	right: auto;
+}
+.minimal-ajax-filters-one-colomn .nopAjaxFilters7Spikes .filter-block .title a {
+    background-position: 4% center;
+}
+.minimal-ajax-filters-one-colomn .nopAjaxFilters7Spikes .filter-block .title a.clearFilterOptions {
+    right: auto;
+    background-position: left 10px;
+}
+.nopAjaxFilters7Spikes .filter-block .title a {
+    background-position: 8% center;
+}
+
+@media all and (max-width: 1280px) {
+
+.nopAjaxFilters7Spikes {
+	left: auto;
+    right: 0;
+}
+.notAndroid23 .nopAjaxFilters7Spikes{
+	-webkit-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.android23 .nopAjaxFilters7Spikes{
+	left: -320px;
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open{
+	-webkit-transform: translate(0);
+	-ms-transform: translate(0);
+	transform: translate(0);
+}
+.android23 .nopAjaxFilters7Spikes.open{
+	left: auto;
+    right: 0;
+}
+.nopAjaxFilters7Spikes .close-filters {
+    text-align: left;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	text-align: left;
+}
+.nopAjaxFilters7Spikes .filter-block .title::after {
+    left: 40px;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.filtersPanel {
+    text-align: right;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+    -webkit-transform: translate(0);
+    transform: translate(0px);
+    background-color: transparent;
+}
+.minimal-ajax-filters-one-colomn .filter-block.selected-options {
+   text-align: right;
+}
+.minimal-ajax-filters-one-colomn .filter-block.selected-options .filtersGroupPanel .selected-options-list > li span {
+    padding: 5px 3px 5px 20px;
+    background-position: left center;
+}
+.minimal-ajax-filters-one-colomn h3.title:before,
+.minimal-ajax-filters-one-colomn h3.title:after {
+    right: 0;
+}
+.minimal-ajax-filters-one-colomn h3.title:after {
+    right: auto;
+    right: 0;
+}
+.minimal-ajax-filters-one-colomn .filtersPanel .filter-block {
+    margin: 0 0.5% 0.5% 0;
+}
+.minimal-ajax-filters-one-colomn .filtersPanel .filter-block .title:after {
+    left: 20px;
+}
+.center-1 .nopAjaxFilters7Spikes .filter-block .title a {
+    background-position: 4% center;
+}
+.center-1 .filtersPanel .filter-block.selected-options .filtersGroupPanel {
+    float: left;
+}
+.center-1 .filtersPanel .selected-options-list {
+    text-align: right;
+}
+
+}
+
+
+/*filters on +1000px two columns*/
+@media all and (min-width: 1001px) and (max-width: 1280px) {
+
+    .side-2 .filtersPanel .filter-block.selected-options {
+        text-align: right;
+    }
+    .side-2 .filtersPanel .filter-block.selected-options .filtersGroupPanel  {
+        text-align: right;
+    }
+
+    .side-2 .filtersPanel .filter-block {
+        margin: 0 0.3% 0.3% 0;
+    }
+
+}
+
+@media all and (min-width: 1281px) {
+
+.number-of-returned-products {
+    float: left;
+    margin-top: -49px;
+    margin-left: 20px;
+    margin-right: auto;
+}
+
+
+}

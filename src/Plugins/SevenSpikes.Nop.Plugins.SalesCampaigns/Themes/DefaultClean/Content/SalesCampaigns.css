@@ -1,0 +1,6 @@
+﻿.countdownTimer,
+.category-countdown {
+    -webkit-transition: all ease 0.35s;
+    transition: all ease 0.35s; 
+    z-index: 1;
+}

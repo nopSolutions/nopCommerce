@@ -1,0 +1,111 @@
+﻿
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+    padding: 9px 3px 9px 20px;
+    margin: 0 0 0 6px;
+    background-position: top 10px left 4px;
+}
+
+.filtersGroupPanel li.checkbox-item label {
+	padding: 10px 20px 10px 0;
+	text-align: right;
+}
+.filtersGroupPanel li.checkbox-item label:before {
+	right: 0;
+	left: auto;
+}
+.colorOptions.filtersGroupPanel .color {
+	left: 0;
+	right: auto;
+}
+.filtersGroupPanel .select-wrap .select-box {
+	background-position: left center;
+	padding: 8px 12px 8px 32px;
+}
+.filtersGroupPanel .select-wrap select {
+	right: 0;
+	left: auto;
+}
+.colorOptions li.checkbox-item .color {
+    right: auto;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+.ajaxFilters .k-window-actions {
+    left: 10px;
+    right: auto;
+}
+
+@media all and (max-width: 1000px) {
+
+.nopAjaxFilters7Spikes {
+	right: 0;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(320px);
+	-moz-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0px);
+	-moz-transform: translate(0px);
+	-ms-transform: translate(0px);
+	transform: translate(0px);
+}
+.android23 .nopAjaxFilters7Spikes {
+	right: -320px;
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	right: 0;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	text-align: left;
+}
+.nopAjaxFilters7Spikes .close-filters span:before {
+	right: 10px;
+	left: auto;
+}
+.filter-block a.toggleControl {
+	text-align: right;
+	background-position: left center;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 10px;
+	right: auto;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.filter-block a.clearFilterOptions, 
+.filter-block a.clearPriceRangeFilter {
+	left: 10px;
+	right: auto;
+}
+.selected-options-list > li span {
+    padding: 5px 3px 5px 20px;
+    background-position: top 6px left 4px;
+}
+
+}

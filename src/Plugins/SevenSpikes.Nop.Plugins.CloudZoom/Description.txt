@@ -1,0 +1,8 @@
+﻿Group: 7Spikes
+FriendlyName: Nop Cloud Zoom
+SystemName: SevenSpikes.Nop.Plugins.CloudZoom
+Version: 3.90
+SupportedVersions: 3.90
+Author: Seven Spikes
+DisplayOrder: 1
+FileName: SevenSpikes.Nop.Plugins.CloudZoom.dll

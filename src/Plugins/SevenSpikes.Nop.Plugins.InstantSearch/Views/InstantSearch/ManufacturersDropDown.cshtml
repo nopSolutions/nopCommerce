@@ -1,0 +1,13 @@
+﻿@* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model IList<SevenSpikes.Nop.Plugins.InstantSearch.Models.ManufacturerSimpleModel>
+
+<select class="search-box-select" id="instant-search-manufacturers">
+    <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllCategories")</option>
+    @foreach (var manufacturer in Model)
+    {
+        <option value="@manufacturer.Id">@manufacturer.Name</option>
+    }
+</select>

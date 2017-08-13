@@ -1,0 +1,56 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+
+/**************************** DEFAULT CLEAN ***************************/
+
+
+
+
+/* quick view button */
+
+.quick-view-button a {
+
+    background-position: 92% center;
+    padding: 15px 35px 15px 15px;
+}
+
+
+
+/********** START PRODUCT OVERVIEW *********/
+
+.quickView .k-window-titlebar.k-header .k-window-actions {
+    right: auto;
+    left: 14px;
+}
+.quickViewWindow .product-name {
+    padding: 12px 15px 12px 50px;
+    text-align: right;    
+}
+
+.quickViewWindow .overview .left, 
+.quickViewWindow .overview .right,
+.quickViewWindow .variant-grid-info .compare-products {
+    text-align: right;
+}
+
+.quickViewWindow .overview #accordion .purchase-area .prices {
+    float: right;
+}
+.quickViewWindow .overview #accordion .purchase-area .add-to-cart {
+    float: left;
+}
+.quickViewWindow .overview #accordion .purchase-area .add-to-cart div * {
+    float: right;
+}
+
+
+
+/* related/also-purchased products */
+
+.quickViewWindow .product-grid .title {
+    text-align: right;
+}

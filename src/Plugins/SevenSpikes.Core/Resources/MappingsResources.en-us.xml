@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Mappings">
+    <Value>Nop Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Mappings.WidgetZones">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Mappings.WidgetZones.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Mappings.AdditionalVendors.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Mappings.WidgetZones.Name">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Catalog.Products.List.VisibleIndividuallyOnly">
+    <Value>Visible Individually Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Catalog.Products.List.VisibleIndividuallyOnly.Hint">
+    <Value>Check this option if you want to view only the visible individually products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Catalog.Products.List.SearchSku">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Catalog.Products.List.SearchSku.Hint">
+    <Value>If you search by SKU, the product name field will be ignored.</Value>
+  </LocaleResource>
+</Language>

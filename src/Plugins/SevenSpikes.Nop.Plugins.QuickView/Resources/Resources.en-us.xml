@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.QuickView.Admin.Menu.MenuName">
+    <Value>Quick View</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Quick View -&gt; Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.AccordionPanelsHeightStyle">
+    <Value>Accordion panels height style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.AccordionPanelsHeightStyle.Hint">
+    <Value>
+      "auto" - All panels will be set to the height of the tallest panel.&lt;br/&gt;
+      "fill" - Expand to the available height based on the accordion's parent height.&lt;br/&gt;
+      "content" - Each panel will be only as tall as its content.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.Common">
+    <Value>Nop Quick View Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.EnableCloudZoom">
+    <Value>Enable the cloud zoom on the main product image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.EnableCloudZoom.Hint">
+    <Value>If enabled the cloud zoom will be activated on the main product picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.Enabled">
+    <Value>Enable the Quick View plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.Enabled.Hint">
+    <Value>If you check this option you will enable the Nop Quick View plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.EnableQuickViewPopupOverlay">
+    <Value>Enable Overlay</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.EnableQuickViewPopupOverlay.Hint">
+    <Value>If clicked an overlay effect will be applied to your website, so that only the Quick View Popup will be clickable.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.MakeQuickViewPopupDraggable">
+    <Value>Make the Quick View popup draggable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.MakeQuickViewPopupDraggable.Hint">
+    <Value>If clicked the Quick View Popup will be draggable.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ProductItemSelector">
+    <Value>Product item selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ProductItemSelector.Hint">
+    <Value>Set the selector of the product item element. The quick view button will be shown when hover over this item. NOTE: the selector should contain attribute "data-productid" with the ID of the product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ProductItemSelectorChild">
+    <Value>Quick View button parent</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ProductItemSelectorChild.Hint">
+    <Value>Set the element where the button will be placed. If left empty or the same value as the "Product item selector" is entered, the button will be placed in the "Product item selector". If entered a different value, the button will be placed in it. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.QuickViewButtonText">
+    <Value>Quick View</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.QuickViewButtonTitle">
+    <Value>Quick View</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.QuickViewPopupAppearanceSettings">
+    <Value>Quick View Popup Appearance Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.QuickViewPopupBehaviorSettings">
+    <Value>Quick View Popup Behaviour Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowAddToWishlistButton">
+    <Value>Show add to wishlist button when simple product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowAddToWishlistButton.Hint">
+    <Value>If clicked the add to wishlist button will be shown in the Quick View for simple products. Regardless of this setting the wishlist button is never shown for grouped products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowCompareProductsButton">
+    <Value>Show compare products button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowCompareProductsButton.Hint">
+    <Value>If clicked the compare products button will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowFullProductDescription">
+    <Value>Show full product description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowFullProductDescription.Hint">
+    <Value>If clicked the full product description will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowProductsAlsoPurchased">
+    <Value>Show products also purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowProductsAlsoPurchased.Hint">
+    <Value>If clicked products also purchased will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowProductSpecification">
+    <Value>Show product specification</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowProductSpecification.Hint">
+    <Value>If clicked the product specification will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowRelatedProducts">
+    <Value>Show related products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowRelatedProducts.Hint">
+    <Value>If clicked related products will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowShortProductDescription">
+    <Value>Show short product description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Settings.ShowShortProductDescription.Hint">
+    <Value>If clicked the short product description will be shown in the Quick View.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public">
+    <Value>Public</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.GoToProductPageLink">
+    <Value>Go to product's page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.MoreInfoHover">
+    <Value>Hover for more info</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.OtherProducts">
+    <Value>Other Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.ProductDescription">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.ProductDetails">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.ProductSpecifications">
+    <Value>Specifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickView.Public.ProductVariants">
+    <Value>Variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.QuickViewMenu">
+    <Value>Nop Quick View</Value>
+  </LocaleResource>
+</Language>

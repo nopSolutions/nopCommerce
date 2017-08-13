@@ -1,0 +1,547 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.product-filters {
+    display: none !important;
+}
+
+
+
+/*=====================================================
+    
+	MOBILE DEVICES
+
+=====================================================*/
+
+
+
+.responsive-nav-wrapper .filters-button {
+	display: table-cell;
+}
+
+/* GLOBAL */
+
+.filtersTitlePanel {
+	display: none;
+}
+.clearFilterOptionsAll {
+	float: right;
+	cursor: pointer;
+}
+
+.filtersPanel {
+}
+.filtersPanel:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.filter-block,
+.filter-block .title {
+	position: relative;
+	margin: 0;
+}
+.filtersGroupPanel {
+	background: #fff;
+	padding: 0 5px;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	padding: 10px;
+	text-align: left;
+	font-size: 13px;
+	color: #000;
+    overflow: hidden;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.selected-options-list > li label{
+    display: block;
+    margin-bottom: 5px;
+}
+.selected-options-list > li span {
+	display: block;
+    float: left;
+    padding: 9px 20px 9px 3px;
+    margin: 0 6px 0 0;
+    background: url('images/delete.png') top 12px right 4px no-repeat;
+	color: #c03;
+	cursor: pointer;
+}
+
+/* PRICE RANGE SLIDER */
+
+.priceRangeFilterPanel7Spikes .filtersGroupPanel {
+	padding: 10px 5px;
+}
+.priceRangeMinMaxPanel {
+	overflow: hidden;
+	margin: 0 0 20px;
+	font-size: 15px;
+}
+.priceRangeMinPanel {
+	float: left;
+}
+.priceRangeMaxPanel {
+	float: right;
+}
+
+.ui-slider {
+	position: relative;
+	width: auto;
+	height: 7px;
+	margin: 0 12px 20px;   
+	background-color: #eee;
+}
+.ui-slider-range {
+	height: 7px;
+	background: #c03;
+	position: absolute;
+}
+.ui-slider-handle {
+	position: absolute;
+	top: -11px;
+	width: 28px;
+	height: 29px;
+	margin-left: -14px;
+	outline: 3px solid #fff !important;
+	background-color: #333;
+	background-position: center;
+	background-repeat: no-repeat;
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	-o-transition: none !important;
+	transition: none !important;
+}
+.ui-slider-handle:nth-child(2) {
+	background-image: url('images/arrow-filters-left.png');
+}
+.ui-slider-handle:nth-child(3) {
+	background-image: url('images/arrow-filters-right.png');
+}
+.ui-slider-handle:hover {
+}
+
+.priceRangeCurrentPricesPanel {
+	overflow: hidden;
+}
+.priceRangeCurrentPricesPanel span {
+	color: #c03;
+	font-size: 15px;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: left;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: right;
+}
+
+/* CHECKBOX MODE */
+
+.filtersGroupPanel ul:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.filtersGroupPanel li {
+	position: relative;
+	border-bottom: 1px dotted #ccc;
+}
+.filtersGroupPanel li.checkbox-item input {
+	position: absolute;
+	opacity: 0;
+}
+.filtersGroupPanel.imageOptions li.checkbox-item label {
+    padding: 12px 0 12px 20px;
+}
+.filtersGroupPanel li.checkbox-item label {
+	display: block;
+	padding: 10px 0 10px 20px;
+	line-height: 1.3;
+	position: relative;
+	font-size: 13px;
+	color: #000;
+	cursor: pointer;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+	text-align: left;
+}
+.filtersGroupPanel li.checkbox-item label:hover {
+	color: #c03;
+}
+.filtersGroupPanel li.checkbox-item label:before {
+	content: "";
+	width: 12px;
+	height: 12px;
+	border: 1px solid #999;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin: -6px 0 0;
+}
+.filtersGroupPanel li.checkbox-item.checked label {
+	color: #c03;
+	font-weight: bold;
+}
+.filtersGroupPanel li.checkbox-item.checked label:before {
+	border-color: #000 !important;
+	background:url('../../../images/selected.png') no-repeat center;
+}
+.filtersGroupPanel li.checkbox-item.disabled label {
+	color: #999;
+	cursor: default;
+	opacity: 0.4;
+}
+.filtersGroupPanel li.checkbox-item.disabled label:hover {
+	color: #999;
+}
+
+/* COLOR SQUARES */
+
+.colorOptions li.checkbox-item .color {
+	position: absolute;
+	top: 50%;
+	margin-top: -9px;
+	right: 0;
+	width: 20px;
+	height: 20px;
+	overflow: hidden;
+	border: 1px solid #333;
+	font-size: 0;
+}
+.imageOptions li.checkbox-item .color {
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    background-position: center;
+    background-size: cover;
+}
+.colorOptions li.checkbox-item.disabled .color {
+	opacity: 0.4;
+}
+.colorOptions li.checkbox-item .defaultColor {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAIAAACRuyQOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE2MDkzNUE1N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjE2MDkzNUE2N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTYwOTM1QTM3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTYwOTM1QTQ3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz73zzpFAAAAkElEQVR42rzNiQ3AIAwEsIzO5i1SpT4UyHcXL2A5SrTWpKjpihr29DTU6dPwprEhTZOGMc0b+LRssNOuAU5Kg5r0BjKZmvxkbZKTo8lMviY8uZvYFGkCU7DxTvHGNaUa+5RtjBOgsUyYRp1gzX5CNpsJ3KwmfDOdKM1/YjXDRGzeE7e5J3pzTRVNV9SInAIMAJwnJvFb6ab1AAAAAElFTkSuQmCC') no-repeat center;
+    background-size: cover;
+}
+
+/* DROPDOWN MODE */
+
+.filtersGroupPanel .select-wrap {
+    position: relative;
+}
+.filtersGroupPanel .select-wrap select {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	margin: 0 !important;
+	opacity: 0;
+}
+.filtersGroupPanel .select-wrap .select-box {
+	display: block;
+	min-width: 100px;
+	border: 1px solid #ccc;
+	background: #fff url('images/arrow-down-black.png') no-repeat right center;
+	padding: 8px 32px 8px 12px;
+	font-size: 14px;
+	color: #333;
+	text-align: left;
+	cursor: pointer;
+}
+.filtersDropDownPanel.disabled .select-wrap .select-box {
+	color: #999;
+	opacity: 0.4;
+}
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+	filter: Alpha(opacity = 70);
+	opacity: 0.7;
+	z-index: 2;
+}
+.infinite-scroll-loader {
+    display: none;
+    height: 100px;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+    font-size: 0;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+    clear: both;
+}
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters.k-window {
+	position: absolute;
+	z-index: 10001;
+	height: auto !important;
+	border: 1px solid #ccc;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+	background: #fff;
+	padding: 1px !important;
+}
+.ajaxFilters .k-window-titlebar {
+	margin: 0 !important;
+	border-bottom: 1px solid #bbb;
+	background: #ddd;
+	padding: 8px;
+}
+.ajaxFilters .k-window-titlebar span {
+	font-size: 16px;
+	color: #333;
+	text-shadow: 1px 1px 0 #fff;
+}
+.ajaxFilters .k-window-actions {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+.ajaxFilters .k-window-actions a {
+	display: block;
+}
+.ajaxFilters .k-window-actions .k-icon {
+	display: block;
+	height: 16px;
+	width: 16px;
+	background: #333 url('../../../images/button-close-hover.png') no-repeat center;
+	font-size: 0;
+}
+.ajaxFilters .k-window-actions .k-icon:hover {
+	background: #fff url('../../../images/button-close.png') no-repeat center;
+}
+.ajaxFilters .k-window-content {
+	min-height: inherit !important;
+	min-width: inherit !important;
+	padding: 15px;
+	line-height: 18px;
+	color: #555;
+}
+
+
+@media all and (max-width: 1000px) {
+
+.nopAjaxFilters7Spikes {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 320px;
+    height: 100%;
+    text-align: left;
+    background: #333 !important;
+    overflow: hidden;
+    z-index: 2147483647;
+	-webkit-transition: all .3s ease-in-out;
+	transition: all .3s ease-in-out;
+}
+.nopAjaxFilters7Spikes.open {
+	box-shadow: 1px 0 5px rgba(0,0,0,0.5);
+}
+
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(-320px);
+	-ms-transform: translate(-320px);
+	transform: translate(-320px);
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0);
+	-ms-transform: translate(0);
+	transform: translate(0);
+}
+.android23 .nopAjaxFilters7Spikes {
+	left: -320px;
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	left: 0;
+}
+
+.nopAjaxFilters7Spikes .close-filters {
+	background: #c03;
+	cursor: pointer;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	display: block;
+	position: relative;
+	padding: 15px;
+	font: normal 15px 'eurostile';
+	color: #fff;
+	text-transform: uppercase;
+	text-align: right;
+}
+.nopAjaxFilters7Spikes .close-filters span:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 10px;
+	width: 26px;
+	height: 26px;
+	margin-top: -13px;
+	background: #eee url('images/mobile-menu-close.png') center no-repeat;  
+}
+
+/* Filter block */
+
+.filter-block {
+	width: 100% !important;
+}
+.filter-block .title {
+	background: #fff !important;
+	border-bottom: 1px dotted #ccc;
+}
+.filter-block a.toggleControl {
+	display: block;
+	background: url('images/mobile-arrow-black.png') right center no-repeat;
+	padding: 16px 18px;
+	text-align: left;
+	font: normal 12px 'eurostile';
+	color: #333;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	width: 30px;
+	height: 30px;
+	margin-top: -15px;
+	background: #333 url('images/clear-button-white.png') center no-repeat;
+	cursor: pointer;
+	text-indent: -9999px;
+}
+
+.filtersGroupPanel {
+	border-bottom: 1px dotted #ccc;
+	background-color: #f6f6f6;
+	padding: 0 20px;
+}
+.filtersGroupPanel li:last-child {
+	border-bottom: none;
+}
+.priceRangeFilterPanel7Spikes .filtersGroupPanel {
+	padding: 10px 20px;
+}
+.ui-slider-handle {
+	outline-color: #f6f6f6 !important;
+}
+
+/* dropdowns */
+
+.product-viewmode .jDropDown,
+.product-sorting .jDropDown,
+.product-page-size .jDropDown {
+	min-width: 150px;
+}
+.jDropDown > div:after {
+	width: 32px;
+	height: 32px;
+}
+.filtersDropDownPanel {
+	padding: 15px 20px;
+}
+
+.number-of-returned-products.active {
+    display: none;
+}
+
+}
+
+
+@media all and (min-width: 1001px) {
+
+.filters-button,
+.close-filters {
+	display: none;
+}
+
+.nopAjaxFilters7Spikes {
+	margin: 0 0 30px;
+	border-bottom: 7px solid #333;
+}
+.filter-block {
+	margin: 0 auto 20px;
+}
+.filter-block .title {
+	display: block;
+	position: relative;
+	z-index: 2;
+	margin: 0 0 10px;
+}
+.filter-block a.toggleControl {
+    display: block;
+	/*background: url('images/arrow-up-white.png') right center no-repeat;*/
+    padding: 12px 15px;
+	font: 14px 'eurostile';
+	color: #fff;
+    text-transform: uppercase;
+}
+.filter-block a.toggleControl.closed {
+	/*background-image: url('images/arrow-down-white.png');*/
+}
+.filter-block a.toggleControl:first-letter {
+	font-size: 18px;
+}
+.filter-block a.clearFilterOptions, 
+.filter-block a.clearPriceRangeFilter {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	width: 24px;
+	height: 24px;
+	margin-top: -12px;
+	background: #fff url('images/clear-button-black.png') center no-repeat;
+	cursor: pointer;
+	text-indent: -9999px;
+	opacity: 0.95;
+}
+.filter-block a.clearFilterOptions:hover,
+.filter-block a.clearPriceRangeFilter:hover {
+	opacity: 0.95;
+}
+
+.filtersGroupPanel {
+	display: block;
+	position: relative;
+	z-index: 2;
+}
+.selected-options-list > li span {
+    padding: 5px 20px 5px 3px;
+    margin: 0 6px 0 0;
+    background-position: top 8px right 4px;
+}
+.selected-options-list > li span:hover{
+    text-decoration: underline;
+}
+.priceRangeFilterPanel7Spikes .filtersGroupPanel {
+	padding-bottom: 0;
+}
+.filtersGroupPanel .ui-slider {
+	margin: 0 12px 20px;
+}
+.filtersGroupPanel li.checkbox-item label {
+	line-height: normal;
+}
+
+.number-of-returned-products.active {
+	display: block;
+	float: right;
+	line-height: 32px;
+}
+
+}

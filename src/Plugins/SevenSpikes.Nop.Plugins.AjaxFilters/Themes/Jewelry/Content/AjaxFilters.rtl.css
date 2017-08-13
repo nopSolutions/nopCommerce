@@ -1,0 +1,101 @@
+﻿.filtersTitlePanel p {
+    float: right !important;
+}
+.filtersGroupPanel li a {
+    text-align: right;
+    padding-left: 0;
+    padding-right: 15px;
+}
+.clearFilterOptionsAll,
+.clearFilterOptions,
+.clearPriceRangeFilter {
+    float: left !important;
+}
+.toggleControl {
+    float: right !important;
+}
+.block .title {
+    overflow: hidden;
+}
+
+
+/* CHECKBOX MODE */
+
+.filtersGroupPanel li .color,
+.filtersGroupPanel li .defaultColor {
+    right: 0;
+    left: auto;
+}
+
+.filtersGroupPanel.filtersDropDownPanel li a {
+    padding: 5px 0 !important;
+}
+.filtersGroupPanel.imageOptions li label {
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+    padding: 3px 3px 3px 15px;
+    margin: 0 0 0 5px;
+    background-position: top 6px left 3px;
+}
+
+.select-inner {
+    text-align: right;
+    background-position: left 5px center;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* POP UP */
+
+.ajaxFilters .k-window-actions {
+    right: inherit !important;
+    left: 10px;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color-container {
+    right: 9px;
+    left: auto;
+}
+
+/*=====================================================
+    
+    TABLETS LANDSCAPE & NETBOOKS
+
+=====================================================*/
+
+@media all and (max-width: 980px) {
+
+    .filtersGroupPanel li a,
+    .nopAjaxFilters7Spikes .filtersGroupPanel.colorOptions li a {
+        padding: 12px 35px 12px 0 !important;
+    }
+    .filtersGroupPanel li a:before {
+        left: 0;
+        right: 8px;
+    }
+
+}

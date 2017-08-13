@@ -1,0 +1,114 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 240px) {
+    .product-name {
+        position: relative;
+        padding: 0 5px 5px;
+    }
+    .previous-product,
+    .next-product {
+        position: absolute;
+        top: 11px;
+        background: #c3b9b1;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+        text-transform: uppercase;
+        color: #fff;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
+    .previous-product-title,
+    .next-product-title {
+        display: none;
+    }
+
+}
+
+@media all and (min-width: 240px) and (max-width: 768px){
+
+    .previous-product,
+    .next-product{
+        width: 40px;
+        height: 40px;
+    }
+    .previous-product .previous-product-label,
+    .next-product .next-product-label{
+        font-size: 0;
+    }
+    .previous-product {
+        /*left: 50%;
+        margin-left: -41px;*/
+        background: #c3b9b1 url('img/product-arrow-left.png') no-repeat center;
+        /*position:relative;
+        top:0;*/
+        position:absolute;
+        top:5px;
+        left:0;
+        z-index:1;
+    }
+    .next-product {
+        /*right: 50%;
+        margin-right: -41px;*/
+        background: #c3b9b1 url('img/product-arrow-right.png') no-repeat center;
+        /*position:relative;*/
+        top:5px;
+        position:absolute;
+        right:0;
+        z-index:1;
+    }
+    .next-product>a ,
+    .previous-product>a{
+        display:block;height:100%;
+    }
+    .center-1{
+        position:relative;
+    }
+}
+
+@media all and (min-width: 769px) {
+
+    .product-name {
+        padding: 0;
+    }
+    .product-name h1{
+        padding: 10px 80px;
+    }
+    .previous-product .previous-product-label,
+    .next-product .next-product-label {
+        display: block;
+        padding: 9px 15px;
+    }
+    .previous-product .previous-product-label {
+        background: url('img/product-arrow-left.png') no-repeat left 8px center;
+        padding-left: 27px;
+    }
+    .next-product .next-product-label {
+        background: url('img/product-arrow-right.png') no-repeat right 8px center;
+        padding-right: 27px;
+    }
+    .previous-product .previous-product-label:hover,
+    .next-product .next-product-label:hover{
+        background-color: #A59B92;
+        transition: all 0.35s ease;
+            -webkit-transition: all 0.35s ease;
+            -ms-transition: all 0.35s ease;
+    }
+
+    .previous-product, .next-product {
+        top: 25px;
+        margin-top: -19px;
+        z-index:1;
+    }
+    .previous-product {
+        left: 0;
+        margin-left: 0;
+    }
+    .next-product {
+        right: 0;
+        margin-right: 0;
+    }
+}

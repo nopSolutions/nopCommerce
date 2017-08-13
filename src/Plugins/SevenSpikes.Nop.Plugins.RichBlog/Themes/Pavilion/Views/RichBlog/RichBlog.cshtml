@@ -1,0 +1,55 @@
+﻿@using SevenSpikes.Nop.Plugins.RichBlog.Models;
+
+@model  IList<BlogPostModel7Spikes>
+
+@{
+    if (Model.Count == 0)
+    {
+        return;
+    }
+
+    var supportRtl = this.ShouldUseRtlTheme();
+    var theme = Model.FirstOrDefault().Theme;
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + theme + "/Content/RichBlog.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.RichBlog/Themes/" + theme + "/Content/RichBlog.rtl.css");
+    }
+}
+
+<div class="rich-blog-homepage">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.LatestFromBlog")</strong>
+    </div>
+    <div class="blog-posts">
+        @foreach (var post in Model)
+        {
+            <div class="blog-post">
+                @if (!string.IsNullOrWhiteSpace(post.HomePagePictureUrl))
+                {
+                    <div class="post-picture">
+                        <a href="@(string.Format("{0}{1}", Url.RouteUrl("HomePage"), post.SeName))">
+                            <img src="@post.HomePagePictureUrl" alt="@post.Title" title="@post.Title" />
+                        </a>
+                    </div>
+                }
+                <div class="post-details">
+                    <span class="post-date">@post.CreatedOn</span>
+                    @if (post.AllowComments)
+                    {
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = post.SeName })" class="read-comments">@post.NumberOfComments</a>
+                    }
+                    <h3 class="post-title"><a href="@(string.Format("{0}{1}", Url.RouteUrl("HomePage"), post.SeName))">@post.Title</a></h3>
+                    <div class="post-description">
+                        @Html.Raw(!String.IsNullOrEmpty(post.BodyOverview) ? post.BodyOverview : post.Body)
+                    </div>
+                    @*<a class="read-more" href="@(string.Format("{0}{1}", Url.RouteUrl("HomePage"), post.SeName))">@T("SevenSpikes.RichBlog.Public.ReadMore")</a>*@
+                </div>
+            </div>
+        }
+    </div>
+    <div class="view-all">
+        <a href="@Url.RouteUrl("Blog")">@T("SevenSpikes.RichBlog.Public.ViewAllBlogPosts")</a>
+    </div>
+</div>

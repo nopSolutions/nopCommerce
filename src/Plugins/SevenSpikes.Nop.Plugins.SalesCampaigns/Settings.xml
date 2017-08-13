@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="SaleCampaignProductPageCustomization.FontSize">
+    <Value>16</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.PaddingTop">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.PaddingRight">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.PaddingBottom">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.PaddingLeft">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.MarginTop">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.MarginRight">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.MarginBottom">
+    <Value>20</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.MarginLeft">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.ClockType">
+    <Value>DaysHoursMinutesSeconds</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.ClockTextAlign">
+    <Value>Center</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.FontColor">
+    <Value>#666666</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.FontWeight">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.FontStyle">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignProductPageCustomization.BackgroundColor">
+    <Value>#f6f6f6</Value>
+  </Setting>
+  <Setting Name="SaleCampaignSettings.SaleCampaignScheduledTaskIntervalSeconds">
+    <Value>600</Value>
+  </Setting>
+  <Setting Name="SaleCampaignPluginSettings.EnableSaleCampaigns">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="SaleCampaignPluginSettings.ProductBoxSelector">
+    <Value>.item-grid .product-item, .product-variant-line, .jcarousel-item .item-holder</Value>
+  </Setting>
+  <Setting Name="SaleCampaignPluginSettings.ProductBoxPictureContainerSelector">
+    <Value>.picture, .variant-picture, .item-picture</Value>
+  </Setting>
+
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType">
+    <Value>DaysHoursMinutesSeconds</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSize">
+    <Value>15</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSizeUnit">
+    <Value>Px</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontWeight">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontStyle">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontColor">
+    <Value>rgba(136, 136, 136, 1)</Value>
+  </Setting>
+  
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPosition">
+    <Value>Middle</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBackgroundColor">
+    <Value>rgba(246, 246, 246, 0.9)</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderInput">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderType">
+    <Value>Solid</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderColor">
+    <Value>rgba(237, 237, 237, 0.9)</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingTop">
+    <Value>20</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingRight">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingBottom">
+    <Value>20</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingLeft">
+    <Value>0</Value>
+  </Setting>
+  
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSize">
+    <Value>12</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSizeUnit">
+    <Value>Px</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontWeight">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontStyle">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontColor">
+    <Value>rgba(136, 136, 136, 1)</Value>
+  </Setting>
+  
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBackgroundColor">
+    <Value>rgba(255, 255, 255, 1)</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderInput">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderType">
+    <Value>Solid</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderColor">
+    <Value>rgba(237, 237, 237, 1)</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSize">
+    <Value>25</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSizeUnit">
+    <Value>Px</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontWeight">
+    <Value>Bold</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontStyle">
+    <Value>Normal</Value>
+  </Setting>
+  <Setting Name="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontColor">
+    <Value>rgba(68, 68, 68, 1)</Value>
+  </Setting>
+</Settings>

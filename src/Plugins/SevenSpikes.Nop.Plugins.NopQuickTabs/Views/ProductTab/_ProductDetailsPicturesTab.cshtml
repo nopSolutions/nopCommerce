@@ -1,0 +1,19 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Web.Models.Catalog
+
+@model ProductDetailsModel
+
+@{
+    var cloudZoom = Html.Widget("sevenspikes_cloud_zoom");
+    if (!MvcHtmlString.IsNullOrEmpty(cloudZoom))
+    {
+        @cloudZoom
+    }
+    else
+    {
+        @Html.Partial("_ProductDetailsPictures", Model)
+    }
+}

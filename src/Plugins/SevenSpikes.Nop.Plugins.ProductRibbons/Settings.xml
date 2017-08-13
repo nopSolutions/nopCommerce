@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="ProductRibbonsSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="ProductRibbonsSettings.ProductBoxSelector">
+    <Value>.product-item, .item-holder</Value>
+  </Setting>
+  <Setting Name="ProductRibbonsSettings.ProductBoxPictureContainerSelector">
+    <Value>.picture, .item-picture</Value>
+  </Setting>
+  <Setting Name="ProductRibbonsSettings.ProductPagePicturesParentContainerSelector">
+    <Value>.product-essential</Value>
+  </Setting>
+  <Setting Name="ProductRibbonsSettings.ProductPageBugPictureContainerSelector">
+    <Value>.picture</Value>
+  </Setting>
+  <Setting Name="ProductRibbonDefaultSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="ProductRibbonDefaultSettings.StopAddingRibbonsAftherThisOneIsAdded">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="ProductRibbonDefaultSettings.Priority">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="CategoryPageRibbonDefaultSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="CategoryPageRibbonDefaultSettings.TextStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="CategoryPageRibbonDefaultSettings.ImageStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="CategoryPageRibbonDefaultSettings.ContainerStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="CategoryPageRibbonDefaultSettings.InnerContainerStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="ProductPageRibbonDefaultSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="ProductPageRibbonDefaultSettings.TextStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="ProductPageRibbonDefaultSettings.ImageStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="ProductPageRibbonDefaultSettings.ContainerStyle">
+    <Value></Value>
+  </Setting>
+  <Setting Name="ProductPageRibbonDefaultSettings.InnerContainerStyle">
+    <Value></Value>
+  </Setting>
+</Settings>

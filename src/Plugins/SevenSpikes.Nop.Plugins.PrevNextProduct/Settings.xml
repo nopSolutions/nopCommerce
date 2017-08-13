@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="PrevNextProductSettings.EnablePrevNextProduct">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PrevNextProductSettings.EnableProductLooping">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PrevNextProductSettings.ProductTitleLength">
+    <Value>27</Value>
+  </Setting>
+</Settings>

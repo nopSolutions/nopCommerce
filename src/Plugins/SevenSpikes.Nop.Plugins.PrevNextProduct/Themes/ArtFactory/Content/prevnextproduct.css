@@ -1,0 +1,90 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 240px) {
+    .product-page-wrapper > .product-page-name {
+        position: relative;
+        padding: 70px 20px 10px;
+    }
+    .previous-product,
+    .next-product {
+        position: absolute;
+        top: 12px;
+        text-indent: -9999px;
+        overflow: hidden;
+        opacity: .5;
+        -webkit-transition: all .2s ease;
+        -moz-transition: all .2s ease;
+        transition: all .2s ease;
+    }
+    .previous-product {
+        left: 50%;
+        margin-left: -55px;
+    }
+    .next-product {
+        right: 50%;
+        margin-right: -55px;
+    }
+    .previous-product:hover,
+    .next-product:hover {
+        opacity: .9;
+    }
+    .previous-product a,
+    .next-product a,
+    .previous-product .previous-product-label,
+    .next-product .next-product-label {
+        display: block;
+        width: 45px;
+        height: 45px;
+        text-indent: -9999px;
+    }
+    .previous-product-title,
+    .next-product-title {
+        display: none;
+    }
+    .previous-product .previous-product-label {
+        background: url(img/nav-button-left.png) no-repeat center;
+    }
+    .next-product .next-product-label {
+        background: url(img/nav-button-right.png) no-repeat center;
+    }
+}
+
+
+@media all and (min-width: 769px) {
+
+    .product-page-wrapper > .product-page-name {
+        padding: 20px 70px;
+    }
+    .previous-product, .next-product {
+        top: 50%;
+        margin-top: -22px;
+    }
+
+}
+
+@media all and (min-width: 769px) and (max-width: 1000px){
+
+    .previous-product {
+        left: 10px;
+        margin-left: 0;
+    }
+    .next-product {
+        right: 10px;
+        margin-right: 0;
+    }
+
+}
+
+@media all and (min-width: 1001px) {
+
+    .previous-product {
+        margin-left: -500px;
+    }
+    .next-product {
+        margin-right: -500px;
+    }    
+
+}

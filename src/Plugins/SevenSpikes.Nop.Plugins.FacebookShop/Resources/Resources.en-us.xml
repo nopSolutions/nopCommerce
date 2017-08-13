@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.FacebookShop.Admin.Menu.MenuName">
+    <Value>Facebook Shop</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Submenus.Settings">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.SettingsTitle">
+    <Value>Nop Facebook Shop Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.TabTitle.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.TabTitle.ConfigurationNotes">
+    <Value>Configuration Notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.HomePageProductIds">
+    <Value>Home Page Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.HomePageProductIds.Hint">
+    <Value>Select the products, which will be shown on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.MainBannerImageId">
+    <Value>Main Banner Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.MainBannerImageId.Hint">
+    <Value>Select an image that will shows up in the top of your facebook store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowMainBannerOnAllPages">
+    <Value>Show Main Banner On All Pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowMainBannerOnAllPages.Hint">
+    <Value>Check this setting to show the main banner on all pages. Otherwise it will be shown only on the home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.MainMenuCategoriesIds">
+    <Value>Main Menu Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.MainMenuCategoriesIds.Hint">
+    <Value>Select the categories, which will be shown in the menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfMainMenuCategoryItems">
+    <Value>Number Of Top Level Menu Category Items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfMainMenuCategoryItems.Hint">
+    <Value>Set the number of categories to be shown as top level items in the menu. The rest will be shown in "More" menu item.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.IncludeManufacturersItemInMainMenu">
+    <Value>Include Manufacturers Item In The Main Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.IncludeManufacturersItemInMainMenu.Hint">
+    <Value>Check this setting to show a manufacturers item in the main menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.CategoryPageSize">
+    <Value>Catalog Page Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.CategoryPageSize.Hint">
+    <Value>Set how many products to be shown on category page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfItemBoxesPerRow">
+    <Value>Number Of Item Boxes Per Row</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfItemBoxesPerRow.Hint">
+    <Value>Set how many products to be shown on each row in product grid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfRelatedProducts">
+    <Value>Number Of Related Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.NumberOfRelatedProducts.Hint">
+    <Value>Set how many related products to be shown on product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowShortDescription">
+    <Value>Show Short Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowShortDescription.Hint">
+    <Value>Show short description on product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowFullDescription">
+    <Value>Show Full Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Settings.ShowFullDescription.Hint">
+    <Value>Show full description on product details page</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.NoResults">
+    <Value>No results to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Product.AllProducts">
+    <Value>All Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Product.Name">
+    <Value>Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.facebookshop.admin.products.addnew">
+    <Value>Add New Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Catalog.Name">
+    <Value>Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.Catalog.Categories">
+    <Value>All Categories</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.ProductName">
+    <Value>Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.ProductName.Hint">
+    <Value>Search by Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Category.Hint">
+    <Value>Search by Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Manufacturer.Hint">
+    <Value>Search by Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Vendor.Hint">
+    <Value>Search by Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.ProductType">
+    <Value>Product Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.ProductType.Hint">
+    <Value>Search by Product Type (simple or grouped)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Admin.ProductsPopup.Store.Hint">
+    <Value>Search by Store</Value>
+  </LocaleResource>
+  
+
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ShopTitle">
+    <Value>Facebook store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.Menu.MoreItem">
+    <Value>More</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.Menu.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.HomePageProducts.Title">
+    <Value>Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ProductBox.ShareToFacebook">
+    <Value>Share to Facebook</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ProductPage.BackTo">
+    <Value>Back To</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ProductPage.BackToHome">
+    <Value>Back To Home</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ProductPage.BackToSearch">
+    <Value>Back To Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.FacebookShop.Public.ProductPage.Manufacturer">
+    <Value>Manufacturer:</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,68 @@
+﻿
+/* general styles */
+
+.ajaxCart {
+    text-align: right;
+}
+.ajaxCart .k-window-titlebar.k-header {
+    padding: 14px 10px 14px 35px;
+}
+.ajaxCart .k-window-titlebar.k-header .k-window-actions {
+    right: auto;
+    left: 14px;
+}
+.productAddedToCartWindowTitle {
+    padding: 13px 15px 13px 35px;
+}
+.productAddedToCartWindowImage {
+    text-align: right;
+}
+.productAddedToCartWindowDescription {
+    margin: 0 230px 0 0;
+}
+.miniProductDetailsView .add-to-cart > * {
+    margin: 0 0 0 1px !important;
+}
+
+
+
+/* grouped */
+
+.miniProductDetailsView .product-name {
+    left: auto;
+    right: 0;
+    padding: 12px 15px 12px 35px;
+}
+.ajaxCart .overview {
+    margin: 0 230px 0 0 !important;
+}
+.ajaxCart .qty-input,
+.miniProductDetailsView .add-info input[type="text"] {
+    float: right;
+}
+.nopAjaxCartProductVariantAddToCartButton {
+    float: right;
+}
+.miniProductDetailsView .message-error {
+    float: right;
+    text-align: right;
+}
+
+
+
+/* attributes */
+
+.ajaxCart .attributes .attribute-squares li {
+	margin: 5px 0 5px 10px;
+}
+
+
+
+/* product grid */
+
+.ajaxCart .product-grid .title {
+    text-align: right;
+}
+.ajaxCart .product-grid .item-box {
+    text-align: right;
+}

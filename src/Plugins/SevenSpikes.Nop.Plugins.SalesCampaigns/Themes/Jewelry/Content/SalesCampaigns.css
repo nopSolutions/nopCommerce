@@ -1,0 +1,55 @@
+﻿/*common styles*/
+
+.vertical-align-middle > div {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    height: 90px;
+}
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    right: 0;
+}
+
+/*jacarousel*/
+
+.jcarousel-item .item-picture {
+    position: relative;
+}
+
+/*product page grouped*/ 
+
+.product-variant-line .variant-picture {
+    position: relative;
+    width: 200px;
+}
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+@media all and (min-width: 768px) {
+    .product-variant-line {
+        min-height: 0;
+    }
+    .variant-picture + .variant-overview {
+        margin-left: 210px;
+    }
+    .product-variant-line .variant-picture {
+        width: 200px;
+    }
+    .product-variant-line .variant-picture + .variant-overview {
+        width: auto;
+    }
+}
+
+@media all and (min-width: 981px) {
+    .product-variant-line .variant-picture + .variant-overview {
+        width: 500px;
+        margin: 0;
+    }
+}

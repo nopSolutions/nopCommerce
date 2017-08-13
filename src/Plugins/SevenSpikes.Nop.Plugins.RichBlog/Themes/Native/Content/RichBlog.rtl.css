@@ -1,0 +1,66 @@
+.blog-search-box span.search-box-text{
+	margin-left: 35px;
+	margin-right: 0;
+}
+.blog-search-box form button{
+	left: 0;
+	right: auto;
+}
+.blog-page .category-list a{
+	margin-right: 15px;
+	margin-left: 0;
+}
+.blog-search-results a:after{
+	right: 0;
+	left: 0;
+}
+.post-relations label{
+	margin: 0 0 0 10px;
+}
+.post-relations li.separator{
+	margin: 0 0 0 5px;
+}
+.post-relations li a{
+	margin-right: 15px;
+	margin-left: 0;
+}
+.post-navigation .prev{
+	float: right;
+	text-align: right;
+}
+.post-navigation .next{
+	float: left;
+	text-align: left;
+}
+.post-navigation .prev:before {
+	left: 0;
+	background: url('images/next.png') center 13px no-repeat;
+}
+.post-navigation .next:before {
+	right: 0;
+	background: url('images/prev.png') center 13px no-repeat;
+}
+.post-navigation .prev:before{
+	right: 0;
+	left: auto;
+}
+.post-navigation .next:before{
+	left: 0;
+	right: auto;
+}
+.rich-blog-homepage .blog-post{
+	float: right;
+	margin: 0 2.5% 2.5% 0;
+}
+.rich-blog-homepage .blog-post:nth-child(2n+1){
+	margin-right: 0;
+}
+.post-navigation .prev{
+	padding-right: 40px;
+	padding-left: 0;
+}
+.post-navigation .next{
+	padding-left: 40px;
+	padding-right: 0;
+}
+

@@ -1,0 +1,39 @@
+﻿@using Nop.Web.Models.Catalog
+@using System.Globalization
+
+@model ProductDetailsModel
+
+@if (Model.IsRental)
+{
+    string startDateControlName = string.Format("rental_start_date_{0}", Model.Id);
+    string endDateControlName = string.Format("rental_end_date_{0}", Model.Id);
+    string startDateControlId = string.Format("quick_view_{0}", startDateControlName);
+    string endDateControlId = string.Format("quick_view_{0}", endDateControlName);
+    //currenly we support only this format
+    //java-script format
+    const string datePickerFormat = "mm/dd/yy";
+    //C# format for ToString method
+    const string datePickerFormat2 = "M/dd/yyyy";
+
+    <div class="attributes rental-attributes">
+        <dl>
+            <dt>
+                <label class="text-prompt">@T("Products.RentalStartDate"):</label>
+                <span class="required">*</span>
+            </dt>
+            <dd>
+                <input id="@(startDateControlId)" name="@(startDateControlName)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+            </dd>
+            <dt>
+                <label class="text-prompt">@T("Products.RentalEndDate"):</label>
+                <span class="required">*</span>
+            </dt>
+            <dd>
+                <input id="@(endDateControlId)" name="@(endDateControlName)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+            </dd>
+        </dl>
+    </div>
+
+    <input type="hidden" class="quickViewRentalInfo" data-datePickerFormat="@datePickerFormat"
+           data-startDateControlId="@startDateControlId" data-endDateControlId="@endDateControlId" />
+}

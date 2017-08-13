@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="NopAjaxCartSettings.EnableNopAjaxCart">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableOnMobileDevices">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableOnProductPage">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableOnCatalogPages">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableProductQuantityTextBox">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.WishlistMenuLinkSelector">
+    <Value>span.wishlist-qty</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.AddToWishlistButtonSelector">
+    <Value>.add-to-wishlist-button</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ShoppingCartMenuLinkSelector">
+    <Value>.cart-qty</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.FlyoutCartPanelSelector">
+    <Value>#flyout-cart</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductPageAddToCartButtonSelector">
+    <Value>.add-to-cart-button</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductBoxAddToCartButtonSelector">
+    <Value>.product-box-add-to-cart-button</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductBoxProductItemElementSelector">
+    <Value>.product-item</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.ProductAddedToCartImageSize">
+    <Value>210</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.MiniProductDetailsViewImageSize">
+    <Value>210</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableRelatedProductsInPopup">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.NumberOfRelatedProductsInPopup">
+    <Value>3</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.EnableCrossSellProductsInPopup">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="NopAjaxCartSettings.NumberOfCrossSellProductsInPopup">
+    <Value>3</Value>
+  </Setting>
+</Settings>

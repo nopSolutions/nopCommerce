@@ -1,0 +1,28 @@
+﻿@using SevenSpikes.Nop.Plugins.SaleCampaigns.Models
+
+@model SaleCampaignPluginSettingsModel
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/SevenSpikesExtensions.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.SalesCampaigns/Scripts/SaleCampaigns.min.js");
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SalesCampaigns/Styles/SalesCampaigns.common.css");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SalesCampaigns/Themes/" + Model.Theme + "/Content/SalesCampaigns.css");
+
+    var supportRtl = ShouldUseRtlTheme();
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.SalesCampaigns/Styles/SalesCampaigns.common.rtl.css");
+    }
+}
+
+<div id="sales-campaign-info"
+     data-localization-day="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Day")" data-localization-days="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Days")"
+     data-localization-hour="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Hour")" data-localization-hours="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Hours")"
+     data-localization-minute="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Minute")" data-localization-minutes="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Minutes")"
+     data-localization-second="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Second")" data-localization-seconds="@T("SevenSpikes.Plugins.SaleCampaigns.Public.Seconds")"
+     data-productbox-selector="@Model.ProductBoxSelector" data-productbox-picture-container-selector="@Model.ProductBoxPictureContainerSelector"
+     data-retrieve-sales-campaings-url="@Url.Action("RetrieveSalesCampaigns", "SaleCampaign")">
+</div>

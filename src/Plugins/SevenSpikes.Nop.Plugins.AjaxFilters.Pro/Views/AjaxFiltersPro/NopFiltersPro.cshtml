@@ -1,0 +1,87 @@
+﻿@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums;
+@using SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Models;
+
+@model NopAjaxFiltersProPublicModel
+
+@{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters.Pro/Themes/" + Model.ThemeName + "/Content/FilterWidget.css");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters.Pro/Themes/" + Model.ThemeName + "/Content/FilterWidget.rtl.css");
+    }
+
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.core.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.data.odata.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.data.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.popup.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.list.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.dropdownlist.min.js");
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters.Pro/Scripts/AjaxFiltersPro.min.js");
+
+    var showCategoryDropdown = Model.UIMode == NopAjaxFiltersProUIMode.CategoryOnly;
+    var showCategoryAndSubcategoryDropdown = Model.UIMode == NopAjaxFiltersProUIMode.CategoryAndSubcategory;
+    var showManufacturerDropdown = Model.UIMode == NopAjaxFiltersProUIMode.ManufacturerOnly;
+    var showCategoryAndManufacturerDropdown = Model.UIMode == NopAjaxFiltersProUIMode.CategoryAndManufacturer;
+    var showCategorySubcategoryAndManufacturerDropdown = Model.UIMode == NopAjaxFiltersProUIMode.CategorySubcategoryAndManufacturer;
+}
+
+@using (Html.BeginForm("Search", "AjaxFiltersProSearch", FormMethod.Post, new { id = "AjaxFiltersProForm" }))
+{
+    <div class="home-page-filters-wrapper ajax-filters-pro"
+         data-showCategoryDropdown="@showCategoryDropdown.ToString().ToLowerInvariant()"
+         data-showCategoryAndSubcategoryDropdown="@showCategoryAndSubcategoryDropdown.ToString().ToLowerInvariant()"
+         data-showManufacturerDropdown="@showManufacturerDropdown.ToString().ToLowerInvariant()"
+         data-showCategoryAndManufacturerDropdown="@showCategoryAndManufacturerDropdown.ToString().ToLowerInvariant()"
+         data-showCategorySubcategoryAndManufacturerDropdown="@showCategorySubcategoryAndManufacturerDropdown.ToString().ToLowerInvariant()"
+         data-categoryResource="@T("SevenSpikes.NopAjaxFiltersPro.Client.Category")"
+         data-subcategoryResource="@T("SevenSpikes.NopAjaxFiltersPro.Client.Subcategory")"
+         data-manufacturerResource="@T("SevenSpikes.NopAjaxFiltersPro.Client.Manufacturer")"
+         data-getCategoriesUrl="@Url.Action("GetCategories", "AjaxFiltersProSearch")"
+         data-getManufacturersUrl="@Url.Action("GetManufacturers", "AjaxFiltersProSearch")"
+         data-getSpecificationsUrl="@Url.Action("GetSpecification", "AjaxFiltersProSearch")">
+        <div class="home-page-filters">
+            <div class="home-page-filter-selectors">
+                @if (Model.UIMode != NopAjaxFiltersProUIMode.ManufacturerOnly)
+                {
+                    <div class="home-page-filter-selector">
+                        <input type="hidden" id="categories" name="categoryId" value="0" autocomplete="off" />
+                    </div>
+                }
+
+                @if (Model.UIMode == NopAjaxFiltersProUIMode.CategoryAndSubcategory || Model.UIMode == NopAjaxFiltersProUIMode.CategorySubcategoryAndManufacturer)
+                {
+                    <div class="home-page-filter-selector">
+                        <input type="hidden" id="ajax-filters-pro-subcategories" name="subCategoryId" value="0" autocomplete="off" />
+                    </div>
+                }
+
+                @if (Model.UIMode == NopAjaxFiltersProUIMode.ManufacturerOnly || Model.UIMode == NopAjaxFiltersProUIMode.CategoryAndManufacturer
+                    || Model.UIMode == NopAjaxFiltersProUIMode.CategorySubcategoryAndManufacturer)
+                {
+                    <div class="home-page-filter-selector">
+                        <input type="hidden" id="manufacturers" name="manufacturerId" value="0" autocomplete="off" />
+                    </div>
+                }
+
+                @foreach (var spec in Model.Specifications)
+                {
+                    <div class="home-page-filter-selector">
+                        <input type="hidden" id="specification_@(spec.Id)" name="specificationOptions" value="0" class="ajaxFiltersProSpecificationItem"
+                               data-id="@spec.Id"
+                               data-name="@Html.Raw(spec.Name)" autocomplete="off" />
+                    </div>
+                }
+            </div>
+            <div class="home-page-filter-button">
+                <span id="home-page-filter-total-products-count" class="results-number"></span>
+                <button type="submit" class="search-button" disabled="disabled">@T("SevenSpikes.NopAjaxFiltersPro.Client.Search")</button>
+            </div>
+        </div>
+    </div>
+}

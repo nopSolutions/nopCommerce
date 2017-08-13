@@ -1,0 +1,207 @@
+/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/* Firefox fix with the popupnot being opened - http://www.telerik.com/forums/q1'14-release---popup-bug-in-firefox */
+.k-ff {
+    overflow: inherit !important;
+}
+
+#AjaxFiltersProForm {
+    margin: 0 0 50px;
+}
+.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+    margin: -20px 0 50px;
+}
+
+.home-page-filters-wrapper {
+    padding: 15px 20px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    margin: 0 0 50px 0;
+    text-align: center;
+}
+.home-page-filter-selectors {
+    margin: 0 0 20px;
+	overflow: hidden;
+}
+.home-page-filter-selector {
+    margin: 10px 0 0;
+}
+.home-page-filter-selector:first-child {
+    margin: 0;
+}
+.home-page-filter-selector .k-dropdown {
+    display: inline-block;
+    width: 70%;
+}
+.home-page-filter-selector span.k-dropdown-wrap {
+    position: relative;
+    text-align: left;
+    display: block;
+    font-size: 13px;
+    color: #898989;
+    line-height: 1;
+    height: 42px;
+    background: #fff;
+    border: 1px solid #c2c2c2;
+    cursor: pointer;
+    padding: 0 8px;
+    line-height: 42px;
+    vertical-align: middle;
+}
+.home-page-filter-selector span.k-dropdown-wrap.k-state-disabled {
+    opacity: .5;
+    cursor: default;
+}
+.home-page-filter-selector span.k-dropdown-wrap:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 30px;
+	background: url(images/filters-select-icon.png) no-repeat center;
+}
+.home-page-filter-selector .k-select {
+	display: none;
+}
+
+.home-page-filter-dropdown {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: 0;
+}
+.home-page-filter-dropdown > ul {
+    max-height: 200px;
+}
+.home-page-filter-dropdown li {
+	color: #888;
+	font-size: 13px;
+	padding: 8px 12px;
+	cursor: pointer;
+}
+.home-page-filter-dropdown li:hover {
+	background: #f9f9f9;
+}
+
+.home-page-filter-button {
+    display: inline-block;
+}
+.home-page-filters-wrapper .search-button,
+.home-page-filters-wrapper .results-number {
+    float: left;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1; 
+    background: #333;       
+}
+.home-page-filters-wrapper .search-button {
+    margin-left: 1px;
+    border: 0;
+    text-transform: uppercase;
+    font-family: proxima-nova;
+    letter-spacing: 0.5px;
+    padding: 14px 30px;
+}
+.home-page-filters-wrapper .search-button:hover {
+    background: #3d3d3d;
+}
+.home-page-filters-wrapper .results-number {
+    display: none;
+    padding: 14px 0;
+    text-align: center;
+    width: 42px;    
+    height: 42px;
+    font-family: proxima-nova;
+}
+.home-page-filters-wrapper .results-number.loading {
+    font-size: 0;
+    background: #333 url(images/loader.gif) no-repeat center;
+}
+
+@media all and (min-width: 481px) {
+	
+    .home-page-filter-selectors:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+	.home-page-filter-selector .k-dropdown {
+		width: 100%;
+	}
+
+}
+
+@media all and (min-width: 481px) and (max-width: 768px) {
+	
+	.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+		max-width: 600px;
+		margin: -20px auto 50px;
+	}
+	.home-page-filter-selectors {
+		margin: 0 0 10px;
+	}
+    .home-page-filter-selector {
+        float: left;
+        width: 49%;
+        margin: 0 0 2% 2%;
+    }
+	.home-page-filter-selector:nth-child(2n+1) {
+		margin-bottom: 2%;
+		margin-left: 0;
+	}
+
+}
+
+@media all and (min-width: 769px) {
+
+    .home-page-filter-selector {
+        float: left;
+        width: 24.25%;
+        margin: 0 0 0 1%;
+    }
+	.home-page-filter-selector:first-child {
+		margin-left: 0;
+	}    
+
+}
+
+@media all and (min-width: 1001px) {
+	
+	.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+		margin: -40px 0 50px;
+	}
+    .home-page-filters:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .home-page-filter-selectors {
+        float: left;
+        width: 730px;
+        margin: 2px 0 0;
+    }
+    .home-page-filter-button {
+        float: right;
+    }
+    .home-page-filters-wrapper {
+        max-width: 1170px;
+        margin: 0 auto 50px;
+        padding: 15px 0;
+    }
+
+}
+
+@media all and (min-width: 1367px) {
+
+    .home-page-filter-selectors {
+        width: 940px;
+    }
+    .home-page-filter-selector {
+        width: 23.5%;
+        margin: 0 0 0 2%;
+    }
+
+}

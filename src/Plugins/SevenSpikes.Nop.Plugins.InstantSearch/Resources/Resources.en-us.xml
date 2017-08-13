@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.InstantSearch.Admin.Menu.MenuName">
+    <Value>Instant Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.AutocompleteHeight">
+    <Value>Autocomplete Window Height (pixels)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.AutocompleteHeight.Hint">
+    <Value>The height of the autocomplete window in pixels.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.Common">
+    <Value>Nop Instant Search Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.Enable">
+    <Value>Enable Instant Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.Enable.Hint">
+    <Value>Set to enable the Instant Search plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchOption">
+    <Value>Search Option</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchOption.Hint">
+    <Value>Enable drop down with categories, vendors or manufacturers, allowing you to choose a search option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.InstantSearchAdvancedSettings">
+    <Value>Instant Search Advanced Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.MinKeywordLength">
+    <Value>Minimum Keyword Length</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.MinKeywordLength.Hint">
+    <Value>The minimum length of the searched keyword before an instant search is triggered. Please use a number bigger than or equal to 3.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.MinKeywordLength.Range">
+    <Value>Value must be between 1 - 1000 inclusive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfProducts">
+    <Value>Maximum number of products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfProducts.Hint">
+    <Value>Maximum number of products that will contain the search result.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfProducts.Range">
+    <Value>Value must be between 1 - 1000 inclusive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfVisibleProducts">
+    <Value>Number of visible products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfVisibleProducts.Hint">
+    <Value>Specify the number of visible products at a time, that are going to be shown in the search results.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.NumberOfVisibleProducts.Range">
+    <Value>Value must be between 1 - 1000 inclusive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.DefaultProductSortOption">
+    <Value>Default Product Sort Option</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.DefaultProductSortOption.Hint">
+    <Value>Here you can control the default product sort option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.PictureSizeInPixels">
+    <Value>Product Picture Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.PictureSizeInPixels.Hint">
+    <Value>The size (in pixels) of the product picture that is shown in the instant search results.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.PictureSizeInPixels.Range">
+    <Value>Value must be between 1 - 1000 inclusive.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchDescriptions">
+    <Value>Search in Descriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchDescriptions.Hint">
+    <Value>Set to search in product descriptions (might be slower).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.ShowSku">
+    <Value>Show sku in search results</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.ShowSku.Hint">
+    <Value>Show sku in search results only if it is available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.HighlightFirstFoundElementToBeSelected">
+    <Value>Highlight first element</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.HighlightFirstFoundElementToBeSelected.Hint">
+    <Value>Highlight first element in the search results from auto complete dropdown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchProductTags">
+    <Value>Search in product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.SearchProductTags.Hint">
+    <Value>Set to search in product tags.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.VisibleIndividuallyOnly">
+    <Value>Visible Individually Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Settings.VisibleIndividuallyOnly.Hint">
+    <Value>Set to search products which are visible individually only.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Submenus">
+    <Value>Submenus</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.InstantSearch.Public.AllCategories">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditInstantSearchSettings">
+    <Value>Instant Search settings has been edited.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.InstantSearch.Domain.Enums.SearchOption.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.InstantSearch.Domain.Enums.SearchOption.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.InstantSearch.Domain.Enums.SearchOption.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.InstantSearch.Domain.Enums.SearchOption.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+</Language>
