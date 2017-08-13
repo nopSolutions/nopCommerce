@@ -1,0 +1,13 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model IList<Nop.Web.Models.Catalog.CategorySimpleModel>
+
+<select class="search-box-select" id="instant-search-categories">
+    <option value='0'>@T("SevenSpikes.InstantSearch.Public.AllCategories")</option>
+    @foreach(var category in Model) 
+    {
+        <option value="@category.Id">@category.Name</option>
+    }
+</select>

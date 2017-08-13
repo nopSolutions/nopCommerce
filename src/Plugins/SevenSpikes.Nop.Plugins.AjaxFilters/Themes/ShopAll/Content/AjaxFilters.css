@@ -1,0 +1,615 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.nopAjaxFilters7Spikes .block .filtersGroupPanel {
+    position: relative;
+    background:#fff;
+    font-size: 11px;
+    line-height: 18px;
+    padding: 10px 15px;
+}
+
+.filtersPanel{
+    margin:0 auto 5px;
+}
+
+/*styles for responsive*/
+.responsive-nav-wrapper .filters-button {
+    display: inline-block;
+}
+
+.filtersPanel .filtersGroupPanel li a{
+	font-size:14px;
+	color:#333;
+	/*padding:5px 5px 5px 20px;*/
+	padding:2px 2px 2px 20px;
+}
+
+.close-filters {
+	display: none;
+}
+
+.nopAjaxFilters7Spikes .block .filtersGroupPanel ul {
+	margin: 0;
+	padding: 10px 0 0;
+}
+.nopAjaxFilters7Spikes .block .filtersGroupPanel li {
+	border-bottom: 0;
+}
+.nopAjaxFilters7Spikes .filtersTitlePanel {
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 700;
+    padding: 0 0 10px 3px;
+    text-transform: uppercase;
+    display: none;
+}
+.nopAjaxFilters7Spikes .filtersTitle {
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+.nopAjaxFilters7Spikes .clearFilterOptionsAll {
+    float: right;
+    color: #fff;
+    text-transform: none;
+    cursor: pointer;
+}
+.nopAjaxFilters7Spikes .block .title{
+    background:#ddd;
+    
+    position:relative;
+}
+
+.nopAjaxFilters7Spikes .block .title>a:first-child{
+}
+
+.nopAjaxFilters7Spikes .block .title a.toggleControl {
+    color: #333;
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl:after{
+	display:block;
+	width:12px;
+	height:12px;
+	background:url(images/arrow-sprite.png);
+	background-position:100% center;
+	background-repeat:no-repeat;
+	content:'';
+	position:absolute;
+	right:12px;
+	bottom:10px;
+}
+
+.nopAjaxFilters7Spikes .block .title a.toggleControl.closed:after {
+	background-position: 0px 0;
+	width:10px;
+}
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions {
+    position:absolute;
+    top:0;
+    right:0;
+    font-size:14px;
+    padding:10px;
+    background:#aaa;
+    color: #fff;
+    text-transform: none;
+    cursor: pointer;
+}
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions:hover {
+	text-decoration: underline;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	padding: 2px;
+	text-align: left;
+	font-size: 14px;
+	color: #333;
+    overflow: hidden;
+	-webkit-transition: all .2s ease-in-out;
+	-moz-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.selected-options-list > li label {
+	display: block;
+}
+.selected-options-list > li span {
+	position: relative;
+    display: block;
+    float: left;
+	margin: 0 0 0 5px;
+	padding: 0 25px 0 0;
+	vertical-align: middle;
+	color: #d31d25;
+	cursor: pointer;
+}
+.selected-options-list > li span:after {
+	content: "";
+	position: absolute;
+	width: 24px;
+	height: 23px;
+	top: -4px;
+	right: 0;
+	background: url('images/remove.png') center no-repeat;
+	cursor: pointer;
+}
+
+/* PRICE RANGE SLIDER */
+
+.priceRangeFilterPanel7Spikes .ui-slider {
+    background: #555555;
+    height: 4px;
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+    overflow:visible;
+}
+.priceRangeFilterPanel7Spikes .priceRangeMinMaxPanel {
+    overflow: hidden;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.priceRangeMinMaxPanel span{
+	color:#333;
+}
+
+.priceRangeMinPanel,
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: left;
+}
+.priceRangeMaxPanel,
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: right;
+}
+.nopAjaxFilters7Spikes .block .title a.clearPriceRangeFilter {
+    color: #fff;
+    text-transform: none;
+    cursor: pointer;
+    font-size:14px;
+    position:absolute;
+    top:0;
+    right:0;
+    padding:10px;
+    background:#aaa;
+}
+.nopAjaxFilters7Spikes .block .title a.clearPriceRangeFilter:hover {
+	text-decoration: underline;
+}
+.ui-widget-content {
+    border: 1px solid #888 !important;
+}
+.ui-slider-handle, .ui-slider-handle.ui-state-hover {
+    top: -5px !important;
+    width: 20px !important;
+    height: 15px !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+}
+    .ui-slider-handle:focus {
+        outline: -webkit-focus-ring-color auto 0;
+    }
+.priceRangeFilterPanel7Spikes .ui-state-default,
+.priceRangeFilterPanel7Spikes .ui-widget-content .ui-state-default,
+.priceRangeFilterPanel7Spikes .ui-widget-header .ui-state-default {
+    background: url("images/scale_knob.png") top no-repeat;
+    border: none;
+    position: absolute;
+    top: -7px !important;
+}
+.ui-slider-handle.ui-state-default.ui-corner-all{
+    margin:0 0 0 -8px;
+} 
+.ui-slider-handle.ui-state-default.ui-corner-all:last-child {
+    margin: 0 0 0 -8px;
+}
+.priceRangeFilterPanel7Spikes .priceRangeCurrentPricesPanel {
+    color: #fff;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.priceRangeCurrentPricesPanel span {
+	color:#333;
+}
+
+/* CHECKBOX MODE */
+
+.nopAjaxFilters7Spikes .filtersGroupPanel a {
+    background:url(images/Rectangle.png);
+    background-repeat: no-repeat;
+    background-position:0 center;
+    color: #fff;
+    padding-left: 20px;
+    display:block;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelected {
+	background:url(images/check.jpg);
+	background-repeat: no-repeat;
+	background-position:0 center;
+	color: #D31D25;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelectedDisabled,
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemDisabled {
+	color: #9D9D9D;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemUnselected {
+	color:#333; 
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelectedDisabled {
+	background-position: left -18px;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemDisabled {
+}
+	.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelectedDisabled:hover,
+	.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemDisabled:hover {
+		text-decoration: none;
+		cursor: default;
+	}
+
+.nopAjaxFilters7Spikes .block .filtersGroupPanel.filtersCheckboxPanel {
+    padding: 0 15px 15px;
+}
+.filtersCheckboxPanel .checkbox-list input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+.filtersCheckboxPanel .checkbox-list label:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    margin: auto;
+    background: url("images/Rectangle.png") no-repeat center;
+    border: 1px solid #aba9ac;
+}
+.filtersCheckboxPanel.imageOptions .checkbox-list label:before {
+    width: 25px;
+    height: 25px;
+    background-image: none;
+    background-size: auto !important;
+}
+.filtersCheckboxPanel .checkbox-list input[type=checkbox]:checked + label:before {
+    background-image: url("images/check.png");
+}
+.filtersCheckboxPanel .checkbox-list label {
+    position: relative;
+    display: block;
+    padding: 6px 6px 6px 20px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+.filtersCheckboxPanel.imageOptions .checkbox-list label {
+    padding-left: 30px;
+}
+.filtersCheckboxPanel .checkbox-list label:hover {
+    text-decoration: underline;
+}
+.checkbox-list .disabled {
+    opacity: 0.5;
+}
+.checkbox-list .disabled label:hover {
+    text-decoration: none;
+}
+.checkbox-list .disabled label {
+    cursor: default;
+}
+.filtersCheckboxPanel .checkbox-list li {
+    position: relative;
+    margin-top: 10px;
+}
+.filtersCheckboxPanel .checkbox-list .color {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 15px;
+    height: 15px;
+    font-size: 0;
+}
+.filtersCheckboxPanel.imageOptions .checkbox-list .color {
+    width: 25px;
+    height: 25px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions a {
+    padding-left: 0 !important;
+    background: none !important;
+}
+.colorOptions .color-container {
+    float: left;
+    margin: 5px 8px 0 0;
+    width: 8px;
+    height: 8px;
+    border: 1px solid #000;
+}
+.colorOptions a.filterItemSelected .color-container {
+    box-shadow: 0 0 3px #000;
+}
+.colorOptions a.filterItemSelected .color {
+    background: url('../../../images/selected.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.colorOptions a.filterItemDisabled, .colorOptions a.filterItemSelectedDisabled {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+.colorOptions .defaultColor {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAIAAACRuyQOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE2MDkzNUE1N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjE2MDkzNUE2N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTYwOTM1QTM3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTYwOTM1QTQ3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz73zzpFAAAAkElEQVR42rzNiQ3AIAwEsIzO5i1SpT4UyHcXL2A5SrTWpKjpihr29DTU6dPwprEhTZOGMc0b+LRssNOuAU5Kg5r0BjKZmvxkbZKTo8lMviY8uZvYFGkCU7DxTvHGNaUa+5RtjBOgsUyYRp1gzX5CNpsJ3KwmfDOdKM1/YjXDRGzeE7e5J3pzTRVNV9SInAIMAJwnJvFb6ab1AAAAAElFTkSuQmCC') no-repeat center;
+    background-size: cover;
+}
+.colorOptions li.checked span.color.defaultColor {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAIAAACRuyQOAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE2MDkzNUE1N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjE2MDkzNUE2N0ZENDExRTZBNERCQkIwMEI2Rjk0MUQ2Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTYwOTM1QTM3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTYwOTM1QTQ3RkQ0MTFFNkE0REJCQjAwQjZGOTQxRDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz73zzpFAAAAkElEQVR42rzNiQ3AIAwEsIzO5i1SpT4UyHcXL2A5SrTWpKjpihr29DTU6dPwprEhTZOGMc0b+LRssNOuAU5Kg5r0BjKZmvxkbZKTo8lMviY8uZvYFGkCU7DxTvHGNaUa+5RtjBOgsUyYRp1gzX5CNpsJ3KwmfDOdKM1/YjXDRGzeE7e5J3pzTRVNV9SInAIMAJwnJvFb6ab1AAAAAElFTkSuQmCC') no-repeat center;
+    background-size: cover;
+}
+
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters.k-window {
+	position: absolute;
+	z-index: 10001;
+	height: auto !important;
+	border: 1px solid #ccc;
+	box-shadow: 0 1px 2px #ccc;
+	background: #fff;
+	padding: 5px !important;
+    text-align: left;
+}
+.ajaxFilters .k-window-titlebar {
+	margin: 0 !important;
+	background:#aaa;
+	padding: 8px;
+}
+.ajaxFilters .k-window-titlebar span {
+    margin: 0;
+    text-align: left;
+    font-size: 18px;
+    color: #fff;
+    line-height: 20px;
+    font-weight: bold;
+    text-shadow: 0 1px 1px #454545;
+}
+.ajaxFilters .k-window-actions {
+}
+.ajaxFilters .k-window-actions a {
+	display: block;
+    position: absolute;
+	top: 9px;
+	right: 9px;
+}
+.ajaxFilters .k-window-actions .k-icon {
+	display: block;
+	height: 16px;
+    width: 16px;
+	background: url('images/remove.png');
+    background-position:center;
+    background-repeat: no-repeat;
+	font-size: 0;
+    margin:6px;
+}
+.ajaxFilters .k-window-actions .k-icon:hover {
+	background: url('images/remove-red.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.ajaxFilters .k-window-content {
+	min-height: inherit !important;
+	min-width: inherit !important;
+	padding: 5px;
+	line-height: 18px;
+	color: #333;
+    font-size:14px;
+}
+.ajaxFilters .k-window-content:focus {
+	outline: -webkit-focus-ring-color auto 0;
+}
+
+/* PRODUCT GRID SELECTORS */
+
+.number-of-returned-products.active {
+    display: none;
+}
+.product-selectors > div {
+    vertical-align: top;
+    font-size: 0;
+}
+
+
+/* DROPDOWN MODE */
+
+.filtersDropDownPanel {
+    overflow: visible !important;
+}
+
+.filtersDropDown div p {
+	padding: 0 0 0 10px;
+	width: 90%;
+	color:#333;
+	font-size:14px;
+	overflow:hidden;
+}
+.filtersDropDown ul {
+	background-color: #ddd;
+}
+.filtersDropDown ul li a {
+	background: none !important;
+	padding-left: 10px !important;
+}
+.filtersDropDown ul li a:hover {
+	text-decoration: none !important;
+}
+.filtersDropDown ul li a.filterItemDisabled, .filtersDropDown ul li a.filterItemDisabledSelected {
+	display: none !important;
+}
+.select-wrap {
+    font-size: 12px;
+    position: relative;
+    margin: 3px 0 0 0;
+    border: 1px solid #ddd;
+    background: #fff url("images/arrowDown.gif");
+    background-repeat: no-repeat;
+    background-position: 95% center;
+    cursor: pointer;
+    margin: 0 auto;
+    padding: 5px 15px 5px 5px;
+}
+.select-wrap select{
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
+    height: 30px;
+    cursor: pointer;
+}
+.select-wrap select option {
+    padding: 3px;
+}
+.select-box{
+    position:relative; 
+    z-index:0; 
+    display:block;
+}
+.select-inner{
+    display:block;
+}
+.filtersDropDownPanel.disabled .select-wrap {
+    opacity: 0.5;
+}
+.filtersDropDownPanel.disabled .select-wrap select {
+    cursor: default;
+}
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy {
+	position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff url('../../../images/ajaxLoader.gif');
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+}
+.infinite-scroll-loader {
+    display: none;
+    height: 100px;
+    background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+    font-size: 0;
+    filter: Alpha(opacity = 70);
+    opacity: 0.7;
+    z-index: 2;
+    clear: both;
+}
+
+
+@media all and (max-width: 980px) {
+
+/*THINGS TO BE CHECKED*/
+
+.nopAjaxFilters7Spikes .block .filtersGroupPanel {
+    position: relative;
+    background:#fff;
+    font-size: 11px;
+    line-height: 18px;
+    padding: 10px 15px;
+}
+.filtersGroupPanel select {
+    width: 100%;
+    opacity: 0;
+}  
+.filtersDropDownPanel .custom-select {
+    background: url("images/arrowDown.gif") no-repeat scroll 95% 6px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 11px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.nopAjaxFilters7Spikes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100%;
+    text-align: left;
+    background: #333 !important;
+    overflow: hidden;
+    z-index: 2147483647;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+    .notAndroid23 .nopAjaxFilters7Spikes{
+        -webkit-transform: translate(-320px);
+        -ms-transform: translate(-320px);
+        transform: translate(-320px);
+    }
+    .android23 .nopAjaxFilters7Spikes{
+        left: -320px;
+    }
+    .nopAjaxFilters7Spikes.open {
+        box-shadow: 1px 0 5px rgba(0,0,0,0.5);
+    }
+    .notAndroid23 .nopAjaxFilters7Spikes.open{
+        -webkit-transform: translate(0);
+        -ms-transform: translate(0);
+        transform: translate(0);
+    }
+    .android23 .nopAjaxFilters7Spikes.open{
+        left: 0;
+    }
+
+#headerMenuParent {
+    height: 0 !important;
+}
+
+}
+
+
+@media all and (min-width: 981px) {
+    
+    .number-of-returned-products.active {
+        display: block;
+        float: right;
+        line-height: 21px;
+    }
+
+}

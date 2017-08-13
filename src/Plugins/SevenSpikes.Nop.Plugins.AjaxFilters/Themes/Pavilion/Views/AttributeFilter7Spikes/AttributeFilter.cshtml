@@ -1,0 +1,141 @@
+﻿@** Copyright 2016 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.AjaxFilters.Models.AttributeFilter
+@using SevenSpikes.Nop.Plugins.AjaxFilters.Common
+@using SevenSpikes.Nop.Plugins.AjaxFilters.Domain
+
+@model AttributeFilterModel7Spikes
+
+@{
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxFilters/Scripts/AttributeFilter.min.js");
+
+    string filtersPanelClass = Model.NopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes ? "filtersCheckboxPanel" : "filtersDropDownPanel";
+
+    string toggleStateClass = "toggleControl";
+    string toggleStateStyles = string.Empty;
+
+    if (Model.NopAjaxFiltersSettings.CloseAttributesFilterBox)
+    {
+        toggleStateClass = "toggleControl closed";
+        toggleStateStyles = "display: none;";
+    }
+}
+
+@functions {
+    string GetOptionAttributes(FilterItemState state)
+    {
+        string optionAttributes = string.Empty;
+
+        if (state == FilterItemState.Checked || state == FilterItemState.CheckedDisabled)
+        {
+            if (Model.NopAjaxFiltersSettings.FiltersUIMode == FiltersUIMode.UseCheckboxes)
+            {
+                optionAttributes += "checked=\"checked\"";
+            }
+            else
+            {
+                optionAttributes += "selected=\"selected\"";
+            }
+        }
+
+        if (state == FilterItemState.Disabled || state == FilterItemState.CheckedDisabled)
+        {
+            optionAttributes += " disabled=\"disabled\"";
+        }
+
+        return optionAttributes;
+    }
+}
+
+@helper GetListOfOptions(AttributeFilterGroup attributeFilterGroup, FiltersUIMode uiMode)
+{
+    bool hasAnyColorSquaresInGroup = attributeFilterGroup.FilterItems.Any(filterItem => filterItem.ColorSquaresRgb != null);
+    bool hasAnyImageSquaresInGroup = attributeFilterGroup.FilterItems.Any(filterItem => filterItem.ImageSquaresUrl != null);
+    
+    foreach (var attributeFilterItem in attributeFilterGroup.FilterItems)
+    {
+        string productVariantAttributeIds = string.Join(",", attributeFilterItem.ProductVariantAttributeIds);
+        string optionAttributes = GetOptionAttributes(attributeFilterItem.FilterItemState);
+        string inputId = string.Format("attribute-input-{0}-{1}", attributeFilterGroup.Id, attributeFilterItem.ValueId);
+        bool hasColorSquare = attributeFilterItem.ColorSquaresRgb != null;
+        bool hasImageSquare = attributeFilterItem.ImageSquaresUrl != null;
+
+        if (uiMode == FiltersUIMode.UseCheckboxes)
+        {
+            <li class="checkbox-item @if (hasColorSquare){<text>color-item</text>}">
+                <input @optionAttributes data-option-ids="@productVariantAttributeIds" data-valueid="@attributeFilterItem.ValueId" type="checkbox" id="@inputId" />
+                @if (hasColorSquare)
+                {
+                    <label class="color" for="@inputId" title="@attributeFilterItem.Name" style="background-color: @attributeFilterItem.ColorSquaresRgb">@attributeFilterItem.Name</label>
+                }
+                else if (hasImageSquare)
+                {
+                     <label class="color image" for="@inputId" title="@attributeFilterItem.Name" style="background-image: url(@attributeFilterItem.ImageSquaresUrl)">@attributeFilterItem.Name</label>
+                }
+                else if (hasAnyColorSquaresInGroup)
+                {
+                    <label class="color defaultColor" for="@inputId" title="@attributeFilterItem.Name">@attributeFilterItem.Name</label>
+                }
+                else if (hasAnyImageSquaresInGroup)
+                {
+                    <label class="color image defaultColor" for="@inputId" title="@attributeFilterItem.Name">@attributeFilterItem.Name</label>
+                }
+                <label for="@inputId" class="filter-item-name">@attributeFilterItem.Name</label>
+            </li>
+        }
+        else
+        {
+            <option @optionAttributes data-option-ids="@productVariantAttributeIds" data-valueId="@attributeFilterItem.ValueId" value="@attributeFilterItem.Name">
+                @attributeFilterItem.Name
+            </option>
+        }
+    }
+}
+
+@helper GetListWithOptions(AttributeFilterGroup attributeFilterGroup, FiltersUIMode uiMode)
+{
+    if (uiMode == FiltersUIMode.UseCheckboxes)
+    {
+        <ul class="checkbox-list">
+            @GetListOfOptions(attributeFilterGroup, uiMode)
+        </ul>
+    }
+    else
+    {
+        <select class="attribute-options-select">
+            <option value="0">@T("SevenSpikes.NopAjaxFilters.Client.Common.All")</option>
+            @GetListOfOptions(attributeFilterGroup, uiMode)
+        </select>
+    }
+}
+
+@foreach (AttributeFilterGroup attributeFilterGroup in Model.AttributeFilterGroups)
+{
+    string colorOptionsClass = "";
+    bool hasColorOptionsInGroup = attributeFilterGroup.FilterItems.Any(filterItem => filterItem.ColorSquaresRgb != null);
+    if (hasColorOptionsInGroup)
+    {
+        colorOptionsClass = "colorOptions";
+    }
+
+    string imageOptionsClass = "";
+    bool hasImageOptionsInGroup = attributeFilterGroup.FilterItems.Any(filterItem => filterItem.ImageSquaresUrl != null);
+    if (hasImageOptionsInGroup)
+    {
+        //needed as the image styling inherits from the colorOptions
+        colorOptionsClass = "colorOptions";
+        imageOptionsClass = "imageOptions";
+    }
+
+    <div class="block filter-block attributeFilterPanel7Spikes">
+        <div class="title">
+            <a class="@toggleStateClass">@attributeFilterGroup.Name</a>
+            <a class="clearFilterOptions">@T("SevenSpikes.NopAjaxFilters.Client.Common.Clear")</a>
+        </div>
+        <div class="filtersGroupPanel @filtersPanelClass @colorOptionsClass @imageOptionsClass" data-optionsgroupid="@attributeFilterGroup.Id" id="@string.Concat("attributeFiltersDropDown", attributeFilterGroup.Id)" style="@toggleStateStyles">
+            @GetListWithOptions(attributeFilterGroup, Model.NopAjaxFiltersSettings.FiltersUIMode)
+        </div>
+    </div>
+}

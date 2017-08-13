@@ -1,0 +1,52 @@
+﻿@media all and (min-width: 981px) {
+
+    .product-variant-line .variant-picture {
+        position: relative;
+        width: 230px;
+    }
+    .product-variant-line .variant-overview {
+        width: 450px;
+    }
+
+}
+
+/*product page grouped*/
+
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    right: 0;
+}
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    bottom: 0;
+    max-width: none;
+}
+.product-variant-list .vertical-align-middle > div {
+    height: 84px;
+}
+
+/*counter in the JCaraousel*/ 
+
+.jcarousel-item .item-picture {
+    position: relative;
+}
+.jcarousel-item .countdownTimer.vertical-align-middle > div {
+    height: 84px;
+}
+
+/*spc*/
+
+.spc .vertical-align-middle > div {
+    left: 0;
+    height: auto;
+}
+
+/*common styles*/
+.vertical-align-middle > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    height: 84px;
+}

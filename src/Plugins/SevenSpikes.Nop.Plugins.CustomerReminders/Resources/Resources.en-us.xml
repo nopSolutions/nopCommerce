@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Menu.MenuName">
+    <Value>Customer Reminders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders">
+    <Value>Reminders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CustomerName">
+    <Value>Customer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.EditMessage">
+    <Value>Edit Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.EmailSentOn">
+    <Value>Email Sent On</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.FromName">
+    <Value>From Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.MessageState">
+    <Value>Message State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.MessageState.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.MessageState.NotSent">
+    <Value>Not Sent</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.MessageState.Sent">
+    <Value>Sent</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.ReminderMessages">
+    <Value>
+      Reminder Messages
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.ReminderName">
+    <Value>Reminder Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchEndDate">
+    <Value>End Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchEndDate.Hint">
+    <Value>The end date before which a reminder message was scheduled to be sent to the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchLoadNotSent">
+    <Value>Load not sent reminder messages only.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchLoadNotSent.Hint">
+    <Value>Search only for reminder messages that have not been sent yet and are still in the system message queue</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchReminderId">
+    <Value>Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchReminderId.Hint">
+    <Value>The reminder for which messages were sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchStartDate">
+    <Value>Start Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchStartDate.Hint">
+    <Value>The start date after which a reminder message was scheduled to be sent to the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchToEmail">
+    <Value>To Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.SearchToEmail.Hint">
+    <Value>The customer email to which a reminder message was sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.AddNew">
+    <Value>Add new reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.BackToList">
+    <Value>Back to reminder list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateEarlierThan">
+    <Value>Condition Met Date Earlier Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateEarlierThan.Hint">
+    <Value>The condition met date (the time when a product was added to the shopping cart for example) should be earlier than the specified interval.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateEarlierThanIntervalType">
+    <Value>Condition Met Date Earlier Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateEarlierThanIntervalType.Hint">
+    <Value>The condition met date (the time when a product was added to the shopping cart for example) should be earlier than the specified interval.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateLaterThan">
+    <Value>Condition Met Date Later Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateLaterThan.Hint">
+    <Value>The condition met date (the time when a product was added to the shopping cart for example) should be later than the specified interval.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateLaterThanIntervalType">
+    <Value>Condition Met Date Later Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ConditionMetDateLaterThanIntervalType.Hint">
+    <Value>The condition met date (the time when a product was added to the shopping cart for example) should be later than the specified interval.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Created">
+    <Value>Reminder successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Edited">
+    <Value>Reminder successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.EditReminderDetails">
+    <Value>Edit Reminder Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Enabled.Hint">
+    <Value>Specifies whether the reminder is enabled or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.Interval">
+    <Value>Reminder interval should be greater than 0.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.MessageTemplate.Body">
+    <Value>Message template body is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.MessageTemplate.Name">
+    <Value>Message template name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.MessageTemplate.Subject">
+    <Value>Message template subject is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.Name">
+    <Value>Reminder name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.FieldValidationMessages.NumberOfMessagesToSendPerCustomer">
+    <Value>The number of reminders to send should be greater than 0.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.IntervalBetweenMessages">
+    <Value>Interval Between Messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.IntervalBetweenMessages.Hint">
+    <Value>Specifies the time interval between messages sent to the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.IntervalBetweenMessagesType">
+    <Value>Interval Between Messages In</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.IntervalBetweenMessagesType.Hint">
+    <Value>Specifies the time interval between messages sent to the customer. This interval can be in Days, Hours, Minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.MessageTemplateName">
+    <Value>Message Template Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.MessageTemplateName.Hint">
+    <Value>The name of the message template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.MessageTemplateTabTitle">
+    <Value>Message Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Name.Hint">
+    <Value>The name of the reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.NumberOfMessagesToSendPerCustomer">
+    <Value>Number Of Messages To Send Per Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.NumberOfMessagesToSendPerCustomer.Hint">
+    <Value>Specifies how many reminder messages should be sent to the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.AddNewCustomer">
+    <Value>Add a new customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.CustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.CustomerName">
+    <Value>Customer Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SaveBeforeEdit">
+    <Value>You need to save the reminder before you can add excluded customers to it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerEmail.Hint">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerFirstName">
+    <Value>First Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerFirstName.Hint">
+    <Value>Customer First Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerLastName">
+    <Value>Last Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.SearchCustomerLastName.Hint">
+    <Value>Customer Last Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomerTabTitle">
+    <Value>Excluded Customers From Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.PopupTitle">
+    <Value>Add Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRuleId">
+    <Value>Reminder Rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRuleId.Hint">
+    <Value>The reminder rule is the condtion that needs to be met for a customer to receive a reminder. For example a customer has place an order but not paid for it or the customer has added products to their shopping cart but not ordered them.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.AbandonedShoppingCartReminder">
+    <Value>Abandoned Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.AbandonedShoppingCartReminder.Description">
+    <Value>Selects customers who have added products to their shopping cart but have not ordered them.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.BirthdayReminder">
+    <Value>Birthday Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.BirthdayReminder.Description">
+    <Value>Select customers who have a birthday.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.CompletedOrderReminder">
+    <Value>Completed Order Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.CompletedOrderReminder.Description">
+    <Value>Select orders which has been completed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.InactiveCustomersReminder">
+    <Value>Inactive Customers Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.InactiveCustomersReminder.Description">
+    <Value>Selects customers who have registered on the web site but have not activated their registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.UnpaidOrdersReminder">
+    <Value>Unpaid Orders Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderRules.UnpaidOrdersReminder.Description">
+    <Value>Selects customers who have placed an order but have not paid for it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderSuccessfullyDeleted">
+    <Value>Reminder successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.SettingsTabTitle">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.SettingsTitle">
+    <Value>Reminder Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.Store.Hint">
+    <Value>Specifies the Store for the reminder.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Submenus.ManageReminders">
+    <Value>Manage Reminders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.Submenus.ReminderMessagesReport">
+    <Value>Reminder Messages Report</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.MessageTemplate.Description.AbandonedShoppingCart">
+    <Value>
+      This message template is used to send message to the customers with abandoned shopping card. The message is received by a customer. You can disable this message from &lt;strong&gt;Administration -> Nop-Templates -> Plugins -> Customer Reminders -> Manage Customer Reminders&lt;/strong&gt;.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.MessageTemplate.Description.BirthdayReminder">
+    <Value>
+      This message template is used to send message congratulating a customer for their birthday. The message is received by a customer. You can disable this message from &lt;strong&gt;Administration -> Nop-Templates -> Plugins -> Customer Reminders -> Manage Customer Reminders&lt;/strong&gt;.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.MessageTemplate.Description.CompletedOrder">
+    <Value>
+      This message template is used to send a message to a customer for a completed order. The message is received by a customer. You can disable this message from &lt;strong&gt;Administration -> Nop-Templates -> Plugins -> Customer Reminders -> Manage Customer Reminders&lt;/strong&gt;.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.MessageTemplate.Description.InactiveCustomers">
+    <Value>
+      This message template is used to send a message to inactive customers. The message is received by the inactive customer. You can disable this message from &lt;strong&gt;Administration -> Nop-Templates -> Plugins -> Customer Reminders -> Manage Customer Reminders&lt;/strong&gt;.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.CustomerReminders.Admin.MessageTemplate.Description.UnpaidOrders">
+    <Value>
+      This message template is used to send a message customers with unpaid orders. The message is received by the customers with unpaid orders. You can disable this message from &lt;strong&gt;Administration -> Nop-Templates -> Plugins -> Customer Reminders -> Manage Customer Reminders&lt;/strong&gt;.
+    </Value>
+  </LocaleResource>
+</Language>

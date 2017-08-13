@@ -1,0 +1,51 @@
+﻿@** Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using System;
+@using SevenSpikes.Nop.Plugins.ProductRibbons.Models
+@model ProductRibbonsSettingsModel
+
+@{
+    var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+    
+    var productIdObject = HttpContext.Current.Request.RequestContext.RouteData.Values.FirstOrDefault(x => x.Key.Equals("productid"));
+
+    var productId = 0;
+
+    if (productIdObject.Value != null)
+    {
+        Int32.TryParse(productIdObject.Value.ToString(), out productId);
+    }
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.css");
+
+    var supportRtl = this.ShouldUseRtlTheme();
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Styles/Ribbons.common.rtl.css");
+    }
+
+    Html.AddCssFileParts(string.Format("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{0}/Content/Ribbons.css", Model.Theme));
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts(string.Format("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Themes/{0}/Content/Ribbons.rtl.css", Model.Theme));
+    }
+    
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Scripts/jquery.json-2.4.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/SevenSpikesExtensions.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.ProductRibbons/Scripts/ProductRibbons.min.js");
+}
+
+<script type="text/javascript">
+    var nop_store_directory_root = "@(storeLocation)";
+</script>
+
+<div id="product-ribbon-info" data-productid="@productId"
+     data-productboxselector="@Model.ProductBoxSelector"
+     data-productboxpicturecontainerselector="@Model.ProductBoxPictureContainerSelector"
+     data-productpagepicturesparentcontainerselector="@Model.ProductPagePicturesParentContainerSelector"
+     data-productpagebugpicturecontainerselector="@Model.ProductPageBugPictureContainerSelector"
+     data-retrieveproductribbonsurl="@Url.Action("RetrieveProductRibbons", "ProductRibbons")">
+</div>

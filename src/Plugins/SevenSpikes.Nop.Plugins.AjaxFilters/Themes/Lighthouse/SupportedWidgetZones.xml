@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>right_side_column_before</WidgetZone>
+  <WidgetZone>right_side_column_after</WidgetZone>
+  <WidgetZone>right_side_column_after_category_navigation</WidgetZone>
+</SupportedWidgetZones>

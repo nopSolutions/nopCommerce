@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Menu.MenuName">
+    <Value>Anywhere Sliders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders">
+    <Value>Sliders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings">
+    <Value>Carousel 3D Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.AutoRotate">
+    <Value>Auto rotate</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.AutoRotate.Hint">
+    <Value>Determines whether the images will auto rotate</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.AutoRotateDelayInMilliseconds">
+    <Value>Auto rotate delay</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.AutoRotateDelayInMilliseconds.Hint">
+    <Value>The delay in milliseconds before the next image is rotated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Height">
+    <Value>Slider Panel Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Height.Hint">
+    <Value>Height of the area of the slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.MouseWheel">
+    <Value>Mouse wheel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.MouseWheel.Hint">
+    <Value>The speed with which the images will be rotated when the mouse wheel is used</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.PictureHeight">
+    <Value>Picture Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.PictureHeight.Hint">
+    <Value>Height of the picture to which the image will be auto resized</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.PictureWidth">
+    <Value>Picture Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.PictureWidth.Hint">
+    <Value>Width of the picture to which the image will be auto resized</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Speed">
+    <Value>Speed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Speed.Hint">
+    <Value>The speed with which the images will be rotated. Values vary around 0.05.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Width">
+    <Value>Slider Panel Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.Width.Hint">
+    <Value>Width of the area of the slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.XPosition">
+    <Value>X position</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.XPosition.Hint">
+    <Value>The X position of the center of the 3d slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.YPosition">
+    <Value>Y position</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.YPosition.Hint">
+    <Value>The Y position of the center of the 3d slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.YRaduis">
+    <Value>Y raduis</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Carousel3DSettings.YRaduis.Hint">
+    <Value>The Y radius that controls on what angle the 3d slider will be visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings">
+    <Value>Carousel 2D Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.AutoSlideIntervalInMilliseconds">
+    <Value>Auto slide interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.AutoSlideIntervalInMilliseconds.Hint">
+    <Value>The interval in milliseconds before an image is changed with another</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Height">
+    <Value>Slider Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Height.Hint">
+    <Value>The height of the slider panel. Note: use images with the same height.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.HoverPause">
+    <Value>Hover pause</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.HoverPause.Hint">
+    <Value>Whether to pause on mouse hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Links">
+    <Value>Use Images as Links</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Links.Hint">
+    <Value>Use images as links that will redirect the customer to a chosen url.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Navigation">
+    <Value>Enable Navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Navigation.Hint">
+    <Value>Whether to show prev and next buttons</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.ShowTitle">
+    <Value>Display text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.ShowTitle.Hint">
+    <Value>Whether to show the display text for each image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Width">
+    <Value>Slider Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.CarouselSettings.Width.Hint">
+    <Value>The width of the slider panel. Note: use images with the same width.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Category.DisplayText">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Category.DisplayText.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Anywhere Sliders -&gt; Manage Sliders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.AdvancedSettings">
+    <Value>Advanced Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.AnimationSpeedInMilliseconds">
+    <Value>Animation Speed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.AnimationSpeedInMilliseconds.Hint">
+    <Value>Slide transition speed (in milliseconds)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.AutoSlideIntervalInMilliseconds">
+    <Value>Auto slide interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.AutoSlideIntervalInMilliseconds.Hint">
+    <Value>The interval in milliseconds before an image is changed with another</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.BoxCols">
+    <Value>BoxCols (for box animations)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.BoxCols.Hint">
+    <Value>BoxCols (for box animations)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.BoxRows">
+    <Value>BoxRows (for box animations)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.BoxRows.Hint">
+    <Value>BoxRows (for box animations)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.CaptionOpacity">
+    <Value>Caption opacity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.CaptionOpacity.Hint">
+    <Value>Caption opacity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.DirectionNavigationShowOnHoverOnly">
+    <Value>Show direction navigation only on hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.DirectionNavigationShowOnHoverOnly.Hint">
+    <Value>Show direction navigation(Next and Prev) only on hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Effect">
+    <Value>Effect</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Effect.Hint">
+    <Value>The effect can be any of the followings: sliceDown, sliceDownLeft, sliceUp, sliceUpLeft, sliceUpDown, sliceUpDownLeft, fold, fade, random, slideInRight, slideInLeft, boxRandom, boxRain, boxRainReverse, boxRainGrow, boxRainGrowReverse</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableControlNavigation">
+    <Value>Enable control navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableControlNavigation.Hint">
+    <Value>1,2,3... navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableControlNavigationThumbs">
+    <Value>Enable using thumbnails for control navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableControlNavigationThumbs.Hint">
+    <Value>Enable using thumbnails for control navigation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableDirectionNavigation">
+    <Value>Enable direction navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.EnableDirectionNavigation.Hint">
+    <Value>Enable Next and Prev navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Height">
+    <Value>Slider Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Height.Hint">
+    <Value>The height of the slider panel. Note: use images with the same height.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.KeyboardNavigation">
+    <Value>Enable keyboard navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.KeyboardNavigation.Hint">
+    <Value>Enable keyboard navigation using left and right arrows</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Links">
+    <Value>Use Pictures as Links</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Links.Hint">
+    <Value>Use the slider pictures as links that will redirect the customer to a chosen url.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.NextText">
+    <Value>Next Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.NextText.Hint">
+    <Value>Shows the next text.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.NivoSliderAdvancedSettings">
+    <Value>Nivo Slider Advanced Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.NivoSliderGeneralSettings">
+    <Value>Nivo Slider General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.PauseOnHover">
+    <Value>Pause on hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.PauseOnHover.Hint">
+    <Value>Whether to pause sliding on mouse hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.PrevText">
+    <Value>Previous Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.PrevText.Hint">
+    <Value>Shows the previous text.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.RandomStart">
+    <Value>Random start</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.RandomStart.Hint">
+    <Value>If checked the slider will start sliding from a random picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ShowCaption">
+    <Value>Show Caption</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ShowCaption.Hint">
+    <Value>Whether to show the caption text for each image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Slices">
+    <Value>Slices (for slice animations)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Slices.Hint">
+    <Value>For slice animations</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ThemeClassName">
+    <Value>Theme class name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ThemeClassName.Hint">
+    <Value>The name of the theme class that is added to the slider. For example if you set it to light then an additional class named theme-light will be added to the slider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ThumbsBiggerSize">
+    <Value>The bigger size of the thumbnail pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.ThumbsBiggerSize.Hint">
+    <Value>The bigger size in pixels of the thumbnail pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Width">
+    <Value>Slider Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.NivoSettings.Width.Hint">
+    <Value>The width of the slider panel. Note: use images with the same width.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.AddNew">
+    <Value>Add new slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.BackToList">
+    <Value>Back to sliders list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.CategoriesNames">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.CategoriesNames.Hint">
+    <Value>The categories to which the sliders is mapped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.CategoriesTab.HowMappingWorks">
+    <Value>You can map this slider to several categories. Note: When a slider is mapped to a category then it will be shown only on the page for the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.CategoriesTab.SaveBeforeEdit">
+    <Value>You need to save the slider before you can add category mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Created">
+    <Value>Slider successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Deleted">
+    <Value>Slider successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Edited">
+    <Value>Slider successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.EditSliderDetails">
+    <Value>Edit Slider Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.IsActive">
+    <Value>Is Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.IsActive.Hint">
+    <Value>Check whether the slider is active.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Language.Hint">
+    <Value>Set language for which the Slider will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.ManufacturerNames">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.ManufacturerNames.Hint">
+    <Value>The manufacturers to which the sliders is mapped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.ManufacturersTab.HowMappingWorks">
+    <Value>You can map this slider to several manufacturers. Note: When a slider is mapped to a manufacturer then it will be shown only on the page for the manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.ManufacturersTab.SaveBeforeEdit">
+    <Value>You need to save the slider before you can add manufacturer mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.Settings.Title">
+    <Value>Slider Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SliderType">
+    <Value>Slider Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SliderType.Hint">
+    <Value>The type of the slider. This determines how the images will be changing.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SystemName">
+    <Value>System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SystemName.Hint">
+    <Value>The system name of the slider. It is not visible in the public area. It is used when calling a slider in manual integration. The value of the 'systemName' argument.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Conditions">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Pictures">
+    <Value>Pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Stores.SaveBeforeEdit">
+    <Value>You need to save the Anywhere Slider, before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.TabTitle.Widgets">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.WidgetZonesNames">
+    <Value>Widget Zones Names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.WidgetZonesNames.Hint">
+    <Value>The names of the widget zone in which the slider is added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.AddNew">
+    <Value>Add a new slider image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Alt">
+    <Value>Alt</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Alt.Hint">
+    <Value>The value of the "alt" attribute of the image. In short it is a description of the image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.BackToSliderImages">
+    <Value>Back to the pictures of the slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Created">
+    <Value>Slider image successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.DisplayOrder.Hint">
+    <Value>The order in which the images will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.DisplayText">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.DisplayText.Hint">
+    <Value>The title of the image that can be visible in some of the sliders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Edit">
+    <Value>Add a new slider image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Edited">
+    <Value>Slider image successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.EditSliderImageDetails">
+    <Value>Edit Picture Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Picture.Hint">
+    <Value>Choose the picture you want to include in the slider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.PictureHeight">
+    <Value>Picture Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.PictureWidth">
+    <Value>Picture Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.QuickAddNew">
+    <Value>Quick add a new slider image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.QuickAddNewButton">
+    <Value>Quick add</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.SaveBeforeEdit">
+    <Value>You need to save the slider before you can upload pictures for this slider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Url">
+    <Value>Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Url.Hint">
+    <Value>The url of the image when is clicked.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Visible">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.SliderImage.Visible.Hint">
+    <Value>Whether the image is visible and is included in the slider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Submenus.ManageSliders">
+    <Value>Manage Sliders</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.AddSlider">
+    <Value>Add the slider to new widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.ChooseSlider">
+    <Value>Please choose which slider you will want to be displayed in the widget:</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.CreateNewSlider">
+    <Value>If you like you can create new slider, which you can add.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.Description">
+    <Value>You can add the {0} slider to as many widget zones as you would like. Just create a new widget by selecting the desired widget zone and click the 'Add new' button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.DisplayOrder.Hint">
+    <Value>The display order for the widget that will be created for the slider.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.SaveBeforeEdit">
+    <Value>You need to save the slider before you can add it to a widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.Slider">
+    <Value>Slider</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.Slider.Hint">
+    <Value>The slider which will be added to this widget.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Widget.WidgetZone.Hint">
+    <Value>The widget zone to which the slider will be added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Fields.Picture.IsRequired">
+    <Value>Picture is required</Value>
+  </LocaleResource>
+  sevenspikes.plugins.anywheresliders.fields.isrequired
+  <LocaleResource Name="SevenSpikes.Plugins.AnywhereSliders.Fields.SystemName.IsRequired">
+    <Value>System Name is required</Value>
+  </LocaleResource>
+</Language>

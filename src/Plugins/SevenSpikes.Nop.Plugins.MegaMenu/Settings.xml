@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="MegaMenuSettings.Enabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.CategoryImageSize">
+    <Value>290</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.ManufacturerImageSize">
+    <Value>165</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.VendorImageSize">
+    <Value>165</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfCategories">
+    <Value>8</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfManufacturers">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfTopics">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfProductTags">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfVendors">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfCategoriesPerRow">
+    <Value>4</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfManufacturersPerRow">
+    <Value>6</Value>
+  </Setting>
+  <Setting Name="MegaMenuSettings.NumberOfVendorsPerRow">
+    <Value>6</Value>
+  </Setting>
+</Settings>

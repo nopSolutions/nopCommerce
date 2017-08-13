@@ -1,0 +1,195 @@
+﻿.filtersGroupPanel li a {
+    padding-left: 9px;
+    padding-right: 28px;
+}
+    .filtersGroupPanel li a:before {
+        right: 10px;
+        left: auto;
+    }
+
+.filter-block .title {
+    overflow: hidden;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl {
+    background-position: 94% center;
+    padding: 0 28px 0 13px;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl.closed {
+    background: url("images/rtl-filterGroupToggle2.png") 94% center no-repeat;
+}
+.nopAjaxFilters7Spikes .block .title a.clearFilterOptions,
+.block .title .clearPriceRangeFilter {
+   right: auto;
+   left: 0;
+}
+.sortOptionsDropDown div p,
+.productsPageSizeDropDown div p,
+.jDropDown div p {
+    text-align: right !important;
+}
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li label {
+	display: block;
+    margin-bottom: 5px;
+}
+.selected-options-list > li span {
+	float: right;
+    padding: 7px 2px 7px 20px;
+    margin: 0 0 0 10px;
+    text-align: right;
+	cursor: pointer;
+    background-position: top 10px left 5px;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* CHECKBOX MODE */
+
+    .filtersGroupPanel input[type="checkbox"] + label {
+        padding: 5px 28px 6px 8px;
+    }
+    .filtersGroupPanel.imageOptions input[type="checkbox"] + label {
+        padding-right: 35px;
+        padding-left: 8px;
+    }
+    .filtersGroupPanel input[type="checkbox"] + label:before {
+        left: auto;
+        right: 10px;
+    }
+
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        right: 10px;
+        left: auto;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersDropDownPanel .select-wrap {
+        text-align: right;
+    }
+    .filtersDropDownPanel .select-inner {
+        padding: 2px 5px 2px 22px;
+        text-align: right;
+    }
+        .filtersDropDownPanel .select-inner:after {
+            right: auto;
+            left: 7px;
+        }
+
+
+
+/* NO RESULTS POPUP */
+
+.ajaxFilters .k-window-actions {
+    right: inherit !important;
+    left: 12px;
+}
+
+
+
+/* AJAXFILTERS RESPONSIVE PROTOTYPE */
+
+@media all and (max-width: 980px) {
+    
+    .nopAjaxFilters7Spikes.showFilters {
+        box-shadow: -1px 0 5px rgba(0,0,0,.5);
+    }
+    .notAndroid23 .nopAjaxFilters7Spikes {
+        -webkit-transform: translate(267px);
+        -ms-transform: translate(267px);
+        transform: translate(267px);
+    }
+    .android23 .nopAjaxFilters7Spikes {
+        left: auto;
+        right: -267px;
+    }
+    .android23 .nopAjaxFilters7Spikes.showFilters {
+        left: auto;
+        right: 0;
+    }
+
+    .nopAjaxFilters7Spikes .close-btn {
+        display: block;
+        padding: 14px 20px;
+        background: #E3E3E3 url(images/nav_bg_org.png) repeat-x;
+        color: #333;
+        text-shadow: 1px 1px 0 #FFF;
+        font-weight: bold;
+        font-size: 17px;
+        line-height: 18px;
+        position: relative;
+        text-align: right;
+    }
+        .nopAjaxFilters7Spikes .close-btn:before {
+            content: "";
+            position: absolute;
+            top: 9px;
+            left: 12px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            width: 27px;
+            height: 27px;
+            background: url(images/clear.png) no-repeat center;
+        }
+
+    .filtersPanel {
+        left: auto;
+        right: -212px;
+        border-radius: 5px 0 5px 5px;
+        text-align: right;
+    }
+
+    .filtersTitlePanel {
+        float: right;
+        border-left: 1px solid #D3D3D3;
+        border-right: 0;
+    }
+
+    .nopAjaxFilters7Spikes .block .title a.toggleControl,
+    .nopAjaxFilters7Spikes .block .title a.toggleControl.closed {
+        background-position: 97% center;
+        text-align: right;
+    }
+
+    .sortOptionsDropDown {
+        margin: 0 5px;
+    }
+    .jDropDown {
+        background: url("images/arrowDown.gif") no-repeat 8px 12px;
+    }
+
+}
+
+@media all and (min-width: 981px){
+
+    .selected-options-list > li span {
+        padding: 2px 2px 2px 15px;
+        margin: 0 0 0 7px;
+        background-position: top 5px left;
+    }
+
+}

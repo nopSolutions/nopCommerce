@@ -1,0 +1,58 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.AnywhereSliders.Models.Carousel3D
+
+@model Carousel3DModel
+
+@{
+    Layout = null;
+
+    if (Model.SliderImages != null && Model.SliderImages.Count > 0)
+    {
+        // add css
+        Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Styles/carousel3d/carousel3d.css");
+
+        // add javascript
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/carousel3d/textshadow.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/carousel3d/easing.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/carousel3d/hoverIntent.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/carousel3d/cloud-carousel.1.0.5.min.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/AnywhereSliders.js");
+
+        <div class="pjcaroumain anywhere-sliders-carousel3d-slider"
+             data-sliderHtmlElementId="@Model.SliderHtmlElementId"
+             data-yRadius="@Model.Settings.YRadius"
+             data-xPos="@Model.Settings.XPosition"
+             data-yPos="@Model.Settings.YPosition"
+             data-speed="@Model.Settings.Speed"
+             data-mouseWheel="@Model.Settings.MouseWheel"
+             data-autoRotateDelay="@Model.Settings.AutoRotateDelay"
+             data-autoRotate="@Model.Settings.AutoRotate.ToString().ToLowerInvariant()">
+
+            <div style="width: @Model.Settings.WidthPx; position: relative; height: 0; z-index: 2;">
+                <div id="pjncarrows">
+                    <a id="but1" class="carouselLeft"></a>
+                    <a id="but2" class="carouselRight"></a>
+                </div>
+            </div>
+            <div>
+                <div id="@Model.SliderHtmlElementId" style="width: @Model.Settings.WidthPx; height: @Model.Settings.HeightPx; z-index: 0;">
+                    @foreach (var sliderImage in Model.SliderImages)
+                    {
+                        var url = "#";
+                        if (!string.IsNullOrWhiteSpace(sliderImage.Url))
+                        {
+                            url = sliderImage.Url;
+                        }
+                        <a href="@url" class="title" title="@sliderImage.DisplayText">
+                            <img width="@Model.Settings.PictureWidth" height="@Model.Settings.PictureHeight" class="cloudcarousel" src="@sliderImage.PicturePath" alt="@sliderImage.Alt" />
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

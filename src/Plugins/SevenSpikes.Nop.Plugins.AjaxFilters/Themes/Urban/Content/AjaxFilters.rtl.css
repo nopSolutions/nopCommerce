@@ -1,0 +1,216 @@
+﻿.priceRangeMinPanel,
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: right;
+}
+.clearFilterOptionsAll,
+.priceRangeMaxPanel,
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: left;
+}
+.selected-options-list > li,
+.jDropDown > div,
+.jDropDown ul {
+	text-align: right;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	text-align: left;
+}
+*{
+	direction: rtl;
+}
+.filter-block a.toggleControl{
+	padding: 20px 22px 9px 18px !important;
+	text-align: right;
+}
+
+.selected-options-list > li span{
+	float: left;
+	margin: 0 0 0 10px;
+	padding: 10px 3px 0 17px;
+	background-position: left 12px;
+	text-align: right;
+}
+.ui-slider-handle{
+	margin-right: -4px;
+	margin-left: 0;
+}
+.filtersGroupPanel li{
+	text-align: right;
+	padding: 0;
+}
+.filtersGroupPanel li > a{
+	padding: 15px 38px 15px 10px;
+	text-align: right;
+}
+.filtersGroupPanel li a:before{
+	right: 12px;
+	left: auto;
+}
+.side-2 .filtersGroupPanel li a:before{
+	right: 0;
+	left: auto;
+}
+.checkbox-list li input {
+    left: auto;
+    right: 20px;
+}
+.checkbox-list li label {
+    text-align: right;
+    padding: 15px 45px 15px 10px;
+}
+.imageOptions .checkbox-list li label {
+    padding-right: 55px;
+}
+.checkbox-list li label::before {
+    left: auto;
+    right: 15px;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+    background-position: 5% center;
+}
+.checkbox-list li .color {
+    left: auto;
+    right: 15px;
+}
+.select-wrap {
+    background-position: 6px center;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color-container{
+	left: 12px;
+	right: auto;
+}
+.colorOptions .defaultColor{
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(50%, #ffffff), color-stop(50%, #000000), color-stop(100%, #000000));
+}
+/* GLOBAL DROPDOWNS (in product grid & in side blocks) */
+
+.jDropDown{
+	background: url("images/filters-drop-new.png") no-repeat 5px center #fff;
+}
+.product-selectors .jDropDown > div{
+	padding: 0 5px 0 0;
+}
+.jDropDown li span,
+.jDropDown li a{
+	padding: 0 5px 0 0;
+}
+.filtersDropDown{
+	background: url(images/filters-drop-new.png) no-repeat 5px center;
+}
+.filtersDropDown div{
+	background-position: 0% center;
+}
+.select-box {
+    text-align: right;
+}
+/* AJAX LOADER */
+
+.productPanelAjaxBusy{
+	right: 0;
+	left: auto;
+}
+/* NO RESULTS POPUP */
+
+.k-overlay{
+	right: 0;
+	left: auto;
+}
+.ajaxFilters .k-window-titlebar{
+	padding: 0 10px 0 20px;
+}
+.ajaxFilters .k-window-actions{
+	left: 8px;
+	right: auto;
+}
+.ajaxFilters .k-window-actions .k-icon{
+	left: 0;
+	right: auto;
+}
+.nopAjaxFilters7Spikes{
+	right: 0;
+	left: auto;
+}
+.android23 .nopAjaxFilters7Spikes{
+	right: -320px;
+	left: auto;
+}
+.android23 .nopAjaxFilters7Spikes.open{
+	right: 0;
+	left: auto;
+}
+.onecolumn .filtersPanel .filter-block{
+	margin: 0 1.7% 1.7% 0;
+    float:right;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter{
+	left: 0;
+	right: auto;
+	background: url("images/close-copy-3.png") no-repeat scroll left center rgba(0, 0, 0, 0);
+}
+.filtersGroupPanel li > a{
+	padding: 2px 22px 2px 0;
+}
+.side-2 .selected-options-list > li span{
+	background-position: left 9px;
+	margin: 0 0 0 10px;
+	padding: 7px 7px 0 17px;
+}
+.onecolumn .filtersPanel .filtersGroupPanel li a::before{
+	right: 0;
+	left: auto;
+}
+.onecolumn .horizontalFiltersTitle span{
+	background: url("images/filters-icon.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+	padding: 0 30px 0 0;
+}
+.filtersDropDown{
+	background: url(images/filters-drop-new.png) no-repeat left center #fff;
+}
+.onecolumn .filtersPanel .block.selected-options .selected-options-list li{
+	float: right;
+	margin: 0 0 0 2%;
+}
+.selected-options-list > li span{
+	margin: 0 12px 0 0;
+	padding: 0 0 0 17px;
+	background-position: left center;
+    float:none;
+}
+
+@media all and (max-width: 1000px) {
+    .filter-block a.clearFilterOptions,
+    .filter-block a.clearPriceRangeFilter{
+	    left: 15px;
+	    right: auto;
+	    background: url(images/close-copy-2.png) no-repeat left center;
+	    padding: 0 0 0 16px;
+    }
+
+    .notAndroid23 .nopAjaxFilters7Spikes {
+        -webkit-transform: translate(320px);
+        transform: translate(320px);
+    }
+}
+
+@media all and (min-width: 1001px) {
+
+    .checkbox-list li label {
+        padding: 2px 25px 2px 2px;
+    }
+    .imageOptions .checkbox-list li label {
+        padding: 7px 36px 7px 7px;
+    }
+    .checkbox-list li label::before, 
+    .checkbox-list li input, 
+    .checkbox-list li span.color {
+        left: auto;
+        right: 0;
+    }
+    .filter-block a.toggleControl {
+        padding: 0 0 0 50px !important;
+    }
+}

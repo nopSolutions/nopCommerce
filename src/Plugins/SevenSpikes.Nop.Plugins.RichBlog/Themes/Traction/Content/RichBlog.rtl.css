@@ -1,0 +1,98 @@
+
+.blog-search-box span.search-box-text {
+	float: right;
+}
+.blog-search-box input.search-box-text {
+	float: right;
+	margin: 0 0 0 -1px;
+}
+
+.blog-search-box .search-box-button {
+	float: left;
+}
+.post-relations label {
+	margin: 0 0 0 3px;
+}
+.post-relations li.separator {
+	margin: 0 0 0 5px;
+}
+
+.post-navigation {
+	right: auto;
+	left: 0;
+}
+.post-navigation .prev {
+	float: right;
+	text-align: right;
+}
+.post-navigation .next {
+	float: left;
+	text-align: left;
+}
+.post-navigation .prev:before {
+	right: 0;
+	left: auto;
+	background-image: url('images/next.png');
+}
+.post-navigation .next:before {
+	right: auto;
+	left: 0;
+	background-image: url('images/prev.png');
+}
+
+.blog-search-results li a:before {
+	right: 0;
+	left: auto;
+}
+
+@media all and (min-width:481px) {
+	
+.blog-page .post-actions .read-more {
+	float: right;
+}
+.blog-page .post-actions .share-post {
+	float: left;
+}
+.blog-search-box {
+    float: right;
+}
+}
+
+@media all and (min-width:769px) {
+	
+.blog-page .post-title {
+	float: right;
+}
+.blog-page .post-date {
+	float: left;
+}
+.blog-page .tags {
+	float: left;
+}
+.blog-page .buttons {
+	float: right;
+}
+.blogpost-page .post-relations {
+	float: right;
+	text-align: right;
+}
+.blogpost-page .post-actions {
+	float: left;
+}
+
+}
+
+@media all and (min-width:1001px) {
+	
+.blog-search-box {
+    float: none; 
+}
+.rich-blog-homepage .blog-post {
+	float: right;
+}
+.blog-search-results {
+	text-align: right;
+}
+
+
+}

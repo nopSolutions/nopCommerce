@@ -1,0 +1,66 @@
+﻿* {
+	direction: rtl;
+}
+.sale-of-the-day-offer .item-gallery .item-picture a img {
+	left: 0;
+	right: 0;
+}
+.sale-of-the-day-offer .picture-thumbs img {
+	left: 0;
+	right: 0;
+}
+.sale-of-the-day-offer .owl-nav .owl-prev {
+	right: 0px;
+	left: auto;
+	background: #eaeaea  url(images/slider-arrow-left.png) no-repeat center;
+}
+.sale-of-the-day-offer .owl-nav .owl-next {
+	left: 0px;
+	right: auto;
+	background: #eaeaea  url(images/slider-arrow-right.png) no-repeat center;
+}
+@media all and (min-width: 769px) {
+	.sale-of-the-day-offer .item-gallery {
+		float: right;
+	}
+	.sale-of-the-day-offer .overview {
+		float: left;
+	}
+	.sale-of-the-day-offer .picture-thumbs {
+		left: 20px;
+		right: 47%;
+	}
+}
+@media all and (min-width: 769px) and (max-width: 1000px) {
+	.sale-of-the-day-offer .overview {
+		text-align: right;
+	}
+}
+@media all and (min-width: 1001px) {
+	.sale-of-the-day-offer .item-gallery .item-picture a {
+		right: 2px;
+		left: auto;
+	}
+	.sale-of-the-day-offer .picture-thumbs {
+		right: 55%;
+		left: auto;
+		margin: 0 10px 0 0;
+	}
+	.home-page-body .nop-jcarousel,
+    .home-page-body .topic-block,
+    .home-page-body .category-grid,
+    .home-page-body .product-grid,
+    .home-page-body .news-list-homepage,
+    .home-page-body .home-page-polls,
+    .home-page-body .rich-blog-homepage {
+		margin-right: auto;
+		margin-left: auto;
+	}
+}
+@media all and (min-width: 1281px) {
+	.sale-of-the-day-offer .picture-thumbs {
+		margin: 0 20px 0 0;
+		right: 60%;
+		left: auto;
+	}
+}

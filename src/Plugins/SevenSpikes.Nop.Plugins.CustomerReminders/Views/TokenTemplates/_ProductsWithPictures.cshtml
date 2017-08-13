@@ -1,0 +1,67 @@
+﻿@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Localization;
+@using Nop.Services.Media;
+@using Nop.Services.Seo;
+@using Nop.Services.Stores;
+@using SevenSpikes.Nop.Plugins.CustomerReminders.Models;
+
+@model ProductsModel
+
+@{
+        var products = Model.Products;
+        
+        var _storeService = EngineContext.Current.Resolve<IStoreService>();
+        var _pictureService = EngineContext.Current.Resolve<IPictureService>();
+        var storeUrl = _storeService.GetStoreById(Model.StoreId).Url;
+}
+
+<table border="0" cellspacing="5">
+
+    @{
+        for (int i = 0; i < products.Count; i++)
+        {
+            Product product = products[i];
+
+            //new row after every third element
+            if (i % 3 == 0)
+            {
+                @Html.Raw("<tr>")
+            }
+            
+            string productName = product.GetLocalized(x => x.Name, Model.LanguageId);
+            string productSeName = product.GetSeName(Model.LanguageId);
+            string productUrl = storeUrl + productSeName;
+            string currentProductHtml = string.Empty;
+            
+            if (Model.IncludePictures)
+            {
+                var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+
+                if (defaultProductPicture == null && product.ParentGroupedProductId > 0)
+                {
+                    defaultProductPicture = _pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
+                }
+
+                string pictureUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true, storeUrl);
+
+                currentProductHtml += string.Format("<a href=\"{0}\"><img src=\"{1}\"/></a><br />", productUrl, pictureUrl);
+            }
+            
+            currentProductHtml += string.Format("<a href=\"{0}\">{1}</a>", productUrl, productName);
+        
+            <td style="text-align: center; vertical-align: top; width: 200px;">
+                @Html.Raw(currentProductHtml)
+            </td>
+        
+            // close the row in two cases:
+            // - after the last element
+            // - or if the element is the last in the row (we have 3 products in a row)
+            if (i == products.Count - 1 || (i > 0 && i % 3 == 2))
+            {
+                @Html.Raw("</tr>")
+            }
+        }
+    }
+
+</table>

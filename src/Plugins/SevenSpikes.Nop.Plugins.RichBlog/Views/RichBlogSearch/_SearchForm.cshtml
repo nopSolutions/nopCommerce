@@ -1,0 +1,76 @@
+﻿@{
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.core.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.data.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.popup.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.list.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.autocomplete.min.js");
+}
+
+<div class="block blog-search-box">
+    <div class="title">
+        <strong>@T("SevenSpikes.RichBlog.Public.Search.BlockTitle")</strong>
+    </div>
+    <div class="listbox">
+        @using (Html.BeginForm("ListResults", "RichBlogSearch", FormMethod.Get, new { id = "rich-blog-search-form" }))
+{
+    <input id="rich-blog-searchterms" class="search-box-text" type="text" name="phrase" placeholder="@T("SevenSpikes.RichBlog.Public.Search.Placeholder")" />
+            <button class="search-box-button" type="submit">@T("SevenSpikes.RichBlog.Public.Search.SearchButton")</button>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#rich-blog-searchterms").kendoAutoComplete({
+            highlightFirst: false,
+            minLength: 3,
+            dataTextField: "Title",
+            filter: "contains",
+            popup: {
+                appendTo: $("#rich-blog-search-form")
+            },
+            template: '<span class="rich-blog-search-item" data-url="' + '@Url.RouteUrl("HomePage")' + '${ data.SEName }">${ data.Title }</span>',
+            select: function (e) {
+                var advancedSearchItemId = this.dataItem(e.item.index()).Id;
+
+                if (advancedSearchItemId === 0) {
+                    e.preventDefault();
+
+                    window.location = '@Url.Action("ListResults", "RichBlogSearch")' + '?phrase=' + $('#rich-blog-searchterms').val();
+                }
+            },
+            dataSource: new kendo.data.DataSource({
+                serverFiltering: true,
+                requestStart: function (e) {
+                    $("#rich-blog-searchterms").addClass("rich-blog-search-busy");
+                },
+                requestEnd: function (e) {
+                    e.response.push({ Title: '@T("SevenSpikes.RichBlog.Public.Search.AdvancedSearchFor") "' + $('#rich-blog-searchterms').val() + '"', Id: 0 });
+                },
+                change: function (e) {
+                    $("#rich-blog-searchterms").removeClass("rich-blog-search-busy");
+                },
+                transport: {
+                    read: "@Url.Action("Search", "RichBlogSearch")",
+                    parameterMap: function () {
+                        return { phrase: $("#rich-blog-searchterms").val() };
+                    }
+                }
+            }),
+            change: function () {
+                var selected = $(".k-list").find(".k-state-selected");
+                var url = selected.find('.rich-blog-search-item').attr('data-url');
+                if (typeof url === "undefined") {
+                    // do nothing as the value has probably been changed from the onblur event handler rather than from dropdown selection
+                } else {
+                    // navigate to the searched product
+                    window.location.href = url;
+                }
+            },
+            dataBound: function (e) {
+                $(".k-animation-container").addClass("blog-instant-search");
+                $(e.sender.list).find('li:last').addClass('rich-blog-autocomplete-last-item');
+            }
+        });
+    });
+</script>

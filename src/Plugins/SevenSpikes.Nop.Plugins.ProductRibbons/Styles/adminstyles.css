@@ -1,0 +1,110 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    CONDITIONS
+
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+a.add-condition-group {
+    margin-bottom: 15px;
+}
+
+
+    a.add-condition-group:hover {
+        text-decoration: none;
+    }
+
+.condition-group-grid {
+    margin-bottom: 20px;
+}
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+    PRODUCT RIBONS ADMIN 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+.ribbon-image label {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.select-ribbon-pictures .ribbon-picture {
+    width: 200px;
+}
+
+.select-ribbon-pictures td {
+    border: 1px solid #999;
+}
+
+.select-ribbon-pictures tr {
+    border: 2px solid #999;
+}
+
+    .select-ribbon-pictures tr:hover {
+        background-color: #a6d9f4;
+        cursor: pointer;
+    }
+
+    .select-ribbon-pictures tr.ribbon-pictures-header:hover {
+        cursor: pointer;
+    }
+
+
+
+/* PICTURE BUTTONS */
+
+.ribbon-picture-buttons td .edit-ribbon-picture,
+.ribbon-picture-buttons td .manage-ribbon-pictures {
+    float: left;
+    cursor: pointer;
+    padding: 4px 16px;
+    border-radius: 5px;
+    border: 1px solid #6ba8c4;
+    border-top: 1px solid #8bc2dd;
+    margin-right: 5px;
+    color: #444;
+    background: #f0f9ff;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YwZjlmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNhNmQ5ZjQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  #f0f9ff 0%, #a6d9f4 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f9ff), color-stop(100%,#a6d9f4));
+    background: -webkit-linear-gradient(top,  #f0f9ff 0%,#a6d9f4 100%);
+    background: -o-linear-gradient(top,  #f0f9ff 0%,#a6d9f4 100%);
+    background: -ms-linear-gradient(top,  #f0f9ff 0%,#a6d9f4 100%);
+    background: linear-gradient(to bottom,  #f0f9ff 0%,#a6d9f4 100%);
+    font-weight: bold;
+    line-height: 19px;
+}
+    .ribbon-picture-buttons td .edit-ribbon-picture:hover,
+    .ribbon-picture-buttons td .manage-ribbon-pictures:hover {
+        color: #111;
+        box-shadow: inset 0 1px #fff;
+        border: 1px solid #6ba8c4;
+        border-bottom: 1px solid #8bc2dd;
+        background: #a6d9f4;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2E2ZDlmNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMGY5ZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top,  #a6d9f4 0%, #f0f9ff 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a6d9f4), color-stop(100%,#f0f9ff));
+        background: -webkit-linear-gradient(top,  #a6d9f4 0%,#f0f9ff 100%);
+        background: -o-linear-gradient(top,  #a6d9f4 0%,#f0f9ff 100%);
+        background: -ms-linear-gradient(top,  #a6d9f4 0%,#f0f9ff 100%);
+        background: linear-gradient(to bottom,  #a6d9f4 0%,#f0f9ff 100%);
+    }
+
+
+.style-text {
+    height: 150px;
+}
+
+.no-picture label {
+    line-height: 34px;
+    display: inline-block
+}
+
+#product-ribbons-create-or-update .panel {
+    box-shadow: none;
+}

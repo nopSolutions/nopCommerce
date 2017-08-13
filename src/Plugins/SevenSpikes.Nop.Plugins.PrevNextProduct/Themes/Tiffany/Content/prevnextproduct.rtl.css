@@ -1,0 +1,20 @@
+﻿.previous-product {
+	float: right;
+}
+.next-product {
+	float: left;
+}
+.previous-product a {
+	background:url(images/next-prod.png)no-repeat center;
+	text-align: right;
+}
+.next-product a {
+	background:url(images/prev-prod.png)no-repeat center;
+	text-align: left;
+}
+.previous-product-title {
+	margin-right: 10px;
+}
+.next-product-title {
+	margin-left: 10px;
+}

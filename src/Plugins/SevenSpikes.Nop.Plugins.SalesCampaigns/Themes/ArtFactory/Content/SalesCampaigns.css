@@ -1,0 +1,14 @@
+﻿
+/*product page grouped*/
+
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    right: 0;
+}
+
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    max-width: none;
+}

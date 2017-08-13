@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Scheduling">
+    <Value>Nop Scheduling</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule">
+    <Value>Schedule</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.FromDate">
+    <Value>From date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.FromDate.Hint">
+    <Value>The date from which the item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.TabTitle">
+    <Value>Scheduling</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.TabTitle.SaveBeforeEdit">
+    <Value>You need to Save before you can add scheduling.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.ToDate">
+    <Value>To date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.Schedule.ToDate.Hint">
+    <Value>The date to which the item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern">
+    <Value>Schedule pattern</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth">
+    <Value>Every Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.From">
+    <Value>From day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.Hint">
+    <Value>The interval in days of every month for which this item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.EveryMonth.To">
+    <Value>To day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.ExactDay">
+    <Value>Exact Day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.ExactDay.Hint">
+    <Value>The exact day for which this item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.FromTime">
+    <Value>From time</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.FromTime.Hint">
+    <Value>The time from which the item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.ToTime">
+    <Value>To time</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.ToTime.Hint">
+    <Value>The time to which the item will be displayed. </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.Type">
+    <Value>Schedule Pattern</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Scheduling.Admin.SchedulePattern.Type.Hint">
+    <Value>The schedule pattern</Value>
+  </LocaleResource>
+</Language>

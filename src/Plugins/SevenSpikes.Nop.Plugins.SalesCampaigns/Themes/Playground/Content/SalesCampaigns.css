@@ -1,0 +1,28 @@
+﻿
+.vertical-align-middle > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 100px;
+}
+
+/*jcarousel*/
+
+.jcarousel-item .vertical-align-middle > div {
+    height: 85px;
+}
+
+/*product page grouped*/ 
+
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    right: 0;
+}
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    max-width: none;
+}

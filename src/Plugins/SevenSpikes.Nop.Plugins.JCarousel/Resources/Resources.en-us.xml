@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.JCarousel.Admin.Menu.MenuName">
+    <Value>JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalCategories">
+    <Value>Add Additional Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalCategories.Description">
+    <Value>If you have chosen a category data source you can add additional categories to this Carousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalCategories.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can add category mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalManufacturers">
+    <Value>Add Additional Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalManufacturers.Description">
+    <Value>If you have chosen a manufacturer data source you can add additional manufacturers to this Carousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalManufacturers.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can add manufacturer mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalProducts">
+    <Value>Add Additional Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalProducts.Description">
+    <Value>If you have chosen a product data source you can add additional products to this Carousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalProducts.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can add product mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalVendors">
+    <Value>Add Additional Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalVendors.Description">
+    <Value>If you have chosen a vendor data source you can add additional vendors to this Carousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AdditionalVendors.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can add vendor mappings.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.AddNew">
+    <Value>Add new JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.BackToList">
+    <Value>Back to carousel list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop JCarousel -&gt; Manage JCarousels</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Created">
+    <Value>JCarousel successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.AlsoPurchasedProducts">
+    <Value>Also Purchased Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.BestSellersProducts">
+    <Value>Best Sellers Products by total amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.BestSellersProductsByQuantity">
+    <Value>Best Sellers Products by quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.CategoryFeaturedProducts">
+    <Value>Category Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.HomePageCategories">
+    <Value>Home Page Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.HomePageFeaturedProducts">
+    <Value>Home Page Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.ManufacturerFeaturedProducts">
+    <Value>Manufacturer Featured Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.ProductsFromTheSameVendor">
+    <Value>Products From The Same Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.ProductsFromTheSameCategory">
+    <Value>Products From The Same Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.RecentlyAddedProducts">
+    <Value>Recently Added Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.MarkedAsNewProducts">
+    <Value>Marked As New Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.RecentlyViewedProducts">
+    <Value>Recently Viewed Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.RelatedProducts">
+    <Value>Related Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.SiblingCategories">
+    <Value>Sibling Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DataSourceTypes.SubCategories">
+    <Value>Sub Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Deleted">
+    <Value>JCarousel successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.DetailsButton">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Edited">
+    <Value>JCarousel successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.EditJCarouselDetails">
+    <Value>Edit JCarousel details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.GeneralSettings">
+    <Value>JCarousel General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.GeneralSettings.GeneralSection">
+    <Value>Generel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.GeneralSettings.Enable">
+    <Value>Enable the JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.GeneralSettings.Enable.Hint">
+    <Value>When you check this option, the JCarousel will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AdvancedSettings">
+    <Value>Advanced Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AnimationSpeed">
+    <Value>The speed of the scroll animation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AnimationSpeed.Hint">
+    <Value>The speed of the scroll animation in terms ("none", "slow" or "fast"). If set to "none", animation is turned off.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AutoscrollInSeconds">
+    <Value>Autoscroll the content after</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AutoscrollInSeconds.Hint">
+    <Value>Specifies after how many milliseconds to periodically autoscroll the content. If set to 0 (default) then autoscrolling is turned off.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AutoscrollHoverPause">
+    <Value>Autoscroll pause on hover</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.AutoscrollHoverPause.Hint">
+    <Value>Pause autoscroll on mouse hover.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.LoopItems">
+    <Value>Loop items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.LoopItems.Hint">
+    <Value>Infinite loop sliding.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NavigationDots">
+    <Value>Dot navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NavigationDots.Hint">
+    <Value>Show dot navigation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NavigationArrows">
+    <Value>Arrows navigation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NavigationArrows.Hint">
+    <Value>Prev/Next Arrows navigation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Common">
+    <Value>Nop JCarousel Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.DataSourceType">
+    <Value>Data source type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.DataSourceType.Hint">
+    <Value>Specifies predefined type of data that will populate the JCarousel plugin e.g. "Featured Products", "Related Products", etc.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.JCarouselAdvancedSettings">
+    <Value>JCarousel Advanced Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Name.Hint">
+    <Value>Specifies the name of the JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Name.Required">
+    <Value>Name of the JCarousel is REQUIRED.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NumberOfItems">
+    <Value>Maximum number of items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NumberOfItems.Hint">
+    <Value>The maximum number of items that will contain the JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NumberOfVisibleItems">
+    <Value>Number of visible items in the JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.NumberOfVisibleItems.Hint">
+    <Value>Specify the number of visible items at a time, that are going to be shown in the JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.ScrollItems">
+    <Value>Number of items to scroll by</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.ScrollItems.Hint">
+    <Value>The number of items to scroll by.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.ShowTitle">
+    <Value>Show title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.ShowTitle.Hint">
+    <Value>If checked the title of the JCarousel will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Skin">
+    <Value>Skin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Skin.Hint">
+    <Value>Specifies a custom class name for the current JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.StartIndex">
+    <Value>Item start index</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.StartIndex.Hint">
+    <Value>The index of the item to start with.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Title.Hint">
+    <Value>Specify a title, that will be displayed before the JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.WidgetZoneNames">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.WidgetZoneNames.Hint">
+    <Value>The names of the widget zone in which the JCarousel is added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.StoreMapping">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.StoreMapping.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can edit Stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Submenus.ManageSettings">
+    <Value>Manage JCarousels</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.AddJCarousel">
+    <Value>Add the JCarousel to new widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.Carousel">
+    <Value>JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.Carousel.Hint">
+    <Value>The JCarousel which will be added to this widget.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.ChooseJCarousel">
+    <Value>Please choose which JCarousel you will want to be displayed in the widget:</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.CreateNewJCarousel">
+    <Value>If you like you can create new JCarousel, which you can add.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.Description">
+    <Value>You can add the {0} JCarousel to as many widget zones as you would like. Just create a new widget by selecting the desired widget zone and click the 'Add new' button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.DisplayOrder.Hint">
+    <Value>The display order for the widget that will be created for the JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.SaveBeforeEdit">
+    <Value>You need to save the JCarousel before you can add it to a widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.WidgetZones.WidgetZone.Hint">
+    <Value>The widget zone to which the JCarousel will be added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Public.NextArrow">
+    <Value>Next</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.JCarousel.Public.PreviousArrow">
+    <Value>Previous</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditJCarouselSettings">
+    <Value>JCarousel settings has been edited.</Value>
+  </LocaleResource>
+</Language>

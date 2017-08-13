@@ -1,0 +1,56 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 240px) {
+    
+.previous-product a{
+    padding-right: 30px;
+    padding-left: 10px;
+    background:  url(img/next.png) right 10px center no-repeat,
+        url(img/background.png) top repeat-x;
+}
+    .previous-product a:hover{
+        background:  url(img/next.png) right 10px center no-repeat,
+        url(img/background.png) bottom repeat-x;
+    }
+.next-product a {
+    padding-left: 30px;
+    padding-right: 10px;
+	background: url(img/prev.png) left 10px center no-repeat,
+        url(img/background.png) top repeat-x;
+}
+    .next-product a:hover{
+        background: url(img/prev.png) left 10px center no-repeat,
+        url(img/background.png) bottom repeat-x;
+    }
+
+}
+
+@media all and (min-width: 240px) and (max-width: 980px) {
+
+.previous-product a {
+        float: left;
+        background:  url(img/next.png) center no-repeat,
+             url(img/background.png) top repeat-x;
+    }
+        .previous-product a:hover{
+            background:  url(img/next.png) center no-repeat,
+            url(img/background.png) bottom repeat-x;
+        }
+    .next-product a {
+        float: right;
+        background: url(img/prev.png) center no-repeat, 
+            url(img/background.png) top repeat-x;
+    }
+        .next-product a:hover{
+            background: url(img/prev.png) center no-repeat,
+            url(img/background.png) bottom repeat-x;
+        }
+    .previous-product a,
+    .next-product a{
+        background-position: center;
+    }
+
+}

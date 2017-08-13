@@ -1,0 +1,152 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+	left: 4px;
+	right: auto;
+}
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	float: right;
+	padding: 5px 0 5px 18px;
+	margin: 0 0 0 15px;
+}
+.selected-options-list > li span:after {
+	left: 0;
+	right: auto;
+}
+
+.priceRangeMinPanel {
+	float: right;
+}
+.priceRangeMaxPanel {
+	float: left;
+}
+.priceRangeMinPanel span,
+.priceRangeMaxPanel span {
+	display: inline-block;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: left;
+}
+
+.filtersGroupPanel li .filter-item-name {
+	padding: 8px 50px 8px 25px;
+	text-align: right;
+}
+.filtersGroupPanel li .filter-item-name:before {
+	right: 25px;
+	left: auto;
+}
+
+.colorOptions.filtersGroupPanel li {
+	float: right;
+	margin: 0 2.5% 10px 0;
+}
+.colorOptions.filtersGroupPanel li:nth-child(5n+1) {
+	margin-right: 0;
+	margin-left: 0;
+}
+.colorOptions.filtersGroupPanel li .color:before {
+	left: 0 !important;
+	right: auto !important;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name {
+	right: 0;
+	left: auto;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name:after {
+	right: 14px;
+	left: auto;
+}
+
+.filtersDropDownPanel .select-wrap select {
+	left: auto;
+	right: 0;
+}
+.filtersDropDownPanel .select-wrap .select-box {
+	background-position: left center;
+	padding: 0 15px 0 25px;
+	text-align: right;
+}
+
+.productPanelAjaxBusy:before,
+.infinite-scroll-loader:before {
+	right: 50%;
+	left: auto;
+	margin: -25px -25px 0 0;
+}
+.productPanelAjaxBusy:after,
+.infinite-scroll-loader:after {
+	right: 50%;
+	left: auto;
+	margin: 35px -25px 0 0;
+}
+
+.ajaxFilters .k-window-titlebar span {
+	float: right;
+}
+.ajaxFilters .k-window-actions {
+	left: 0;
+	right: auto;
+}
+
+
+@media all and (max-width: 1000px) {
+	
+.nopAjaxFilters7Spikes {
+	right: 0;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.android23 .nopAjaxFilters7Spikes {
+	right: -320px;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0);
+	-ms-transform: translate(0);
+	transform: translate(0);
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	right: 0;
+	left: auto;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	background-position: left center;
+}
+
+}
+
+@media all and (min-width: 1281px) {
+
+.filtersGroupPanel li .filter-item-name {
+	padding: 8px 60px 8px 35px;
+}
+.filtersGroupPanel li .filter-item-name:before {
+	right: 35px;
+	left: auto;
+}
+.colorOptions.filtersGroupPanel li .filter-item-name:after {
+	right: 16px;
+	left: auto;
+}
+
+}
+

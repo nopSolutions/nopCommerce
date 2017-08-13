@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Core.Admin.Help">
+    <Value>Help</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy">
+    <Value>Copy</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.Name">
+    <Value>New Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.Name.Hint">
+    <Value>Enter the name of the new created entity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyConditions">
+    <Value>Copy Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyConditions.Hint">
+    <Value>This includes: Conditions, Override Product and Customer Conditions, if there are any.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyMappings">
+    <Value>Copy Widget/Product/Category/Manufacturer Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyMappings.Hint">
+    <Value>This includes: Widget zones, Product, Category and Manufacturer Mappings, if there are any.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyScheduling">
+    <Value>Copy Scheduling</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Copy.CopyScheduling.Hint">
+    <Value>This includes: Scheduling.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Warnings.NoWarnings">
+    <Value>There are no warnings!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Warnings.Title">
+    <Value>Nop-Templates Warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Menu.MainMenu">
+    <Value>Nop-Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Menu.Warnings.MenuName">
+    <Value>Warnings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Menu.Plugins.MenuName">
+    <Value>Plugins</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Menu.Themes.MenuName">
+    <Value>Themes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Menu.Information.MenuName">
+    <Value>System Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.Information.Title">
+    <Value>Nop-Templates System Information</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings">
+    <Value>Reset Default Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForPlugins.CurrentValueHint">
+    <Value>&lt;strong&gt;Current Value&lt;/strong&gt; - the currently used value of the setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForPlugins.DefaultValueHint">
+    <Value>&lt;strong&gt;Default Value&lt;/strong&gt; - the default (recommended) value of the setting for &lt;strong&gt;DefaultClean&lt;/strong&gt; theme.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.MessageForThemes.DefaultValueHint">
+    <Value>&lt;strong&gt;Default Value&lt;/strong&gt; - the default (recommended) value of the setting for &lt;strong&gt; {0} &lt;/strong&gt; theme.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.NoSettingsSelected">
+    <Value>No settings were selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.SuccessMessage">
+    <Value>Settings were successfully reset.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.SettingsUpdatedSuccessfully">
+    <Value>The Settings were updated successfully!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.ConfirmPopupTitle">
+    <Value>Reset Default Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.Confirm">
+    <Value>Reset</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ResetDefaultSettings.Cancel">
+    <Value>Cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.SettingKey">
+    <Value>Setting Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.SettingCurrentValue">
+    <Value>Current Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.SettingDefaultValue">
+    <Value>Default Value</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ManageResources">
+    <Value>Manage Theme Resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ManageResources.IncludeAdminResources">
+    <Value>Include Admin Resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.Admin.ManageResources.SelectLanguage">
+    <Value>Select a language</Value>
+  </LocaleResource>
+
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels">
+    <Value>px</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Milliseconds">
+    <Value>ms</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.MegaBytes">
+    <Value>MB</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Hours">
+    <Value>hours</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Days">
+    <Value>days</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Seconds">
+    <Value>sec</Value>
+  </LocaleResource>
+  <LocaleResource Name ="SevenSpikes.Plugins.Admin.InputStyles.Postfix.Percentage">
+    <Value>%</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.ThemeSettings.ShowCartQuantityMarker">
+    <Value>Show Shopping Cart Quantity Marker</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.ThemeSettings.ShowCartQuantityMarker.Hint">
+    <Value>Choose whether to show the shopping cart quantity marker.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.CustomHeadStyles">
+    <Value>Custom Head Styles</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.CustomHeadStyles.Hint">
+    <Value>Insert your custom css styles that will be added in the head after all other css files. This way you can further customize the theme. Example: .footer { display: none; }</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.Picture">
+    <Value>Logo Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.Picture.Hint">
+    <Value>Choose the logo image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.PinterestUrl">
+    <Value>Follow us pinterest url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.PinterestUrl.Hint">
+    <Value>Insert your follow us URL address on pinterest. If left empty the icon in the footer will not be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.RemoveCopyright">
+    <Value>Remove Copyright</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.RemoveCopyright.Hint">
+    <Value>Remove Copyright notice after a copyright removal key had been purchased by www.nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.RemoveDesignedBy">
+    <Value>Remove Designed By Nop-Templates.com link in the footer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.RemoveDesignedBy.Hint">
+    <Value>If you would like to receive 10% discount on any future purchase or renewal and a feature spot on our site, please leave this unckecked and contact us.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.VimeoUrl">
+    <Value>Follow us vimeo url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.VimeoUrl.Hint">
+    <Value>Insert your follow us URL address on vimeo. If left empty the icon in the footer will not be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.InstagramUrl">
+    <Value>Follow us on Instagram url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.InstagramUrl.Hint">
+    <Value>Insert your Instagram follow us URL address. If left empty the icon will not be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.LazyLoadImages">
+    <Value>Lazy Load Product Box Images</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.LazyLoadImages.Hint">
+    <Value>If this setting is checked the product box images will load asynchronously on scroll.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.ProductImageProportion">
+    <Value>Product Images Proportion</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.ProductImageProportion.Hint">
+    <Value>Set the value in percentage of how the height of the product images relates to the width. I.e. 100 means that the image height is 100% from the image width, which means it is a square image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.CategoryImageProportion">
+    <Value>Category Images Proportion</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.Settings.CategoryImageProportion.Hint">
+    <Value>Set the value in percentage of how the height of the category images relates to the width. I.e. 100 means that the image height is 100% from the image width, which means it is a square image.</Value>
+  </LocaleResource>
+ 
+  <LocaleResource Name="SevenSpikes.Themes.Admin.SettingsSubmenu">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Admin.ManageResources">
+    <Value>Manage Theme Resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Common.BackSublist">
+    <Value>Back</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Common.CloseMenu">
+    <Value>Close</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Common.Filters">
+    <Value>Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Common.MenuTitle">
+    <Value>Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Common.Personal">
+    <Value>Personal menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.ProductCompareName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Themes.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ID">
+    <Value>Shipments ID</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Products.Compare.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Compare.NoDescription">
+    <Value>No description!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Trial.Message.Notification">
+    <Value>You are running a trial version of</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Trial.Message.FullVersion">
+    <Value>Buy Full Version</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Admin.Trial.Message.Collection">
+    <Value>Buy Nop Ultimate Plugin Collection</Value>
+  </LocaleResource>
+</Language>

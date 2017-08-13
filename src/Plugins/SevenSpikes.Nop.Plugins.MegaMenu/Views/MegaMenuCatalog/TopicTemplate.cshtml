@@ -1,0 +1,31 @@
+﻿@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemTopicModel
+
+@{
+    var hasTopics = Model.Topics.Count > 0;
+    var hasSublistClass = hasTopics ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasTopics ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass @Model.Item.CssClass">
+
+    <span class="@withSubcategoriesClass labelfornextplusbutton">@Model.Item.Title</span>
+
+    @if (hasTopics)
+    {
+        <div class="plus-button"></div>
+        <div class="sublist-wrap">
+            <ul class="sublist">
+                <li class="back-button">
+                    <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                </li>
+                @foreach (var topic in Model.Topics)
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new { topic.SeName })"><span>@topic.Title</span></a></li>
+                }
+            </ul>
+        </div>
+    }
+
+</li>

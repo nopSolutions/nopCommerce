@@ -1,0 +1,114 @@
+﻿@using Nop.Core
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Infrastructure
+@using Nop.Services.Localization
+@using Nop.Web.Models.Catalog
+@using SevenSpikes.Nop.Plugins.StoreLocator
+
+@model SevenSpikes.Nop.Plugins.StoreLocator.Models.ShopModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title, meta
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+    Html.AddCssFileParts("~/Content/magnific-popup/magnific-popup.css");
+
+    var supportRtl = this.ShouldUseRtlTheme();
+
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + Model.Theme + "/Content/StoreLocator.css");
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Themes/" + Model.Theme + "/Content/StoreLocator.rtl.css");
+    }
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/SevenSpikesExtensions.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorShop.min.js");
+
+    bool doesShopHasCoordinates = !string.IsNullOrWhiteSpace(Model.Latitude) && !string.IsNullOrWhiteSpace(@Model.Longitude);
+    bool doesShopHasImage = Model.ShopImages.Count > 0;
+    var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+}
+
+<div class="page shop-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        <div class="back-to-all-shops">
+            <a href="@Url.RouteUrl(Constants.AllShopsRouteName)" title="@T("SevenSpikes.StoreLocator.Public.AllShops.PageTitle")">
+                <span>@T("SevenSpikes.StoreLocator.Public.BackToAllShops")</span>
+            </a>
+        </div>
+        @if (doesShopHasImage || doesShopHasCoordinates)
+        {
+            <div class="shop-map-images">
+                @if (doesShopHasImage)
+                {
+                    var mainImage = Model.ShopImages[0];
+                    
+                    <div class="main-picture">
+                        <a class="main-picture-link" href="@mainImage.FullSizePictureSrc" title="@mainImage.Alt">
+                            <img class="main-picture-img" src="@mainImage.PictureSrc" alt="@mainImage.Alt" title="@mainImage.Alt" />
+                        </a>
+                    </div>
+                    <ul class="all-shop-images">
+                        @foreach (var image in Model.ShopImages.Skip(1))
+                        {
+                            <li>
+                                <a href="@image.FullSizePictureSrc" title="@image.Alt">
+                                    <img src="@image.PictureSrc" alt="@image.Alt" title="@image.Alt" />
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                @if (doesShopHasCoordinates)
+                {
+                    <div class="map-wrapper">
+                        <div class="map" id="shop-map-holder"></div>
+                    </div>
+                    <div class="map-controls">
+                        <a class="get-directions-to-shop"><span>@T("SevenSpikes.StoreLocator.Public.ShowDirections")</span></a>
+                        <span class="additional-info"></span>
+                    </div>
+                    <div class="directions-wrapper">
+                        <div class="directions-panel" id="directions-panel"></div>
+                    </div>
+                    <input type="hidden" class="shop-coordinates" data-latitude="@Model.Latitude" data-longitude="@Model.Longitude" value="1" />                   
+                    <input type="hidden" class="shop-resources" data-youarehere="@T("SevenSpikes.StoreLocator.Public.YouAreHere")" 
+                           data-accuracy="@T("SevenSpikes.StoreLocator.Public.Accuracy")"
+                           data-geolocationnotsupported="@T("SevenSpikes.StoreLocator.Public.GeoLocationNotSupported")" 
+                           data-pathtoimages = "@storeLocation@Constants.PathToImagesFolder"
+                           data-units="@Model.StoreLocatorSettings.UnitsSystem.ToString()"
+                           data-googleapikey="@Model.StoreLocatorSettings.GoogleApiKey"
+                           data-mapstyles="@Model.StoreLocatorSettings.CustomMapStyles"
+                           value="1" />
+                }
+            </div>
+        }
+        <div class="shop-info">
+            @if (!string.IsNullOrWhiteSpace(Model.FullDescription))
+            {
+                <div class="shop-full-description">@Html.Raw(Model.FullDescription)</div>
+            }
+
+            @if (Model.TagsList.Count > 0)
+            {
+                <div class="tags">
+                    <label class="tags-label">@T("SevenSpikes.StoreLocator.Public.TagsTitle")</label>
+                    <ul class="tag-list">
+                        @foreach (var tag in Model.TagsList)
+                        {
+                            <li class="tag-item">@tag</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>

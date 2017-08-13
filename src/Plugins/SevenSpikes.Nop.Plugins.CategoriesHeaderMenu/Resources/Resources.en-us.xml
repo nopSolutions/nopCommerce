@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.CategoriesHeaderMenu.Admin.Menu.MenuName">
+    <Value>Categories Header Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Categories Header Menu -&gt; Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.Common">
+    <Value>Nop Categories Header Menu Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.Enabled.Hint">
+    <Value>If checked the Categories Header Menu plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.ShowHomePageTopLevelCategoriesOnly">
+    <Value>Display only top level categories, which are marked as 'Show on home page'</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.ShowHomePageTopLevelCategoriesOnly.Hint">
+    <Value>If enabled then only top level categories will be shown in the menu based on their 'Show on home' page property being set to True.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.ShowManufacturers">
+    <Value>Show Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Settings.ShowManufacturers.Hint">
+    <Value>If enabled a manufacturers menu is going to be shown in the Header Menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CategoriesHeaderMenu.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+</Language>

@@ -1,0 +1,54 @@
+﻿@using SevenSpikes.Nop.Plugins.StoreLocator.Domain.Enums
+@using SevenSpikes.Nop.Plugins.StoreLocator.Models
+
+@model StoreLocatorModel
+@{
+    string units = (Model.Settings.UnitsSystem == UnitsSystems.Metric ? T("SevenSpikes.StoreLocator.Public.Units.Kilometers") : T("SevenSpikes.StoreLocator.Public.Units.Miles")).ToString();
+}
+@foreach (var shop in Model.Shops)
+{
+    <li class="shops-item visible" data-shopid="@shop.Id">
+        @if (shop.DefaultShopImage != null)
+        {
+            <div class="picture-wrap">
+                <a class="picture-link" href="@Url.RouteUrl("HomePage")@shop.SeName" title="@shop.Name">
+                    <img class="picture-img" src="@shop.DefaultShopImage.PictureSrc" alt="@shop.DefaultShopImage.Alt" title="@shop.DefaultShopImage.Alt" />
+                </a>
+            </div>
+        }
+        <div class="info-wrap">
+            <h2 class="shop-name">
+                <a class="shop-link" href="@Url.RouteUrl("HomePage")@shop.SeName" title="@shop.Name">@shop.Name</a>
+            </h2>
+            <input type="hidden" class="distanceToShopValue" value="0" />
+            <div class="distance-line">
+                <label class="distance-label">@T("SevenSpikes.StoreLocator.Public.SortMethod.Distance"):</label>
+                <span class="distance-value">0 @units</span>
+            </div>
+            <a class="show-directions">@T("SevenSpikes.StoreLocator.Public.ShowDirections")</a>
+            @*TODO: This functionality is working just needs styling.*@
+            @*<a class="show-on-map">@T("SevenSpikes.StoreLocator.Public.ShowOnMap")</a>*@
+            @if (!string.IsNullOrWhiteSpace(shop.ShortDescription))
+            {
+                <div class="short-description">
+                    @Html.Raw(shop.ShortDescription)
+                </div>
+            }
+            @if (shop.TagsList.Count > 0)
+            {
+                <div class="tags">
+                    <label class="tags-label">@T("SevenSpikes.StoreLocator.Public.TagsTitle")</label>
+                    <ul class="tag-list">
+                        @foreach (var tag in shop.TagsList)
+                        {
+                            <li class="tag-item">@tag</li>
+                        }
+                    </ul>
+                </div>
+            }
+            <a class="read-more" href="@Url.RouteUrl("HomePage")@shop.SeName" title="@shop.Name">@T("SevenSpikes.StoreLocator.Public.ReadMore")</a>
+        </div>
+        <input type="hidden" class="shop-coordinates" data-latitude="@shop.Latitude" data-longitude="@shop.Longitude" data-shop-title="@shop.Name" value="1" />
+        <input type="hidden" class="shop-tags-hidden-field" value="@shop.Tags" />
+    </li>
+}

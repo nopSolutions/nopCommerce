@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.ProductRibbons.Admin.Menu.MenuName">
+    <Value>Product Ribbons</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.AddNew">
+    <Value>Add Product Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.AvailableProductTokens">
+    <Value>Available Product Tokens</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.BackToList">
+    <Value>Back to Product Ribbons list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.CategoryRibbonText">
+    <Value>Small product picture ribbon text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Product Ribbons -&gt; Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.DefaultConditionValue">
+    <Value>Default State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.DefaultConditionValue.Hint">
+    <Value>If the product does not match any condition groups, then this determines whether the ribbon will be shown on the product. Almost always select "Fail" unless you want to show on every product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.ProductOverrides">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.ProductState">
+    <Value>State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.SaveBeforeAddingConditions">
+    <Value>You need to save this ribbon before you can add conditions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Condition.SaveBeforeAddingProductOverride">
+    <Value>You need to save this ribbon before you can include/exclude products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Created">
+    <Value>The Product Ribbon have been created successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Deleted">
+    <Value>The Ribbon was deletes successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Edited">
+    <Value>Product Ribbon successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.EditProductRibbonDetails">
+    <Value>Edit Product Ribbon details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.ProductRibbonText">
+    <Value>Big product picture ribbon text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture">
+    <Value>Add or Delete Ribbon Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.AddPicture">
+    <Value>Add picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.ChooseFromPictures">
+    <Value>You can choose from {0} pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.EditPicture">
+    <Value>Select picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.ManagePictures">
+    <Value>Manage pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.NoPicture">
+    <Value>No Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.Picture.Hint">
+    <Value>Insert ribbon picture. Do not insert the picture twice!!!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureAddedError">
+    <Value>Adding the ribbon picture failed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureHeight">
+    <Value>Picture Height</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl">
+    <Value>Preview picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureUrl.Hint">
+    <Value>Preview picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.PictureWidth">
+    <Value>Picture Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.RibbonPicture.SelectAPicture">
+    <Value>Select a picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.Common">
+    <Value>Nop Product Ribbons Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.Common.GoToRibbonList">
+    <Value>Go to Product Ribbons List</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.Enabled.Hint">
+    <Value>If checked the Product Ribbons plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.GeneralSettings">
+    <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductBoxPictureContainerSelector">
+    <Value>Product Box Picture Container Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductBoxPictureContainerSelector.Hint">
+    <Value>The selector for the product box picture container. The product box is used for listing products on pages like category page, manufacturer page, home page, etc. It is used by the integration of the plugin for displaying the Small product picture ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductBoxSelector">
+    <Value>Product Box Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductBoxSelector.Hint">
+    <Value>The selector for the product box. The product box is used for listing products on pages like category page, manufacturer page, home page, etc. It is used by the integration of the plugin for displaying the Small product picture ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductPageBugPictureContainerSelector">
+    <Value>Product Page Big Picture Container Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductPageBugPictureContainerSelector.Hint">
+    <Value>The selector for the container of the big product picture located on the product page. It is used by the integration of the plugin for displaying the Big product picture ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductPagePicturesParentContainerSelector">
+    <Value>Product Page Picture Parent Container Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductPagePicturesParentContainerSelector.Hint">
+    <Value>The selector for the parent container of the product picture located on the product page. It is used by the integration of the plugin for displaying the Big product picture ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon">
+    <Value>Product Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.CategoryPageRibbon">
+    <Value>Small product picture ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.CategoryPageRibbon.CategoryPageRibbonSettings">
+    <Value>
+      Specify the settings for the ribbon shown on the small (thumbnail) product picture.&lt;br/&gt;
+      The small (thumbnail) product pictures are used for the products (product boxes) on the followings:&lt;br/&gt;
+      catalog and manufacturer pages, related products, also purchased products, home page products, recently viewed products etc.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.Condition">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.Condition.AddConditionGroup">
+    <Value>Add Condition Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.Condition.Description">
+    <Value>
+      With conditions you can filter the products for which this ribbon will be shown.&lt;br/&gt;
+      The conditions consist of &lt;strong&gt;Condition Groups&lt;/strong&gt;. &lt;br/&gt;
+      The &lt;strong&gt;Default State&lt;/strong&gt; is also considered as a condition group. &lt;br/&gt;
+      A Condition Group consists of one or many &lt;strong&gt;Condition Statements&lt;/strong&gt; (rules).&lt;br/&gt;
+      The dependancy between the Condition Groups is &lt;strong&gt;OR&lt;/strong&gt; and between the Condition Statements is &lt;strong&gt;AND&lt;/strong&gt;. This means that if all of the Condition Statements in one Condition Group are true for a product, the ribbon will be displayed over that product.&lt;br/&gt;
+      To add a Condition Group you need to click on the &lt;strong&gt;Add Condition Group&lt;/strong&gt; button.
+      To delete a Condition Group you need to click on the &lt;strong&gt;Delete&lt;/strong&gt; button.
+      To add a Condition Statement to the Condition Group, you need to click on the &lt;strong&gt;Add new record&lt;/strong&gt; button.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon">
+    <Value>Page Ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.ContainerStyle">
+    <Value>Ribbon style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.ContainerStyle.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon html element. &lt;br/&gt;
+      The ribbon html element is the main html element for the ribbon that wraps the ribbon image and the ribbon text elements.&lt;br/&gt;
+      It has a css class name - 'product-ribbon'. Example styles: top: -5px; left:-5px;
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Enabled.Hint">
+    <Value>Check/uncheck to enable/disable this product ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.ImageStyle">
+    <Value>Ribbon image style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.ImageStyle.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon image (img) element.&lt;br/&gt;
+      The ribbon image html element is nested inside the ribbon element.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Position">
+    <Value>Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Position.Hint">
+    <Value>
+      The default location where the ribbon will appear relative to the picture of the product.&lt;br/&gt;
+      You can customize further with the styles below if needed.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.Text.Hint">
+    <Value>
+      Specify the text of the ribbon. This text will appear over the product image. &lt;br/&gt;
+      Leave empty if you use a ribbon picture that contains text. &lt;br/&gt;
+      You can use the Available Product Tokens here i.e "${max-discount-percentage} OFF" or "-${max-discount-percentage}"
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.TextStyle">
+    <Value>Ribbon text style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.PageRibbon.TextStyle.Hint">
+    <Value>
+      Here you can specify css styles that will be applied only to the ribbon text (label) element.&lt;br/&gt;
+      The ribbon text is an label html element that is nested inside the ribbon element.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductPageRibbon">
+    <Value>Big product picture ribbon</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductPageRibbon.ProductPageRibbonSettings">
+    <Value>
+      Specify the settings for the ribbon shown on the big product picture.&lt;br/&gt;
+      The big product picture is the one on the product page.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation">
+    <Value>General Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.CategoryRibbonText">
+    <Value>Category Ribbon Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Enabled.Hint">
+    <Value>Check/Uncheck to enable/disable this product ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.FromDate">
+    <Value>From date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.FromDate.Hint">
+    <Value>Set the date from which this product ribbon will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Name">
+    <Value>Ribbon name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Name.Hint">
+    <Value>The name of this product ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Name.Required">
+    <Value>Please enter the name of this product ribbon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Priority">
+    <Value>Priority</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.Priority.Hint">
+    <Value>NOTE: A lower number is a higher priority! Set the priority of the product ribbon. If two or more product ribbons match the same conditions and have the same position then the ribbon with the higher priority will be shown first.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.ProductRibbonText">
+    <Value>Product Ribbon Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.StopAddingRibbonsAftherThisOneIsAdded">
+    <Value>Stop adding ribbons after this one is added</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.StopAddingRibbonsAftherThisOneIsAdded.Hint">
+    <Value>If checked no more ribbons will be added to a product after this ribbon is added. Do not check if there will be multiple ribbons shown for a single product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.ToDate">
+    <Value>To date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.ProductRibbonGeneralInformation.ToDate.Hint">
+    <Value>Set the date till which this product ribbon will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.StoreMapping">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Settings.ProductRibbon.StoreMapping.SaveBeforeEdit">
+    <Value>You need to save this product ribbon, before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.Days">
+    <Value>days</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.Hours">
+    <Value>hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.Minutes">
+    <Value>minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.OneDay">
+    <Value>day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.OneHour">
+    <Value>hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.OneMinute">
+    <Value>minute</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.OneSecond">
+    <Value>second</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.SpecialPriceTokenExpiresIn.Seconds">
+    <Value>seconds</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Submenus.ProductRibbons">
+    <Value>Product Ribbons</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Submenus.RibbonImages">
+    <Value>Ribbon Images</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.ProductRibbons.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.ProductRibbons.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+</Language>

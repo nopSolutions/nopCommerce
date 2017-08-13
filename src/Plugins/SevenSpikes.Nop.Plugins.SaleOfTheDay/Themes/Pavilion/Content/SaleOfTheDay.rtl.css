@@ -1,0 +1,73 @@
+﻿/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+.sale-of-the-day-offer .owl-nav .owl-prev {
+	right: 0px;
+	left: auto;
+	background-image: url('images/next.png');
+	background-position: -1px center;
+}
+.sale-of-the-day-offer .owl-nav .owl-next {
+	left: 0px;
+	right: auto;
+	background-image: url('images/prev.png');
+	background-position: -39px center;
+}
+.sale-of-the-day-offer .owl-nav .owl-prev:hover {
+	background-position: -39px center/* CHECK_HERE */;
+}
+.sale-of-the-day-offer .owl-nav .owl-next:hover {
+	background-position: -1px center/* CHECK_HERE */;
+}
+.sale-of-the-day-offer .price.actual-price {
+	margin: 0 0 0 5px;
+}
+
+@media all and (min-width: 769px) {
+	
+	.sale-of-the-day-offer .item-gallery {
+		float: right;
+	}
+	.sale-of-the-day-offer .overview {
+		float: left;
+	}
+	.sale-of-the-day-offer .picture-thumbs a {
+		margin: 0 2% 0 0;
+	}
+	
+}
+
+@media all and (min-width: 1001px) {
+	
+	.sale-of-the-day-offer .title {
+		text-align: right;
+	}
+	.sale-of-the-day-offer .owl-nav .owl-prev {
+		left: 37px;
+		right: auto;
+	}
+	.sale-of-the-day-offer .countdown-timer {
+		left: 0;
+		right: auto;
+	}
+	.sale-of-the-day-offer .countdown-timer:before {
+		right: -40px;
+		left: auto;
+		border-style: dashed dashed solid solid;
+		border-color: transparent transparent #f6f6f6 #f6f6f6;
+	}
+	.sale-of-the-day-offer .item-gallery,
+	.sale-of-the-day-offer .overview {
+		float: none;
+	}
+	.sale-of-the-day-offer .overview {
+		padding: 0 25px 0 0;
+	}
+	.sale-of-the-day-offer .picture-thumbs {
+		right: 25px;
+		left: auto;
+	}
+	
+}

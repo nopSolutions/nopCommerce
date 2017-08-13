@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.NopSmartSEO">
+    <Value>Nop Smart SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.NopSmartSEO.AddNew">
+    <Value>Add New Smart SEO Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.NopSmartSEO.BackToList">
+    <Value>Back to Smart SEO list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.NopSmartSEO.EditSmartSEOTemplateDetails">
+    <Value>Edit SmartSEO Template Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate">
+    <Value>SEO Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Active">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Active.Hint">
+    <Value>Enable the SmartSEO Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AppendProductsToKeywordsForCategories">
+    <Value>
+      Append Product Names to Keywords for Category Pages
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AppendProductsToKeywordsForCategories.Hint">
+    <Value>
+      Append Products Names to Keywords for Category Pages
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AppendProductsToKeywordsForManufacturers">
+    <Value>
+      Append Product Names to Keywords for Manufacturer Pages
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AppendProductsToKeywordsForManufacturers.Hint">
+    <Value>
+      Append Product Names to Keywords for Manufacturer Pages
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AvailableCategoryTokens">
+    <Value>
+      Available Category Tokens:
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AvailableManufacturerTokens">
+    <Value>
+      Available Manufacturer Tokens:
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.AvailableProductTokens">
+    <Value>
+      Available Product Tokens:
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoriesNames">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryDescriptionSEOTemplate">
+    <Value>
+      Category Description SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryDescriptionSEOTemplate.Hint">
+    <Value>
+      Category Description SEO Templates
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryKeywordsSEOTemplate">
+    <Value>
+      Category Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryKeywordsSEOTemplate.Hint">
+    <Value>
+      Category Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryKeywordsSEOTemplateRegex">
+    <Value>
+      Category Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryKeywordsSEOTemplateRegex.Hint">
+    <Value>
+      Category Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryMapping">
+    <Value>Category Mapping</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryMapping.SaveBeforeEdit">
+    <Value>You need to save the SmartSEO Template before you can map categories to it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryTitleSEOTemplate">
+    <Value>
+      Category Title SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoryTitleSEOTemplate.Hint">
+    <Value>
+      Category Title SEO Templates
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CombineWithGlobalTemplate">
+    <Value>Combine with global template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CombineWithGlobalTemplate.Hint">
+    <Value>If enabled the current SEOTemplate will be combined with the SEO Template marked as Global.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Created">
+    <Value>The SmartSEO Template have been created successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Deleted">
+    <Value>The SmartSEO template have been deletes successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Edited">
+    <Value>The SmartSEO Template have been edited successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Global">
+    <Value>Is Global</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Global.Hint">
+    <Value>If set the SmartSEO Template will be applied for all products, categories and manufacturers in your store. NOTE: You can override a global SmartSEO template by creating a non global SmartSEO template and mapping it to category or manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerDescriptionSEOTemplate">
+    <Value>
+      Manufacturer Description SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerDescriptionSEOTemplate.Hint">
+    <Value>
+      Manufacturer Description SEO Templates
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerKeywordsSEOTemplate">
+    <Value>
+      Manufacturer Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerKeywordsSEOTemplate.Hint">
+    <Value>
+      Manufacturer Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerKeywordsSEOTemplateRegex">
+    <Value>
+      Manufacturer Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerKeywordsSEOTemplateRegex.Hint">
+    <Value>
+      Manufacturer Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerMapping">
+    <Value>Manufacturer Mapping</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerMapping.SaveBeforeEdit">
+    <Value>You need to save the SmartSEO Template before you can map manufacturers to it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerNames">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerTitleSEOTemplate">
+    <Value>
+      Manufacturer Title SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerTitleSEOTemplate.Hint">
+    <Value>
+      Manufacturer Title SEO Templates
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Name.Hint">
+    <Value>Set the name of the SEO Template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Name.Required">
+    <Value>The SEO Template Name is Required!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Notifications.SEOTemplateEdited">
+    <Value>Seo Template successfully edited</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.PrefixProductKeywordsForCategoriesWithManufacturerName">
+    <Value>
+      Prefix Product Names with Manufacturer Name
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.PrefixProductKeywordsForCategoriesWithManufacturerName.Hint">
+    <Value>
+      Prefix Product Names with Manufacturer Name
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.PrefixProductKeywordsForManufacturersWithManufacturerName">
+    <Value>
+      Prefix Product Names with Manufacturer Name
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.PrefixProductKeywordsForManufacturersWithManufacturerName.Hint">
+    <Value>
+      Prefix Product Names with Manufacturer Name
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Priority">
+    <Value>Priority</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Priority.Hint">
+    <Value>Set the Priority of the SmartSEO Template. NOTE: Lower number means higher priority.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductDescriptionSEOTemplate">
+    <Value>
+      Product Description SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductDescriptionSEOTemplate.Hint">
+    <Value>
+      Product Description SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductKeywordsSEOTemplate">
+    <Value>
+      Product Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductKeywordsSEOTemplate.Hint">
+    <Value>
+      Product Keywords SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductKeywordsSEOTemplateRegex">
+    <Value>
+      Product Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductKeywordsSEOTemplateRegex.Hint">
+    <Value>
+      Product Keywords SEO Template Regex
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductTitleSEOTemplate">
+    <Value>
+      Product Title SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ProductTitleSEOTemplate.Hint">
+    <Value>
+      Product Title SEO Template
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.StoreMapping">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SEOTemplate.StoreMapping.SaveBeforeEdit">
+    <Value>You need to save the SmartSEO Template before you can configure the template for your stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings">
+    <Value>Smart SEO Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultCategoryMetaData">
+    <Value>Do Not Override Default Category Meta Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultCategoryMetaData.Hint">
+    <Value>Do Not override default category meta data if there is one.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultManufacturerMetaData">
+    <Value>Do Not Override Default Manufacturer Meta Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultManufacturerMetaData.Hint">
+    <Value>Do Not override default manufacturer meta data if there is one.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultProductMetaData">
+    <Value>Do Not Override Default Product Meta Data</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.DontOverrideDefaultProductMetaData.Hint">
+    <Value>Do Not override default product meta data if there is one.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.EnableSmartSEO">
+    <Value>Enable Smart SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.EnableSmartSEO.Hint">
+    <Value>Enable Smart SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.CategoryTemplate">
+    <Value>Category Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.ProductTemplate">
+    <Value>Product Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.ManufacturerTemplate">
+    <Value>Manufacturer Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.RemoveDefaultTitle">
+    <Value>Remove Default Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.SmartSEOSettings.RemoveDefaultTitle.Hint">
+    <Value>If enabled the default title will not be set.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopSmartSEO.Admin.Submenus.SmartSEOTemplates">
+    <Value>SmartSEO Templates</Value>
+  </LocaleResource>
+</Language>

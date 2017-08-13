@@ -1,0 +1,145 @@
+﻿@media all and (min-width: 240px) {
+
+
+/* GLOBAL */
+
+    .clearFilterOptionsAll {
+	    float: left;
+    }
+
+    .filter-block a.toggleControl {
+        padding: 10px 10px 10px 42px;
+        background: url(images/pointer-white.png) no-repeat 15px center;
+    }
+    .filter-block a.clearFilterOptions, .filter-block a.clearPriceRangeFilter {
+        right: auto;
+        left: 1px;
+    }
+
+/* CHECKBOX MODE */
+
+.filtersGroupPanel input[type="checkbox"] + label {
+    padding: 10px 42px 10px 10px;
+}
+.filtersGroupPanel.imageOptions input[type="checkbox"] + label {
+    padding: 12px 42px 12px 10px;
+}
+.filtersGroupPanel input[type="checkbox"] + label:before {
+    left: auto;
+    right: 15px;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        right: auto;
+        left: 16px;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersGroupPanel .select-inner {
+        padding: 9px 12px 9px 36px;
+    }
+        .filtersGroupPanel .select-inner:after {
+            right: auto;
+            left: 0;
+        }
+
+/* SEARCH CRITERIA */
+
+	.selected-options-list > li {
+		text-align: right;
+	}
+	.selected-options-list > li span {
+        float: right;
+        padding: 9px 3px 9px 20px;
+        margin: 0 0 0 6px;
+        background-position: top 12px left 4px;
+	}
+
+/* PRICE RANGE SLIDER */
+ 
+    .priceRangeMinPanel {
+        float: right;
+    }
+    .priceRangeMaxPanel {
+        float: left;
+    }
+    .priceRangeCurrentPricesPanel .currentMinPrice {
+        float: right;
+    }
+    .priceRangeCurrentPricesPanel .currentMaxPrice {
+        float: left;
+    }
+
+/* NO RESULTS POPUP */
+
+    .ajaxFilters .k-window-actions {
+	    right: auto;
+        left: 10px;
+    }
+
+}
+
+@media all and (max-width: 980px) {
+
+    .nopAjaxFilters7Spikes {
+		right: 0;
+		left: auto;
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes {
+		-webkit-transform: translate(320px);
+		-moz-transform: translate(320px);
+		-ms-transform: translate(320px);
+		transform: translate(320px);
+	}
+	.notAndroid23 .nopAjaxFilters7Spikes.open {
+		-webkit-transform: translate(0px);
+		-moz-transform: translate(0px);
+		-ms-transform: translate(0px);
+		transform: translate(0px);
+	}
+	.android23 .nopAjaxFilters7Spikes {
+		right: -320px;
+	}
+	.android23 .nopAjaxFilters7Spikes.open {
+		right: 0;
+	}
+	.nopAjaxFilters7Spikes .close-filters span {
+		background: url(images/rtl-nav-item-close.png) no-repeat 285px center;
+		text-align: left;
+	}
+
+}
+
+/*=====================================================
+    
+    DESKTOP
+
+=====================================================*/
+
+@media all and (min-width: 981px) {
+
+	.filtersGroupPanel:after {
+		right: auto;
+		left: -1px;
+		border-width: 0 0 6px 134px;
+		border-color: transparent transparent transparent #46c688;
+	}
+
+    .filtersGroupPanel li > a {
+        padding: 10px 42px 10px 10px;
+    }
+    .filter-block a.toggleControl {
+        padding: 8px 0 8px 42px;
+        background: url(images/pointer.png) no-repeat 10px center;
+    }
+    .selected-options-list > li span {
+        padding: 5px 3px 5px 20px;
+        background-position: top 8px left 4px;
+    }
+    
+}

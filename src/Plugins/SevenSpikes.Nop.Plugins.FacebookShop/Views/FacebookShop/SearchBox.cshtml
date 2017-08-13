@@ -1,0 +1,9 @@
+﻿@{
+    string q = Request != null && Request.QueryString["q"] != null ? Request.QueryString["q"].ToString() : string.Empty;
+}
+
+@using (Html.BeginRouteForm("SevenSpikes.Nop.Plugins.FacebookShop.ProductSearch", FormMethod.Get))
+{
+    <input type="text" class="search-text" autocomplete="off" placeholder="@T("Search.SearchBox.Tooltip")" name="q" value="@q" />
+    <button type="submit" class="search-button" value="@T("Search")">@T("Search")</button>
+}

@@ -1,0 +1,174 @@
+﻿.clearFilterOptionsAll {
+	float: left;
+}
+.filter-block a.clearFilterOptions, .filter-block a.clearPriceRangeFilter {
+	left: 1px;
+	right: auto;
+}
+.center-1 .filtersPanel .block.filter-block{
+    float:right;
+} 
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+	margin: 0 7px 0 0;
+    padding: 1px 1px 1px 20px;
+}
+.selected-options-list > li span:before {
+	right: auto;
+	left: 4px;
+}
+.priceRangeMinPanel {
+	float: right;
+}
+.priceRangeMaxPanel {
+	float: left;
+}
+.ui-slider {
+	margin: 0 5px 12px;   
+}
+.ui-slider-handle {
+	margin-right: -6px;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+	float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: left;
+}
+.filtersGroupPanel li > a {
+	padding: 12px 40px 12px 12px;
+	text-align: right;
+}
+.filtersGroupPanel li a:before {
+	content: " ";
+	width: 20px;
+	height: 20px;
+	border: 1px solid #ddd;
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	margin: -10px 0 0;
+	background:#fff;
+}
+a.filterItemSelected:before {
+	background:url(../../../images/selected.png) no-repeat center #fff !important;
+}
+a.filterItemSelectedDisabled {
+	background:url(../../../images/selected.png) no-repeat center;
+}
+.colorOptions .color-container {
+	left: 16px;
+}
+.select-wrap {
+	padding: 10px 15px 10px 10px;
+	text-align: right;
+	background:url(images/arrow_rtl.png) no-repeat left center #fff;
+}
+.product-selectors .select-wrap {
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+
+.productPanelAjaxBusy {
+	right: 0;
+	background: #fff url('../../../images/ajaxLoader.gif') no-repeat 50% 50%;
+}
+.ajaxFilters .k-window-actions {
+	left: 0;
+}
+.ajaxFilters .k-window-actions .k-icon {
+	background: url("images/remove-button.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    left: 10px;
+    position:absolute;
+}
+.checkbox-list li {
+    text-align: right;
+}
+.checkbox-list li input {
+    left: auto;
+    right: 10px;
+}
+.checkbox-list li input + label::before {
+    left: auto;
+    right: 10px;
+}
+.checkbox-list li input + label {
+    padding: 12px 40px 12px 12px;
+}
+.imageOptions .checkbox-list li input + label {
+    padding: 12px 48px 12px 12px;
+}
+.checkbox-list li span.color {
+    left: auto;
+    right: 10px;
+}
+
+
+@media all and (max-width: 1000px) {
+
+.nopAjaxFilters7Spikes {
+	right: 0;
+	left: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+	-webkit-transform: translate(320px);
+	-moz-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.notAndroid23 .nopAjaxFilters7Spikes.open {
+	-webkit-transform: translate(0);
+	-moz-transform: translate(0);
+	-ms-transform: translate(0);
+	transform: translate(0);
+}
+.android23 .nopAjaxFilters7Spikes {
+	right: -320px;
+}
+.android23 .nopAjaxFilters7Spikes.open {
+	right: 0;
+}
+
+.nopAjaxFilters7Spikes .close-filters {
+    background: url("images/arrow-right.png") no-repeat scroll 94% center #282322;
+}
+.nopAjaxFilters7Spikes .close-filters span {
+	text-align: left;
+    background: url("images/close-menu.png") no-repeat scroll 6% center rgba(0, 0, 0, 0);
+}
+
+    .filter-block a.toggleControl {
+        text-align: right;
+    }
+
+}
+
+
+@media all and (min-width: 1000px) {
+
+.filtersGroupPanel li > a {
+	padding: 10px 42px 10px 10px;
+}
+.filter-block a.toggleControl {
+	padding: 12px 20px 10px 10px !important;
+    text-align: right;
+}
+.filter-block a.toggleControl.closed{
+	background: url(images/expand-button.png) no-repeat 5% center;
+}
+.filter-block a.clearFilterOptions, 
+.filter-block a.clearPriceRangeFilter {
+	left:0;
+	right: auto;
+}
+.center-1 .filtersPanel{
+    background: url("images/title-decoration.png") no-repeat scroll center bottom rgba(0, 0, 0, 0);
+}
+.center-1 .filtersPanel .block.filter-block:nth-of-type(4n+1){
+    clear:both;
+}
+
+}

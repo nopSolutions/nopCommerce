@@ -1,0 +1,46 @@
+﻿@model CategoriesHeaderMenuModel
+@using Nop.Core;
+@using SevenSpikes.Nop.Plugins.CategoriesHeaderMenu.Models
+@using Nop.Core.Infrastructure
+
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.CategoriesHeaderMenu/Themes/" + Model.Theme + "/Content/jquery.superfishmenu.rtl.css");
+    }
+    else
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.CategoriesHeaderMenu/Themes/" + Model.Theme + "/Content/jquery.superfishmenu.css");
+    }        
+
+}
+<div class="categories-header-menu header-menu">
+    <div class="menu-toggle">@T("Menu")</div>
+    <ul class="top-menu">
+        @* This will render all main categories in a separate li element and all child categories will be nested in these li elements *@
+        @Html.Raw(Model.CategoriesHtml)
+        @if (Model.ShowManufacturers)
+        {
+            <li>
+                <a href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers")</a>
+                <div class="sublist-toggle"></div>
+                <ul class="sublist">
+                    @Html.Raw(Model.ManufacturersHtml)
+                </ul>
+            </li>
+        }
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.categories-header-menu .menu-toggle').click(function () {
+            $(this).siblings('.top-menu').slideToggle('slow');
+        });
+        $('.categories-header-menu .sublist-toggle').click(function () {
+            $(this).siblings('.sublist').slideToggle('slow');
+        });
+    });
+</script>

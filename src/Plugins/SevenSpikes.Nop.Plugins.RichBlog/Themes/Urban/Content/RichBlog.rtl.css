@@ -1,0 +1,74 @@
+.blog-search-box span.search-box-text,
+.blog-search-box input.search-box-text,
+.blog-search-box .search-box-button {
+	float: right;
+}
+.rich-blog-homepage .post-primary{
+	padding: 33px 0 33px 20px;
+	border-left: 1px solid #eaeaea;
+	border-right: 0;
+}
+.rich-blog-homepage .post-details{
+	padding: 33px 28px 33px 20px;
+	text-align: right;
+}
+.rich-blog-homepage .post-date span{
+	margin: 0 0 0 5px;
+}
+.rich-blog-homepage .read-more:before{
+	margin: 0 0 0 5px;
+}
+.blog-search-box .instant-search-busy{
+	background: #fff url('images/ajax-loader-small.gif') left center no-repeat !important;
+}
+.blog-page .tags label:before,
+.blogpost-page .tags label:before{
+	right: 0 !important;
+	left: auto !important;
+}
+.post-relations .category-list label:before,
+.post-relations .related-posts-list label:before{
+	right: 0;
+	left: 0;
+}
+.post-relations li.separator{
+	margin: 0 0 0 5px;
+}
+.post-navigation .prev{
+	float: right;
+	background: url('images/next.png') center right no-repeat;
+	padding: 5px 12px 5px 0;
+	text-align: right;
+}
+.post-navigation .next{
+	float: left;
+	background: url('images/prev.png') center left no-repeat;
+	padding: 5px 0 5px 12px;
+	text-align: left;
+}
+
+@media all and (min-width: 769px) {
+
+    .rich-blog-homepage .blog-post,
+.post-relations,
+.blog-page .post-actions .read-more {
+	float: right;
+}
+.blog-page .buttons,
+.post-actions,
+.blog-page .post-actions .share-post {
+	float: left;
+}
+.rich-blog-homepage .post-description,
+.blogpost-page .tags label,
+.fieldset.new-comment .buttons {
+	text-align: right;
+}
+.post-relations .category-list label:before,
+.post-relations .related-posts-list label:before{
+	left: auto;
+	right: auto;
+}
+
+
+}

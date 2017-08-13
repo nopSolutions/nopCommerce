@@ -1,0 +1,107 @@
+.blog-search-box span.search-box-text {
+	float: right;
+}
+.blog-search-box input.search-box-text {
+	float: right;
+}
+.blog-search-box .instant-search-busy {
+	background: #fff  url('images/ajax-loader-small.gif') left center no-repeat !important;
+}
+.blog-search-box .search-box-button {
+	float: right;
+	border-right: none;
+	border-left: 0;
+}
+.post-relations li.separator {
+	margin: 0 0 0 5px;
+}
+.share-post li {
+	margin: 0 0 0 8px;
+}
+.share-post .facebook a span {
+	background-position: -108px center;
+}
+.share-post .pinterest a span {
+	background-position: -323px center;
+}
+.share-post .google a span {
+	background-position: -215px center;
+}
+.post-navigation .prev {
+	float: right;
+}
+.post-navigation .next {
+	float: left;
+}
+.post-navigation .prev span {
+	padding: 11.5px 46px 11.5px 23px;
+	text-align: right;
+}
+.post-navigation .next span {
+	padding: 11.5px 23px 11.5px 46px;
+	text-align: left;
+}
+.post-navigation .prev span:before {
+	background: url('images/next.png') center no-repeat;
+}
+.post-navigation .prev span.flop:before {
+    background: url('images/next-hover.png') center no-repeat;
+} 
+.post-navigation .next span:before {
+	background: url('images/prev.png') center no-repeat;
+}
+.post-navigation .next span.flop:before {
+    background: url('images/prev-hover.png') center no-repeat;
+} 
+.post-navigation .prev span:before {
+	right: 0;
+	left: auto;
+}
+.post-navigation .next span:before {
+	left: 0;
+	right: auto;
+}
+.blog-search-results li a {
+	right: 0;
+	left: 0;
+	text-align: right;
+}
+@media all and (min-width: 481px) {
+}
+@media all and (min-width: 769px) {
+	.rich-blog-homepage .blog-post {
+		float: right;
+		margin: 0 3.4% 35px 0;
+	}
+	.rich-blog-homepage .blog-post:nth-child(2n+1) {
+		margin-right: 0;
+		margin-left: 0;
+	}
+	.blog-page .blog-post-item:before {
+		right: 0;
+		left: 0;
+	}
+	.blog-posts .buttons .read-comments {
+		right: 0;
+		left: auto;
+	}
+	.blog-posts .tags {
+		left: 0;
+		right: auto;
+	}
+	.post-relations {
+		float: right;
+	}
+	.post-actions {
+		float: left;
+	}
+}
+@media all and (min-width: 1001px) {
+	#rich-blog-searchterms {
+		margin: 0 0 0 -1px;
+	}
+	.blog-search-box .search-box-button {
+		left: 21px;
+		right: auto;
+	}
+}

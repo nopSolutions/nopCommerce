@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.MegaMenu.Admin.Menu.MenuName">
+    <Value>Mega Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.ResponsiveMenuTitle">
+    <Value>Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.ResponsiveBackButton">
+    <Value>Back</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ClickToConfigure">
+    <Value>To configure the plugin either click HERE or go to Plugins -&gt; Nop Mega Menu -&gt; Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings.Enabled.Hint">
+    <Value>If checked the Mega Menu plugin will be enabled.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Submenus.Menus">
+    <Value>Manage Menus</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings.Common.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings.Common.MenuItemsSettings">
+    <Value>Menu Items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Settings.Common.StoreSettings">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Common.NoStoresDefined">
+    <Value>No stores defined.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Items.SaveBeforeEdit">
+    <Value>You need to save the menu before adding items to it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Store.SaveBeforeEdit">
+    <Value>You need to save the menu before adding it to stores.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menus">
+    <Value>Menus</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Enabled.Hint">
+    <Value>Enables the menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Name.Hint">
+    <Value>Set the name of the menu, which will be visible only in the administration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Name.IsRequired">
+    <Value>The menu must have a name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.CssClass">
+    <Value>CSS class</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.CssClass.Hint">
+    <Value>This additional CSS class will be added to the menu element. It can be useful for styling purposes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.ShowDropdownsOnClick">
+    <Value>Show dropdowns on click</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.ShowDropdownsOnClick.Hint">
+    <Value>Check to show the menu dropdowns on click instead on hover.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.WidgetZone">
+    <Value>Widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.WidgetZone.Hint">
+    <Value>The widget zone where this menu will appear.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Created">
+    <Value>The menu has been successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Updated">
+    <Value>The menu has been successfully updated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Menu.Deleted">
+    <Value>The menu has been successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.NoMenusMessage">
+    <Value>You still do not have any menus created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.BackToList">
+    <Value>back to menus list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.EditMenu">
+    <Value>Edit Menu</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Title.IsRequired">
+    <Value>Title is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Url">
+    <Value>Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Url.IsRequired">
+    <Value>Url is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.OpenLinkInNewTab">
+    <Value>Open link in a new tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.CssClasses">
+    <Value>CSS classes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Template">
+    <Value>Template</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.MaximumNumberOfEntities">
+    <Value>Maximum number of entities</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.MaximumNumberOfSubCategories">
+    <Value>Number of sub-categories per category item</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.NumberOfBoxesPerRow">
+    <Value>Number of boxes per row</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.ImageSize">
+    <Value>Image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Cancel">
+    <Value>Cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.Width">
+    <Value>Width</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.NoLabel">
+    <Value>(no label)</Value>
+  </LocaleResource> 
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItem.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.AddToMenu">
+    <Value>Add to Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.PanelTitle">
+    <Value>Custom Links</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Title.Hint">
+    <Value>Set the title of the custom link</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Url">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.CustomLinks.Url.Hint">
+    <Value>Set the URL of the custom link</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Pages.PanelTitle">
+    <Value>Pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Categories.PanelTitle">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Categories.SpecificCategory">
+    <Value>Specific Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Manufacturers.PanelTitle">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Manufacturers.SpecificManufacturer">
+    <Value>Specific Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Vendors.PanelTitle">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Vendors.SpecificVendor">
+    <Value>Specific Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Topics.PanelTitle">
+    <Value>Topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Topics.SpecificTopic">
+    <Value>Specific Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.ProductTags.PanelTitle">
+    <Value>Product Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.ProductTags.SpecificProductTag">
+    <Value>Specific Product Tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.PanelTitle">
+    <Value>Layouts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Title.Hint">
+    <Value>Set the title of the layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type">
+    <Value>Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.Hint">
+    <Value>Choose the type of the layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.ColumnsLayout">
+    <Value>Columns Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Layouts.Type.RowsLayout">
+    <Value>Rows Layout</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Column.PanelTitle">
+    <Value>Column</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Column.NoSuitableElements">
+    <Value>There are no suitable elements! Please add "Columns Layout" menu item first!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Column.Layout">
+    <Value>Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Column.Layout.Hint">
+    <Value>Parent columns layout where this column will be</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Row.PanelTitle">
+    <Value>Row</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Row.NoSuitableElements">
+    <Value>There are no suitable elements! Please add "Rows Layout" menu item first!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Row.Layout">
+    <Value>Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Row.Layout.Hint">
+    <Value>Parent rows layout where this row will be</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Picture.PanelTitle">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Picture.NoSuitableElements">
+    <Value>There are no suitable elements! Please add "Column" menu item first!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Picture.Column">
+    <Value>Column</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.Accordion.Picture.Column.Hint">
+    <Value>Parent column menu item where this picture will be</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.NotInMenu">
+    <Value>not in menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ItemNotInMenu">
+    <Value>This item is not included in menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.SomeCategoriesMayNotBeInMenu">
+    <Value>Some categories setting "Include in top menu" may be disabled</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Picture.AsMovingMenuItem">
+    <Value>Picture menu items can be nested only in Columns</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Picture.AsParentMenuItem">
+    <Value>Nesting in Picture menu items is forbidden</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Column.AsMovingMenuItem">
+    <Value>Column menu items can be nested only in the Columns Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Column.AsParentMenuItem">
+    <Value>Layouts menu items cannot be nested in Column</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Row.AsMovingMenuItem">
+    <Value>Row menu items can be nested only in the Rows Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.Row.AsParentMenuItem">
+    <Value>Layouts menu items cannot be nested in Row</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.ColumnsLayout.AsMovingMenuItem">
+    <Value>Columns layout menu items cannot be nested. They can be top-level menu items only</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.ColumnsLayout.AsParentMenuItem">
+    <Value>Only Column menu items can be nested in Columns Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.RowsLayout.AsMovingMenuItem">
+    <Value>Rows layout menu items cannot be nested. They can be top-level menu items only</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.RowsLayout.AsParentMenuItem">
+    <Value>Only Row menu items can be nested in Rows Layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.TemplateBasedMenuItems">
+    <Value>You can not nest (in) Categories, Manufacturers, Vendors, Topics, ProductTags items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.InvalidOperation">
+    <Value>Invalid operation. Reverting last change.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.InvalidNestingMessage.SelectedCatalogDoesNotAllowChildElements">
+    <Value>You can't select this template because it does not allow the menu item to have any child elements or any parent elements!</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Title">
+    <Value>Are you sure?</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Text">
+    <Value>Deleting this menu item will result in deleting all of the menu items inside it. Are you sure that you want to proceed?</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Button.RemoveAllItems">
+    <Value>Remove all items</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.ConfirmationWindow.Button.Cancel">
+    <Value>Cancel</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.ViewAllCategories">
+    <Value>View All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.ViewAllManufacturers">
+    <Value>View All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.ViewAllVendors">
+    <Value>View All</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.ViewAllProductTags">
+    <Value>View All</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.PanelTitle">
+    <Value>Choose wich items to add in your Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.MenuItemsDescription">
+    <Value>You can drag and drop the boxes to rearange your menu links.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.AclDisabledWarning">
+    <Value>In order to use Customer roles functionality you have to disable the following setting: Catalog settings > Ignore ACL rules.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.Topics">
+    <Value>Topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemTypeTitle.ProductTags">
+    <Value>Product Tags</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.MegaMenu.Admin.MenuItemType.Pages">
+    <Value>Pages</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Topics">
+    <Value>Topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Blogs">
+    <Value>Blogs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Forums">
+    <Value>Forums</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.News">
+    <Value>News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ProductTags">
+    <Value>Product Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.CustomLink">
+    <Value>Custom Link</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.HomePage">
+    <Value>Home Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.CustomerInfo">
+    <Value>My Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ContactUs">
+    <Value>Contact Us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Blog">
+    <Value>Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.NewsArchive">
+    <Value>News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Boards">
+    <Value>Forums</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ManufacturerList">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.VendorList">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ProductTagsAll">
+    <Value>Product Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ProductSearch">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.ShoppingCart">
+    <Value>Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Wishlist">
+    <Value>Wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.CompareProducts">
+    <Value>Compare</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Checkout">
+    <Value>Checkout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Login">
+    <Value>Login</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Register">
+    <Value>Register</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.Sitemap">
+    <Value>Sitemap</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.MegaMenu.Domain.Enums.MenuItemType.RecentlyViewedProducts">
+    <Value>Recently Viewed Products</Value>
+  </LocaleResource>
+</Language>

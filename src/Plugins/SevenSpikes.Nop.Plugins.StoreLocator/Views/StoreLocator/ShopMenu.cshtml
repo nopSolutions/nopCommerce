@@ -1,0 +1,26 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.StoreLocator
+@using SevenSpikes.Nop.Plugins.StoreLocator.Models
+
+@model IList<ShopModel>
+
+<li class="store-locator">
+    <a class="with-subcategories" href="@Url.RouteUrl(Constants.AllShopsRouteName)" title="@T("SevenSpikes.StoreLocator.Public.AllShops.PageTitle")">@T("SevenSpikes.StoreLocator.Public.AllShops.LinkTitle")</a>
+    <div class="plus-button"></div>
+    <div class="sublist-wrap">
+        <ul class="sublist">
+            <li class="back-button">
+                <span>@T("SevenSpikes.StoreLocator.Public.MenuBackButton")</span>
+            </li>
+            @foreach (var shop in Model)
+            {
+                <li>
+                    <a href="@Url.RouteUrl("HomePage")@shop.SeName" title="@shop.Name">@shop.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+</li>

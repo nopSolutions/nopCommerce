@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="SmartSEOSettings.EnableSmartSEO">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="SmartSEOSettings.RemoveDefaultTitle">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOSettings.DontOverrideDefaultProductMetaData">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOSettings.DontOverrideDefaultCategoryMetaData">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOSettings.DontOverrideDefaultManufacturerMetaData">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.Active">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.Global">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.Priority">
+    <Value>0</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.CategoryTitleSEOTemplate">
+    <Value>${name}</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.CategoryDescriptionSEOTemplate">
+    <Value>${name}</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.AppendProductsToKeywordsForCategories">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.PrefixProductKeywordsForCategoriesWithManufacturerName">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.CategoryKeywordsSEOTemplate">
+    <Value>${name},buy ${name},${name} prices,${name} online</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.CategoryKeywordsSEOTemplateRegex">
+    <Value>(?:(.+)\\s(?:and|&amp;)\\s(\\S+)|(.*))</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ProductTitleSEOTemplate">
+    <Value>${name}</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ProductDescriptionSEOTemplate">
+    <Value>buy ${name} online</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ProductKeywordsSEOTemplate">
+    <Value>${name},buy ${name},${name} prices,${name} online</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ProductKeywrodsSEOTemplateRegex">
+    <Value></Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ManufacturerTitleSEOTemplate">
+    <Value>${name}</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ManufacturerDescriptionSEOTemplate">
+    <Value>${name}</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.AppendProductsToKeywordsForManufacturers">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.PrefixProductKeywordsForManufacturersWithManufacturerName">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ManufacturerKeywordsSEOTemplate">
+    <Value>${name},buy ${name},${name} prices,${name} online</Value>
+  </Setting>
+  <Setting Name="SmartSEOTemplateSettings.ManufacturerKeywordsSEOTemplateRegex">
+    <Value>(?:(.+)\\s(?:and|&amp;)\\s(\\S+)|(.*))</Value>
+  </Setting>
+</Settings>

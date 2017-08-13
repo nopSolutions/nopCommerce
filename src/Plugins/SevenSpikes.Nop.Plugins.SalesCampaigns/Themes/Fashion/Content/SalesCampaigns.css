@@ -1,0 +1,18 @@
+﻿/*common styles*/
+
+.vertical-align-middle > div {
+    position: absolute;
+}
+.item-box .vertical-align-middle > div {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    max-height: 100px;
+    margin: auto;
+}
+
+/*jcarousel*/
+
+.nop-jcarousel .item-picture {
+    position: relative;
+}

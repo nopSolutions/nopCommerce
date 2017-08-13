@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.QuickTabs.Admin.Menu.MenuName">
+    <Value>Quick Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle">
+    <Value>Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddExistingTab">
+    <Value>Add existing tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.AddNewTab">
+    <Value>Add new tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.ProductSpecificTabs">
+    <Value>Product specific tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SaveBeforeEdit">
+    <Value>You need to save the product before you can add tabs.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.SharedTabs">
+    <Value>Shared tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.NopProductsTabTitle.ViewTab">
+    <Value>View tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.AddNew">
+    <Value>Add a new Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.AddNewTabPopup.AddNew">
+    <Value>Add A New Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.DisplayOrder.Hint">
+    <Value>The Display Order is used when the Tab is global.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.Fields.TabSystemName">
+    <Value>Tab System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.ProductTabs.Manage">
+    <Value>Manage Products and Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Submenus.ManageProductsAndTabs">
+    <Value>Manage Products And Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Submenus.ManageTabs">
+    <Value>Manage Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs">
+    <Value>Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.ActivityLog.AddNewTab">
+    <Value>New tab added</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.ActivityLog.DeleteTab">
+    <Value>Tab deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.ActivityLog.EditTab">
+    <Value>Tab updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.ActivityLog.EditTabSettings">
+    <Value>Tab settings updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.AddNew">
+    <Value>Add new Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.BackToList">
+    <Value>Back to Tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Categories">
+    <Value>Category mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Categories.HowMappingWorks">
+    <Value>The {0} tab will appear on the product details pages of the products in the selected categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Categories.SaveBeforeEdit">
+    <Value>You need to save the tab before you can map it to categories.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Conditions">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.EditTabDetails">
+    <Value>Edit tab details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.Description.Hint">
+    <Value>This is the actuall content of the Tab as it will appear in the public store front</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName">
+    <Value>Display Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.DisplayName.Hint">
+    <Value>This is the name of the Tab as it will be displayed in the public store front</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.IsGlobal">
+    <Value>Is global</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.IsGlobal.Hint">
+    <Value>Set to make this tab - global. It will appear for all products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName">
+    <Value>System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName.Hint">
+    <Value>The System Name is used only internally for easier management of the different tabs. The System Name is NOT displayed in the public store front</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.SystemName.Required">
+    <Value>System Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.TabMode">
+    <Value>Select products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Fields.TabMode.Hint">
+    <Value>How would you like to select products?</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.InfoTab">
+    <Value>Tab Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Manufacturers">
+    <Value>Manufacturer mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Manufacturers.HowMappingWorks">
+    <Value>By adding a manufacturer then the {0} tab will appear on the product details pages of each product that has the given manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Manufacturers.SaveBeforeEdit">
+    <Value>You need to save the tab before you can map it to manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Notifications.Added">
+    <Value>Tab successfully added</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Notifications.Deleted">
+    <Value>Tab successfully deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Notifications.Edited">
+    <Value>Tab successfully updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.ProductOverrides">
+    <Value>Product Overrides</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Products">
+    <Value>Product mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Products.HowMappingWorks">
+    <Value>Add the products for which you want {0} tab to appear on their product details pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Products.SaveBeforeEdit">
+    <Value>You need to save the tab before you can map it to products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.AjaxSettings">
+    <Value>Ajax Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.AutomaticIntegrationSettings">
+    <Value>Automatic Integration Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Common">
+    <Value>Tab Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Enable">
+    <Value>Enable</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Enable.Hint">
+    <Value>Set to enable the Quick Tabs.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableAjax">
+    <Value>Enable Ajax</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableAjax.Hint">
+    <Value>Enables Ajax loading of the tab content</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductContactUsTab">
+    <Value>Enable Product Contact Us Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductContactUsTab.Hint">
+    <Value>Enables a product tab with a contact us form</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductFullDescriptionTab">
+    <Value>Enable Product Full Description Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductFullDescriptionTab.Hint">
+    <Value>Enables a product tab with the product full description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductReviewsTab">
+    <Value>Enable Product Reviews Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductReviewsTab.Hint">
+    <Value>Enables a product tab with the product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductSpecificationsTab">
+    <Value>Enable Product Specifications Tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductSpecificationsTab.Hint">
+    <Value>Enables a product tab with the product specifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductContactUsTabDisplayOrder">
+    <Value>Contact Us tab display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductContactUsTabDisplayOrder.Hint">
+    <Value>Set the display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.SendEmailToProductVendor">
+    <Value>Send Email to Product Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.SendEmailToProductVendor.Hint">
+    <Value>If the product is mapped to a Vendor send Email to him.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.IncludeStoreOwnerInBcc">
+    <Value>Send Email to Store Owner</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.IncludeStoreOwnerInBcc.Hint">
+    <Value>Include Store Owner Email in BCC.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductFullDescriptionTabDisplayOrder">
+    <Value>Full description tab display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductFullDescriptionTabDisplayOrder.Hint">
+    <Value>Set the display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductReviewsTabDisplayOrder">
+    <Value>Reviews tab display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductReviewsTabDisplayOrder.Hint">
+    <Value>Set the display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductSpecificationsTabDisplayOrder">
+    <Value>Specification tab display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductSpecificationsTabDisplayOrder.Hint">
+    <Value>Set the display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductAttachmentsTab">
+    <Value>Enable Product Attachments tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.EnableProductAttachmentsTab.Hint">
+    <Value>Set to enable the product attachments tab. NOTE: You need the Nop Attachments Plugin installed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductAttachmentsTabDisplayOrder">
+    <Value>Attachments tab display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.ProductAttachmentsTabDisplayOrder.Hint">
+    <Value>Set the display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Theme">
+    <Value>Theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.Settings.Theme.Hint">
+    <Value>Select the theme for the tabs</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.StoreMapping">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Admin.Tabs.StoreMapping.SaveBeforeEdit">
+    <Value>You need to save the tab before you can limit it to Stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.ContactUs.EmailSubject">
+    <Value>Product Enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.ContactUs.MessageLinkFormat">
+    <Value>For product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.ContactUs.TabTitle">
+    <Value>Contact Us</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.CouldNotLoadTabErrorMessage">
+    <Value>Couldn't load this tab.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.Description">
+    <Value>Overview</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Client.Tabs.Specifications">
+    <Value>Specifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.NopQuickTabs.Domain.TabMode.Conditions">
+    <Value>Automatically select products based on conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.NopQuickTabs.Domain.TabMode.Mappings">
+    <Value>Manually select products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Public.Tabs.Attachments">
+    <Value>Attachments</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopQuickTabs.Public.Tabs.NoAttachmentsFound">
+    <Value>There are no attachments for this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.QuickTabs.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+</Language>

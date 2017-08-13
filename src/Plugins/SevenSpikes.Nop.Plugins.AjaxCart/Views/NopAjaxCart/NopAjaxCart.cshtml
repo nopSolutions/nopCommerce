@@ -1,0 +1,50 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+
+@model SevenSpikes.Nop.Plugins.AjaxCart.Models.NopAjaxCartSettingsModel
+@{
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Styles/common.css");
+    Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Themes/" + Model.Theme + "/Content/ajaxCart.css");
+
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Styles/common.rtl.css");
+        Html.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Themes/" + Model.Theme + "/Content/ajaxCart.rtl.css");
+    }
+
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Core/Scripts/SevenSpikesExtensions.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Scripts/jquery.json-2.2.min.js");
+    Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Scripts/AjaxCart.min.js");
+
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.core.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.userevents.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.draganddrop.min.js");
+    Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.window.min.js");
+}
+
+<div class="ajaxCartInfo" data-getAjaxCartButtonUrl="@Url.Action("GetAjaxCartButtonsAjax", "NopAjaxCart")"
+     data-productPageAddToCartButtonSelector="@Model.ProductPageAddToCartButtonSelector"
+     data-productBoxAddToCartButtonSelector="@Model.ProductBoxAddToCartButtonSelector"
+     data-productBoxProductItemElementSelector="@Model.ProductBoxProductItemElementSelector"
+     data-enableOnProductPage="@Model.EnableOnProductPage"
+     data-enableOnCatalogPages="@Model.EnableOnCatalogPages"
+     data-miniShoppingCartQuatityFormattingResource="@T("ShoppingCart.HeaderQuantity")" 
+     data-miniWishlistQuatityFormattingResource="@T("Wishlist.HeaderQuantity")" 
+     data-addToWishlistButtonSelector="@Model.AddToWishlistButtonSelector">
+</div>
+
+@Html.Hidden("addProductVariantToCartUrl", Url.Action("AddProductFromProductDetailsPageToCartAjax", "NopAjaxCartShoppingCart"))
+@Html.Hidden("addProductToCartUrl", Url.Action("AddProductToCartAjax", "NopAjaxCartShoppingCart"))
+@Html.Hidden("miniShoppingCartUrl", Url.Action("MiniShoppingCart", "NopAjaxCartShoppingCart"))
+@Html.Hidden("flyoutShoppingCartUrl", Url.Action("NopAjaxCartFlyoutShoppingCart", "NopAjaxCartShoppingCart"))
+@Html.Hidden("checkProductAttributesUrl", Url.Action("CheckIfProductOrItsAssociatedProductsHasAttributes", "NopAjaxCartCatalog"))
+@Html.Hidden("getMiniProductDetailsViewUrl", Url.Action("GetMiniProductDetailsView", "NopAjaxCartCatalog"))
+@Html.Hidden("flyoutShoppingCartPanelSelector", Html.Encode(Model.FlyoutCartPanelSelector))
+@Html.Hidden("shoppingCartMenuLinkSelector", Html.Encode(Model.ShoppingCartMenuLinkSelector))
+@Html.Hidden("wishlistMenuLinkSelector", Html.Encode(Model.WishlistMenuLinkSelector))
+@Html.Partial("AdditionalPanelsToUpdate")

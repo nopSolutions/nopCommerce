@@ -1,0 +1,50 @@
+﻿@using System.Text;
+@using SevenSpikes.Nop.Plugins.SaleCampaigns.Models
+@using SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums;
+
+@model SaleCampaignPublicModel
+
+@{
+    StringBuilder sb = new StringBuilder();
+
+    sb.Append("-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; "); // base styling
+    sb.Append(string.Format("background-color: {0}; ", Model.SaleCampaignProductPageCustomization.BackgroundColor));
+    sb.Append(string.Format("color: {0}; ", Model.SaleCampaignProductPageCustomization.FontColor));
+    sb.Append(string.Format("font-weight: {0}; ", Model.SaleCampaignProductPageCustomization.FontWeight));
+    sb.Append(string.Format("font-style: {0}; ", Model.SaleCampaignProductPageCustomization.FontStyle));
+    sb.Append(string.Format("font-size: {0}px; ", Model.SaleCampaignProductPageCustomization.FontSize));
+    sb.Append(string.Format("padding: {0}px {1}px {2}px {3}px; ", Model.SaleCampaignProductPageCustomization.PaddingTop, Model.SaleCampaignProductPageCustomization.PaddingRight, Model.SaleCampaignProductPageCustomization.PaddingBottom, Model.SaleCampaignProductPageCustomization.PaddingLeft));
+    sb.Append(string.Format("margin: {0}px {1}px {2}px {3}px; ", Model.SaleCampaignProductPageCustomization.MarginTop, Model.SaleCampaignProductPageCustomization.MarginRight, Model.SaleCampaignProductPageCustomization.MarginBottom, Model.SaleCampaignProductPageCustomization.MarginLeft));
+    sb.Append(string.Format("text-align: {0}; ", Model.SaleCampaignProductPageCustomization.ClockTextAlign.ToString().ToLower()));
+
+    if (!string.IsNullOrEmpty(Model.SaleCampaignProductPageCustomization.CustomCSS))
+    {
+        sb.Append(Model.SaleCampaignProductPageCustomization.CustomCSS);
+    }
+
+    string styling = sb.ToString();
+
+    if (Model.DateDifferenceInSeconds > 0)
+    {
+        var clockType = Model.SaleCampaignProductPageCustomization.ClockType;
+
+        <div id="countdownTimerContainer" style="@styling">
+            @if (clockType == SaleCampaignClockType.DaysHoursMinutesSeconds
+                || clockType == SaleCampaignClockType.HoursMinutesSeconds
+                || clockType == SaleCampaignClockType.OnlyDays)
+            {
+                <text>
+                    @T("SevenSpikes.Plugins.SaleCampaigns.Public.SaleEndsIn")
+                    <span data-time="@Model.DateDifferenceInSeconds" data-clocktype="@((int)clockType)" data-campaignid="@Model.Id" class="countdownTimer"></span>
+                </text>
+            }
+            else
+            {
+                <text>
+                    @T("SevenSpikes.Plugins.SaleCampaigns.Public.OnSaleUntil")
+                    <span>@Model.DateUntil</span>
+                </text>
+            }
+        </div>
+    }
+}

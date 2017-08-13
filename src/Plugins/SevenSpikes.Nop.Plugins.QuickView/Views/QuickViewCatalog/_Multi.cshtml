@@ -1,0 +1,128 @@
+﻿@using SevenSpikes.Nop.Plugins.QuickView.Models;
+@using SevenSpikes.Nop.Framework.MVCExtensions;
+@using Nop.Web.Models.Catalog;
+@model QuickViewProductPageModel
+
+<div class="product-essential">
+    @using (Html.BeginRouteForm("Product", new { SeName = Model.ProductDetails.SeName }, FormMethod.Post, new { id = "product-details-form" }))
+    {
+        <div class="popup-header">
+            <h1 class="product-name">
+                @Model.ProductDetails.Name
+            </h1>
+        </div>
+        <div class="product-content">
+            <div class="gallery">
+                <!--product pictures-->
+                @Html.Action("ShowCloudZoomPictures", "QuickViewCatalog", new { model = Model })
+
+                <div class="links-panel">
+                    <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductDetails.SeName })" class="link-to-product-page">@T("SevenSpikes.QuickView.Public.GoToProductPageLink")</a>
+                </div>
+            </div>
+            <div class="overview">
+                <div id="accordion">
+                    <h3>@T("SevenSpikes.QuickView.Public.ProductVariants")</h3>
+                    <div class="product-details variants-in-grid">
+                        <!--product variants-->
+                        <div class="product-variant-list">
+                            @(Html.DataList7Spikes<ProductDetailsModel>(Model.ProductDetails.AssociatedProducts, 3,
+                            @<div class="product-variant">
+                                @if (!String.IsNullOrWhiteSpace(item.DefaultPictureModel.ImageUrl))
+                                {
+                                    <div class="variant-picture">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductDetails.SeName })">
+                                            <img alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" />
+                                        </a>
+                                    </div>
+                                }
+                                <div class="variant-info">
+                                    @if (!String.IsNullOrWhiteSpace(item.Name))
+                                    {
+                                        <div class="variant-name">
+                                            <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductDetails.SeName })">@item.Name</a>
+                                        </div>
+                                    }
+                                    @{
+                                        var dataDictPrice = new ViewDataDictionary();
+                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", item.Id);
+                                        @Html.Partial("_ProductPrice", item.ProductPrice, dataDictPrice)
+                                    }
+
+                                </div>
+                                <div class="moreInfoHover">
+                                    <span>@T("SevenSpikes.QuickView.Public.MoreInfoHover")</span>
+                                </div>
+                            </div>
+                                                ))
+                        </div>
+
+                        @{
+                            MvcHtmlString manufacturers = Html.Partial("_ProductManufacturers", Model.ProductDetails.ProductManufacturers);
+                        }
+
+                        @if (Model.QuickViewSettings.ShowCompareProductsButton || !MvcHtmlString.IsNullOrEmpty(manufacturers))
+                        {
+                            <div class="variant-grid-info">
+                                <!--product manufacturers-->
+                                @manufacturers
+
+                                @if (Model.QuickViewSettings.ShowCompareProductsButton)
+                                {
+                                    @Html.Partial("_CompareProductsButton", Model.ProductDetails)
+                                }
+                            </div>
+                        }
+                    </div>
+                    @if (Model.QuickViewSettings.ShowShortProductDescription || Model.QuickViewSettings.ShowFullProductDescription)
+                    {
+                        if (!String.IsNullOrEmpty(Model.ProductDetails.ShortDescription) || !String.IsNullOrEmpty(Model.ProductDetails.FullDescription))
+                        {
+                            <h3>@T("SevenSpikes.QuickView.Public.ProductDescription")</h3>
+                            <div class="product-details">
+                                @if (Model.QuickViewSettings.ShowShortProductDescription)
+                                {
+                                    <div class="short-description">
+                                        @Html.Raw(Model.ProductDetails.ShortDescription)
+                                    </div>
+                                }
+
+                                @if (Model.QuickViewSettings.ShowFullProductDescription)
+                                {
+                                    <div class="full-description">
+                                        @Html.Raw(Model.ProductDetails.FullDescription)
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
+                    @{
+                    MvcHtmlString productSpecificationsContent = MvcHtmlString.Empty;
+                    if (Model.QuickViewSettings.ShowProductSpecification)
+                    {
+                        productSpecificationsContent = Html.Partial("_ProductSpecifications", Model.ProductDetails.ProductSpecifications);
+                    }
+                    }
+
+                    @if (!MvcHtmlString.IsNullOrEmpty(productSpecificationsContent))
+                    {
+                        <h3>@T("SevenSpikes.QuickView.Public.ProductSpecifications")</h3>
+                        <div class="product-details">
+                            @productSpecificationsContent
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        if (Model.QuickViewSettings.ShowRelatedProducts)
+        {
+            @Html.Action("RelatedProducts", "Product", new { productId = Model.ProductDetails.Id })
+        }
+        if (Model.QuickViewSettings.ShowProductsAlsoPurchased)
+        {
+            @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.ProductDetails.Id })
+        }
+    }
+</div>
+

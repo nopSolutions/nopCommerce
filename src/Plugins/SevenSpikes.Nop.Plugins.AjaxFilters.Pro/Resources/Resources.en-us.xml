@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.AjaxFiltersPro.Admin.Menu.MenuName">
+    <Value>Ajax Filters Pro</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin">
+    <Value>Nop Ajax Filters Pro</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.NoResults">
+    <Value>No results</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.SelectSpecificationAttribute">
+    <Value>Select specification attribute...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings">
+    <Value>Nop Ajax Filters Pro Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.EnableAjaxFiltersPro">
+    <Value>Enable Ajax Filters Pro</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.EnableAjaxFiltersPro.Hint">
+    <Value>Enable the Ajax Filters Pro.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.WidgetZone.Hint">
+    <Value>The names of the widget zone in which the Nop Ajax Filters Pro can be added. NOTE: The Nop Ajax Filters Pro can be added only to one widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.UIMode">
+    <Value>UI Mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.UIMode.Hint">
+    <Value>The user interface mode of the Nop Ajax Filters Pro.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.ShowTopLevelCategoriesOnly">
+    <Value>Show Top Level Categories Only</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Admin.Settings.ShowTopLevelCategoriesOnly.Hint">
+    <Value>Choose whether the dropdown with categories will show only top-level ones.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums.NopAjaxFiltersProUIMode.CategoryAndManufacturer">
+    <Value>[Categories] [Manufacturers] [Specification_1] [Specification_2] ... [Specification_N]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums.NopAjaxFiltersProUIMode.CategorySubcategoryAndManufacturer">
+    <Value>[Categories] [Subcategories] [Manufacturers] [Specification_1] [Specification_2] ... [Specification_N]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums.NopAjaxFiltersProUIMode.CategoryOnly">
+    <Value>[Categories] [Specification_1] [Specification_2] ... [Specification_N]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums.NopAjaxFiltersProUIMode.CategoryAndSubcategory">
+    <Value>[Categories] [Subcategories] [Specification_1] [Specification_2] ... [Specification_N]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.AjaxFilters.Pro.Domain.Enums.NopAjaxFiltersProUIMode.ManufacturerOnly">
+    <Value>[Manufacturers] [Specification_1] [Specification_2] ... [Specification_N]</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Client.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Client.AllAvailable">
+    <Value>All Available</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Client.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Client.Subcategory">
+    <Value>Subcategory</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.NopAjaxFiltersPro.Client.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>  
+
+</Language>

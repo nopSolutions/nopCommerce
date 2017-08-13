@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Admin.Menu.MenuName">
+    <Value>Sale Of The Day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.SaleOfTheDay.Admin.Settings.Common">
+    <Value>Nop Sale Of The Day Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.submenus.settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.submenus.manageoffers">
+    <Value>Manage Offers</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Sevenspikes.SaleOfTheDay.Admin.Settings.Common.generalsettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Settings.Enabled.Hint">
+    <Value>If checked the Nop Sale Of The Day plugin will be enabled.</Value>
+  </LocaleResource>
+   <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Settings.ShowSpecialPriceCountdownTimer">
+    <Value>Show Special Price Countdown Timer</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Settings.ShowSpecialPriceCountdownTimer.Hint">
+    <Value>If checked, the product special price end date will be shown as a countdown timer.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.Title.Hint">
+    <Value>Set the title for this sale of the day offers. It will be shown only when there is more than one product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.Published.Hint">
+    <Value>Check to make the product visible.</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.SaleOfTheDayOffer.DisplayOrder.Hint">
+    <Value>Specify the display order of the product. This is useful when you have more than one product in the same widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Offers.BackToList">
+    <Value>back to list</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Offers.TabTitle.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Offers.TabTitle.Widgets">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Admin.Offers.TabTitle.ProductMappings">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Offers.TabTitle.Conditions">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="sevenspikes.SaleOfTheDay.admin.Offers.TabTitle.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Sevenspikes.Saleoftheday.Admin.Offers.SaveBeforeEdit">
+    <Value>You need to Save before you can edit this.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.Saleoftheday.Admin.Offers.Settings.Title">
+    <Value>Sale of the day offer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Admin.Offer.Created">
+    <Value>Sale of the day offer created successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Admin.Offer.Updated">
+    <Value>Sale of the day offer updated successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Admin.Offers.Deleted">
+    <Value>Sale of the day offer deleted successfully</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.SaleOfTheDay.Public.GoToProductPage">
+    <Value>Go To Product Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Day">
+    <Value>day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Days">
+    <Value>days</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Hour">
+    <Value>hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Hours">
+    <Value>hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Minute">
+    <Value>minute</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Minutes">
+    <Value>minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Second">
+    <Value>second</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleOfTheDay.Public.Seconds">
+    <Value>seconds</Value>
+  </LocaleResource>
+  
+
+</Language>

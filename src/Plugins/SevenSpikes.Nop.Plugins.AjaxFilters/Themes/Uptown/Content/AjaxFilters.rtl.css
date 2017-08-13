@@ -1,0 +1,168 @@
+﻿.clearFilterOptionsAll {
+	float: left;
+}
+/* SEARCH CRITERIA */
+
+.selected-options-list > li,
+.jDropDown ul {
+	text-align: right;
+}
+.filter-block a.toggleControl{
+	padding: 16px 30px 16px 16px;
+	text-align: right;
+}
+.filter-block a.toggleControl.closed{
+	background: url('images/dropdown-arrow.png') left 14px center no-repeat;
+	padding-left: 25px;
+	padding-right: 0;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter{
+	left: 0;
+	right: auto;
+}
+.filtersGroupPanel{
+	padding: 0 18px 16px 16px;
+}
+.selected-options-list > li span{
+	float: right;
+	padding: 7px 0 7px 20px;
+	margin: 0 0 7px 7px;
+	background: url('images/clear.png')  left 5px top 10px no-repeat;
+}
+.filtersGroupPanel li > .filter-item-name{
+	padding: 12px 38px 12px 10px;
+	text-align: right;
+}
+.filtersGroupPanel.imageOptions li > .filter-item-name {
+    padding: 9px 42px 9px 10px;
+}
+.filtersGroupPanel li .filter-item-name:before{
+	right: 0;
+	left: auto;
+}
+.filtersDropDownPanel .select-wrap select {
+    right: 0;
+    top: 0;
+}
+.filtersGroupPanel.filtersDropDownPanel .select-inner {
+    text-align: right;
+    padding: 12px 16px 12px 35px;
+    background-position: left 15px center;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color-container{
+	right: 0;
+	left: auto;
+}
+.colorOptions .defaultColor{
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(50%, #ffffff), color-stop(50%, #000000), color-stop(100%, #000000));
+}
+
+.filtersGroupPanel li .color {
+    left: auto;
+    right: 0;
+}
+
+/* AJAX LOADER */
+
+.productPanelAjaxBusy{
+	right: 0;
+	left: auto;
+}
+/* NO RESULTS POPUP */
+
+.k-overlay{
+	right: 0;
+	left: auto;
+}
+.ajaxFilters .k-window-actions{
+	left: 8px;
+	right: auto;
+}
+
+@media all and (max-width: 1000px) {
+
+.notAndroid23 .nopAjaxFilters7Spikes{
+	-webkit-transform: translate(320px);
+	-ms-transform: translate(320px);
+	transform: translate(320px);
+}
+.nopAjaxFilters7Spikes{
+	right: 0;
+	left: auto;
+}
+.android23 .nopAjaxFilters7Spikes{
+	right: -320px;
+	left: auto;
+}
+.android23 .nopAjaxFilters7Spikes.open{
+	right: 0;
+	left: auto;
+}
+.nopAjaxFilters7Spikes .close-filters span{
+    text-align: left;
+    padding: 0 0 0 20px;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.filter-block a.toggleControl {
+    padding: 7px 0;
+}
+.filtersGroupPanel {
+    padding: 0;
+}
+.filtersGroupPanel li > label{
+	padding-right: 31px;
+	padding-left: 0;
+    text-align: right;
+}
+.filtersGroupPanel li label:before{
+	right: 1px;
+	left: auto;
+}
+.filtersGroupPanel li .color{
+	right: 0;
+	left: auto;
+}
+.uptown-one-column-ajax-filters-wrapper .filtersTitlePanel{
+	background: #f8f8f8 url('images/dropdown-arrow.png') left 19px center no-repeat;
+}
+.uptown-one-column-ajax-filters-wrapper .filtersTitlePanel .filtersTitle{
+	padding: 17px 30px 17px 0;
+	background: url('images/filter-icon.png') right center no-repeat;
+}
+.uptown-one-column-ajax-filters-wrapper .filtersPanel:before{
+	right: -100%;
+	left: -100%;
+}
+.uptown-one-column-ajax-filters-wrapper .filter-block{
+	margin: 0 2% 2% 0;
+	float: right;
+}
+.uptown-one-column-ajax-filters-wrapper .filter-block:nth-child(4n+1){
+	margin-right: 0;
+}
+
+}
+

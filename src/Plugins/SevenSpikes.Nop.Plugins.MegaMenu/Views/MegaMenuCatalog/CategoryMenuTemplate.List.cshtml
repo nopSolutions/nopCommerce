@@ -1,0 +1,74 @@
+﻿@using SevenSpikes.Nop.Plugins.MegaMenu.Models
+
+@model MenuItemCategoryModel
+
+@{
+    var areCategoriesInASingleItem = Model.Item.EntityId == 0;
+    var hasSubCategories = Model.Categories.Count > 0;
+    var hasSublistClass = hasSubCategories ? "has-sublist" : string.Empty;
+    var withSubcategoriesClass = hasSubCategories ? "with-subcategories" : string.Empty;
+}
+
+<li class="@hasSublistClass @Model.Item.CssClass">
+
+    @if (areCategoriesInASingleItem)
+    {
+        <span class="@withSubcategoriesClass single-item-categories labelfornextplusbutton">@Model.Item.Title</span>
+    }
+    else
+    {
+        <a class="@withSubcategoriesClass" href="@Model.Item.Url"><span>@Model.Item.Title</span></a>
+    }
+
+    @if (hasSubCategories)
+    {
+        <div class="plus-button"></div>
+        <div class="sublist-wrap">
+            <ul class="sublist">
+                <li class="back-button">
+                    <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                </li>
+                @CreateSubLists(Model.Categories)
+            </ul>
+        </div>
+    }
+
+</li>
+
+@helper CreateSubLists(IList<MegaMenuCategoryModel> category)
+{
+    foreach (var subCategory in category)
+    {
+
+        if (subCategory.SubCategories.Count > 0)
+        {
+            <li class="has-sublist">
+                <a href="@Url.RouteUrl("Category", new { SeName = subCategory.CategoryModel.SeName })" title="@subCategory.CategoryModel.Name" class="with-subcategories"><span>@subCategory.CategoryModel.Name</span></a>
+                <div class="plus-button"></div>
+                <div class="sublist-wrap">
+                    <ul class="sublist">
+                        <li class="back-button">
+                            <span>@T("SevenSpikes.MegaMenu.ResponsiveBackButton")</span>
+                        </li>
+                        @CreateSubLists(subCategory.SubCategories)
+
+                        @if (subCategory.ShouldShowViewAllLink)
+                        {
+                            <li>
+                                <a class="view-all" href="@Url.RouteUrl("Category", new {subCategory.CategoryModel.SeName})" title="@T("SevenSpikes.MegaMenu.ViewAllCategories")">
+                                    <span>@T("SevenSpikes.MegaMenu.ViewAllCategories")</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a class="lastLevelCategory" href="@Url.RouteUrl("Category", new {SeName = subCategory.CategoryModel.SeName})" title="@subCategory.CategoryModel.Name"><span>@subCategory.CategoryModel.Name</span></a>
+            </li>
+        }
+    }
+}

@@ -1,0 +1,268 @@
+/*
+* Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/* Firefox fix with the popupnot being opened - http://www.telerik.com/forums/q1'14-release---popup-bug-in-firefox */
+.k-ff {
+    overflow: inherit !important;
+}
+
+#AjaxFiltersProForm {
+    margin: 0 0 50px;
+}
+.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+    margin: -20px 0 50px;
+}
+
+.home-page-filters-wrapper {
+    padding: 20px 0px;
+    text-align: center;
+}
+.home-page-filter-selectors {
+    margin: 0 0 20px;
+	overflow: hidden;
+}
+.home-page-filter-selector {
+    max-width: 280px;
+    margin: 10px auto 0;
+    font-size: 0;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+.home-page-filter-selector:first-child {
+    margin: 0 auto;
+}
+.home-page-filter-selector .k-dropdown {
+    display: block;
+    max-width: 280px;
+    margin: 0 auto;
+    border: none;
+    overflow: hidden;
+    font-size: 12px;
+}
+.home-page-filter-selector span.k-dropdown-wrap {
+    position: relative;
+    text-align: left;
+    display: block;
+    height: 32px;
+    padding: 0 0 0 5px;
+    line-height: 1;
+    border: 1px solid #bbb;
+    line-height: 32px;
+    color: #000;
+    cursor: pointer;
+}
+.home-page-filter-selector span.k-dropdown-wrap.k-state-disabled {
+    color: #bbb;
+    cursor: default;
+}
+.home-page-filter-selector span.k-dropdown-wrap:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 30px;
+	background: url(images/responsive-pointer.png) no-repeat center;
+}
+.home-page-filter-selector span.k-dropdown-wrap.k-state-disabled::after {
+    background: url(images/passive-selector.png) no-repeat center;
+}
+.home-page-filter-selector .k-select {
+	display: none;
+}
+
+.home-page-filter-dropdown {
+    height: auto !important;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: 0;
+    padding: 0;
+}
+.home-page-filter-dropdown > ul {
+    max-height: 221px;
+}
+.home-page-filter-dropdown li {
+	border-top: 1px dotted #ccc;
+    color: #555;
+    cursor: pointer;
+    display: block;
+    padding: 8px;
+    line-height: 20px;
+}
+.home-page-filter-dropdown li:first-child {
+    border: none;
+}
+.home-page-filter-dropdown li:hover {
+	background: #f6f6f6;
+}
+
+.home-page-filter-button {
+    display: inline-block;
+}
+.home-page-filters-wrapper .search-button,
+.home-page-filters-wrapper .results-number {
+    float: left;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1; 
+    background: #333;       
+}
+.home-page-filters-wrapper .search-button {
+    height: 34px;
+    border: 1px solid #503;
+    background: #836;
+    padding: 6px 24px;
+    font-size: 16px;
+    line-height: 22px;
+    text-transform: uppercase;
+    color: #fff;
+}
+.home-page-filters-wrapper .search-button:hover {
+    opacity: 0.9;
+}
+.home-page-filters-wrapper .results-number {
+    display: none;
+    padding: 0;
+    text-align: center;
+    width: 34px;    
+    height: 34px;
+    line-height: 34px;
+    font-family: proxima-nova;
+}
+.home-page-filters-wrapper .results-number.loading {
+    font-size: 0;
+    background: #333 url(images/loader.gif) no-repeat center;
+}
+
+/*hide nivo slider navigation whent filters are on*/
+.nivo-controlNav {
+    display: none !important;
+}
+
+@media all and (min-width: 481px) {
+	
+    .home-page-filter-selectors:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+	/*.home-page-filter-selector .k-dropdown {
+		width: 100%;
+	}*/
+
+}
+
+@media all and (min-width: 481px) and (max-width: 768px) {
+	
+	.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+		max-width: 600px;
+		margin: -20px auto 50px;
+	}
+	.home-page-filter-selectors {
+		margin: 0 0 10px;
+	}
+    
+
+}
+
+@media all and (min-width: 769px) {
+
+    .home-page-filter-selectors {
+        max-width: 610px;
+        margin: 0 auto 5px;
+    }
+    .home-page-filter-selector {
+        float: left;
+        width: 48%;
+        margin: 0 1% 1%;
+    }   
+    .home-page-filter-selector:nth-child(2n+1) {
+        clear: both;
+        margin: 0 1% 1%;
+    }
+
+}
+
+@media all and (min-width: 1001px) {
+	
+    .main-slider-wrapper {
+        position: relative;
+    }
+    #AjaxFiltersProForm {
+        position: absolute;
+        right: 0;
+        bottom: 0px;
+        left: 0;
+        z-index: 20;
+        margin: auto;
+        background-color: rgba(0,0,0,0.7);
+    }
+    .home-page-filters {
+        font-size: 0;
+    }
+	.home-page .slider-wrapper ~ #AjaxFiltersProForm {
+		margin: -40px 0 50px;
+	}
+    .home-page-filters:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    .home-page-filter-selectors {
+        display: inline-block;
+        width: 800px;
+        margin: 0;
+        max-width: none;
+    }
+    .home-page-filters-wrapper {
+        max-width: 1170px;
+        margin: 0 auto;
+    }
+    .home-page-filter-selector {
+        float: left;
+        width: 22%;
+        margin: 0 0 0 1%;
+    }   
+    .home-page-filter-selector:nth-child(2n+1) {
+        clear: none;
+        margin: 0 0 0 1%;
+    }
+    .home-page-filter-selector:nth-child(4n+1) {
+        clear: both;
+        margin: 0;
+        margin-left: 0 !important;
+    }
+    .home-page-filter-selector:nth-child(n+5) {
+        margin: 1% 0 0 1%;
+    }
+    .home-page-filter-selector span.k-dropdown-wrap {
+        background-color: #f8f8f8;
+    }
+    .home-page-filter-selector .k-dropdown {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .home-page-filters-wrapper .search-button {
+        height: 46px;
+    }
+    .home-page-filter-button {
+        position: relative;
+        padding-left: 46px;
+    }
+    .home-page-filters-wrapper .results-number {
+        position: absolute;
+        left: 0;
+        height: 46px;
+        width: 46px;
+        line-height: 46px;
+    }
+}
+
+@media all and (min-width: 1367px) {
+
+    .home-page-filter-selectors {
+        width: 940px;
+    }
+
+}

@@ -1,0 +1,22 @@
+﻿@** Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.ProductRibbons
+
+@model SevenSpikes.Nop.Plugins.ProductRibbons.Models.ProductRibbonsPublicModel
+
+@if (Model.ProductRibbonModels.Count > 0)
+{
+    foreach (var productRibbon in Model.ProductRibbonModels)
+    {
+        if (productRibbon.CategoryPageRibbon != null && productRibbon.CategoryPageRibbon.Enabled)
+        {
+            @Html.Partial(Constants.ViewCategoryPageRibbonHtml, productRibbon.CategoryPageRibbon)
+        }
+        if (productRibbon.ProductPageRibbon != null && productRibbon.ProductPageRibbon.Enabled)
+        {
+            @Html.Partial(Constants.ViewProductPageRibbonHtml, productRibbon.ProductPageRibbon)
+        }
+    }
+}

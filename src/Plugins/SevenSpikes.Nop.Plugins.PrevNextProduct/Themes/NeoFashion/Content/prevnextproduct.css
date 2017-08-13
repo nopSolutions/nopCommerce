@@ -1,0 +1,127 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+.overview .product-name{
+    overflow: hidden;
+}
+
+.previous-product,
+.next-product {
+	overflow: hidden;
+    width: 49%;
+    display: inline-block;
+    margin: 15px 0;
+}
+
+.next-product {
+    margin-left: 1%;
+}
+
+.previous-product a,
+.next-product a {
+    display: block;
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 8px;
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.65) 100%);
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0.65) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.65) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.65) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.65) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6ffffff', endColorstr='#a6ffffff',GradientType=0 );
+    background-color: #ccc;
+    background-size: 100% 200%;
+    -webkit-transition: background .2s ease-in-out;
+    -moz-transition: background .2s ease-in-out;
+    transition: background .2s ease-in-out;
+    color: #333;
+    text-shadow: 1px 1px #eee;
+    cursor: pointer;
+    text-align: center;
+}
+.previous-product a:hover,
+.next-product a:hover {
+    background-position: center, bottom;
+}
+
+.previous-product a:before {
+    content: "";
+    display: inline-block;
+    width: 45px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url(img/prev.png) no-repeat center center;
+}
+
+.next-product a:before {
+    content: "";
+    display: inline-block;
+    width: 45px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: auto;
+    right: 0;
+    background: url(img/next.png) no-repeat center center;
+}
+
+.next-product a:hover,
+.previous-product a:hover {
+	background-position: bottom;
+}
+
+
+.previous-product a .previous-product-label, 
+.next-product a .next-product-label {
+    display: none;
+}
+
+@media all and (min-width: 768px) {
+    .previous-product a,
+    .next-product a {
+        box-shadow: 0 1px 0 #fff inset;
+    }
+
+     .previous-product a {
+         padding-left: 40px;
+     }
+
+     .next-product a {
+         padding-right: 40px;
+     }
+}
+
+@media all and (max-width: 768px) {
+
+    .previous-product a > span,
+    .next-product a > span{
+        display: none;
+    }
+
+    .previous-product a,
+    .next-product a{
+        width: 45px;
+        height: 45px;
+        padding: 0;
+    }
+    .previous-product a:hover,
+    .next-product a:hover{
+        padding: 0;
+        background-position: center
+    }
+
+    .previous-product a {
+        float: right;
+    }
+
+    .next-product {
+        margin-left: 0;
+    }
+    .next-product a {
+        float: left;
+    }
+
+}

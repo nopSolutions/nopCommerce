@@ -1,0 +1,70 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+@media all and (min-width: 240px) {
+
+.prev-next-wrapper {
+	margin: 0 0 30px;
+	overflow: hidden;
+	text-align: center;
+}
+.previous-product,
+.next-product {
+	display: inline-block;
+	width: 60px;
+	border: 1px solid #fff;
+	overflow: hidden;
+	text-indent: 9999px;
+}
+.previous-product a,
+.next-product a,
+.previous-product > span,
+.next-product > span {
+	display: block;
+	overflow: hidden;
+	padding: 10px 15px;
+	background-color: #eee !important;
+	color: #333;
+	white-space: nowrap;
+}
+    .previous-product a:hover,
+    .next-product a:hover {
+        background-color: #ddd !important;
+    }
+.previous-product a,
+.previous-product > span {
+	background: url(img/prev.png) no-repeat left center;
+	padding-left: 35px;
+}
+.next-product a,
+.next-product > span {
+	background: url(img/next.png) no-repeat right center;
+	padding-right: 35px;
+}
+
+.previous-product a .previous-product-label,
+.next-product a .next-product-label {
+	display: none;
+}
+
+}
+
+@media all and (min-width: 481px) {
+
+.previous-product,
+.next-product {
+	width: 50%;
+	text-indent: 0;
+}
+.previous-product {
+	float: left;
+	text-align: left;
+}
+.next-product {
+	float: right;
+	text-align: right;
+}  
+
+}

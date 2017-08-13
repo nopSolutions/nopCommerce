@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.CloudZoom.Admin.Menu.MenuName">
+    <Value>Cloud Zoom</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.AdjustX">
+    <Value>X-positon of the zoom window (horizontal) (pixels)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.AdjustX.Hint">
+    <Value>Allows you to fine tune the x-position of the zoom window in pixels.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.AdjustY">
+    <Value>Y-positon of the zoom window (vertical) (pixels)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.AdjustY.Hint">
+    <Value>Allows you to fine tune the y-position of the zoom window in pixels.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.CloudZoomConfigurationSettings">
+    <Value>Cloud Zoom Configuration Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.CloudZoomSelectorsSettings">
+    <Value>Cloud Zoom Selectors Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.Common">
+    <Value>Nop Cloud Zoom Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.DefaultImageContainerSelector">
+    <Value>Default image container selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.DefaultImageContainerSelector.Hint">
+    <Value>The selector for the default nopCommerce image container. The container will be removed and images with Cloud Zoom will be displayed on its place.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.Enable">
+    <Value>Enable Cloud Zoom</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.Enable.Hint">
+    <Value>Set to enable the Cloud Zoom plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnableClickToZoom">
+    <Value>Enable Default Zoom On Click</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnableClickToZoom.Hint">
+    <Value>Set to enable the default zoom when you click on the main image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnablePictureThumbnailsInCarousel">
+    <Value>Enable Picture Thumbnails To Be In JCarousel</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnablePictureThumbnailsInCarousel.Hint">
+    <Value>Set to enable the picture thumbnails to be displayed in a JCarousel.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnableTint">
+    <Value>Enable Tint</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.EnableTint.Hint">
+    <Value>Enables the Tint property, which allows you to specifify a tint colour which will cover the small image. DOES NOT WORK WITH SOFT FOCUS!!!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SelectorOfTheParentElementOfTheCloudZoomWindow">
+    <Value>The selector of the element that will contain the cloud zoom window</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SelectorOfTheParentElementOfTheCloudZoomWindow.Hint">
+    <Value>The selector for the element, that will contain the Cloud Zoom window element.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ShowTitle">
+    <Value>Show Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ShowTitle.Hint">
+    <Value>Shows the title tag of the image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SmoothMove">
+    <Value>Smooth Move</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SmoothMove.Hint">
+    <Value>Amount of smoothness/drift of the zoom image as it moves. The higher the number, the smoother/more drifty the movement will be. 1 = no smoothing.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SmoothMove.Range">
+    <Value>Value must be between 1 - 1000</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TouchStartDelay">
+    <Value>Touch Start Delay</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TouchStartDelay.Hint">
+    <Value>Allow normal page touch-scrolling to work when the zoom image take up full device width.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.SoftFocus.Hint">
+    <Value>Applies a subtle blur effect to the small image. Set to true or false. DOES NOT WORK WITH TINT!!!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TintColor">
+    <Value>Tint Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TintColor.Hint">
+    <Value>Specifies a tint colour which will cover the small image. Colours should be specified in hex format, e.g. '#aa00aa'.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TintOpacity">
+    <Value>Tint Opacity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TintOpacity.Hint">
+    <Value>Opacity of the tint, where 0 is fully transparent, and 1 is fully opaque.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.TintOpacity.Range">
+    <Value>Value must be between 0 - 1</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomHeightInPixels">
+    <Value>Height of the zoom window</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomHeightInPixels.Hint">
+    <Value>Set the height of the zoom window (in pixels).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomPosition">
+    <Value>Zoom Type (position)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomPosition.Hint">
+    <Value>Specifies the position of the zoom window relative to the small image. Allowable values are 'left', 'right', 'top', 'bottom', 'inside' (for inner zoom) or you can specifiy the id of an html element to place the zoom window in e.g. 'element1'</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomAutoInside">
+    <Value>Zoom Auto Inside</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomAutoInside.Hint">
+    <Value>If the page size becomes less than or equal to the specified width (pixels) Cloud Zoom will work in 'inside' mode. Useful for responsive pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomWidthInPixels">
+    <Value>Width of the zoom window</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Settings.ZoomWidthInPixels.Hint">
+    <Value>Set the width of the zoom window (in pixels).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.CloudZoom.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCloudZoomSettings">
+    <Value>Cloud Zoom settings has been edited.</Value>
+  </LocaleResource>
+</Language>

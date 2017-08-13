@@ -1,0 +1,40 @@
+/*
+ Cloud Zoom CSS. (c)2012-2015 Star Plugins.
+*/
+
+.quickView .cloudzoom-blank {
+	top: 0;
+    right: 0;
+	left: 0;
+    margin: auto;
+    background-image: url('blank.png');
+}
+
+.quickView .cloudzoom-zoom-inside {
+	z-index: 9;
+    border: none;
+    box-shadow: none;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto; 
+}
+.quickView .cloudzoom-zoom-inside img {
+    right: auto !important;
+    bottom: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.quickView .cloudzoom-ajax-loader {
+    background-image: url('ajax-loader.gif');
+    width: 32px;
+    height: 32px;
+}
+
+.quickView .picture a + img {
+	top: 0;
+    right: 0;
+	left: 0;
+    margin: auto;
+} /* transitional image (on thumbnail click) */

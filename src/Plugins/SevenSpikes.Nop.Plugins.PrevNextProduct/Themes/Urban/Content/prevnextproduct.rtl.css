@@ -1,0 +1,28 @@
+﻿.previous-product a {
+	float: right;
+}
+.next-product a {
+	float: left;
+}
+*{
+	direction: rtl;
+}
+.previous-product .previous-product-title{
+	margin: 0 30px 0 0;
+}
+.next-product .next-product-title{
+	margin: 0 0 0 30px;
+	float: left;
+}
+.previous-product{
+	right: auto;
+	left: 0;
+}
+/*BUTTON TO CATEGORY*/{
+	padding: 0 10px 0 0;
+	background: url(img/mark.png) no-repeat right center;
+}
+.next-product{
+	left: 40px;
+	right: 0;
+}

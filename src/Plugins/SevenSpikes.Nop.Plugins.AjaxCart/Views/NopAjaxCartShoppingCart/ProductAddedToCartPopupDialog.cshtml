@@ -1,0 +1,63 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model SevenSpikes.Nop.Plugins.AjaxCart.Models.ProductAddedToCartPopupDialogModel
+
+@{
+    var shoppingCartItemModel = Model.MiniShoppingCart.Items[0];
+}
+<div class="productAddedToCartWindow">
+    <div class="productAddedToCartWindowTitle">
+        @T("SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxTitle")
+    </div>
+    <div class="productAddedToCartItem">
+        <div class="productAddedToCartWindowImage">
+            <a href="@Url.RouteUrl("Product", new { SeName = shoppingCartItemModel.ProductSeName })" title="@shoppingCartItemModel.Picture.Title">
+                <img alt="@shoppingCartItemModel.Picture.AlternateText" src="@shoppingCartItemModel.Picture.ImageUrl" title="@shoppingCartItemModel.Picture.Title" />
+            </a>
+        </div>
+        <div class="productAddedToCartWindowDescription">
+            <h1>
+                <a href="@Url.RouteUrl("Product", new { SeName = shoppingCartItemModel.ProductSeName })">@shoppingCartItemModel.ProductName</a>
+            </h1>
+            <strong class="price">@shoppingCartItemModel.UnitPrice @T("SevenSpikes.NopAjaxCart.PerUnit")</strong>
+            <div class="attributeInfo">@Html.Raw(shoppingCartItemModel.AttributeInfo)</div>
+            <span class="quantity">@T("SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxQuantity") : @shoppingCartItemModel.Quantity</span>
+        </div>
+    </div>
+    <div class="productAddedToCartWindowSummary">
+        <a class="continueShoppingLink" href="#">@T("SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxContinueShopping")</a>
+        @if (Model.MiniShoppingCart.DisplayCheckoutButton)
+        {
+            var checkoutUrl = "";
+            if (Model.MiniShoppingCart.AnonymousCheckoutAllowed && Model.MiniShoppingCart.CurrentCustomerIsGuest)
+            {
+                checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+            }
+            else
+            {
+                checkoutUrl = Url.RouteUrl("Checkout");
+            }
+            <a class="viewBasketLink" href="@Url.RouteUrl("ShoppingCart")">@T("SevenSpikes.NopAjaxCart.ShoppingCartNotificationBoxViewYourBasket")</a>
+            <div>
+                <input type="submit" class="button-1 productAddedToCartWindowCheckout" value="@T("Checkout.Button")" onclick="setLocation('@checkoutUrl');" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <input type="submit" class="button-1 productAddedToCartWindowCheckout" value="@T("ShoppingCart.Mini.ViewCart")" onclick="setLocation('@Url.RouteUrl("ShoppingCart")');" />
+            </div>
+        }
+    </div>
+    @if (Model.EnableRelatedProductsInPopup)
+    {
+        @Html.Action("GetRelatedProducts", "NopAjaxCartCatalog", new { productId = shoppingCartItemModel.ProductId })
+    }
+
+    @if (Model.EnableCrossSellProductsInPopup)
+    {
+        @Html.Action("GetCrossSellProducts", "NopAjaxCartCatalog", new { productId = shoppingCartItemModel.ProductId })
+    }
+</div>

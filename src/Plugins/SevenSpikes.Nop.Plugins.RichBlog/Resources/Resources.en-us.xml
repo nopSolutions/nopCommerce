@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.RichBlog.Admin.Menu.MenuName">
+    <Value>Rich Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sevenspikes.RichBlog.Admin.Settings.Common">
+    <Value>Nop Rich Blog Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Enabled.Hint">
+    <Value>If checked the Rich Blog plugin will be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfBlogPostsToShow">
+    <Value>Number of Blog Posts to show (home page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfBlogPostsToShow.Hint">
+    <Value>Set the number of visible blog posts on the home page.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowPrevNextNavigation">
+    <Value>Show Previous/Next navigation on Blog Post page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowPrevNextNavigation.Hint">
+    <Value>Show Previous/Next navigation on Blog Post page, which could be used to navigate to prev/next blog post arranged by date of creation.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowImageOnBlogPostPage">
+    <Value>Show Image On Blog Details Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowImageOnBlogPostPage.Hint">
+    <Value>Set to show the image on the top of the blog post detail page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RichBlogTabTitle">
+    <Value>Rich Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.ShowOnHomePage">
+    <Value>Show on Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.ShowOnHomePage.Hint">
+    <Value>Check if you want this blog post to be shown on the Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.HomePagePictureId">
+    <Value>Home Page Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.HomePagePictureId.Hint">
+    <Value>The home page picture of the blog post</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.PictureId">
+    <Value>Blog details / Blog list Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.PictureId.Hint">
+    <Value>The picture which will be shown on blog details / blog list page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Common.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SearchCategoryName">
+    <Value>Search by category name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SearchCategoryName.Hint">
+    <Value>Search by category name</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SearchStoreId">
+    <Value>Search by store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SearchStoreId.Hint">
+    <Value>Search by store</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Submenus.RelatedBlogPosts">
+    <Value>Related blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SaveBeforeEdit">
+    <Value>You need to save the blog post before you add related blog posts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.LanguageName">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.AddNew">
+    <Value>Add new blog post</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchBlogTitle">
+    <Value>Search by title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchBlogTitle.Hint">
+    <Value>Search by title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchLanguageId">
+    <Value>Search by language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchLanguageId.Hint">
+    <Value>Search by language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchStoreId">
+    <Value>Search by store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RelatedBlogPost.SearchStoreId.Hint">
+    <Value>Search by store</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Submenus.ManageCategories">
+    <Value>Manage Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.RichBlogCategoryTabTitle">
+    <Value>Manage Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Post.SearchPostName">
+    <Value>Search by post name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Post.SearchPostName.Hint">
+    <Value>Search by post name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.LanguageId">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.LanguageId.Hint">
+    <Value>Specify for which language this category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.Name">
+    <Value>Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEOTitle">
+    <Value>SEO Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEODescription">
+    <Value>SEO Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEOKeywords">
+    <Value>SEO Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEName">
+    <Value>SEName</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.DisplayOrder">
+    <Value>DisplayOrder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.AddNew">
+    <Value>Add New Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.AddNewBlogPost">
+    <Value>Add New Blog Post</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common">
+    <Value>Rich Blog Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SuccessfullyCreated">
+    <Value>Category successfully created!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SuccessfullyEdited">
+    <Value>Category successfully edited!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Post.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Post.DisplayOrder">
+    <Value>DisplayOrder</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SaveBeforeEdit">
+    <Value>You must save before edit!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEO">
+    <Value>SEO</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.BlogPosts">
+    <Value>Blog Posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.LimitedToStores">
+    <Value>Limited To Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.Name.Hint">
+    <Value>Category Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.DisplayOrder.Hint">
+    <Value>Display Order is responsible for aranging the categories in the category or post category navigations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.Published.Hint">
+    <Value>Check this setting if you want to make the category visible to the public area.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEOTitle.Hint">
+    <Value>SEO Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEODescription.Hint">
+    <Value>SEO Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEOKeywords.Hint">
+    <Value>SEO Keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.SEName.Hint">
+    <Value>SEName</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.BlogPost.AddNew">
+    <Value>Add New Blog Post</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfCharactersInBlogPostPreviewOnHomePage">
+    <Value>Number of characters in blog post preview - Home Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfCharactersInBlogPostPreviewOnHomePage.Hint">
+    <Value>Specify the number of characters you want your blog post preview to have on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfCharactersInBlogPostPreviewOnBlogListPage">
+    <Value>Number of characters in blog post preview - Blog list page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfCharactersInBlogPostPreviewOnBlogListPage.Hint">
+    <Value>Specify the number of characters you want your blog post preview to have on blog list page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.BlogPost.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Category.EditCategoryDetails">
+    <Value>Edit Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.ManageCategories.Title">
+    <Value>Manage Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowFacebookShare">
+    <Value>Show Facebook Share Button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowTwitterShare">
+    <Value>Show Twitter Share Button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowPinterestShare">
+    <Value>Show Pinterest Share Button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowLinkedInShare">
+    <Value>Show LinkedIn Share Button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowGooglePlusShare">
+    <Value>Show Google+ Share Button</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.SocialNetworksSettings">
+    <Value>Social Networks Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowFacebookShare.Hint">
+    <Value>If you check this every blog post will have a Facebook Share button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowTwitterShare.Hint">
+    <Value>If you check this every blog post will have a Twitter Share button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowPinterestShare.Hint">
+    <Value>If you check this every blog post will have a Pinterest Share button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowLinkedInShare.Hint">
+    <Value>If you check this every blog post will have a LinkedIn Share button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ShowGooglePlusShare.Hint">
+    <Value>If you check this every blog post will have a Google+ Share button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ExcludedTags">
+    <Value>Excluded Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ExcludedTags.Hint">
+    <Value>Enter the tags you want to exclude from blog post preview e.g. img, span, strong...</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.HomePageSettings">
+    <Value>Home Page Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HomePageImageSize">
+    <Value>Home Page Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HomePageImageSize.Hint">
+    <Value>Set the image size for the Home page.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HomePageWidgetZone">
+    <Value>Home page widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HomePageWidgetZone.Hint">
+    <Value>Choose in which widget zone the home page blogs will appear.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HomePageWidgetZone.None">
+    <Value>None</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.CategoryNavigationSettings">
+    <Value>Category Navigation Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogCategoryNavigationWidgetZone">
+    <Value>Blog category navigation widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogCategoryNavigationWidgetZone.Hint">
+    <Value>Choose in which widget zone the category navigation will appear.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.BlogDetailsSettings">
+    <Value>Blog Details Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsImageSize">
+    <Value>Blog Details Image Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsImageSize.Hint">
+    <Value>Set the image size for the blog details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsImageWidgetZone">
+    <Value>Blog details image widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsImageWidgetZone.Hint">
+    <Value>Choose in which widget zone the image of every blog post will appear on blog details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsPrevNextWidgetZone">
+    <Value>Blog details prev/next blog post widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogDetailsPrevNextWidgetZone.Hint">
+    <Value>Choose in which widget zone the prev/next buttons of every blog post will appear.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.BlogListSettings">
+    <Value>Blog List Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogListImageWidgetZone">
+    <Value>Blog list image widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogListImageWidgetZone.Hint">
+    <Value>Choose in which widget zone the image of every blog post will appear on blog list page.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Common.SearchSettings">
+    <Value>Search Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogSearchWidgetZone">
+    <Value>Blog search widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.BlogSearchWidgetZone.Hint">
+    <Value>Choose in which widget zone the search box will appear.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfResultsInDropdown">
+    <Value>Number Of Results In Dropdown</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.NumberOfResultsInDropdown.Hint">
+    <Value>Set the number of results in the autocomplete dropdown when searching.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ResultsPageNumberOfItemsPerPage">
+    <Value>Number Of Items Per Page</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.ResultsPageNumberOfItemsPerPage.Hint">
+    <Value>Set the number of items per page on results page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HighlightedTextChunkLength">
+    <Value>Highlighted Text Chunk Length</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.HighlightedTextChunkLength.Hint">
+    <Value>Set the length of the highlighted text chunk. This is the number of characters returned around the found search term.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Reindex">
+    <Value>Re-index</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Admin.Settings.Reindex.Hint">
+    <Value>Click the button if you want to re-index the blog posts.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.ViewAllBlogPosts">
+    <Value>View All Blog Posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.LatestFromBlog">
+    <Value>Latest From Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.ReadMore">
+    <Value>Read More</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.RelateBlogPosts">
+    <Value>Related blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Category.Tab.Title">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Blog.Post.Preview.Marker">
+    <Value>...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Blog.Post.Comments">
+    <Value>{0} comments</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.BlockTitle">
+    <Value>Blog search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.Placeholder">
+    <Value>Search in blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.SearchButton">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.ResultsForTitle">
+    <Value>Results for "{0}"</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.AdvancedSearchFor">
+    <Value>Search for</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.TextChunkWrapper">
+    <Value>... {0} ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.RichBlog.Public.Search.NoResults">
+    <Value>No Results found!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.RichBlog.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+</Language>

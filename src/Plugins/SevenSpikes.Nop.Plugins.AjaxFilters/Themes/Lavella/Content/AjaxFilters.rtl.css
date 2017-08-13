@@ -1,0 +1,224 @@
+﻿@media all and (min-width: 320px){
+.priceRangeFilterPanel7Spikes .ui-slider-range.ui-widget-header {
+    position: absolute;
+}
+
+.nopAjaxFilters7Spikes .filtersTitle,
+.priceRangeMinPanel,
+    .priceRangeCurrentPricesPanel .currentMinPrice {
+	float: left;
+}
+.nopAjaxFilters7Spikes .clearFilterOptionsAll,
+.priceRangeMaxPanel,
+    .priceRangeCurrentPricesPanel .currentMaxPrice {
+	float: right;
+}
+.nopAjaxFilters7Spikes .close-filters {
+    background: url("images/ajax-filter-arrow-close-new.png") no-repeat scroll 93% center rgb(195, 185, 177);
+}
+.nopAjaxFilters7Spikes .block .filtersGroupPanel,
+/* NO RESULTS POPUP */
+
+    .ajaxFilters.k-window {
+	text-align: right;
+}
+.nopAjaxFilters7Spikes{
+	right: 0;
+	left: auto;
+}
+.nopAjaxFilters7Spikes .close-filters span{
+	left: 10px;
+	right: auto;
+}
+.notAndroid23 .nopAjaxFilters7Spikes {
+    -webkit-transform: translate(320px);
+    -ms-transform: translate(320px);
+    transform: translate(320px);
+}
+.nopAjaxFilters7Spikes .filtersTitlePanel{
+	padding: 0 3px 10px 0;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl{
+	padding: 0 12px 0 0;
+	text-align: right;
+    background:url('images/hide-filters.png');
+    background-repeat:no-repeat;
+    	background-position: 3% center;
+}
+.nopAjaxFilters7Spikes .block .title a.toggleControl.closed{
+	background-position: 3% center;
+}
+.nopAjaxFilters7Spikes .block .title a.clearPriceRangeFilter,
+    .clearFilterOptions{
+	left: 10%;
+	right: auto;
+}
+.priceRangeFilterPanel7Spikes .ui-state-default, 
+.priceRangeFilterPanel7Spikes .ui-widget-content .ui-state-default, 
+.priceRangeFilterPanel7Spikes .ui-widget-header .ui-state-default{
+	margin-right: 0;
+	margin-left: -8px;
+}
+/* CHECKBOX MODE */
+
+    .nopAjaxFilters7Spikes .filtersGroupPanel a{
+	padding-right: 15px;
+	padding-left: 0;
+	margin-right: 0px;
+	margin-left: 0;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel .ui-slider a:last-child{
+	margin-right: 0;
+	margin-left: -8px;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel .filtersDropDown a{
+	padding-right: 10px;
+	padding-left: 0;
+}
+.nopAjaxFilters7Spikes .filtersDropDown{
+    background-position:5% center;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelected{
+	background-position: right -15px;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemUnselected{
+	background-position: right 5px;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemSelectedDisabled{
+	background-position: right -35px;
+}
+.nopAjaxFilters7Spikes .filtersGroupPanel a.filterItemDisabled{
+	background-position: right -55px;
+}
+.checkbox-list label {
+    padding: 8px 15px 8px 5px;
+}
+.checkbox-list input[type="checkbox"],
+.checkbox-list label:before {
+    left: auto;
+    right: 0;
+}
+.checkbox-list li .color + input + label {
+    padding-left: 0;
+    padding-right: 35px;
+}
+.imageOptions .checkbox-list li .color + input + label {
+    padding-left: 0;
+    padding-right: 35px;
+}
+.checkbox-list li .color {
+    left: auto;
+    right: 0;
+}
+
+ 
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions a{
+	padding-right: 0 !important;
+}
+.colorOptions .color-container{
+	float: right;
+	margin: 6px 0 0 8px;
+}
+.colorOptions .color{
+	float: right;
+}
+.ajaxFilters .k-window-actions{
+	left: 7px;
+	right: auto;
+}
+.product-sorting,
+    .product-page-size{
+	margin-right: 108px;
+	margin-left: 0;
+}
+.sortOptionsDropDown{
+	background-position: 5px center;
+    padding: 0 0 0 20px;
+}
+.viewOptionsDropDown{
+	background-position: 5px center;
+}
+.productsPageSizeDropDown{
+	background-position: 5px center;
+}
+.filtersDropDown{
+	background-position: 5px center;
+}
+.filtersDropDown ul li a{
+	padding-right: 0;
+}
+.select-wrap {
+    text-align: right;
+    padding: 0 10px 0 25px;
+    background-position: 8px center;
+}
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    float: right;
+	padding: 7px 3px 7px 20px;
+    margin: 0 0 0 5px;
+}
+.selected-options-list > li span:after {
+    right: auto;
+    left: 5px;
+}
+.select-wrap select {
+    left: auto;
+    right: 0;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* AJAX LOADER */
+
+    .productPanelAjaxBusy{
+	right: 0;
+	left: auto;
+}
+
+/* POPUP BOX */
+.ajaxFilters .k-window-actions{
+    right:0;
+    left:7px;
+}
+.ajaxFilters .k-window-actions .k-icon{
+    position:absolute;
+    left:7px;
+}
+}
+@media only screen and (min-width: 769px) {
+
+    .selected-options-list > li span {
+	    padding: 4px 3px 4px 20px;
+    }
+    .notAndroid23 .nopAjaxFilters7Spikes {
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+@media all and (min-width: 981px) {
+    .notAndroid23 .nopAjaxFilters7Spikes {
+        -webkit-transform: none;
+        transform: none;
+    }
+}

@@ -1,0 +1,115 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+@media all and (min-width: 240px) {
+.overview .product-name h1 {
+    border-top: 1px solid #e1e1e1;
+    padding: 15px 0 0;
+    margin:15px 0 0 0;
+}
+
+.previous-product,
+.next-product {
+    width: 48%;
+    display: inline-block;
+    vertical-align:middle;
+    font-size: 0;
+    margin: 15px 0;
+}
+.previous-product a,
+.next-product a{
+    border: none;
+    border-radius: 30px;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    width: 38px;
+    height: 38px;
+    border:1px solid #e1e1e1;
+}
+    .previous-product a:hover,
+    .next-product a:hover {
+        transform:scale(1.1,1.1);
+
+    }
+
+.previous-product a{
+	background: url(img/prv.png) no-repeat 11px center;
+    float: left;
+}
+.next-product a {
+	background: url(img/nxt.png) no-repeat 15px center;
+    float: right;
+}
+.backToCategory{
+    display:none;
+}
+.previous-product .previous-product-title,
+.next-product .next-product-title{
+    font-size:13px;
+    color:#898989;
+    display:inline-block;
+    width:140px;
+    padding:10px 0;
+}
+.previous-product .previous-product-title{
+    margin:0 0 0 30px;
+}
+.next-product .next-product-title{
+    margin:0 30px 0 0;
+    float:right;
+}
+
+}
+
+@media all and (min-width: 769px) {
+.product-details-page .overview{
+    margin:20px 0;
+}
+.previous-product,
+.next-product{
+    width: auto;
+    position: absolute;
+    top: 50%;
+    margin: -20px 0 0;
+}
+.previous-product{
+    left: auto;
+    right:40px;
+    top:-17px;
+}
+/*BUTTON TO CATEGORY*/{
+    display:block;
+    position:absolute;
+    top:-47px;
+    max-width:210px;
+    overflow:hidden;
+    color:#333;
+    font-size:12px;
+    line-height:normal;
+    padding:0 0 0 10px;
+    background:url(img/mark.png) no-repeat left center;
+    white-space: nowrap;
+}
+.next-product{
+    right: 0;
+    top:-17px;
+}
+.previous-product a,
+.next-product a{
+    width: 35px;
+    height: 35px;
+}
+.previous-product .previous-product-title,
+.next-product .next-product-title{
+    font-size:0;
+}
+
+}
+@media all and (min-width: 1170px){
+
+
+}

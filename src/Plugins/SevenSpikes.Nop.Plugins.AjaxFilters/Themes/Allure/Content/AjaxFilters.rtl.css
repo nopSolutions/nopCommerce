@@ -1,0 +1,169 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+@media all and (min-width: 240px) {
+
+/* GLOBAL */
+
+    .clearFilterOptionsAll {
+	    float: left;
+    }
+
+    .filter-block a.toggleControl {
+        padding: 12px 14px 12px 42px;
+        text-align: right;
+        background: url(images/arrow-down.png) no-repeat 15px center !important;
+    }
+	.filter-block a.toggleControl.closed {
+		background: url(images/rtl-arrow-right.png) no-repeat 15px center !important;
+	}
+    .filter-block a.clearFilterOptions, 
+    .filter-block a.clearPriceRangeFilter {
+        right: auto;
+        left: 2px;
+    }
+
+/* SEARCH CRITERIA */
+
+	.selected-options-list > li {
+		text-align: right;
+	}
+	.selected-options-list > li span {
+        float: right;
+        padding: 8px 2px 8px 20px ;
+		margin: 0 0 0 10px;
+        background-position: top 10px left 2px;
+	}
+    .filtersGroupPanel.imageOptions input[type="checkbox"] + label {
+        padding-left: 40px;
+        padding-right: 35px;
+    }
+
+/* PRICE RANGE SLIDER */
+
+    .ui-slider-handle {
+        margin-left: auto;
+        margin-right: -1px;
+    }
+
+
+    .priceRangeMinPanel {
+        float: right;
+    }
+    .priceRangeMaxPanel {
+        float: left;
+    }
+    .priceRangeCurrentPricesPanel .currentMinPrice {
+        float: right;
+    }
+    .priceRangeCurrentPricesPanel .currentMaxPrice {
+        float: left;
+    }
+
+
+/* CHECKBOX MODE */
+
+    .filtersGroupPanel input[type="checkbox"] + label {
+        padding: 12px 42px 12px 10px;
+        text-align: right;
+    }
+    .filtersGroupPanel input[type="checkbox"] + label:before {
+        left: auto;
+        right: 15px;
+    }
+
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+    .filtersGroupPanel .color {
+        right: auto;
+        left: 16px;
+    }
+
+
+
+/* DROPDOWN MODE */
+
+    .filtersDropDownPanel .select-wrap {
+        text-align: right;
+    }
+    .filtersDropDownPanel .select-inner {
+        padding: 6px 12px 6px 32px;
+        text-align: right;
+        background-position: left center;
+    }
+
+
+
+/* AJAX LOADER */
+
+    .productPanelAjaxBusy {
+        left: auto;
+        right: 0;
+    }
+
+/* NO RESULTS POPUP */
+
+    .ajaxFilters .k-window-actions {
+	    right: auto;
+        left: 10px;
+    }
+
+}
+
+
+@media all and (max-width: 1000px) {
+
+    .notAndroid23 .nopAjaxFilters7Spikes {
+        right: 0;
+        left: auto;
+        -webkit-transform: translate(320px);
+        -ms-transform: translate(320px);
+        transform: translate(320px);
+    }
+    .android23 .nopAjaxFilters7Spikes{
+        right: -320px;
+        left: auto;
+    }
+        .nopAjaxFilters7Spikes .close-filters span {
+            text-align: left;
+            background: url(images/rtl-mobile-filters-close.png) no-repeat 94% center;
+        }
+        .android23 .nopAjaxFilters7Spikes.open{
+            right: 0;
+            left: auto;
+        }
+
+}
+
+/*=====================================================
+    
+    DESKTOP
+
+=====================================================*/
+
+@media all and (min-width: 1001px) {
+
+    .filtersGroupPanel li > a {
+        padding: 10px 42px 10px 10px;
+    }
+    .filter-block a.toggleControl {
+        padding: 10px 8px 10px 42px;
+        text-align: right;
+    }
+    .selected-options-list > li span {
+        padding: 4px 2px 4px 20px;
+        background-position: top 5px left 2px;
+		margin: 0 0 0 7px;
+	}
+    
+}

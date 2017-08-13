@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Conditions">
+    <Value>Nop Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin">
+    <Value>Admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.Active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.Active.Hint">
+    <Value>Specifies whether the condition is active.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.AddConditionGroup">
+    <Value>Add Condition Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.CondtionGroupsTitle">
+    <Value>Condition Groups</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.AboutCondtionGroups">
+    <Value>What You Need to Know</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.Pass">
+    <Value>Pass</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.Fail">
+    <Value>Fail</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.ConditionName">
+    <Value>Condition Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.ConditionName.Hint">
+    <Value>The name of the condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.DefaultConditionValue">
+    <Value>Default State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.DefaultConditionValue.Hint">
+    <Value>If the product does not match any condition groups, then this determines whether the item will be shown on the product. Almost always select "Fail" unless you want to show on every product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.Description">
+    <Value>
+      With conditions you can filter the products for which this item will be shown.&lt;br/&gt;
+      The conditions consist of &lt;strong&gt;Condition Groups&lt;/strong&gt;. &lt;br/&gt;
+      The &lt;strong&gt;Default State&lt;/strong&gt; is also considered as a condition group. &lt;br/&gt;
+      A Condition Group consists of one or many &lt;strong&gt;Condition Statements&lt;/strong&gt; (rules).&lt;br/&gt;
+      The dependancy between the Condition Groups is &lt;strong&gt;OR&lt;/strong&gt; and between the Condition Statements is &lt;strong&gt;AND&lt;/strong&gt;. This means that if all of the Condition Statements in one Condition Group are true for a product, the item will be displayed over that product.&lt;br/&gt;
+      To add a Condition Group you need to click on the &lt;strong&gt;Add Condition Group&lt;/strong&gt; button.
+      To delete a Condition Group you need to click on the &lt;strong&gt;Delete&lt;/strong&gt; button.
+      To add a Condition Statement to the Condition Group, you need to click on the &lt;strong&gt;Add new record&lt;/strong&gt; button.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.TabTitle">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.Condition.TabTitle.SaveBeforeEdit">
+    <Value>You need to Save before you can add conditions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.AddNew">
+    <Value>Add a new customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerName">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerOverrides">
+    <Value>Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.OverrideState">
+    <Value>State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.TabTitle">
+    <Value>Override Customer Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.CustomerOverrides.TabTitle.SaveBeforeEdit">
+    <Value>You need to Save before you can add customer overrides.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.AddNew">
+    <Value>Add a new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.ProductOverrides">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.ProductState">
+    <Value>State</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle">
+    <Value>Override Product Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle.SaveBeforeEdit">
+    <Value>You need to Save before you can add product overrides.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.Default">
+    <Value>Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.IsInRole">
+    <Value>Is In Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.IsLoggedIn">
+    <Value>Is Logged In</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.IsNotInRole">
+    <Value>Is Not In Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.CustomerConditionProperty.UserName">
+    <Value>User Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.Contains">
+    <Value>Contains</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.DoesNotContain">
+    <Value>Does Not Contain</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.EqualTo">
+    <Value>Equal To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.GreaterThan">
+    <Value>Greater Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.GreaterThanOrEqualTo">
+    <Value>Greater Than Or Equal To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.LessThan">
+    <Value>Less Than</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.LessThanOrEqualTo">
+    <Value>Less Than Or Equal To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.OperatorType.NotEqualTo">
+    <Value>Not Equal To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.Default">
+    <Value>Default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.DiscountAmmount">
+    <Value>Discount Ammount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.DiscountPercentage">
+    <Value>Discount Percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.MinPrice">
+    <Value>Min Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.PreOrder">
+    <Value>Pre Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.PriceDifferenceAmmount">
+    <Value>Price Difference Ammount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.PriceDifferencePercentage">
+    <Value>Price Difference Percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.ProductAgeHours">
+    <Value>Product Age Hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ProductConditionProperty.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType">
+    <Value />
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Conditions.Domain.ConditionType.ProductSpecification">
+    <Value>Product Specification</Value>
+  </LocaleResource>
+  
+</Language>

@@ -1,0 +1,13 @@
+﻿@** Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@using SevenSpikes.Nop.Plugins.ProductRibbons
+
+@model SevenSpikes.Nop.Plugins.ProductRibbons.Models.CategoryPageRibbonModel
+
+<a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="ribbon-position @Model.Position" data-productribbonid="@Model.ProductRibbonId" data-productid="@Model.ProductId">
+    <div class="product-ribbon" style="@Model.ContainerStyle">
+        @Html.Partial(Constants.ViewBasePageRibbonHtml, Model)
+    </div>
+</a>

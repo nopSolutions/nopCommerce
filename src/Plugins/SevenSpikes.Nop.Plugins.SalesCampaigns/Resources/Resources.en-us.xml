@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.SalesCampaigns.Admin.Menu.MenuName">
+    <Value>Sales Campaigns</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.SaleEndsIn">
+    <Value>Sale ends in</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.OnSaleUntil">
+    <Value>On Sale until</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Day">
+    <Value>day</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Days">
+    <Value>days</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Hour">
+    <Value>hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Hours">
+    <Value>hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Minute">
+    <Value>minute</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Minutes">
+    <Value>minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Second">
+    <Value>second</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Public.Seconds">
+    <Value>seconds</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign">
+		<Value>Sales Campaign</Value>
+	</LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList">
+    <Value>Here is a list of all the sales campaigns you have created for your store. Please read the following items you should know about Sales Campaigns:</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList.1">
+    <Value>If a sale is &lt;strong&gt;scheduled&lt;/strong&gt; you do not need to click the [Start immediately] button, the sale will start at the listed start time. If the sale is &lt;strong&gt;not scheduled&lt;/strong&gt; or you would like to manually start it you can click the [Start immediately] button and it will start immediately. You can check under the state column to see whether it is active or not. You can also stop immediately sales campaigns using the [Stop immediately] button, even if it is a timed sale.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList.2">
+    <Value>When the campaign is scheduled or running you &lt;strong&gt;cannot&lt;/strong&gt; edit it. You can only [View] what settings you have been setup.</Value>
+  </LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.BackToList">
+		<Value>Back to Sales Campaigns list</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.EditSaleCampaignDetails">
+		<Value>Edit Sales Campaign Details</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.AddNew">
+		<Value>Add new Sales Campaign</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.SuccessfullyCreated">
+		<Value>Sales campaign successfully created.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.SuccessfullyEdited">
+		<Value>Sales campaign successfully edited.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.SuccessfullyDeleted">
+		<Value>Sales campaign successfully deleted.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.EditNotAllowedWhileCampaignIsRunning">
+		<Value>Edit is not allowed while the campaign is running !</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Name">
+		<Value>Name</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Name.Hint">
+		<Value>The name of the sales campaign. Internal use only.</Value>
+	</LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.WidgetZone">
+    <Value>Widget Zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.WidgetZone.Hint">
+    <Value>The widget zone on the product details page, where the sales campaign will appear</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.AssignToCategory">
+    <Value>Add products to category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.AssignToCategory.Hint">
+    <Value>Specifies whether the products in this campaign will be mapped to a specific category.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryId">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryId.Hint">
+    <Value>Choose the desired category to which the products will be mapped.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DiscountValue">
+		<Value>Discount</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DiscountValue.Hint">
+		<Value>The discount value</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DiscountType">
+		<Value>Discount type</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DiscountType.Hint">
+		<Value>The discount type</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.OverrideCents">
+		<Value>Override cents</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.OverrideCents.Hint">
+		<Value>If checked the cents on the calculated price will be overriden.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.OverrideCentsValue">
+		<Value>Override cents value</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.OverrideCentsValue.Hint">
+		<Value>Override the cents on the calculated price.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.State">
+		<Value>State</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.GeneralSettings">
+		<Value>General Settings</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.SettingsTabTitle">
+		<Value>Sales Campaign Settings</Value>
+	</LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ConditionsTabTitle">
+    <Value>Product conditions</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ProductCustomizationTabTitle">
+    <Value>Countdown timer ( Product page )</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ProductCustomizationTabTitle.Description">
+    <Value>Here you can customize the countdown timer on the product page. &lt;br/&gt;
+    NOTE: The countdown timer is shown ONLY if "To date" is set in the Scheduling.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryCustomizationTabTitle">
+    <Value>Countdown timer ( Product Box )</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryCustomizationTabTitle.Description">
+    <Value>
+      Here you can customize the countdown timer shown in the product boxes and associated products. &lt;br/&gt;
+      NOTE: The countdown timer is shown ONLY if "To date" is set in the Scheduling.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.SelectClockType">
+    <Value>Step 1 - Clock Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.SelectClockStyle">
+    <Value>Step 2 - Clock Style</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CampaignLabel">
+    <Value>Step 2 - Campaign Label Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CampaignText">
+    <Value>Step 3 - Campaign Text Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.WrapperStyle">
+    <Value>Step 4 - Wrapper Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.NumberBox">
+    <Value>Step 5 - Number Box Style</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS">
+    <Value>Customize your CSS (Advanced users)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS.Text">
+    <Value>A semicolon ( <strong>;</strong> ) IS required after a property:value pair !</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS.Example">
+    <Value>Example: border-radius: 10px;</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Preview">
+    <Value>Preview</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.ClockType">
+    <Value>Select type</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.FontWeight">
+    <Value>Font weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.FontStyle">
+    <Value>Font style</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.FontSize">
+    <Value>Font size</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.ClockTextAlign">
+    <Value>Text align</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.FontColor">
+    <Value>Font color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.BackgroundColor">
+    <Value>Background color</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize">
+    <Value>Margin</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize.Top">
+    <Value>Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize.Right">
+    <Value>Right</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize.Bottom">
+    <Value>Bottom</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize.Left">
+    <Value>Left</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize">
+    <Value>Padding</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize.Top">
+    <Value>Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize.Right">
+    <Value>Right</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize.Bottom">
+    <Value>Bottom</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize.Left">
+    <Value>Left</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomCSS">
+    <Value>Custom CSS</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Border">
+    <Value>Border</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CategoryWrapperPosition">
+    <Value>Position</Value>
+  </LocaleResource>
+  
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.PreviewTabTitle">
+		<Value>Preview</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.PreviewTabTitle.SaveBeforeEdit">
+		<Value>You need to save the Sales Campaign before you can see a preview.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.PreviewTabTitle.Description">
+		<Value>Here you can see which products will be discounted and with how much.</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.ScheduleCampaign.Description">
+		<Value>Schedule the campaign</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.ScheduleCampaign.Text">
+		<Value>Schedule</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.UnscheduleCampaign.Description">
+		<Value>Unschedule the campaign</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.UnscheduleCampaign.Text">
+		<Value>Unschedule</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StartCampaign.Description">
+		<Value>Start the campaign immediately</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StartCampaign.Text">
+		<Value>Start immediately</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StopCampaign.Description">
+		<Value>Stop the campaign immediately</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StopCampaign.Text">
+		<Value>Stop immediately</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.FieldValidationMessages.Name">
+		<Value>The sales campaign name is required.</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.FieldValidationMessages.DiscountValue">
+		<Value>The discount value must be greater than 0.</Value>
+	</LocaleResource>
+		
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords">
+		<Value>Sales Campaign Failed History Records</Value>
+	</LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList">
+    <Value>Here is a list of all the failed history records. Please read the following items so you should know about the possible failed reasons:</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList.1">
+    <Value>"Product skipped. The discount amount is more or equal to the product price."</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList.2">
+    <Value>"The product does not exists (has been deleted)."</Value>
+  </LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.SaleCampaignName">
+		<Value>Sales Campaign Name</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductName">
+		<Value>Product name</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductPrice">
+		<Value>Price</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductOldPrice">
+		<Value>Old Price</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.Status">
+		<Value>Status</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.Reason">
+		<Value>Reason</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.CreatedOnUtc">
+		<Value>Created On</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus">
+		<Value>Submenu names</Value>
+	</LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.ManageSaleCampaigns">
+		<Value>Manage Sales Campaigns</Value>
+	</LocaleResource>
+	<LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.FailedHistoryReports">
+		<Value>Failed History Reports</Value>
+	</LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings">
+    <Value>Nop Sales Campaigns Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.EnableSaleCampaigns">
+    <Value>Enable Sales Campaigns</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.EnableSaleCampaigns.Hint">
+    <Value>Enables/Disables the Sales Campaigns in all html widget zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.ProductBoxSelector">
+    <Value>Product Box Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.ProductBoxSelector.Hint">
+    <Value>The selector for the product box. The product box is used for listing products on pages like category page, manufacturer page, home page, etc. It is used by the integration of the plugin for displaying the countdown timer.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.ProductBoxPictureContainerSelector">
+    <Value>Product Box Picture Container Selector</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Settings.ProductBoxPictureContainerSelector.Hint">
+    <Value>The selector for the product box picture container. The product box is used for listing products on pages like category page, manufacturer page, home page, etc. It is used by the integration of the plugin for displaying the countdown timer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.SaleCampaigns.Admin.Campaign.List">
+    <Value>Campaigns List</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.DaysHoursMinutesSeconds">
+    <Value>Sale ends in # days, # hours, # minutes, # seconds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.HoursMinutesSeconds">
+    <Value>Sale ends in # hours, # minutes, # seconds</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.OnlyDays">
+    <Value>Sale ends in # days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.LongDate">
+    <Value>On Sale until Saturday, January 1, 2014, 0:00:00 AM</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.LongDateWithoutTime">
+    <Value>On Sale until Saturday, January 1, 2014</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.ShortDate">
+    <Value>On Sale until Jan 1, 2014, 0:00:00 AM </Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockType.ShortDateWithoutTime">
+    <Value>On Sale until Jan 1, 2014</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Default">
+    <Value>Select text align...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Left">
+    <Value>left</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Right">
+    <Value>right</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Center">
+    <Value>center</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Justify">
+    <Value>justify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignClockTextAlign.Inherit">
+    <Value>inherit</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontWeight.Normal">
+    <Value>normal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontWeight.Bold">
+    <Value>bold</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontWeight.Bolder">
+    <Value>bolder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontWeight.Lighter">
+    <Value>lighter</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontStyle.Normal">
+    <Value>normal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontStyle.Italic">
+    <Value>italic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.SaleCampaignFontStyle.Oblique">
+    <Value>oblique</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.None">
+    <Value>none</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Hidden">
+    <Value>hidden</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Dotted">
+    <Value>dotted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Dashed">
+    <Value>dashed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Solid">
+    <Value>solid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Double">
+    <Value>double</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Groove">
+    <Value>groove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Ridge">
+    <Value>ridge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Inset">
+    <Value>inset</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Outset">
+    <Value>outset</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Initial">
+    <Value>initial</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignBorderType.Inherit">
+    <Value>inherit</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignCategoryWrapperPosition.Top">
+    <Value>Top</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignCategoryWrapperPosition.Middle">
+    <Value>Middle</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignCategoryWrapperPosition.Bottom">
+    <Value>Bottom</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignFontSizeUnit.Px">
+    <Value>px</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignFontSizeUnit.Em">
+    <Value>em</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignFontSizeUnit.Cm">
+    <Value>cm</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignFontSizeUnit.Pt">
+    <Value>pt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SalesCampaigns.Domain.Enums.SaleCampaignFontSizeUnit.Percentages">
+    <Value>%</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.DiscountType.Percentage">
+    <Value>Percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.SaleCampaigns.Domain.Enums.DiscountType.FixedAmmount">
+    <Value>Fixed Amount</Value>
+  </LocaleResource>
+</Language>

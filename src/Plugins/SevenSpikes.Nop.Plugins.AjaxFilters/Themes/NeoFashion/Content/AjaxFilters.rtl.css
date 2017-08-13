@@ -1,0 +1,235 @@
+﻿/* DROPDOWNS */
+
+.jDropDown div {
+    padding: 2px 8px 2px 0 !important;
+    background-position: 7px center !important;
+}
+.jDropDown ul {
+    text-align: right;
+}
+
+/* FILTERS */
+
+.filter-block a.toggleControl {
+    display: inline-block;
+    width: 100%;
+    background: url(images/rtl-arrow2.png) no-repeat right -14px !important;
+    padding: 0 18px 0 0 !important;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+}
+.filter-block a.toggleControl.closed {
+    background-position: right 4px !important
+}
+.filter-block .title {
+    position: relative;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter {
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 0;
+    padding: 8px;
+}
+
+/* CHECKBOXES */
+
+.filtersGroupPanel li label {
+    padding: 5px 26px 5px 0;
+}
+.filtersGroupPanel.imageOptions li label {
+    padding: 5px 40px 5px 0px;
+}
+.filtersGroupPanel li label:before {
+    right: 8px;
+    left: auto;
+}
+.filtersGroupPanel li .color,
+.filtersGroupPanel li .defaultColor {
+    right: 8px;
+    left: auto;
+}
+
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li span {
+    padding: 3px 2px 3px 15px;
+    background-position: top 2.5px left;
+    float: right;
+    margin: 0 0 0 7px;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* POPUP */
+
+.ajaxFilters .k-window-actions {
+    right: inherit !important;
+    left: 10px;
+}
+
+/* DROPDOWN MODE */
+
+.select-inner {
+    padding: 2px 8px 2px 0;
+    background-position: left 5px center;
+}
+
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color-container {
+    right: 9px;
+    left: auto;
+}
+
+.jDropDown div.toplevel {
+    text-align: right;
+}
+
+/*=====================================================
+    
+    TABLETS LANDSCAPE & NETBOOKS
+
+=====================================================*/
+
+@media all and (max-width: 980px) and (min-width: 769px) {
+
+    .filter-block a.clearFilterOptions,
+    .filter-block a.clearPriceRangeFilter {
+        display: block;
+        top: 3px;
+        left: 3px;
+        right: auto;
+        padding: 0;
+        height: 33px;
+        line-height: 33px;
+    }
+    .filtersGroupPanel li a {
+        padding: 9px 35px 9px 0 !important;
+    }
+    .filtersGroupPanel li a:before {
+        content: " ";
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 1px solid #333;
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        left: auto;
+        margin: -8px 0 0;
+    }
+
+}
+
+
+
+/*=====================================================
+    
+    TABLETS PORTRAIT & SMARTPHONES LANDSCAPE
+
+=====================================================*/
+
+@media all and (max-width: 768px) and (min-width: 481px) {
+    
+    .filter-block a.clearFilterOptions,
+    .filter-block a.clearPriceRangeFilter {
+        display: block;
+        top: 3px;
+        left: 3px;
+        right: auto;
+        padding: 0;
+        height: 33px;
+        line-height: 33px;
+    }
+    .filtersGroupPanel li a {
+        padding: 9px 35px 9px 0 !important;
+    }
+    .filtersGroupPanel li a:before {
+        content: " ";
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 1px solid #333;
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        left: auto;
+        margin: -8px 0 0;
+    }
+    .selected-options-list > li span {
+        padding: 7px 2px 7px 15px;
+        background-position: top 6.5px left;
+    }
+
+}
+
+        
+
+/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+@media all and (max-width: 480px) {
+    
+    .side-2 .block.block-poll {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .side-2 .nopAjaxFilters7Spikes .block .title {
+        text-align: right !important;
+    }
+    
+    .filter-block a.clearFilterOptions,
+    .filter-block a.clearPriceRangeFilter {
+        display: block;
+        top: 3px;
+        left: 3px;
+        right: auto;
+        padding: 0;
+        height: 33px;
+        line-height: 33px;
+    }
+    .filtersGroupPanel li a {
+        padding: 9px 35px 9px 0 !important;
+    }
+    .filtersGroupPanel li a:before {
+        content: " ";
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border: 1px solid #333;
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        left: auto;
+        margin: -8px 0 0;
+    }
+    .selected-options-list > li span {
+        padding: 7px 2px 7px 15px;
+        background-position: top 6.5px left;
+    }
+
+}

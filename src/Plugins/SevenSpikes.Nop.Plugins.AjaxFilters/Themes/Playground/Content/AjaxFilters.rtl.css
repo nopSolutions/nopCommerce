@@ -1,0 +1,195 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+/*=====================================================
+    
+    SMALLER MOBILE DEVICES
+
+=====================================================*/
+
+
+.filtersGroupPanel li {
+	float: right;
+}
+.clearFilterOptionsAll {
+	float: left;
+}
+.jDropDown div {
+	text-align: right;
+	background-position: 8% center !important;
+}
+
+.filter-block .title{
+	padding: 8px 12px 8px 30px !important;
+}
+.filter-block a.toggleControl.closed{
+	background-position: right -18px;
+}
+.filter-block a.clearFilterOptions,
+.filter-block a.clearPriceRangeFilter{
+	left: 4px;
+	right: auto;
+}
+.filtersGroupPanel li a{
+	padding: 8px 34px 8px 8px;
+}
+.filtersGroupPanel li a:before{
+	right: 10px;
+	left: auto;
+}
+.checkbox-list li label {
+    padding: 8px 34px 8px 8px;
+}
+.imageOptions .checkbox-list li label {
+    padding: 10px 50px 10px 10px;
+}
+.checkbox-list li label::before {
+    left: auto;
+    right: 10px;
+}
+.checkbox-list li input {
+    left: auto;
+    right: 9px;
+}
+.checkbox-list li span.color {
+    left: auto;
+    right: 11px;
+}
+.imageOptions .checkbox-list li span.color {
+    right: 10px;
+}
+.select-wrap {
+    background-position: 4% center;
+}
+.product-selectors .select-wrap {
+    margin: 0 5px 0 0;
+    padding-left: 40px;
+    padding-right: 12px;
+}
+.select-wrap select {
+    left: auto;
+    right: 0;
+    margin: 0;
+}
+
+
+/* SEARCH CRITERIA */
+
+.selected-options-list > li {
+	text-align: right;
+}
+.selected-options-list > li label {
+	display: inline-block;
+}
+.selected-options-list > li span {
+	margin: 0 5px 0 0;
+	padding: 0 0 0 35px;
+}
+.selected-options-list > li span:after {
+	right: auto;
+	left: 0;
+}
+
+/* PRICE RANGE SLIDER */
+ 
+.priceRangeMinPanel {
+    float: right;
+}
+.priceRangeMaxPanel {
+    float: left;
+}
+.priceRangeCurrentPricesPanel .currentMinPrice {
+    float: right;
+}
+.priceRangeCurrentPricesPanel .currentMaxPrice {
+    float: left;
+}
+
+/* COLOR SQUARE ATTRIBUTES */
+
+.colorOptions .color-container{
+	right: 11px;
+	left: auto;
+}
+.jDropDown ul{
+	right: -1px;
+	left: auto;
+	text-align: right;
+}
+.ajaxFilters .k-window-actions{
+	left: 10px;
+	right: auto;
+}
+
+
+
+/*=====================================================
+    
+    TABLETS PORTRAIT & SMARTPHONES LANDSCAPE
+
+=====================================================*/
+
+@media all and (min-width: 481px) {
+
+    .filter-block .title {
+	    text-align: right;
+    }
+    .filtersPanel .filter-block{
+	    float: right;
+	    margin: 0 2% 2% 0 !important;
+    }
+    .filtersPanel .filter-block:nth-of-type(2n+1){
+	    margin-right: 0 !important;
+    }
+
+}
+
+
+
+/*=====================================================
+    
+    TABLETS LANDSCAPE & NETBOOKS
+
+=====================================================*/
+
+@media all and (min-width: 769px) {
+
+    .filtersPanel .filter-block,
+    .filtersPanel .filter-block:nth-of-type(2n+1){
+	    margin: 0 2% 1% 0 !important;
+    }
+    .filtersPanel .filter-block:nth-of-type(3n+1){
+	    margin-right: 0 !important;
+    }
+
+}
+
+
+
+/*=====================================================
+    
+    DESKTOP
+
+=====================================================*/
+
+@media all and (min-width: 981px) {
+
+/* BLOCKS */
+
+    .filtersPanel .filter-block,
+    .filtersPanel .filter-block:nth-of-type(2n+1),
+    .filtersPanel .filter-block:nth-of-type(3n+1){
+	    margin: 0 2% 2% 0 !important;
+    }
+    .filtersPanel .filter-block:nth-of-type(4n+1){
+	    margin-right: 0 !important;
+    }
+    .filter-block a.clearFilterOptions, 
+    .filter-block a.clearPriceRangeFilter{
+	    left: 5px;
+	    right: auto;
+    }
+    
+}

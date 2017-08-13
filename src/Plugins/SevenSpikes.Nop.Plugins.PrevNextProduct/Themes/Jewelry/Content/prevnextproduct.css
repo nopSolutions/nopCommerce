@@ -1,0 +1,94 @@
+﻿/*
+* Copyright 2014 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+* http://www.nop-templates.com/t/licensinginfo
+*/
+
+
+@media all and (min-width: 240px) {
+
+.overview .product-name{
+    overflow: hidden;
+}
+
+.previous-product,
+.next-product {
+	overflow: hidden;
+    width: 49%;
+    display: inline-block;
+    margin: 15px 0;
+}
+.previous-product a,
+.next-product a{
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 5px;    
+    box-shadow: inset 0 1px 0 #fff;
+    padding: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #b68c65;
+    text-shadow: 1px 1px 0 #fff;
+    height: 37px;
+    line-height: 37px;
+}
+
+.previous-product a{	
+    padding: 0 10px 0 35px;
+    background:url(img/prev.png) top 9px left 9px no-repeat,         url(img/boxpad3.png) bottom repeat-x;        
+}
+    .previous-product a:hover{	
+        padding: 0 10px 0 35px;
+        background:url(img/prev.png) top 9px left 9px no-repeat,             url(img/boxpad3.png) top repeat-x;        
+    }
+.next-product a {
+	padding: 0 35px 0 10px;
+    text-align: right;
+    background:url(img/next.png) top 9px right 9px no-repeat,         url(img/boxpad3.png) bottom repeat-x;
+}
+    .next-product a:hover {
+	    padding: 0 35px 0 10px;
+        text-align: right;
+        background:url(img/next.png) top 9px right 9px no-repeat,             url(img/boxpad3.png) top repeat-x;
+    }
+
+.previous-product a .previous-product-label, 
+.next-product a .next-product-label {
+    display: none;
+}
+
+}
+
+@media all and (min-width: 240px) and (max-width: 980px) {
+
+    .previous-product a > span,
+    .next-product a > span{
+        display: none;
+    }
+
+    .previous-product a,
+    .next-product a{
+        width: 43px;
+        height: 43px;
+        padding: 0;
+    }
+
+    .previous-product a {        
+        float: right;
+        padding: 0;
+        background:url(img/prev.png) center no-repeat,             url(img/boxpad3.png) bottom repeat-x;
+    }
+        .previous-product a:hover{
+            padding: 0;
+            background:url(img/prev.png) center no-repeat,             url(img/boxpad3.png) top repeat-x;
+        }
+    .next-product a {
+        float: left;
+        padding: 0;
+        background:url(img/next.png) center no-repeat,              url(img/boxpad3.png) bottom repeat-x;
+    }
+        .next-product a:hover{
+            padding: 0;
+            background:url(img/next.png) center no-repeat,                 url(img/boxpad3.png) top repeat-x;
+        }
+
+}

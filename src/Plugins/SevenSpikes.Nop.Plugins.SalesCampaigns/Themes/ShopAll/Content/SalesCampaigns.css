@@ -1,0 +1,34 @@
+﻿
+.product-variant-line {
+    min-height: 0;
+}
+
+/*jcarousel*/
+
+.jcarousel-item .item-picture:hover .countdownTimer {
+    opacity: 0;
+}
+
+.nop-jcarousel .jcarousel-item .item-picture {
+    position: relative;
+}
+
+
+/*product page grouped*/ 
+
+
+.product-variant-list .countdownTimer, 
+.product-variant-list .category-countdown {
+    top: 0;
+    right: 0;
+}
+.product-variant-list .vertical-align-bottom {
+    top: auto;
+}
+
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+}

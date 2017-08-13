@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="AttachmentsSettings.Enable">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.ProductAttachmentsPanelTitle">
+    <Value>Product Files</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.GroupAttachmentsByCategory">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.StoreFilesInDatabase">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.FileStoragePath">
+    <Value>~/Content/Files/Attachments</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.WidgetZone">
+    <Value>productdetails_before_collateral</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.AddFilesInOrderCompleteEmails">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.AddFilesInOrderPlaceEmails">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="AttachmentsSettings.OpenLinksInNewWindow">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="AttachmentDefaultSettings.Visible">
+    <Value>true</Value>
+  </Setting>
+</Settings>

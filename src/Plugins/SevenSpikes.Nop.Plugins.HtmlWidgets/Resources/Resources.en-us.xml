@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Menu.MenuName">
+    <Value>Html Widgets</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities">
+    <Value>Nop Html Widgets Entities</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget">
+    <Value>Html Widget</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.AddNew">
+    <Value>Add new Html Widget</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.BackToList">
+    <Value>Back to Html Widget list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.EditHtmlWidgetDetails">
+    <Value>Edit Html Widget Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.FromDate">
+    <Value>From Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.FromDate.Hint">
+    <Value>
+      The date from which the html widget will be displayed.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.HtmlContent">
+    <Value>Html Content</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.HtmlContent.Hint">
+    <Value>
+      The html content for the html widget.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.HtmlWidgetToWidgetZoneTabTitle">
+    <Value>Widget Zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.HtmlWidgetToWidgetZoneTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Html Widget before you can add it to a widget zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.Name.Hint">
+    <Value>
+      The name of the html widget.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.SettingsTabTitle">
+    <Value>Html Widget Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.StoresTabTitle">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.StoresTabTitle.SaveBeforeEdit">
+    <Value>You need to save the Html Widget before you can limit it to stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.SuccessfullyCreated">
+    <Value>Html Widget successfully created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.SuccessfullyDeleted">
+    <Value>Html Widget successfully deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.SuccessfullyEdited">
+    <Value>Html Widget successfully edited.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.ToDate">
+    <Value>To Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.ToDate.Hint">
+    <Value>
+      The date to which the html widget will be displayed.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.Visible">
+    <Value>Visible</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Entities.HtmlWidget.Visible.Hint">
+    <Value>
+      Specifies whether the html widget is visible.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Settings">
+    <Value>Nop Html Widgets Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Settings.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Settings.EnableHtmlWidgets">
+    <Value>Enable Html Widgets</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Settings.EnableHtmlWidgets.Hint">
+    <Value>Enables/Disables the html widgets in all html widget zones</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Submenus">
+    <Value>Submenu names</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Submenus.ManageHtmlWidgets">
+    <Value>Manage Html Widgets</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.Plugins.HtmlWidgets.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+</Language>

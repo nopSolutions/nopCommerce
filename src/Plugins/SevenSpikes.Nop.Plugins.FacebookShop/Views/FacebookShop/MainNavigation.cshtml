@@ -1,0 +1,80 @@
+﻿@using SevenSpikes.Nop.Plugins.FacebookShop.Models
+
+@model FacebookMainNavigationModel
+
+<ul class="top-menu">
+    <li class="tm-item">
+        <a class="tm-link home-link" href="@Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Index")" title="@T("HomePage")">@T("HomePage")</a>
+    </li>
+
+    @foreach (var category in Model.HeadCategories)
+    {
+        @RenderCategoryLine(category)
+    }
+    
+    @if (Model.Manufacturers.Count > 0)
+    {
+        <li class="tm-item manufacturers-item">
+            <a class="tm-link" href="#" title="@T("SevenSpikes.FacebookShop.Public.Menu.Manufacturers")">@T("SevenSpikes.FacebookShop.Public.Menu.Manufacturers")</a>
+            <ul class="sublist">
+                @foreach (var manufacturer in Model.Manufacturers)
+                {
+                    <li class="sl-item">
+                        <a class="sl-link" href="@Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Manufacturer", new { manufacturerId = manufacturer.Id })" title="@manufacturer.Name">@manufacturer.Name</a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+
+    @if (Model.SecondaryCategories.Count > 0)
+    {
+        <li class="tm-item more-categories-item">
+            <a class="tm-link" href="#" title="@T("SevenSpikes.FacebookShop.Public.Menu.MoreItem")">@T("SevenSpikes.FacebookShop.Public.Menu.MoreItem")</a>
+            <ul class="sublist">
+                @foreach (var category in Model.SecondaryCategories)
+                {
+                    @RenderSubCategoryLine(category)
+                }
+            </ul>
+        </li>
+    }
+
+    <li class="tm-item search-box">
+        @Html.Partial("SearchBox")
+    </li>
+</ul>
+
+@helper RenderCategoryLine(FacebookCategoryModel category)
+{
+    <li class="tm-item">
+        <a class="tm-link" href="@Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Category", new { categoryId = category.Id })">@category.Name</a>
+
+        @if (category.SubCategories.Count > 0)
+        {
+            <ul class="sublist">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderSubCategoryLine(subCategory)
+                }
+            </ul>
+        }
+    </li>
+}
+
+@helper RenderSubCategoryLine(FacebookCategoryModel category)
+{
+    <li class="sl-item">
+        <a class="sl-link" href="@Url.RouteUrl("SevenSpikes.Nop.Plugins.FacebookShop.Category", new { categoryId = category.Id })">@category.Name</a>
+
+        @if (category.SubCategories.Count > 0)
+        {
+            <ul class="sublist">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderSubCategoryLine(subCategory)
+                }
+            </ul>
+        }
+    </li>
+}

@@ -1,0 +1,44 @@
+﻿/*common styles*/
+.vertical-align-middle:before {
+    display: none;
+}
+.product-variant-line {
+    min-height: 0;
+}
+
+/*counter in the product box*/
+
+.item-grid .vertical-align-middle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 125px;
+}
+
+/*counter in the JCaraousel*/
+
+.jcarousel-item .vertical-align-middle > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 82px;
+}
+.jcarousel-item .vertical-align-bottom > div {
+    top: auto;
+}
+
+/*product page grouped*/
+
+.product-variant-list .countdownTimer {
+    left: 0;
+    right: 0;
+}
+
+.product-variant-list .vertical-align-middle {
+    top: 0;
+    bottom: 0;
+    height: 125px;
+    margin: auto;
+}

@@ -1,0 +1,8 @@
+Group: 7Spikes
+FriendlyName: Nop Attachments
+SystemName: SevenSpikes.Nop.Plugins.Attachments
+Version: 3.90
+SupportedVersions: 3.90
+Author: Seven Spikes
+DisplayOrder: 1
+FileName: SevenSpikes.Nop.Plugins.Attachments.dll

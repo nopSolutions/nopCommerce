@@ -1,0 +1,78 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model SevenSpikes.Nop.Plugins.AjaxCart.Models.AjaxCartButtonsModel
+
+@if (Model.AddProductToCartAjaxButtonModels.Count > 0)
+{
+    bool isThereAnyProductsWithAllowedQuantities = false;
+
+    if (!Model.IsAjax)
+    {
+        Html.AppendCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Themes/" + Model.NopAjaxCartSettingsModel.Theme + "/Content/styles.css");
+
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Scripts/jquery.json-2.2.min.js");
+        Html.AddScriptParts("~/Plugins/SevenSpikes.Nop.Plugins.AjaxCart/Scripts/AjaxCart.min.js");
+
+        Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.core.min.js");
+        Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.userevents.min.js");
+        Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.draganddrop.min.js");
+        Html.AddScriptParts("~/Administration/Scripts/kendo/2014.1.318/kendo.window.min.js");
+    }
+
+    for (var i = 0; i < Model.AddProductToCartAjaxButtonModels.Count; i++)
+    {
+        var button = Model.AddProductToCartAjaxButtonModels[i];
+
+        <div class="ajax-cart-button-wrapper" data-productid="@button.ProductId" data-isproductpage="@button.IsProductPage.ToString().ToLowerInvariant()">
+            @if (button.IsProductPage)
+            {
+                <input type="button" id="add-to-cart-button-@button.ProductId" value="@button.ButtonValue" class="button-1 add-to-cart-button nopAjaxCartProductVariantAddToCartButton" data-productid="@button.ProductId" />
+            }
+            else
+            {
+                if (Model.NopAjaxCartSettingsModel.EnableProductQuantityTextBox)
+                {
+                    if (button.AllowedQuantities.Count > 0)
+                    {
+                        isThereAnyProductsWithAllowedQuantities = true;
+
+                        <select id="@string.Concat("productQuantity", button.ProductId)" class="productQuantityDropdown">
+                            @foreach (var allowedQuantity in button.AllowedQuantities)
+                            {
+                                <option value="@allowedQuantity.Value">@allowedQuantity.Text</option>
+                            }
+                        </select>
+
+                        <input class="@string.Concat("productQuantityChanged", button.ProductId)" type="hidden" value="no" />
+                    }
+                    else
+                    {
+                        <input id="@string.Concat("productQuantity", button.ProductId)" type="text" class="productQuantityTextBox" value="@button.DefaultProductMinimumQuantity" />
+                    }
+                }
+
+                <input type="button" value="@button.ButtonValue" class="button-2 product-box-add-to-cart-button nopAjaxCartProductListAddToCartButton" data-productid="@button.ProductId" />
+            }
+
+            @if (!Model.IsAjax)
+            {
+                @Html.Hidden("addProductVariantToCartUrl", Url.RouteUrl("AddProductFromProductDetailsPageToCartAjax"))
+                @Html.Hidden("addProductToCartUrl", Url.RouteUrl("AddProductToCartAjax"))
+                @Html.Hidden("miniShoppingCartUrl", Url.RouteUrl("MiniShoppingCart"))
+                @Html.Hidden("flyoutShoppingCartUrl", Url.RouteUrl("NopAjaxCartFlyoutShoppingCart"))
+                @Html.Hidden("checkProductAttributesUrl", Url.RouteUrl("CheckIfProductOrItsAssociatedProductsHasAttributes"))
+                @Html.Hidden("getMiniProductDetailsViewUrl", Url.RouteUrl("GetMiniProductDetailsView"))
+                @Html.Hidden("flyoutShoppingCartPanelSelector", Html.Encode(Model.NopAjaxCartSettingsModel.FlyoutCartPanelSelector))
+                @Html.Hidden("shoppingCartMenuLinkSelector", Html.Encode(Model.NopAjaxCartSettingsModel.ShoppingCartMenuLinkSelector))
+                @Html.Partial("AdditionalPanelsToUpdate")
+            }
+
+            @if (isThereAnyProductsWithAllowedQuantities && i == Model.AddProductToCartAjaxButtonModels.Count - 1)
+            {
+                <input type="hidden" class="ajaxCartAllowedQuantitesHover" data-productItemSelector="@Model.NopAjaxCartSettingsModel.ProductBoxProductItemElementSelector" />
+            }
+        </div>
+    }
+}

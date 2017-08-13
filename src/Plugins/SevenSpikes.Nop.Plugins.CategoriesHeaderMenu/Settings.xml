@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="CategoriesHeaderMenuSettings.Enabled">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="CategoriesHeaderMenuSettings.ShowHomePageTopLevelCategoriesOnly">
+    <Value>True</Value>
+  </Setting>
+  <Setting Name="CategoriesHeaderMenuSettings.ShowManufacturers">
+    <Value>True</Value>
+  </Setting>
+</Settings>

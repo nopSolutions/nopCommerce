@@ -1,0 +1,89 @@
+﻿@** Copyright 2015 Seven Spikes Ltd. All rights reserved. (http://www.nop-templates.com)
+    * http://www.nop-templates.com/t/licensinginfo
+*@
+
+@model global::Nop.Web.Models.Catalog.ProductDetailsModel
+@using Nop.Web.Models.Catalog
+
+<div class="product-overview-line">
+    <div class="product-essential">
+        <!--product pictures-->
+        <div class="gallery">
+            <div class="picture">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+            </div>
+        </div>
+        <div class="overview">
+            @if (!String.IsNullOrEmpty(Model.Name))
+            {
+                <h1 class="product-variant-name">
+                    @Model.Name
+                </h1>
+            }
+            @if (!String.IsNullOrEmpty(Model.ShortDescription))
+            {
+                <div class="short-description">
+                    @Html.Raw(Model.ShortDescription)
+                </div>
+            }
+            @{
+
+                var dataDictPrice = new ViewDataDictionary();
+                dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
+
+                var dataDictAttributes = new ViewDataDictionary { TemplateInfo = { HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id) } };
+                @Html.Partial("_AjaxCartProductAttributes", Model.ProductAttributes, dataDictAttributes)
+
+                if (Model.IsRental)
+                {
+                    @Html.Partial("_AjaxCartRentalInfo", Model)
+                }
+
+                var dataDictAddToCart = new ViewDataDictionary();
+                dataDictAddToCart.Add("ProductId", ViewData["ProductId"]);
+                dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+
+                bool isAddToCartButton = (bool)ViewData["IsAddToCartButton"];
+
+                if (isAddToCartButton)
+                {
+                    @Html.Partial("MiniProductDetailsViewProductAddToCart", Model.AddToCart, dataDictAddToCart)
+                }
+                else
+                {
+                    @Html.Partial("MiniProductDetailsViewProductAddToWishlist", Model.AddToCart, dataDictAddToCart)
+                }
+            }
+
+            <span class="message-error"></span>
+        </div>
+    </div>
+
+    @{
+        MvcHtmlString tierPrice = MvcHtmlString.Empty;
+        if (Model.TierPrices.Count > 0 && !(Model.TierPrices.Count == 1 && Model.TierPrices[0].Quantity <= 1))
+        {
+            tierPrice = Html.Partial("_ProductTierPrices", Model.TierPrices);
+        }
+
+        MvcHtmlString giftCard = MvcHtmlString.Empty;
+        if (Model.GiftCard.IsGiftCard)
+        {
+            var dataDictGiftCard = new ViewDataDictionary { TemplateInfo = { HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id) } };
+            giftCard = Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard);
+        }
+    }
+
+    @if (!MvcHtmlString.IsNullOrEmpty(tierPrice) || !MvcHtmlString.IsNullOrEmpty(giftCard))
+    {
+        <div class="product-collateral">
+
+            @tierPrice
+
+            @giftCard
+
+        </div>
+    }
+
+</div>

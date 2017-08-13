@@ -1,0 +1,9 @@
+﻿/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+    Disable default header menu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+.header-menu{
+    display:none !important;
+}
+.header-menu.categories-header-menu {
+    display:block !important;
+}
