@@ -457,7 +457,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                 attachmentFilePath, attachmentFileName);
@@ -537,7 +537,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName, 
                 attachmentFilePath, attachmentFileName);
@@ -579,7 +579,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -620,7 +620,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -659,7 +659,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                 attachmentFilePath, attachmentFileName);
@@ -696,7 +696,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -772,7 +772,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -811,7 +811,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = order.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -885,8 +885,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
-            var toName = string.Format("{0} {1}", 
-                recurringPayment.InitialOrder.BillingAddress.FirstName, recurringPayment.InitialOrder.BillingAddress.LastName);
+            var toName = $"{recurringPayment.InitialOrder.BillingAddress.FirstName} {recurringPayment.InitialOrder.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -923,8 +922,7 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
-            var toName = string.Format("{0} {1}",
-                recurringPayment.InitialOrder.BillingAddress.FirstName, recurringPayment.InitialOrder.BillingAddress.LastName);
+            var toName = $"{recurringPayment.InitialOrder.BillingAddress.FirstName} {recurringPayment.InitialOrder.BillingAddress.LastName}";
 
             return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
         }
@@ -1725,8 +1723,7 @@ namespace Nop.Services.Messages
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    WebUtility.HtmlEncode(senderName), WebUtility.HtmlEncode(senderEmail), body);
+                body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br /><br />{body}";
             }
             else
             {
@@ -1788,8 +1785,7 @@ namespace Nop.Services.Messages
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-                body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                    WebUtility.HtmlEncode(senderName), WebUtility.HtmlEncode(senderEmail), body);
+                body = $"<strong>From</strong>: {WebUtility.HtmlEncode(senderName)} - {WebUtility.HtmlEncode(senderEmail)}<br /><br />{body}";
             }
             else
             {

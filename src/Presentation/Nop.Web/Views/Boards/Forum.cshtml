@@ -116,11 +116,11 @@
                                     break;
                                 case ForumTopicType.Sticky:
                                     topicType = "sticky";
-                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                    topicText = $"[{T("Forum.Sticky")}]";
                                     break;
                                 case ForumTopicType.Announcement:
                                     topicType = "announcement";
-                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                    topicText = $"[{T("Forum.Announcement")}]";
                                     break;
                                 default:
                                     topicType = "post";

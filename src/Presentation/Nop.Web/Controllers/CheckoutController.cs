@@ -1110,8 +1110,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int billingAddressId;
-                int.TryParse(model.Form["billing_address_id"], out billingAddressId);
+                int.TryParse(model.Form["billing_address_id"], out int billingAddressId);
 
                 if (billingAddressId > 0)
                 {
@@ -1285,8 +1284,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, null, _storeContext.CurrentStore.Id);
                 }
 
-                int shippingAddressId;
-                int.TryParse(model.Form["shipping_address_id"], out shippingAddressId);
+                int.TryParse(model.Form["shipping_address_id"], out int shippingAddressId);
 
                 if (shippingAddressId > 0)
                 {
@@ -1633,7 +1631,7 @@ namespace Nop.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
+                            redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
                         });
                     }
 

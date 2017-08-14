@@ -110,10 +110,10 @@ namespace Nop.Web.Controllers
             foreach (var topic in topics)
             {
                 string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
+                string content = $"{repliesText}: {topic.NumReplies.ToString()}, {viewsText}: {topic.Views.ToString()}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
-                    String.Format("urn:store:{0}:activeDiscussions:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), topic.LastPostTime ?? topic.UpdatedOnUtc));
+                    $"urn:store:{_storeContext.CurrentStore.Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
             }
             feed.Items = items;
 
@@ -192,9 +192,9 @@ namespace Nop.Web.Controllers
                 foreach (var topic in topics)
                 {
                     string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                    string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies, topic.Views, repliesText, viewsText);
+                    string content = $"{repliesText}: {topic.NumReplies}, {viewsText}: {topic.Views}";
 
-                    items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), topic.LastPostTime ?? topic.UpdatedOnUtc));
+                    items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{_storeContext.CurrentStore.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
                 }
 
                 feed.Items = items;
@@ -839,7 +839,7 @@ namespace Nop.Web.Controllers
                     {
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
                     }
-                    return Redirect(string.Format("{0}#{1}", url, forumPost.Id));
+                    return Redirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -962,7 +962,7 @@ namespace Nop.Web.Controllers
                     {
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
                     }
-                    return Redirect(string.Format("{0}#{1}", url, forumPost.Id));
+                    return Redirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -1007,8 +1007,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("fs", "").Trim();
-                    int forumSubscriptionId;
-                    if (Int32.TryParse(id, out forumSubscriptionId))
+                    if (Int32.TryParse(id, out int forumSubscriptionId))
                     {
                         var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
                         if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)

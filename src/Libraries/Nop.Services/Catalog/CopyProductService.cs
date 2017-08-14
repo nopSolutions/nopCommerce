@@ -323,8 +323,7 @@ namespace Nop.Services.Catalog
                 productCopy.ProductWarehouseInventory.Add(pwiCopy);
 
                 //quantity change history
-                var message = string.Format("{0} {1}", _localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses"),
-                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
+                var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
                 _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
             }
             _productService.UpdateProduct(productCopy);
@@ -620,7 +619,7 @@ namespace Nop.Services.Catalog
                 var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
                 foreach (var associatedProduct in associatedProducts)
                 {
-                    var associatedProductCopy = CopyProduct(associatedProduct, string.Format("Copy of {0}", associatedProduct.Name),
+                    var associatedProductCopy = CopyProduct(associatedProduct, $"Copy of {associatedProduct.Name}",
                         isPublished, copyImages, false);
                     associatedProductCopy.ParentGroupedProductId = productCopy.Id;
                     _productService.UpdateProduct(productCopy);

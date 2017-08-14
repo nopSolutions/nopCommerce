@@ -149,7 +149,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
             var shippingMethodId = model.ShippingMethodId;
             var rate = model.Rate;
 
-            _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{0}", shippingMethodId), rate);
+            _settingService.SetSetting(
+                $"ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{shippingMethodId}", rate);
 
             return new NullJsonResult();
         }
@@ -157,7 +158,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
         [NonAction]
         protected decimal GetFixedShippingRateValue(int shippingMethodId)
         {
-            var rate = _settingService.GetSettingByKey<decimal>(string.Format("ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{0}", shippingMethodId));
+            var rate = _settingService.GetSettingByKey<decimal>(
+                $"ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{shippingMethodId}");
             return rate;
         }
 

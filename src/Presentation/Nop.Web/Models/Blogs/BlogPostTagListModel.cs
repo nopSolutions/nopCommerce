@@ -20,8 +20,7 @@ namespace Nop.Web.Models.Blogs
             foreach (var tag in Tags)
                 itemWeights.Add(tag.BlogPostCount);
 
-            double mean;
-            double stdDev = StdDev(itemWeights, out mean);
+            double stdDev = StdDev(itemWeights, out double mean);
             return GetFontSize(blogPostTag.BlogPostCount, mean, stdDev);
         }
 

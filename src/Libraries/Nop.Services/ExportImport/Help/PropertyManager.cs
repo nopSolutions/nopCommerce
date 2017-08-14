@@ -116,7 +116,7 @@ namespace Nop.Services.ExportImport.Help
                         fCell.Value = dropDownElement;
                     }
 
-                    validator.Formula.ExcelFormula = string.Format("{0}!{1}:{2}", fWorksheet.Name, fWorksheet.Cells[1, prop.PropertyOrderPosition].Address, fWorksheet.Cells[dropDownElements.Length, prop.PropertyOrderPosition].Address);
+                    validator.Formula.ExcelFormula = $"{fWorksheet.Name}!{fWorksheet.Cells[1, prop.PropertyOrderPosition].Address}:{fWorksheet.Cells[dropDownElements.Length, prop.PropertyOrderPosition].Address}";
                 }
                 else
                 {

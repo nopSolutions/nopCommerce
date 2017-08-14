@@ -68,7 +68,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
                 _taxRateService.DeleteTaxRate(taxRate);
             }
 
-            var settingKey = string.Format("Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{0}", eventMessage.Entity.Id);
+            var settingKey = $"Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{eventMessage.Entity.Id}";
             var setting = _settingService.GetSetting(settingKey);
             if (setting != null)
                 _settingService.DeleteSetting(setting);

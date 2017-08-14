@@ -28,7 +28,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Services
 
         private string GetEmbeddedFileContent(string resourceName)
         {
-            string fullResourceName = string.Format("Nop.Plugin.Feed.GoogleShopping.Files.{0}", resourceName);
+            string fullResourceName = $"Nop.Plugin.Feed.GoogleShopping.Files.{resourceName}";
             var assem = this.GetType().Assembly;
             using (var stream = assem.GetManifestResourceStream(fullResourceName))
             using (var reader = new StreamReader(stream))

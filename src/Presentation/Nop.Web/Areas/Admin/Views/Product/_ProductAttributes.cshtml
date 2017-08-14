@@ -6,7 +6,7 @@
 {
     foreach (var attribute in Model)
     {
-        string controlId = string.Format("product_attribute_{0}", attribute.Id);
+        string controlId = $"product_attribute_{attribute.Id}";
         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
         <div class="form-group">
             <div class="col-sm-4">

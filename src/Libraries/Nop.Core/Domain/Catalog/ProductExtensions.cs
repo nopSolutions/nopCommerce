@@ -28,8 +28,7 @@ namespace Nop.Core.Domain.Catalog
                 .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {
-                int id;
-                if (int.TryParse(idStr, out id))
+                if (int.TryParse(idStr, out int id))
                     ids.Add(id);
             }
 

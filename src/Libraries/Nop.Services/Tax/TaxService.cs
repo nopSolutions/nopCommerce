@@ -10,7 +10,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Extensions;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -192,9 +191,9 @@ namespace Nop.Services.Tax
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         Country = country,
-                        CountryId = country.Return(c => c.Id, 0),
+                        CountryId = country?.Id ?? 0,
                         StateProvince = state,
-                        StateProvinceId = state.Return(sp => sp.Id, 0),
+                        StateProvinceId = state?.Id ?? 0,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };
@@ -302,7 +301,7 @@ namespace Nop.Services.Tax
             {
                 foreach (var error in calculateTaxResult.Errors)
                 {
-                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
                 }
             }
         }
@@ -424,8 +423,7 @@ namespace Nop.Services.Tax
             }
 
 
-            bool isTaxable;
-            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
+            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out bool isTaxable);
 
             if (priceIncludesTax)
             {
@@ -499,8 +497,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetShippingPrice(price, includingTax, customer, out taxRate);
+            return GetShippingPrice(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -550,9 +547,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetPaymentMethodAdditionalFee(price, includingTax,
-                customer, out taxRate);
+            return GetPaymentMethodAdditionalFee(price, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -614,8 +609,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            decimal taxRate;
-            return GetCheckoutAttributePrice(cav, includingTax, customer, out taxRate);
+            return GetCheckoutAttributePrice(cav, includingTax, customer, out decimal _);
         }
 
         /// <summary>
@@ -657,8 +651,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string fullVatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(fullVatNumber, out name, out address);
+            return GetVatNumberStatus(fullVatNumber, out string _, out string _);
         }
 
         /// <summary>
@@ -698,8 +691,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
         {
-            string name, address;
-            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
+            return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out string _, out string _);
         }
 
         /// <summary>
@@ -728,8 +720,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
 
-            Exception exception;
-            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out exception);
+            return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out Exception _);
         }
 
         /// <summary>

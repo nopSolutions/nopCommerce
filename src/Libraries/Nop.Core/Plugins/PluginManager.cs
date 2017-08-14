@@ -140,9 +140,9 @@ namespace Nop.Core.Plugins
 
                         //some validation
                         if (String.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
-                            throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", descriptionFile.FullName));
+                            throw new Exception($"A plugin '{descriptionFile.FullName}' has no system name. Try assigning the plugin a unique name and recompiling.");
                         if (referencedPlugins.Contains(pluginDescriptor))
-                            throw new Exception(string.Format("A plugin with '{0}' system name is already defined", pluginDescriptor.SystemName));
+                            throw new Exception($"A plugin with '{pluginDescriptor.SystemName}' system name is already defined");
 
                         //set 'Installed' property
                         pluginDescriptor.Installed = installedPluginSystemNames
@@ -151,7 +151,7 @@ namespace Nop.Core.Plugins
                         try
                         {
                             if (descriptionFile.Directory == null)
-                                throw new Exception(string.Format("Directory cannot be resolved for '{0}' description file", descriptionFile.Name));
+                                throw new Exception($"Directory cannot be resolved for '{descriptionFile.Name}' description file");
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
@@ -188,7 +188,7 @@ namespace Nop.Core.Plugins
                         catch (ReflectionTypeLoadException ex)
                         {
                             //add a plugin name. this way we can easily identify a problematic plugin
-                            var msg = string.Format("Plugin '{0}'. ", pluginDescriptor.FriendlyName);
+                            var msg = $"Plugin '{pluginDescriptor.FriendlyName}'. ";
                             foreach (var e in ex.LoaderExceptions)
                                 msg += e.Message + Environment.NewLine;
 
@@ -198,7 +198,7 @@ namespace Nop.Core.Plugins
                         catch (Exception ex)
                         {
                             //add a plugin name. this way we can easily identify a problematic plugin
-                            var msg = string.Format("Plugin '{0}'. {1}", pluginDescriptor.FriendlyName, ex.Message);
+                            var msg = $"Plugin '{pluginDescriptor.FriendlyName}'. {ex.Message}";
 
                             var fail = new Exception(msg, ex);
                             throw fail;
@@ -360,7 +360,7 @@ namespace Nop.Core.Plugins
             {
                 var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
                 if (string.IsNullOrEmpty(fileNameWithoutExt))
-                    throw new Exception(string.Format("Cannot get file extension for {0}", fileInfo.Name));
+                    throw new Exception($"Cannot get file extension for {fileInfo.Name}");
 
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {

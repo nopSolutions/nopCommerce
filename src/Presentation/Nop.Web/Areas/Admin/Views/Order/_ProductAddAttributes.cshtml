@@ -9,7 +9,7 @@
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Convert.ToInt32(ViewData["productId"]);
     var attributesHaveConditions = Model.Any(a => a.HasCondition);
-    var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
+    var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
 
     var getAttributeValueName = new Func<OrderModel.AddOrderProductModel.ProductAttributeValueModel, string>((attributeValue) =>
         string.IsNullOrEmpty(attributeValue.PriceAdjustment) ? attributeValue.Name : T("Products.ProductAttributes.PriceAdjustment",
@@ -21,7 +21,7 @@
             {
                 <div id="product_attribute_row_@(attribute.Id)" class="form-group">
                     @{
-                        string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                        string controlId = $"product_attribute_{attribute.Id}";
                         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                     }
                     <div class="col-md-3">
@@ -37,7 +37,7 @@
                             {
                                 case AttributeControlType.DropdownList:
                                     {
-                                        <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onchange=\"showHideDropdownQuantity('{0}')\"", controlId)) : null)>
+                                        <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
                                             @if (!attribute.IsRequired)
                                             {
                                                 <option value="0">---</option>
@@ -72,7 +72,7 @@
                                             <div class="radio">
                                                 <label for="@(controlId)_@(attributeValue.Id)">
                                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                           @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onclick=\"showHideRadioQuantity('{0}')\"", controlId)) : null) />
+                                                           @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                                     @getAttributeValueName(attributeValue)
                                                 </label>
 
@@ -100,7 +100,7 @@
                                             <div class="checkbox">
                                                 <label for="@(controlId)_@(attributeValue.Id)">
                                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
-                                                           @(attributeValue.CustomerEntersQty ? Html.Raw(string.Format("onchange=\"showHideCheckboxQuantity('{0}_{1}')\"", controlId, attributeValue.Id)) : null) />
+                                                           @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>
                                                     @getAttributeValueName(attributeValue)
                                                 </label>
 
@@ -246,7 +246,7 @@
             @*generate change event script*@
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                string controlId = $"product_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

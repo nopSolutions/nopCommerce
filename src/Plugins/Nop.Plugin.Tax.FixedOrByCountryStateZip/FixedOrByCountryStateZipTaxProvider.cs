@@ -57,7 +57,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 //the tax rate calculation by fixed rate
                 result = new CalculateTaxResult
                 {
-                    TaxRate = _settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{0}", calculateTaxRequest.TaxCategoryId))
+                    TaxRate = _settingService.GetSettingByKey<decimal>(
+                        $"Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{calculateTaxRequest.TaxCategoryId}")
                 };
             }
             else

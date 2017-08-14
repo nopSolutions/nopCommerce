@@ -8,7 +8,6 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Extensions;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -99,10 +98,7 @@ namespace Nop.Web.Framework
         /// <returns>String value of cookie</returns>
         protected virtual string GetCustomerCookie()
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
-                return null;
-
-            return _httpContextAccessor.HttpContext.Request.Cookies[CUSTOMER_COOKIE_NAME];
+            return _httpContextAccessor.HttpContext?.Request?.Cookies[CUSTOMER_COOKIE_NAME];
         }
 
         /// <summary>
@@ -111,7 +107,7 @@ namespace Nop.Web.Framework
         /// <param name="customerGuid">Guid of the customer</param>
         protected virtual void SetCustomerCookie(Guid customerGuid)
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Response == null)
+            if (_httpContextAccessor.HttpContext?.Response == null)
                 return;
 
             //delete current cookie value
@@ -140,7 +136,7 @@ namespace Nop.Web.Framework
         /// <returns>The found language</returns>
         protected virtual Language GetLanguageFromUrl()
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
+            if (_httpContextAccessor.HttpContext?.Request == null)
                 return null;
 
             //whether the requsted URL is localized
@@ -161,7 +157,7 @@ namespace Nop.Web.Framework
         /// <returns>The found language</returns>
         protected virtual Language GetLanguageFromRequest()
         {
-            if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
+            if (_httpContextAccessor.HttpContext?.Request == null)
                 return null;
 
             //get request culture
@@ -392,7 +388,7 @@ namespace Nop.Web.Framework
             set
             {
                 //get passed language identifier
-                var languageId = value.Return(language => language.Id, 0);
+                var languageId = value?.Id ?? 0;
 
                 //and save it
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
@@ -455,7 +451,7 @@ namespace Nop.Web.Framework
             set
             {
                 //get passed currency identifier
-                var currencyId = value.Return(currency => currency.Id, 0);
+                var currencyId = value?.Id ?? 0;
 
                 //and save it
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 

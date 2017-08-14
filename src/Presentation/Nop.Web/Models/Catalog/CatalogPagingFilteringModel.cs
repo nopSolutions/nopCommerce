@@ -370,8 +370,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int specId;
-                    int.TryParse(spec.Trim(), out specId);
+                    int.TryParse(spec.Trim(), out int specId);
                     if (!result.Contains(specId))
                         result.Add(specId);
                 }
@@ -439,7 +438,7 @@ namespace Nop.Web.Models.Catalog
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<int> { x.SpecificationAttributeOptionId });
-                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
+                    var queryString = $"{QUERYSTRINGPARAM}={GenerateFilteredSpecQueryParam(alreadyFiltered.ToList())}";
                     var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
 
                     return new SpecificationFilterItem()

@@ -84,12 +84,9 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
-                    return;
-
                 //check request query parameters
-                var request = context.HttpContext.Request;
-                if (request.Query == null || !request.Query.Any())
+                var request = context?.HttpContext?.Request;
+                if (request?.Query == null || !request.Query.Any())
                     return;
 
                 //try to find by ID

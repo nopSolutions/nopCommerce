@@ -40,8 +40,7 @@ namespace Nop.Services.Orders
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             ids.Add(id);
                         }
@@ -100,8 +99,7 @@ namespace Nop.Services.Orders
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
+                        if (int.TryParse(valueStr, out int id))
                         {
                             var value = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
                             if (value != null)
@@ -136,8 +134,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == checkoutAttributeId)
                             {
@@ -191,8 +188,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == ca.Id)
                             {
@@ -261,8 +257,7 @@ namespace Nop.Services.Orders
                         if (node.Attributes != null && node.Attributes["ID"] != null)
                         {
                             string str1 = node.Attributes["ID"].InnerText.Trim();
-                            int id;
-                            if (int.TryParse(str1, out id))
+                            if (int.TryParse(str1, out int id))
                             {
                                 if (checkoutAttributeIdsToRemove.Contains(id))
                                 {
@@ -363,8 +358,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == attribute.Id)
                             {

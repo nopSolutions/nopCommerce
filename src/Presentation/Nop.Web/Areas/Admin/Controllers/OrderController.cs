@@ -293,7 +293,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                var controlId = string.Format("product_attribute_{0}", attribute.Id);
+                var controlId = $"product_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -309,7 +309,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 {
                                     //get quantity entered by customer
                                     var quantity = 1;
-                                    var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
+                                    var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
                                     if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                         errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
@@ -331,7 +331,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                                     {
                                         //get quantity entered by customer
                                         var quantity = 1;
-                                        var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, item)];
+                                        var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
                                         if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                             errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
@@ -353,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 //get quantity entered by customer
                                 var quantity = 1;
-                                var quantityStr = form[string.Format("product_attribute_{0}_{1}_qty", attribute.Id, selectedAttributeId)];
+                                var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) && (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
 
@@ -394,8 +394,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid downloadGuid;
-                            Guid.TryParse(form[controlId], out downloadGuid);
+                            Guid.TryParse(form[controlId], out Guid downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -713,13 +712,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
                     model.ShippingAddressGoogleMapsUrl =
-                        string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
-                            WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " +
-                                                 order.ShippingAddress.ZipPostalCode + " " +
-                                                 order.ShippingAddress.City + " " +
-                                                 (order.ShippingAddress.Country != null
-                                                     ? order.ShippingAddress.Country.Name
-                                                     : "")));
+                        $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
                 }
                 else
                 {
@@ -727,12 +720,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         model.PickupAddress = order.PickupAddress.ToModel();
                         model.PickupAddressGoogleMapsUrl =
-                            string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}",
-                                WebUtility.UrlEncode(string.Format("{0} {1} {2} {3}", order.PickupAddress.Address1,
-                                    order.PickupAddress.ZipPostalCode, order.PickupAddress.City,
-                                    order.PickupAddress.Country != null
-                                        ? order.PickupAddress.Country.Name
-                                        : string.Empty)));
+                            $"http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
                     }
                 }
                 model.ShippingMethod = order.ShippingMethod;
@@ -852,8 +840,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var presetQty = 1;
             var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
-            decimal taxRate;
-            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out taxRate);
+            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out decimal taxRate);
             decimal presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out taxRate);
 
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
@@ -945,7 +932,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Id = shipment.Id,
                 OrderId = shipment.OrderId,
                 TrackingNumber = shipment.TrackingNumber,
-                TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
+                TotalWeight = shipment.TotalWeight.HasValue ? $"{shipment.TotalWeight:F2} [{baseWeightIn}]" : "",
                 ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
                 ShippedDateUtc = shipment.ShippedDateUtc,
                 CanShip = !shipment.ShippedDateUtc.HasValue,
@@ -981,8 +968,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         AttributeInfo = orderItem.AttributeDescription,
                         ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
                         ShipSeparately = orderItem.Product.ShipSeparately,
-                        ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
+                        ItemWeight = orderItem.ItemWeight.HasValue ? $"{orderItem.ItemWeight:F2} [{baseWeightIn}]" : "",
+                        ItemDimensions = $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimensionIn}]",
                         QuantityOrdered = qtyOrdered,
                         QuantityInThisShipment = qtyInThisShipment,
                         QuantityInAllShipments = qtyInAllShipments,
@@ -1220,7 +1207,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatusId = x.ShippingStatusId,
                         CustomerEmail = x.BillingAddress.Email,
-                        CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
+                        CustomerFullName = $"{x.BillingAddress.FirstName} {x.BillingAddress.LastName}",
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                         CustomOrderNumber = x.CustomOrderNumber
                     };
@@ -1848,7 +1835,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Order status has been edited. New status: {0}", order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
+                    Note = $"Order status has been edited. New status: {order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -1937,7 +1924,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
-            return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
         }
 
         [HttpPost, ActionName("List")]
@@ -2234,21 +2221,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No order item found with the specified id");
 
 
-            decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
-            int quantity;
-            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out unitPriceInclTax))
+            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out decimal unitPriceInclTax))
                 unitPriceInclTax = orderItem.UnitPriceInclTax;
-            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out unitPriceExclTax))
+            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out decimal unitPriceExclTax))
                 unitPriceExclTax = orderItem.UnitPriceExclTax;
-            if (!int.TryParse(form["pvQuantity" + orderItemId], out quantity))
+            if (!int.TryParse(form["pvQuantity" + orderItemId], out int quantity))
                 quantity = orderItem.Quantity;
-            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out discountInclTax))
+            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out decimal discountInclTax))
                 discountInclTax = orderItem.DiscountAmountInclTax;
-            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out discountExclTax))
+            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out decimal discountExclTax))
                 discountExclTax = orderItem.DiscountAmountExclTax;
-            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out priceInclTax))
+            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out decimal priceInclTax))
                 priceInclTax = orderItem.PriceInclTax;
-            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out priceExclTax))
+            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out decimal priceExclTax))
                 priceExclTax = orderItem.PriceExclTax;
 
             if (quantity > 0)
@@ -2667,16 +2652,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             //save order item
 
             //basic properties
-            decimal unitPriceInclTax;
-            decimal.TryParse(form["UnitPriceInclTax"], out unitPriceInclTax);
-            decimal unitPriceExclTax;
-            decimal.TryParse(form["UnitPriceExclTax"], out unitPriceExclTax);
-            int quantity;
-            int.TryParse(form["Quantity"], out quantity);
-            decimal priceInclTax;
-            decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
-            decimal priceExclTax;
-            decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
+            decimal.TryParse(form["UnitPriceInclTax"], out decimal unitPriceInclTax);
+            decimal.TryParse(form["UnitPriceExclTax"], out decimal unitPriceExclTax);
+            int.TryParse(form["Quantity"], out int quantity);
+            decimal.TryParse(form["SubTotalInclTax"], out decimal priceInclTax);
+            decimal.TryParse(form["SubTotalExclTax"], out decimal priceExclTax);
 
             //warnings
             var warnings = new List<string>();
@@ -3187,8 +3167,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
                     ShipSeparately = orderItem.Product.ShipSeparately,
-                    ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
+                    ItemWeight = orderItem.ItemWeight.HasValue ? $"{orderItem.ItemWeight:F2} [{baseWeightIn}]" : "",
+                    ItemDimensions =$"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimensionIn}]",
                     QuantityOrdered = qtyOrdered,
                     QuantityInThisShipment = qtyInThisShipment,
                     QuantityInAllShipments = qtyInAllShipments,
@@ -3284,7 +3264,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 int qtyToAdd = 0; //parse quantity
                 foreach (string formKey in form.Keys)
-                    if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
                         break;
@@ -3297,7 +3277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner
                     foreach (string formKey in form.Keys)
-                        if (formKey.Equals(string.Format("warehouse_{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                        if (formKey.Equals($"warehouse_{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
                             int.TryParse(form[formKey], out warehouseId);
                             break;
@@ -3310,7 +3290,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 foreach (string formKey in form.Keys)
-                    if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
                         break;
@@ -3639,7 +3619,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _orderSettings.GeneratePdfInvoiceInCustomerLanguage ? 0 : _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, MimeTypes.ApplicationPdf, string.Format("packagingslip_{0}.pdf", shipment.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, $"packagingslip_{shipment.Id}.pdf");
         }
 
         [HttpPost, ActionName("ShipmentList")]

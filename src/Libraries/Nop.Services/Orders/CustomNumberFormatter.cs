@@ -54,7 +54,7 @@ namespace Nop.Services.Orders
                 //if(!string.IsNullOrEmpty(formatValue) && !string.IsNullOrEmpty(maskForReplase))
                 //    customNumber = customNumber.Replace(maskForReplase, returnRequest.Id.ToString(formatValue));
                 //else
-                //    customNumber = customNumber.Insert(0, string.Format("{0}-", returnRequest.Id));
+                //    customNumber = customNumber.Insert(0, $"{returnRequest.Id}-");
             }
 
             return customNumber;
@@ -85,7 +85,7 @@ namespace Nop.Services.Orders
             //if (!string.IsNullOrEmpty(formatValue) && !string.IsNullOrEmpty(maskForReplase))
             //    customNumber = customNumber.Replace(maskForReplase, order.Id.ToString(formatValue));
             //else
-            //    customNumber = customNumber.Insert(0, string.Format("{0}-", order.Id));
+            //    customNumber = customNumber.Insert(0, $"{order.Id}-");
 
 
             return customNumber;

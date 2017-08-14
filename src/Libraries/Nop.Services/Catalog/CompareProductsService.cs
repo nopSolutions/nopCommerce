@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         protected virtual List<int> GetComparedProductIds()
         {
             var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null || httpContext.Request == null)
+            if (httpContext?.Request == null)
                 return new List<int>();
 
             //try to get cookie

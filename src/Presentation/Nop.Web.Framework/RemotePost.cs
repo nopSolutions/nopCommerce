@@ -91,16 +91,17 @@ namespace Nop.Web.Framework
             //text
             var sb = new StringBuilder();
             sb.Append("<html><head>");
-            sb.Append(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
+            sb.Append($"</head><body onload=\"document.{FormName}.submit()\">");
             if (!string.IsNullOrEmpty(AcceptCharset))
             {
                 //AcceptCharset specified
-                sb.Append(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" accept-charset=\"{3}\">", FormName, Method, Url, AcceptCharset));
+                sb.Append(
+                    $"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" accept-charset=\"{AcceptCharset}\">");
             }
             else
             {
                 //no AcceptCharset specified
-                sb.Append(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
+                sb.Append($"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" >");
             }
             if (NewInputForEachValue)
             {
@@ -111,7 +112,8 @@ namespace Nop.Web.Framework
                     {
                         foreach (string value in values)
                         {
-                            sb.Append(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", WebUtility.HtmlEncode(key), WebUtility.HtmlEncode(value)));
+                            sb.Append(
+                                $"<input name=\"{WebUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(value)}\">");
                         }
                     }
                 }
@@ -119,7 +121,8 @@ namespace Nop.Web.Framework
             else
             {
                 for (int i = 0; i < _inputValues.Keys.Count; i++)
-                    sb.Append(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", WebUtility.HtmlEncode(_inputValues.Keys[i]), WebUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])));
+                    sb.Append(
+                        $"<input name=\"{WebUtility.HtmlEncode(_inputValues.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])}\">");
             }
             sb.Append("</form>");
             sb.Append("</body></html>");

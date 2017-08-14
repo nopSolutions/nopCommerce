@@ -455,7 +455,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     Id = x.Id,
                     CheckoutAttributeId = x.CheckoutAttributeId,
-                    Name = x.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                    Name = x.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : $"{x.Name} - {x.ColorSquaresRgb}",
                     ColorSquaresRgb = x.ColorSquaresRgb,
                     PriceAdjustment = x.PriceAdjustment,
                     WeightAdjustment = x.WeightAdjustment,

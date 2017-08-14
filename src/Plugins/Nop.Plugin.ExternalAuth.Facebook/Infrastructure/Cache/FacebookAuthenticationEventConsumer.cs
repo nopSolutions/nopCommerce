@@ -31,7 +31,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure.Cache
 
         public void HandleEvent(CustomerAutoRegisteredByExternalMethodEvent eventMessage)
         {
-            if (eventMessage?.Customer == null || eventMessage?.AuthenticationParameters == null)
+            if (eventMessage?.Customer == null || eventMessage.AuthenticationParameters == null)
                 return;
 
             //handle event only for this authentication method

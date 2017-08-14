@@ -194,7 +194,7 @@ namespace Nop.Web.Factories
                 if (String.IsNullOrEmpty(logo))
                 {
                     //use default logo
-                    logo = string.Format("{0}Themes/{1}/Content/images/logo.png", _webHelper.GetStoreLocation(), _themeContext.WorkingThemeName);
+                    logo = $"{_webHelper.GetStoreLocation()}Themes/{_themeContext.WorkingThemeName}/Content/images/logo.png";
                 }
                 return logo;
             });
@@ -601,7 +601,7 @@ namespace Nop.Web.Factories
 
             //try loading a store specific favicon
 
-            var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
+            var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
             var localFaviconPath = System.IO.Path.Combine(_hostingEnvironment.WebRootPath, faviconFileName);
             if (!System.IO.File.Exists(localFaviconPath))
             {

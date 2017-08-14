@@ -179,11 +179,7 @@ namespace Nop.Web.Factories
 
             var activeOptions = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
                 .Except(_catalogSettings.ProductSortingEnumDisabled)
-                .Select((idOption) =>
-                {
-                    int order;
-                    return new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out order) ? order : idOption);
-                })
+                .Select((idOption) => new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out int order) ? order : idOption))
                 .OrderBy(x => x.Value);
             if (command.OrderBy == null)
                 command.OrderBy = allDisabled ? 0 : activeOptions.First().Key;
@@ -276,8 +272,7 @@ namespace Nop.Web.Factories
                     // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
                     if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
                     {
-                        int temp;
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out int temp))
                         {
                             if (temp > 0)
                             {
@@ -292,8 +287,7 @@ namespace Nop.Web.Factories
 
                     foreach (var pageSize in pageSizes)
                     {
-                        int temp;
-                        if (!int.TryParse(pageSize, out temp))
+                        if (!int.TryParse(pageSize, out int temp))
                         {
                             continue;
                         }
@@ -502,17 +496,16 @@ namespace Nop.Web.Factories
             }
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
-            IList<int> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds,
+            var products = _productService.SearchProducts(out IList<int> filterableSpecificationAttributeOptionIds,
                 true,
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                featuredProducts:_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
-                priceMin:minPriceConverted, 
-                priceMax:maxPriceConverted,
+                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?) false,
+                priceMin: minPriceConverted,
+                priceMax: maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
-                orderBy: (ProductSortingEnum)command.OrderBy,
+                orderBy: (ProductSortingEnum) command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
             model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
@@ -855,15 +848,14 @@ namespace Nop.Web.Factories
 
 
             //products
-            IList<int> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = _productService.SearchProducts(out IList<int> _, true,
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
-                priceMin: minPriceConverted, 
+                featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?) false,
+                priceMin: minPriceConverted,
                 priceMax: maxPriceConverted,
-                orderBy: (ProductSortingEnum)command.OrderBy,
+                orderBy: (ProductSortingEnum) command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
             model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
@@ -1017,12 +1009,12 @@ namespace Nop.Web.Factories
                 vendor.PageSize);
 
             //products
-            IList<int> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = _productService.SearchProducts(out IList<int> filterableSpecificationAttributeOptionIds,
+                true,
                 vendorId: vendor.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
-                orderBy: (ProductSortingEnum)command.OrderBy,
+                orderBy: (ProductSortingEnum) command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
             model.Products = _productModelFactory.PrepareProductOverviewModels(products).ToList();
@@ -1377,15 +1369,13 @@ namespace Nop.Web.Factories
                         //min price
                         if (!string.IsNullOrEmpty(model.pf))
                         {
-                            decimal minPrice;
-                            if (decimal.TryParse(model.pf, out minPrice))
+                            if (decimal.TryParse(model.pf, out decimal minPrice))
                                 minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
                         }
                         //max price
                         if (!string.IsNullOrEmpty(model.pt))
                         {
-                            decimal maxPrice;
-                            if (decimal.TryParse(model.pt, out maxPrice))
+                            if (decimal.TryParse(model.pt, out decimal maxPrice))
                                 maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
                         }
 

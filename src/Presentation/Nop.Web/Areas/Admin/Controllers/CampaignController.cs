@@ -122,7 +122,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.AvailableEmailAccounts = _emailAccountService.GetAllEmailAccounts().Select(emailAccount => new SelectListItem
             {
                 Value = emailAccount.Id.ToString(),
-                Text = string.Format("{0} ({1})", emailAccount.DisplayName, emailAccount.Email)
+                Text = $"{emailAccount.DisplayName} ({emailAccount.Email})"
             }).ToList();
         }
 

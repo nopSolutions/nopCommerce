@@ -46,15 +46,12 @@ namespace Nop.Web.Framework.Extensions
             if (localizationSupported)
             {
                 var tabStrip = new StringBuilder();
-                tabStrip.AppendLine(string.Format("<div id=\"{0}\" class=\"nav-tabs-custom nav-tabs-localized-fields\">", name));
+                tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields\">");
                 tabStrip.AppendLine("<ul class=\"nav nav-tabs\">");
 
                 //default tab
                 tabStrip.AppendLine("<li class=\"active\">");
-                tabStrip.AppendLine(string.Format("<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\">{2}</a>",
-                        name, 
-                        "standard",
-                        EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")));
+                tabStrip.AppendLine($"<a data-tab-name=\"{name}-{"standard"}-tab\" href=\"#{name}-{"standard"}-tab\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -68,11 +65,7 @@ namespace Nop.Web.Framework.Extensions
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
-                    tabStrip.AppendLine(string.Format("<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\"><img alt='' src='{2}'>{3}</a>",
-                            name, 
-                            language.Id,
-                            iconUrl,
-                            WebUtility.HtmlEncode(language.Name)));
+                    tabStrip.AppendLine($"<a data-tab-name=\"{name}-{language.Id}-tab\" href=\"#{name}-{language.Id}-tab\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
                     tabStrip.AppendLine("</li>");
                 }
@@ -80,7 +73,7 @@ namespace Nop.Web.Framework.Extensions
                     
                 //default tab
                 tabStrip.AppendLine("<div class=\"tab-content\">");
-                tabStrip.AppendLine(string.Format("<div class=\"tab-pane active\" id=\"{0}-{1}-tab\">", name, "standard"));
+                tabStrip.AppendLine($"<div class=\"tab-pane active\" id=\"{name}-{"standard"}-tab\">");
                 tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                 tabStrip.AppendLine("</div>");
 
@@ -89,9 +82,7 @@ namespace Nop.Web.Framework.Extensions
                     //languages
                     var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
 
-                    tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-{1}-tab\">",
-                        name,
-                        language.Id));
+                    tabStrip.AppendLine($"<div class=\"tab-pane\" id=\"{name}-{language.Id}-tab\">");
                     tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                     tabStrip.AppendLine("</div>");
                 }

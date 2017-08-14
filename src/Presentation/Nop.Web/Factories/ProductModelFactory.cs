@@ -272,9 +272,8 @@ namespace Nop.Web.Factories
                                     }
                                     else if (minPossiblePrice.HasValue)
                                     {
-                                        //calculate prices
-                                        decimal taxRate;
-                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
+                                                //calculate prices
+                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out decimal _);
                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                                         priceModel.OldPrice = null;
@@ -359,8 +358,7 @@ namespace Nop.Web.Factories
                                         _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
                                 }
 
-                                decimal taxRate;
-                                decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                                decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal taxRate);
                                 decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
                                 decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
@@ -588,8 +586,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        decimal taxRate;
-                        decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                        decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal taxRate);
                         decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
                         decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRate);
 
@@ -794,9 +791,8 @@ namespace Nop.Web.Factories
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            decimal taxRate;
                             decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out taxRate);
+                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out decimal _);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                             if (priceAdjustmentBase > decimal.Zero)
                                 valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
@@ -900,9 +896,7 @@ namespace Nop.Web.Factories
                                 var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                                 if (selectedDateStr.Any())
                                 {
-                                    DateTime selectedDate;
-                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
-                                                           DateTimeStyles.None, out selectedDate))
+                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime selectedDate))
                                     {
                                         //successfully parsed
                                         attributeModel.SelectedDay = selectedDate.Day;
@@ -918,8 +912,7 @@ namespace Nop.Web.Factories
                                 if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
-                                    Guid downloadGuid;
-                                    Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                    Guid.TryParse(downloadGuidStr, out Guid downloadGuid);
                                     var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                     if (download != null)
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -954,9 +947,8 @@ namespace Nop.Web.Factories
                    .RemoveDuplicatedQuantities()
                    .Select(tierPrice =>
                    {
-                       decimal taxRate;
                        var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
-                           _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                       _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out decimal _);
                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
 
                        return new ProductDetailsModel.TierPriceModel
@@ -1303,10 +1295,9 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
                     _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
-                        out giftCardRecipientName, out giftCardRecipientEmail,
-                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                        out string giftCardRecipientName, out string giftCardRecipientEmail,
+                        out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
                     model.GiftCard.RecipientName = giftCardRecipientName;
                     model.GiftCard.RecipientEmail = giftCardRecipientEmail;
@@ -1546,7 +1537,7 @@ namespace Nop.Web.Factories
                             m.ValueRaw = psa.CustomValue;
                             break;
                         case SpecificationAttributeType.Hyperlink:
-                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
+                            m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
                             break;
                         default:
                             break;

@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
                 result = String.IsNullOrEmpty(result)
                     ? categoryName
-                    : string.Format("{0} {1} {2}", result, separator, categoryName);
+                    : $"{result} {separator} {categoryName}";
             }
 
             return result;
@@ -107,7 +107,7 @@ namespace Nop.Services.Catalog
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
                 result = String.IsNullOrEmpty(result)
                     ? categoryName
-                    : string.Format("{0} {1} {2}", result, separator, categoryName);
+                    : $"{result} {separator} {categoryName}";
             }
 
             return result;

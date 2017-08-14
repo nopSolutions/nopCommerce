@@ -229,8 +229,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
-            decimal lengthTmp, widthTmp, heightTmp;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
             int length = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
             int width = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
             int height = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);

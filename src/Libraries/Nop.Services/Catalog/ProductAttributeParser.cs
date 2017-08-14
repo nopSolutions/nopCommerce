@@ -55,8 +55,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             ids.Add(id);
                         }
@@ -91,8 +90,7 @@ namespace Nop.Services.Catalog
                 {
                     if (attributeNode.Attributes != null && attributeNode.Attributes["ID"] != null)
                     {
-                        int attributeId;
-                        if (int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out attributeId) && attributeId == productAttributeMappingId)
+                        if (int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out int attributeId) && attributeId == productAttributeMappingId)
                         {
                             foreach (XmlNode attributeValue in attributeNode.SelectNodes("ProductAttributeValue"))
                             {
@@ -157,14 +155,12 @@ namespace Nop.Services.Catalog
 
                 foreach (var attributeValue in ParseValuesWithQuantity(attributesXml, attribute.Id))
                 {
-                    int attributeValueId;
-                    if (!string.IsNullOrEmpty(attributeValue.Item1) && int.TryParse(attributeValue.Item1, out attributeValueId))
+                    if (!string.IsNullOrEmpty(attributeValue.Item1) && int.TryParse(attributeValue.Item1, out int attributeValueId))
                     {
                         var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
                         if (value != null)
                         {
-                            int quantity;
-                            if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out quantity) && quantity != value.Quantity)
+                            if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out int quantity) && quantity != value.Quantity)
                             {
                                 //if customer enters quantity, use new entity with new quantity
                                 var oldValue = _context.LoadOriginalCopy(value);
@@ -204,8 +200,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == productAttributeMappingId)
                             {
@@ -260,8 +255,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == productAttributeMapping.Id)
                             {
@@ -334,8 +328,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == productAttributeMapping.Id)
                             {

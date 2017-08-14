@@ -101,7 +101,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
         protected decimal GetFixedTaxRateValue(int taxCategoryId)
         {
-            var rate = _settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{0}", taxCategoryId));
+            var rate = _settingService.GetSettingByKey<decimal>(
+                $"Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{taxCategoryId}");
             return rate;
         }
 
@@ -136,7 +137,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             var taxCategoryId = model.TaxCategoryId;
             var rate = model.Rate;
 
-            _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{0}", taxCategoryId), rate);
+            _settingService.SetSetting($"Tax.TaxProvider.FixedOrByCountryStateZip.TaxCategoryId{taxCategoryId}", rate);
 
             return new NullJsonResult();
         }

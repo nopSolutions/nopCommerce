@@ -322,7 +322,7 @@ namespace Nop.Services.Orders
 
             details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
             if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException(string.Format("Country '{0}' is not allowed for billing", details.BillingAddress.Country.Name));
+                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
@@ -338,7 +338,7 @@ namespace Nop.Services.Orders
             //validate the entire shopping cart
             var warnings = _shoppingCartService.GetShoppingCartWarnings(details.Cart, details.CheckoutAttributesXml, true);
             if (warnings.Any())
-                throw new NopException(warnings.Aggregate(string.Empty, (current, next) => string.Format("{0}{1};", current, next)));
+                throw new NopException(warnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
 
             //validate individual cart items
             foreach (var sci in details.Cart)
@@ -347,7 +347,7 @@ namespace Nop.Services.Orders
                     sci.ShoppingCartType, sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
                     sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
                 if (sciWarnings.Any())
-                    throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => string.Format("{0}{1};", current, next)));
+                    throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
             }
 
             //min totals validation
@@ -372,12 +372,7 @@ namespace Nop.Services.Orders
                 details.CustomerTaxDisplayType = _taxSettings.TaxDisplayType;
 
             //sub total (incl tax)
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, true, out orderSubTotalDiscountAmount,
-                out orderSubTotalAppliedDiscounts, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, true, out decimal orderSubTotalDiscountAmount, out List<DiscountForCaching> orderSubTotalAppliedDiscounts, out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
             details.OrderSubTotalInclTax = subTotalWithoutDiscountBase;
             details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
 
@@ -423,7 +418,7 @@ namespace Nop.Services.Orders
                     //clone shipping address
                     details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
                     if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException(string.Format("Country '{0}' is not allowed for shipping", details.ShippingAddress.Country.Name));
+                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
                 }
 
                 var shippingOption = details.Customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, processPaymentRequest.StoreId);
@@ -439,9 +434,7 @@ namespace Nop.Services.Orders
                 details.ShippingStatus = ShippingStatus.ShippingNotRequired;
 
             //shipping total
-            decimal tax;
-            List<DiscountForCaching> shippingTotalDiscounts;
-            var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
+            var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out decimal _, out List<DiscountForCaching> shippingTotalDiscounts);
             var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
             if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
                 throw new NopException("Shipping total couldn't be calculated");
@@ -459,8 +452,7 @@ namespace Nop.Services.Orders
             details.PaymentAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, details.Customer);
 
             //tax amount
-            SortedDictionary<decimal, decimal> taxRatesDictionary;
-            details.OrderTaxTotal = _orderTotalCalculationService.GetTaxTotal(details.Cart, out taxRatesDictionary);
+            details.OrderTaxTotal = _orderTotalCalculationService.GetTaxTotal(details.Cart, out SortedDictionary<decimal, decimal> taxRatesDictionary);
 
             //VAT number
             var customerVatStatus = (VatNumberStatus)details.Customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
@@ -469,16 +461,10 @@ namespace Nop.Services.Orders
 
             //tax rates
             details.TaxRates = taxRatesDictionary.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2};   ", current, next.Key.ToString(CultureInfo.InvariantCulture), next.Value.ToString(CultureInfo.InvariantCulture)));
+                $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
 
             //order total (and applied discounts, gift cards, reward points)
-            List<AppliedGiftCard> appliedGiftCards;
-            List<DiscountForCaching> orderAppliedDiscounts;
-            decimal orderDiscountAmount;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
-                out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
+            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out decimal orderDiscountAmount, out List<DiscountForCaching> orderAppliedDiscounts, out List<AppliedGiftCard> appliedGiftCards, out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);
             if (!orderTotal.HasValue)
                 throw new NopException("Order total couldn't be calculated");
 
@@ -499,11 +485,7 @@ namespace Nop.Services.Orders
             details.IsRecurringShoppingCart = details.Cart.IsRecurring();
             if (details.IsRecurringShoppingCart)
             {
-                int recurringCycleLength;
-                RecurringProductCyclePeriod recurringCyclePeriod;
-                int recurringTotalCycles;
-                var recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService,
-                    out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
+                var recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService, out int recurringCycleLength, out RecurringProductCyclePeriod recurringCyclePeriod, out int recurringTotalCycles);
                 if (!string.IsNullOrEmpty(recurringCyclesError))
                     throw new NopException(recurringCyclesError);
 
@@ -561,7 +543,7 @@ namespace Nop.Services.Orders
             
             details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
             if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException(string.Format("Country '{0}' is not allowed for billing", details.BillingAddress.Country.Name));
+                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
@@ -588,7 +570,7 @@ namespace Nop.Services.Orders
                     //clone shipping address
                     details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
                     if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException(string.Format("Country '{0}' is not allowed for shipping", details.ShippingAddress.Country.Name));
+                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
                 }
                 else
                     if (details.InitialOrder.PickupAddress != null)
@@ -726,8 +708,7 @@ namespace Nop.Services.Orders
                 //this order is placed by a store administrator impersonating a customer
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
-                        _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
+                    Note = $"Order placed by a store owner ('{_workContext.OriginalCustomerIfImpersonated.Email}'. ID = {_workContext.OriginalCustomerIfImpersonated.Id}) impersonating the customer.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -746,7 +727,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
+                    Note = $"\"Order placed\" email (to store owner) has been queued. Queued email identifier: {orderPlacedStoreOwnerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -763,7 +744,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
+                    Note = $"\"Order placed\" email (to customer) has been queued. Queued email identifier: {orderPlacedCustomerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -778,7 +759,7 @@ namespace Nop.Services.Orders
                 {
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
+                        Note = $"\"Order placed\" email (to vendor) has been queued. Queued email identifier: {orderPlacedVendorNotificationQueuedEmailId}.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -932,7 +913,7 @@ namespace Nop.Services.Orders
             //order notes, notifications
             order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Order status has been changed to {0}", os.ToString()),
+                    Note = $"Order status has been changed to {os.ToString()}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -955,7 +936,7 @@ namespace Nop.Services.Orders
                 {
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
+                        Note = $"\"Order completed\" email (to customer) has been queued. Queued email identifier: {orderCompletedCustomerNotificationQueuedEmailId}.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -973,7 +954,7 @@ namespace Nop.Services.Orders
                 {
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
+                        Note = $"\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {orderCancelledCustomerNotificationQueuedEmailId}.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -1279,13 +1260,9 @@ namespace Nop.Services.Orders
                     foreach (var sc in details.Cart)
                     {
                         //prices
-                        decimal taxRate;
-                        List<DiscountForCaching> scDiscounts;
-                        decimal discountAmount;
-                        int? maximumDiscountQty;
                         var scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
-                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts, out maximumDiscountQty);
-                        var scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, details.Customer, out taxRate);
+                        var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out decimal discountAmount, out List<DiscountForCaching> scDiscounts, out int? _);
+                        var scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, details.Customer, out decimal taxRate);
                         var scUnitPriceExclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, false, details.Customer, out taxRate);
                         var scSubTotalInclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, true, details.Customer, out taxRate);
                         var scSubTotalExclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, false, details.Customer, out taxRate);
@@ -1329,13 +1306,7 @@ namespace Nop.Services.Orders
                         //gift cards
                         if (sc.Product.IsGiftCard)
                         {
-                            string giftCardRecipientName;
-                            string giftCardRecipientEmail;
-                            string giftCardSenderName;
-                            string giftCardSenderEmail;
-                            string giftCardMessage;
-                            _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml, out giftCardRecipientName,
-                                out giftCardRecipientEmail, out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                            _productAttributeParser.GetGiftCardAttribute(sc.AttributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
                             for (var i = 0; i < sc.Quantity; i++)
                             {
@@ -1466,7 +1437,7 @@ namespace Nop.Services.Orders
             {
                 //log errors
                 var logError = result.Errors.Aggregate("Error while placing order. ",
-                    (current, next) => string.Format("{0}Error {1}: {2}. ", current, result.Errors.IndexOf(next) + 1, next));
+                    (current, next) => $"{current}Error {result.Errors.IndexOf(next) + 1}: {next}. ");
                 var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
                 _logger.Error(logError, customer: customer);
             }
@@ -1540,13 +1511,7 @@ namespace Nop.Services.Orders
                 //gift cards
                 if (updatedShoppingCartItem.Product.IsGiftCard)
                 {
-                    string giftCardRecipientName;
-                    string giftCardRecipientEmail;
-                    string giftCardSenderName;
-                    string giftCardSenderEmail;
-                    string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(updatedShoppingCartItem.AttributesXml, out giftCardRecipientName,
-                        out giftCardRecipientEmail, out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                    _productAttributeParser.GetGiftCardAttribute(updatedShoppingCartItem.AttributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
                     for (var i = 0; i < updatedShoppingCartItem.Quantity; i++)
                     {
@@ -1792,14 +1757,7 @@ namespace Nop.Services.Orders
                         //gift cards
                         if (orderItem.Product.IsGiftCard)
                         {
-                            string giftCardRecipientName;
-                            string giftCardRecipientEmail;
-                            string giftCardSenderName;
-                            string giftCardSenderEmail;
-                            string giftCardMessage;
-
-                            _productAttributeParser.GetGiftCardAttribute(orderItem.AttributesXml, out giftCardRecipientName,
-                                out giftCardRecipientEmail, out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                            _productAttributeParser.GetGiftCardAttribute(orderItem.AttributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
 
                             for (var i = 0; i < orderItem.Quantity; i++)
                             {
@@ -1871,7 +1829,7 @@ namespace Nop.Services.Orders
                 {
                     //log errors
                     var logError = processPaymentResult.Errors.Aggregate("Error while processing recurring order. ",
-                        (current, next) => string.Format("{0}Error {1}: {2}. ", current, processPaymentResult.Errors.IndexOf(next) + 1, next));
+                        (current, next) => $"{current}Error {processPaymentResult.Errors.IndexOf(next) + 1}: {next}. ");
                     _logger.Error(logError, customer: customer);
 
                     if (processPaymentResult.RecurringPaymentFailed)
@@ -1898,7 +1856,7 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                _logger.Error(string.Format("Error while processing recurring order. {0}", exc.Message), exc);
+                _logger.Error($"Error while processing recurring order. {exc.Message}", exc);
                 throw;
             }
         }
@@ -1949,7 +1907,7 @@ namespace Nop.Services.Orders
             {
                 if (result == null)
                     result = new CancelRecurringPaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError($"Error: {exc.Message}. Full exception: {exc.ToString()}");
             }
 
 
@@ -1957,7 +1915,7 @@ namespace Nop.Services.Orders
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += $"Error {i}: {result.Errors[i]}";
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
@@ -1966,14 +1924,14 @@ namespace Nop.Services.Orders
                 //add a note
                 initialOrder.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Unable to cancel recurring payment. {0}", error),
+                    Note = $"Unable to cancel recurring payment. {error}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
                 _orderService.UpdateOrder(initialOrder);
 
                 //log it
-                string logError = string.Format("Error cancelling recurring payment. Order #{0}. Error: {1}", initialOrder.Id, error);
+                string logError = $"Error cancelling recurring payment. Order #{initialOrder.Id}. Error: {error}";
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
             return result.Errors;
@@ -2079,7 +2037,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Shipment# {0} has been sent", shipment.Id),
+                    Note = $"Shipment# {shipment.Id} has been sent",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -2093,7 +2051,7 @@ namespace Nop.Services.Orders
                 {
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
+                        Note = $"\"Shipped\" email (to customer) has been queued. Queued email identifier: {queuedEmailId}.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -2138,7 +2096,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
-                Note = string.Format("Shipment# {0} has been delivered", shipment.Id),
+                Note = $"Shipment# {shipment.Id} has been delivered",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
@@ -2152,7 +2110,7 @@ namespace Nop.Services.Orders
                 {
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
+                        Note = $"\"Delivered\" email (to customer) has been queued. Queued email identifier: {queuedEmailId}.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -2367,7 +2325,7 @@ namespace Nop.Services.Orders
             {
                 if (result == null)
                     result = new CapturePaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError($"Error: {exc.Message}. Full exception: {exc.ToString()}");
             }
 
 
@@ -2375,7 +2333,7 @@ namespace Nop.Services.Orders
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += $"Error {i}: {result.Errors[i]}";
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
@@ -2384,14 +2342,14 @@ namespace Nop.Services.Orders
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Unable to capture order. {0}", error),
+                    Note = $"Unable to capture order. {error}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
                 _orderService.UpdateOrder(order);
 
                 //log it
-                string logError = string.Format("Error capturing order #{0}. Error: {1}", order.Id, error);
+                string logError = $"Error capturing order #{order.Id}. Error: {error}";
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
             return result.Errors;
@@ -2515,7 +2473,7 @@ namespace Nop.Services.Orders
                     //add a note
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("Order has been refunded. Amount = {0}", request.AmountToRefund),
+                        Note = $"Order has been refunded. Amount = {request.AmountToRefund}",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -2530,7 +2488,7 @@ namespace Nop.Services.Orders
                     {
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            Note = $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
@@ -2541,7 +2499,7 @@ namespace Nop.Services.Orders
                     {
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            Note = $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
@@ -2557,14 +2515,14 @@ namespace Nop.Services.Orders
             {
                 if (result == null)
                     result = new RefundPaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError($"Error: {exc.Message}. Full exception: {exc.ToString()}");
             }
 
             //process errors
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += $"Error {i}: {result.Errors[i]}";
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
@@ -2573,14 +2531,14 @@ namespace Nop.Services.Orders
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Unable to refund order. {0}", error),
+                    Note = $"Unable to refund order. {error}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
                 _orderService.UpdateOrder(order);
 
                 //log it
-                string logError = string.Format("Error refunding order #{0}. Error: {1}", order.Id, error);
+                string logError = $"Error refunding order #{order.Id}. Error: {error}";
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
             return result.Errors;
@@ -2639,7 +2597,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
-                Note = string.Format("Order has been marked as refunded. Amount = {0}", amountToRefund),
+                Note = $"Order has been marked as refunded. Amount = {amountToRefund}",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
@@ -2654,7 +2612,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    Note = $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -2665,7 +2623,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    Note = $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -2748,7 +2706,7 @@ namespace Nop.Services.Orders
                     //add a note
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("Order has been partially refunded. Amount = {0}", amountToRefund),
+                        Note = $"Order has been partially refunded. Amount = {amountToRefund}",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -2763,7 +2721,7 @@ namespace Nop.Services.Orders
                     {
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            Note = $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
@@ -2774,7 +2732,7 @@ namespace Nop.Services.Orders
                     {
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            Note = $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
@@ -2789,14 +2747,14 @@ namespace Nop.Services.Orders
             {
                 if (result == null)
                     result = new RefundPaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError($"Error: {exc.Message}. Full exception: {exc.ToString()}");
             }
 
             //process errors
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += $"Error {i}: {result.Errors[i]}";
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
@@ -2805,14 +2763,14 @@ namespace Nop.Services.Orders
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Unable to partially refund order. {0}", error),
+                    Note = $"Unable to partially refund order. {error}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
                 _orderService.UpdateOrder(order);
 
                 //log it
-                string logError = string.Format("Error refunding order #{0}. Error: {1}", order.Id, error);
+                string logError = $"Error refunding order #{order.Id}. Error: {error}";
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
             return result.Errors;
@@ -2875,7 +2833,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
-                Note = string.Format("Order has been marked as partially refunded. Amount = {0}", amountToRefund),
+                Note = $"Order has been marked as partially refunded. Amount = {amountToRefund}",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
@@ -2890,7 +2848,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    Note = $"\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {orderRefundedStoreOwnerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -2901,7 +2859,7 @@ namespace Nop.Services.Orders
             {
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    Note = $"\"Order refunded\" email (to customer) has been queued. Queued email identifier: {orderRefundedCustomerNotificationQueuedEmailId}.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
@@ -2980,14 +2938,14 @@ namespace Nop.Services.Orders
             {
                 if (result == null)
                     result = new VoidPaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError($"Error: {exc.Message}. Full exception: {exc.ToString()}");
             }
 
             //process errors
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += $"Error {i}: {result.Errors[i]}";
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
@@ -2996,14 +2954,14 @@ namespace Nop.Services.Orders
                 //add a note
                 order.OrderNotes.Add(new OrderNote
                 {
-                    Note = string.Format("Unable to voiding order. {0}", error),
+                    Note = $"Unable to voiding order. {error}",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
                 _orderService.UpdateOrder(order);
 
                 //log it
-                string logError = string.Format("Error voiding order #{0}. Error: {1}", order.Id, error);
+                string logError = $"Error voiding order #{order.Id}. Error: {error}";
                 _logger.InsertLog(LogLevel.Error, logError, logError);
             }
             return result.Errors;
@@ -3131,13 +3089,7 @@ namespace Nop.Services.Orders
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
-                decimal orderSubTotalDiscountAmountBase;
-                List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-                decimal subTotalWithoutDiscountBase;
-                decimal subTotalWithDiscountBase;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, _orderSettings.MinOrderSubtotalAmountIncludingTax,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscounts,
-                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, _orderSettings.MinOrderSubtotalAmountIncludingTax, out decimal _, out List<DiscountForCaching> _, out decimal subTotalWithoutDiscountBase, out decimal _);
 
                 if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
                     return false;

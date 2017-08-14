@@ -234,7 +234,7 @@ namespace Nop.Services.Directory
             {
                 decimal exchangeRatio = sourceMeasureDimension.Ratio;
                 if (exchangeRatio == decimal.Zero)
-                    throw new NopException(string.Format("Exchange ratio not set for dimension [{0}]", sourceMeasureDimension.Name));
+                    throw new NopException($"Exchange ratio not set for dimension [{sourceMeasureDimension.Name}]");
                 result = result / exchangeRatio;
             }
             return result;
@@ -258,7 +258,7 @@ namespace Nop.Services.Directory
             {
                 decimal exchangeRatio = targetMeasureDimension.Ratio;
                 if (exchangeRatio == decimal.Zero)
-                    throw new NopException(string.Format("Exchange ratio not set for dimension [{0}]", targetMeasureDimension.Name));
+                    throw new NopException($"Exchange ratio not set for dimension [{targetMeasureDimension.Name}]");
                 result = result * exchangeRatio;
             }
             return result;
@@ -412,7 +412,7 @@ namespace Nop.Services.Directory
             {
                 decimal exchangeRatio = sourceMeasureWeight.Ratio;
                 if (exchangeRatio == decimal.Zero)
-                    throw new NopException(string.Format("Exchange ratio not set for weight [{0}]", sourceMeasureWeight.Name));
+                    throw new NopException($"Exchange ratio not set for weight [{sourceMeasureWeight.Name}]");
                 result = result / exchangeRatio;
             }
             return result;
@@ -436,7 +436,7 @@ namespace Nop.Services.Directory
             {
                 decimal exchangeRatio = targetMeasureWeight.Ratio;
                 if (exchangeRatio == decimal.Zero)
-                    throw new NopException(string.Format("Exchange ratio not set for weight [{0}]", targetMeasureWeight.Name));
+                    throw new NopException($"Exchange ratio not set for weight [{targetMeasureWeight.Name}]");
                 result = result * exchangeRatio;
             }
             return result;

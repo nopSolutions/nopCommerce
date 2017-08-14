@@ -408,8 +408,7 @@ namespace Nop.Services.Catalog
                 if (includeDiscounts)
                 {
                     //discount
-                    List<DiscountForCaching> tmpAppliedDiscounts;
-                    decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscounts);
+                    decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out List<DiscountForCaching> tmpAppliedDiscounts);
                     price = price - tmpDiscountAmount;
 
                     if (tmpAppliedDiscounts != null)
@@ -596,10 +595,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts = true)
         {
-            decimal discountAmount;
-            List<DiscountForCaching> appliedDiscounts;
-            int? maximumDiscountQty;
-            return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscounts, out maximumDiscountQty);
+            return GetSubTotal(shoppingCartItem, includeDiscounts, out decimal _, out List<DiscountForCaching> _, out int? _);
         }
         /// <summary>
         /// Gets the shopping cart item sub total

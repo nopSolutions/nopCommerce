@@ -61,8 +61,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
         public static bool IsValidIpAddress(string ipAddress)
         {
-            IPAddress ip;
-            return IPAddress.TryParse(ipAddress, out ip);
+            return IPAddress.TryParse(ipAddress, out IPAddress _);
         }
 
         /// <summary>
@@ -378,7 +377,7 @@ namespace Nop.Core
 
             if (fi == null)
             {
-                throw new Exception(String.Format("Field '{0}' not found in type hierarchy.", fieldName));
+                throw new Exception($"Field '{fieldName}' not found in type hierarchy.");
             }
 
             return fi.GetValue(target);

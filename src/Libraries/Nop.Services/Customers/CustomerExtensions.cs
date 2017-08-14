@@ -29,7 +29,7 @@ namespace Nop.Services.Customers
 
             string fullName = "";
             if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
-                fullName = string.Format("{0} {1}", firstName, lastName);
+                fullName = $"{firstName} {lastName}";
             else
             {
                 if (!String.IsNullOrWhiteSpace(firstName))

@@ -84,7 +84,7 @@ namespace Nop.Services.Orders
                 var product= sci.Product;
                 if (product == null)
                 {
-                    throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
+                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
                 }
 
                 if (product.IsRecurring)

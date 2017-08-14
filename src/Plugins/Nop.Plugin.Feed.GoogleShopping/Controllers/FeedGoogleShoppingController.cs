@@ -102,7 +102,8 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
                     model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel
                     {
                         StoreName = store.Name,
-                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _googleShoppingSettings.StaticFileName)
+                        FileUrl =
+                            $"{_webHelper.GetStoreLocation(false)}content/files/exportimport/{store.Id}-{_googleShoppingSettings.StaticFileName}"
                     });
             }
 

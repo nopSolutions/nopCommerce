@@ -19,7 +19,7 @@
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
-        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))

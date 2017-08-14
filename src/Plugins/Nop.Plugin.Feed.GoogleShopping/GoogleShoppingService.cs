@@ -291,7 +291,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = string.Format("{0}{1}", store.Url, product.GetSeName(languageId));
+                        var productUrl = $"{store.Url}{product.GetSeName(languageId)}";
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item
@@ -364,8 +364,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                                     _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, quantity: int.MaxValue));
                             }
 
-                            decimal taxRate;
-                            finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                            finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out decimal _);
                         }
                         else
                         {
@@ -551,7 +550,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                 ProductPictureSize = 125,
                 PassShippingInfoWeight = false,
                 PassShippingInfoDimensions = false,
-                StaticFileName = string.Format("googleshopping_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
+                StaticFileName = $"googleshopping_{CommonHelper.GenerateRandomDigitCode(10)}.xml",
                 ExpirationNumberOfDays = 28
             };
             _settingService.SaveSetting(settings);

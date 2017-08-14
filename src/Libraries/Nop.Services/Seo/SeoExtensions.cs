@@ -248,7 +248,7 @@ namespace Nop.Services.Seo
                 if (!reserved1 && !reserved2 && !reserved3)
                     break;
 
-                tempSeName = string.Format("{0}-{1}", seName, i);
+                tempSeName = $"{seName}-{i}";
                 i++;
             }
             seName = tempSeName;

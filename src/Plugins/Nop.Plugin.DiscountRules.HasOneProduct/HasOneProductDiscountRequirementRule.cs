@@ -31,7 +31,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirementId));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(
+                $"DiscountRequirement.RestrictedProductIds-{request.DiscountRequirementId}");
             if (String.IsNullOrWhiteSpace(restrictedProductIds))
             {
                 //valid
@@ -79,16 +80,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the third way (the quantity rage specified)
                             //{Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out int restrictedProductId))
                                 //parsing error; exit;
                                 return result;
-                            int quantityMin;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out int quantityMin))
                                 //parsing error; exit;
                                 return result;
-                            int quantityMax;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out int quantityMax))
                                 //parsing error; exit;
                                 return result;
 
@@ -102,12 +100,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the second way (the quantity specified)
                             //{Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out int restrictedProductId))
                                 //parsing error; exit;
                                 return result;
-                            int quantity;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out quantity))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out int quantity))
                                 //parsing error; exit;
                                 return result;
 
@@ -121,8 +117,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedProductId;
-                        if (int.TryParse(restrictedProduct, out restrictedProductId))
+                        if (int.TryParse(restrictedProduct, out int restrictedProductId))
                         {
                             if (sci.ProductId == restrictedProductId)
                             {
@@ -160,7 +155,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesHasOneProduct/Configure/?discountId=" + discountId;
             if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+                result += $"&discountRequirementId={discountRequirementId.Value}";
             return result;
         }
 

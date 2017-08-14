@@ -205,8 +205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
             var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
-            model.AllowedTokens = string.Format("{0}{1}{1}{2}{1}", allowedTokens, Environment.NewLine,
-                _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement"));
+            model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}{_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -286,8 +285,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
             var allowedTokens = string.Join(", ", _messageTokenProvider.GetListOfAllowedTokens(messageTemplate.GetTokenGroups()));
-            model.AllowedTokens = string.Format("{0}{1}{1}{2}{1}", allowedTokens, Environment.NewLine,
-                _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement"));
+            model.AllowedTokens = $"{allowedTokens}{Environment.NewLine}{Environment.NewLine}{_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Tokens.ConditionalStatement")}{Environment.NewLine}";
 
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -407,14 +405,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //try get non-string value
                     object tokenValue;
-                    bool boolValue;
-                    int intValue;
-                    decimal decimalValue;
-                    if (bool.TryParse(stringValue, out boolValue))
+                    if (bool.TryParse(stringValue, out bool boolValue))
                         tokenValue = boolValue;
-                    else if (int.TryParse(stringValue, out intValue))
+                    else if (int.TryParse(stringValue, out int intValue))
                         tokenValue = intValue;
-                    else if (decimal.TryParse(stringValue, out decimalValue))
+                    else if (decimal.TryParse(stringValue, out decimal decimalValue))
                         tokenValue = decimalValue;
                     else
                         tokenValue = stringValue;

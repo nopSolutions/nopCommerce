@@ -131,38 +131,38 @@
                                     <!--attributes-->
                                     @{
                                         var dataDictAttributes = new ViewDataDictionary(ViewData);
-                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{variant.Id}";
                                         @await Html.PartialAsync("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                     }
                                     <!--gift card-->
                                     @{
                                         var dataDictGiftCard = new ViewDataDictionary(ViewData);
-                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = $"giftcard_{variant.Id}";
                                         @await Html.PartialAsync("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                     }
                                     <!--rental info-->
                                     @{
                                         var dataDictRental = new ViewDataDictionary(ViewData);
-                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = $"rental_{variant.Id}";
                                         @await Html.PartialAsync("_RentalInfo", variant, dataDictRental)
                                     }
                                     <!--price & add to cart-->
                                     @{
                                         var dataDictPrice = new ViewDataDictionary(ViewData);
-                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{variant.Id}";
                                         @await Html.PartialAsync("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                     }
                                     <!--price breaks-->
                                     @await Html.PartialAsync("_ProductTierPrices", variant.TierPrices)
                                     @{
                                         var dataDictAddToCart = new ViewDataDictionary(ViewData);
-                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{variant.Id}";
                                         @await Html.PartialAsync("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                     }
                                     <!--wishlist-->
                                     @{
                                         var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
-                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = $"addtocart_{variant.Id}";
                                         @await Html.PartialAsync("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }
                                 </div>

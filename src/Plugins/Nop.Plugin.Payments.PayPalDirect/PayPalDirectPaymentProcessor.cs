@@ -152,7 +152,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     break;
             }
 
-            return string.Format("{0}Z", startDate.ToString("s"));
+            return $"{startDate.ToString("s")}Z";
         }
 
         #region Items
@@ -223,9 +223,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     item.sku = shoppingCartItem.Product.Sku;
 
                 //item price
-                decimal taxRate;
                 var unitPrice = _priceCalculationService.GetUnitPrice(shoppingCartItem);
-                var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out taxRate);
+                var price = _taxService.GetProductPrice(shoppingCartItem.Product, unitPrice, false, shoppingCartItem.Customer, out decimal _);
                 item.price = price.ToString("N", new CultureInfo("en-US"));
 
                 //quantity
@@ -261,7 +260,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 //create item
                 return new Item
                 {
-                    name = string.Format("{0} ({1})", checkoutAttributeValue.CheckoutAttribute.Name, checkoutAttributeValue.Name),
+                    name = $"{checkoutAttributeValue.CheckoutAttribute.Name} ({checkoutAttributeValue.Name})",
                     price = attributePrice.ToString("N", new CultureInfo("en-US")),
                     quantity = "1"
                 };
@@ -286,7 +285,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //create item
             return new Item
             {
-                name = string.Format("Payment method ({0}) additional fee", PluginDescriptor.FriendlyName),
+                name = $"Payment method ({PluginDescriptor.FriendlyName}) additional fee",
                 price = paymentPrice.ToString("N", new CultureInfo("en-US")),
                 quantity = "1"
             };
@@ -300,11 +299,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         protected Item CreateItemForSubtotalDiscount(IList<ShoppingCartItem> shoppingCart)
         {
             //get subtotal discount amount
-            decimal discountAmount;
-            List<DiscountForCaching> discounts;
-            decimal withoutDiscount;
-            decimal subtotal;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(shoppingCart, false, out discountAmount, out discounts, out withoutDiscount, out subtotal);
+            _orderTotalCalculationService.GetShoppingCartSubTotal(shoppingCart, false, out decimal discountAmount, out List<DiscountForCaching> _, out decimal _, out decimal _);
 
             if (discountAmount <= decimal.Zero)
                 return null;
@@ -326,13 +321,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
         protected Item CreateItemForTotalDiscount(IList<ShoppingCartItem> shoppingCart)
         {
             //get total discount amount
-            decimal discountAmount;
-            List<AppliedGiftCard> giftCards;
-            List<DiscountForCaching> discounts;
-            int rewardPoints;
-            decimal rewardPointsAmount;
-            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, out discountAmount,
-                out discounts, out giftCards, out rewardPoints, out rewardPointsAmount);
+            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(shoppingCart,
+                out decimal discountAmount,
+                out List<DiscountForCaching> _, out List<AppliedGiftCard> _, out int _, out decimal _);
 
             if (discountAmount <= decimal.Zero)
                 return null;
@@ -359,20 +350,17 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             //get shipping total
             var shipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart, false);
-            var shippingTotal = shipping.HasValue ? shipping.Value : 0;
+            var shippingTotal = shipping ?? 0;
 
             //get tax total
-            SortedDictionary<decimal, decimal> taxRatesDictionary;
-            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out taxRatesDictionary);
+            var taxTotal = _orderTotalCalculationService.GetTaxTotal(shoppingCart, out SortedDictionary<decimal, decimal> _);
 
             //get subtotal
-            var subTotal = decimal.Zero;
+            decimal subTotal;
             if (items != null && items.Any())
             {
                 //items passed to PayPal, so calculate subtotal based on them
-                var tmpPrice = decimal.Zero;
-                var tmpQuantity = 0;
-                subTotal = items.Sum(item => !decimal.TryParse(item.price, out tmpPrice) || !int.TryParse(item.quantity, out tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
+                subTotal = items.Sum(item => !decimal.TryParse(item.price, out decimal tmpPrice) || !int.TryParse(item.quantity, out int tmpQuantity) ? 0 : tmpPrice * tmpQuantity);
             }
             else
                 subTotal = paymentRequest.OrderTotal - shippingTotal - taxTotal;
@@ -513,7 +501,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                                     line2 = customer.ShippingAddress.Address2,
                                     phone = customer.ShippingAddress.PhoneNumber,
                                     postal_code = customer.ShippingAddress.ZipPostalCode,
-                                    recipient_name = string.Format("{0} {1}", customer.ShippingAddress.FirstName, customer.ShippingAddress.LastName)
+                                    recipient_name =
+                                        $"{customer.ShippingAddress.FirstName} {customer.ShippingAddress.LastName}"
                                 }
 
                                 #endregion
@@ -536,8 +525,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         {
                             if (authorization.fmf_details != null && !string.IsNullOrEmpty(authorization.fmf_details.filter_id))
                             {
-                                result.AuthorizationTransactionResult = string.Format("Authorization is {0}. Based on fraud filter: {1}. {2}",
-                                    authorization.fmf_details.filter_type, authorization.fmf_details.name, authorization.fmf_details.description);
+                                result.AuthorizationTransactionResult =
+                                    $"Authorization is {authorization.fmf_details.filter_type}. Based on fraud filter: {authorization.fmf_details.name}. {authorization.fmf_details.description}";
                                 result.NewPaymentStatus = GetPaymentStatus(Authorization.Get(apiContext, authorization.id).state);
                             }
                             else
@@ -555,8 +544,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                         {
                             if (sale.fmf_details != null && !string.IsNullOrEmpty(sale.fmf_details.filter_id))
                             {
-                                result.CaptureTransactionResult = string.Format("Sale is {0}. Based on fraud filter: {1}. {2}",
-                                    sale.fmf_details.filter_type, sale.fmf_details.name, sale.fmf_details.description);
+                                result.CaptureTransactionResult =
+                                    $"Sale is {sale.fmf_details.filter_type}. Based on fraud filter: {sale.fmf_details.name}. {sale.fmf_details.description}";
                                 result.NewPaymentStatus = GetPaymentStatus(Sale.Get(apiContext, sale.id).state);
                             }
                             else
@@ -579,9 +568,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 
@@ -663,9 +652,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 
@@ -709,9 +698,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 
@@ -747,9 +736,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 
@@ -793,7 +782,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 var billingPlan = new Plan
                 {
                     name = processPaymentRequest.OrderGuid.ToString(),
-                    description = string.Format("nopCommerce billing plan for the {0} order", processPaymentRequest.OrderGuid),
+                    description = $"nopCommerce billing plan for the {processPaymentRequest.OrderGuid} order",
                     type = "fixed",
                     merchant_preferences = new MerchantPreferences
                     {
@@ -843,7 +832,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 //create subscription
                 var subscription = new Agreement
                 {
-                    name = string.Format("nopCommerce subscription for the {0} order", processPaymentRequest.OrderGuid),
+                    name = $"nopCommerce subscription for the {processPaymentRequest.OrderGuid} order",
                     //we set order GUID in the description, then use it in the webhook handler
                     description = processPaymentRequest.OrderGuid.ToString(),
                     //setting start date as the next date of recurring payments as the setup fee was the first payment
@@ -937,9 +926,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 
@@ -966,7 +955,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 var subscription = Agreement.Get(apiContext, cancelPaymentRequest.Order.SubscriptionTransactionId);
                 var reason = new AgreementStateDescriptor
                 {
-                    note = string.Format("Cancel subscription {0}", cancelPaymentRequest.Order.OrderGuid)
+                    note = $"Cancel subscription {cancelPaymentRequest.Order.OrderGuid}"
                 };
                 subscription.Cancel(apiContext, reason);
             }
@@ -977,9 +966,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var error = JsonFormatter.ConvertFromJson<Error>((exc as PayPal.ConnectionException).Response);
                     if (error != null)
                     {
-                        result.AddError(string.Format("PayPal error: {0} ({1})", error.message, error.name));
+                        result.AddError($"PayPal error: {error.message} ({error.name})");
                         if (error.details != null)
-                            error.details.ForEach(x => result.AddError(string.Format("{0} {1}", x.field, x.issue)));
+                            error.details.ForEach(x => result.AddError($"{x.field} {x.issue}"));
                     }
                 }
 

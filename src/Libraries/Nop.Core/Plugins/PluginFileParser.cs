@@ -42,7 +42,7 @@ namespace Nop.Core.Plugins
         {
             string result = "";
             foreach (var sn in pluginSystemNames)
-                result += string.Format("{0}{1}", sn, Environment.NewLine);
+                result += $"{sn}{Environment.NewLine}";
 
             File.WriteAllText(filePath, result);
         }
@@ -106,8 +106,7 @@ namespace Nop.Core.Plugins
                         break;
                     case "DisplayOrder":
                         {
-                            int displayOrder;
-                            int.TryParse(value, out displayOrder);
+                            int.TryParse(value, out int displayOrder);
                             descriptor.DisplayOrder = displayOrder;
                         }
                         break;
@@ -120,8 +119,7 @@ namespace Nop.Core.Plugins
                             foreach (var str1 in value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                                                       .Select(x => x.Trim()))
                             {
-                                int storeId;
-                                if (int.TryParse(str1, out storeId))
+                                if (int.TryParse(str1, out int storeId))
                                 {
                                     descriptor.LimitedToStores.Add(storeId);
                                 }
@@ -133,8 +131,7 @@ namespace Nop.Core.Plugins
                             //parse list of customer role IDs
                             foreach (var id in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
                             {
-                                int roleId;
-                                if (int.TryParse(id, out roleId))
+                                if (int.TryParse(id, out int roleId))
                                     descriptor.LimitedToCustomerRoles.Add(roleId);
                             }
                         }
@@ -162,10 +159,10 @@ namespace Nop.Core.Plugins
 
             //get the Description.txt file path
             if (plugin.OriginalAssemblyFile == null)
-                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
+                throw new Exception($"Cannot load original assembly path for {plugin.SystemName} plugin.");
             var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
             if (!File.Exists(filePath))
-                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
+                throw new Exception($"Description file for {plugin.SystemName} plugin does not exist. {filePath}");
 
             var keyValues = new List<KeyValuePair<string, string>>();
             keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));

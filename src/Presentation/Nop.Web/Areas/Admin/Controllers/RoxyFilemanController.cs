@@ -133,9 +133,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         await RenameFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int w = 140, h = 0;
-                        int.TryParse(this.HttpContext.Request.Query["width"].ToString().Replace("px", ""), out w);
-                        int.TryParse(this.HttpContext.Request.Query["height"].ToString().Replace("px", ""), out h);
+                        int.TryParse(this.HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
+                        int.TryParse(this.HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
                         CreateThumbnail(this.HttpContext.Request.Query["f"], w, h);
                         break;
                     case "UPLOAD":

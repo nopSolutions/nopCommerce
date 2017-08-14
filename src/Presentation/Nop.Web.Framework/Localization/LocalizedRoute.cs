@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.Localization
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
                 return base.RouteAsync(context);
 
             //remove language code and application path from the path

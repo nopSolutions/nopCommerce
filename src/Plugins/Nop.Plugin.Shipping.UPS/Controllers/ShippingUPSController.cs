@@ -102,7 +102,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                     if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
-                        if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))
+                        if (carrierServicesOfferedDomestic.Contains($"[{serviceId}]"))
                             model.CarrierServicesOffered.Add(service);
                     }
                 }

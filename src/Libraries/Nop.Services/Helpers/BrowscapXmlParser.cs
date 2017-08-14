@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Nop.Core.Extensions;
 
 namespace Nop.Services.Helpers
 {
@@ -32,7 +31,7 @@ namespace Nop.Services.Helpers
                 //try to load crawler list from crawlers only file
                 using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
                 {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Elements("browscapitem").ToList(), null);
+                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
                 }
             }
 
@@ -41,9 +40,9 @@ namespace Nop.Services.Helpers
                 //try to load crawler list from full user agents file
                 using (var sr = new StreamReader(userAgentStringsPath))
                 {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null)
+                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem")
                         //only crawlers
-                        .Return(x => x.Elements("browscapitem").Where(IsBrowscapItemIsCrawler).ToList(), null);
+                        .Where(IsBrowscapItemIsCrawler).ToList();
                 }
             }
 
@@ -69,7 +68,7 @@ namespace Nop.Services.Helpers
                 {
                     foreach (var element in crawler.Elements().ToList())
                     {
-                        if (element.Attribute("name").Return(x => x.Value.ToLower(), string.Empty) == "crawler")
+                        if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
                             continue;
                         element.Remove();
                     }
@@ -82,16 +81,16 @@ namespace Nop.Services.Helpers
 
         private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
         {
-            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name").Return(a => a.Value, "") == "Crawler");
+            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
 
-            return el != null && el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
+            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
         }
 
         private static string ToRegexp(string str)
         {
             var sb = new StringBuilder(Regex.Escape(str));
             sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
-            return string.Format("^{0}$", sb);
+            return $"^{sb}$";
         }
 
         /// <summary>

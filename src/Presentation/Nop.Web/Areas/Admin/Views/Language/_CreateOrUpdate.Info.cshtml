@@ -22,7 +22,7 @@
                             .Select(x => new SelectListItem
                             {
                                 Value = x.IetfLanguageTag,
-                                Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                                Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
                             });
                     }
                     <nop-select asp-for="LanguageCulture" asp-items="@cultures" />

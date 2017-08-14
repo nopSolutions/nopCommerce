@@ -225,10 +225,9 @@ namespace Nop.Services.Orders
             out decimal discountAmount, out List<DiscountForCaching> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
-            SortedDictionary<decimal, decimal> taxRates;
-            GetShoppingCartSubTotal(cart, includingTax, 
+            GetShoppingCartSubTotal(cart, includingTax,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out SortedDictionary<decimal, decimal> _);
         }
 
         /// <summary>
@@ -266,8 +265,7 @@ namespace Nop.Services.Orders
             {
                 decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
 
-                decimal taxRate;
-                decimal sciExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, false, customer, out taxRate);
+                decimal sciExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, false, customer, out decimal taxRate);
                 decimal sciInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, true, customer, out taxRate);
                 subTotalExclTaxWithoutDiscount += sciExclTax;
                 subTotalInclTaxWithoutDiscount += sciInclTax;
@@ -296,9 +294,7 @@ namespace Nop.Services.Orders
                 {
                     foreach (var attributeValue in attributeValues)
                     {
-                        decimal taxRate;
-
-                        decimal caExclTax = _taxService.GetCheckoutAttributePrice(attributeValue, false, customer, out taxRate);
+                        decimal caExclTax = _taxService.GetCheckoutAttributePrice(attributeValue, false, customer, out decimal taxRate);
                         decimal caInclTax = _taxService.GetCheckoutAttributePrice(attributeValue, true, customer, out taxRate);
                         subTotalExclTaxWithoutDiscount += caExclTax;
                         subTotalInclTaxWithoutDiscount += caInclTax;
@@ -461,8 +457,7 @@ namespace Nop.Services.Orders
 
             //We calculate discount amount on order subtotal excl tax (discount first)
             //calculate discount amount ('Applied to order subtotal' discount)
-            List<DiscountForCaching> subTotalDiscounts;
-            var discountAmountExclTax = GetOrderSubtotalDiscount(customer, subTotalExclTax, out subTotalDiscounts);
+            var discountAmountExclTax = GetOrderSubtotalDiscount(customer, subTotalExclTax, out List<DiscountForCaching> subTotalDiscounts);
             if (subTotalExclTax < discountAmountExclTax)
                 discountAmountExclTax = subTotalExclTax;
             var discountAmountInclTax = discountAmountExclTax;
@@ -526,7 +521,7 @@ namespace Nop.Services.Orders
                                     if (selectedPickupPoint != null)
                                         shippingTotal = selectedPickupPoint.PickupFee;
                                     else
-                                        updateOrderParameters.Warnings.Add(string.Format("Shipping method {0} could not be loaded", updatedOrder.ShippingMethod));
+                                        updateOrderParameters.Warnings.Add($"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
                                 }
                                 else
                                     updateOrderParameters.Warnings.AddRange(pickupPointsResponse.Errors);
@@ -545,7 +540,7 @@ namespace Nop.Services.Orders
                                 if (shippingOption != null)
                                     shippingTotal = shippingOption.Rate;
                                 else
-                                    updateOrderParameters.Warnings.Add(string.Format("Shipping method {0} could not be loaded", updatedOrder.ShippingMethod));
+                                    updateOrderParameters.Warnings.Add($"Shipping method {updatedOrder.ShippingMethod} could not be loaded");
                             }
                             else
                                 updateOrderParameters.Warnings.AddRange(shippingOptionsResponse.Errors);
@@ -596,8 +591,7 @@ namespace Nop.Services.Orders
                     shippingTotal += restoredCart.Where(item => item.IsShipEnabled && !item.IsFreeShipping).Sum(item => item.Product.AdditionalShippingCharge);
 
                     //shipping discounts
-                    List<DiscountForCaching> shippingTotalDiscounts;
-                    shippingTotal -= GetShippingDiscount(customer, shippingTotal, out shippingTotalDiscounts);
+                    shippingTotal -= GetShippingDiscount(customer, shippingTotal, out List<DiscountForCaching> shippingTotalDiscounts);
                     if (shippingTotal < decimal.Zero)
                         shippingTotal = decimal.Zero;
 
@@ -701,7 +695,7 @@ namespace Nop.Services.Orders
 
             updatedOrder.OrderTax = taxTotal;
             updatedOrder.TaxRates = taxRates.Aggregate(string.Empty, (current, next) =>
-                string.Format("{0}{1}:{2};   ", current, next.Key.ToString(CultureInfo.InvariantCulture), next.Value.ToString(CultureInfo.InvariantCulture)));
+                $"{current}{next.Key.ToString(CultureInfo.InvariantCulture)}:{next.Value.ToString(CultureInfo.InvariantCulture)};   ");
 
             #endregion
 
@@ -710,8 +704,7 @@ namespace Nop.Services.Orders
             var total = (subTotalExclTax - discountAmountExclTax) + shippingTotalExclTax + updatedOrder.PaymentMethodAdditionalFeeExclTax + taxTotal;
 
             //get discounts for the order total
-            List<DiscountForCaching> orderAppliedDiscounts;
-            var discountAmountTotal = GetOrderTotalDiscount(customer, total, out orderAppliedDiscounts);     
+            var discountAmountTotal = GetOrderTotalDiscount(customer, total, out List<DiscountForCaching> orderAppliedDiscounts);
             if (total < discountAmountTotal)
                 discountAmountTotal = total;
             total -= discountAmountTotal;
@@ -814,12 +807,7 @@ namespace Nop.Services.Orders
             {
                 if (!subTotal.HasValue)
                 {
-                    decimal discountAmount;
-                    List<DiscountForCaching> appliedDiscounts;
-                    decimal subTotalWithoutDiscount;
-                    decimal subTotalWithDiscount;
-                    GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out discountAmount,
-                        out appliedDiscounts, out subTotalWithoutDiscount, out subTotalWithDiscount);
+                    GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out decimal _, out List<DiscountForCaching> _, out decimal _, out decimal subTotalWithDiscount);
                     subTotal = subTotalWithDiscount;
                 }
 
@@ -884,8 +872,7 @@ namespace Nop.Services.Orders
         /// <returns>Shipping total</returns>
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax)
         {
-            decimal taxRate;
-            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate);
+            return GetShoppingCartShippingTotal(cart, includingTax, out decimal _);
         }
 
         /// <summary>
@@ -898,8 +885,7 @@ namespace Nop.Services.Orders
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate)
         {
-            List<DiscountForCaching> appliedDiscounts;
-            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out appliedDiscounts);
+            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out List<DiscountForCaching> _);
         }
 
         /// <summary>
@@ -1012,8 +998,7 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            SortedDictionary<decimal, decimal> taxRates;
-            return GetTaxTotal(cart, out taxRates, usePaymentMethodAdditionalFee);
+            return GetTaxTotal(cart, out SortedDictionary<decimal, decimal> _, usePaymentMethodAdditionalFee);
         }
 
         /// <summary>
@@ -1043,15 +1028,7 @@ namespace Nop.Services.Orders
 
             //order sub total (items + checkout attributes)
             decimal subTotalTaxTotal = decimal.Zero;
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
-            SortedDictionary<decimal, decimal> orderSubTotalTaxRates;
-            GetShoppingCartSubTotal(cart, false, 
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase,
-                out orderSubTotalTaxRates);
+            GetShoppingCartSubTotal(cart, false, out decimal _, out List<DiscountForCaching> _, out decimal _, out decimal _, out SortedDictionary<decimal, decimal> orderSubTotalTaxRates);
             foreach (KeyValuePair<decimal, decimal> kvp in orderSubTotalTaxRates)
             {
                 decimal taxRate = kvp.Key;
@@ -1071,8 +1048,7 @@ namespace Nop.Services.Orders
             decimal shippingTax = decimal.Zero;
             if (_taxSettings.ShippingIsTaxable)
             {
-                decimal taxRate;
-                decimal? shippingExclTax = GetShoppingCartShippingTotal(cart, false, out taxRate);
+                decimal? shippingExclTax = GetShoppingCartShippingTotal(cart, false, out decimal taxRate);
                 decimal? shippingInclTax = GetShoppingCartShippingTotal(cart, true, out taxRate);
                 if (shippingExclTax.HasValue && shippingInclTax.HasValue)
                 {
@@ -1096,9 +1072,8 @@ namespace Nop.Services.Orders
             decimal paymentMethodAdditionalFeeTax = decimal.Zero;
             if (usePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
             {
-                decimal taxRate;
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
-                decimal paymentMethodAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate);
+                decimal paymentMethodAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out decimal taxRate);
                 decimal paymentMethodAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate);
 
                 paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
@@ -1193,13 +1168,7 @@ namespace Nop.Services.Orders
 
 
             //subtotal without tax
-            decimal orderSubTotalDiscountAmount;
-            List<DiscountForCaching> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
-            GetShoppingCartSubTotal(cart, false,
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+            GetShoppingCartSubTotal(cart, false, out decimal _, out List<DiscountForCaching> _, out decimal _, out decimal subTotalWithDiscountBase);
             //subtotal with discount
             decimal subtotalBase = subTotalWithDiscountBase;
 

@@ -108,25 +108,24 @@ namespace Nop.Services.Catalog
                                     attributeName = WebUtility.HtmlEncode(attributeName);
 
                                 //we never encode multiline textbox input
-                                formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(value, false, true, false, false, false, false));
+                                formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(value, false, true, false, false, false, false)}";
                             }
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid downloadGuid;
-                                Guid.TryParse(value, out downloadGuid);
+                                Guid.TryParse(value, out Guid downloadGuid);
                                 var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
-                                    var fileName = string.Format("{0}{1}", download.Filename ?? download.DownloadGuid.ToString(), download.Extension);
+                                    var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
 
                                     //encode (if required)
                                     if (htmlEncode)
                                         fileName = WebUtility.HtmlEncode(fileName);
 
                                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                                    var attributeText = allowHyperlinks ? string.Format("<a href=\"{0}download/getfileupload/?downloadId={1}\" class=\"fileuploadattribute\">{2}</a>",
-                                        _webHelper.GetStoreLocation(false), download.DownloadGuid, fileName) : fileName;
+                                    var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
+                                        : fileName;
 
                                     var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
 
@@ -134,13 +133,13 @@ namespace Nop.Services.Catalog
                                     if (htmlEncode)
                                         attributeName = WebUtility.HtmlEncode(attributeName);
 
-                                    formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                    formattedAttribute = $"{attributeName}: {attributeText}";
                                 }
                             }
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), value);
+                                formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {value}";
 
                                 //encode (if required)
                                 if (htmlEncode)
@@ -160,20 +159,17 @@ namespace Nop.Services.Catalog
                     {
                         foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = string.Format("{0}: {1}",
-                                attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id),
-                                attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                            var formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
 
                             if (renderPrices)
                             {
-                                decimal taxRate;
                                 var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
+                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
                                 var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                 if (priceAdjustmentBase > 0)
-                                    formattedAttribute += string.Format(" [+{0}]", _priceFormatter.FormatPrice(priceAdjustment, false, false));
+                                    formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
                                 else if (priceAdjustmentBase < decimal.Zero)
-                                    formattedAttribute += string.Format(" [-{0}]", _priceFormatter.FormatPrice(-priceAdjustment, false, false));
+                                    formattedAttribute += $" [-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}]";
                             }
 
                             //display quantity
@@ -204,13 +200,7 @@ namespace Nop.Services.Catalog
             {
                 if (product.IsGiftCard)
                 {
-                    string giftCardRecipientName;
-                    string giftCardRecipientEmail;
-                    string giftCardSenderName;
-                    string giftCardSenderEmail;
-                    string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out giftCardRecipientName, out giftCardRecipientEmail,
-                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string _);
 
                     //sender
                     var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?

@@ -11,9 +11,9 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
+                string controlId = $"checkout_attribute_{attribute.Id}";
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@string.Format("checkout_attribute_label_{0}", attribute.Id)">
+                <dt id="@($"checkout_attribute_label_{attribute.Id}")">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -22,7 +22,7 @@
                         <span class="required">*</span>
                     }
                 </dt>
-                <dd id="@string.Format("checkout_attribute_input_{0}", attribute.Id)">
+                <dd id="@($"checkout_attribute_input_{attribute.Id}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:

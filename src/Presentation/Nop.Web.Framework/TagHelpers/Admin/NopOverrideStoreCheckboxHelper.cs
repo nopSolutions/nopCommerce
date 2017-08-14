@@ -99,7 +99,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 {
                     dataInputSelector = "#" + String.Join(", #", dataInputIds);
                 }
-                var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
+                var onClick = $"checkOverriddenStoreValue(this, '{dataInputSelector}')";
 
                 var htmlAttributes = new
                 {

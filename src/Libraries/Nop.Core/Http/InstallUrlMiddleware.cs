@@ -38,7 +38,7 @@ namespace Nop.Core.Http
             //whether database is installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
             {
-                var installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
+                var installUrl = $"{webHelper.GetStoreLocation()}install";
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //redirect

@@ -152,9 +152,9 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 return new GetShippingOptionResponse { Errors = new List<string> { "Origin postal code is not set" } };
 
             //get available services
-            string errors;
-            var availableServices = CanadaPostHelper.GetServices(getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
-                _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out errors);
+            var availableServices = CanadaPostHelper.GetServices(
+                getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
+                _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out string errors);
             if (availableServices == null)
                 return new GetShippingOptionResponse { Errors = new List<string> { errors } };
 
@@ -203,12 +203,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
             }
 
             //get original parcel characteristics
-            decimal originalLength;
-            decimal originalWidth;
-            decimal originalHeight;
-            decimal originalWeight;
-            GetWeight(getShippingOptionRequest, out originalWeight);
-            GetDimensions(getShippingOptionRequest, out originalLength, out originalWidth, out originalHeight);
+            GetWeight(getShippingOptionRequest, out decimal originalWeight);
+            GetDimensions(getShippingOptionRequest, out decimal originalLength, out decimal originalWidth, out decimal originalHeight);
 
             //get rate for all available services
             var errorSummary = new StringBuilder();
@@ -322,9 +318,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
                             {
                                 Name = option.servicename,
                                 Rate = PriceToPrimaryStoreCurrency(option.pricedetails.due * totalParcels),
-                                Description = string.Format("Delivery {0}into {1} parcels", 
-                                    option.servicestandard != null && !string.IsNullOrEmpty(option.servicestandard.expectedtransittime) 
-                                    ? string.Format("in {0} days ", option.servicestandard.expectedtransittime) : string.Empty, totalParcels),
+                                Description =
+                                    $"Delivery {(option.servicestandard != null && !string.IsNullOrEmpty(option.servicestandard.expectedtransittime) ? $"in {option.servicestandard.expectedtransittime} days " : string.Empty)}into {totalParcels} parcels",
                             });
                         }
                     else

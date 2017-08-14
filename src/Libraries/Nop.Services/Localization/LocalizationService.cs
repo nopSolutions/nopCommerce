@@ -163,7 +163,7 @@ namespace Nop.Services.Localization
             var localeStringResource = query.FirstOrDefault();
 
             if (localeStringResource == null && logIfNotFound)
-                _logger.Warning(string.Format("Resource string ({0}) not found. Language ID = {1}", resourceName, languageId));
+                _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");
             return localeStringResource;
         }
 
@@ -304,7 +304,7 @@ namespace Nop.Services.Localization
             if (String.IsNullOrEmpty(result))
             {
                 if (logIfNotFound)
-                    _logger.Warning(string.Format("Resource string ({0}) is not found. Language ID = {1}", resourceKey, languageId));
+                    _logger.Warning($"Resource string ({resourceKey}) is not found. Language ID = {languageId}");
                 
                 if (!String.IsNullOrEmpty(defaultValue))
                 {

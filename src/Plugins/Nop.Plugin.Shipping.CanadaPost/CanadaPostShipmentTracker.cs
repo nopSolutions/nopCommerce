@@ -60,9 +60,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// <returns>List of Shipment Events.</returns>
         public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
         {
-            string errors;
             var trackingDetails = CanadaPostHelper.GetTrackingDetails(trackingNumber,
-                _canadaPostSettings.ApiKey,_canadaPostSettings.UseSandbox, out errors);
+                _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out string errors);
 
             if (trackingDetails == null)
             {

@@ -314,7 +314,7 @@ namespace Nop.Core
             //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
             //if it can return content type, then it's a static file
             var contentTypeProvider = new FileExtensionContentTypeProvider();
-            return contentTypeProvider.TryGetContentType(path, out string contentType);
+            return contentTypeProvider.TryGetContentType(path, out string _);
         }
 
         /// <summary>

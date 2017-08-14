@@ -9,7 +9,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Extensions;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -151,7 +150,7 @@ namespace Nop.Services.Shipping
 
             //whether to ship associated products
             return associatedAttributeValues.Any(attributeValue =>
-                _productService.GetProductById(attributeValue.AssociatedProductId).Return(product => product.IsShipEnabled, false));
+                _productService.GetProductById(attributeValue.AssociatedProductId)?.IsShipEnabled ?? false);
 
         }
 
@@ -608,11 +607,7 @@ namespace Nop.Services.Shipping
                 foreach (var packageItem in packageItems)
                 {
                     //associated products
-                    decimal associatedProductsWidth;
-                    decimal associatedProductsLength;
-                    decimal associatedProductsHeight;
-                    GetAssociatedProductDimensions(packageItem.ShoppingCartItem,
-                        out associatedProductsWidth, out associatedProductsLength, out associatedProductsHeight);
+                    GetAssociatedProductDimensions(packageItem.ShoppingCartItem, out decimal associatedProductsWidth, out decimal associatedProductsLength, out decimal associatedProductsHeight);
 
                     var quantity = packageItem.GetQuantity();
                     width += (packageItem.ShoppingCartItem.Product.Width + associatedProductsWidth) * quantity;
@@ -809,8 +804,7 @@ namespace Nop.Services.Shipping
             var result = new GetShippingOptionResponse();
 
             //create a package
-            bool shippingFromMultipleLocations;
-            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
+            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out bool shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(customer, storeId);
@@ -867,7 +861,7 @@ namespace Nop.Services.Shipping
                         foreach (string error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
-                            _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
+                            _logger.Warning($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
                         }
                         //clear the shipping options in this case
                         srcmShippingOptions = new List<ShippingOption>();
@@ -933,7 +927,7 @@ namespace Nop.Services.Shipping
                     foreach (string error in pickPointsResponse.Errors)
                     {
                         result.AddError(error);
-                        _logger.Warning(string.Format("PickupPoints ({0}). {1}", provider.PluginDescriptor.FriendlyName, error));
+                        _logger.Warning($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
                     }
                 }
             }

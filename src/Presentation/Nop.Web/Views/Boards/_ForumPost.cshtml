@@ -4,7 +4,7 @@
 @{
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
-<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+<div class="topic-post" id="@Html.Encode($"post{Model.Id}")">
     <div class="post-info">
         <div class="user-info">
             @if (Model.AllowViewingProfiles)
@@ -135,7 +135,7 @@
                 });
                 </script>
 
-                <div class="post-vote" id="@String.Format("post-vote-{0}", Model.Id)">
+                <div class="post-vote" id="@($"post-vote-{Model.Id}")">
                     <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
                           title="This post/answer is useful"></span>
                     <div class="vote-count-post"> @Model.VoteCount </div>

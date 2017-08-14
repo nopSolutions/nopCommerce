@@ -429,13 +429,12 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            IList<int> filterableSpecificationAttributeOptionIds;
-            return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
+            return SearchProducts(out IList<int> filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchManufacturerPartNumber, searchSku,
-                searchProductTags, languageId, filteredSpecs, 
+                searchProductTags, languageId, filteredSpecs,
                 orderBy, showHidden, overridePublished);
         }
 

@@ -16,8 +16,7 @@ namespace Nop.Web.Framework.Themes
 
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
-            string theme = null;
-            if (context.Values.TryGetValue(THEME_KEY, out theme))
+            if (context.Values.TryGetValue(THEME_KEY, out string theme))
             {
                 viewLocations = new[] {
                         $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",

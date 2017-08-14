@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="context">Exception context</param>
         public void OnException(ExceptionContext context)
         {
-            if (context == null || context.Exception == null)
+            if (context?.Exception == null)
                 return;
 
             //just log an exception here, handle it later

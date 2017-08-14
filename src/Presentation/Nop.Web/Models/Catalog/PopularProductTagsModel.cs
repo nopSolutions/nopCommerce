@@ -72,8 +72,7 @@ namespace Nop.Web.Models.Catalog
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.ProductCount);
-            double mean;
-            double stdDev = StdDev(itemWeights, out mean);
+            double stdDev = StdDev(itemWeights, out double mean);
 
             return GetFontSize(productTag.ProductCount, mean, stdDev);
         }
