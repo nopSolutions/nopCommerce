@@ -49,13 +49,6 @@
                                     serverFiltering: true,
                                     serverSorting: true
                                 },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
                                 editable: {
                                     confirmation: "@T("Admin.Common.DeleteConfirmation")",
                                     mode: "inline"
