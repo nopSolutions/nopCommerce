@@ -2730,6 +2730,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //attributes
                 var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
+                //weight
+                var itemWeight = _shippingService.GetShoppingCartItemWeight(product, attributesXml);
+
+
                 //save item
                 var orderItem = new OrderItem
                 {
@@ -2749,6 +2753,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     DownloadCount = 0,
                     IsDownloadActivated = false,
                     LicenseDownloadId = 0,
+                    ItemWeight = itemWeight,
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate
                 };

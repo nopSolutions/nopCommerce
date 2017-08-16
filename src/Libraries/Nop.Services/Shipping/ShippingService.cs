@@ -432,14 +432,24 @@ namespace Nop.Services.Shipping
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            if (shoppingCartItem.Product == null)
+            return GetShoppingCartItemWeight(shoppingCartItem.Product, shoppingCartItem.AttributesXml);
+        }
+        /// <summary>
+        /// Gets product item weight (of one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Selected product attributes in XML</param>
+        /// <returns>Item weight</returns>
+        public virtual decimal GetShoppingCartItemWeight(Product product, string attributesXml)
+        {
+            if (product == null)
                 return decimal.Zero;
 
             //attribute weight
             decimal attributesTotalWeight = decimal.Zero;
-            if (_shippingSettings.ConsiderAssociatedProductsDimensions && !String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+            if (_shippingSettings.ConsiderAssociatedProductsDimensions && !String.IsNullOrEmpty(attributesXml))
             {
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
                 foreach (var attributeValue in attributeValues)
                 {
                     switch (attributeValue.AttributeValueType)
@@ -464,7 +474,7 @@ namespace Nop.Services.Shipping
                 }
             }
 
-            var weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
+            var weight = product.Weight + attributesTotalWeight;
             return weight;
         }
 
