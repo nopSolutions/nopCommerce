@@ -122,7 +122,8 @@ namespace Nop.Web.Factories
         {
             var model = new CheckoutBillingAddressModel();
             model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping();
-            model.ShipToSameAddress = true;
+            //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
+            model.ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep;
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
