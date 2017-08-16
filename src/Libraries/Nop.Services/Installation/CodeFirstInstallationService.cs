@@ -5825,6 +5825,18 @@ namespace Nop.Services.Installation
                                            Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
+                                   new Topic
+                                       {
+                                           SystemName = "VendorTermsOfService",
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
+                                           IncludeInFooterColumn1 = true,
+                                           DisplayOrder = 1,
+                                           Published = true,
+                                           Title = "",
+                                           Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
+                                       }
                                };
             _topicRepository.Insert(topics);
 
@@ -6417,6 +6429,7 @@ namespace Nop.Services.Installation
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
                 AllowCustomersToApplyForVendorAccount = true,
+                TermsOfServiceEnabled = false,
                 AllowVendorsToEditInfo = false,
                 NotifyStoreOwnerAboutVendorInformationChange = true,
                 MaximumProductNumber = 3000,

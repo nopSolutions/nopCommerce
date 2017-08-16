@@ -35,8 +35,10 @@
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.AllowVendorsToEditInfo)").click(toggleAllowVendorsToEditInfo);
+                                $("#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)").click(toggleAllowCustomersToApplyForVendorAccount);
 
                                 toggleAllowVendorsToEditInfo();
+                                toggleAllowCustomersToApplyForVendorAccount();
                             });
 
                             function toggleAllowVendorsToEditInfo() {
@@ -44,6 +46,14 @@
                                     $('#pnlNotifyStoreOwnerAboutVendorInformationChange').show();
                                 } else {
                                     $('#pnlNotifyStoreOwnerAboutVendorInformationChange').hide();
+                                }
+                            }
+
+                            function toggleAllowCustomersToApplyForVendorAccount() {
+                                if ($('#@Html.IdFor(model => model.AllowCustomersToApplyForVendorAccount)').is(':checked')) {
+                                    $('#pnlTermsOfServiceEnabled').show();
+                                } else {
+                                    $('#pnlTermsOfServiceEnabled').hide();
                                 }
                             }
                         </script>
@@ -55,6 +65,16 @@
                             <div class="col-md-9">
                                 <nop-editor asp-for="AllowCustomersToApplyForVendorAccount" />
                                 <span asp-validation-for="AllowCustomersToApplyForVendorAccount"></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlTermsOfServiceEnabled">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="TermsOfServiceEnabled_OverrideForStore" asp-input="TermsOfServiceEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="TermsOfServiceEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TermsOfServiceEnabled" />
+                                <span asp-validation-for="TermsOfServiceEnabled"></span>
                             </div>
                         </div>
                         <div class="form-group advanced-setting">

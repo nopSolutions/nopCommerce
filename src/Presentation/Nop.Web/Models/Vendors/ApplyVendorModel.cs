@@ -19,6 +19,8 @@ namespace Nop.Web.Models.Vendors
         
         public bool DisplayCaptcha { get; set; }
 
+        public bool TermsOfServiceEnabled { get; set; }
+
         public bool DisableFormInput { get; set; }
         public string Result { get; set; }
     }

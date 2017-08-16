@@ -1,4 +1,5 @@
-﻿@model ApplyVendorModel
+﻿@using System.Text.Encodings.Web
+@model ApplyVendorModel
 @{
     Layout = "_ColumnsOne";
 
@@ -52,10 +53,42 @@
                                 <nop-captcha />
                             </div>
                         }
+                        @if (Model.TermsOfServiceEnabled)
+                        {
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    $('#apply-vendor').click(function() {
+                                        if ($('#accept-terms-of-service').is(':checked')) {
+                                            //do some stuff
+                                            return true;
+                                        } else {
+                                            //just show validation errors, dont post
+                                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Vendors.ApplyAccount.AcceptTermsOfService.Required").Text))');
+                                            return false;
+                                        }
+                                    });
+                                });
+                            </script>
+                            <div class="accept-terms-of-service">
+                                <input id="accept-terms-of-service" type="checkbox" name="accept-terms-of-service" />
+                                <label for="accept-terms-of-service">@T("Vendors.ApplyAccount.AcceptTermsOfService")</label>
+                                <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#read-acceptterms').on('click',
+                                            function (e) {
+                                                displayPopupContentFromUrl(
+                                                    '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                    '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
+                                            });
+                                    });
+                                </script>
+                            </div>
+                        }
                     </div>
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="send-email" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                    <input type="submit" id="apply-vendor" name="apply-vendor" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                 </div>
             </form>
         }
