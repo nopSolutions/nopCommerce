@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -17,6 +18,18 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
         {
+            //TODO find the way to get settings here
+            //var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
+            var settings = new FacebookExternalAuthSettings();
+            if (string.IsNullOrEmpty(settings?.ClientKeyIdentifier) || string.IsNullOrEmpty(settings?.ClientSecret))
+                return;
+
+            services.AddAuthentication().AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
+            {
+                options.AppId = settings.ClientKeyIdentifier;
+                options.AppSecret = settings.ClientSecret;
+                options.SaveTokens = true;
+            });
         }
 
         /// <summary>
@@ -25,17 +38,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
-            if (string.IsNullOrEmpty(settings?.ClientKeyIdentifier) || string.IsNullOrEmpty(settings?.ClientSecret))
-                return;
-
-            //add Facebook middleware
-            application.UseFacebookAuthentication(new FacebookOptions
-            {
-                AppId = settings.ClientKeyIdentifier,
-                AppSecret = settings.ClientSecret,
-                SaveTokens = true
-            });
         }
 
         /// <summary>

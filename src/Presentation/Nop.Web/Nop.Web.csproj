@@ -14,12 +14,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,10 +36,10 @@
 	<None Remove="Plugins\**" />
 	
 	<!-- We copy the entire \Plugins and \Themes directories.
-	But we ignore cshtml files to avoid "Duplicate 'Content' items were included" error during publishing.
+	But we ignore cshtml and config files to avoid "Duplicate 'Content' items were included" error during publishing.
 	We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
 	<Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml" />
-	<Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.cshtml" />
+	<Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.cshtml;Themes\**\*.config" />
     
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

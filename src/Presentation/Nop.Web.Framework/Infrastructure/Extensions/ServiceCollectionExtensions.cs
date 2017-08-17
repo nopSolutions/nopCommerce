@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //override cookie name
             services.AddAntiforgery(options =>
             {
-                options.CookieName = ".Nop.Antiforgery";
+                options.Cookie.Name = ".Nop.Antiforgery";
             });
         }
 
@@ -114,8 +114,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             services.AddSession(options =>
             {
-                options.CookieName = ".Nop.Session";
-                options.CookieHttpOnly = true;
+                options.Cookie.Name = ".Nop.Session";
+                options.Cookie.HttpOnly = true;
             });
         }
 
@@ -141,11 +141,30 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddNopAuthentication(this IServiceCollection services)
         {
-            //set the authentication scheme corresponding to the default middleware
-            services.AddAuthentication(options =>
+            //set default authentication schemes
+            var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.SignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
+
+            //add main cookie authentication
+            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+            });
+
+            //add external authentication
+            authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
+             {
+                 options.Cookie.Name = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                 options.Cookie.HttpOnly = true;
+                 options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
+                 options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
+             });
         }
 
         /// <summary>
@@ -157,6 +176,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             //add basic MVC feature
             var mvcBuilder = services.AddMvc();
+
+            //use session temp data provider
+            mvcBuilder.AddSessionStateTempDataProvider();
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());

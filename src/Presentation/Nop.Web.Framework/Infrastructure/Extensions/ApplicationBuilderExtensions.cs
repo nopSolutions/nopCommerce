@@ -9,11 +9,9 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
-using Nop.Services.Authentication;
 using Nop.Services.Security;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -132,41 +130,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Congifure authentication
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseAuthentication(this IApplicationBuilder application)
-        {                    
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            //enable main cookie authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = NopCookieAuthenticationDefaults.AuthenticationScheme,
-                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme,
-                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = true
-            });
-
-            //enable external authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = false
-            });
-        }
-
-        /// <summary>
         /// Configure MVC routing
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
@@ -192,15 +155,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //whether MiniProfiler should be displayed
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
-                application.UseMiniProfiler(new MiniProfilerOptions
+                application.UseMiniProfiler(miniProfilerOptions =>
                 {
                     //use memory cache provider for storing each result
-                    Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60)),
+                    miniProfilerOptions.Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60));
 
                     //determine who can access the MiniProfiler results
-                    ResultsAuthorize = request =>
+                    miniProfilerOptions.ResultsAuthorize = request =>
                         !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
+                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
                 });
             }
         }

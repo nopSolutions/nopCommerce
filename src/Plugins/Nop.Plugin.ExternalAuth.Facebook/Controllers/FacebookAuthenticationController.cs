@@ -3,8 +3,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
@@ -136,23 +134,19 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public async Task<IActionResult> LoginCallback(string returnUrl)
         {
             //authenticate Facebook user
-            var authenticateContext = new AuthenticateContext(FacebookDefaults.AuthenticationScheme);
-            await this.HttpContext?.Authentication?.AuthenticateAsync(authenticateContext);
-
-            //get authenticated user identity
-            var userIdentity = authenticateContext.Principal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
-            if (userIdentity == null || !userIdentity.Claims.Any())
+            var authenticateResult =  await this.HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+            if (!authenticateResult.Succeeded || !authenticateResult.Principal.Claims.Any())
                 return RedirectToRoute("Login");
 
             //create external authentication parameters
             var authenticationParameters = new ExternalAuthenticationParameters
             {
                 ProviderSystemName = FacebookAuthenticationDefaults.ProviderSystemName,
-                AccessToken = new AuthenticationProperties(authenticateContext.Properties).GetTokenValue("access_token"),
-                Email = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value,
-                ExternalIdentifier = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
-                ExternalDisplayIdentifier = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
-                Claims = userIdentity.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()
+                AccessToken = await this.HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
+                Email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value,
+                ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,
+                ExternalDisplayIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name)?.Value,
+                Claims = authenticateResult.Principal.Claims.Select(claim => new ExternalAuthenticationClaim(claim.Type, claim.Value)).ToList()
             };
 
             //authenticate Nop user
