@@ -122,6 +122,9 @@ set @resources='
   <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService.Required">
     <Value>Please accept terms of service</Value>
   </LocaleResource>
+  <LocaleResource Name="Payment.ExpirationDate.Expired">
+    <Value>Card is expired</Value>
+  </LocaleResource>
 </Language>
 '
 
