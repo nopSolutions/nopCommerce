@@ -56,7 +56,7 @@ namespace Nop.Services.Authentication.External
         #endregion
 
         /// <summary>
-        /// Accociate external account with customer
+        /// Associate external account with customer
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
