@@ -6,7 +6,7 @@ namespace Nop.Services.Caching
     /// <summary>
     /// Clear cache scheduled task implementation
     /// </summary>
-    public partial class ClearCacheTask : ITask
+    public partial class ClearCacheTask : IScheduleTask
     {
         private readonly IStaticCacheManager _staticCacheManager;
 

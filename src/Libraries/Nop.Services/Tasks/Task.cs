@@ -62,8 +62,7 @@ namespace Nop.Services.Tasks
                 instance = EngineContext.Current.ResolveUnregistered(type);
             }
 
-            var task = instance as ITask;
-
+            var task = instance as IScheduleTask;
             if (task == null)
                 return;
 

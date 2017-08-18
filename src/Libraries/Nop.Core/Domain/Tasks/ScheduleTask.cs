@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Tasks
         public int Seconds { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of appropriate ITask class
+        /// Gets or sets the type of appropriate IScheduleTask class
         /// </summary>
         public string Type { get; set; }
 

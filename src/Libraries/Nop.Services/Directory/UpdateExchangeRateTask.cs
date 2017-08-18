@@ -7,7 +7,7 @@ namespace Nop.Services.Directory
     /// <summary>
     /// Represents a task for updating exchange rates
     /// </summary>
-    public partial class UpdateExchangeRateTask : ITask
+    public partial class UpdateExchangeRateTask : IScheduleTask
     {
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;

@@ -7,7 +7,7 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Represents a task for sending queued message 
     /// </summary>
-    public partial class QueuedMessagesSendTask : ITask
+    public partial class QueuedMessagesSendTask : IScheduleTask
     {
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailSender _emailSender;
