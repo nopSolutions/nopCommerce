@@ -16,7 +16,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
         /// <param name="builder">Authentication builder</param>
         public void Configure(AuthenticationBuilder builder)
         {
-            builder.AddFacebook(FacebookDefaults.AuthenticationScheme, x => GetSettings.Configure());
+            //ignore external authentication now (validation exception is thrown)
+            //https://github.com/nopSolutions/nopCommerce/issues/2497
+            //builder.AddFacebook(FacebookDefaults.AuthenticationScheme, x => GetSettings.Configure());
         }
 
         /// <summary>
