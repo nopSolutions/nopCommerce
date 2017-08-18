@@ -3,7 +3,7 @@ using Nop.Core.Configuration;
 namespace Nop.Plugin.ExternalAuth.Facebook
 {
     /// <summary>
-    /// Represents settings of the Facebook authentication mehod
+    /// Represents settings of the Facebook authentication method
     /// </summary>
     public class FacebookExternalAuthSettings : ISettings
     {
