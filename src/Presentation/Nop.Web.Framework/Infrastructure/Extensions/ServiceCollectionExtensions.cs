@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -8,7 +9,9 @@ using Newtonsoft.Json.Serialization;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Services.Authentication;
+using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.FluentValidation;
@@ -147,6 +150,18 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
+            //register external authentication plugins now
+            var typeFinder = new WebAppTypeFinder();
+            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
+            //create and sort instances of external authentication configurations
+            var externalAuthInstances = externalAuthConfigurations
+                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
+                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x))
+                .OrderBy(x => x.Order);
+            //configure services
+            foreach (var instance in externalAuthInstances)
+                instance.Configure(authenticationBuilder);
+
 
             //add main cookie authentication
             authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.AuthenticationScheme, options =>
