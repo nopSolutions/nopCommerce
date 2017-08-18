@@ -64,6 +64,7 @@ namespace Nop.Services.Tests.Configuration
         public override IList<Setting> GetAllSettings()
         {
             var settings = new List<Setting>();
+#if NET451
             var appSettings = ConfigurationManager.AppSettings;
             foreach (var setting in appSettings.AllKeys)
             {
@@ -74,6 +75,7 @@ namespace Nop.Services.Tests.Configuration
                                  });
             }
 
+#endif
             return settings;
         }
 
