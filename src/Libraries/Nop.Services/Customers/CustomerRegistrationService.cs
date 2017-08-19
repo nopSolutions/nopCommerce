@@ -85,7 +85,7 @@ namespace Nop.Services.Customers
         #region Utilities
 
         /// <summary>
-        /// Check whether the entered password matches with saved one
+        /// Check whether the entered password matches with a saved one
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
         /// <param name="enteredPassword">The entered password</param>
@@ -108,6 +108,9 @@ namespace Nop.Services.Customers
                     savedPassword = _encryptionService.CreatePasswordHash(enteredPassword, customerPassword.PasswordSalt, _customerSettings.HashedPasswordFormat);
                     break;
             }
+
+            if (customerPassword.Password == null)
+                return false;
 
             return customerPassword.Password.Equals(savedPassword);
         }
