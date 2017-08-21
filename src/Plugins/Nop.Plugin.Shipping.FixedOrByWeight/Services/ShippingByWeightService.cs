@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -75,59 +74,36 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Services
                 .ToList();
 
             //filter by store
-            var matchedByStore = new List<ShippingByWeightRecord>();
-            foreach (var sbw in existingRates)
-                if (storeId == sbw.StoreId)
-                    matchedByStore.Add(sbw);
-            if (!matchedByStore.Any())
-                foreach (var sbw in existingRates)
-                    if (sbw.StoreId == 0)
-                        matchedByStore.Add(sbw);
-
+            var matchedByStore = storeId == 0
+                ? existingRates
+                : existingRates.Where(r => r.StoreId == storeId || r.StoreId == 0);
+           
             //filter by warehouse
-            var matchedByWarehouse = new List<ShippingByWeightRecord>();
-            foreach (var sbw in matchedByStore)
-                if (warehouseId == sbw.WarehouseId)
-                    matchedByWarehouse.Add(sbw);
-            if (!matchedByWarehouse.Any())
-                foreach (var sbw in matchedByStore)
-                    if (sbw.WarehouseId == 0)
-                        matchedByWarehouse.Add(sbw);
+            var matchedByWarehouse = warehouseId == 0
+                ? matchedByStore
+                : matchedByStore.Where(r => r.WarehouseId == warehouseId || r.WarehouseId == 0);
 
             //filter by country
-            var matchedByCountry = new List<ShippingByWeightRecord>();
-            foreach (var sbw in matchedByWarehouse)
-                if (countryId == sbw.CountryId)
-                    matchedByCountry.Add(sbw);
-            if (!matchedByCountry.Any())
-                foreach (var sbw in matchedByWarehouse)
-                    if (sbw.CountryId == 0)
-                        matchedByCountry.Add(sbw);
+            var matchedByCountry = countryId == 0
+                ? matchedByWarehouse
+                : matchedByWarehouse.Where(r => r.CountryId == countryId || r.CountryId == 0);
 
             //filter by state/province
-            var matchedByStateProvince = new List<ShippingByWeightRecord>();
-            foreach (var sbw in matchedByCountry)
-                if (stateProvinceId == sbw.StateProvinceId)
-                    matchedByStateProvince.Add(sbw);
-            if (!matchedByStateProvince.Any())
-                foreach (var sbw in matchedByCountry)
-                    if (sbw.StateProvinceId == 0)
-                        matchedByStateProvince.Add(sbw);
-
+            var matchedByStateProvince = stateProvinceId == 0
+                ? matchedByCountry
+                : matchedByCountry.Where(r => r.StateProvinceId == stateProvinceId || r.StateProvinceId == 0);
 
             //filter by zip
-            var matchedByZip = new List<ShippingByWeightRecord>();
-            foreach (var sbw in matchedByStateProvince)
-                if ((String.IsNullOrEmpty(zip) && String.IsNullOrEmpty(sbw.Zip)) ||
-                    (zip.Equals(sbw.Zip, StringComparison.InvariantCultureIgnoreCase)))
-                    matchedByZip.Add(sbw);
+            var matchedByZip = string.IsNullOrEmpty(zip)
+                ? matchedByStateProvince
+                : matchedByStateProvince.Where(r => string.IsNullOrEmpty(r.Zip) || r.Zip.Equals(zip, StringComparison.InvariantCultureIgnoreCase));
 
-            if (!matchedByZip.Any())
-                foreach (var taxRate in matchedByStateProvince)
-                    if (String.IsNullOrWhiteSpace(taxRate.Zip))
-                        matchedByZip.Add(taxRate);
+            //sort from particular to general, more particular cases will be the first
+            var foundRecords = matchedByZip.OrderBy(r => r.StoreId == 0).ThenBy(r => r.WarehouseId == 0)
+                .ThenBy(r => r.CountryId == 0).ThenBy(r => r.StateProvinceId == 0)
+                .ThenBy(r => string.IsNullOrEmpty(r.Zip));
 
-            return matchedByZip.FirstOrDefault();
+            return foundRecords.FirstOrDefault();
         }
 
         public virtual ShippingByWeightRecord GetById(int shippingByWeightRecordId)

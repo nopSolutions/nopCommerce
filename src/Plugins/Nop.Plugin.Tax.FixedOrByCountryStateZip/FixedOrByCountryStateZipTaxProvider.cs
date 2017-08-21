@@ -96,37 +96,29 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 var stateProvinceId = calculateTaxRequest.Address.StateProvince != null
                     ? calculateTaxRequest.Address.StateProvince.Id
                     : 0;
-                var zip = calculateTaxRequest.Address.ZipPostalCode;
-                
-                if (zip == null)
-                    zip = string.Empty;
+                var zip = calculateTaxRequest.Address.ZipPostalCode ?? string.Empty;
+
                 zip = zip.Trim();
 
-                var existingRates = allTaxRates.Where(taxRate => taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId).ToList();
+                var existingRates = allTaxRates.Where(taxRate => taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId);
 
                 //filter by store
-                //first, find by a store ID
-                var matchedByStore = existingRates.Where(taxRate => storeId == taxRate.StoreId).ToList();
-                
-                //not found? use the default ones (ID == 0)
-                if (!matchedByStore.Any())
-                    matchedByStore.AddRange(existingRates.Where(taxRate => taxRate.StoreId == 0));
+                var matchedByStore = existingRates.Where(taxRate => storeId == taxRate.StoreId || taxRate.StoreId == 0);
 
                 //filter by state/province
-                //first, find by a state ID
-                var matchedByStateProvince = matchedByStore.Where(taxRate => stateProvinceId == taxRate.StateProvinceId).ToList();
-               
-                //not found? use the default ones (ID == 0)
-                if (!matchedByStateProvince.Any())
-                    matchedByStateProvince.AddRange(matchedByStore.Where(taxRate => taxRate.StateProvinceId == 0));
-
+                var matchedByStateProvince = matchedByStore.Where(taxRate => stateProvinceId == taxRate.StateProvinceId || taxRate.StateProvinceId == 0);
+                
                 //filter by zip
-                var matchedByZip = matchedByStateProvince.Where(taxRate => (string.IsNullOrEmpty(zip) && string.IsNullOrEmpty(taxRate.Zip)) || zip.Equals(taxRate.Zip, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                if (!matchedByZip.Any())
-                    matchedByZip.AddRange(matchedByStateProvince.Where(taxRate => string.IsNullOrWhiteSpace(taxRate.Zip)));
+                var matchedByZip = matchedByStateProvince.Where(taxRate => string.IsNullOrWhiteSpace(taxRate.Zip) || taxRate.Zip.Equals(zip, StringComparison.InvariantCultureIgnoreCase));
 
-                if (matchedByZip.Any())
-                    result.TaxRate = matchedByZip[0].Percentage;
+                //sort from particular to general, more particular cases will be the first
+                var foundRecords = matchedByZip.OrderBy(r => r.StoreId == 0).ThenBy(r => r.StateProvinceId == 0)
+                    .ThenBy(r => string.IsNullOrEmpty(r.Zip));
+
+                var foundRecord = foundRecords.FirstOrDefault();
+
+                if (foundRecord != null)
+                    result.TaxRate = foundRecord.Percentage;
             }
             return result;
         }
