@@ -140,6 +140,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts.Hint">
     <Value>Check to allow administrators (in impersonation mode) are allowed to buy products marked as "Call for price".</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Services">
+    <Value>Available services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Services.Hint">
+    <Value>Select the services you want to offer to customers.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -349,5 +355,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.allowadmin
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.allowadminstobuycallforpriceproducts', N'True', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'canadapostsettings.selectedservicescodes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'canadapostsettings.selectedservicescodes', N'', 0)
 END
 GO
