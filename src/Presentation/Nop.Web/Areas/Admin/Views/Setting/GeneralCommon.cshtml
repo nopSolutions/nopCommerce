@@ -555,7 +555,8 @@
                        @T("Admin.Configuration.Settings.GeneralCommon.Captcha.Instructions")
                         <div class="form-group">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.Enabled" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.Enabled_OverrideForStore" asp-input="CaptchaSettings.Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.Enabled"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.Enabled" />
@@ -564,7 +565,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnLoginPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnLoginPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnLoginPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnLoginPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnLoginPage" />
@@ -573,7 +575,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnRegistrationPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnRegistrationPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnRegistrationPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnRegistrationPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnRegistrationPage" />
@@ -582,7 +585,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnContactUsPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnContactUsPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnContactUsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnContactUsPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnContactUsPage" />
@@ -591,7 +595,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailWishlistToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnEmailWishlistToFriendPage" />
@@ -600,7 +605,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnEmailProductToFriendPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnEmailProductToFriendPage" />
@@ -609,7 +615,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnBlogCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnBlogCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnBlogCommentPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnBlogCommentPage" />
@@ -618,7 +625,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnNewsCommentPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnNewsCommentPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnNewsCommentPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnNewsCommentPage" />
@@ -627,7 +635,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnProductReviewPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnProductReviewPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnProductReviewPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnProductReviewPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnProductReviewPage" />
@@ -636,7 +645,8 @@
                         </div>
                         <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore" asp-input="CaptchaSettings.ShowOnApplyVendorPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ShowOnApplyVendorPage"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ShowOnApplyVendorPage" />
@@ -645,7 +655,8 @@
                         </div>
                         <div class="form-group" id="ssReCaptchaVersionpnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ReCaptchaVersion" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaVersion_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaVersion" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaVersion"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-select asp-for="CaptchaSettings.ReCaptchaVersion" asp-items="Model.CaptchaSettings.AvailableReCaptchaVersions" />
@@ -654,7 +665,8 @@
                         </div>
                         <div class="form-group" id="ssReCaptchaPublicKeypnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ReCaptchaPublicKey" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaPublicKey"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ReCaptchaPublicKey" />
@@ -663,7 +675,8 @@
                         </div>
                         <div class="form-group" id="ssReCaptchaPrivateKeypnl">
                             <div class="col-md-3">
-                                <nop-label asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
+                                <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPrivateKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPrivateKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CaptchaSettings.ReCaptchaPrivateKey"/>
                             </div>
                             <div class="col-md-9">
                                 <nop-editor asp-for="CaptchaSettings.ReCaptchaPrivateKey" />
