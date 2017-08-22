@@ -266,6 +266,12 @@ BEGIN
 	INSERT [dbo].[Topic] ([SystemName], [TopicTemplateId], [IncludeInSitemap], [AccessibleWhenStoreClosed], [LimitedToStores], [IncludeInFooterColumn1], [IncludeInFooterColumn2], [IncludeInFooterColumn3], [IncludeInTopMenu], [IsPasswordProtected], [DisplayOrder], [SubjectToAcl], [Published], [Title], [Body])
 	VALUES (N'VendorTermsOfService', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, N'', N'<p>Put your terms of service information here. You can edit this in the admin site.</p>')
 
+	DECLARE @TopicId INT 
+	SET @TopicId = @@IDENTITY
+
+	INSERT [dbo].[UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+	VALUES (@TopicId, N'Topic', N'vendortermsofservice', 1, 0)
+
 END
 GO
 
