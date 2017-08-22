@@ -220,9 +220,9 @@ namespace Nop.Services.Orders
 
         #region Nested classes
 
-        protected class PlaceOrderContainter
+        protected class PlaceOrderContainer
         {
-            public PlaceOrderContainter()
+            public PlaceOrderContainer()
             {
                 this.Cart = new List<ShoppingCartItem>();
                 this.AppliedDiscounts = new List<DiscountForCaching>();
@@ -281,9 +281,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Details</returns>
-        protected virtual PlaceOrderContainter PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
+        protected virtual PlaceOrderContainer PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
-            var details = new PlaceOrderContainter();
+            var details = new PlaceOrderContainer();
 
             //customer
             details.Customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
@@ -502,9 +502,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Details</returns>
-        protected virtual PlaceOrderContainter PrepareRecurringOrderDetails(ProcessPaymentRequest processPaymentRequest)
+        protected virtual PlaceOrderContainer PrepareRecurringOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
-            var details = new PlaceOrderContainter();
+            var details = new PlaceOrderContainer();
             details.IsRecurringShoppingCart = true;
 
             //Load initial order
@@ -620,7 +620,7 @@ namespace Nop.Services.Orders
         /// <param name="details">Details</param>
         /// <returns>Order</returns>
         protected virtual Order SaveOrderDetails(ProcessPaymentRequest processPaymentRequest, 
-            ProcessPaymentResult processPaymentResult, PlaceOrderContainter details)
+            ProcessPaymentResult processPaymentResult, PlaceOrderContainer details)
         {
             var order = new Order
             {
