@@ -1,5 +1,6 @@
 ﻿using System;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Localization;
@@ -21,6 +22,7 @@ namespace Nop.Web.Factories
         private readonly IPictureService _pictureService;
         
         private readonly CaptchaSettings _captchaSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -32,6 +34,7 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IPictureService pictureService,
             CaptchaSettings captchaSettings,
+            CommonSettings commonSettings,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
@@ -40,6 +43,7 @@ namespace Nop.Web.Factories
             this._pictureService = pictureService;
             
             this._captchaSettings = captchaSettings;
+            this._commonSettings = commonSettings;
             this._mediaSettings = mediaSettings;
             this._vendorSettings = vendorSettings;
         }
@@ -69,6 +73,7 @@ namespace Nop.Web.Factories
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
 
             if (!excludeProperties)
             {

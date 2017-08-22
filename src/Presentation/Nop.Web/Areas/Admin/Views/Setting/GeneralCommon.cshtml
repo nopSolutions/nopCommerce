@@ -144,6 +144,16 @@
                                 <span asp-validation-for="StoreInformationSettings.UseSystemEmailForContactUsForm"></span>
                             </div>
                         </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks_OverrideForStore" asp-input="StoreInformationSettings.PopupForTermsOfServiceLinks" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="StoreInformationSettings.PopupForTermsOfServiceLinks" />
+                                <span asp-validation-for="StoreInformationSettings.PopupForTermsOfServiceLinks"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

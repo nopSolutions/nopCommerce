@@ -72,17 +72,24 @@
                             <div class="accept-terms-of-service">
                                 <input id="accept-terms-of-service" type="checkbox" name="accept-terms-of-service" />
                                 <label for="accept-terms-of-service">@T("Vendors.ApplyAccount.AcceptTermsOfService")</label>
-                                <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
-                                <script>
-                                    $(document).ready(function() {
-                                        $('#read-acceptterms').on('click',
-                                            function (e) {
-                                                displayPopupContentFromUrl(
-                                                    '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
-                                                    '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
-                                            });
-                                    });
-                                </script>
+                                @if (Model.TermsOfServicePopup)
+                                {
+                                    <span class="read" id="read-acceptterms">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</span>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('#read-acceptterms').on('click',
+                                                function (e) {
+                                                    displayPopupContentFromUrl(
+                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "VendorTermsOfService"})',
+                                                        '@T("Vendors.ApplyAccount.AcceptTermsOfService")');
+                                                });
+                                        });
+                                    </script>
+                                }
+                                else
+                                {
+                                    <a class="read" id="read-acceptterms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("VendorTermsOfService") })">@T("Vendors.ApplyAccount.AcceptTermsOfService.Read")</a>
+                                }
                             </div>
                         }
                     </div>

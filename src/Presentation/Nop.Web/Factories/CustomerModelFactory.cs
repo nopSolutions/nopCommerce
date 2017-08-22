@@ -48,6 +48,7 @@ namespace Nop.Web.Factories
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
         private readonly ForumSettings _forumSettings;
@@ -84,6 +85,7 @@ namespace Nop.Web.Factories
             ICustomerAttributeService customerAttributeService,
             IGenericAttributeService genericAttributeService,
             RewardPointsSettings rewardPointsSettings,
+            CommonSettings commonSettings,
             CustomerSettings customerSettings,
             AddressSettings addressSettings, 
             ForumSettings forumSettings,
@@ -115,6 +117,7 @@ namespace Nop.Web.Factories
             this._customerAttributeService = customerAttributeService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._commonSettings = commonSettings;
             this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
             this._forumSettings = forumSettings;
@@ -439,6 +442,7 @@ namespace Nop.Web.Factories
             model.FaxRequired = _customerSettings.FaxRequired;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
+            model.AcceptPrivacyPolicyPopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;

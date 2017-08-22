@@ -75,6 +75,7 @@ namespace Nop.Web.Factories
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -116,7 +117,8 @@ namespace Nop.Web.Factories
             IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings, 
+            CatalogSettings catalogSettings,
+            CommonSettings commonSettings,
             OrderSettings orderSettings,
             ShippingSettings shippingSettings, 
             TaxSettings taxSettings,
@@ -157,6 +159,7 @@ namespace Nop.Web.Factories
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+            this._commonSettings = commonSettings;
             this._orderSettings = orderSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
@@ -788,6 +791,7 @@ namespace Nop.Web.Factories
             }
             model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoShoppingCart;
 
             //discount and gift card boxes

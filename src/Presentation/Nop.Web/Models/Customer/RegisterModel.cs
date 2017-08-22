@@ -132,6 +132,7 @@ namespace Nop.Web.Models.Customer
         public bool Newsletter { get; set; }
         
         public bool AcceptPrivacyPolicyEnabled { get; set; }
+        public bool AcceptPrivacyPolicyPopup { get; set; }
 
         //time zone
         [NopResourceDisplayName("Account.Fields.TimeZone")]

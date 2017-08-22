@@ -45,6 +45,7 @@ namespace Nop.Web.Factories
         private readonly IRewardPointService _rewardPointService;
         private readonly IWebHelper _webHelper;
 
+        private readonly CommonSettings _commonSettings;
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -72,6 +73,7 @@ namespace Nop.Web.Factories
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointService rewardPointService,
             IWebHelper webHelper,
+            CommonSettings commonSettings,
             OrderSettings orderSettings, 
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
@@ -96,6 +98,7 @@ namespace Nop.Web.Factories
             this._rewardPointService = rewardPointService;
             this._webHelper = webHelper;
 
+            this._commonSettings = commonSettings;
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._paymentSettings = paymentSettings;
@@ -450,6 +453,7 @@ namespace Nop.Web.Factories
             var model = new CheckoutConfirmModel();
             //terms of service
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             //min order amount validation
             bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)

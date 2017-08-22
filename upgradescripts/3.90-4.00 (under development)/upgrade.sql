@@ -125,6 +125,12 @@ set @resources='
   <LocaleResource Name="Payment.ExpirationDate.Expired">
     <Value>Card is expired</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks">
+    <Value>Popup windows for "terms of service"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks.Hint">
+    <Value>Check if you want "accept terms of service" or "accept privacy policy" links to be open in popup window. If disabled, then they''ll be open on a new page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -259,5 +265,14 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [dbo].[Topic] ([SystemName], [TopicTemplateId], [IncludeInSitemap], [AccessibleWhenStoreClosed], [LimitedToStores], [IncludeInFooterColumn1], [IncludeInFooterColumn2], [IncludeInFooterColumn3], [IncludeInTopMenu], [IsPasswordProtected], [DisplayOrder], [SubjectToAcl], [Published], [Title], [Body])
 	VALUES (N'VendorTermsOfService', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, N'', N'<p>Put your terms of service information here. You can edit this in the admin site.</p>')
+
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.popupfortermsofservicelinks')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.popupfortermsofservicelinks', N'True', 0)
 END
 GO

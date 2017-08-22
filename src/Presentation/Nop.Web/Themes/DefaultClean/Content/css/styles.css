@@ -2778,7 +2778,8 @@ label, label + * {
     display: inline-block;
     line-height: 32px;
 }
-.apply-vendor-page .accept-terms-of-service span {
+.apply-vendor-page .accept-terms-of-service span,
+.apply-vendor-page .accept-terms-of-service a {
     color: #4ab2f1;
     cursor: pointer;
 }
@@ -2829,7 +2830,8 @@ label, label + * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span {
+.accept-privacy-policy span,
+.accept-privacy-policy a {
 	color: #4ab2f1;
 	cursor: pointer;
 }

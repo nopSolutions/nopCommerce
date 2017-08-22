@@ -257,18 +257,25 @@
                             <div class="terms-of-service">
                                 <input id="termsofservice" type="checkbox" name="termsofservice" />
                                 <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
-                                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                                <script>
-                               $(document).ready(function() {
-                                   $('#read-terms').on('click',
-                                       function(e) {
-                                           e.preventDefault();
-                                           displayPopupContentFromUrl(
-                                               '@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})',
-                                               '@T("Checkout.TermsOfService")');
-                                       });
-                               });
-                                </script>
+                                @if (Model.TermsOfServicePopup)
+                                {
+                                    <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('#read-terms').on('click',
+                                                function(e) {
+                                                    e.preventDefault();
+                                                    displayPopupContentFromUrl(
+                                                        '@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})',
+                                                        '@T("Checkout.TermsOfService")');
+                                                });
+                                        });
+                                    </script>
+                                }
+                                else
+                                {
+                                    <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                                }
                             </div>
                         }
                         <div class="checkout-buttons">

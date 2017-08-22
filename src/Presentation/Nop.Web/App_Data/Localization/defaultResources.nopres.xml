@@ -6423,6 +6423,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLogo.Hint">
     <Value>Image file that will be displayed in PDF order invoices. A small image is recommended.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks">
+    <Value>Popup windows for "terms of service"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks.Hint">
+    <Value>Check if you want "accept terms of service" or "accept privacy policy" links to be open in popup window. If disabled, then they'll be open on a new page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey">
     <Value>reCAPTCHA private key</Value>
   </LocaleResource>

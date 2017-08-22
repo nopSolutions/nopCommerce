@@ -89,6 +89,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public bool UseSystemEmailForContactUsForm { get; set; }
             public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks")]
+            public bool PopupForTermsOfServiceLinks { get; set; }
+            public bool PopupForTermsOfServiceLinks_OverrideForStore { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapEnabled")]
             public bool SitemapEnabled { get; set; }
             public bool SitemapEnabled_OverrideForStore { get; set; }

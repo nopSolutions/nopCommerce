@@ -5885,7 +5885,8 @@ namespace Nop.Services.Installation
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
                 XuaCompatibleValue = "IE=edge",
-                BbcodeEditorOpenLinksInNewWindow = false
+                BbcodeEditorOpenLinksInNewWindow = false,
+                PopupForTermsOfServiceLinks = true
             });
 
             settingService.SaveSetting(new SeoSettings
