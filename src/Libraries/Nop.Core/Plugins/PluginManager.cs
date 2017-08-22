@@ -77,7 +77,7 @@ namespace Nop.Core.Plugins
             if (applicationPartManager == null)
                 throw new ArgumentNullException(nameof(applicationPartManager));
 
-            if (applicationPartManager == null)
+            if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
 
