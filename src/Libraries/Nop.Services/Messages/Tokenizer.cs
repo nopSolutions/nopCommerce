@@ -34,7 +34,7 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Returns a new string in which all occurrences of a specified string in the current instance are replaced with another specified string
         /// </summary>
-        /// <param name="original">Origianl string</param>
+        /// <param name="original">Original string</param>
         /// <param name="pattern">The string to be replaced</param>
         /// <param name="replacement">The string to replace all occurrences of pattern string</param>
         /// <returns>A string that is equivalent to the current string except that all instances of pattern are replaced with replacement string</returns>
@@ -149,12 +149,12 @@ namespace Nop.Services.Messages
             return template;
         }
 
-#endregion
+        #endregion
 
-#region Methods
+        #region Methods
 
         /// <summary>
-        /// Replace all of the token key occurences inside the specified template text with corresponded token values
+        /// Replace all of the token key occurrences inside the specified template text with corresponded token values
         /// </summary>
         /// <param name="template">The template with token keys inside</param>
         /// <param name="tokens">The sequence of tokens to use</param>
@@ -176,7 +176,7 @@ namespace Nop.Services.Messages
 
             return template;
         }
-
-#endregion
+        
+        #endregion
     }
 }
