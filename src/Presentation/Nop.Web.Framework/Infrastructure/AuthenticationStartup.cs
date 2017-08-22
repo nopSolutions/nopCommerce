@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             //configure authentication
-            application.UseAuthentication();
+            application.UseNopAuthentication();
 
             //set request culture
             application.UseCulture();

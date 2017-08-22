@@ -12,10 +12,5 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="builder">Authentication builder</param>
         void Configure(AuthenticationBuilder builder);
-
-        /// <summary>
-        /// Gets order of this registrar implementation
-        /// </summary>
-        int Order { get; }
     }
 }

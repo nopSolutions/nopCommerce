@@ -150,18 +150,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
-            //register external authentication plugins now
-            var typeFinder = new WebAppTypeFinder();
-            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
-            //create and sort instances of external authentication configurations
-            var externalAuthInstances = externalAuthConfigurations
-                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
-                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x))
-                .OrderBy(x => x.Order);
-            //configure services
-            foreach (var instance in externalAuthInstances)
-                instance.Configure(authenticationBuilder);
-
 
             //add main cookie authentication
             authenticationBuilder.AddCookie(NopCookieAuthenticationDefaults.AuthenticationScheme, options =>
@@ -180,6 +168,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                  options.LoginPath = NopCookieAuthenticationDefaults.LoginPath;
                  options.AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath;
              });
+
+            //register and configure external authentication plugins now
+            var typeFinder = new WebAppTypeFinder();
+            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
+            var externalAuthInstances = externalAuthConfigurations
+                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
+                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x));
+
+            foreach (var instance in externalAuthInstances)
+                instance.Configure(authenticationBuilder);
         }
 
         /// <summary>

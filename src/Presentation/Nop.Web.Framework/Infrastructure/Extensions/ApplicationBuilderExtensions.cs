@@ -9,6 +9,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.Authentication;
 using Nop.Services.Security;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -114,6 +115,15 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseInstallUrl(this IApplicationBuilder application)
         {
             application.UseMiddleware<InstallUrlMiddleware>();
+        }
+
+        /// <summary>
+        /// Adds the authentication middleware, which enables authentication capabilities.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopAuthentication(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<AuthenticationMiddleware>();
         }
 
         /// <summary>

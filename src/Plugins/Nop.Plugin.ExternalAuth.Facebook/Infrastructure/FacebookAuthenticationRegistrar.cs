@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -22,19 +21,10 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Infrastructure
             {
                 var settings = EngineContext.Current.Resolve<FacebookExternalAuthSettings>();
 
-                //no empty values allowed. otherwise, an exception could be thrown on application startup
-                options.AppId = !String.IsNullOrWhiteSpace(settings.ClientKeyIdentifier) ? settings.ClientKeyIdentifier : "123";
-                options.AppSecret = !String.IsNullOrWhiteSpace(settings.ClientSecret) ? settings.ClientSecret : "123";
+                options.AppId = settings.ClientKeyIdentifier;
+                options.AppSecret = settings.ClientSecret;
                 options.SaveTokens = true;
             });
-        }
-
-        /// <summary>
-        /// Gets order of this registrar implementation
-        /// </summary>
-        public int Order
-        {
-            get { return 501; }
         }
     }
 }

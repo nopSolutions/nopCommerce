@@ -4,8 +4,6 @@
 }
 @inject Nop.Core.IWebHelper webHelper
 
-@await Component.InvokeAsync("StoreScopeConfiguration")
-
 <form asp-controller="FacebookAuthentication" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
@@ -25,7 +23,6 @@
                 </p>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="ClientId" />
                     </div>
                     <div class="col-md-9">
@@ -35,7 +32,6 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="ClientSecret_OverrideForStore" asp-input="ClientSecret" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                         <nop-label asp-for="ClientSecret" />
                     </div>
                     <div class="col-md-9">
