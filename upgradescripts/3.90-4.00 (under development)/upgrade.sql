@@ -134,6 +134,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.DeleteSystemLog">
     <Value>Deleted system log</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts">
+    <Value>Allow admins to buy "Call for price" products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts.Hint">
+    <Value>Check to allow administrators (in impersonation mode) are allowed to buy products marked as "Call for price".</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -335,5 +341,13 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteS
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteSystemLog', N'Delete system log', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.allowadminstobuycallforpriceproducts')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.allowadminstobuycallforpriceproducts', N'True', 0)
 END
 GO

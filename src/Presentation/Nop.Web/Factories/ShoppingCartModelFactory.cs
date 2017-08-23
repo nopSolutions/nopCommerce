@@ -389,7 +389,9 @@ namespace Nop.Web.Factories
             }
 
             //unit prices
-            if (sci.Product.CallForPrice)
+            if (sci.Product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
             }
@@ -400,7 +402,9 @@ namespace Nop.Web.Factories
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
             //subtotal, discount
-            if (sci.Product.CallForPrice)
+            if (sci.Product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
             }
@@ -519,7 +523,9 @@ namespace Nop.Web.Factories
             }
 
             //unit prices
-            if (sci.Product.CallForPrice)
+            if (sci.Product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
             }
@@ -530,7 +536,9 @@ namespace Nop.Web.Factories
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
             //subtotal, discount
-            if (sci.Product.CallForPrice)
+            if (sci.Product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
             }
@@ -985,7 +993,9 @@ namespace Nop.Web.Factories
                         };
 
                         //unit prices
-                        if (sci.Product.CallForPrice)
+                        if (sci.Product.CallForPrice &&
+                            //also check whether the current user is impersonated
+                            (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
                         {
                             cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
                         }

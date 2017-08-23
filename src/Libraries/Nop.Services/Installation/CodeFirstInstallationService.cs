@@ -6274,7 +6274,8 @@ namespace Nop.Services.Installation
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
                 CustomOrderNumberMask = "{ID}",
-                ExportWithProducts = true
+                ExportWithProducts = true,
+                AllowAdminsToBuyCallForPriceProducts = true
             });
 
             settingService.SaveSetting(new SecuritySettings

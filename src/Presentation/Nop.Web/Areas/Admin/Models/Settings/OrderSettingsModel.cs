@@ -106,5 +106,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ExportWithProducts")]
         public bool ExportWithProducts { get; set; }
         public bool ExportWithProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts")]
+        public bool AllowAdminsToBuyCallForPriceProducts { get; set; }
+        public bool AllowAdminsToBuyCallForPriceProducts_OverrideForStore { get; set; }
     }
 }

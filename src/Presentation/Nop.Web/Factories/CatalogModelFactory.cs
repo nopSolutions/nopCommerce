@@ -328,8 +328,8 @@ namespace Nop.Web.Factories
                 command.PageSize = fixedPageSize;
             }
         }
-
-#endregion
+        
+        #endregion
         
         #region Categories
 

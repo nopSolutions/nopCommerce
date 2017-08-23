@@ -70,6 +70,7 @@ namespace Nop.Web.Factories
         private readonly VendorSettings _vendorSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly IStaticCacheManager _cacheManager;
 
@@ -107,6 +108,7 @@ namespace Nop.Web.Factories
             VendorSettings vendorSettings,
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings,
+            OrderSettings orderSettings,
             SeoSettings seoSettings,
             IStaticCacheManager cacheManager)
         {
@@ -140,6 +142,7 @@ namespace Nop.Web.Factories
             this._vendorSettings = vendorSettings;
             this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
+            this._orderSettings = orderSettings;
             this._seoSettings = seoSettings;
             this._cacheManager = cacheManager;
         }
@@ -265,14 +268,16 @@ namespace Nop.Web.Factories
                                 }
                                 if (minPriceProduct != null && !minPriceProduct.CustomerEntersPrice)
                                 {
-                                    if (minPriceProduct.CallForPrice)
+                                    if (minPriceProduct.CallForPrice &&
+                                        //also check whether the current user is impersonated
+                                        (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
                                     {
                                         priceModel.OldPrice = null;
                                         priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
                                     }
                                     else if (minPossiblePrice.HasValue)
                                     {
-                                                //calculate prices
+                                        //calculate prices
                                         decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out decimal _);
                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
@@ -340,8 +345,10 @@ namespace Nop.Web.Factories
                     {
                         if (!product.CustomerEntersPrice)
                         {
-                            if (product.CallForPrice)
-                            {
+                            if (product.CallForPrice &&
+                                //also check whether the current user is impersonated
+                                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
+                           {
                                 //call for price
                                 priceModel.OldPrice = null;
                                 priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
@@ -580,7 +587,9 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    if (product.CallForPrice)
+                    if (product.CallForPrice &&
+                        //also check whether the current user is impersonated
+                        (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
                     {
                         model.CallForPrice = true;
                     }

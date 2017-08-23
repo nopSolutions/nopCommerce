@@ -6726,6 +6726,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ActivateGiftCardsAfterCompletingOrder.Hint">
     <Value>Check to activate related gift cards when an order is completed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts">
+    <Value>Allow admins to buy "Call for price" products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowAdminsToBuyCallForPriceProducts.Hint">
+    <Value>Check to allow administrators (in impersonation mode) are allowed to buy products marked as "Call for price".</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AnonymousCheckoutAllowed">
     <Value>Anonymous checkout allowed</Value>
   </LocaleResource>
@@ -6827,7 +6833,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ExportWithProducts.Hint">
     <Value>Check if orders should be exported with products.</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.IsReOrderAllowed">
     <Value>Is re-order allowed</Value>
   </LocaleResource>

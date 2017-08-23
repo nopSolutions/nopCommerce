@@ -37,6 +37,7 @@ namespace Nop.Services.Orders
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
+        private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
@@ -65,6 +66,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
+        /// <param name="orderSettings">Order settings</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="permissionService">Permission service</param>
@@ -85,6 +87,7 @@ namespace Nop.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
+            OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings,
             IEventPublisher eventPublisher,
             IPermissionService permissionService, 
@@ -106,6 +109,7 @@ namespace Nop.Services.Orders
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._priceFormatter = priceFormatter;
             this._customerService = customerService;
+            this._orderSettings = orderSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
@@ -339,7 +343,9 @@ namespace Nop.Services.Orders
             }
 
             //call for price
-            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice)
+            if (shoppingCartType == ShoppingCartType.ShoppingCart && product.CallForPrice &&
+                //also check whether the current user is impersonated
+                (!_orderSettings.AllowAdminsToBuyCallForPriceProducts || _workContext.OriginalCustomerIfImpersonated == null))
             {
                 warnings.Add(_localizationService.GetResource("Products.CallForPrice"));
             }
