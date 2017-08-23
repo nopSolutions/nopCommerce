@@ -306,9 +306,23 @@ GO
 --recreate index
 IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and object_id=object_id(N'[dbo].[QueuedEmail]'))
 BEGIN
-	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail];
+	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail]
 END
 GO
 
 CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] DESC)
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Order_CreatedOnUtc' and object_id=object_id(N'[dbo].[Order]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Order_CreatedOnUtc] ON [Order] ([CreatedOnUtc] DESC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_CreatedOnUtc' and object_id=object_id(N'[dbo].[Customer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_CreatedOnUtc] ON [Customer] ([CreatedOnUtc] DESC)
+END
 GO
