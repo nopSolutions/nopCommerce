@@ -297,7 +297,7 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var siteMap = _commonModelFactory.PrepareSitemapXml(this.Url, id);
+            var siteMap = _commonModelFactory.PrepareSitemapXml(id);
             return Content(siteMap, "text/xml");
         }
 
