@@ -286,26 +286,29 @@ GO
 --recreate index
 IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Log_CreatedOnUtc' and object_id=object_id(N'[dbo].[Log]'))
 BEGIN
-	DROP INDEX [IX_Log_CreatedOnUtc] ON [Log];  
-	
-	CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [Log] ([CreatedOnUtc] DESC)
+	DROP INDEX [IX_Log_CreatedOnUtc] ON [Log]
 END
+GO
+	
+CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [Log] ([CreatedOnUtc] DESC)
 GO
 
 --recreate index
 IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ActivityLog_CreatedOnUtc' and object_id=object_id(N'[dbo].[ActivityLog]'))
 BEGIN
-	DROP INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog];  
-	
-	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] DESC)
+	DROP INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog]
 END
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] DESC)
 GO
 
 --recreate index
 IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and object_id=object_id(N'[dbo].[QueuedEmail]'))
 BEGIN
-	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail];  
-	
-	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] DESC)
+	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail];
 END
+GO
+
+CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] DESC)
 GO
