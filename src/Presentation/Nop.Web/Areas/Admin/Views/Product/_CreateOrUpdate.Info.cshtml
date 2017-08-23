@@ -1025,7 +1025,7 @@
 							<nop-label asp-for="MinimumCustomerEnteredPrice" />
                         </div>
                         <div class="col-md-9">
-							<nop-editor asp-for="MinimumCustomerEnteredPrice" asp-postfix="Model.PrimaryStoreCurrencyCode" />
+							<nop-editor asp-for="MinimumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
 							<span asp-validation-for="MinimumCustomerEnteredPrice"></span>
                         </div>
                     </div>
@@ -1034,7 +1034,7 @@
 							<nop-label asp-for="MaximumCustomerEnteredPrice" />
                         </div>
                         <div class="col-md-9">
-							<nop-editor asp-for="MaximumCustomerEnteredPrice" asp-postfix="Model.PrimaryStoreCurrencyCode" />
+							<nop-editor asp-for="MaximumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
 							<span asp-validation-for="MaximumCustomerEnteredPrice"></span>
                         </div>
                     </div>
