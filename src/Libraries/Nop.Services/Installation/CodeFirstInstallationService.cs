@@ -11498,6 +11498,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "DeleteSystemLog",
+                    Enabled = true,
+                    Name = "Delete system log"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "DeleteTopic",
                     Enabled = true,
                     Name = "Delete a topic"

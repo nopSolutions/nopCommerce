@@ -867,6 +867,9 @@
   <LocaleResource Name="ActivityLog.DeleteStore">
    <Value>Deleted a store (ID = {0})</Value>
   </LocaleResource>  
+  <LocaleResource Name="ActivityLog.DeleteSystemLog">
+    <Value>Deleted system log</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteTopic">
     <Value>Deleted a topic ('{0}')</Value>
   </LocaleResource>

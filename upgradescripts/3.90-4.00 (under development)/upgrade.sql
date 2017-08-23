@@ -131,6 +131,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PopupForTermsOfServiceLinks.Hint">
     <Value>Check if you want "accept terms of service" or "accept privacy policy" links to be open in popup window. If disabled, then they''ll be open on a new page.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteSystemLog">
+    <Value>Deleted system log</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -324,5 +327,13 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_CreatedOnUtc' and object_id=object_id(N'[dbo].[Customer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Customer_CreatedOnUtc] ON [Customer] ([CreatedOnUtc] DESC)
+END
+GO
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteSystemLog')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteSystemLog', N'Delete system log', N'true')
 END
 GO
