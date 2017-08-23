@@ -11,7 +11,7 @@
         {
             <div class="customer-entered-price">
                 <div class="price-input">
-                    <label asp-for="CustomerEnteredPrice" class="enter-price-label">@("Products.EnterProductPrice"):</label>
+                    <label asp-for="CustomerEnteredPrice" class="enter-price-label">@T("Products.EnterProductPrice"):</label>
                     @*round price*@
                     <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input"/>
                 </div>
