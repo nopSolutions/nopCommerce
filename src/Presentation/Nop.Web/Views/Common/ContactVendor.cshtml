@@ -26,13 +26,13 @@
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            <label asp-for="FullName">@T("ContactVendor.FullName"):</label>
+                            <label asp-for="FullName" asp-postfix=":"></label>
                             <input asp-for="FullName" placeholder="@T("ContactVendor.FullName.Hint")" class="fullname" />
                             <nop-required />
                             <span asp-validation-for="FullName"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="Email">@T("ContactVendor.Email"):</label>
+                            <label asp-for="Email" asp-postfix=":"></label>
                             <input asp-for="Email" placeholder="@T("ContactVendor.Email.Hint")" class="email" />
                             <nop-required />
                             <span asp-validation-for="Email"></span>
@@ -40,14 +40,14 @@
                         @if (Model.SubjectEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Subject">@T("ContactVendor.Subject"):</label>
+                                <label asp-for="Subject" asp-postfix=":"></label>
                                 <input asp-for="Subject" placeholder="@T("ContactVendor.Subject.Hint")" class="subject" />
                                 <nop-required />
                                 <span asp-validation-for="Subject"></span>
                             </div>
                         }
                         <div class="inputs">
-                            <label asp-for="Enquiry">@T("ContactVendor.Enquiry"):</label>
+                            <label asp-for="Enquiry" asp-postfix=":"></label>
                             <input asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="enquiry" />
                             <nop-required />
                             <span asp-validation-for="Enquiry"></span>

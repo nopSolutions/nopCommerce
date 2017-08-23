@@ -67,13 +67,13 @@
                         </div>
                     }
                     <div class="inputs">
-                        <label asp-for="FirstName">@T("Account.Fields.FirstName"):</label>
+                        <label asp-for="FirstName" asp-postfix=":"></label>
                         <input asp-for="FirstName" />
                         <nop-required />
                         <span asp-validation-for="FirstName"></span>
                     </div>
                     <div class="inputs">
-                        <label asp-for="LastName">@T("Account.Fields.LastName"):</label>
+                        <label asp-for="LastName" asp-postfix=":"></label>
                         <input asp-for="LastName" />
                         <nop-required />
                         <span asp-validation-for="LastName"></span>
@@ -102,7 +102,7 @@
                         </div>
                     }
                     <div class="inputs">
-                        <label asp-for="Email">@T("Account.Fields.Email"):</label>
+                        <label asp-for="Email" asp-postfix=":"></label>
                         <input asp-for="Email" />
                         <nop-required />
                         <span asp-validation-for="Email"></span>
@@ -110,7 +110,7 @@
                     @if (Model.EnteringEmailTwice)
                     {
                         <div class="inputs">
-                            <label asp-for="ConfirmEmail">@T("Account.Fields.ConfirmEmail"):</label>
+                            <label asp-for="ConfirmEmail" asp-postfix=":"></label>
                             <input asp-for="ConfirmEmail" />
                             <nop-required />
                             <span asp-validation-for="ConfirmEmail"></span>
@@ -119,7 +119,7 @@
                     @if (Model.UsernamesEnabled)
                     {
                         <div class="inputs">
-                            <label asp-for="Username">@T("Account.Fields.Username"):</label>
+                            <label asp-for="Username" asp-postfix=":"></label>
                             <input asp-for="Username" />
                             <nop-required />
                             <span asp-validation-for="Username"></span>
@@ -142,7 +142,7 @@
                         @if (Model.CompanyEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Company">@T("Account.Fields.Company"):</label>
+                                <label asp-for="Company" asp-postfix=":"></label>
                                 <input asp-for="Company" />
                                 @if (Model.CompanyRequired)
                                 {
@@ -154,7 +154,7 @@
                         @if (Model.DisplayVatNumber)
                         {
                             <div class="inputs">
-                                <label asp-for="VatNumber">@T("Account.Fields.VatNumber"):</label>
+                                <label asp-for="VatNumber" asp-postfix=":"></label>
                                 <input asp-for="VatNumber" />
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
@@ -173,7 +173,7 @@
                         @if (Model.StreetAddressEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StreetAddress">@T("Account.Fields.StreetAddress"):</label>
+                                <label asp-for="StreetAddress" asp-postfix=":"></label>
                                 <input asp-for="StreetAddress" />
                                 @if (Model.StreetAddressRequired)
                                 {
@@ -185,7 +185,7 @@
                         @if (Model.StreetAddress2Enabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StreetAddress2">@T("Account.Fields.StreetAddress2"):</label>
+                                <label asp-for="StreetAddress2" asp-postfix=":"></label>
                                 <input asp-for="StreetAddress2" />
                                 @if (Model.StreetAddress2Required)
                                 {
@@ -197,7 +197,7 @@
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="ZipPostalCode">@T("Account.Fields.ZipPostalCode"):</label>
+                                <label asp-for="ZipPostalCode" asp-postfix=":"></label>
                                 <input asp-for="ZipPostalCode" />
                                 @if (Model.ZipPostalCodeRequired)
                                 {
@@ -209,7 +209,7 @@
                         @if (Model.CityEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="City">@T("Account.Fields.City"):</label>
+                                <label asp-for="City" asp-postfix=":"></label>
                                 <input asp-for="City" />
                                 @if (Model.CityRequired)
                                 {
@@ -221,7 +221,7 @@
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="CountryId">@T("Account.Fields.Country"):</label>
+                                <label asp-for="CountryId" asp-postfix=":"></label>
                                 <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
                                 @if (Model.CountryRequired)
                                 {
@@ -233,7 +233,7 @@
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StateProvinceId">@T("Account.Fields.StateProvince"):</label>
+                                <label asp-for="StateProvinceId" asp-postfix=":"></label>
                                 <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
                                 @if (Model.StateProvinceRequired)
                                 {
@@ -256,7 +256,7 @@
                         @if (Model.PhoneEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Phone">@T("Account.Fields.Phone"):</label>
+                                <label asp-for="Phone" asp-postfix=":"></label>
                                 <input asp-for="Phone" />
                                 @if (Model.PhoneRequired)
                                 {
@@ -268,7 +268,7 @@
                         @if (Model.FaxEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Fax">@T("Account.Fields.Fax"):</label>
+                                <label asp-for="Fax" asp-postfix=":"></label>
                                 <input asp-for="Fax" />
                                 @if (Model.FaxRequired)
                                 {
@@ -290,7 +290,7 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Newsletter">@T("Account.Fields.Newsletter"):</label>
+                                <label asp-for="Newsletter" asp-postfix=":"></label>
                                 <input asp-for="Newsletter" />
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
@@ -312,7 +312,7 @@
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
                             <div class="inputs">
-                                <label asp-for="TimeZoneId">@T("Account.Fields.TimeZone"):</label>
+                                <label asp-for="TimeZoneId" asp-postfix=":"></label>
                                 <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
                                 <span asp-validation-for="TimeZoneId"></span>
                             </div>
@@ -327,13 +327,13 @@
                 <div class="form-fields">
                     <div class="inputs">
                         <div class="inputs">
-                            <label asp-for="Password">@T("Account.Fields.Password"):</label>
+                            <label asp-for="Password" asp-postfix=":"></label>
                             <input asp-for="Password" />
                             <nop-required />
                             <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="ConfirmPassword">@T("Account.Fields.ConfirmPassword"):</label>
+                            <label asp-for="ConfirmPassword" asp-postfix=":"></label>
                             <input asp-for="ConfirmPassword" />
                             <nop-required />
                             <span asp-validation-for="ConfirmPassword"></span>

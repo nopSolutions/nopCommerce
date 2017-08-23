@@ -28,19 +28,19 @@
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            <label asp-for="Name">@T("Vendors.ApplyAccount.Name"):</label>
+                            <label asp-for="Name" asp-postfix=":"></label>
                             <input asp-for="Name" class="name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")"/>
                             <nop-required />
                             <span asp-validation-for="Name"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="Email">@T("Vendors.ApplyAccount.Email"):</label>
+                            <label asp-for="Email" asp-postfix=":"></label>
                             <input asp-for="Email" class="name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")"/>
                             <nop-required />
                             <span asp-validation-for="Email"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="Description">@T("Vendors.ApplyAccount.Description"):</label>
+                            <label asp-for="Description" asp-postfix=":"></label>
                             <textarea asp-for="Description" class="description"></textarea>
                         </div>
                         <div class="inputs">

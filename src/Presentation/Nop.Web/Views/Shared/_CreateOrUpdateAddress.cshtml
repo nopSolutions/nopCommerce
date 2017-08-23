@@ -32,19 +32,19 @@
 <input asp-for="Id" type="hidden"/>
 <div class="edit-address">
     <div class="inputs">
-        <label asp-for="FirstName">@T("Address.Fields.FirstName"):</label>
+        <label asp-for="FirstName" asp-postfix=":"></label>
         <input asp-for="FirstName" />
         <nop-required />
         <span asp-validation-for="FirstName"></span>
     </div>
     <div class="inputs">
-        <label asp-for="LastName">@T("Address.Fields.LastName"):</label>
+        <label asp-for="LastName" asp-postfix=":"></label>
         <input asp-for="LastName" />
         <nop-required />
         <span asp-validation-for="LastName"></span>
     </div>
     <div class="inputs">
-        <label asp-for="Email">@T("Address.Fields.Email"):</label>
+        <label asp-for="Email" asp-postfix=":"></label>
         <input asp-for="Email" />
         <nop-required />
         <span asp-validation-for="Email"></span>
@@ -52,7 +52,7 @@
     @if (Model.CompanyEnabled)
     {
         <div class="inputs">
-            <label asp-for="Company">@T("Address.Fields.Company"):</label>
+            <label asp-for="Company" asp-postfix=":"></label>
             <input asp-for="Company" />
             @if (Model.CompanyRequired)
             {
@@ -64,7 +64,7 @@
     @if (Model.CountryEnabled)
     {
         <div class="inputs">
-            <label asp-for="CountryId">@T("Address.Fields.Country"):</label>
+            <label asp-for="CountryId" asp-postfix=":"></label>
             <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
             <nop-required />
             <span asp-validation-for="CountryId"></span>
@@ -74,7 +74,7 @@
     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
     {
         <div class="inputs">
-            <label asp-for="StateProvinceId">@T("Address.Fields.StateProvince"):</label>
+            <label asp-for="StateProvinceId" asp-postfix=":"></label>
             <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             <span asp-validation-for="StateProvinceId"></span>
@@ -83,7 +83,7 @@
     @if (Model.CityEnabled)
     {
         <div class="inputs">
-            <label asp-for="City">@T("Address.Fields.City"):</label>
+            <label asp-for="City" asp-postfix=":"></label>
             <input asp-for="City" />
             @if (Model.CityRequired)
             {
@@ -95,7 +95,7 @@
     @if (Model.StreetAddressEnabled)
     {
         <div class="inputs">
-            <label asp-for="Address1">@T("Address.Fields.Address1"):</label>
+            <label asp-for="Address1" asp-postfix=":"></label>
             <input asp-for="Address1" />
             @if (Model.StreetAddressRequired)
             {
@@ -107,7 +107,7 @@
     @if (Model.StreetAddress2Enabled)
     {
         <div class="inputs">
-            <label asp-for="Address2">@T("Address.Fields.Address2"):</label>
+            <label asp-for="Address2" asp-postfix=":"></label>
             <input asp-for="Address2" />
             @if (Model.StreetAddress2Required)
             {
@@ -119,7 +119,7 @@
     @if (Model.ZipPostalCodeEnabled)
     {
         <div class="inputs">
-            <label asp-for="ZipPostalCode">@T("Address.Fields.ZipPostalCode"):</label>
+            <label asp-for="ZipPostalCode" asp-postfix=":"></label>
             <input asp-for="ZipPostalCode" />
             @if (Model.ZipPostalCodeRequired)
             {
@@ -131,7 +131,7 @@
     @if (Model.PhoneEnabled)
     {
         <div class="inputs">
-            <label asp-for="PhoneNumber">@T("Address.Fields.PhoneNumber"):</label>
+            <label asp-for="PhoneNumber" asp-postfix=":"></label>
             <input asp-for="PhoneNumber" />
             @if (Model.PhoneRequired)
             {
@@ -143,7 +143,7 @@
     @if (Model.FaxEnabled)
     {
         <div class="inputs">
-            <label asp-for="FaxNumber">@T("Address.Fields.FaxNumber"):</label>
+            <label asp-for="FaxNumber" asp-postfix=":"></label>
             <input asp-for="FaxNumber" />
             @if (Model.FaxRequired)
             {

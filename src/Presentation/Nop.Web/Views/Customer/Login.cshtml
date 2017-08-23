@@ -63,7 +63,7 @@
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Username">@T("Account.Login.Fields.UserName"):</label>
+                                <label asp-for="Username" asp-postfix=":"></label>
                                 <input asp-for="Username" class="username" autofocus="autofocus" />
                                 <span asp-validation-for="Username"></span>
                             </div>
@@ -71,19 +71,19 @@
                         else
                         {
                             <div class="inputs">
-                                <label asp-for="Email">@T("Account.Login.Fields.Email"):</label>
+                                <label asp-for="Email" asp-postfix=":"></label>
                                 <input asp-for="Email" class="email" autofocus="autofocus" />
                                 <span asp-validation-for="Email"></span>
                             </div>
                         }
                         <div class="inputs">
-                            <label asp-for="Password">@T("Account.Login.Fields.Password"):</label>
+                            <label asp-for="Password" asp-postfix=":"></label>
                             <input asp-for="Password" class="password" />
                             <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs reversed">
                             <input asp-for="RememberMe" />
-                            <label asp-for="RememberMe">@T("Account.Login.Fields.RememberMe")</label>
+                            <label asp-for="RememberMe"></label>
                             <span class="forgot-password">
                                 <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                             </span>

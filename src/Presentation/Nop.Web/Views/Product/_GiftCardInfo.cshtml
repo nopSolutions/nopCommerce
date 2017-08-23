@@ -3,29 +3,29 @@
 {
     <div class="giftcard">
         <div>
-            <label asp-for="RecipientName">@T("Products.GiftCard.RecipientName"):</label>
+            <label asp-for="RecipientName" asp-postfix=":"></label>
             <input asp-for="RecipientName" class="recipient-name"/>
         </div>
         @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
         {
             <div>
-                <label asp-for="RecipientEmail">@T("Products.GiftCard.RecipientEmail"):</label>
+                <label asp-for="RecipientEmail" asp-postfix=":"></label>
                 <input asp-for="RecipientEmail" class="recipient-email"/>
             </div>
         }
         <div>
-            <label asp-for="SenderName">@T("Products.GiftCard.SenderName"):</label>
+            <label asp-for="SenderName" asp-postfix=":"></label>
             <input asp-for="SenderName" class="sender-name"/>
         </div>
         @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
         {
             <div>
-                <label asp-for="SenderEmail">@T("Products.GiftCard.SenderEmail"):</label>
+                <label asp-for="SenderEmail" asp-postfix=":"></label>
                 <input asp-for="SenderEmail" class="sender-email"/>
             </div>
         }
         <div>
-            <label asp-for="Message">@T("Products.GiftCard.Message"):</label>
+            <label asp-for="Message" asp-postfix=":">@T("Products.GiftCard.Message"):</label>
             <textarea asp-for="Message" class="message"></textarea>
         </div>
     </div>

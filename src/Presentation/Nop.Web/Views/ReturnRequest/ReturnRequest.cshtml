@@ -89,7 +89,7 @@
                                     Value = x.Id.ToString()
                                 }).ToList();
                             }
-                            <label asp-for="ReturnRequestReasonId">@T("ReturnRequests.ReturnReason"):</label>
+                            <label asp-for="ReturnRequestReasonId" asp-postfix=":"></label>
                             <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="return-reasons"></select>
                         </div>
                         <div class="inputs">
@@ -100,7 +100,7 @@
                                     Value = x.Id.ToString()
                                 }).ToList();
                             }
-                            <label asp-for="ReturnRequestActionId">@T("ReturnRequests.ReturnAction"):</label>
+                            <label asp-for="ReturnRequestActionId" asp-postfix=":"></label>
                             <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="return-actions"></select>
                         </div>
                         @if (Model.AllowFiles)
@@ -116,7 +116,7 @@
                             var allowedFileExtensions = string.Join(", ", allowedFileExtensionsList.Select(x => "'" + x.Trim() + "'").ToList());
                             var controlId = Html.IdFor(model => model.UploadedFileGuid);
                             <div class="inputs return-request-file">
-                                <label asp-for="UploadedFileGuid">@T("ReturnRequests.UploadedFile"):</label>
+                                <label asp-for="UploadedFileGuid" asp-postfix=":"></label>
                                 <input id="@(controlId)" name="@(controlId)" type="hidden"/>
 
                                 @*fine uploader container*@
@@ -176,7 +176,7 @@
                             </div>
                         }
                         <div class="inputs">
-                            <label asp-for="Comments">@T("ReturnRequests.Comments"):</label>
+                            <label asp-for="Comments" asp-postfix=":"></label>
                             <textarea asp-for="Comments" class="comment"></textarea>
                             <span asp-validation-for="Comments"></span>
                         </div>

@@ -27,13 +27,13 @@
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            <label asp-for="FullName">@T("ContactUs.FullName"):</label>
+                            <label asp-for="FullName" asp-postfix=":"></label>
                             <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname" />
                             <nop-required />
                             <span asp-validation-for="FullName"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="Email">@T("ContactUs.Email"):</label>
+                            <label asp-for="Email" asp-postfix=":"></label>
                             <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email"/>
                             <nop-required />
                             <span asp-validation-for="Email"></span>
@@ -41,14 +41,14 @@
                         @if (Model.SubjectEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Subject">@T("ContactUs.Subject"):</label>
+                                <label asp-for="Subject" asp-postfix=":"></label>
                                 <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="subject" />
                                 <nop-required />
                                 <span asp-validation-for="Subject"></span>
                             </div>
                         }
                         <div class="inputs">
-                            <label asp-for="Enquiry">@T("ContactUs.Enquiry"):</label>
+                            <label asp-for="Enquiry" asp-postfix=":"></label>
                             <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="enquiry"></textarea>
                             <nop-required />
                             <span asp-validation-for="Enquiry"></span>

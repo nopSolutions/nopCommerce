@@ -29,19 +29,19 @@
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            <label asp-for="FriendEmail">@T("Products.EmailAFriend.FriendEmail"):</label>
+                            <label asp-for="FriendEmail" asp-postfix=":"></label>
                             <input asp-for="FriendEmail" class="friend-email" placeholder="@T("Products.EmailAFriend.FriendEmail.Hint")"/>
                             <nop-required />
                             <span asp-validation-for="FriendEmail"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="YourEmailAddress">@T("Products.EmailAFriend.YourEmailAddress"):</label>
+                            <label asp-for="YourEmailAddress" asp-postfix=":"></label>
                             <input asp-for="YourEmailAddress" class="your-email" placeholder="@T("Products.EmailAFriend.YourEmailAddress.Hint")"/>
                             <nop-required />
                             <span asp-validation-for="YourEmailAddress"></span>
                         </div>
                         <div class="inputs">
-                            <label asp-for="PersonalMessage">@T("Products.EmailAFriend.PersonalMessage"):</label>
+                            <label asp-for="PersonalMessage" asp-postfix=":"></label>
                             <textarea asp-for="PersonalMessage" class="your-email" placeholder="@T("Products.EmailAFriend.PersonalMessage.Hint")"></textarea>
                             <nop-required />
                             <span asp-validation-for="PersonalMessage"></span>

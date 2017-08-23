@@ -23,24 +23,24 @@
             <div class="fieldset">
                 <div class="form-fields">
                     <div class="inputs">
-                        <label asp-for="Name">@T("Account.VendorInfo.Name"):</label>
+                        <label asp-for="Name" asp-postfix=":"></label>
                         <input asp-for="Name"/>
                         <nop-required />
                         <span asp-validation-for="Name"></span>
                     </div>
                     <div class="inputs">
-                        <label asp-for="Email">@T("Account.VendorInfo.Email"):</label>
+                        <label asp-for="Email" asp-postfix=":"></label>
                         <input asp-for="Email"/>
                         <nop-required />
                         <span asp-validation-for="Email"></span>
                     </div>
                     <div class="inputs">
-                        <label asp-for="Description">@T("Account.VendorInfo.Description"):</label>
+                        <label asp-for="Description" asp-postfix=":"></label>
                         <textarea asp-for="Description"></textarea>
                         <span asp-validation-for="Description"></span>
                     </div>
                     <div class="inputs">
-                        <label asp-for="PictureUrl">@T("Account.VendorInfo.Picture"):</label>
+                        <label asp-for="PictureUrl" asp-postfix=":"></label>
                         <input name="uploadedFile" type="file" />
                         @if (!String.IsNullOrEmpty(Model.PictureUrl))
                         {

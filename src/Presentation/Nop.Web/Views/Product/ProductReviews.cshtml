@@ -31,19 +31,19 @@
                     <div class="fieldset">
                         <div class="form-fields">
                             <div class="inputs">
-                                <label asp-for="AddProductReview.Title">@T("Reviews.Fields.Title"):</label>
+                                <label asp-for="AddProductReview.Title" asp-postfix=":"></label>
                                 <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
                                 <nop-required />
                                 <span asp-validation-for="AddProductReview.Title"></span>
                             </div>
                             <div class="inputs">
-                                <label asp-for="AddProductReview.ReviewText">@T("Reviews.Fields.ReviewText"):</label>
+                                <label asp-for="AddProductReview.ReviewText" asp-postfix=":"></label>
                                 <textarea asp-for="AddProductReview.ReviewText" class="review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
                                 <nop-required />
                                 <span asp-validation-for="AddProductReview.ReviewText"></span>
                             </div>
                             <div class="review-rating">
-                                <label asp-for="AddProductReview.Rating">@T("Reviews.Fields.Rating"):</label>
+                                <label asp-for="AddProductReview.Rating" asp-postfix=":"></label>
                                 <ul>
                                     <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li class="rating-options">

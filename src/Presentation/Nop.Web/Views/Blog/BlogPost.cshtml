@@ -68,7 +68,7 @@
                 <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
                     <div class="form-fields">
                         <div class="inputs">
-                            <label asp-for="AddNewComment.CommentText">@T("Blog.Comments.CommentText"):</label>
+                            <label asp-for="AddNewComment.CommentText" asp-postfix=":"></label>
                             <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text"></textarea>
                             <span asp-validation-for="AddNewComment.CommentText"></span>
                         </div>
