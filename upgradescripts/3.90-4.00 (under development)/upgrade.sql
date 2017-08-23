@@ -146,6 +146,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Services.Hint">
     <Value>Select the services you want to offer to customers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.EmailAlreadyExists">
+    <Value>A user with the specified email has been already registered. If this is your account, and you want to associate it with ''{0}'' external record, please login firstly.</Value>
+  </LocaleResource>
 </Language>
 '
 

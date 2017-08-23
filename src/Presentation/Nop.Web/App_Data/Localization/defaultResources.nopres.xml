@@ -24,6 +24,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth.Email">
     <Value>Email</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.EmailAlreadyExists">
+    <Value>A user with the specified email has been already registered. If this is your account, and you want to associate it with '{0}' external record, please login firstly.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth.ExternalIdentifier">
     <Value>External identifier</Value>
   </LocaleResource>
@@ -596,7 +599,7 @@
   </LocaleResource>
   <LocaleResource Name="Account.Register.Errors.EmailAlreadyExists">
     <Value>The specified email already exists</Value>
-  </LocaleResource>
+  </LocaleResource> 
   <LocaleResource Name="Account.Register.Errors.EmailIsNotProvided">
     <Value>Email is required.</Value>
   </LocaleResource>

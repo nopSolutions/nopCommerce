@@ -138,6 +138,13 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result of an authentication</returns>
         protected virtual IActionResult RegisterNewUser(ExternalAuthenticationParameters parameters, string returnUrl)
         {
+            //check whether the specified email has been already registered
+            if (_customerService.GetCustomerByEmail(parameters.Email) != null)
+            {
+                var alreadyExistsError = string.Format(_localizationService.GetResource("Account.AssociatedExternalAuth.EmailAlreadyExists"), parameters.ExternalDisplayIdentifier);
+                return ErrorAuthentication(new[] { alreadyExistsError }, returnUrl);
+            }
+
             //registration is approved if validation isn't required
             var registrationIsApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard ||
                 (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation && !_externalAuthenticationSettings.RequireEmailValidation);
