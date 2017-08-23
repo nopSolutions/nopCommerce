@@ -282,3 +282,30 @@ BEGIN
 	VALUES (N'commonsettings.popupfortermsofservicelinks', N'True', 0)
 END
 GO
+
+--recreate index
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Log_CreatedOnUtc' and object_id=object_id(N'[dbo].[Log]'))
+BEGIN
+	DROP INDEX [IX_Log_CreatedOnUtc] ON [Log];  
+	
+	CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [Log] ([CreatedOnUtc] DESC)
+END
+GO
+
+--recreate index
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ActivityLog_CreatedOnUtc' and object_id=object_id(N'[dbo].[ActivityLog]'))
+BEGIN
+	DROP INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog];  
+	
+	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] DESC)
+END
+GO
+
+--recreate index
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and object_id=object_id(N'[dbo].[QueuedEmail]'))
+BEGIN
+	DROP INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail];  
+	
+	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] DESC)
+END
+GO
