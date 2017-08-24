@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Shipping.CanadaPost.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -49,8 +51,21 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
                 CustomerNumber = _canadaPostSettings.CustomerNumber,
                 ContractId = _canadaPostSettings.ContractId,
                 ApiKey = _canadaPostSettings.ApiKey,
-                UseSandbox = _canadaPostSettings.UseSandbox
+                UseSandbox = _canadaPostSettings.UseSandbox,
+                SelectedServicesCodes = _canadaPostSettings.SelectedServicesCodes
             };
+
+            //set available services
+            var availableServices = CanadaPostHelper.GetServices(null, _canadaPostSettings.ApiKey, _canadaPostSettings.UseSandbox, out string errors);
+            if (availableServices != null)
+            {
+                model.AvailableServices = availableServices.service.Select(service => new SelectListItem
+                {
+                    Value = service.servicecode,
+                    Text = service.servicename,
+                    Selected = _canadaPostSettings.SelectedServicesCodes?.Contains(service.servicecode) ?? false
+                }).ToList();
+            }
 
             return View("~/Plugins/Shipping.CanadaPost/Views/Configure.cshtml", model);
         }
@@ -73,6 +88,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             _canadaPostSettings.ContractId = model.ContractId;
             _canadaPostSettings.ApiKey = model.ApiKey;
             _canadaPostSettings.UseSandbox = model.UseSandbox;
+            _canadaPostSettings.SelectedServicesCodes = model.SelectedServicesCodes.ToList();
             _settingService.SaveSetting(_canadaPostSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
