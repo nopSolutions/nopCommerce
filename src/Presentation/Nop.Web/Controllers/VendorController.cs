@@ -90,7 +90,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new ApplyVendorModel();
             model = _vendorModelFactory.PrepareApplyVendorModel(model, true, false);
@@ -106,7 +106,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
@@ -180,7 +180,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -196,7 +196,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");
@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RemovePicture()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
                 return RedirectToRoute("CustomerInfo");

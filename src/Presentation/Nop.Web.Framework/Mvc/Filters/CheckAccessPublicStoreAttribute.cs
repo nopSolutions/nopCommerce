@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //customer hasn't access to a public store
-                filterContext.Result = new UnauthorizedResult();
+                filterContext.Result = new ChallengeResult();
             }
 
             #endregion

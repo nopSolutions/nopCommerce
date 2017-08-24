@@ -859,7 +859,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new CustomerInfoModel();
             model = _customerModelFactory.PrepareCustomerInfoModel(model, _workContext.CurrentCustomer, false);
@@ -872,7 +872,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Info(CustomerInfoModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1030,7 +1030,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RemoveExternalAssociation(int id)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             //ensure it's our record
             var ear = _workContext.CurrentCustomer.ExternalAuthenticationRecords.FirstOrDefault(x => x.Id == id);
@@ -1113,7 +1113,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _customerModelFactory.PrepareCustomerAddressListModel();
             return View(model);
@@ -1125,7 +1125,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddressDelete(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1150,7 +1150,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new CustomerAddressEditModel();
             _addressModelFactory.PrepareAddressModel(model.Address,
@@ -1167,7 +1167,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1210,7 +1210,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddressEdit(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1234,7 +1234,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1278,7 +1278,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
@@ -1309,7 +1309,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _customerModelFactory.PrepareChangePasswordModel();
 
@@ -1325,7 +1325,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1358,7 +1358,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1374,7 +1374,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1429,7 +1429,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");

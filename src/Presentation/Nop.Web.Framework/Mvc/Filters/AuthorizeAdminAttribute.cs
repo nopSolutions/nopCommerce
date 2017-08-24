@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 {
                     //authorize permission of access to the admin area
                     if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel))
-                        filterContext.Result = new UnauthorizedResult();
+                        filterContext.Result = new ChallengeResult();
                 }
             }
 

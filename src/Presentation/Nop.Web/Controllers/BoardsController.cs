@@ -379,7 +379,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return new UnauthorizedResult();
+                    return Challenge();
                 }
                 var forum = _forumService.GetForumById(forumTopic.ForumId);
 
@@ -415,7 +415,7 @@ namespace Nop.Web.Controllers
 
             if (_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum) == false)
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var model = new EditForumTopicModel();
@@ -445,7 +445,7 @@ namespace Nop.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum))
                     {
-                        return new UnauthorizedResult();
+                        return Challenge();
                     }
 
                     string subject = model.Subject;
@@ -550,7 +550,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var model = new EditForumTopicModel();
@@ -585,7 +585,7 @@ namespace Nop.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
                     {
-                        return new UnauthorizedResult();
+                        return Challenge();
                     }
 
                     string subject = model.Subject;
@@ -703,7 +703,7 @@ namespace Nop.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                 {
-                    return new UnauthorizedResult();
+                    return Challenge();
                 }
 
                 var forumTopic = forumPost.ForumTopic;
@@ -748,7 +748,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
 
@@ -776,7 +776,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
-                        return new UnauthorizedResult();
+                        return Challenge();
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
@@ -867,7 +867,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var model = _forumModelFactory.PreparePostEditModel(forumPost, false);
@@ -891,7 +891,7 @@ namespace Nop.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var forumTopic = forumPost.ForumTopic;

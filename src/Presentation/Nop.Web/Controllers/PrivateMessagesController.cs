@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(page, tab);
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             if (_workContext.CurrentCustomer.IsGuest())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
             if (customerTo == null || customerTo.IsGuest())
@@ -194,7 +194,7 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             Customer toCustomer = null;
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);
@@ -317,7 +317,7 @@ namespace Nop.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);

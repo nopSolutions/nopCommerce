@@ -429,7 +429,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CustomerProductReviews(int? page)
         {
             if (_workContext.CurrentCustomer.IsGuest())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
             {

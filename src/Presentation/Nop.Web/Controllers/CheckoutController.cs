@@ -152,7 +152,7 @@ namespace Nop.Web.Controllers
                 _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
             if (_workContext.CurrentCustomer.IsGuest() && (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //if we have only "button" payment methods available (displayed onthe shopping cart page, not during checkout),
             //then we should allow standard checkout
@@ -207,7 +207,7 @@ namespace Nop.Web.Controllers
         {
             //validation
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             Order order = null;
             if (orderId.HasValue)
@@ -255,7 +255,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //model
             var model = _checkoutModelFactory.PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
@@ -322,7 +322,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //custom address attributes
             var customAttributes = model.Form?.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
@@ -396,7 +396,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -444,7 +444,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -546,7 +546,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -588,7 +588,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -647,7 +647,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
@@ -703,7 +703,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //reward points
             if (_rewardPointsSettings.Enabled)
@@ -753,7 +753,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
@@ -804,7 +804,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
@@ -853,7 +853,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             //model
             var model = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
@@ -875,7 +875,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
 
             //model
@@ -1086,7 +1086,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Checkout");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _checkoutModelFactory.PrepareOnePageCheckoutModel(cart);
             return View(model);
@@ -1671,7 +1671,7 @@ namespace Nop.Web.Controllers
                     return RedirectToRoute("HomePage");
 
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                    return new UnauthorizedResult();
+                    return Challenge();
 
                 //get the order
                 var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,

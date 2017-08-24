@@ -339,7 +339,7 @@ namespace Nop.Web.Framework.Controllers
         {
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
-            //return new UnauthorizedResult();
+            //return Challenge();
             return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
         }
 

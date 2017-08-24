@@ -69,7 +69,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ensure that this user has active vendor record associated
                 if (_workContext.CurrentVendor == null)
-                    filterContext.Result = new UnauthorizedResult();
+                    filterContext.Result = new ChallengeResult();
             }
 
             #endregion
