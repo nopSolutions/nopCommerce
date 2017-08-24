@@ -149,6 +149,18 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.EmailAlreadyExists">
     <Value>A user with the specified email has been already registered. If this is your account, and you want to associate it with ''{0}'' external record, please login firstly.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.OverrideTaxDisplayType">
+    <Value>Overrride default tax display type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.OverrideTaxDisplayType.Hint">
+    <Value>Check to override the default tax display type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType">
+    <Value>Default tax display type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType.Hint">
+    <Value>Default tax display type.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -367,4 +379,36 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'canadapostsettings.selectedservicescodes', N'', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='OverrideTaxDisplayType')
+BEGIN
+	ALTER TABLE [CustomerRole]
+	ADD [OverrideTaxDisplayType] bit NULL
+END
+GO
+
+UPDATE [CustomerRole]
+SET [OverrideTaxDisplayType] = 0
+WHERE [OverrideTaxDisplayType] IS NULL
+GO
+
+ALTER TABLE [CustomerRole] ALTER COLUMN [OverrideTaxDisplayType] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='DefaultTaxDisplayTypeId')
+BEGIN
+	ALTER TABLE [CustomerRole]
+	ADD [DefaultTaxDisplayTypeId] int NULL
+END
+GO
+
+UPDATE [CustomerRole]
+SET [DefaultTaxDisplayTypeId] = 0
+WHERE [DefaultTaxDisplayTypeId] IS NULL
+GO
+
+ALTER TABLE [CustomerRole] ALTER COLUMN [DefaultTaxDisplayTypeId] int NOT NULL
 GO

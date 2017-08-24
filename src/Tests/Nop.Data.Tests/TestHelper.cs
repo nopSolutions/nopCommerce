@@ -605,7 +605,10 @@ namespace Nop.Data.Tests
                 TaxExempt = true,
                 Active = true,
                 IsSystemRole = true,
-                SystemName = "Administrators"
+                SystemName = "Administrators",
+                OverrideTaxDisplayType = true,
+                DefaultTaxDisplayTypeId = 2,
+                EnablePasswordLifetime = true
             };
         }
 

@@ -5,8 +5,19 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $("#@Html.IdFor(model => model.OverrideTaxDisplayType)").click(toggleTaxDisplayType);
+        toggleTaxDisplayType();
+
         toggleRemoveButton();
     });
+    
+    function toggleTaxDisplayType() {
+        if ($('#@Html.IdFor(model => model.OverrideTaxDisplayType)').is(':checked')) {
+            $('#pnlDefaultTaxDisplayType').show();
+        } else {
+            $('#pnlDefaultTaxDisplayType').hide();
+        }
+    }
 
     function toggleRemoveButton() {
         if ($('#@Html.IdFor(model => model.PurchasedWithProductId)').val() > 0) {
@@ -56,6 +67,24 @@
                         <div class="col-md-9">
                             <nop-editor asp-for="TaxExempt"/>
                             <span asp-validation-for="TaxExempt"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="OverrideTaxDisplayType" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="OverrideTaxDisplayType" />
+                            <span asp-validation-for="OverrideTaxDisplayType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlDefaultTaxDisplayType">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DefaultTaxDisplayTypeId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="DefaultTaxDisplayTypeId" asp-items="Model.TaxDisplayTypeValues" />
+                            <span asp-validation-for="DefaultTaxDisplayTypeId"></span>
                         </div>
                     </div>
                     <div class="form-group">

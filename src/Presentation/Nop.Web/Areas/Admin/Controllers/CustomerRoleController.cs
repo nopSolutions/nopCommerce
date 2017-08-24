@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Tax;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -38,11 +39,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
+	    private readonly TaxSettings _taxSettings;
         private readonly IStaticCacheManager _cacheManager;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CustomerRoleController(ICustomerService customerService,
             ILocalizationService localizationService, 
@@ -53,7 +55,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
+            TaxSettings taxSettings,
             IStaticCacheManager cacheManager)
 		{
             this._customerService = customerService;
@@ -66,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._workContext = workContext;
+		    this._taxSettings = taxSettings;
             this._cacheManager = cacheManager;
 		}
 
@@ -73,15 +77,17 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
+        protected virtual void PrepareCustomerRoleModel(CustomerRoleModel model, CustomerRole customerRole)
         {
-            var model = customerRole.ToModel();
-            var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
-            if (product != null)
+            if (customerRole != null)
             {
-                model.PurchasedWithProductName = product.Name;
+                var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
+                if (product != null)
+                {
+                    model.PurchasedWithProductName = product.Name;
+                }
             }
-            return model;
+            model.TaxDisplayTypeValues = _taxSettings.TaxDisplayType.ToSelectList();
         }
 
         #endregion
@@ -110,8 +116,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             var gridModel = new DataSourceResult
 			{
-                Data = customerRoles.Select(PrepareCustomerRoleModel),
-                Total = customerRoles.Count()
+                Data = customerRoles.Select(cr =>
+                {
+                    var model = cr.ToModel();
+                    PrepareCustomerRoleModel(model, cr);
+                    return model;
+                }),
+                Total = customerRoles.Count
 			};
 
             return Json(gridModel);
@@ -123,6 +134,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
             
             var model = new CustomerRoleModel();
+            PrepareCustomerRoleModel(model, null);
             //default values
             model.Active = true;
             return View(model);
@@ -147,6 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            PrepareCustomerRoleModel(model, null);
             return View(model);
         }
 
@@ -159,8 +172,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customerRole == null)
                 //No customer role found with the specified id
                 return RedirectToAction("List");
-		    
-            var model = PrepareCustomerRoleModel(customerRole);
+
+            var model = customerRole.ToModel();
+            PrepareCustomerRoleModel(model, customerRole);
             return View(model);
 		}
 
@@ -200,6 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //If we got this far, something failed, redisplay form
+                PrepareCustomerRoleModel(model, customerRole);
                 return View(model);
             }
             catch (Exception exc)

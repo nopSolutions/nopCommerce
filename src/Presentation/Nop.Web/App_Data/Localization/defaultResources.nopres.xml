@@ -9399,6 +9399,12 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Active.Hint">
     <Value>Check to make this role active.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType">
+    <Value>Default tax display type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType.Hint">
+    <Value>Default tax display type.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime">
     <Value>Enable password lifetime</Value>
   </LocaleResource>
@@ -9425,6 +9431,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Name.Required">
     <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.OverrideTaxDisplayType">
+    <Value>Override default tax display type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.OverrideTaxDisplayType.Hint">
+    <Value>Check to override the default tax display type.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct">
     <Value>Purchased with product</Value>

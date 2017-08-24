@@ -31,6 +31,12 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
         public bool EnablePasswordLifetime { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.OverrideTaxDisplayType")]
+        public bool OverrideTaxDisplayType { get; set; }
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType")]
+        public int DefaultTaxDisplayTypeId { get; set; }
+        public SelectList TaxDisplayTypeValues { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public int PurchasedWithProductId { get; set; }
 

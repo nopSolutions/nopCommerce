@@ -473,20 +473,41 @@ namespace Nop.Web.Framework
                 if (_cachedTaxDisplayType.HasValue)
                     return _cachedTaxDisplayType.Value;
 
-                TaxDisplayType taxDisplayType;
+                TaxDisplayType taxDisplayType = TaxDisplayType.IncludingTax;
 
                 //whether customers are allowed to select tax display type
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
                     //try to get previously saved tax display type
-                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.TaxDisplayTypeId, 
+                    var taxDisplayTypeId = this.CurrentCustomer.GetAttribute<int?>(SystemCustomerAttributeNames.TaxDisplayTypeId, 
                         _genericAttributeService, _storeContext.CurrentStore.Id);
-                    taxDisplayType = (TaxDisplayType)taxDisplayTypeId;
+                    if (taxDisplayTypeId.HasValue)
+                    {
+                        taxDisplayType = (TaxDisplayType)taxDisplayTypeId.Value;
+                    }
+                    else
+                    {
+                        //default tax type by customer roles
+                        var defaultRoleTaxDisplayType = this.CurrentCustomer.GetDefaultTaxDisplayType();
+                        if (defaultRoleTaxDisplayType != null)
+                        {
+                            taxDisplayType = defaultRoleTaxDisplayType.Value;
+                        }
+                    }
                 }
                 else
                 {
-                    //or get the default tax display type
-                    taxDisplayType = _taxSettings.TaxDisplayType;
+                    //default tax type by customer roles
+                    var defaultRoleTaxDisplayType = this.CurrentCustomer.GetDefaultTaxDisplayType();
+                    if (defaultRoleTaxDisplayType != null)
+                    {
+                        taxDisplayType = defaultRoleTaxDisplayType.Value;
+                    }
+                    else
+                    {
+                        //or get the default tax display type
+                        taxDisplayType = _taxSettings.TaxDisplayType;
+                    }
                 }
 
                 //cache the value

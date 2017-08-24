@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -116,6 +117,23 @@ namespace Nop.Core.Domain.Customers
         public static bool IsVendor(this Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static TaxDisplayType? GetDefaultTaxDisplayType(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var roleWithOVerriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            if (roleWithOVerriddenTaxType == null)
+                return null;
+
+            return (TaxDisplayType)roleWithOVerriddenTaxType.DefaultTaxDisplayTypeId;
         }
         #endregion
 
