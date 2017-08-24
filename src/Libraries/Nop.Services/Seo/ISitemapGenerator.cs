@@ -12,18 +12,16 @@ namespace Nop.Services.Seo
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(IUrlHelper urlHelper, int? id);
+        string Generate(int? id);
 
         /// <summary>
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        void Generate(IUrlHelper urlHelper, Stream stream, int? id);
+        void Generate(Stream stream, int? id);
     }
 }

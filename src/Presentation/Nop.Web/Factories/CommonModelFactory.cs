@@ -555,16 +555,15 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Get the sitemap in XML format
         /// </summary>
-        /// <param name="url">URL helper</param>
         /// <param name="id">Sitemap identifier; pass null to load the first sitemap or sitemap index file</param>
         /// <returns>Sitemap as string in XML format</returns>
-        public virtual string PrepareSitemapXml(IUrlHelper url, int? id)
+        public virtual string PrepareSitemapXml(int? id)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(url, id));
+            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(id));
             return siteMap;
         }
 
