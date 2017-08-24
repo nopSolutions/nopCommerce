@@ -55,10 +55,10 @@ function checkOverriddenStoreValue(obj, selector) {
     };
 }
 
-function bindBootstrapTabSelectEvent(tabsId) {
+function bindBootstrapTabSelectEvent(tabsId, inputId) {
     $('#' + tabsId + ' > ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var tabName = $(e.target).attr("data-tab-name");
-        $("#selected-tab-name").val(tabName);
+        $("#" + inputId).val(tabName);
     });
 }
 

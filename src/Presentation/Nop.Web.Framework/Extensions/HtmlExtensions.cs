@@ -41,11 +41,23 @@ namespace Nop.Web.Framework.Extensions
             {
                 var tabStrip = new StringBuilder();
                 tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields\">");
+                
+                //render input contains selected tab name
+                var tabNameToSelect = GetSelectedTabName(helper, name);
+                var selectedTabInput = new TagBuilder("input");
+                selectedTabInput.Attributes.Add("type", "hidden");
+                selectedTabInput.Attributes.Add("id", $"selected-tab-name-{name}");
+                selectedTabInput.Attributes.Add("name", $"selected-tab-name-{name}");
+                selectedTabInput.Attributes.Add("value", tabNameToSelect);
+                tabStrip.AppendLine(selectedTabInput.RenderHtmlContent());
+
                 tabStrip.AppendLine("<ul class=\"nav nav-tabs\">");
 
                 //default tab
-                tabStrip.AppendLine("<li class=\"active\">");
-                tabStrip.AppendLine($"<a data-tab-name=\"{name}-standard-tab\" href=\"#{name}-standard-tab\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                var standardTabName = $"{name}-standard-tab";
+                var standardTabSelected = String.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
+                tabStrip.AppendLine(string.Format("<li{0}>", standardTabSelected ? " class=\"active\"" : null));
+                tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -58,9 +70,10 @@ namespace Nop.Web.Framework.Extensions
                     if (language == null)
                         throw new Exception("Language cannot be loaded");
 
-                    tabStrip.AppendLine("<li>");
+                    var localizedTabName = $"{name}-{language.Id}-tab";
+                    tabStrip.AppendLine(string.Format("<li{0}>", localizedTabName == tabNameToSelect ? " class=\"active\"" : null));
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
-                    tabStrip.AppendLine($"<a data-tab-name=\"{name}-{language.Id}-tab\" href=\"#{name}-{language.Id}-tab\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
+                    tabStrip.AppendLine($"<a data-tab-name=\"{localizedTabName}\" href=\"#{localizedTabName}\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
                     tabStrip.AppendLine("</li>");
                 }
@@ -68,7 +81,7 @@ namespace Nop.Web.Framework.Extensions
                     
                 //default tab
                 tabStrip.AppendLine("<div class=\"tab-content\">");
-                tabStrip.AppendLine($"<div class=\"tab-pane active\" id=\"{name}-standard-tab\">");
+                tabStrip.AppendLine(string.Format("<div class=\"tab-pane{0}\" id=\"{1}\">", standardTabSelected ? " active" : null, standardTabName));
                 tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                 tabStrip.AppendLine("</div>");
 
@@ -76,13 +89,22 @@ namespace Nop.Web.Framework.Extensions
                 {
                     //languages
                     var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
+                    if (language == null)
+                        throw new Exception("Language cannot be loaded");
 
-                    tabStrip.AppendLine($"<div class=\"tab-pane\" id=\"{name}-{language.Id}-tab\">");
+                    var localizedTabName = $"{name}-{language.Id}-tab";
+                    tabStrip.AppendLine(string.Format("<div class=\"tab-pane{0}\" id=\"{1}\">", localizedTabName == tabNameToSelect ? " active" : null, localizedTabName));
                     tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                     tabStrip.AppendLine("</div>");
                 }
                 tabStrip.AppendLine("</div>");
                 tabStrip.AppendLine("</div>");
+
+                //render tabs script
+                var script = new TagBuilder("script");
+                script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + name + "', 'selected-tab-name-" + name + "');});");
+                tabStrip.AppendLine(script.RenderHtmlContent());
+
                 return new HtmlString(tabStrip.ToString());
             }
             else
@@ -90,17 +112,21 @@ namespace Nop.Web.Framework.Extensions
                 return standardTemplate(helper.ViewData.Model);
             }
         }
-        
+
         /// <summary>
         /// Gets a selected tab name (used in admin area to store selected tab name)
         /// </summary>
+        /// <param name="helper">HtmlHelper</param>
+        /// <param name="dataKeyPrefix">Key prefix. Pass null to ignore</param>
         /// <returns>Name</returns>
-        public static string GetSelectedTabName(this IHtmlHelper helper)
+        public static string GetSelectedTabName(this IHtmlHelper helper, string dataKeyPrefix = null)
         {
             //keep this method synchronized with
             //"SaveSelectedTab" method of \Area\Admin\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
-            const string dataKey = "nop.selected-tab-name";
+            string dataKey = "nop.selected-tab-name";
+            if (!String.IsNullOrEmpty(dataKeyPrefix))
+                dataKey += $"-{dataKeyPrefix}";
 
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();

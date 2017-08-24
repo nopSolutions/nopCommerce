@@ -82,7 +82,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 if (output.Attributes.ContainsName("id"))
                 {
                     var script = new TagBuilder("script");
-                    script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "');});");
+                    script.InnerHtml.AppendHtml("$(document).ready(function () {bindBootstrapTabSelectEvent('" + output.Attributes["id"].Value + "', 'selected-tab-name');});");
                     output.PostContent.SetHtmlContent(script.RenderHtmlContent());
                 }
             }
