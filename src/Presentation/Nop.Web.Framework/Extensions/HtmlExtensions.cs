@@ -98,7 +98,7 @@ namespace Nop.Web.Framework.Extensions
         public static string GetSelectedTabName(this IHtmlHelper helper)
         {
             //keep this method synchronized with
-            //"SaveSelectedTab" method of \Administration\Controllers\BaseAdminController.cs
+            //"SaveSelectedTab" method of \Area\Admin\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
             const string dataKey = "nop.selected-tab-name";
 
