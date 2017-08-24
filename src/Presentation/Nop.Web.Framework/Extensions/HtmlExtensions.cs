@@ -109,7 +109,7 @@ namespace Nop.Web.Framework.Extensions
             }
             else
             {
-                return standardTemplate(helper.ViewData.Model);
+                return new HtmlString(standardTemplate(helper.ViewData.Model).RenderHtmlContent());
             }
         }
 
