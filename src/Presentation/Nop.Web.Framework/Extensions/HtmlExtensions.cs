@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.Extensions
 
                 //default tab
                 tabStrip.AppendLine("<li class=\"active\">");
-                tabStrip.AppendLine($"<a data-tab-name=\"{name}-{"standard"}-tab\" href=\"#{name}-{"standard"}-tab\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
+                tabStrip.AppendLine($"<a data-tab-name=\"{name}-standard-tab\" href=\"#{name}-standard-tab\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
@@ -68,7 +68,7 @@ namespace Nop.Web.Framework.Extensions
                     
                 //default tab
                 tabStrip.AppendLine("<div class=\"tab-content\">");
-                tabStrip.AppendLine($"<div class=\"tab-pane active\" id=\"{name}-{"standard"}-tab\">");
+                tabStrip.AppendLine($"<div class=\"tab-pane active\" id=\"{name}-standard-tab\">");
                 tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                 tabStrip.AppendLine("</div>");
 
