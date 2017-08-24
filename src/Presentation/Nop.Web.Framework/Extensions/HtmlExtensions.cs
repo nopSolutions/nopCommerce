@@ -97,7 +97,7 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>Name</returns>
         public static string GetSelectedTabName(this IHtmlHelper helper)
         {
-            //keep this method synchornized with
+            //keep this method synchronized with
             //"SaveSelectedTab" method of \Administration\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
             const string dataKey = "nop.selected-tab-name";
@@ -105,7 +105,6 @@ namespace Nop.Web.Framework.Extensions
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();
 
-            //TODO test in asp.net core
             if (helper.ViewContext.TempData.ContainsKey(dataKey))
                 tabName = helper.ViewContext.TempData[dataKey].ToString();
 
