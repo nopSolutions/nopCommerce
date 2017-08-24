@@ -646,6 +646,19 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             //Settings
             CreateMap<CaptchaSettings, GeneralCommonSettingsModel.CaptchaSettingsModel>()
                 .ForMember(dest => dest.AvailableReCaptchaVersions, mo => mo.Ignore())
+                .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnLoginPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnRegistrationPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnContactUsPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnEmailWishlistToFriendPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnEmailProductToFriendPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnBlogCommentPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnNewsCommentPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnProductReviewPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowOnApplyVendorPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ReCaptchaPublicKey_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ReCaptchaPrivateKey_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ReCaptchaVersion_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<GeneralCommonSettingsModel.CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(dest => dest.ReCaptchaTheme, mo => mo.Ignore())
@@ -901,10 +914,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnRequestNumberMask_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomOrderNumberMask_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.ExportWithProducts_OverrideForStore, mo => mo.Ignore());
+                .ForMember(dest => dest.ExportWithProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.AllowAdminsToBuyCallForPriceProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(dest => dest.GeneratePdfInvoiceInCustomerLanguage, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnRequestsFileMaximumSize, mo => mo.Ignore())
