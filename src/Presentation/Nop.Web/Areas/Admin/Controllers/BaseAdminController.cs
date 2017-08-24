@@ -24,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
+            //"GetSelectedTabName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
             if (string.IsNullOrEmpty(tabName))
             {
                 tabName = this.Request.Form["selected-tab-name"];
