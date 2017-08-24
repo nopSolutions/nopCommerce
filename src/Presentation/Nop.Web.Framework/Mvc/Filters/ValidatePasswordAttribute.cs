@@ -30,14 +30,17 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
+            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidatePasswordFilter(IWorkContext workContext)
+            public ValidatePasswordFilter(IUrlHelperFactory urlHelperFactory, 
+                IWorkContext workContext)
             {
+                this._urlHelperFactory = urlHelperFactory;
                 this._workContext = workContext;
             }
 
@@ -73,7 +76,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     if (_workContext.CurrentCustomer.PasswordIsExpired())
                     {
                         //redirect to ChangePassword page if expires
-                        var changePasswordUrl = new UrlHelper(context).RouteUrl("CustomerChangePassword");
+                        var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");
                         context.Result = new RedirectResult(changePasswordUrl);
                     }
                 }

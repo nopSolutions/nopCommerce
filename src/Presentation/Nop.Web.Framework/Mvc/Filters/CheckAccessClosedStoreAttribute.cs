@@ -39,6 +39,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             private readonly IPermissionService _permissionService;
             private readonly IStoreContext _storeContext;
             private readonly ITopicService _topicService;
+            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly StoreInformationSettings _storeInformationSettings;
 
             #endregion
@@ -49,12 +50,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IPermissionService permissionService,
                 IStoreContext storeContext,
                 ITopicService topicService,
+                IUrlHelperFactory urlHelperFactory,
                 StoreInformationSettings storeInformationSettings)
             {
                 this._ignoreFilter = ignoreFilter;
                 this._permissionService = permissionService;
                 this._storeContext = storeContext;
                 this._topicService = topicService;
+                this._urlHelperFactory = urlHelperFactory;
                 this._storeInformationSettings = storeInformationSettings;
             }
 
@@ -109,7 +112,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //store is closed and no access, so redirect to 'StoreClosed' page
-                var storeClosedUrl = new UrlHelper(context).RouteUrl("StoreClosed");
+                var storeClosedUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("StoreClosed");
                 context.Result = new RedirectResult(storeClosedUrl);
             }
 

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -11,14 +9,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Extensions
 {
@@ -55,6 +49,8 @@ namespace Nop.Web.Framework.Extensions
                 tabStrip.AppendLine("</li>");
 
                 var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var urlHelper = EngineContext.Current.Resolve<IUrlHelperFactory>().GetUrlHelper(helper.ViewContext);
+
                 foreach (var locale in helper.ViewData.Model.Locales)
                 {
                     //languages
@@ -63,7 +59,6 @@ namespace Nop.Web.Framework.Extensions
                         throw new Exception("Language cannot be loaded");
 
                     tabStrip.AppendLine("<li>");
-                    var urlHelper = new UrlHelper(helper.ViewContext);
                     var iconUrl = urlHelper.Content("~/images/flags/" + language.FlagImageFileName);
                     tabStrip.AppendLine($"<a data-tab-name=\"{name}-{language.Id}-tab\" href=\"#{name}-{language.Id}-tab\" data-toggle=\"tab\"><img alt='' src='{iconUrl}'>{WebUtility.HtmlEncode(language.Name)}</a>");
 
