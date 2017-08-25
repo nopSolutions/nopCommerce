@@ -5390,7 +5390,7 @@ pre {
     margin: 0 0 15px;
 }
 .item-box .prices {
-    height: 40px;
+    min-height: 40px;
 }
 .item-box .product-title {
     min-height: 42px;
