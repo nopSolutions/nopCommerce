@@ -107,97 +107,89 @@
                             var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
                             <div class="pickup-points-map" id="map">
                                 <script type="text/javascript">
-                    var markers = new Map();
-                    var googleMap = null;
-                    $(document).ready(function() {
-                        $.getScript("@src",
-                            function(data, textStatus, jqxhr) {
-                                google.maps.visualRefresh = true;
-                                googleMap = new google.maps.Map(document.getElementById("map"),
-                                    {
-                                        zoom: 15,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                                    });
-                                var geocoder = new google.maps.Geocoder();
-                                var infowindow = new google.maps.InfoWindow();
-                                @for (var i = 0; i < Model.PickupPoints.Count; i++)
-                                {
-                                    var point = Model.PickupPoints[i];
-                                    var value = $"{point.Id}___{point.ProviderSystemName}";
-                                    var pickupPointInfo = Html.Raw($@"<div class='pickup-point-info'><ul><li><strong>{point.Name}</strong></li><li>{point.OpeningHours}</li><li>{point.PickupFee}</li></ul></div>");
-                                    if (point.Latitude != null && point.Longitude != null)
-                                    {
-                                        <text>
-                                            (function() {
-                                                var marker = new google.maps.Marker({
-                                                    map: googleMap,
-                                                    title: "@point.Name",
-                                                    position: new google.maps.LatLng(@point.Latitude,
-                                                        @point.Longitude),
-                                                    icon:
-                                                        "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                });
-                                                markers.set("@value", marker);
-                                                google.maps.event.addListener(marker,
-                                                    'click',
-                                                    function() {
-                                                        $('#pickup-points-select').val("@value")
-                                                        infowindow.setContent("@pickupPointInfo");
-                                                        infowindow.open(googleMap, marker);
-                                                    });
-                                                @if (i == 0)
+                                    var markers = new Map();
+                                    var googleMap = null;
+                                    $(document).ready(function () {
+                                        $.getScript("@src", function( data, textStatus, jqxhr ) {
+                                            google.maps.visualRefresh = true;
+                                            googleMap = new google.maps.Map(document.getElementById("map"), {
+                                                zoom: 15,
+                                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                                            });
+                                            var geocoder = new google.maps.Geocoder();
+                                            var infowindow = new google.maps.InfoWindow();
+                                            @for (var i = 0; i < Model.PickupPoints.Count; i++)
+                                            {
+                                                var point = Model.PickupPoints[i];
+                                                var value = $"{point.Id}___{point.ProviderSystemName}";
+                                                var pickupPointInfo = Html.Raw($@"<div class='pickup-point-info'><ul><li><strong>{point.Name}</strong></li><li>{point.OpeningHours}</li><li>{point.PickupFee}</li></ul></div>");
+                                                if (point.Latitude != null && point.Longitude != null)
                                                 {
-                                                    <text>googleMap.setCenter(marker.getPosition())</text>
-                                                }
-                                            }());
-                                        </text>
-                                    }
-                                    else
-                                    {
-                                        var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
-                                        <text>
-                                            geocoder.geocode({ 'address': "@address" },
-                                                function(results, status) {
-                                                    if (status === google.maps.GeocoderStatus.OK) {
-                                                        var marker = new google.maps.Marker({
-                                                            map: googleMap,
-                                                            title: "@point.Name",
-                                                            position: results[0].geometry.location,
-                                                            icon:
-                                                                "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                        });
-                                                        markers.set("@value", marker);
-                                                        google.maps.event.addListener(marker,
-                                                            'click',
-                                                            function() {
-                                                                $('#pickup-points-select').val("@value")
+                                                    <text>
+                                                        (function() {
+                                                            var marker = new google.maps.Marker({
+                                                                map: googleMap,
+                                                                title: "@point.Name",
+                                                                position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
+                                                                icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                            });
+                                                            markers.set("@value", marker);
+                                                            google.maps.event.addListener(marker, 'click', function () {
+                                                                $('#pickup-points-select').val("@value");
+                                                                googleMap.setCenter(this.getPosition());
                                                                 infowindow.setContent("@pickupPointInfo");
                                                                 infowindow.open(googleMap, marker);
                                                             });
-                                                        @if (i == 0)
-                                                        {
-                                                            <text>googleMap.setCenter(marker
-                                                            .getPosition())</text>
-                                                        }
-                                                    };
-                                                });
-                                        </text>
-                                    }
-                                }
+                                                            @if (i == 0) {
+                                                                <text>googleMap.setCenter(marker.getPosition());</text>
+                                                            }
+                                                        }());
+                                                    </text>
+                                                }
+                                                else
+                                                {
+                                                    var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
+                                                    <text>
+                                                        var interval_@i = setInterval( function () {
+                                                            geocoder.geocode({ 'address': "@address" }, function(results, status) {
+                                                                if (status === google.maps.GeocoderStatus.OK) {
+                                                                    var marker = new google.maps.Marker({
+                                                                        map: googleMap,
+                                                                        title: "@point.Name",
+                                                                        position: results[0].geometry.location,
+                                                                        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                                    });
+                                                                    markers.set("@value", marker);
+                                                                    google.maps.event.addListener(marker, 'click', function () {
+                                                                        $('#pickup-points-select').val("@value");
+                                                                        googleMap.setCenter(this.getPosition());
+                                                                        infowindow.setContent("@pickupPointInfo");
+                                                                        infowindow.open(googleMap, marker);
+                                                                    });
+                                                                    @if (i == 0) {
+                                                                        <text>googleMap.setCenter(marker.getPosition());</text>
+                                                                    }
+                                                                    clearInterval(interval_@i);
+                                                                }
+                                                            })
+                                                        }, 250);
+                                                    </text>
+                                                }
+                                            }
 
-                                $('#pickup-points-select').change(function() {
-                                    new google.maps.event.trigger(markers.get(this.value), 'click');
-                                });
+                                            $('#pickup-points-select').change(function() {
+                                                new google.maps.event.trigger(markers.get(this.value), 'click');
+                                            });
 
-                                $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
-                                    if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
-                                        var center = googleMap.getCenter();
-                                        google.maps.event.trigger(googleMap, 'resize');
-                                        googleMap.setCenter(center);
-                                    }
-                                })
-                            })
-                    })
+                                            $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
+                                                if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
+                                                    var center = googleMap.getCenter();
+                                                    google.maps.event.trigger(googleMap, 'resize');
+                                                    googleMap.setCenter(center);
+                                                }
+                                            })
+                                        })
+                                    })
                                 </script>
                             </div>
                         }

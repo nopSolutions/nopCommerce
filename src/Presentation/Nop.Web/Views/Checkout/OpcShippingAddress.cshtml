@@ -109,13 +109,13 @@
                                                     });
                                                     markers.set("@value", marker);
                                                     google.maps.event.addListener(marker, 'click', function () {
-                                                        $('#pickup-points-select').val("@value")
+                                                        $('#pickup-points-select').val("@value");
+                                                        googleMap.setCenter(this.getPosition());
                                                         infowindow.setContent("@pickupPointInfo");
                                                         infowindow.open(googleMap, marker);
                                                     });
-                                                    @if (i == 0)
-                                                    {
-                                                        <text>googleMap.setCenter(marker.getPosition())</text>
+                                                    @if (i == 0) {
+                                                        <text>googleMap.setCenter(marker.getPosition());</text> 
                                                     }
                                                 }());
                                             </text>
@@ -124,30 +124,33 @@
                                         {
                                             var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
                                             <text>
-                                                geocoder.geocode({'address': "@address"}, function(results, status) {
-                                                    if (status === google.maps.GeocoderStatus.OK) {
-                                                        var marker = new google.maps.Marker({
-                                                            map: googleMap,
-                                                            title: "@point.Name",
-                                                            position: results[0].geometry.location,
-                                                            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                        });
-                                                        markers.set("@value", marker);
-                                                        google.maps.event.addListener(marker, 'click', function () {
-                                                            $('#pickup-points-select').val("@value")
-                                                            infowindow.setContent("@pickupPointInfo");
-                                                            infowindow.open(googleMap, marker);
-                                                        });
-                                                        @if (i == 0)
-                                                        {
-                                                            <text>googleMap.setCenter(marker.getPosition())</text>
+                                                var interval_@i = setInterval( function () {
+                                                    geocoder.geocode({'address': "@address"}, function(results, status) {
+                                                        if (status === google.maps.GeocoderStatus.OK) {
+                                                            var marker = new google.maps.Marker({
+                                                                map: googleMap,
+                                                                title: "@point.Name",
+                                                                position: results[0].geometry.location,
+                                                                icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                            });
+                                                            markers.set("@value", marker);
+                                                            google.maps.event.addListener(marker, 'click', function () {
+                                                                $('#pickup-points-select').val("@value");
+                                                                googleMap.setCenter(this.getPosition());
+                                                                infowindow.setContent("@pickupPointInfo");
+                                                                infowindow.open(googleMap, marker);
+                                                            });
+                                                            @if (i == 0) {
+                                                                <text>googleMap.setCenter(marker.getPosition());</text> 
+                                                            }
+                                                            clearInterval(interval_@i);
                                                         }
-                                                    };
-                                                });
+                                                    })
+                                                }, 250);
                                             </text>
                                         }
                                     }
-                                        
+
                                     $('#pickup-points-select').change(function() {
                                         new google.maps.event.trigger(markers.get(this.value), 'click' );
                                     });
