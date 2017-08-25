@@ -1,5 +1,4 @@
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Services.Seo
 {
