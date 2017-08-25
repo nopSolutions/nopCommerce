@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -202,12 +203,14 @@ namespace Nop.Web.Models.Catalog
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
 
+            [DataType(DataType.EmailAddress)]
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
 
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
 
+            [DataType(DataType.EmailAddress)]
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
 

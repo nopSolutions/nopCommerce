@@ -11,6 +11,7 @@ namespace Nop.Web.Models.Customer
     {
         public bool CheckoutAsGuest { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Login.Fields.Email")]
         public string Email { get; set; }
 

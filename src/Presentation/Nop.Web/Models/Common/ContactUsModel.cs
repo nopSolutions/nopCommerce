@@ -1,4 +1,5 @@
-﻿using FluentValidation.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Common;
@@ -8,6 +9,7 @@ namespace Nop.Web.Models.Common
     [Validator(typeof(ContactUsValidator))]
     public partial class ContactUsModel : BaseNopModel
     {
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("ContactUs.Email")]
         public string Email { get; set; }
         

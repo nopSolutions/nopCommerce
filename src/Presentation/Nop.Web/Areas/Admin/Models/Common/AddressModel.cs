@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Common;
@@ -24,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.LastName")]
         public string LastName { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Address.Fields.Email")]
         public string Email { get; set; }
 
@@ -54,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 

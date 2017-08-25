@@ -1,4 +1,5 @@
-﻿using FluentValidation.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Common;
@@ -11,6 +12,7 @@ namespace Nop.Web.Models.Common
         public int VendorId { get; set; }
         public string VendorName { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("ContactVendor.Email")]
         public string Email { get; set; }
 

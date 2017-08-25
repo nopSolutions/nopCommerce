@@ -40,6 +40,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Username")]
         public string Username { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Email")]
         public string Email { get; set; }
 
@@ -100,10 +101,12 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Phone")]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Fax")]
         public string Fax { get; set; }
 

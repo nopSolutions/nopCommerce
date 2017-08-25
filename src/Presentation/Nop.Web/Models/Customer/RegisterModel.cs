@@ -24,10 +24,12 @@ namespace Nop.Web.Models.Customer
         //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
         public IFormCollection Form { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
         
         public bool EnteringEmailTwice { get; set; }
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.ConfirmEmail")]
         public string ConfirmEmail { get; set; }
 
@@ -119,11 +121,13 @@ namespace Nop.Web.Models.Customer
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Account.Fields.Phone")]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
         

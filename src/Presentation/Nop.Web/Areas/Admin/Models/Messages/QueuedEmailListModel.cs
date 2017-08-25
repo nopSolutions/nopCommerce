@@ -15,9 +15,11 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [UIHint("DateNullable")]
         public DateTime? SearchEndDate { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.FromEmail")]
         public string SearchFromEmail { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.ToEmail")]
         public string SearchToEmail { get; set; }
 

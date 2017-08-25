@@ -28,6 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.Name")]
         public string Name { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Vendors.Fields.Email")]
         public string Email { get; set; }
 

@@ -50,6 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         public int EmailAccountId { get; set; }
         public IList<SelectListItem> AvailableEmailAccounts { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
         public string TestEmail { get; set; }
     }

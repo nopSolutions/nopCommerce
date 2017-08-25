@@ -40,9 +40,11 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea {
-	border-radius: 0;
+    border-radius: 0;
 }
 input[type="button"],
 input[type="submit"],
@@ -83,12 +85,14 @@ table {
 	border-collapse: collapse;
 }
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
 input, textarea, select {
 	font-size: 14px;
@@ -104,10 +108,12 @@ select {
 	padding: 6px;
 }
 input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus, select:focus {
-	border-color: #ccc;
-	color: #444;
+    border-color: #ccc;
+    color: #444;
 }
 input[type="checkbox"],
 input[type="radio"],
@@ -266,13 +272,14 @@ label, label + * {
 	color: #444;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select, .inputs textarea {
-	width: 400px;
-	max-width: 100%;
-	background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
 }
-
 .inputs.custom-attributes {
 	white-space: normal;
 }
@@ -985,7 +992,7 @@ label, label + * {
 	display: inline-block;
 	overflow: hidden; 
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	float: left;
 	width: 180px;
 	height: 36px;
@@ -6041,9 +6048,11 @@ pre {
 	text-align: right;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select {
-	min-height: 40px;
+    min-height: 40px;
 }
 .inputs .option-list li {
 	margin: 0 10px 0 0;
@@ -6586,8 +6595,9 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 300px;
+    width: 300px;
 }
 
 .address-list-page .section,
@@ -6837,8 +6847,9 @@ pre {
 
 
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 360px;
+    width: 360px;
 }
 
 .registration-page .vat-note {

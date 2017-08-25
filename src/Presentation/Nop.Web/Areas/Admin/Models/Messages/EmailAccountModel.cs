@@ -9,6 +9,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     [Validator(typeof(EmailAccountValidator))]
     public partial class EmailAccountModel : BaseNopEntityModel
     {
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Email")]
         public string Email { get; set; }
 

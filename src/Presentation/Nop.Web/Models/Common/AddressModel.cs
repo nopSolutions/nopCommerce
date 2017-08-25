@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -21,6 +22,7 @@ namespace Nop.Web.Models.Common
         public string FirstName { get; set; }
         [NopResourceDisplayName("Address.Fields.LastName")]
         public string LastName { get; set; }
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Address.Fields.Email")]
         public string Email { get; set; }
 
@@ -64,6 +66,7 @@ namespace Nop.Web.Models.Common
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 

@@ -451,10 +451,12 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
                 [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
                 public string RecipientName { get; set; }
+                [DataType(DataType.EmailAddress)]
                 [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
                 public string RecipientEmail { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
                 public string SenderName { get; set; }
+                [DataType(DataType.EmailAddress)]
                 [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
                 public string SenderEmail { get; set; }
                 [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]

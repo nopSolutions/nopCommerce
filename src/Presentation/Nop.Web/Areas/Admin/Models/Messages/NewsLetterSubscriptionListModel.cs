@@ -16,6 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
             AvailableCustomerRoles = new List<SelectListItem>();
         }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail")]
         public string SearchEmail { get; set; }
 
