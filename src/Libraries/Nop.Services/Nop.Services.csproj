@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.1.0" />
     <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.1.9" />
-    <PackageReference Include="iTextSharp" Version="5.5.11" />
+    <PackageReference Include="iTextSharp" Version="5.5.12" />
     <PackageReference Include="MaxMind.GeoIP2" Version="2.8.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.0" />
