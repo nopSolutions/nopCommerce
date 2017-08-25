@@ -7,9 +7,13 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.GoogleShopping.Data;
@@ -44,9 +48,12 @@ namespace Nop.Plugin.Feed.GoogleShopping
         private readonly MeasureSettings _measureSettings;
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly SecuritySettings _securitySettings;
         private readonly GoogleProductObjectContext _objectContext;
         private readonly IWebHelper _webHelper;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IActionContextAccessor _actionContextAccessor;
 
         #endregion
 
@@ -67,10 +74,12 @@ namespace Nop.Plugin.Feed.GoogleShopping
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
+            SecuritySettings securitySettings,
             GoogleProductObjectContext objectContext,
             IWebHelper webHelper,
-            IHostingEnvironment hostingEnvironment
-            )
+            IHostingEnvironment hostingEnvironment,
+            IUrlHelperFactory urlHelperFactory,
+            IActionContextAccessor actionContextAccessor)
         {
             this._googleService = googleService;
             this._priceCalculationService = priceCalculationService;
@@ -87,9 +96,12 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this._measureSettings = measureSettings;
             this._googleShoppingSettings = googleShoppingSettings;
             this._currencySettings = currencySettings;
+            this._securitySettings = securitySettings;
             this._objectContext = objectContext;
             this._webHelper = webHelper;
             this._hostingEnvironment = hostingEnvironment;
+            this._urlHelperFactory = urlHelperFactory;
+            this._actionContextAccessor = actionContextAccessor;
         }
 
         #endregion
@@ -101,7 +113,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
         /// <param name="input">Input string</param>
         /// <param name="isHtmlEncoded">A value indicating whether input string is HTML encoded</param>
         /// <returns>Valid string</returns>
-        private string StripInvalidChars(string input, bool isHtmlEncoded)
+        protected virtual string StripInvalidChars(string input, bool isHtmlEncoded)
         {
             if (String.IsNullOrWhiteSpace(input))
                 return input;
@@ -133,14 +145,32 @@ namespace Nop.Plugin.Feed.GoogleShopping
 
             return input;
         }
-        private Currency GetUsedCurrency()
+
+        protected virtual Currency GetUsedCurrency()
         {
             var currency = _currencyService.GetCurrencyById(_googleShoppingSettings.CurrencyId);
             if (currency == null || !currency.Published)
                 currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             return currency;
         }
-        
+
+        /// <summary>
+        /// Get UrlHelper
+        /// </summary>
+        /// <returns>UrlHelper</returns>
+        protected virtual IUrlHelper GetUrlHelper()
+        {
+            return _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+        }
+
+        /// <summary>
+        /// Get HTTP protocol
+        /// </summary>
+        /// <returns>Protocol name as string</returns>
+        protected virtual string GetHttpProtocol()
+        {
+            return _securitySettings.ForceSslForAllPages ? "https" : "http";
+        }
         #endregion
 
         #region Methods
@@ -188,7 +218,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             if (languageId == 0)
                 languageId = _workContext.WorkingLanguage.Id;
 
-            //we load all google products here using one SQL request (performance optimization)
+            //we load all Google products here using one SQL request (performance optimization)
             var allGoogleProducts = _googleService.GetAll();
 
             using (var writer = XmlWriter.Create(stream, settings))
@@ -282,7 +312,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                             //TODO localize categories
                             var category = defaultProductCategory.Category
                                 .GetFormattedBreadCrumb(_categoryService, separator: ">", languageId: languageId);
-                            if (!String.IsNullOrEmpty((category)))
+                            if (!String.IsNullOrEmpty(category))
                             {
                                 writer.WriteStartElement("g", "product_type", googleBaseNamespace);
                                 writer.WriteCData(category);
@@ -291,20 +321,23 @@ namespace Nop.Plugin.Feed.GoogleShopping
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = $"{store.Url}{product.GetSeName(languageId)}";
+                        var productUrl = GetUrlHelper().RouteUrl("Product", new { SeName = product.GetSeName(languageId) }, GetHttpProtocol());
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item
                         //additional images [additional_image_link]
                         //up to 10 pictures
                         const int maximumPictures = 10;
+                        var storeLocation = _securitySettings.ForceSslForAllPages ? 
+                            (!string.IsNullOrWhiteSpace(store.SecureUrl) ? store.SecureUrl : store.Url.Replace("http://", "https://")): 
+                            store.Url;
                         var pictures = _pictureService.GetPicturesByProductId(product.Id, maximumPictures);
                         for (int i = 0; i < pictures.Count; i++)
                         {
                             var picture = pictures[i];
                             var imageUrl = _pictureService.GetPictureUrl(picture,
                                 _googleShoppingSettings.ProductPictureSize,
-                                storeLocation: store.Url);
+                                storeLocation: storeLocation);
 
                             if (i == 0)
                             {
@@ -320,7 +353,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
                         if (!pictures.Any())
                         {
                             //no picture? submit a default one
-                            var imageUrl = _pictureService.GetDefaultPictureUrl(_googleShoppingSettings.ProductPictureSize, storeLocation: store.Url);
+                            var imageUrl = _pictureService.GetDefaultPictureUrl(_googleShoppingSettings.ProductPictureSize, storeLocation: storeLocation);
                             writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
                         }
 
