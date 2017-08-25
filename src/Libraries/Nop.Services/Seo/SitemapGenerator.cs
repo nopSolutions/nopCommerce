@@ -237,7 +237,6 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Get product URLs for the sitemap
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
         /// <returns>Collection of sitemap URLs</returns>
         protected virtual IEnumerable<SitemapUrl> GetProductUrls()
         {
@@ -350,7 +349,6 @@ namespace Nop.Services.Seo
         /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
         /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
         public virtual string Generate(int? id)
