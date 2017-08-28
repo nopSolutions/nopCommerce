@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
@@ -13,12 +15,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckAffiliateAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public CheckAffiliateAttribute() : base(typeof(CheckAffiliateFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -84,9 +90,15 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
                 //check request query parameters
-                var request = context?.HttpContext?.Request;
+                var request = context.HttpContext.Request;
                 if (request?.Query == null || !request.Query.Any())
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //try to find by ID

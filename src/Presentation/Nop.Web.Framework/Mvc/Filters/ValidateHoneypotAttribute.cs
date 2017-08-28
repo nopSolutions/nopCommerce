@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Services.Logging;
 
@@ -13,12 +14,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ValidateHoneypotAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public ValidateHoneypotAttribute() : base(typeof(ValidateHoneypotFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -58,6 +63,12 @@ namespace Nop.Web.Framework.Mvc.Filters
             {
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
+
+                if (filterContext.HttpContext.Request == null)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
 
                 //whether honeypot is enabled
                 if (!_securitySettings.HoneypotEnabled)

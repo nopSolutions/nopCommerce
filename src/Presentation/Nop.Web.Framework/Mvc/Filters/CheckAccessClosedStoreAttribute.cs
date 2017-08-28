@@ -17,14 +17,34 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
+        #region Fields
+
+        private readonly bool _ignoreFilter;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter => _ignoreFilter;
+
+        #endregion
 
         #region Nested filter
 
@@ -71,11 +91,16 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                //ignore filter (the action available even when a store is closed)
-                if (_ignoreFilter)
-                    return;
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
 
-                if (context?.HttpContext?.Request == null)
+                //check whether this filter has been overridden for the Action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<CheckAccessClosedStoreAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if a store is closed)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())

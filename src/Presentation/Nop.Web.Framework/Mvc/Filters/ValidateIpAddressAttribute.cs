@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -13,12 +14,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ValidateIpAddressAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public ValidateIpAddressAttribute() : base(typeof(ValidateIpAddressFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -53,7 +58,13 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context?.HttpContext?.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //get action and controller names

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,6 +10,8 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute 
         /// </summary>
@@ -18,6 +21,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             this.Arguments = new object[] { formKeyName, actionParameterName };
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -51,7 +56,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context?.HttpContext?.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
                     return;
 
                 //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true

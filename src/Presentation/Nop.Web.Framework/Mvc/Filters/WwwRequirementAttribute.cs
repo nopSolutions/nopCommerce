@@ -13,12 +13,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class WwwRequirementAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public WwwRequirementAttribute() : base(typeof(WwwRequirementFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -88,11 +92,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
+                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
-                //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
-                if (filterContext.HttpContext.Request.Method != WebRequestMethods.Http.Get)
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //ignore this rule for localhost

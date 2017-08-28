@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using Nop.Core.Data;
 using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -10,6 +12,8 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ValidateCaptchaAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute 
         /// </summary>
@@ -18,6 +22,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             this.Arguments = new object[] { actionParameterName };
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -97,10 +103,13 @@ namespace Nop.Web.Framework.Mvc.Filters
             public void OnActionExecuting(ActionExecutingContext context)
             {
                 if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //whether CAPTCHA is enabled
-                if (_captchaSettings.Enabled && context.HttpContext != null && context.HttpContext.Request != null)
+                if (_captchaSettings.Enabled && context.HttpContext?.Request != null)
                 {
                     //push the validation result as an action parameter
                     context.ActionArguments[_actionParameterName] = ValidateCaptcha(context);

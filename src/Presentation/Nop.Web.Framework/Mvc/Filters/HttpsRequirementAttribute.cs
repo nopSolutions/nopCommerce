@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,14 +15,34 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class HttpsRequirementAttribute : TypeFilterAttribute
     {
+        #region Fields
+
+        private readonly SslRequirement _sslRequirement;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="sslRequirement">Whether the page should be secured</param>
         public HttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
         {
+            this._sslRequirement = sslRequirement;
             this.Arguments = new object[] { sslRequirement };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether the page should be secured
+        /// </summary>
+        public SslRequirement SslRequirement => _sslRequirement;
+
+        #endregion
 
         #region Nested filter
 
@@ -88,18 +109,28 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (filterContext.HttpContext.Request == null)
                     return;
 
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly
-                if (filterContext.HttpContext.Request.Method != WebRequestMethods.Http.Get)
+                if (!filterContext.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<HttpsRequirementAttribute>().FirstOrDefault();
+
+                var sslRequirement = actionFilter?.SslRequirement ?? _sslRequirement;
 
                 //whether all pages will be forced to use SSL no matter of the passed value
                 if (_securitySettings.ForceSslForAllPages)
-                    _sslRequirement = SslRequirement.Yes;
+                    sslRequirement = SslRequirement.Yes;
 
-                switch (_sslRequirement)
+                switch (sslRequirement)
                 {
                     case SslRequirement.Yes:
                         //redirect to HTTPS page

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,12 +16,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckLanguageSeoCodeAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public CheckLanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
         {
         }
+        
+        #endregion
 
         #region Nested filter
 
@@ -61,21 +66,23 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context?.HttpContext?.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
+                    return;
+
+                //only in GET requests
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
-                    return;
-                
-                //only in GET requests
-                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
                     return;
 
                 //whether SEO friendly URLs are enabled
                 if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     return;
-
-                
+                                
                 //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
                 if (context.RouteData?.Routers == null || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
                     return;

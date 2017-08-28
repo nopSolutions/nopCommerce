@@ -14,12 +14,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class SaveLastVisitedPageAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public SaveLastVisitedPageAttribute() : base(typeof(SaveLastVisitedPageFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -60,14 +64,17 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context?.HttpContext?.Request == null)
-                    return;
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (context.HttpContext.Request == null)
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //check whether we store last visited page URL
