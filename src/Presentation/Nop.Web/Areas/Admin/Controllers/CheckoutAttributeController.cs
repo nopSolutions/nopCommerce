@@ -193,8 +193,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                             Name = x.Name,
                             AttributeControlType = x.AttributeControlType,
                             Values = _checkoutAttributeService.GetCheckoutAttributeValues(x.Id)
-                                .Select(v => new SelectListItem() { Text = v.Name, Value = v.Id.ToString(),
-                                    Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id) }).ToList()
+                            .Select(v => new SelectListItem {
+                                Text = v.Name,
+                                Value = v.Id.ToString(),
+                                Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id) })
+                            .ToList()
                         }).ToList()
             };
         }

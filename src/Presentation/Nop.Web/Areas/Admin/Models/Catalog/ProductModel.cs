@@ -32,7 +32,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableProductAvailabilityRanges = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
-            AvailableProductAttributes = new List<SelectListItem>();
             ProductsTypesSupportedByProductTemplates = new Dictionary<int, IList<SelectListItem>>();
 
             AvailableVendors = new List<SelectListItem>();
@@ -409,12 +408,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         //vendor
         public bool IsLoggedInAsVendor { get; set; }
 
-        //product attributes
-        public IList<SelectListItem> AvailableProductAttributes { get; set; }
-        
         //pictures
         public ProductPictureModel AddPictureModel { get; set; }
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
+
+        //product attributes
+        public bool ProductAttributesExist { get; set; }
 
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
@@ -718,11 +717,19 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public partial class ProductAttributeMappingModel : BaseNopEntityModel
         {
+            public ProductAttributeMappingModel()
+            {
+                AvailableProductAttributes = new List<SelectListItem>();
+            }
+
             public int ProductId { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public int ProductAttributeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
+            public IList<SelectListItem> AvailableProductAttributes { get; set; }
+
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             public string TextPrompt { get; set; }
@@ -730,6 +737,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
             public bool IsRequired { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
             public int AttributeControlTypeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
             public string AttributeControlType { get; set; }
@@ -737,12 +745,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
-            public bool ShouldHaveValues { get; set; }
-            public int TotalValues { get; set; }
-
             //validation fields
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")]
-            public bool ValidationRulesAllowed { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength")]
             [UIHint("Int32Nullable")]
             public int? ValidationMinLength { get; set; }
@@ -762,16 +765,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
             public bool ConditionAllowed { get; set; }
             public string ConditionString { get; set; }
-        }
-        public partial class ProductAttributeValueListModel : BaseNopModel
-        {
-            public int ProductId { get; set; }
+            public ProductAttributeConditionModel ConditionModel { get; set; }
 
-            public string ProductName { get; set; }
-
-            public int ProductAttributeMappingId { get; set; }
-
-            public string ProductAttributeName { get; set; }
         }
         [Validator(typeof(ProductAttributeValueModelValidator))]
         public partial class ProductAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeValueLocalizedModel>

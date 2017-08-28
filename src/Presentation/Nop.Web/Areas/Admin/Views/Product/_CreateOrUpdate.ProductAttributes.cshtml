@@ -6,7 +6,7 @@
     </p>
     @if (Model.Id > 0)
     {
-        if (Model.AvailableProductAttributes.Count > 0)
+        if (Model.ProductAttributesExist)
         {
             <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
                 <nop-tab-header>
