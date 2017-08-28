@@ -182,6 +182,7 @@ namespace Nop.Web.Factories
                 var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (pickupPointProviders.Any())
                 {
+                    var languageId = _workContext.WorkingLanguage.Id;
                     var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                         _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
@@ -198,8 +199,8 @@ namespace Nop.Web.Factories
                                 ProviderSystemName = point.ProviderSystemName,
                                 Address = point.Address,
                                 City = point.City,
-                                StateName = state?.Name ?? string.Empty,
-                                CountryName = country?.Name ?? string.Empty,
+                                StateName = state?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
+                                CountryName = country?.GetLocalized(x => x.Name, languageId) ?? string.Empty,
                                 ZipPostalCode = point.ZipPostalCode,
                                 Latitude = point.Latitude,
                                 Longitude = point.Longitude,
