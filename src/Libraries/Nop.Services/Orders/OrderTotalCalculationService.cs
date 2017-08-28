@@ -798,8 +798,8 @@ namespace Nop.Services.Orders
             if (customer != null && customer.CustomerRoles.Where(role => role.Active).Any(role => role.FreeShipping))
                 return true;
 
-            //check whether all shopping cart items are marked as free shipping
-            if (cart.All(item => item.IsShipEnabled && item.IsFreeShipping))
+            //check whether all shopping cart items are not shippable or marked as free shipping
+            if (cart.All(item => !item.IsShipEnabled || item.IsFreeShipping))
                 return true;
 
             //free shipping over $X
