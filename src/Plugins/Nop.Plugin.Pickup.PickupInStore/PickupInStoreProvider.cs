@@ -94,6 +94,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     ZipPostalCode = pointAddress.ZipPostalCode,
                     OpeningHours = point.OpeningHours,
                     PickupFee = point.PickupFee,
+                    DisplayOrder = point.DisplayOrder,
                     ProviderSystemName = PluginDescriptor.SystemName
                 });
             }
@@ -148,6 +149,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.AddNew", "Add a new pickup point");
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Description", "Description");
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Description.Hint", "Specify a description of the pickup point.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.DisplayOrder", "Display order");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.DisplayOrder.Hint", "Specify the pickup point display order.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Name", "Name");
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Name.Hint", "Specify a name of the pickup point.");            
             this.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.OpeningHours", "Opening hours");
@@ -173,6 +176,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.AddNew");
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Description");
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Description.Hint");
+            this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.DisplayOrder");
+            this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.DisplayOrder.Hint");
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Name");
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Name.Hint");
             this.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.OpeningHours");

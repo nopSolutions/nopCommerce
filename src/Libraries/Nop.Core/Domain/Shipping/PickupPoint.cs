@@ -73,6 +73,11 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets an opening hours
         /// </summary>
         public string OpeningHours { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 
     public class PickupPointTypeConverter : TypeConverter

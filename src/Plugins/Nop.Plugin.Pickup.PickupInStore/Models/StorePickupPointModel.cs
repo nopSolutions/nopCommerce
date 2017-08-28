@@ -27,6 +27,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.OpeningHours")]
         public string OpeningHours { get; set; }
 
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
+
         public List<SelectListItem> AvailableStores { get; set; }
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Store")]
         public int StoreId { get; set; }

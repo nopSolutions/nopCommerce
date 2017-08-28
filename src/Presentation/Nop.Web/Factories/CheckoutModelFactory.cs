@@ -185,29 +185,29 @@ namespace Nop.Web.Factories
                     var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
                         _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
-                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(x =>
+                        model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
                         {
-                            var country = _countryService.GetCountryByTwoLetterIsoCode(x.CountryCode);
-                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(x.StateAbbreviation);
+                            var country = _countryService.GetCountryByTwoLetterIsoCode(point.CountryCode);
+                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation);
 
                             var pickupPointModel = new CheckoutPickupPointModel
                             {
-                                Id = x.Id,
-                                Name = x.Name,
-                                Description = x.Description,
-                                ProviderSystemName = x.ProviderSystemName,
-                                Address = x.Address,
-                                City = x.City,
+                                Id = point.Id,
+                                Name = point.Name,
+                                Description = point.Description,
+                                ProviderSystemName = point.ProviderSystemName,
+                                Address = point.Address,
+                                City = point.City,
                                 StateName = state?.Name ?? string.Empty,
                                 CountryName = country?.Name ?? string.Empty,
-                                ZipPostalCode = x.ZipPostalCode,
-                                Latitude = x.Latitude,
-                                Longitude = x.Longitude,
-                                OpeningHours = x.OpeningHours
+                                ZipPostalCode = point.ZipPostalCode,
+                                Latitude = point.Latitude,
+                                Longitude = point.Longitude,
+                                OpeningHours = point.OpeningHours
                             };
-                            if (x.PickupFee > 0)
+                            if (point.PickupFee > 0)
                             {
-                                var amount = _taxService.GetShippingPrice(x.PickupFee, _workContext.CurrentCustomer);
+                                var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
                             }

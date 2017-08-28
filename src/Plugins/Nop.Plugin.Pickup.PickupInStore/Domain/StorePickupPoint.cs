@@ -33,6 +33,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Domain
         public string OpeningHours { get; set; }
 
         /// <summary>
+        /// Gets or sets a display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a store identifier
         /// </summary>
         public int StoreId { get; set; }

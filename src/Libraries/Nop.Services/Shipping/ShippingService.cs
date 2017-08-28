@@ -920,9 +920,13 @@ namespace Nop.Services.Shipping
         {
             var result = new GetPickupPointsResponse();
             var pickupPointsProviders = LoadActivePickupPointProviders(customer, storeId);
+
             if (!string.IsNullOrEmpty(providerSystemName))
+            {
                 pickupPointsProviders = pickupPointsProviders
                     .Where(x => x.PluginDescriptor.SystemName.Equals(providerSystemName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            }
+
             if (pickupPointsProviders.Count == 0)
                 return result;
 
@@ -946,7 +950,7 @@ namespace Nop.Services.Shipping
             if (allPickupPoints.Count > 0)
             {
                 result.Errors.Clear();
-                result.PickupPoints = allPickupPoints;
+                result.PickupPoints = allPickupPoints.OrderBy(point => point.DisplayOrder).ThenBy(point => point.Name).ToList();
             }
 
             return result;

@@ -65,9 +65,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return Content("Access denied");
-
             return View("~/Plugins/Pickup.PickupInStore/Views/Configure.cshtml");
         }
 
@@ -78,18 +75,18 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return ErrorForKendoGridJson("Access denied");
 
-            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints();
-            var model = pickupPoints.Select(x =>
+            var pickupPoints = _storePickupPointService.GetAllStorePickupPoints(pageIndex: command.Page - 1, pageSize: command.PageSize);
+            var model = pickupPoints.Select(point =>
             {
-                var store = _storeService.GetStoreById(x.StoreId);
+                var store = _storeService.GetStoreById(point.StoreId);
                 return new StorePickupPointModel
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    OpeningHours = x.OpeningHours,
-                    PickupFee = x.PickupFee,
-                    StoreName = store != null ? store.Name
-                        : x.StoreId == 0 ? _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores") : string.Empty
+                    Id = point.Id,
+                    Name = point.Name,
+                    OpeningHours = point.OpeningHours,
+                    PickupFee = point.PickupFee,
+                    DisplayOrder = point.DisplayOrder,
+                    StoreName = store?.Name ?? (point.StoreId == 0 ? _localizationService.GetResource("Admin.Configuration.Settings.StoreScope.AllStores") : string.Empty)
                 };
             }).ToList();
 
@@ -154,6 +151,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 AddressId = address.Id,
                 OpeningHours = model.OpeningHours,
                 PickupFee = model.PickupFee,
+                DisplayOrder = model.DisplayOrder,
                 StoreId = model.StoreId
             };
             _storePickupPointService.InsertStorePickupPoint(pickupPoint);
@@ -179,6 +177,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 Description = pickupPoint.Description,
                 OpeningHours = pickupPoint.OpeningHours,
                 PickupFee = pickupPoint.PickupFee,
+                DisplayOrder = pickupPoint.DisplayOrder,
                 StoreId = pickupPoint.StoreId
             };
 
@@ -244,6 +243,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             pickupPoint.AddressId = address.Id;
             pickupPoint.OpeningHours = model.OpeningHours;
             pickupPoint.PickupFee = model.PickupFee;
+            pickupPoint.DisplayOrder = model.DisplayOrder;
             pickupPoint.StoreId = model.StoreId;
             _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
 
@@ -266,6 +266,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             var address = _addressService.GetAddressById(pickupPoint.AddressId);
             if (address != null)
                 _addressService.DeleteAddress(address);
+
             _storePickupPointService.DeleteStorePickupPoint(pickupPoint);
 
             return new NullJsonResult();

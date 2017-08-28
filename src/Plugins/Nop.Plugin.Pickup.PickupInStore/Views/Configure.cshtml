@@ -1,5 +1,9 @@
-﻿@{
+﻿@inject Nop.Core.Domain.Common.AdminAreaSettings adminAreaSettings
+@{
     Layout = "_ConfigurePlugin";
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 
 <form asp-controller="PickupInStore" asp-action="Configure" method="post" id="pickup-instore-form">
@@ -44,16 +48,15 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
                             },
                             pageable: {
                                 refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false,
-                                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_GridPagerMessages.cshtml")
+                                pageSizes: [@(gridPageSizes)],
+                                @await Html.PartialAsync("_GridPagerMessages")
                             },
                             editable: {
                                 confirmation: "@T("Admin.Common.DeleteConfirmation")",
@@ -70,8 +73,12 @@
                                 title: "@T("Plugins.Pickup.PickupInStore.Fields.OpeningHours")"
                             }, {
                                 field: "PickupFee",
-                                width: 150,
+                                width: 100,
                                 title: "@T("Plugins.Pickup.PickupInStore.Fields.PickupFee")"
+                            }, {
+                                field: "DisplayOrder",
+                                width: 100,
+                                title: "@T("Plugins.Pickup.PickupInStore.Fields.DisplayOrder")"
                             }, {
                                 field: "StoreName",
                                 width: 100,

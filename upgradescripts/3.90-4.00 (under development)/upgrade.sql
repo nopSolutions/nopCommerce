@@ -161,6 +161,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.DefaultTaxDisplayType.Hint">
     <Value>Default tax display type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.DisplayOrder.Hint">
+    <Value>Specify the pickup point display order.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -411,4 +417,21 @@ WHERE [DefaultTaxDisplayTypeId] IS NULL
 GO
 
 ALTER TABLE [CustomerRole] ALTER COLUMN [DefaultTaxDisplayTypeId] int NOT NULL
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+AND NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and NAME='DisplayOrder')
+BEGIN
+	ALTER TABLE [StorePickupPoint]
+	ADD [DisplayOrder] INT NULL
+END
+GO
+
+UPDATE [StorePickupPoint]
+SET [DisplayOrder] = 0
+WHERE [DisplayOrder] IS NULL
+GO
+
+ALTER TABLE [StorePickupPoint] ALTER COLUMN [DisplayOrder] INT NOT NULL
 GO
