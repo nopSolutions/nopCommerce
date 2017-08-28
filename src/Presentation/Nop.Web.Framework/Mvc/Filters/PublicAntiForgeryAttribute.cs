@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Web.Framework.Security
+namespace Nop.Web.Framework.Mvc.Filters
 {
     /// <summary>
     /// Represents a filter attribute that enables anti-forgery feature for the public store
