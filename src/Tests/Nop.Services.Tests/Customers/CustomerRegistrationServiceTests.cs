@@ -53,7 +53,8 @@ namespace Nop.Services.Tests.Customers
         {
             _customerSettings = new CustomerSettings
             {
-                UnduplicatedPasswordsNumber = 1
+                UnduplicatedPasswordsNumber = 1,
+                HashedPasswordFormat = "SHA512"
             };
             _securitySettings = new SecuritySettings
             {
