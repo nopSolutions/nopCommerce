@@ -97,6 +97,9 @@ namespace Nop.Services.Directory
         /// <returns>State/province</returns>
         public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation)
         {
+            if (string.IsNullOrEmpty(abbreviation))
+                return null;
+
             var query = from sp in _stateProvinceRepository.Table
                         where sp.Abbreviation == abbreviation
                         select sp;

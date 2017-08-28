@@ -631,12 +631,13 @@ namespace Nop.Web.Factories
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
                     var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+
                     model.PickupAddress = new AddressModel
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
-                        CountryName = country != null ? country.Name : string.Empty,
-                        StateProvinceName = state != null ? state.Name : string.Empty,
+                        CountryName = country?.Name ?? string.Empty,
+                        StateProvinceName = state?.Name ?? string.Empty,
                         ZipPostalCode = pickupPoint.ZipPostalCode
                     };
                 }

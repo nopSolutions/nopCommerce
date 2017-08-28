@@ -189,6 +189,7 @@ namespace Nop.Web.Factories
                         {
                             var country = _countryService.GetCountryByTwoLetterIsoCode(x.CountryCode);
                             var state = _stateProvinceService.GetStateProvinceByAbbreviation(x.StateAbbreviation);
+
                             var pickupPointModel = new CheckoutPickupPointModel
                             {
                                 Id = x.Id,
@@ -197,8 +198,8 @@ namespace Nop.Web.Factories
                                 ProviderSystemName = x.ProviderSystemName,
                                 Address = x.Address,
                                 City = x.City,
-                                StateName = state != null ? state.Name : string.Empty,
-                                CountryName = country != null ? country.Name : string.Empty,
+                                StateName = state?.Name ?? string.Empty,
+                                CountryName = country?.Name ?? string.Empty,
                                 ZipPostalCode = x.ZipPostalCode,
                                 Latitude = x.Latitude,
                                 Longitude = x.Longitude,
