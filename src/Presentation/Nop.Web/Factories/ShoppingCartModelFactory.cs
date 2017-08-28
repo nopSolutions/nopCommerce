@@ -630,7 +630,7 @@ namespace Nop.Web.Factories
                 else
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
                     model.PickupAddress = new AddressModel
                     {

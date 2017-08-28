@@ -123,7 +123,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
 
             //sample pickup point
             var country = _countryService.GetCountryByThreeLetterIsoCode("USA");
-            var state = _stateProvinceService.GetStateProvinceByAbbreviation("NY");
+            var state = _stateProvinceService.GetStateProvinceByAbbreviation("NY", country?.Id);
 
             var address = new Address
             {

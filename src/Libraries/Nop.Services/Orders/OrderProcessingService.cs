@@ -394,7 +394,7 @@ namespace Nop.Services.Orders
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation);
+                    var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
                     details.PickUpInStore = true;
                     details.PickupAddress = new Address

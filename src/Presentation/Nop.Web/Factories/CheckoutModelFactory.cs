@@ -188,7 +188,7 @@ namespace Nop.Web.Factories
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
                         {
                             var country = _countryService.GetCountryByTwoLetterIsoCode(point.CountryCode);
-                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation);
+                            var state = _stateProvinceService.GetStateProvinceByAbbreviation(point.StateAbbreviation, country?.Id);
 
                             var pickupPointModel = new CheckoutPickupPointModel
                             {

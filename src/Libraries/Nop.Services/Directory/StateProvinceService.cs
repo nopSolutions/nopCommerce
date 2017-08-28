@@ -91,18 +91,22 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
-        /// Gets a state/province 
+        /// Gets a state/province by abbreviation
         /// </summary>
         /// <param name="abbreviation">The state/province abbreviation</param>
+        /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
-        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation)
+        public virtual StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null)
         {
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var query = from sp in _stateProvinceRepository.Table
-                        where sp.Abbreviation == abbreviation
-                        select sp;
+            var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
+
+            //filter by country
+            if (countryId.HasValue)
+                query = query.Where(state => state.CountryId == countryId);
+
             var stateProvince = query.FirstOrDefault();
             return stateProvince;
         }
