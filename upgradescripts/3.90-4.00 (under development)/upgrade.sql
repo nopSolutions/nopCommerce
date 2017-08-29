@@ -221,6 +221,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Added">
     <Value>The new attribute has been added successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="">
+    <Value>back to product details</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -897,7 +897,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         protected virtual void PrepareProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model, 
-            ProductAttributeMapping pam, Product product)
+            ProductAttributeMapping pam, Product product, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -919,18 +919,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 model.Id = pam.Id;
                 model.ProductAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId).Name;
-                model.ProductAttributeId = pam.ProductAttributeId;
-                model.TextPrompt = pam.TextPrompt;
-                model.IsRequired = pam.IsRequired;
                 model.AttributeControlType = pam.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                model.AttributeControlTypeId = pam.AttributeControlTypeId;
-                model.DisplayOrder = pam.DisplayOrder;
-                model.AttributeControlTypeId = pam.AttributeControlTypeId;
-                model.ValidationMinLength = pam.ValidationMinLength;
-                model.ValidationMaxLength = pam.ValidationMaxLength;
-                model.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
-                model.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
-                model.DefaultValue = pam.DefaultValue;
+                if (!excludeProperties)
+                {
+                    model.ProductAttributeId = pam.ProductAttributeId;
+                    model.TextPrompt = pam.TextPrompt;
+                    model.IsRequired = pam.IsRequired;
+                    model.AttributeControlTypeId = pam.AttributeControlTypeId;
+                    model.DisplayOrder = pam.DisplayOrder;
+                    model.ValidationMinLength = pam.ValidationMinLength;
+                    model.ValidationMaxLength = pam.ValidationMaxLength;
+                    model.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
+                    model.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
+                    model.DefaultValue = pam.DefaultValue;
+                }
                 
                 if (pam.ValidationRulesAllowed())
                 {
@@ -3594,7 +3596,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 .Select(x =>
                 {
                     var attributeModel = new ProductModel.ProductAttributeMappingModel();
-                    PrepareProductAttributeMappingModel(attributeModel, x, x.Product);
+                    PrepareProductAttributeMappingModel(attributeModel, x, x.Product, false);
                     return attributeModel;
                 })
                 .ToList();
@@ -3626,7 +3628,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var model = new ProductModel.ProductAttributeMappingModel();
-            PrepareProductAttributeMappingModel(model, null, product);
+            PrepareProductAttributeMappingModel(model, null, product, false);
             //condition
             PrepareConditionAttributes(model, null, product);
             //locales
@@ -3654,9 +3656,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
                 .Any(x => x.ProductAttributeId == model.ProductAttributeId))
             {
+                //redisplay form
                 ErrorNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
-                SaveSelectedTabName("tab-product-attributes");
-                return RedirectToAction("Edit", new {id = product.Id});
+                //model
+                PrepareProductAttributeMappingModel(model, null, product, true);
+                //condition
+                PrepareConditionAttributes(model, null, product);
+                return View(model);
             }
 
             //insert mapping
@@ -3740,7 +3746,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             var model = new ProductModel.ProductAttributeMappingModel();
-            PrepareProductAttributeMappingModel(model, pam, product);
+            PrepareProductAttributeMappingModel(model, pam, product, false);
             //condition
             PrepareConditionAttributes(model, pam, product);
             //locales
@@ -3776,9 +3782,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
                 .Any(x => x.ProductAttributeId == model.ProductAttributeId && x.Id != productAttributeMapping.Id))
             {
-                SaveSelectedTabName("tab-product-attributes");
+                //redisplay form
                 ErrorNotification(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists"));
-                return RedirectToAction("Edit", new { id = product.Id });
+                //model
+                PrepareProductAttributeMappingModel(model, productAttributeMapping, product, true);
+                //condition
+                PrepareConditionAttributes(model, productAttributeMapping, product);
+                return View(model);
             }
 
             productAttributeMapping.ProductAttributeId = model.ProductAttributeId;

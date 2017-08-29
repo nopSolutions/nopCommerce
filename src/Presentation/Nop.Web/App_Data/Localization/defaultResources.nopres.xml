@@ -3522,9 +3522,6 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew">
     <Value>Add a new value</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToAttribute">
-    <Value>back to product details</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails">
     <Value>Add/Edit values for [{0}] attribute. Product: {1}</Value>
   </LocaleResource>
