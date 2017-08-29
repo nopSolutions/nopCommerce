@@ -767,7 +767,7 @@ namespace Nop.Web.Factories
                     ProductAttributeId = attribute.ProductAttributeId,
                     Name = attribute.ProductAttribute.GetLocalized(x => x.Name),
                     Description = attribute.ProductAttribute.GetLocalized(x => x.Description),
-                    TextPrompt = attribute.TextPrompt,
+                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
