@@ -562,8 +562,9 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = !string.IsNullOrEmpty(a2.TextPrompt) ?
-                            a2.TextPrompt : 
+                        var textPrompt = a2.GetLocalized(x => x.TextPrompt);
+                        var notFoundWarning = !string.IsNullOrEmpty(textPrompt) ?
+                            textPrompt : 
                             string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.ProductAttribute.GetLocalized(a => a.Name));
                         
                         warnings.Add(notFoundWarning);

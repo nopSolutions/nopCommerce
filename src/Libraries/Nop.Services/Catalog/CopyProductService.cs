@@ -429,6 +429,13 @@ namespace Nop.Services.Catalog
                     DefaultValue = productAttributeMapping.DefaultValue
                 };
                 _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+                //localization
+                foreach (var lang in languages)
+                {
+                    var textPrompt = productAttributeMapping.GetLocalized(x => x.TextPrompt, lang.Id, false, false);
+                    if (!String.IsNullOrEmpty(textPrompt))
+                        _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt, lang.Id);
+                }
 
                 productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
 

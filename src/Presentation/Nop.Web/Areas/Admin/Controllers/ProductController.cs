@@ -245,6 +245,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+        protected virtual void UpdateLocales(ProductAttributeMapping pam, ProductModel.ProductAttributeMappingModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(pam,
+                    x => x.TextPrompt,
+                    localized.TextPrompt,
+                    localized.LanguageId);
+            }
+        }
+
         protected virtual void UpdateLocales(ProductAttributeValue pav, ProductModel.ProductAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
@@ -3618,6 +3629,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareProductAttributeMappingModel(model, null, product);
             //condition
             PrepareConditionAttributes(model, null, product);
+            //locales
+            AddLocales(_languageService, model.Locales);
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -3662,6 +3675,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 DefaultValue = model.DefaultValue
             };
             _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
+            UpdateLocales(productAttributeMapping, model);
 
             //predefined values
             var predefinedValues = _productAttributeService.GetPredefinedProductAttributeValues(model.ProductAttributeId);
@@ -3729,6 +3743,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             PrepareProductAttributeMappingModel(model, pam, product);
             //condition
             PrepareConditionAttributes(model, pam, product);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.TextPrompt = pam.GetLocalized(x => x.TextPrompt, languageId, false, false);
+            });
+
             return View(model);
         }
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -3772,6 +3792,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             productAttributeMapping.ValidationFileMaximumSize = model.ValidationFileMaximumSize;
             productAttributeMapping.DefaultValue = model.DefaultValue;
             _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
+
+            UpdateLocales(productAttributeMapping, model);
 
             SaveConditionAttributes(productAttributeMapping, model.ConditionModel);
 

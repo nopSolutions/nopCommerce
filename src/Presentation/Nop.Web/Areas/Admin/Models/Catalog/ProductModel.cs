@@ -715,11 +715,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         }
 
 
-        public partial class ProductAttributeMappingModel : BaseNopEntityModel
+        public partial class ProductAttributeMappingModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeMappingLocalizedModel>
         {
             public ProductAttributeMappingModel()
             {
                 AvailableProductAttributes = new List<SelectListItem>();
+                Locales = new List<ProductAttributeMappingLocalizedModel>();
             }
 
             public int ProductId { get; set; }
@@ -767,6 +768,15 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             public string ConditionString { get; set; }
             public ProductAttributeConditionModel ConditionModel { get; set; }
 
+            public IList<ProductAttributeMappingLocalizedModel> Locales { get; set; }
+
+        }
+        public partial class ProductAttributeMappingLocalizedModel : ILocalizedModelLocal
+        {
+            public int LanguageId { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
+            public string TextPrompt { get; set; }
         }
         [Validator(typeof(ProductAttributeValueModelValidator))]
         public partial class ProductAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeValueLocalizedModel>
