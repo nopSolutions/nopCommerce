@@ -1480,10 +1480,10 @@ namespace Nop.Services.ExportImport
                 _customerActivityService.InsertActivity("ImportCategories", _localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2);
             }
         }
-
-#endregion
-
-#region Nested classes
+        
+        #endregion
+        
+        #region Nested classes
 
         protected class ProductPictureMetadata
         {
@@ -1493,7 +1493,7 @@ namespace Nop.Services.ExportImport
             public string Picture3Path { get; set; }
             public bool IsNew { get; set; }
         }
-
-#endregion
+        
+        #endregion
     }
 }
