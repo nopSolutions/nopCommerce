@@ -157,34 +157,28 @@ namespace Nop.Core
         /// Gets this page URL
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
+        /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        public virtual string GetThisPageUrl(bool includeQueryString)
-        {
-            //whether connection is secured
-            var useSsl = IsCurrentConnectionSecured();
-
-            return GetThisPageUrl(includeQueryString, useSsl);
-        }
-
-        /// <summary>
-        /// Gets this page URL
-        /// </summary>
-        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
-        /// <param name="useSsl">Value indicating whether to get SSL secured page URL</param>
-        /// <returns>Page URL</returns>
-        public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
+        public virtual string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = true)
         {
             if (!IsRequestAvailable())
                 return string.Empty;
 
+            if (!useSsl.HasValue)
+                useSsl = IsCurrentConnectionSecured();
+
             //get the host considering using SSL
-            var url = GetStoreHost(useSsl).TrimEnd('/');
+            var url = GetStoreHost(useSsl.Value).TrimEnd('/');
 
             //get full URL with or without query string
             url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request) 
                 : $"{_httpContextAccessor.HttpContext.Request.PathBase}{_httpContextAccessor.HttpContext.Request.Path}";
 
-            return url.ToLowerInvariant();
+            if (lowercaseUrl)
+                url = url.ToLowerInvariant();
+
+            return url;
         }
 
         /// <summary>

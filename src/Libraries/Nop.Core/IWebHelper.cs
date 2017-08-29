@@ -23,16 +23,10 @@ namespace Nop.Core
         /// Gets this page URL
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
+        /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        string GetThisPageUrl(bool includeQueryString);
-
-        /// <summary>
-        /// Gets this page URL
-        /// </summary>
-        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
-        /// <param name="useSsl">Value indicating whether to get SSL secured page URL</param>
-        /// <returns>Page URL</returns>
-        string GetThisPageUrl(bool includeQueryString, bool useSsl);
+        string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = true);
 
         /// <summary>
         /// Gets a value indicating whether current connection is secured
