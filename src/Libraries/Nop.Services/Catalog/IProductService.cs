@@ -374,6 +374,14 @@ namespace Nop.Services.Catalog
         IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>
+        /// Gets cross-sell products by product identifier
+        /// </summary>
+        /// <param name="productIds">The first product identifiers</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Cross-sell products</returns>
+        IList<CrossSellProduct> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false);
+
+        /// <summary>
         /// Gets a cross-sell product
         /// </summary>
         /// <param name="crossSellProductId">Cross-sell product identifier</param>

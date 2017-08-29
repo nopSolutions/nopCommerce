@@ -1670,13 +1670,27 @@ namespace Nop.Services.Catalog
         /// <returns>Cross-sell products</returns>
         public virtual IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false)
         {
+            return GetCrossSellProductsByProductIds(new[] {productId1}, showHidden);
+        }
+
+        /// <summary>
+        /// Gets cross-sell products by product identifier
+        /// </summary>
+        /// <param name="productIds">The first product identifiers</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Cross-sell products</returns>
+        public virtual IList<CrossSellProduct> GetCrossSellProductsByProductIds(int[] productIds, bool showHidden = false)
+        {
+            if (productIds == null || productIds.Length == 0)
+                return new List<CrossSellProduct>();
+
             var query = from csp in _crossSellProductRepository.Table
-                        join p in _productRepository.Table on csp.ProductId2 equals p.Id
-                        where csp.ProductId1 == productId1 &&
-                        !p.Deleted &&
-                        (showHidden || p.Published)
-                        orderby csp.Id
-                        select csp;
+                join p in _productRepository.Table on csp.ProductId2 equals p.Id
+                where productIds.Contains(csp.ProductId1) &&
+                      !p.Deleted &&
+                      (showHidden || p.Published)
+                orderby csp.Id
+                select csp;
             var crossSellProducts = query.ToList();
             return crossSellProducts;
         }
@@ -1748,26 +1762,24 @@ namespace Nop.Services.Catalog
                     cartProductIds.Add(prodId);
             }
 
-            foreach (var sci in cart)
+            var productIds = cart.Select(sci => sci.ProductId).ToArray();
+            var crossSells = GetCrossSellProductsByProductIds(productIds);
+            foreach (var crossSell in crossSells)
             {
-                var crossSells = GetCrossSellProductsByProductId1(sci.ProductId);
-                foreach (var crossSell in crossSells)
+                //validate that this product is not added to result yet
+                //validate that this product is not in the cart
+                if (result.Find(p => p.Id == crossSell.ProductId2) == null &&
+                    !cartProductIds.Contains(crossSell.ProductId2))
                 {
-                    //validate that this product is not added to result yet
-                    //validate that this product is not in the cart
-                    if (result.Find(p => p.Id == crossSell.ProductId2) == null &&
-                        !cartProductIds.Contains(crossSell.ProductId2))
-                    {
-                        var productToAdd = GetProductById(crossSell.ProductId2);
-                        //validate product
-                        if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
-                            continue;
+                    var productToAdd = GetProductById(crossSell.ProductId2);
+                    //validate product
+                    if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
+                        continue;
 
-                        //add a product to result
-                        result.Add(productToAdd);
-                        if (result.Count >= numberOfProducts)
-                            return result;
-                    }
+                    //add a product to result
+                    result.Add(productToAdd);
+                    if (result.Count >= numberOfProducts)
+                        return result;
                 }
             }
             return result;
