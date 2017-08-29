@@ -171,8 +171,9 @@ namespace Nop.Core
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
         /// <param name="useSsl">Value indicating whether to get SSL secured page URL</param>
+        /// <param name="ignoreCase">Value indicating whether the page URL should be lowercase or not</param>
         /// <returns>Page URL</returns>
-        public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
+        public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl, bool ignoreCase = true)
         {
             if (!IsRequestAvailable())
                 return string.Empty;
@@ -184,7 +185,10 @@ namespace Nop.Core
             url += includeQueryString ? GetRawUrl(_httpContextAccessor.HttpContext.Request) 
                 : $"{_httpContextAccessor.HttpContext.Request.PathBase}{_httpContextAccessor.HttpContext.Request.Path}";
 
-            return url.ToLowerInvariant();
+            if (ignoreCase)
+                return url.ToLowerInvariant();
+
+            return url;
         }
 
         /// <summary>
