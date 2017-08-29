@@ -1009,8 +1009,9 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="isAssociatedProduct">Whether the product is associated</param>
-        /// <returns>Picture model for the default picture and list of picture models for all product pictures</returns>
-        protected virtual dynamic PrepareProductDetailsPictureModel(Product product, bool isAssociatedProduct = false)
+        /// <param name="allPictureModels">All picture models</param>
+        /// <returns>Picture model for the default picture</returns>
+        protected virtual PictureModel PrepareProductDetailsPictureModel(Product product, bool isAssociatedProduct, out IList<PictureModel> allPictureModels)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1069,7 +1070,8 @@ namespace Nop.Web.Factories
                 return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
             });
 
-            return cachedPictures;
+            allPictureModels = cachedPictures.PictureModels;
+            return cachedPictures.DefaultPictureModel;
         }
 
         #endregion
@@ -1281,9 +1283,8 @@ namespace Nop.Web.Factories
             
            //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
-            var pictureModels = PrepareProductDetailsPictureModel(product, isAssociatedProduct);
-            model.DefaultPictureModel = pictureModels.DefaultPictureModel;
-            model.PictureModels = pictureModels.PictureModels;
+            model.DefaultPictureModel = PrepareProductDetailsPictureModel(product, isAssociatedProduct, out IList<PictureModel> allPictureModels);
+            model.PictureModels = allPictureModels;
 
             //price
             model.ProductPrice = PrepareProductPriceModel(product);

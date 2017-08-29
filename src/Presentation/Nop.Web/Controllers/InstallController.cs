@@ -397,7 +397,7 @@ namespace Nop.Web.Controllers
                     permissionProviders.Add(typeof(StandardPermissionProvider));
                     foreach (var providerType in permissionProviders)
                     {
-                        dynamic provider = Activator.CreateInstance(providerType);
+                        var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
                         EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                     }
 
