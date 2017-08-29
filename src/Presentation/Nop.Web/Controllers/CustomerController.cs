@@ -37,6 +37,10 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
+    //available even when a store is closed
+    [CheckAccessClosedStore(true)]
+    //available even when navigation is not allowed
+    [CheckAccessPublicStore(true)]
     public partial class CustomerController : BasePublicController
     {
         #region Fields
@@ -243,10 +247,6 @@ namespace Nop.Web.Controllers
         #region Login / logout
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult Login(bool? checkoutAsGuest)
         {
             var model = _customerModelFactory.PrepareLoginModel(checkoutAsGuest);
@@ -255,10 +255,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateCaptcha]
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -326,10 +322,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        //available even when a store is closed
-        [CheckAccessClosedStore(true)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult Logout()
         {
             if (_workContext.OriginalCustomerIfImpersonated != null)
@@ -382,8 +374,6 @@ namespace Nop.Web.Controllers
         #region Password recovery
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
             var model = _customerModelFactory.PreparePasswordRecoveryModel();
@@ -393,8 +383,6 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("PasswordRecovery")]
         [PublicAntiForgery]
         [FormValueRequired("send-email")]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoverySend(PasswordRecoveryModel model)
         {
             if (ModelState.IsValid)
@@ -430,8 +418,6 @@ namespace Nop.Web.Controllers
 
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -469,8 +455,6 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
         [PublicAntiForgery]
         [FormValueRequired("set-password")]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -521,8 +505,6 @@ namespace Nop.Web.Controllers
         #region Register
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
         {
             //check whether registration is allowed
@@ -539,8 +521,6 @@ namespace Nop.Web.Controllers
         [ValidateCaptcha]
         [ValidateHoneypot]
         [PublicAntiForgery]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid)
         {
             //check whether registration is allowed
@@ -770,16 +750,12 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult RegisterResult(int resultId)
         {
             var model = _customerModelFactory.PrepareRegisterResultModel(resultId);
             return View(model);
         }
 
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         [HttpPost]
         public virtual IActionResult RegisterResult(string returnUrl)
         {
@@ -791,8 +767,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult CheckUsernameAvailability(string username)
         {
             var usernameAvailable = false;
@@ -821,8 +795,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult AccountActivation(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -856,6 +828,8 @@ namespace Nop.Web.Controllers
         #region My account / Info
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -869,6 +843,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult Info(CustomerInfoModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1027,6 +1003,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult RemoveExternalAssociation(int id)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1052,8 +1030,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
-        //available even when navigation is not allowed
-        [CheckAccessPublicStore(true)]
         public virtual IActionResult EmailRevalidation(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
@@ -1110,6 +1086,8 @@ namespace Nop.Web.Controllers
         #region My account / Addresses
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1122,6 +1100,8 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult AddressDelete(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1147,6 +1127,8 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1164,6 +1146,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1207,6 +1191,8 @@ namespace Nop.Web.Controllers
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult AddressEdit(int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1231,6 +1217,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1275,6 +1263,8 @@ namespace Nop.Web.Controllers
         #region My account / Downloadable products
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1287,6 +1277,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult UserAgreement(Guid orderItemId)
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
@@ -1306,6 +1298,8 @@ namespace Nop.Web.Controllers
         #region My account / Change password
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1322,6 +1316,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1355,6 +1351,8 @@ namespace Nop.Web.Controllers
         #region My account / Avatar
 
         [HttpsRequirement(SslRequirement.Yes)]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1371,6 +1369,8 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Avatar")]
         [PublicAntiForgery]
         [FormValueRequired("upload-avatar")]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1426,6 +1426,8 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Avatar")]
         [PublicAntiForgery]
         [FormValueRequired("remove-avatar")]
+        [CheckAccessClosedStore]
+        [CheckAccessPublicStore]
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
