@@ -298,7 +298,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                             var processPaymentResult = new ProcessPaymentResult
                                             {
                                                 NewPaymentStatus = PaymentStatus.Paid,
-                                                CaptureTransactionId = sale.id
+                                                CaptureTransactionId = sale.id,
+                                                AvsResult = sale.processor_response?.avs_code ?? string.Empty,
+                                                Cvv2Result = sale.processor_response?.cvv_code ?? string.Empty
                                             };
                                             _orderProcessingService.ProcessNextRecurringPayment(recurringPayment, processPaymentResult);
                                         }

@@ -9,7 +9,7 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @Html.Raw(T("Plugins.Payments.PayPalDirect.Instructions"))
+                @Html.Raw(string.Format(T("Plugins.Payments.PayPalDirect.Instructions").Text, $"{_webHelper.GetStoreLocation(true)}Plugins/PaymentPayPalDirect/Webhook", T("Plugins.Payments.PayPalDirect.WebhookCreate").Text))
                 <div class="form-group">
                     <div class="col-md-3">
                         <nop-override-store-checkbox asp-for="ClientId_OverrideForStore" asp-input="ClientId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

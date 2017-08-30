@@ -40,12 +40,16 @@ namespace Nop.Services.Payments
         /// Errors
         /// </summary>
         public IList<string> Errors { get; set; }
-
-
+        
         /// <summary>
         /// Gets or sets an AVS result
         /// </summary>
         public string AvsResult { get; set; }
+
+        /// <summary>
+        /// Gets or sets an CVV2 result
+        /// </summary>
+        public string Cvv2Result { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction identifier

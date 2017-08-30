@@ -554,8 +554,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                                 result.NewPaymentStatus = GetPaymentStatus(sale.state);
                             }
                             result.CaptureTransactionId = sale.id;
-                            result.AvsResult = sale.processor_response != null ? sale.processor_response.avs_code : string.Empty;
-
+                            result.AvsResult = sale.processor_response?.avs_code ?? string.Empty;
+                            result.Cvv2Result = sale.processor_response?.cvv_code ?? string.Empty;
                         }
                     }
                 else
@@ -1083,7 +1083,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId", "Webhook ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint", "Specify webhook ID.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b><br /><br />To configure plugin follow these steps:<br />1. Log into your Developer PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click on My Apps & Credentials from the Dashboard.<br />3. Create new REST API app.<br />4. Copy your Client ID and Secret key below.<br />5. To be able to use recurring payments you need to set the webhook ID. You can get it manually in your PayPal account (enter the URL https://www.yourStore.com/Plugins/PaymentPayPalDirect/Webhook below REST API application credentials), or automatically by pressing \"@T(\"Plugins.Payments.PayPalDirect.WebhookCreate\")\" button (not visible when running the site locally).<br /></p>");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Instructions", "<p><b>If you're using this gateway ensure that your primary store currency is supported by PayPal.</b><br /><br />To configure plugin follow these steps:<br />1. Log into your Developer PayPal account (click <a href=\"https://www.paypal.com/us/webapps/mpp/referral/paypal-business-account2?partner_id=9JJPJNNPQ7PZ8\" target=\"_blank\">here</a> to create your account).<br />2. Click on My Apps & Credentials from the Dashboard.<br />3. Create new REST API app.<br />4. Copy your Client ID and Secret key below.<br />5. To be able to use recurring payments you need to set the webhook ID. You can get it manually in your PayPal account (enter the URL {0} below REST API application credentials), or automatically by pressing \"{1}\" button (not visible when running the site locally).<br /></p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription", "Pay by credit / debit card");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookCreate", "Get webhook ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.WebhookError", "Webhook was not created (see details in the log)");
