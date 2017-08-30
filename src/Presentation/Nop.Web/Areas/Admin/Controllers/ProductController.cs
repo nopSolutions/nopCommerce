@@ -4629,6 +4629,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+
+            //check whether the same attribute combination already exists
+            var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            if (existingCombination != null)
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
+
             if (!warnings.Any())
             {
                 //save combination
