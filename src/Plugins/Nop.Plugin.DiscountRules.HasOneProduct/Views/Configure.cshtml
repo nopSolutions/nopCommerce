@@ -50,7 +50,7 @@
                     <input type="submit"
                            id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                            value="@T("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew")"
-                           onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.IdFor(model => model.Products)}))', 800, 850, true); return false;"
+                           onclick="javascript:OpenWindow('@Url.Action("ProductAddPopup", "DiscountRulesHasOneProduct", new {btnId = $"btnRefreshDiscountRequirementProducts{Model.RequirementId}", productIdsInput = Html.IdFor(model => model.Products)})', 800, 850, true); return false;"
                            class="btn btn-info"/>
                     <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
                 </div>
@@ -111,7 +111,7 @@
             $.ajax({
                 cache: false,
                 type: 'POST',
-                url: '@Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.LoadProductFriendlyNames")',
+                url: '@Url.Action("LoadProductFriendlyNames", "DiscountRulesHasOneProduct")',
                 data: postData,
                 dataType: 'json',
                 success: function(data) {

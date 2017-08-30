@@ -101,7 +101,7 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Html.Raw(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopupList"))",
+                                                url: "@Html.Raw(Url.Action("ProductAddPopupList", "DiscountRulesHasOneProduct"))",
                                                 type: "POST",
                                                 dataType: "json",
                                                 data: additionalData
