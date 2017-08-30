@@ -967,9 +967,11 @@ input[type=file].form-control {
 .mce-container {
     max-width: 100%;
 }
-
 .mce-container label {
     max-width: inherit;
+}
+.mce-fullscreen {
+    z-index: 10000 !important;
 }
 
 /* TABLES */

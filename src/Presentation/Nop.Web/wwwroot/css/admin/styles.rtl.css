@@ -981,6 +981,9 @@ input[type=file].form-control {
 .mce-container {
     max-width: 100%;
 }
+.mce-fullscreen {
+    z-index: 10000 !important;
+}
 
 /* TABLES */
 table td .form-group {
