@@ -35,13 +35,10 @@
             <div class="panel-group">
                 <div class="panel panel-default panel-popup">
                     <div class="panel-body">
-                        @if (Model.Warnings.Count > 0)
+                        @foreach (var warning in Model.Warnings)
                         {
                             <div class="alert alert-warning alert-dismissible">
-                                @foreach (var warning in Model.Warnings)
-                                {
-                                    @warning
-                                }
+                                @warning
                             </div>
                         }
 
