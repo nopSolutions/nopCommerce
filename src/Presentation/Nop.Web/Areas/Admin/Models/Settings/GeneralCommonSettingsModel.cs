@@ -19,6 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
             DisplayDefaultMenuItemSettings = new DisplayDefaultMenuItemSettingsModel();
+            AdminAreaSettings = new AdminAreaSettingsModel();
         }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
@@ -29,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
         public DisplayDefaultMenuItemSettingsModel DisplayDefaultMenuItemSettings { get; set; }
+        public AdminAreaSettingsModel AdminAreaSettings { get; set; }
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
@@ -349,7 +351,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public bool DisplayContactUsMenuItem { get; set; }
             public bool DisplayContactUsMenuItem_OverrideForStore { get; set; }
         }
-        
+
+        public partial class AdminAreaSettingsModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates")]
+            public bool UseRichEditorInMessageTemplates { get; set; }
+            public bool UseRichEditorInMessageTemplates_OverrideForStore { get; set; }
+        }
         #endregion
     }
 }
