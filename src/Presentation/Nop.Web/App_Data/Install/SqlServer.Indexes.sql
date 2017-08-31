@@ -139,7 +139,22 @@ GO
 CREATE NONCLUSTERED INDEX [IX_PCM_Product_and_Category] ON [Product_Category_Mapping] ([CategoryId] ASC, [ProductId] ASC)
 GO
 
+CREATE NONCLUSTERED INDEX [IX_PCM_ProductId] ON [Product_Category_Mapping] ([ProductId] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PCM_ProductId_Extended] ON [Product_Category_Mapping] ([ProductId] ASC, [IsFeaturedProduct] ASC) INCLUDE ([CategoryId])
+GO
+
 CREATE NONCLUSTERED INDEX [IX_PMM_Product_and_Manufacturer] ON [Product_Manufacturer_Mapping] ([ManufacturerId] ASC, [ProductId] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PMM_ProductId] ON [Product_Manufacturer_Mapping] ([ProductId] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_PMM_ProductId_Extended] ON [Product_Manufacturer_Mapping] ([ProductId] ASC, [IsFeaturedProduct] ASC) INCLUDE ([ManufacturerId])
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Picture_Mapping_ProductId] ON [Product_Picture_Mapping] ([ProductId] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_PSAM_AllowFiltering] ON [Product_SpecificationAttribute_Mapping] ([AllowFiltering] ASC) INCLUDE ([ProductId],[SpecificationAttributeOptionId])

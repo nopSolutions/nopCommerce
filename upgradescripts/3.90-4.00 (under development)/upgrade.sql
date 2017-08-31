@@ -507,3 +507,39 @@ GO
 
 ALTER TABLE [StorePickupPoint] ALTER COLUMN [DisplayOrder] INT NOT NULL
 GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Picture_Mapping_ProductId' and object_id=object_id(N'[dbo].[Product_Picture_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Picture_Mapping_ProductId] ON [Product_Picture_Mapping] ([ProductId] ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_ProductId' and object_id=object_id(N'[dbo].[Product_Category_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PCM_ProductId] ON [Product_Category_Mapping] ([ProductId] ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_ProductId_Extended' and object_id=object_id(N'[dbo].[Product_Category_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PCM_ProductId_Extended] ON [Product_Category_Mapping] ([ProductId] ASC, [IsFeaturedProduct] ASC) INCLUDE ([CategoryId])
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_ProductId' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PMM_ProductId] ON [Product_Manufacturer_Mapping] ([ProductId] ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_ProductId_Extended' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PMM_ProductId_Extended] ON [Product_Manufacturer_Mapping] ([ProductId] ASC, [IsFeaturedProduct] ASC) INCLUDE ([ManufacturerId])
+END
+GO
+
