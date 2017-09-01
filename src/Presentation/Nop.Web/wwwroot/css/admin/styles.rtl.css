@@ -981,6 +981,9 @@ input[type=file].form-control {
 .mce-container {
     max-width: 100%;
 }
+.mce-container label {
+    max-width: inherit;
+}
 .mce-fullscreen {
     z-index: 10000 !important;
 }
@@ -1361,10 +1364,7 @@ span.grid-report-item.red {
 
     /* FORM ELEMENTS */
     .form-horizontal .panel-popup .label-wrapper {
-        float: none;
-    }
-    .form-horizontal .panel-popup .ico-help  {
-        display: none;
+        float: right;
     }
 }
 
