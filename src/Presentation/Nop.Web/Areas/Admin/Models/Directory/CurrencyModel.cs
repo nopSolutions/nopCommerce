@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         public IList<CurrencyLocalizedModel> Locales { get; set; }
 
         //store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
+        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
