@@ -87,6 +87,7 @@
             $('#group-rental').show();
             $('#group-shipping').show();
             $('#group-inventory').show();
+            $('#group-visible-individually').show();
             $('#group-associated-products').hide();
         } else if (selectedProductTypeId == groupedProductId) {
             $('#group-prices').hide();
@@ -98,6 +99,7 @@
             $('#group-rental').hide();
             $('#group-shipping').hide();
             $('#group-inventory').hide();
+            $('#group-visible-individually').hide();
             $('#group-associated-products').show();
         }
 
@@ -504,7 +506,7 @@
                             <span asp-validation-for="ProductTemplateId"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")">
+                    <div class="form-group @(Model.ProductEditorSettingsModel.VisibleIndividually ? null : "advanced-setting")" id="group-visible-individually">
                         <div class="col-md-3">
                             <nop-label asp-for="VisibleIndividually" />
                         </div>
