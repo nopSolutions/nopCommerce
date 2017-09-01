@@ -26,7 +26,7 @@ namespace Nop.Core
         /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
         /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = true);
+        string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false);
 
         /// <summary>
         /// Gets a value indicating whether current connection is secured
@@ -44,15 +44,9 @@ namespace Nop.Core
         /// <summary>
         /// Gets store location
         /// </summary>
+        /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
         /// <returns>Store location</returns>
-        string GetStoreLocation();
-
-        /// <summary>
-        /// Gets store location
-        /// </summary>
-        /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store location</returns>
-        string GetStoreLocation(bool useSsl);
+        string GetStoreLocation(bool? useSsl = null);
 
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the CMS engine.

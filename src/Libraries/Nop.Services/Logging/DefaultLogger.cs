@@ -228,7 +228,7 @@ namespace Nop.Services.Logging
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
                 Customer = customer,
-                PageUrl = _webHelper.GetThisPageUrl(true, lowercaseUrl: false),
+                PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow
             };

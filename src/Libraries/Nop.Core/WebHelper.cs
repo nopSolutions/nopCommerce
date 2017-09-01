@@ -160,7 +160,7 @@ namespace Nop.Core
         /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
         /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        public virtual string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = true)
+        public virtual string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false)
         {
             if (!IsRequestAvailable())
                 return string.Empty;
@@ -258,30 +258,22 @@ namespace Nop.Core
             if (!result.EndsWith("/"))
                 result += "/";
 
-            return result.ToLowerInvariant();
+            return result;
         }
 
         /// <summary>
         /// Gets store location
         /// </summary>
+        /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
         /// <returns>Store location</returns>
-        public virtual string GetStoreLocation()
+        public virtual string GetStoreLocation(bool? useSsl = null)
         {
             //whether connection is secured
-            var useSsl = IsCurrentConnectionSecured();
+            if (!useSsl.HasValue)
+                useSsl = IsCurrentConnectionSecured();
 
-            return GetStoreLocation(useSsl);
-        }
-
-        /// <summary>
-        /// Gets store location
-        /// </summary>
-        /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store location</returns>
-        public virtual string GetStoreLocation(bool useSsl)
-        {
             //get store host
-            var host = GetStoreHost(useSsl).TrimEnd('/');
+            var host = GetStoreHost(useSsl.Value).TrimEnd('/');
 
             //add application path base if exists
             if (IsRequestAvailable())
@@ -290,7 +282,7 @@ namespace Nop.Core
             if (!host.EndsWith("/"))
                 host += "/";
 
-            return host.ToLowerInvariant();
+            return host;
         }
         
         /// <summary>
@@ -322,16 +314,12 @@ namespace Nop.Core
         {
             if (url == null)
                 url = string.Empty;
-            url = url.ToLowerInvariant();
 
             if (queryStringModification == null)
                 queryStringModification = string.Empty;
-            queryStringModification = queryStringModification.ToLowerInvariant();
 
             if (anchor == null)
                 anchor = string.Empty;
-            anchor = anchor.ToLowerInvariant();
-
 
             string str = string.Empty;
             string str2 = string.Empty;
@@ -349,7 +337,7 @@ namespace Nop.Core
             {
                 if (!string.IsNullOrEmpty(str))
                 {
-                    var dictionary = new Dictionary<string, string>();
+                    var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
                     foreach (string str3 in str.Split(new[] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))
@@ -413,7 +401,7 @@ namespace Nop.Core
             {
                 str2 = anchor;
             }
-            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2))).ToLowerInvariant();
+            return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2)));
         }
 
         /// <summary>
@@ -426,12 +414,9 @@ namespace Nop.Core
         {
             if (url == null)
                 url = string.Empty;
-            url = url.ToLowerInvariant();
 
             if (queryString == null)
                 queryString = string.Empty;
-            queryString = queryString.ToLowerInvariant();
-
 
             string str = string.Empty;
             if (url.Contains("?"))
@@ -443,7 +428,7 @@ namespace Nop.Core
             {
                 if (!string.IsNullOrEmpty(str))
                 {
-                    var dictionary = new Dictionary<string, string>();
+                    var dictionary = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
                     foreach (string str3 in str.Split(new[] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))

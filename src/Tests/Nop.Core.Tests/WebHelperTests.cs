@@ -28,38 +28,32 @@ namespace Nop.Core.Tests
         [Test]
         public void Can_get_storeHost_without_ssl()
         {
-            _webHelper.GetStoreHost(false).ShouldEqual("http://www.example.com/");
+            _webHelper.GetStoreHost(false).ShouldEqual("http://www.Example.com/");
         }
 
         [Test]
         public void Can_get_storeHost_with_ssl()
         {
-            _webHelper.GetStoreHost(true).ShouldEqual("https://www.example.com/");
+            _webHelper.GetStoreHost(true).ShouldEqual("https://www.Example.com/");
         }
 
         [Test]
         public void Can_get_storeLocation_without_ssl()
         {
-            _webHelper.GetStoreLocation(false).ShouldEqual("http://www.example.com/");
+            _webHelper.GetStoreLocation(false).ShouldEqual("http://www.Example.com/");
         }
 
         [Test]
         public void Can_get_storeLocation_with_ssl()
         {
-            _webHelper.GetStoreLocation(true).ShouldEqual("https://www.example.com/");
+            _webHelper.GetStoreLocation(true).ShouldEqual("https://www.Example.com/");
         }
 
         [Test]
         public void Can_get_storeLocation_in_virtual_directory()
         {
             _httpContext.Request.PathBase = "/nopCommercepath";
-            _webHelper.GetStoreLocation(false).ShouldEqual("http://www.example.com/nopcommercepath/");
-        }
-
-        [Test]
-        public void Get_storeLocation_should_return_lowerCased_result()
-        {
-            _webHelper.GetStoreLocation(false).ShouldEqual("http://www.example.com/");
+            _webHelper.GetStoreLocation(false).ShouldEqual("http://www.Example.com/nopCommercepath/");
         }
 
         [Test]
@@ -82,13 +76,6 @@ namespace Nop.Core.Tests
             //non-existing param
             _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&param2=value2", "param3")
                 .ShouldEqual("http://www.example.com/?param1=value1&param2=value2");
-        }
-
-        [Test]
-        public void Can_remove_queryString_should_return_lowerCased_result()
-        {
-            _webHelper.RemoveQueryString("htTp://www.eXAmple.com/?param1=value1&parAm2=value2", "paRAm1")
-                .ShouldEqual("http://www.example.com/?param2=value2");
         }
 
         [Test]
