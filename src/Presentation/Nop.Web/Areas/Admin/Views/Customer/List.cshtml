@@ -192,7 +192,8 @@
                                                     $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
                                                         .data("kendoMultiSelect");
                                                 rolesIdsInput.setOptions({
-                                                    autoClose: false
+                                                    autoClose: false,
+                                                    filter: "contains"
                                                 });
 
                                                 @if (Model.AvailableCustomerRoles.Count == 0)

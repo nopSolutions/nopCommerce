@@ -100,7 +100,8 @@
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                                                 .data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
-                                                autoClose: false
+                                                autoClose: false,
+                                                filter: "contains"
                                             });
 
                                             @if (Model.AvailableStores.Count == 0)

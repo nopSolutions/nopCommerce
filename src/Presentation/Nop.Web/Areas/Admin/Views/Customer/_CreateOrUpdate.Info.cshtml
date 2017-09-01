@@ -169,7 +169,8 @@
                     $(document).ready(function() {
                         var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         customerRolesIdsInput.setOptions({
-                            customerRolesIdsInput: false
+                            customerRolesIdsInput: false,
+                            filter: "contains"
                         });
 
                         @if (Model.AvailableCustomerRoles.Count == 0)

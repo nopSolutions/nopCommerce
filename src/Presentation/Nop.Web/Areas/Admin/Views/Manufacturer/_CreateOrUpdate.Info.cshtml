@@ -128,7 +128,8 @@
             $(document).ready(function() {
                 var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
                 discountsIdsInput.setOptions({
-                    autoClose: false
+                    autoClose: false,
+                    filter: "contains"
                 });
 
                 @if (Model.AvailableDiscounts.Count == 0)
@@ -158,7 +159,8 @@
                     $(document).ready(function() {
                         var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         rolesIdsInput.setOptions({
-                            autoClose: false
+                            autoClose: false,
+                            filter: "contains"
                         });
 
                         @if (Model.AvailableCustomerRoles.Count == 0)
@@ -193,7 +195,8 @@
                     $(document).ready(function() {
                         var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                         storesIdsInput.setOptions({
-                            autoClose: false
+                            autoClose: false,
+                            filter: "contains"
                         });
 
                         @if (Model.AvailableStores.Count == 0)
