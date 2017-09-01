@@ -16311,6 +16311,9 @@
   <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode">
     <Value>Zip / postal code</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode.Required">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.FileUploaded">
     <Value>Your file successfully uploaded!</Value>
   </LocaleResource>

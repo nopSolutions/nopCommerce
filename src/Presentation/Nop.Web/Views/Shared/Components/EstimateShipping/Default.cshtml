@@ -74,6 +74,7 @@
             <div class="inputs">
                 <label asp-for="ZipPostalCode" asp-postfix=":"></label>
                 <input asp-for="ZipPostalCode" class="zip-input"/>
+                <nop-required />
             </div>
             <div class="buttons">
                 <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />

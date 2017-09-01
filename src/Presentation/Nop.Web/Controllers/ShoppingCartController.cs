@@ -1492,6 +1492,9 @@ namespace Nop.Web.Controllers
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
 
+            if (string.IsNullOrEmpty(zipPostalCode))
+                return Content(_localizationService.GetResource("ShoppingCart.EstimateShipping.ZipPostalCode.Required"));
+
             var model = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, countryId, stateProvinceId, zipPostalCode);
             return PartialView("_EstimateShippingResult", model);
         }

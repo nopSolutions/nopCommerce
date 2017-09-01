@@ -239,6 +239,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists">
     <Value>The same combination already exists</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
 </Language>
 '
 
