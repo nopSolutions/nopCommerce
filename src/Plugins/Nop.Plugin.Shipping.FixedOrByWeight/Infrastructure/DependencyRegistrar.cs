@@ -10,7 +10,7 @@ using Nop.Plugin.Shipping.FixedOrByWeight.Domain;
 using Nop.Plugin.Shipping.FixedOrByWeight.Services;
 using Nop.Web.Framework.Infrastructure;
 
-namespace Nop.Plugin.Shipping.FixedOrByWeight
+namespace Nop.Plugin.Shipping.FixedOrByWeight.Infrastructure
 {
     /// <summary>
     /// Dependency registrar

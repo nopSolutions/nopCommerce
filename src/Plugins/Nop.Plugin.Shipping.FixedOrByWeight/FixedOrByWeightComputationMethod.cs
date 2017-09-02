@@ -21,36 +21,36 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
     {
         #region Fields
 
-        private readonly ISettingService _settingService;
-        private readonly IShippingService _shippingService;
-        private readonly IShippingByWeightService _shippingByWeightService;
         private readonly FixedOrByWeightSettings _fixedOrByWeightSettings;
-        private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly ShippingByWeightObjectContext _objectContext;
+        private readonly ISettingService _settingService;
+        private readonly IShippingByWeightService _shippingByWeightService;
+        private readonly IShippingService _shippingService;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
+        private readonly ShippingByWeightObjectContext _objectContext;
 
         #endregion
 
         #region Ctor
 
-        public FixedOrByWeightComputationMethod(ISettingService settingService,
-            IShippingService shippingService,
-            FixedOrByWeightSettings fixedOrByWeightSettings,
-            IShippingByWeightService shippingByWeightService,
-            IStoreContext storeContext,
+        public FixedOrByWeightComputationMethod(FixedOrByWeightSettings fixedOrByWeightSettings,
             IPriceCalculationService priceCalculationService,
-            ShippingByWeightObjectContext objectContext,
-            IWebHelper webHelper)
+            ISettingService settingService,
+            IShippingByWeightService shippingByWeightService,
+            IShippingService shippingService,
+            IStoreContext storeContext,
+            IWebHelper webHelper,
+            ShippingByWeightObjectContext objectContext)
         {
-            this._settingService = settingService;
-            this._shippingService = shippingService;
             this._fixedOrByWeightSettings = fixedOrByWeightSettings;
-            this._shippingByWeightService = shippingByWeightService;
-            this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
-            this._objectContext = objectContext;
+            this._settingService = settingService;
+            this._shippingByWeightService = shippingByWeightService;
+            this._shippingService = shippingService;
+            this._storeContext = storeContext;
             this._webHelper = webHelper;
+            this._objectContext = objectContext;
         }
 
         #endregion
@@ -64,9 +64,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// <returns>Rate</returns>
         private decimal GetRate(int shippingMethodId)
         {
-            var key = $"ShippingRateComputationMethod.FixedOrByWeight.Rate.ShippingMethodId{shippingMethodId}";
-            var rate = _settingService.GetSettingByKey<decimal>(key);
-            return rate;
+            return _settingService.GetSettingByKey<decimal>(string.Format(FixedOrByWeightDefaults.FixedRateSettingsKey, shippingMethodId));
         }
 
         /// <summary>
@@ -254,12 +252,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         public override void Install()
         {
             //settings
-            var settings = new FixedOrByWeightSettings
-            {
-                LimitMethodsToCreated = false,
-                ShippingByWeightEnabled = false
-            };
-            _settingService.SaveSetting(settings);
+            _settingService.SaveSetting(new FixedOrByWeightSettings());
 
             //database objects
             _objectContext.Install();
