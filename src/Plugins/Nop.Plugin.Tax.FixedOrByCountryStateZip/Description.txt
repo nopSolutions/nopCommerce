@@ -1,7 +1,7 @@
 ﻿Group: Tax providers
 FriendlyName: Manual (Fixed or By Country/State/Zip)
 SystemName: Tax.FixedOrByCountryStateZip
-Version: 1.11
+Version: 1.12
 SupportedVersions: 4.00
 Author: nopCommerce team
 DisplayOrder: 1
