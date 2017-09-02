@@ -303,6 +303,12 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
             //settings
             _settingService.DeleteSetting<FixedOrByWeightSettings>();
 
+            //fixed rates
+            var fixedRates = _shippingService.GetAllShippingMethods()
+                .Select(shippingMethod => _settingService.GetSetting(string.Format(FixedOrByWeightDefaults.FixedRateSettingsKey, shippingMethod.Id)))
+                .Where(setting => setting != null).ToList();
+            _settingService.DeleteSettings(fixedRates);
+
             //database objects
             _objectContext.Uninstall();
 

@@ -169,6 +169,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             //settings
             _settingService.DeleteSetting<FixedOrByCountryStateZipTaxSettings>();
 
+            //fixed rates
+            var fixedRates = _taxCategoryService.GetAllTaxCategories()
+                .Select(taxCategory => _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
+                .Where(setting => setting != null).ToList();
+            _settingService.DeleteSettings(fixedRates);
+
             //database objects
             _objectContext.Uninstall();
 
