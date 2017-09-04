@@ -40,7 +40,7 @@ namespace Nop.Services.Common
             string keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = genericAttributeService.GetAttributesForEntity(entity.Id, keyGroup);
-            //little hack here (only for unit testing). we should write ecpect-return rules in unit tests for such cases
+            //little hack here (only for unit testing). we should write expect-return rules in unit tests for such cases
             if (props == null)
                 return default(TPropType);
             props = props.Where(x => x.StoreId == storeId).ToList();
