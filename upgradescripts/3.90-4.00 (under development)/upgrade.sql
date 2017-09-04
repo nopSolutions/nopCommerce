@@ -546,3 +546,10 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.querystringincanonicalurlsenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.querystringincanonicalurlsenabled', N'False', 0)
+END
+GO

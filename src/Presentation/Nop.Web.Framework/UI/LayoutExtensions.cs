@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.UI
@@ -252,9 +254,19 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">Canonical URL part</param>
-        public static void AddCanonicalUrlParts(this IHtmlHelper html, string part)
+        /// <param name="withQueryString">Whether to use canonical URLs with query string parameters</param>
+        public static void AddCanonicalUrlParts(this IHtmlHelper html, string part, bool withQueryString = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+
+            if (withQueryString)
+            {
+                //add ordered query string parameters
+                var queryParameters = html.ViewContext.HttpContext.Request.Query.OrderBy(parameter => parameter.Key)
+                    .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.ToString());
+                part = QueryHelpers.AddQueryString(part, queryParameters);
+            }
+
             pageHeadBuilder.AddCanonicalUrlParts(part);
         }
         /// <summary>

@@ -15,7 +15,7 @@
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(vendorUrl);
+        Html.AddCanonicalUrlParts(vendorUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
 <div class="page vendor-page">

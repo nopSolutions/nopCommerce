@@ -15,7 +15,7 @@
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(manufacturerUrl);
+        Html.AddCanonicalUrlParts(manufacturerUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
 <div class="page manufacturer-page">
