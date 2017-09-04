@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 
 namespace Nop.Services.Localization
 {
@@ -291,7 +292,8 @@ namespace Nop.Services.Localization
                        keySelector));
             }
 
-            string localeKeyGroup = typeof(T).Name;
+            //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
+            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             string localeKey = propInfo.Name;
 
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);

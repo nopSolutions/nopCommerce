@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -131,7 +132,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
@@ -189,7 +190,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return ValidateSeName(entity.Id, typeof(T).Name, seName, name, ensureNotEmpty);
+            return ValidateSeName(entity.Id, entity.GetUnproxiedEntityType().Name, seName, name, ensureNotEmpty);
         }
 
         /// <summary>

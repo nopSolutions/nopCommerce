@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
+using Nop.Data;
 
 namespace Nop.Services.Seo
 {
@@ -359,7 +360,7 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _urlRecordRepository.Table
                         where ur.EntityId == entityId &&

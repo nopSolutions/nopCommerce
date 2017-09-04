@@ -7,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
@@ -82,8 +83,8 @@ namespace Nop.Services.Localization
             TPropType result = default(TPropType);
             string resultStr = string.Empty;
 
-            //load localized value
-            string localeKeyGroup = typeof(T).Name;
+            //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
+            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             string localeKey = propInfo.Name;
 
             if (languageId > 0)

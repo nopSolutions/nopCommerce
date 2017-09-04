@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Stores
@@ -112,7 +113,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -127,7 +128,7 @@ namespace Nop.Services.Stores
         /// Inserts a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping</param>
-        public virtual void InsertStoreMapping(StoreMapping storeMapping)
+        protected virtual void InsertStoreMapping(StoreMapping storeMapping)
         {
             if (storeMapping == null)
                 throw new ArgumentNullException(nameof(storeMapping));
@@ -156,7 +157,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentOutOfRangeException("storeId");
 
             int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
 
             var storeMapping = new StoreMapping
             {
@@ -167,25 +168,7 @@ namespace Nop.Services.Stores
 
             InsertStoreMapping(storeMapping);
         }
-
-        /// <summary>
-        /// Updates the store mapping record
-        /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        public virtual void UpdateStoreMapping(StoreMapping storeMapping)
-        {
-            if (storeMapping == null)
-                throw new ArgumentNullException(nameof(storeMapping));
-
-            _storeMappingRepository.Update(storeMapping);
-
-            //cache
-            _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityUpdated(storeMapping);
-        }
-
+        
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
         /// </summary>
@@ -198,7 +181,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(entity));
 
             int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
 
             string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>

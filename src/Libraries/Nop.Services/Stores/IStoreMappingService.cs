@@ -29,12 +29,7 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <returns>Store mapping records</returns>
         IList<StoreMapping> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
-
-        /// <summary>
-        /// Inserts a store mapping record
-        /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        void InsertStoreMapping(StoreMapping storeMapping);
+        
 
         /// <summary>
         /// Inserts a store mapping record
@@ -43,12 +38,6 @@ namespace Nop.Services.Stores
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
         void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
-
-        /// <summary>
-        /// Updates the store mapping record
-        /// </summary>
-        /// <param name="storeMapping">Store mapping</param>
-        void UpdateStoreMapping(StoreMapping storeMapping);
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)
