@@ -83,7 +83,6 @@ namespace Nop.Services.Localization
             TPropType result = default(TPropType);
             string resultStr = string.Empty;
 
-            //load localized value (check whether it's a cacheable entity. In such cases we load its original entity type)
             var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
             string localeKey = propInfo.Name;
 
