@@ -16,19 +16,5 @@ namespace Nop.Data.Tests.Localization
             fromDb.ShouldNotBeNull();
             fromDb.PropertiesShouldEqual(lang);
         }
-
-        [Test]
-        public void Can_save_and_load_language_with_localeStringResources()
-        {
-            var lang = this.GetTestLanguage();
-            lang.LocaleStringResources.Add(this.GetTestLocaleStringResource());
-            var fromDb = SaveAndLoadEntity(lang);
-            fromDb.ShouldNotBeNull();
-            fromDb.PropertiesShouldEqual(this.GetTestLanguage());
-
-            fromDb.LocaleStringResources.ShouldNotBeNull();
-            (fromDb.LocaleStringResources.Count == 1).ShouldBeTrue();
-            fromDb.LocaleStringResources.First().PropertiesShouldEqual(this.GetTestLocaleStringResource());
-        }
     }
 }

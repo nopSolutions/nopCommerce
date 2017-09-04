@@ -50,7 +50,6 @@ namespace Nop.Services.Localization
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
-        private readonly ILanguageService _languageService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
@@ -78,8 +77,7 @@ namespace Nop.Services.Localization
         public LocalizationService(IStaticCacheManager cacheManager,
             ILogger logger,
             IWorkContext workContext,
-            IRepository<LocaleStringResource> lsrRepository, 
-            ILanguageService languageService,
+            IRepository<LocaleStringResource> lsrRepository,
             IDataProvider dataProvider,
             IDbContext dbContext,
             CommonSettings commonSettings,
@@ -90,12 +88,51 @@ namespace Nop.Services.Localization
             this._logger = logger;
             this._workContext = workContext;
             this._lsrRepository = lsrRepository;
-            this._languageService = languageService;
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual void InsertLocaleStringResources(IList<LocaleStringResource> resources)
+        {
+            if (resources == null)
+                throw new ArgumentNullException(nameof(resources));
+
+            //insert
+            _lsrRepository.Insert(resources);
+
+            //cache
+            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+
+            //event notification
+            foreach (var resource in resources)
+            {
+                _eventPublisher.EntityInserted(resource);
+            }
+        }
+
+        protected virtual void UpdateLocaleStringResources(IList<LocaleStringResource> resources)
+        {
+            if (resources == null)
+                throw new ArgumentNullException(nameof(resources));
+
+            //update
+            _lsrRepository.Update(resources);
+
+            //cache
+            _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+
+            //event notification
+            foreach (var resource in resources)
+            {
+                _eventPublisher.EntityUpdated(resource);
+            }
         }
 
         #endregion
@@ -407,8 +444,11 @@ namespace Nop.Services.Localization
                 //stored procedures aren't supported
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(xml);
-
                 var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
+
+                var existingResources = GetAllResources(language.Id);
+                var newResources = new List<LocaleStringResource>();
+
                 foreach (XmlNode node in nodes)
                 {
                     string name = node.Attributes["Name"].InnerText.Trim();
@@ -422,7 +462,7 @@ namespace Nop.Services.Localization
 
                     //do not use "Insert"/"Update" methods because they clear cache
                     //let's bulk insert
-                    var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    var resource = existingResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     if (resource != null)
                     {
                         if (updateExistingResources)
@@ -432,15 +472,17 @@ namespace Nop.Services.Localization
                     }
                     else
                     {
-                        language.LocaleStringResources.Add(
+                        newResources.Add(
                             new LocaleStringResource
                             {
+                                LanguageId = language.Id,
                                 ResourceName = name,
                                 ResourceValue = value
                             });
                     }
                 }
-                _languageService.UpdateLanguage(language);
+                InsertLocaleStringResources(newResources);
+                UpdateLocaleStringResources(existingResources);
             }
 
             //clear cache
