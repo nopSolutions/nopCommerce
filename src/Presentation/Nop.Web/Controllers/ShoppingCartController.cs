@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -1492,8 +1493,21 @@ namespace Nop.Web.Controllers
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
 
+            var errors = new StringBuilder();
+
             if (string.IsNullOrEmpty(zipPostalCode))
-                return Content(_localizationService.GetResource("ShoppingCart.EstimateShipping.ZipPostalCode.Required"));
+            {
+                errors.Append(_localizationService.GetResource("ShoppingCart.EstimateShipping.ZipPostalCode.Required"));
+                errors.Append("<br>");
+            }
+
+            if (countryId == null || countryId == 0)
+            {
+                errors.Append(_localizationService.GetResource("ShoppingCart.EstimateShipping.Country.Required"));
+            }
+
+            if (errors.Length > 0)
+                return Content(errors.ToString());
 
             var model = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, countryId, stateProvinceId, zipPostalCode);
             return PartialView("_EstimateShippingResult", model);

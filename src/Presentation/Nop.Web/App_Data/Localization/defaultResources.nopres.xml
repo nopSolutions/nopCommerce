@@ -16299,6 +16299,9 @@
   <LocaleResource Name="ShoppingCart.EstimateShipping.Country">
     <Value>Country</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.EstimateShipping.ShippingOptionWithRate">
     <Value>{0} ({1})</Value>
   </LocaleResource>
