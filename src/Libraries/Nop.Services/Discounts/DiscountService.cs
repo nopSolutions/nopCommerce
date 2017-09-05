@@ -660,18 +660,29 @@ namespace Nop.Services.Discounts
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
         public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
-            int? customerId = null, int? orderId = null, 
-            int pageIndex = 0, int pageSize = int.MaxValue)
+            int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _discountUsageHistoryRepository.Table;
+            var discountUsageHistory = _discountUsageHistoryRepository.Table;
+
+            //filter by discount
             if (discountId.HasValue && discountId.Value > 0)
-                query = query.Where(duh => duh.DiscountId == discountId.Value);
+                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.DiscountId == discountId.Value);
+
+            //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
-                query = query.Where(duh => duh.Order != null && duh.Order.CustomerId == customerId.Value);
+                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && historyRecord.Order.CustomerId == customerId.Value);
+
+            //filter by order
             if (orderId.HasValue && orderId.Value > 0)
-                query = query.Where(duh => duh.OrderId == orderId.Value);
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
-            return new PagedList<DiscountUsageHistory>(query, pageIndex, pageSize);
+                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.OrderId == orderId.Value);
+
+            //ignore deleted orders
+            discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && !historyRecord.Order.Deleted);
+
+            //order
+            discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);
+
+            return new PagedList<DiscountUsageHistory>(discountUsageHistory, pageIndex, pageSize);
         }
 
         /// <summary>
