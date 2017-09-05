@@ -378,9 +378,12 @@
                                         <th class="external-id">
                                             @T("Account.AssociatedExternalAuth.ExternalIdentifier")
                                         </th>
-                                        <th class="remove">
-                                            @T("Account.AssociatedExternalAuth.Remove")
-                                        </th>
+                                        @if (Model.AllowCustomersToRemoveAssociations)
+                                        {
+                                            <th class="remove">
+                                                @T("Account.AssociatedExternalAuth.Remove")
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -396,9 +399,12 @@
                                             <td class="external-id">
                                                 @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                             </td>
-                                            <td class="remove">
-                                                <a href="#" onclick="return removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
-                                            </td>
+                                            @if (Model.AllowCustomersToRemoveAssociations)
+                                            {
+                                                <td class="remove">
+                                                    <a href="#" onclick="return removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                                </td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>

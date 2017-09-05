@@ -274,10 +274,16 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
-                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+            {
+                var completedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                    productId: productId,
+                    osIds: new List<int> { (int)OrderStatus.Complete },
+                    pageSize: 1);
+                if (!completedOrders.Any())
                     ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
-            
+            }
+
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
             return View(model);
@@ -304,9 +310,15 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
 
-            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing && 
-                !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, osIds: new List<int> { (int)OrderStatus.Complete }).Any())
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
+            {
+                var completedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                    productId: productId,
+                    osIds: new List<int> { (int)OrderStatus.Complete },
+                    pageSize: 1);
+                if (!completedOrders.Any())
                     ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
+            }
 
             if (ModelState.IsValid)
             {

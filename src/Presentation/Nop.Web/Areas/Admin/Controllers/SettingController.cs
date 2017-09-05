@@ -1581,6 +1581,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
+            var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
             //merge settings
             var model = new CustomerUserSettingsModel();
@@ -1599,6 +1600,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     });
             }
 
+            model.ExternalAuthenticationSettings.AllowCustomersToRemoveAssociations = externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
+
             return View(model);
         }
 
@@ -1613,6 +1616,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
+            var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
             customerSettings = model.CustomerSettings.ToEntity(customerSettings);
             _settingService.SaveSetting(customerSettings);
@@ -1623,6 +1627,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             _settingService.SaveSetting(dateTimeSettings);
+
+            externalAuthenticationSettings.AllowCustomersToRemoveAssociations = model.ExternalAuthenticationSettings.AllowCustomersToRemoveAssociations;
+            _settingService.SaveSetting(externalAuthenticationSettings);
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));

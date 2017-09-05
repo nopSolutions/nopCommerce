@@ -13,11 +13,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             CustomerSettings = new CustomerSettingsModel();
             AddressSettings = new AddressSettingsModel();
             DateTimeSettings = new DateTimeSettingsModel();
+            ExternalAuthenticationSettings = new ExternalAuthenticationSettingsModel();
         }
 
         public CustomerSettingsModel CustomerSettings { get; set; }
         public AddressSettingsModel AddressSettings { get; set; }
         public DateTimeSettingsModel DateTimeSettings { get; set; }
+        public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
 
         #region Nested classes
 
@@ -226,6 +228,12 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultStoreTimeZone")]
             public IList<SelectListItem> AvailableTimeZones { get; set; }
+        }
+
+        public partial class ExternalAuthenticationSettingsModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowCustomersToRemoveAssociations")]
+            public bool AllowCustomersToRemoveAssociations { get; set; }
         }
 
         #endregion
