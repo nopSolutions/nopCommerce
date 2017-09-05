@@ -393,6 +393,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}";
         /// <summary>
+        /// Key for TopicModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic system name
+        /// {1} : language id
+        /// {2} : store id
+        /// </remarks>
+        public const string TOPIC_TITLE_BY_SYSTEMNAME = "Nop.pres.topic.title.bysystemname-{0}-{1}-{2}";
+        /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
         /// <remarks>

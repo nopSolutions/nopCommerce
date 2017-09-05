@@ -239,7 +239,7 @@ namespace Nop.Web.Extensions
         }
 
         /// <summary>
-        /// Get topic system name
+        /// Get topic SEO name
         /// </summary>
         /// <typeparam name="T">T</typeparam>
         /// <param name="html">HTML helper</param>
@@ -263,6 +263,33 @@ namespace Nop.Web.Extensions
                 return topic.GetSeName();
             });
             return cachedSeName;
+        }
+
+        /// <summary>
+        /// Get topic title
+        /// </summary>
+        /// <typeparam name="T">T</typeparam>
+        /// <param name="html">HTML helper</param>
+        /// <param name="systemName">System name</param>
+        /// <returns>Topic SEO Name</returns>
+        public static string GetTopicTitle<T>(this IHtmlHelper<T> html, string systemName)
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+
+            //static cache manager
+            var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
+            var cachedTitle = cacheManager.Get(cacheKey, () =>
+            {
+                var topicService = EngineContext.Current.Resolve<ITopicService>();
+                var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
+                if (topic == null)
+                    return "";
+
+                return topic.GetLocalized(x => x.Title);
+            });
+            return cachedTitle;
         }
     }
 }
