@@ -1,5 +1,5 @@
 @model Decimal?
-<input asp-for="@Model" type="number"/>
+<input asp-for="@Model"/>
 @{
     var postfix = "";
     if (ViewData.ContainsKey("postfix") && ViewData["postfix"] != null)
