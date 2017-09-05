@@ -71,7 +71,7 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             var allStores = GetAllStores();
@@ -160,7 +160,7 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
             
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw  new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Insert(store);
@@ -180,7 +180,7 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Update(store);
