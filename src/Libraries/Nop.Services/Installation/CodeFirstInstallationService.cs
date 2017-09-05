@@ -6181,7 +6181,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ExternalAuthenticationSettings
             {
-                RequireEmailValidation = false
+                RequireEmailValidation = false,
+                AllowCustomersToRemoveAssociations = true
             });
 
             settingService.SaveSetting(new RewardPointsSettings
