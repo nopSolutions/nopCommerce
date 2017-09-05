@@ -31,7 +31,7 @@ namespace Nop.Services.Directory
 
             foreach (var exchageRate in exchangeRates)
             {
-                var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode);
+                var currency = _currencyService.GetCurrencyByCode(exchageRate.CurrencyCode, false);
                 if (currency != null)
                 {
                     currency.Rate = exchageRate.Rate;

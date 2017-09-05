@@ -13,7 +13,7 @@
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(productsByTagUrl);
+        Html.AddCanonicalUrlParts(productsByTagUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 }
 <div class="page product-tag-page">

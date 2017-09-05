@@ -5900,6 +5900,7 @@ namespace Nop.Services.Installation
                 ConvertNonWesternChars = false,
                 AllowUnicodeCharsInUrls = true,
                 CanonicalUrlsEnabled = false,
+                QueryStringInCanonicalUrlsEnabled = false,
                 WwwRequirement = WwwRequirement.NoMatter,
                 //we disable bundling out of the box because it requires a lot of server resources
                 EnableJsBundling = false,
@@ -6180,7 +6181,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new ExternalAuthenticationSettings
             {
-                RequireEmailValidation = false
+                RequireEmailValidation = false,
+                AllowCustomersToRemoveAssociations = true
             });
 
             settingService.SaveSetting(new RewardPointsSettings

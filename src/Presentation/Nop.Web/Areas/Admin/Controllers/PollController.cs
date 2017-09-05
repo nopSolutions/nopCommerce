@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
                     if (x.EndDateUtc.HasValue)
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
-                    m.LanguageName = x.Language.Name;
+                    m.LanguageName = _languageService.GetLanguageById(x.LanguageId)?.Name;
                     return m;
                 }),
                 Total = polls.TotalCount

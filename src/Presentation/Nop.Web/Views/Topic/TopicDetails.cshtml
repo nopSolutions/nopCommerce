@@ -20,7 +20,7 @@
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(topicUrl);
+        Html.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
     //page class

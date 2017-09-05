@@ -374,6 +374,7 @@ namespace Nop.Web.Factories
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
+            model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
             model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
                 .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
             foreach (var ear in customer.ExternalAuthenticationRecords)

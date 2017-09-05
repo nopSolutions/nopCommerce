@@ -347,7 +347,7 @@ namespace Nop.Web.Models.Catalog
                 if (optionIds == null)
                     return "";
 
-                string result = string.Join(",", optionIds);
+                string result = string.Join(",", optionIds.OrderBy(id => id));
                 return result;
             }
 

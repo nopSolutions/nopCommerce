@@ -17,7 +17,7 @@
     if (seoSettings.CanonicalUrlsEnabled)
     {
         var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
-        Html.AddCanonicalUrlParts(categoryUrl);
+        Html.AddCanonicalUrlParts(categoryUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
     var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;

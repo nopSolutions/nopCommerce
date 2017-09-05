@@ -37,7 +37,7 @@ namespace Nop.Services.Stores
 
         private readonly IRepository<Store> _storeRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -46,14 +46,14 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="staticCacheManager">Static cache manager</param>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeRepository">Store repository</param>
         /// <param name="eventPublisher">Event published</param>
-        public StoreService(IStaticCacheManager staticCacheManager,
+        public StoreService(IStaticCacheManager cacheManager,
             IRepository<Store> storeRepository,
             IEventPublisher eventPublisher)
         {
-            this._staticCacheManager = staticCacheManager;
+            this._cacheManager = cacheManager;
             this._storeRepository = storeRepository;
             this._eventPublisher = eventPublisher;
         }
@@ -71,7 +71,7 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             var allStores = GetAllStores();
@@ -80,7 +80,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _staticCacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(store);
@@ -104,7 +104,7 @@ namespace Nop.Services.Stores
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                return _staticCacheManager.Get(STORES_ALL_KEY, () =>
+                return _cacheManager.Get(STORES_ALL_KEY, () =>
                 {
                     var result = new List<Store>();
                     foreach (var store in loadStoresFunc())
@@ -137,7 +137,8 @@ namespace Nop.Services.Stores
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                return _staticCacheManager.Get(string.Format(STORES_BY_ID_KEY, storeId), () =>
+                string key = string.Format(STORES_BY_ID_KEY, storeId);
+                return _cacheManager.Get(key, () =>
                 {
                     var store = loadStoreFunc();
                     if (store == null)
@@ -160,12 +161,12 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
             
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw  new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Insert(store);
 
-            _staticCacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -180,12 +181,12 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (store is StoreForCaching)
+            if (store is IEntityForCaching)
                 throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Update(store);
 
-            _staticCacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(store);

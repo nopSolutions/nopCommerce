@@ -69,19 +69,5 @@ namespace Nop.Core.Caching
             //remove matching values
             matchesKeys.ForEach(key => cacheManager.Remove(key));
         }
-
-        /// <summary>
-        /// Get original (base) entity. Throw an exception if it cannot be loaded
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        /// <returns>Type</returns>
-        public static Type GetOriginalEntityType(this IEntityForCaching entity)
-        {
-            var type = entity.GetType()?.BaseType;
-            if (type == null)
-                throw new Exception("Original entity type cannot be loaded");
-
-            return type;
-        }
     }
 }

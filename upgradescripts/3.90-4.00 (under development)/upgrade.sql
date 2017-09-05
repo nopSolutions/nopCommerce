@@ -245,6 +245,15 @@ set @resources='
   <LocaleResource Name="ShoppingCart.EstimateShipping.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.BlockTitle.ExternalAuthentication">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToRemoveAssociations">
+    <Value>Allow customers to remove associations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowCustomersToRemoveAssociations.Hint">
+    <Value>Check to allow customers to remove external authentication associations.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -549,3 +558,18 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.querystringincanonicalurlsenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.querystringincanonicalurlsenabled', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'externalauthenticationsettings.allowcustomerstoremoveassociations')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'externalauthenticationsettings.allowcustomerstoremoveassociations', N'True', 0)
+END
+GO

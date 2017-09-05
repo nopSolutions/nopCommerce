@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -44,7 +45,7 @@ namespace Nop.Services.Directory
 
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
@@ -62,7 +63,7 @@ namespace Nop.Services.Directory
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
-        public CurrencyService(ICacheManager cacheManager,
+        public CurrencyService(IStaticCacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService,
             CurrencySettings currencySettings,
@@ -106,7 +107,10 @@ namespace Nop.Services.Directory
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
-            
+
+            if (currency is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
+
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
@@ -119,26 +123,48 @@ namespace Nop.Services.Directory
         /// Gets a currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyById(int currencyId)
+        public virtual Currency GetCurrencyById(int currencyId, bool loadCacheableCopy = true)
         {
             if (currencyId == 0)
                 return null;
-            
-            string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
+
+            Func<Currency> loadCurrencyFunc = () =>
+            {
+                return _currencyRepository.GetById(currencyId);
+            };
+
+            if (loadCacheableCopy)
+            {
+                //cacheable copy
+                string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+                return _cacheManager.Get(key, () =>
+                {
+                    var currency = loadCurrencyFunc();
+                    if (currency == null)
+                        return null;
+                    return new CurrencyForCaching(currency);
+                });
+            }
+            else
+            {
+                return loadCurrencyFunc();
+            }
         }
 
         /// <summary>
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyByCode(string currencyCode)
+        public virtual Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true)
         {
             if (String.IsNullOrEmpty(currencyCode))
                 return null;
-            return GetAllCurrencies(true).FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
+            return GetAllCurrencies(true, loadCacheableCopy: loadCacheableCopy)
+                .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
         }
 
         /// <summary>
@@ -146,18 +172,36 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currencies</returns>
-        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
+        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0, bool loadCacheableCopy = true)
         {
-            string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
-            var currencies = _cacheManager.Get(key, () =>
+            Func<IList<Currency>> loadCurrenciesFunc = () =>
             {
                 var query = _currencyRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
                 return query.ToList();
-            });
+            };
+
+            IList<Currency> currencies;
+            if (loadCacheableCopy)
+            {
+                //cacheable copy
+                string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+                currencies = _cacheManager.Get(key, () =>
+                {
+                    var result = new List<Currency>();
+                    foreach (var currency in loadCurrenciesFunc())
+                        result.Add(new CurrencyForCaching(currency));
+                    return result;
+                });
+            }
+            else
+            {
+                currencies = loadCurrenciesFunc();
+            }
 
             //store mapping
             if (storeId > 0)
@@ -178,6 +222,9 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
+            if (currency is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
+
             _currencyRepository.Insert(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
@@ -194,6 +241,9 @@ namespace Nop.Services.Directory
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
+
+            if (currency is IEntityForCaching)
+                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _currencyRepository.Update(currency);
 

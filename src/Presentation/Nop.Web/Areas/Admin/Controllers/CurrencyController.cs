@@ -140,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId, false);
                     if (primaryExchangeCurrency == null)
                         throw new NopException("Primary exchange rate currency is not set");
 
@@ -186,7 +186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedKendoGridJson();
 
-            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
+            var currenciesModel = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
             foreach (var currency in currenciesModel)
@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
+            var currency = _currencyService.GetCurrencyByCode(currencyCode, false);
             if (currency != null)
             {
                 currency.Rate = rate;
@@ -304,7 +304,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = _currencyService.GetCurrencyById(id, false);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -328,7 +328,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currency = _currencyService.GetCurrencyById(model.Id);
+            var currency = _currencyService.GetCurrencyById(model.Id, false);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -381,7 +381,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currency = _currencyService.GetCurrencyById(id);
+            var currency = _currencyService.GetCurrencyById(id, false);
             if (currency == null)
                 //No currency found with the specified id
                 return RedirectToAction("List");
@@ -395,7 +395,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 //ensure we have at least one published currency
-                var allCurrencies = _currencyService.GetAllCurrencies();
+                var allCurrencies = _currencyService.GetAllCurrencies(loadCacheableCopy: false);
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
                 {
                     ErrorNotification(_localizationService.GetResource("Admin.Configuration.Currencies.PublishedCurrencyRequired"));
