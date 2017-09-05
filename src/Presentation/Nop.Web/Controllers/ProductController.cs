@@ -276,11 +276,11 @@ namespace Nop.Web.Controllers
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
             {
-                var completedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
                     productId: productId,
                     osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1);
-                if (!completedOrders.Any())
+                    pageSize: 1).Any();
+                if (!hasCompletedOrders)
                     ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
             }
 
@@ -312,11 +312,11 @@ namespace Nop.Web.Controllers
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
             {
-                var completedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
+                var hasCompletedOrders = _orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id,
                     productId: productId,
                     osIds: new List<int> { (int)OrderStatus.Complete },
-                    pageSize: 1);
-                if (!completedOrders.Any())
+                    pageSize: 1).Any();
+                if (!hasCompletedOrders)
                     ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
             }
 
