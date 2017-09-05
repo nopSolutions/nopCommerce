@@ -171,7 +171,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (x.EndDateUtc.HasValue)
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.LanguageName = x.Language.Name;
+                    m.LanguageName = _languageService.GetLanguageById(x.LanguageId)?.Name;
                     m.ApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: true);
                     m.NotApprovedComments = _blogService.GetBlogCommentsCount(x, isApproved: false);
 

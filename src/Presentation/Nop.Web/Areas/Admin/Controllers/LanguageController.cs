@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedKendoGridJson();
 
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = _languageService.GetAllLanguages(true, loadCacheableCopy: false);
             var gridModel = new DataSourceResult
             {
                 Data = languages.Select(x => x.ToModel()),
@@ -220,7 +220,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -240,7 +240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(model.Id);
+            var language = _languageService.GetLanguageById(model.Id, false);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -248,7 +248,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allLanguages = _languageService.GetAllLanguages();
+                var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
                 if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
                     !model.Published)
                 {
@@ -294,13 +294,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
 
             //ensure we have at least one published language
-            var allLanguages = _languageService.GetAllLanguages();
+            var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
@@ -465,7 +465,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
@@ -488,7 +488,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
