@@ -687,6 +687,11 @@ namespace Nop.Web.Factories
                 int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
                     ? _workContext.CurrentCustomer.ShippingAddress.CountryId
                     : model.CountryId;
+                model.AvailableCountries.Add(new SelectListItem
+                {
+                    Text = _localizationService.GetResource("Address.SelectCountry"),
+                    Value = "0"
+                });
 
                 foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
                     model.AvailableCountries.Add(new SelectListItem
