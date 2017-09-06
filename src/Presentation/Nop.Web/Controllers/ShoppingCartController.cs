@@ -1032,17 +1032,19 @@ namespace Nop.Web.Controllers
         }
         
         [HttpPost]
-        public virtual IActionResult CheckoutAttributeChange(IFormCollection form)
+        public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
+            //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes,
                 _genericAttributeService, _storeContext.CurrentStore.Id);
 
+            //conditions
             var enabledAttributeIds = new List<int>();
             var disabledAttributeIds = new List<int>();
             var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
@@ -1058,8 +1060,14 @@ namespace Nop.Web.Controllers
                 }
             }
 
+            //update blocks
+            var ordetotalssectionhtml = this.RenderViewComponentToString("OrderTotals", new { isEditable = isEditable });
+            var selectedcheckoutattributesssectionhtml = this.RenderViewComponentToString("SelectedCheckoutAttributes");
+
             return Json(new
             {
+                ordetotalssectionhtml = ordetotalssectionhtml,
+                selectedcheckoutattributesssectionhtml = selectedcheckoutattributesssectionhtml,
                 enabledattributeids = enabledAttributeIds.ToArray(),
                 disabledattributeids = disabledAttributeIds.ToArray()
             });

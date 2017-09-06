@@ -792,7 +792,6 @@ namespace Nop.Web.Factories
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
-            model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
             if (!minOrderSubtotalAmountOk)
             {
@@ -1021,6 +1020,17 @@ namespace Nop.Web.Factories
             }
             
             return model;
+        }
+
+        /// <summary>
+        /// Prepare selected checkout attributes
+        /// </summary>
+        /// <returns>Formatted attributes</returns>
+        public virtual string FormatSelectedCheckoutAttributes()
+        {
+            var checkoutAttributesXml = _workContext.CurrentCustomer
+                .GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+           return _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
         }
 
         /// <summary>

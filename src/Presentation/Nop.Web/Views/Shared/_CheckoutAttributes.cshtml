@@ -1,15 +1,15 @@
-﻿@model IList<ShoppingCartModel.CheckoutAttributeModel>
+﻿@model ShoppingCartModel
 @using System.Text
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 @using Nop.Services.Media
 @inject IDownloadService downloadService
-@if (Model.Count > 0)
+@if (Model.CheckoutAttributes.Count > 0)
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
     <div class="checkout-attributes">
         <dl>
-            @foreach (var attribute in Model)
+            @foreach (var attribute in Model.CheckoutAttributes)
             {
                 string controlId = $"checkout_attribute_{attribute.Id}";
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
@@ -257,10 +257,16 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart"))',
+                url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))',
                 data: $('#shopping-cart-form').serialize(),
                 type: 'post',
                 success: function(data) {
+                    if (data.ordetotalssectionhtml) {
+                        $('.total-info').replaceWith(data.ordetotalssectionhtml);
+                    }
+                    if (data.selectedcheckoutattributesssectionhtml) {
+                        $('.selected-checkout-attributes').replaceWith(data.selectedcheckoutattributesssectionhtml);
+                    }
                     if (data.enabledattributeids) {
                         for (var i = 0; i < data.enabledattributeids.length; i++) {
                             $('#checkout_attribute_label_' + data.enabledattributeids[i]).show();
@@ -273,6 +279,7 @@
                             $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
                         }
                     }
+                    $.event.trigger({ type: "checkout_attributes_changed", changedData: data });
                 }
             });
         }

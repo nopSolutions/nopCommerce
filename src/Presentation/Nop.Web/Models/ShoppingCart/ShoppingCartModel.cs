@@ -27,8 +27,7 @@ namespace Nop.Web.Models.ShoppingCart
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
-
-        public string CheckoutAttributeInfo { get; set; }
+        
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }
