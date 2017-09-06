@@ -260,6 +260,9 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select">
     <Value>Select customer role</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
+    <Value>Check if the product should be shipped separately from other products (in single box). But notice that if the order includes several items of this product, all of them will be shipped in single box.</Value>
+  </LocaleResource>
 </Language>
 '
 

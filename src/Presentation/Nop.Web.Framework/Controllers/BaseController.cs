@@ -245,10 +245,10 @@ namespace Nop.Web.Framework.Controllers
         }
 
         /// <summary>
-        /// Error's json data for kendo grid
+        /// Error's JSON data for kendo grid
         /// </summary>
         /// <param name="errorMessage">Error message</param>
-        /// <returns>Error's json data</returns>
+        /// <returns>Error's JSON data</returns>
         protected JsonResult ErrorForKendoGridJson(string errorMessage)
         {
             var gridModel = new DataSourceResult
