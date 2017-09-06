@@ -1,8 +1,8 @@
 @model ShoppingCartModel
 @using Nop.Core
 @using Nop.Core.Domain.Tax
-@inject IWebHelper webHelper;
-@inject IWorkContext workContext;
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
 <div class="order-summary-content">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
