@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.Controllers
         #region Rendering
 
         /// <summary>
-        /// Render componentto string
+        /// Render component to string
         /// </summary>
         /// <param name="componentName">Component name</param>
         /// <returns>Result</returns>
