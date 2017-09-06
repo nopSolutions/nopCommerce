@@ -21,7 +21,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Feed.GoogleShopping.Controllers
 {
@@ -181,7 +180,7 @@ namespace Nop.Plugin.Feed.GoogleShopping.Controllers
         public IActionResult GoogleProductList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return ErrorForKendoGridJson("Access denied");
+                return AccessDeniedKendoGridJson();
 
             var products = _productService.SearchProducts(pageIndex: command.Page - 1,
                 pageSize: command.PageSize, showHidden: true);

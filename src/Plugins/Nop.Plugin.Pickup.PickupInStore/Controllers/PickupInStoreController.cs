@@ -17,7 +17,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 {
@@ -73,7 +72,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         public IActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return ErrorForKendoGridJson("Access denied");
+                return AccessDeniedKendoGridJson();
 
             var pickupPoints = _storePickupPointService.GetAllStorePickupPoints(pageIndex: command.Page - 1, pageSize: command.PageSize);
             var model = pickupPoints.Select(point =>

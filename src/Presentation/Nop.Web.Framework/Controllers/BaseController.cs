@@ -344,13 +344,12 @@ namespace Nop.Web.Framework.Controllers
         }
 
         /// <summary>
-        /// Access denied json data for kendo grid
+        /// Access denied JSON data for kendo grid
         /// </summary>
-        /// <returns>Access denied json data</returns>
+        /// <returns>Access denied JSON data</returns>
         protected JsonResult AccessDeniedKendoGridJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
         
