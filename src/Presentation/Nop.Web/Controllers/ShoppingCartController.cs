@@ -1498,17 +1498,21 @@ namespace Nop.Web.Controllers
             if (string.IsNullOrEmpty(zipPostalCode))
             {
                 errors.Append(_localizationService.GetResource("ShoppingCart.EstimateShipping.ZipPostalCode.Required"));
-                errors.Append("<br>");
             }
 
             if (countryId == null || countryId == 0)
             {
+                if(errors.Length > 0)
+                    errors.Append("<br>");
+
                 errors.Append(_localizationService.GetResource("ShoppingCart.EstimateShipping.Country.Required"));
             }
 
             if (errors.Length > 0)
+            {
                 return Content(errors.ToString());
-
+            }
+            
             var model = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, countryId, stateProvinceId, zipPostalCode);
             return PartialView("_EstimateShippingResult", model);
         }
