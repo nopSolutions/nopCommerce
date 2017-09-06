@@ -482,7 +482,7 @@ namespace Nop.Core.Plugins
         { 
             return CommonHelper.MapPath(InstalledPluginsFilePath);
         }
-
-#endregion
+        
+        #endregion
     }
 }
