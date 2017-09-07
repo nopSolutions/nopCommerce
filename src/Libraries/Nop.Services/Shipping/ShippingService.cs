@@ -896,7 +896,7 @@ namespace Nop.Services.Shipping
 
             if (_shippingSettings.ReturnValidOptionsIfThereAreAny)
             {
-                //return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
+                //return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
                 if (result.ShippingOptions.Any() && result.Errors.Any())
                     result.Errors.Clear();
             }
