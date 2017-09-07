@@ -253,6 +253,38 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        return Json(gridModel);
 	    }
 
+	    [HttpPost]
+	    public virtual IActionResult UploadPlugin(IFormFile archivefile)
+	    {
+	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+	            return AccessDeniedView();
+
+	        try
+	        {
+	            if (archivefile != null && archivefile.Length > 0)
+	            {
+	                var pluginDescriptor = PluginManager.UploadPlugin(archivefile);
+	                //activity log
+	                _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
+                }
+                else
+	            {
+	                ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+	                return RedirectToAction("List");
+	            }
+
+	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"));
+
+                //restart application
+                _webHelper.RestartAppDomain();
+	        }
+	        catch (Exception exc)
+	        {
+	            ErrorNotification(exc);
+	        }
+	        return RedirectToAction("List");
+        }
+
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
         public virtual IActionResult Install(IFormCollection form)

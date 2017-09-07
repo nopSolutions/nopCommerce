@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
@@ -23,6 +25,7 @@ namespace Nop.Core.Plugins
 
         private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
         private const string PluginsPath = "~/Plugins";
+        private const string PluginsTempPath = "~/App_Data/TempUploads";
         private const string PluginsPathName = "Plugins";
         private const string ShadowCopyPath = "~/Plugins/bin";
         private const string RefsPathName = "refs";
@@ -95,7 +98,7 @@ namespace Nop.Core.Plugins
                 {
                     var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
 
-                    Debug.WriteLine("Creating shadow copy folder and querying for dlls");
+                    Debug.WriteLine("Creating shadow copy folder and querying for DLLs");
                     //ensure folders are created
                     Directory.CreateDirectory(pluginFolder.FullName);
                     Directory.CreateDirectory(_shadowCopyFolder.FullName);
@@ -152,6 +155,7 @@ namespace Nop.Core.Plugins
                         {
                             if (descriptionFile.Directory == null)
                                 throw new Exception($"Directory cannot be resolved for '{descriptionFile.Name}' description file");
+
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
@@ -162,6 +166,9 @@ namespace Nop.Core.Plugins
                             //other plugin description info
                             var mainPluginFile = pluginFiles
                                 .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.InvariantCultureIgnoreCase));
+                            if (mainPluginFile == null)
+                                throw new Exception($"{pluginDescriptor.PluginFileName} cannot be loaded");
+
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //shadow copy main plugin file
@@ -298,6 +305,83 @@ namespace Nop.Core.Plugins
                 && plugin.ReferencedAssembly.FullName.Equals(typeInAssembly.Assembly.FullName, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        /// <summary>
+        /// Upload plugin
+        /// </summary>
+        /// <param name="archivefile">File</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor UploadPlugin(IFormFile archivefile)
+        {
+            if (archivefile == null)
+                throw  new ArgumentNullException(nameof(archivefile));
+
+            //save
+            var pluginFolder = CommonHelper.MapPath(PluginsPath);
+            var pluginTempFolder = CommonHelper.MapPath(PluginsTempPath);
+            //ensure folders are created
+            Directory.CreateDirectory(new DirectoryInfo(pluginTempFolder).FullName);
+
+            var zipFilePath = Path.Combine(pluginTempFolder, archivefile.FileName);
+            using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
+                archivefile.CopyTo(fileStream);
+
+            //ensure we have a valid Description.txt file and the current version is supported
+            PluginDescriptor pluginDescriptor = null;
+            var uploadedPluginDirectoryName = "";
+            using (var archive = ZipFile.OpenRead(zipFilePath))
+            {
+                //the archive should contain only one root directory (the plugin one)
+                var rootDirectories = archive.Entries
+                    .Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/"))
+                    .ToList();
+                if (rootDirectories.Count != 1)
+                    throw new Exception("The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.");
+                //the plugin directory name (remove the ending /)
+                uploadedPluginDirectoryName = rootDirectories.First().FullName.Replace("/", "");
+
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/Description.txt", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        using (var unzippedEntryStream = entry.Open())
+                        {
+                            using (var reader = new StreamReader(unzippedEntryStream))
+                            {
+                                string text = reader.ReadToEnd();
+                                pluginDescriptor = PluginFileParser.ParsePluginDescription(text);
+                                if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                                    throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pluginDescriptor == null)
+                throw new Exception("No Description.txt file is found. It should be in the root of the archive.");
+
+            //new plugin path
+            if (uploadedPluginDirectoryName == null)
+                throw new Exception("Cannot get the plugin directory name");
+            var uploadedPluginPath = Path.Combine(pluginFolder, uploadedPluginDirectoryName);
+
+            //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
+            //furthermore, zip extract functionality cannot override existing files
+            //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
+            if (Directory.Exists(uploadedPluginPath))
+                CommonHelper.DeleteDirectory(uploadedPluginPath);
+
+            //extract to /Plugins
+            ZipFile.ExtractToDirectory(zipFilePath, pluginFolder);
+
+            //delete temporary file
+            File.Delete(zipFilePath);
+
+            return pluginDescriptor;
+        }
+        
         #endregion
 
         #region Utilities
@@ -453,7 +537,7 @@ namespace Nop.Core.Plugins
                 {
                     throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
                 }
-                //ok, we've made it this far, now retry the shadow copy
+                //OK, we've made it this far, now retry the shadow copy
                 File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
             }
 

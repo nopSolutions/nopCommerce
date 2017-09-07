@@ -263,6 +263,30 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
     <Value>Check if the product should be shipped separately from other products (in single box). But notice that if the order includes several items of this product, all of them will be shipped in single box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>The plugin has been uploaded.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.ZipFile">
+    <Value>Zip file</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewPlugin">
+    <Value>Uploaded a new plugin (FriendlyName: ''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
+    <Value>Uploading plugin...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
+    <Value>The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
+    <Value>The archive should contain only already compiled plugin version.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
+    <Value>Please note that you can also manually upload a plugin using FTP if this method doesn''t work for you.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -580,5 +604,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'externalauthenticationse
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'externalauthenticationsettings.allowcustomerstoremoveassociations', N'True', 0)
+END
+GO
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadNewPlugin')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'UploadNewPlugin', N'Upload a plugin', N'true')
 END
 GO

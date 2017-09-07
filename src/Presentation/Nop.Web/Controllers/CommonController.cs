@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -8,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -187,6 +191,50 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
         {
+            try
+            {
+                string zipPath = @"e:\example\Nop.Plugin.DiscountRules.HasOneProduct.zip";
+                string pluginsPath = @"e:\example\Plugins";
+
+                var extractPath = Path.Combine(pluginsPath, Path.GetFileNameWithoutExtension(zipPath));
+                if (Directory.Exists(extractPath))
+                    Directory.Delete(extractPath, true);
+
+                var hasDescriptionFile = false;
+                using (var archive = ZipFile.OpenRead(zipPath))
+                {
+                    if (!archive.Entries.Any())
+                        throw new Exception("The archive is empty");
+                    //re-create a plugin directory name
+                    
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (entry.FullName.Equals("Description.txt", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (var unzippedEntryStream = entry.Open())
+                            {
+                                using (var reader = new StreamReader(unzippedEntryStream))
+                                {
+                                    //ensure that version of plugin is valid
+                                    var pluginDescriptor = PluginFileParser.ParsePluginDescription(reader.ReadToEnd());
+                                    if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                                        throw new Exception($"This plugin doesn't support version {NopVersion.CurrentVersion}");
+                                }
+                            }
+                            hasDescriptionFile = true;
+                        }
+                    }
+                }
+
+                if (!hasDescriptionFile)
+                    throw new Exception("No Description.txt file is found");
+
+                ZipFile.ExtractToDirectory(zipPath, extractPath);
+            }
+            catch (Exception exc)
+            {
+                throw;
+            }
             var model = new ContactUsModel();
             model = _commonModelFactory.PrepareContactUsModel(model, false);
             return View(model);

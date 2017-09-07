@@ -49,8 +49,12 @@ namespace Nop.Core.Plugins
 
         public static PluginDescriptor ParsePluginDescriptionFile(string filePath)
         {
-            var descriptor = new PluginDescriptor();
             var text = File.ReadAllText(filePath);
+            return ParsePluginDescription(text);
+        }
+        public static PluginDescriptor ParsePluginDescription(string text)
+        {
+            var descriptor = new PluginDescriptor();
             if (String.IsNullOrEmpty(text))
                 return descriptor;
 
@@ -96,7 +100,7 @@ namespace Nop.Core.Plugins
                     case "SupportedVersions":
                         {
                             //parse supported versions
-                            descriptor.SupportedVersions = value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            descriptor.SupportedVersions = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                 .Select(x => x.Trim())
                                 .ToList();
                         }
@@ -116,7 +120,7 @@ namespace Nop.Core.Plugins
                     case "LimitedToStores":
                         {
                             //parse list of store IDs
-                            foreach (var str1 in value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            foreach (var str1 in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                                       .Select(x => x.Trim()))
                             {
                                 if (int.TryParse(str1, out int storeId))
@@ -137,7 +141,7 @@ namespace Nop.Core.Plugins
                         }
                         break;
                     case "Description":
-                            descriptor.Description = value;
+                        descriptor.Description = value;
                         break;
                     default:
                         break;
@@ -151,7 +155,7 @@ namespace Nop.Core.Plugins
 
             return descriptor;
         }
-        
+
         public static void SavePluginDescriptionFile(PluginDescriptor plugin)
         {
             if (plugin == null)
