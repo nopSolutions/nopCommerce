@@ -186,3 +186,14 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
     </div>
 </div>
+<script>
+$(function() {
+  // Handler for .ready() called.
+$('.variant-name').each(function () { 
+	 var str = $(this).html().trim();
+	 str = str.replace(/\s+/g, '-').toLowerCase();
+	 $(this).attr('id', str);
+	 $('.product-name').append('<div><a href="#'+str+'">' + $(this).html().trim() + '</a></div>');
+});
+}); 
+</script>
