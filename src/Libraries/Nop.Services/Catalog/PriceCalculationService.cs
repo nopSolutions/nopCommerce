@@ -488,7 +488,7 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Product atrributes (XML format)</param>
+        /// <param name="attributesXml">Product attributes (XML format)</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
         /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
         /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
