@@ -182,7 +182,7 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
-                _priceCalcService, _taxService, _shippingService, _paymentService,
+                _priceCalcService, _productService, _productAttributeParser, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
                 _genericAttributeService, _rewardPointService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);

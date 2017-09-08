@@ -29,6 +29,8 @@ namespace Nop.Services.Orders
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductService _productService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
         private readonly IShippingService _shippingService;
         private readonly IPaymentService _paymentService;
@@ -42,32 +44,16 @@ namespace Nop.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+        
         #endregion
 
         #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="priceCalculationService">Price calculation service</param>
-        /// <param name="taxService">Tax service</param>
-        /// <param name="shippingService">Shipping service</param>
-        /// <param name="paymentService">Payment service</param>
-        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
-        /// <param name="discountService">Discount service</param>
-        /// <param name="giftCardService">Gift card service</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="rewardPointService">Reward point service</param>
-        /// <param name="taxSettings">Tax settings</param>
-        /// <param name="rewardPointsSettings">Reward points settings</param>
-        /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="catalogSettings">Catalog settings</param>
+        
         public OrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
+            IProductService productService,
+            IProductAttributeParser productAttributeParser,
             ITaxService taxService,
             IShippingService shippingService,
             IPaymentService paymentService,
@@ -85,6 +71,8 @@ namespace Nop.Services.Orders
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
+            this._productService = productService;
+            this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
             this._shippingService = shippingService;
             this._paymentService = paymentService;
@@ -500,7 +488,7 @@ namespace Nop.Services.Orders
             var shippingTotalInclTax = decimal.Zero;
             var shippingTaxRate = decimal.Zero;
 
-            if (restoredCart.RequiresShipping())
+            if (restoredCart.RequiresShipping(_productService, _productAttributeParser))
             {
                 if (!IsFreeShipping(restoredCart, _shippingSettings.FreeShippingOverXIncludingTax ? subTotalInclTax : subTotalExclTax))
                 {
@@ -588,7 +576,8 @@ namespace Nop.Services.Orders
                     }
 
                     //additional shipping charge
-                    shippingTotal += restoredCart.Where(item => item.IsShipEnabled && !item.IsFreeShipping).Sum(item => item.Product.AdditionalShippingCharge);
+                    shippingTotal += restoredCart.Where(item => item.IsShipEnabled(_productService, _productAttributeParser) 
+                        && !item.IsFreeShipping).Sum(item => item.Product.AdditionalShippingCharge);
 
                     //shipping discounts
                     shippingTotal -= GetShippingDiscount(customer, shippingTotal, out List<DiscountForCaching> shippingTotalDiscounts);
@@ -776,7 +765,7 @@ namespace Nop.Services.Orders
                 return decimal.Zero;
 
             foreach (var sci in cart)
-                if (sci.IsShipEnabled && !sci.IsFreeShipping)
+                if (sci.IsShipEnabled(_productService, _productAttributeParser) && !sci.IsFreeShipping)
                     additionalShippingCharge += sci.AdditionalShippingCharge;
 
             return additionalShippingCharge;
@@ -790,7 +779,7 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether shipping is free</returns>
         public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart, decimal? subTotal = null)
         {
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
                 return true;
 
             //check whether customer is in a customer role with free shipping applied
@@ -799,7 +788,7 @@ namespace Nop.Services.Orders
                 return true;
 
             //check whether all shopping cart items are not shippable or marked as free shipping
-            if (cart.All(item => !item.IsShipEnabled || item.IsFreeShipping))
+            if (cart.All(item => !item.IsShipEnabled(_productService, _productAttributeParser) || item.IsFreeShipping))
                 return true;
 
             //free shipping over $X

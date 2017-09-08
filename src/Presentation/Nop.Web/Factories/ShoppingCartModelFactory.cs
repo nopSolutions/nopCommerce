@@ -49,6 +49,7 @@ namespace Nop.Web.Factories
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductService _productService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
@@ -93,7 +94,8 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             IShoppingCartService shoppingCartService, 
             IPictureService pictureService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
+            IProductService productService, 
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             ITaxService taxService, ICurrencyService currencyService, 
@@ -133,6 +135,7 @@ namespace Nop.Web.Factories
             this._shoppingCartService = shoppingCartService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
+            this._productService = productService;
             this._productAttributeFormatter = productAttributeFormatter;
             this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
@@ -185,7 +188,8 @@ namespace Nop.Web.Factories
 
             var model = new List<ShoppingCartModel.CheckoutAttributeModel>();
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
+            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
                 var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
@@ -611,7 +615,7 @@ namespace Nop.Web.Factories
             }
 
             //shipping info
-            if (cart.RequiresShipping())
+            if (cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 model.IsShippable = true;
 
@@ -680,7 +684,7 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel();
 
-            model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
+            model.Enabled = cart.Any() && cart.RequiresShipping(_productService, _productAttributeParser) && _shippingSettings.EstimateShippingEnabled;
             if (model.Enabled)
             {
                 //countries
@@ -953,7 +957,7 @@ namespace Nop.Web.Factories
                     decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                     model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
-                    var requiresShipping = cart.RequiresShipping();
+                    var requiresShipping = cart.RequiresShipping(_productService, _productAttributeParser);
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
                     //1. "terms of service" are enabled
                     //2. min order sub-total is OK
@@ -1061,7 +1065,7 @@ namespace Nop.Web.Factories
 
 
                 //shipping info
-                model.RequiresShipping = cart.RequiresShipping();
+                model.RequiresShipping = cart.RequiresShipping(_productService, _productAttributeParser);
                 if (model.RequiresShipping)
                 {
                     decimal? shoppingCartShippingBase = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart);
@@ -1204,7 +1208,7 @@ namespace Nop.Web.Factories
         {
             var model = new EstimateShippingResultModel();
 
-            if (cart.RequiresShipping())
+            if (cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 var address = new Address
                 {

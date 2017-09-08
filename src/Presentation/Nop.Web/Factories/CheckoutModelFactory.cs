@@ -36,6 +36,8 @@ namespace Nop.Web.Factories
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -65,6 +67,8 @@ namespace Nop.Web.Factories
             ICurrencyService currencyService, 
             IPriceFormatter priceFormatter, 
             IOrderProcessingService orderProcessingService,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             IGenericAttributeService genericAttributeService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
@@ -89,6 +93,8 @@ namespace Nop.Web.Factories
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -124,7 +130,7 @@ namespace Nop.Web.Factories
             string overrideAttributesXml = "")
         {
             var model = new CheckoutBillingAddressModel();
-            model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping();
+            model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser);
             //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
             model.ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep;
 
@@ -509,7 +515,7 @@ namespace Nop.Web.Factories
 
             var model = new OnePageCheckoutModel
             {
-                ShippingRequired = cart.RequiresShipping(),
+                ShippingRequired = cart.RequiresShipping(_productService, _productAttributeParser),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
                 BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };

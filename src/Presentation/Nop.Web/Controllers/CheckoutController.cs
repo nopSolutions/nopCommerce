@@ -11,6 +11,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -38,6 +39,8 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -67,7 +70,9 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             IShoppingCartService shoppingCartService, 
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService, 
             IOrderProcessingService orderProcessingService,
             ICustomerService customerService, 
             IGenericAttributeService genericAttributeService,
@@ -93,6 +98,8 @@ namespace Nop.Web.Controllers
             this._storeContext = storeContext;
             this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._orderProcessingService = orderProcessingService;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
@@ -292,7 +299,7 @@ namespace Nop.Web.Controllers
                 .ToList();
 
             //ship to the same address?
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping())
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -360,7 +367,7 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                 //ship to the same address?
-                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && cart.RequiresShipping())
+                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser))
                 {
                     _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -398,7 +405,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 _workContext.CurrentCustomer.ShippingAddress = null;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -446,7 +453,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 _workContext.CurrentCustomer.ShippingAddress = null;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -548,7 +555,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
@@ -590,7 +597,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                 return Challenge();
 
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
@@ -1182,7 +1189,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 
-                if (cart.RequiresShipping())
+                if (cart.RequiresShipping(_productService, _productAttributeParser))
                 {
                     //shipping is required
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
@@ -1247,7 +1254,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
 
-                if (!cart.RequiresShipping())
+                if (!cart.RequiresShipping(_productService, _productAttributeParser))
                     throw new Exception("Shipping is not required");
 
                 //pickup point
@@ -1386,7 +1393,7 @@ namespace Nop.Web.Controllers
                 if (_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
                     throw new Exception("Anonymous checkout is not allowed");
                 
-                if (!cart.RequiresShipping())
+                if (!cart.RequiresShipping(_productService, _productAttributeParser))
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 

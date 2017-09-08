@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
 
 namespace Nop.Services.Orders
 {
@@ -12,12 +13,28 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial class CheckoutAttributeParser : ICheckoutAttributeParser
     {
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        #region Fields
 
-        public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService)
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
+
+        #endregion
+
+        #region Ctor
+
+        public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
         }
+
+        #endregion
+
+        #region Utilities
 
         /// <summary>
         /// Gets selected checkout attribute identifiers
@@ -53,6 +70,10 @@ namespace Nop.Services.Orders
             }
             return ids;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets selected checkout attributes
@@ -237,7 +258,7 @@ namespace Nop.Services.Orders
             var result = attributesXml;
 
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
-            if (!cart.RequiresShipping())
+            if (!cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<int>();
@@ -383,5 +404,7 @@ namespace Nop.Services.Orders
             }
             return result;
         }
+
+        #endregion
     }
 }

@@ -388,7 +388,7 @@ namespace Nop.Services.Orders
             details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
 
             //shipping info
-            if (details.Cart.RequiresShipping())
+            if (details.Cart.RequiresShipping(_productService, _productAttributeParser))
             {
                 var pickupPoint = details.Customer.GetAttribute<PickupPoint>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
                 if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)

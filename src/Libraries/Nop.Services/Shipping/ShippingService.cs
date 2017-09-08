@@ -700,7 +700,7 @@ namespace Nop.Services.Shipping
 
             foreach (var sci in cart)
             {
-                if (!sci.IsShipEnabled)
+                if (!sci.Product.IsShipEnabled)
                     continue;
 
                 var product = sci.Product;

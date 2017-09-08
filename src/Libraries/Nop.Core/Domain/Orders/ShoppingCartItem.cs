@@ -69,14 +69,8 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public ShoppingCartType ShoppingCartType
         {
-            get
-            {
-                return (ShoppingCartType)this.ShoppingCartTypeId;
-            }
-            set
-            {
-                this.ShoppingCartTypeId = (int)value;
-            }
+            get { return (ShoppingCartType)this.ShoppingCartTypeId; }
+            set { this.ShoppingCartTypeId = (int)value; }
         }
 
         /// <summary>
@@ -100,20 +94,6 @@ namespace Nop.Core.Domain.Orders
                 if (product != null)
                     return product.IsFreeShipping;
                 return true;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the shopping cart item is ship enabled
-        /// </summary>
-        public bool IsShipEnabled
-        {
-            get
-            {
-                var product = this.Product;
-                if (product != null)
-                    return product.IsShipEnabled;
-                return false;
             }
         }
 

@@ -157,8 +157,9 @@ namespace Nop.Web.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            string attributesXml = "";
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
+            var attributesXml = string.Empty;
+            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
                 string controlId = $"checkout_attribute_{attribute.Id}";
@@ -1047,7 +1048,8 @@ namespace Nop.Web.Controllers
             //conditions
             var enabledAttributeIds = new List<int>();
             var disabledAttributeIds = new List<int>();
-            var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
+            var excludeShippableAttributes = !cart.RequiresShipping(_productService, _productAttributeParser);
+            var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in attributes)
             {
                 var conditionMet = _checkoutAttributeParser.IsConditionMet(attribute, attributeXml);

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
+using Nop.Services.Catalog;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Orders
@@ -18,13 +19,13 @@ namespace Nop.Services.Orders
         /// Indicates whether the shopping cart requires shipping
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>True if the shopping cart requires shipping; otherwise, false.</returns>
-        public static bool RequiresShipping(this IList<ShoppingCartItem> shoppingCart)
+        public static bool RequiresShipping(this IList<ShoppingCartItem> shoppingCart,
+            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
         {
-            foreach (var shoppingCartItem in shoppingCart)
-                if (shoppingCartItem.IsShipEnabled)
-                    return true;
-            return false;
+            return shoppingCart.Any(shoppingCartItem => shoppingCartItem.IsShipEnabled(productService, productAttributeParser));
         }
 
         /// <summary>
