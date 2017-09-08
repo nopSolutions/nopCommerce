@@ -85,7 +85,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             if (usedMeasureWeight == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"kg\" measure weight");
 
-            weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
+            weight = _shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true);
             weight = _measureService.ConvertFromPrimaryMeasureWeight(weight, usedMeasureWeight);
         }
 
@@ -102,7 +102,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             if (usedMeasureDimension == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"meter(s)\" measure dimension");
 
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height, true);
 
             //In the Canada Post API length is longest dimension, width is second longest dimension, height is shortest dimension
             var dimensions = new List<decimal> { length, width, height };

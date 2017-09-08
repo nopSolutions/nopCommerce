@@ -282,12 +282,12 @@ namespace Nop.Plugin.Shipping.Fedex
             var usedMeasureWeight = GetUsedMeasureWeight();
             var usedMeasureDimension = GetUsedMeasureDimension();
 
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp, true);
 
             int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
             int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
             int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true), usedMeasureWeight);
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -402,7 +402,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp, true);
 
                 int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                 int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -498,7 +498,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp, true);
 
                 totalPackagesDims = 1;
                 length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
@@ -516,7 +516,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
-                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+                                               }, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp, true);
 
                     int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
                     int productHeight = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -557,7 +557,7 @@ namespace Nop.Plugin.Shipping.Fedex
             if (width < 1)
                 width = 1;
 
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true), usedMeasureWeight);
             if (weight < 1)
                 weight = 1;
 

@@ -86,7 +86,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            var totalWeigth = _shippingService.GetTotalWeight(getShippingOptionRequest);
+            var totalWeigth = _shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true);
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
         }
@@ -229,7 +229,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out decimal widthTmp, out decimal lengthTmp, out decimal heightTmp, true);
             int length = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
             int width = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
             int height = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);

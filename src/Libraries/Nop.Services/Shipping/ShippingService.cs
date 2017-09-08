@@ -426,28 +426,35 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart item weight (of one item)
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Shopping cart item weight</returns>
-        public virtual decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem)
+        public virtual decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem, bool ignoreFreeShippedItems = false)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            return GetShoppingCartItemWeight(shoppingCartItem.Product, shoppingCartItem.AttributesXml);
+            return GetShoppingCartItemWeight(shoppingCartItem.Product, shoppingCartItem.AttributesXml, ignoreFreeShippedItems);
         }
+
         /// <summary>
         /// Gets product item weight (of one item)
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Selected product attributes in XML</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Item weight</returns>
-        public virtual decimal GetShoppingCartItemWeight(Product product, string attributesXml)
+        public virtual decimal GetShoppingCartItemWeight(Product product, string attributesXml, bool ignoreFreeShippedItems = false)
         {
             if (product == null)
                 return decimal.Zero;
 
+            //product weight
+            var productWeight = !product.IsFreeShipping || !ignoreFreeShippedItems ? product.Weight : decimal.Zero;
+
             //attribute weight
-            decimal attributesTotalWeight = decimal.Zero;
-            if (_shippingSettings.ConsiderAssociatedProductsDimensions && !String.IsNullOrEmpty(attributesXml))
+            var attributesTotalWeight = decimal.Zero;
+
+            if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(attributesXml))
             {
                 var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
                 foreach (var attributeValue in attributeValues)
@@ -455,27 +462,20 @@ namespace Nop.Services.Shipping
                     switch (attributeValue.AttributeValueType)
                     {
                         case AttributeValueType.Simple:
-                        {
                             //simple attribute
                             attributesTotalWeight += attributeValue.WeightAdjustment;
-                        }
                             break;
                         case AttributeValueType.AssociatedToProduct:
-                        {
                             //bundled product
                             var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
-                            {
+                            if (associatedProduct != null && associatedProduct.IsShipEnabled && (!associatedProduct.IsFreeShipping || !ignoreFreeShippedItems))
                                 attributesTotalWeight += associatedProduct.Weight * attributeValue.Quantity;
-                            }
-                        }
                             break;
                     }
                 }
             }
 
-            var weight = product.Weight + attributesTotalWeight;
-            return weight;
+            return productWeight + attributesTotalWeight;
         }
 
         /// <summary>
@@ -483,30 +483,32 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="request">Request</param>
         /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Total weight</returns>
-        public virtual decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true)
+        public virtual decimal GetTotalWeight(GetShippingOptionRequest request, 
+            bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
+            
+            var totalWeight = decimal.Zero;
 
-            Customer customer = request.Customer;
-
-            decimal totalWeight = decimal.Zero;
             //shopping cart items
             foreach (var packageItem in request.Items)
-                totalWeight += GetShoppingCartItemWeight(packageItem.ShoppingCartItem) * packageItem.GetQuantity();
+                totalWeight += GetShoppingCartItemWeight(packageItem.ShoppingCartItem, ignoreFreeShippedItems) * packageItem.GetQuantity();
 
             //checkout attributes
-            if (customer != null && includeCheckoutAttributes)
+            if (request.Customer != null && includeCheckoutAttributes)
             {
-                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
-                if (!String.IsNullOrEmpty(checkoutAttributesXml))
+                var checkoutAttributesXml = request.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
+                if (!string.IsNullOrEmpty(checkoutAttributesXml))
                 {
                     var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                     foreach (var attributeValue in attributeValues)
                         totalWeight += attributeValue.WeightAdjustment;
                 }
             }
+
             return totalWeight;
         }
 
@@ -517,8 +519,9 @@ namespace Nop.Services.Shipping
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         public virtual void GetAssociatedProductDimensions(ShoppingCartItem shoppingCartItem,
-            out decimal width, out decimal length, out decimal height)
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
@@ -535,16 +538,15 @@ namespace Nop.Services.Shipping
 
             //bundled products (associated attributes)
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
-                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                .ToList();
+                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct).ToList();
             foreach (var attributeValue in attributeValues)
             {
                 var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                if (associatedProduct != null && associatedProduct.IsShipEnabled && (!associatedProduct.IsFreeShipping || !ignoreFreeShippedItems))
                 {
-                    width += associatedProduct.Width*attributeValue.Quantity;
+                    width += associatedProduct.Width * attributeValue.Quantity;
                     length += associatedProduct.Length * attributeValue.Quantity;
-                    height += associatedProduct.Height*attributeValue.Quantity;
+                    height += associatedProduct.Height * attributeValue.Quantity;
                 }
             }
         }
@@ -556,8 +558,9 @@ namespace Nop.Services.Shipping
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         public virtual void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
-            out decimal width, out decimal length, out decimal height)
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false)
         {
             if (packageItems == null)
                 throw new ArgumentNullException(nameof(packageItems));
@@ -565,17 +568,20 @@ namespace Nop.Services.Shipping
             //calculate cube root of volume, in case if the number of items more than 1
             if (_shippingSettings.UseCubeRootMethod && AreMultipleItems(packageItems))
             {
-                //find max dimensions of items
-                var maxWidth = packageItems.Max(item => item.ShoppingCartItem.Product.Width);
-                var maxLength = packageItems.Max(item => item.ShoppingCartItem.Product.Length);
-                var maxHeight = packageItems.Max(item => item.ShoppingCartItem.Product.Height);
+                //find max dimensions of the shipped items
+                var maxWidth = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.ShoppingCartItem.Product.Width : decimal.Zero);
+                var maxLength = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.ShoppingCartItem.Product.Length : decimal.Zero);
+                var maxHeight = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.ShoppingCartItem.Product.Height : decimal.Zero);
 
-                //get total volume
+                //get total volume of the shipped items
                 var totalVolume = packageItems.Sum(packageItem =>
                 {
                     //product volume
-                    var productVolume = packageItem.ShoppingCartItem.Product.Width *
-                        packageItem.ShoppingCartItem.Product.Length * packageItem.ShoppingCartItem.Product.Height;
+                    var productVolume = !packageItem.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
+                        packageItem.ShoppingCartItem.Product.Width * packageItem.ShoppingCartItem.Product.Length * packageItem.ShoppingCartItem.Product.Height : decimal.Zero;
 
                     //associated products volume
                     if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
@@ -584,7 +590,7 @@ namespace Nop.Services.Shipping
                             .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct).Sum(attributeValue =>
                             {
                                 var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                                if (associatedProduct == null || !associatedProduct.IsShipEnabled)
+                                if (associatedProduct == null || !associatedProduct.IsShipEnabled || (associatedProduct.IsFreeShipping && ignoreFreeShippedItems))
                                     return 0;
 
                                 //adjust max dimensions
@@ -616,13 +622,23 @@ namespace Nop.Services.Shipping
                 width = length = height = decimal.Zero;
                 foreach (var packageItem in packageItems)
                 {
+                    var productWidth = decimal.Zero;
+                    var productLength = decimal.Zero;
+                    var productHeight = decimal.Zero;
+                    if (!packageItem.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems)
+                    {
+                        productWidth = packageItem.ShoppingCartItem.Product.Width;
+                        productLength = packageItem.ShoppingCartItem.Product.Length;
+                        productHeight = packageItem.ShoppingCartItem.Product.Height;
+                    }
+
                     //associated products
                     GetAssociatedProductDimensions(packageItem.ShoppingCartItem, out decimal associatedProductsWidth, out decimal associatedProductsLength, out decimal associatedProductsHeight);
 
                     var quantity = packageItem.GetQuantity();
-                    width += (packageItem.ShoppingCartItem.Product.Width + associatedProductsWidth) * quantity;
-                    length += (packageItem.ShoppingCartItem.Product.Length + associatedProductsLength) * quantity;
-                    height += (packageItem.ShoppingCartItem.Product.Height + associatedProductsHeight) * quantity;
+                    width += (productWidth + associatedProductsWidth) * quantity;
+                    length += (productLength + associatedProductsLength) * quantity;
+                    height += (productHeight + associatedProductsHeight) * quantity;
                 }
             }
         }

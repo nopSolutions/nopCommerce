@@ -161,7 +161,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 }
 
                 //get weight of shipped items (excluding items with free shipping)
-                var weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
+                var weight = _shippingService.GetTotalWeight(getShippingOptionRequest, ignoreFreeShippedItems: true);
                 
                 foreach (var shippingMethod in _shippingService.GetAllShippingMethods(countryId))
                 {
