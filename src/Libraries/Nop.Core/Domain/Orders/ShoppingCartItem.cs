@@ -111,19 +111,5 @@ namespace Nop.Core.Domain.Orders
                 return additionalShippingCharge;
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the shopping cart item is tax exempt
-        /// </summary>
-        public bool IsTaxExempt
-        {
-            get
-            {
-                var product = this.Product;
-                if (product != null)
-                    return product.IsTaxExempt;
-                return false;
-            }
-        }
     }
 }

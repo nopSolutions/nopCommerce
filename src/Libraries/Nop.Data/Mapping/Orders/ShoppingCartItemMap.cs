@@ -14,7 +14,6 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(sci => sci.ShoppingCartType);
             this.Ignore(sci => sci.IsFreeShipping);
             this.Ignore(sci => sci.AdditionalShippingCharge);
-            this.Ignore(sci => sci.IsTaxExempt);
 
             this.HasRequired(sci => sci.Customer)
                 .WithMany(c => c.ShoppingCartItems)
