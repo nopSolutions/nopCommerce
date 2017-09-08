@@ -8,6 +8,7 @@ using Nop.Plugin.Shipping.FixedOrByWeight.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -152,7 +153,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 var subTotal = decimal.Zero;
                 foreach (var packageItem in getShippingOptionRequest.Items)
                 {
-                    if (packageItem.ShoppingCartItem.IsFreeShipping)
+                    if (packageItem.ShoppingCartItem.IsFreeShipping())
                         continue;
 
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal

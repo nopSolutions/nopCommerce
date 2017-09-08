@@ -84,20 +84,6 @@ namespace Nop.Core.Domain.Orders
         public virtual Customer Customer { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the shopping cart item is free shipping
-        /// </summary>
-        public bool IsFreeShipping
-        {
-            get
-            {
-                var product = this.Product;
-                if (product != null)
-                    return product.IsFreeShipping;
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Gets the additional shipping charge
         /// </summary> 
         public decimal AdditionalShippingCharge

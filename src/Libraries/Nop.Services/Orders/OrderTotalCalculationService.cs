@@ -577,7 +577,7 @@ namespace Nop.Services.Orders
 
                     //additional shipping charge
                     shippingTotal += restoredCart.Where(item => item.IsShipEnabled(_productService, _productAttributeParser) 
-                        && !item.IsFreeShipping).Sum(item => item.Product.AdditionalShippingCharge);
+                        && !item.IsFreeShipping(_productService, _productAttributeParser)).Sum(item => item.Product.AdditionalShippingCharge);
 
                     //shipping discounts
                     shippingTotal -= GetShippingDiscount(customer, shippingTotal, out List<DiscountForCaching> shippingTotalDiscounts);
@@ -765,7 +765,7 @@ namespace Nop.Services.Orders
                 return decimal.Zero;
 
             foreach (var sci in cart)
-                if (sci.IsShipEnabled(_productService, _productAttributeParser) && !sci.IsFreeShipping)
+                if (sci.IsShipEnabled(_productService, _productAttributeParser) && !sci.IsFreeShipping(_productService, _productAttributeParser))
                     additionalShippingCharge += sci.AdditionalShippingCharge;
 
             return additionalShippingCharge;
@@ -779,16 +779,13 @@ namespace Nop.Services.Orders
         /// <returns>A value indicating whether shipping is free</returns>
         public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart, decimal? subTotal = null)
         {
-            if (!cart.RequiresShipping(_productService, _productAttributeParser))
-                return true;
-
             //check whether customer is in a customer role with free shipping applied
             var customer = cart.GetCustomer();
             if (customer != null && customer.CustomerRoles.Where(role => role.Active).Any(role => role.FreeShipping))
                 return true;
 
-            //check whether all shopping cart items are not shippable or marked as free shipping
-            if (cart.All(item => !item.IsShipEnabled(_productService, _productAttributeParser) || item.IsFreeShipping))
+            //check whether all shopping cart items and their associated products marked as free shipping
+            if (cart.All(shoppingCartItem => shoppingCartItem.IsFreeShipping(_productService, _productAttributeParser)))
                 return true;
 
             //free shipping over $X
@@ -823,7 +820,7 @@ namespace Nop.Services.Orders
             //free shipping
             if (IsFreeShipping(cart))
                 return decimal.Zero;
-            
+
             //additional shipping charges
             decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
             var adjustedRate = shippingRate + additionalShippingCharge;

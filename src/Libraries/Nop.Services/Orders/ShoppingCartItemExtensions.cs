@@ -39,6 +39,36 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Whether the shopping cart item is free shipping
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
+        public static bool IsFreeShipping(this ShoppingCartItem shoppingCartItem,
+            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
+        {
+            //first, check whether shipping is required
+            if (!shoppingCartItem.IsShipEnabled(productService, productAttributeParser))
+                return true;
+
+            //then whether the product is free shipping
+            if (shoppingCartItem.Product != null && !shoppingCartItem.Product.IsFreeShipping)
+                return false;
+
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return true;
+
+            productService = productService ?? EngineContext.Current.Resolve<IProductService>();
+            productAttributeParser = productAttributeParser ?? EngineContext.Current.Resolve<IProductAttributeParser>();
+
+            //and whether associated products of the shopping cart item is free shipping
+            return productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .All(attributeValue => productService.GetProductById(attributeValue.AssociatedProductId)?.IsFreeShipping ?? true);
+        }
+
+        /// <summary>
         /// Whether the shopping cart item is tax exempt
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
