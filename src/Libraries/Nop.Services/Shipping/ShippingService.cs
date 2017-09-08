@@ -716,10 +716,21 @@ namespace Nop.Services.Shipping
 
             foreach (var sci in cart)
             {
-                if (!sci.Product.IsShipEnabled)
+                if (!sci.IsShipEnabled(_productService, _productAttributeParser))
                     continue;
 
                 var product = sci.Product;
+
+                //TODO properly create requests for the assocated products
+                if (product == null || !product.IsShipEnabled)
+                {
+                    var associatedProducts = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml)
+                        .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                        .Select(attributeValue => _productService.GetProductById(attributeValue.AssociatedProductId));
+                    product = associatedProducts.FirstOrDefault(associatedProduct => associatedProduct != null && associatedProduct.IsShipEnabled);
+                }
+                if (product == null)
+                    continue;
 
                 //warehouses
                 Warehouse warehouse = null;
