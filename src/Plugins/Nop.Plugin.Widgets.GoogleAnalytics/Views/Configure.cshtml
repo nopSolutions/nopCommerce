@@ -12,19 +12,13 @@
         "var _gaq = _gaq || [];" + "\r\n" +
         "_gaq.push(['_setAccount', '{GOOGLEID}']);" + "\r\n" +
         "_gaq.push(['_trackPageview']);" + "\r\n" +
-        "{ECOMMERCE}" + "\r\n" +
         "(function() {" + "\r\n" +
         "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" + "\r\n" +
         "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" + "\r\n" +
         "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" + "\r\n" +
         "})();" + "\r\n" +
         "</script>"));
-    var googleAnalytics_EcommerceScript = Html.Raw(JavaScriptEncoder.Default.Encode("_gaq.push(['_addTrans', '{ORDERID}', '{SITE}', '{TOTAL}', '{TAX}', '{SHIP}', '{CITY}', '{STATEPROVINCE}', '{COUNTRY}']);" + "\r\n" +
-        "{DETAILS}" + "\r\n" +
-        "_gaq.push(['_trackTrans']); "));
-    var googleAnalytics_EcommerceDetailScript = Html.Raw(JavaScriptEncoder.Default.Encode("_gaq.push(['_addItem', '{ORDERID}', '{PRODUCTSKU}', '{PRODUCTNAME}', '{CATEGORYNAME}', '{UNITPRICE}', '{QUANTITY}' ]); "));
-
-
+    
 
     var universalAnalytics_trackingScript = Html.Raw(JavaScriptEncoder.Default.Encode("<!-- Google code for Analytics tracking -->" + "\r\n" +
         "<script>" + "\r\n" +
@@ -34,26 +28,7 @@
         "})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" + "\r\n" +
         "ga('create', '{GOOGLEID}', 'auto');" + "\r\n" +
         "ga('send', 'pageview');" + "\r\n" +
-        "{ECOMMERCE}" + "\r\n" +
         "</script>"));
-    var universalAnalytics_EcommerceScript = Html.Raw(JavaScriptEncoder.Default.Encode("ga('require', 'ecommerce', 'ecommerce.js');" + "\r\n" +
-        "ga('ecommerce:addTransaction', {" + "\r\n" +
-        "'id': '{ORDERID}'," + "\r\n" +
-        "'affiliation': '{SITE}'," + "\r\n" +
-        "'revenue': '{TOTAL}'," + "\r\n" +
-        "'shipping': '{SHIP}'," + "\r\n" +
-        "'tax': '{TAX}'" + "\r\n" +
-        "});" + "\r\n" +
-        "{DETAILS} " + "\r\n" +
-        "ga('ecommerce:send');"));
-    var universalAnalytics_EcommerceDetailScript = Html.Raw(JavaScriptEncoder.Default.Encode("ga('ecommerce:addItem', {" + "\r\n" +
-        "'id': '{ORDERID}'," + "\r\n" +
-        "'name': '{PRODUCTNAME}'," + "\r\n" +
-        "'sku': '{PRODUCTSKU}'," + "\r\n" +
-        "'category': '{CATEGORYNAME}'," + "\r\n" +
-        "'price': '{UNITPRICE}'," + "\r\n" +
-        "'quantity': '{QUANTITY}'" + "\r\n" +
-        "});"));
 }
 
 <form asp-controller="WidgetsGoogleAnalytics" asp-action="Configure" method="post">
@@ -75,14 +50,10 @@
 
                     function preConfigureGoogleAnalytic() {
                         $('#@Html.IdFor(model => model.TrackingScript)').val('@googleAnalytics_trackingScript');
-                        $('#@Html.IdFor(model => model.EcommerceScript)').val('@googleAnalytics_EcommerceScript');
-                        $('#@Html.IdFor(model => model.EcommerceDetailScript)').val('@googleAnalytics_EcommerceDetailScript');
                     }
 
                     function preConfigureUniversalAnalytic() {
                         $('#@Html.IdFor(model => model.TrackingScript)').val('@universalAnalytics_trackingScript');
-                        $('#@Html.IdFor(model => model.EcommerceScript)').val('@universalAnalytics_EcommerceScript');
-                        $('#@Html.IdFor(model => model.EcommerceDetailScript)').val('@universalAnalytics_EcommerceDetailScript');
                     }
 
                 </script>
@@ -113,22 +84,12 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="EcommerceScript_OverrideForStore" asp-input="EcommerceScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="EcommerceScript" />
+                        <nop-override-store-checkbox asp-for="EnableEcommerce_OverrideForStore" asp-input="EnableEcommerce" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="EnableEcommerce" />
                     </div>
                     <div class="col-md-9">
-                        <nop-textarea asp-for="EcommerceScript" />
-                        <span asp-validation-for="EcommerceScript"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="EcommerceDetailScript_OverrideForStore" asp-input="EcommerceDetailScript" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        <nop-label asp-for="EcommerceDetailScript" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-textarea asp-for="EcommerceDetailScript" />
-                        <span asp-validation-for="EcommerceDetailScript"></span>
+                        <nop-editor asp-for="EnableEcommerce" />
+                        <span asp-validation-for="EnableEcommerce"></span>
                     </div>
                 </div>
                 <div class="form-group">
