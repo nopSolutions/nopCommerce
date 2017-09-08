@@ -12,7 +12,6 @@ namespace Nop.Data.Mapping.Orders
             this.Property(sci => sci.CustomerEnteredPrice).HasPrecision(18, 4);
 
             this.Ignore(sci => sci.ShoppingCartType);
-            this.Ignore(sci => sci.AdditionalShippingCharge);
 
             this.HasRequired(sci => sci.Customer)
                 .WithMany(c => c.ShoppingCartItems)

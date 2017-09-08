@@ -82,20 +82,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets the additional shipping charge
-        /// </summary> 
-        public decimal AdditionalShippingCharge
-        {
-            get
-            {
-                decimal additionalShippingCharge = decimal.Zero;
-                var product = this.Product;
-                if (product != null)
-                    additionalShippingCharge = product.AdditionalShippingCharge * Quantity;
-                return additionalShippingCharge;
-            }
-        }
     }
 }

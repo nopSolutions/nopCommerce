@@ -69,6 +69,37 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Get the additional shipping charge
+        /// </summary> 
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <returns>The additional shipping charge of the shopping cart item</returns>
+        public static decimal GetAdditionalShippingCharge(this ShoppingCartItem shoppingCartItem,
+            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
+        {
+            //first, check whether shipping is free
+            if (shoppingCartItem.IsFreeShipping(productService, productAttributeParser))
+                return decimal.Zero;
+
+            //get additional shipping charge of the product
+            var additionalShippingCharge = (shoppingCartItem.Product?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
+
+            if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return additionalShippingCharge;
+
+            productService = productService ?? EngineContext.Current.Resolve<IProductService>();
+            productAttributeParser = productAttributeParser ?? EngineContext.Current.Resolve<IProductAttributeParser>();
+
+            //and sum with associated products additional shipping charges
+            additionalShippingCharge += productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .Sum(attributeValue => productService.GetProductById(attributeValue.AssociatedProductId)?.AdditionalShippingCharge ?? decimal.Zero);
+
+            return additionalShippingCharge;
+        }
+
+        /// <summary>
         /// Whether the shopping cart item is tax exempt
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>

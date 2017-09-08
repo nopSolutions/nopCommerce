@@ -576,8 +576,7 @@ namespace Nop.Services.Orders
                     }
 
                     //additional shipping charge
-                    shippingTotal += restoredCart.Where(item => item.IsShipEnabled(_productService, _productAttributeParser) 
-                        && !item.IsFreeShipping(_productService, _productAttributeParser)).Sum(item => item.Product.AdditionalShippingCharge);
+                    shippingTotal += GetShoppingCartAdditionalShippingCharge(restoredCart);
 
                     //shipping discounts
                     shippingTotal -= GetShippingDiscount(customer, shippingTotal, out List<DiscountForCaching> shippingTotalDiscounts);
@@ -758,17 +757,7 @@ namespace Nop.Services.Orders
         /// <returns>Additional shipping charge</returns>
         public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
         {
-            decimal additionalShippingCharge = decimal.Zero;
-
-            bool isFreeShipping = IsFreeShipping(cart);
-            if (isFreeShipping)
-                return decimal.Zero;
-
-            foreach (var sci in cart)
-                if (sci.IsShipEnabled(_productService, _productAttributeParser) && !sci.IsFreeShipping(_productService, _productAttributeParser))
-                    additionalShippingCharge += sci.AdditionalShippingCharge;
-
-            return additionalShippingCharge;
+            return cart.Sum(shoppingCartItem => shoppingCartItem.GetAdditionalShippingCharge(_productService, _productAttributeParser));
         }
 
         /// <summary>
@@ -821,18 +810,14 @@ namespace Nop.Services.Orders
             if (IsFreeShipping(cart))
                 return decimal.Zero;
 
-            //additional shipping charges
-            decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
-            var adjustedRate = shippingRate + additionalShippingCharge;
+            //with additional shipping charges
+            var adjustedRate = shippingRate + GetShoppingCartAdditionalShippingCharge(cart);
 
             //discount
-            var customer = cart.GetCustomer();
-            decimal discountAmount = GetShippingDiscount(customer, adjustedRate, out appliedDiscounts);
-            adjustedRate = adjustedRate - discountAmount;
+            var discountAmount = GetShippingDiscount(cart.GetCustomer(), adjustedRate, out appliedDiscounts);
+            adjustedRate -= discountAmount;
 
-            if (adjustedRate < decimal.Zero)
-                adjustedRate = decimal.Zero;
-
+            adjustedRate = Math.Max(adjustedRate, decimal.Zero);
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 adjustedRate = RoundingHelper.RoundPrice(adjustedRate);
 
