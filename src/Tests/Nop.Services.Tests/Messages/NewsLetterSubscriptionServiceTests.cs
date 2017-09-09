@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Messages
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.InsertNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription)));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nop.Services.Tests.Messages
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
             service.DeleteNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(subscription)));
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace Nop.Services.Tests.Messages
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@somenewdomain.com" };
             service.UpdateNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(originalSubscription.Email)));
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(originalSubscription)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription)));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Nop.Services.Tests.Messages
 
             service.UpdateNewsLetterSubscription(subscription, true);
 
-            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
+            _eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription)));
         }
 
         /// <summary>

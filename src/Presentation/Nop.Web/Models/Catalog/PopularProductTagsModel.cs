@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -17,7 +17,8 @@ namespace Nop.Web.Models.Catalog
         {
             double factor = (weight - mean);
 
-            if (factor != 0 && stdDev != 0) factor /= stdDev;
+            if (factor != 0 && stdDev != 0)
+                factor /= stdDev;
 
             return (factor > 2) ? 150 :
                 (factor > 1) ? 120 :
@@ -39,6 +40,8 @@ namespace Nop.Web.Models.Catalog
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return sum / count;
         }
 
@@ -55,6 +58,8 @@ namespace Nop.Web.Models.Catalog
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return Math.Sqrt(sumOfDiffSquares / count);
         }
 
@@ -67,8 +72,7 @@ namespace Nop.Web.Models.Catalog
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.ProductCount);
-            double mean;
-            double stdDev = StdDev(itemWeights, out mean);
+            double stdDev = StdDev(itemWeights, out double mean);
 
             return GetFontSize(productTag.ProductCount, mean, stdDev);
         }

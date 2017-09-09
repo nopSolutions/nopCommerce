@@ -1,13 +1,12 @@
 @model OrderDetailsModel
-@using Nop.Web.Models.Order
 @{
     if (!Model.PrintMode)
     {
-        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+        Layout = "_ColumnsOne";
     }
     else
     {
-        Layout = "~/Views/Shared/_Print.cshtml";
+        Layout = "_Print";
     }
     //title
     Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
@@ -35,10 +34,10 @@
         </div>
     }
     <div class="page-body">
-        @Html.Widget("orderdetails_page_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model.Id })
         <div class="order-overview">
             <div class="order-number">
-                <strong>@T("Order.Order#")@Model.Id</strong>
+                <strong>@T("Order.Order#")@Model.CustomOrderNumber</strong>
             </div>
             <ul class="order-overview-content">
                 <li class="order-date">
@@ -51,15 +50,15 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @Html.Widget("orderdetails_page_overview", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model.Id })
         </div>
         <div class="order-details-area">
             <div class="billing-info-wrap">
-                <div class="title">
-                    <strong>@T("Order.BillingAddress")</strong>
-                </div>
-                <div class="info-content">
-                    <ul class="billing-info">
+                <div class="billing-info">
+	                <div class="title">
+	                    <strong>@T("Order.BillingAddress")</strong>
+	                </div>
+                    <ul class="info-list">
                         <li class="name">
                             @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
                         </li>
@@ -157,59 +156,57 @@
                             }
                         }
                     </ul>
-                    @if (!String.IsNullOrEmpty(Model.PaymentMethod))
-                    {
-                        <div class="side-list-wrap">
-                            <ul class="side-list">
-                                <li class="title">
-                                    @T("Order.Payment")
-                                </li>
-                                <li class="payment-method">
+                </div>
+                @if (!String.IsNullOrEmpty(Model.PaymentMethod))
+                {
+                    <div class="payment-method-info">
+                        <div class="title">
+                            <strong>@T("Order.Payment")</strong>
+                        </div>
+                        <ul class="info-list">
+                            <li class="payment-method">
+                                <span class="label">
+                                    @T("Order.Payment.Method"):
+                                </span>
+                                <span class="value">
+                                    @Model.PaymentMethod
+                                </span>
+                            </li>
+                            @if (!Model.PrintMode)
+                            {
+                                <li class="payment-method-status">
                                     <span class="label">
-                                        @T("Order.Payment.Method"):
+                                        @T("Order.Payment.Status"):
                                     </span>
                                     <span class="value">
-                                        @Model.PaymentMethod
+                                        @Model.PaymentMethodStatus
                                     </span>
                                 </li>
-                                @if (!Model.PrintMode)
-                                {
-                                    <li class="payment-method-status">
-                                        <span class="label">
-                                            @T("Order.Payment.Status"):
-                                        </span>
-                                        <span class="value">
-                                            @Model.PaymentMethodStatus
-                                        </span>
-                                    </li>
-                                }
-                                @if (!Model.PrintMode && Model.CanRePostProcessPayment)
-                                {
-                                    @*Complete payment (for redirection payment methods)*@
-                                    <li class="repost">
-                                        @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
-                                        {
-                                            @Html.AntiForgeryToken()
-                                            <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="button-2 re-order-button" />
-                                            <p class="hint">
-                                                <em>@T("Order.RetryPayment.Hint")</em>
-                                            </p>
-                                        }
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                </div>
+                            }
+                            @if (!Model.PrintMode && Model.CanRePostProcessPayment)
+                            {
+                                @*Complete payment (for redirection payment methods)*@
+                                <li class="repost">
+                                    <form asp-route="OrderDetails" method="post">
+                                        <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="button-2 re-order-button"/>
+                                        <p class="hint">
+                                            <em>@T("Order.RetryPayment.Hint")</em>
+                                        </p>
+                                    </form>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
             </div>
             @if (Model.IsShippable)
             {
                 <div class="shipping-info-wrap">
-                    <div class="title">
-                        <strong>@(Model.PickUpInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
-                    </div>
-                    <div class="info-content">
-                        <ul class="shipping-info">
+                    <div class="shipping-info">
+	                    <div class="title">
+	                        <strong>@(Model.PickUpInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
+	                    </div>
+                        <ul class="info-list">
                             @if (!Model.PickUpInStore)
                             {
                                 <li class="name">
@@ -314,32 +311,32 @@
                                 }
                             }
                         </ul>
-                        <div class="side-list-wrap">
-                            <ul class="side-list">
-                                <li class="title">
-                                    @T("Order.Shipping")
-                                </li>
-                                <li class="shipping-method">
+                    </div>
+                    <div class="shipping-method-info">
+                        <div class="title">
+                            <strong>@T("Order.Shipping")</strong>
+                        </div>
+                        <ul class="info-list">
+                            <li class="shipping-method">
+                                <span class="label">
+                                    @T("Order.Shipping.Name"):
+                                </span>
+                                <span class="value">
+                                    @Model.ShippingMethod
+                                </span>
+                            </li>
+                            @if (!Model.PrintMode)
+                            {
+                                <li class="shipping-status">
                                     <span class="label">
-                                        @T("Order.Shipping.Name"):
+                                        @T("Order.Shipping.Status"):
                                     </span>
                                     <span class="value">
-                                        @Model.ShippingMethod
+                                        @Model.ShippingStatus
                                     </span>
                                 </li>
-                                @if (!Model.PrintMode)
-                                {
-                                    <li class="shipping-status">
-                                        <span class="label">
-                                            @T("Order.Shipping.Status"):
-                                        </span>
-                                        <span class="value">
-                                            @Model.ShippingStatus
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
+                            }
+                        </ul>
                     </div>
                 </div>
             }
@@ -469,7 +466,7 @@
                     </div>
                 </div>
             }
-            @Html.Widget("orderdetails_page_beforeproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -552,7 +549,7 @@
                                                 <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                        @Html.Widget("orderdetails_product_line", item.Id)
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
                                     </td>
                                     <td class="unit-price">
                                         <label class="td-title">@T("Order.Product(s).Price"):</label>
@@ -581,7 +578,7 @@
                     </div>
                 }
             </div>
-            @Html.Widget("orderdetails_page_afterproducts", Model.Id)
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
             <div class="section options">
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -722,6 +719,6 @@
                 }
             </div>
         }
-        @Html.Widget("orderdetails_page_bottom", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model.Id })
     </div>
 </div>

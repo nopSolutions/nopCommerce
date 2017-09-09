@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Extensions;
 
 namespace Nop.Services.Common
 {
@@ -43,7 +43,7 @@ namespace Nop.Services.Common
                 ((a.StateProvinceId.IsNullOrDefault() && stateProvinceId.IsNullOrDefault()) || a.StateProvinceId == stateProvinceId) &&
                 ((String.IsNullOrEmpty(a.ZipPostalCode) && String.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
                 ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId) &&
-                //actually we should parse custom address attibutes (in case if "Display order" is changed) and then compare
+                //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
                 //bu we simplify this process and simply compare their values in XML
                 ((String.IsNullOrEmpty(a.CustomAttributes) && String.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
         }

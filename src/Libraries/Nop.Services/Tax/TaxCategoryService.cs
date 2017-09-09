@@ -69,7 +69,7 @@ namespace Nop.Services.Tax
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Delete(taxCategory);
 
@@ -89,7 +89,7 @@ namespace Nop.Services.Tax
             return _cacheManager.Get(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder
+                            orderby tc.DisplayOrder, tc.Id
                             select tc;
                 var taxCategories = query.ToList();
                 return taxCategories;
@@ -117,7 +117,7 @@ namespace Nop.Services.Tax
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
 
@@ -134,7 +134,7 @@ namespace Nop.Services.Tax
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Update(taxCategory);
 

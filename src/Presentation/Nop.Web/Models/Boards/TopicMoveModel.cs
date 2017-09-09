@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Boards
 
         public int ForumSelected { get; set; }
         public string TopicSeName { get; set; }
-
+        
         public IEnumerable<SelectListItem> ForumList { get; set; }
     }
 }

@@ -1,40 +1,57 @@
 ﻿using System;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Shipping.USPS.Domain;
 using Nop.Plugin.Shipping.USPS.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.USPS.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingUSPSController : BasePluginController
     {
+        #region Fields
+
         private readonly USPSSettings _uspsSettings;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
+
+        #endregion
+
+        #region Ctor
 
         public ShippingUSPSController(USPSSettings uspsSettings,
             ISettingService settingService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IPermissionService permissionService)
         {
             this._uspsSettings = uspsSettings;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
         }
 
-        [ChildActionOnly]
-        public ActionResult Configure()
+        #endregion
+
+        #region Methods
+
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             var model = new USPSShippingModel();
             model.Url = _uspsSettings.Url;
             model.Username = _uspsSettings.Username;
             model.Password = _uspsSettings.Password;
             model.AdditionalHandlingCharge = _uspsSettings.AdditionalHandlingCharge;
-
-
 
             // Load Domestic service names
             string carrierServicesOfferedDomestic = _uspsSettings.CarrierServicesOfferedDomestic;
@@ -45,10 +62,10 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                 foreach (string service in USPSServices.DomesticServices)
                 {
                     string serviceId = USPSServices.GetServiceIdDomestic(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
-                        if (carrierServicesOfferedDomestic.Contains(String.Format("[{0}]", serviceId)))
+                        if (carrierServicesOfferedDomestic.Contains($"[{serviceId}]"))
                             model.CarrierServicesOfferedDomestic.Add(service);
                     }
                 }
@@ -62,24 +79,25 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                 foreach (string service in USPSServices.InternationalServices)
                 {
                     string serviceId = USPSServices.GetServiceIdInternational(service);
-                    if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedInternational))
+                    if (!String.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
-                        if (carrierServicesOfferedInternational.Contains(String.Format("[{0}]", serviceId)))
+                        if (carrierServicesOfferedInternational.Contains($"[{serviceId}]"))
                             model.CarrierServicesOfferedInternational.Add(service);
                     }
                 }
-            return View("~/Plugins/Shipping.USPS/Views/ShippingUSPS/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.USPS/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [ChildActionOnly]
-        public ActionResult Configure(USPSShippingModel model)
+        [AdminAntiForgery]
+        public IActionResult Configure(USPSShippingModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
-            {
                 return Configure();
-            }
             
             //save settings
             _uspsSettings.Url = model.Url;
@@ -100,7 +118,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
                     string serviceId = USPSServices.GetServiceIdDomestic(cs);
                     //unselect any other services if NONE is selected
-                    if (serviceId.Equals("NONE"))
+                    if (!String.IsNullOrEmpty(serviceId) && serviceId.Equals("NONE"))
                     {
                         carrierServicesOfferedDomestic.Clear();
                         carrierServicesOfferedDomestic.AppendFormat("[{0}]:", serviceId);
@@ -132,7 +150,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                     carrierServicesInternationalSelectedCount++;
                     string serviceId = USPSServices.GetServiceIdInternational(cs);
                     // unselect other services if NONE is selected
-                    if (serviceId.Equals("NONE"))
+                    if (!String.IsNullOrEmpty(serviceId) && serviceId.Equals("NONE"))
                     {
                         carrierServicesOfferedInternational.Clear();
                         carrierServicesOfferedInternational.AppendFormat("[{0}]:", serviceId);
@@ -159,5 +177,6 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             return Configure();
         }
 
+        #endregion
     }
 }

@@ -40,9 +40,11 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea {
-	border-radius: 0;
+    border-radius: 0;
 }
 input[type="button"],
 input[type="submit"],
@@ -84,11 +86,13 @@ table {
 }
 input[type="text"],
 input[type="password"],
+input[type="email"],
+input[type="tel"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
 input, textarea, select {
 	font-size: 14px;
@@ -104,10 +108,12 @@ select {
 	padding: 6px;
 }
 input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus, select:focus {
-	border-color: #ccc;
-	color: #444;
+    border-color: #ccc;
+    color: #444;
 }
 input[type="checkbox"],
 input[type="radio"],
@@ -266,11 +272,13 @@ label, label + * {
 	color: #444;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select, .inputs textarea {
-	width: 400px;
-	max-width: 100%;
-	background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
 }
 
 .inputs.custom-attributes {
@@ -453,7 +461,7 @@ label, label + * {
 	white-space: nowrap;
     color: #444;
 }
-.cart td.subtotal .discount {
+.cart td.subtotal .discount, .cart td.subtotal .discount-additional-info {
     font-style: italic;
     color: #4ab2f1;
 }
@@ -488,6 +496,9 @@ label, label + * {
 }
 .bar-notification.error {
 	background-color: #e4444c;
+}
+.bar-notification.warning {
+	background-color: #f39c12;
 }
 .bar-notification .content {
 	margin: 0 0 0 10px;
@@ -600,7 +611,6 @@ label, label + * {
 	display: none !important;
 }
 .ui-dialog-content {
-	height: auto !important;
 	padding: 15px;
 	line-height: 20px;
 	/*override jQuery UI styles, do not delete doubled properties*/
@@ -985,7 +995,7 @@ label, label + * {
 	display: inline-block;
 	overflow: hidden; 
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	float: right;
 	width: 180px;
 	height: 36px;
@@ -1464,6 +1474,9 @@ label, label + * {
 .item-box .product-title a:hover {
 	color: #248ece;
 }
+.item-box .sku {
+    margin: 0 0 15px;
+}
 .item-box .product-rating-box {
     display: inline-block;
 	margin: 0 0 10px;
@@ -1722,13 +1735,14 @@ label, label + * {
 	overflow: hidden;
 	font-size: 0;
 }
-.gallery .picture-thumbs a {
+.gallery .picture-thumbs .thumb-item {
 	display: inline-block;
 	position: relative;
 	width: 100px;
 	height: 100px;
 	margin: 0 5px 10px;
 	overflow: hidden;
+    cursor: pointer;
 }
 
 .overview {
@@ -2143,6 +2157,12 @@ label, label + * {
 	color: #444;
 }
 
+.attributes .qty-box input{
+	width: 48px;
+    height: 32px;
+    text-align: center;
+}
+
 .ui-datepicker {
 	width: 280px;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
@@ -2242,36 +2262,36 @@ label, label + * {
 	color: #4ab2f1 !important;
 }
 
-.color-squares {
+.attribute-squares {
 	font-size: 0;
 }
-.color-squares li {
+.attribute-squares li {
 	display: inline-block;
 	margin: 0 5px 5px;
 	text-align: center;
 }
-.color-squares .color-container {
+.attribute-squares .attribute-square-container {
     display: block;
     position: relative;
     z-index: 0;
 	padding: 1px;
 }
-.color-squares label {
+.attribute-squares label {
 	display: block;
 	margin: 0 !important;
     overflow: hidden;
 }
-.color-squares .color {
+.attribute-squares .attribute-square {
     display: table !important;
     width: 32px !important;
     height: 32px !important;
     border: 1px solid #444 !important;
     cursor: pointer;
 }
-.color-squares .selected-value .color-container {
+.attribute-squares .selected-value .attribute-square-container {
 	background-color: #4ab2f1;
 }
-.color-squares li input {
+.attribute-squares li input {
 	position: relative;
 	z-index: -1;
 	margin: -32px 0 0;
@@ -2308,7 +2328,7 @@ label, label + * {
     border-right: 6px solid transparent;
     border-left: 6px solid transparent;
 }
-.color-squares li:hover .tooltip-container {
+.attribute-squares li:hover .tooltip-container {
     visibility: visible;
     margin-right: -83px;
     margin-top: 5px;
@@ -2462,6 +2482,17 @@ label, label + * {
 	margin: 0 0 15px;
 	line-height: 22px;
 	color: #444;
+}
+.product-review-item .reply {
+	margin: 15px 0;
+    border-top: 1px solid #ddd;
+}
+.product-review-item .reply-header {
+	margin: 15px 0;
+    font-weight: bold;
+}
+.product-review-item .reply-text {
+	line-height: 22px;
 }
 .product-review-item .review-info {
 	margin: 0 0 5px;
@@ -2770,6 +2801,19 @@ label, label + * {
 	color: #4ab2f1;
 }
 
+.apply-vendor-page .accept-terms-of-service {
+    margin: 0 0 20px;
+    text-align: center;
+}
+.apply-vendor-page .accept-terms-of-service > * {
+    display: inline-block;
+    line-height: 32px;
+}
+.apply-vendor-page .accept-terms-of-service span,
+.apply-vendor-page .accept-terms-of-service a {
+    color: #4ab2f1;
+    cursor: pointer;
+}
 
 /********** REGISTRATION, LOGIN, ACCOUNT PAGES  **********/
 
@@ -2787,6 +2831,9 @@ label, label + * {
 	margin: 0 5px;
 	line-height: 32px;
 }
+.date-of-birth .date-picker-wrapper {
+    display: inline;
+} 
 .date-of-birth select {
 	width: 31%; /*always single line*/
 	max-width: 126px;
@@ -2814,7 +2861,8 @@ label, label + * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span {
+.accept-privacy-policy span,
+.accept-privacy-policy a {
 	color: #4ab2f1;
 	cursor: pointer;
 }
@@ -2841,6 +2889,15 @@ label, label + * {
 .return-request-page .button-1:hover {
 	background-color: #248ece;
 }
+.return-request-page h1 a {
+    color: #4ab2f1;
+}
+.return-request-page .return-request-file {
+    font-size: 14px;
+}
+.return-request-page .return-request-file .uploadedfileinput {
+    display: inline-block;
+}
 .registration-page .message-error,
 .login-page .message-error,
 .account-page .message-error {
@@ -2853,15 +2910,22 @@ label, label + * {
 	font-size: 16px;
 	color: #4cb17c;
 }
+.customer-info-page .email-to-revalidate,
+.customer-info-page .readonly-username,
 .customer-info-page .vat-status {
     margin: 0 5px;
     font-size: 14px;
 }
+.customer-info-page .vat-status {
+    display: block;
+}
 .registration-page .vat-note,
-.customer-info-page .vat-note {
+.customer-info-page .vat-note,
+.customer-info-page .email-to-revalidate-note {
     display: block;
     font-size: 14px;
-    margin-top: 5px;
+    margin-top: 7px;
+    white-space: normal;
 }
 
 .login-page .customer-blocks {
@@ -2926,6 +2990,11 @@ label, label + * {
 	margin: 0 0 50px;
 	overflow: hidden;
 	text-align: center;
+}
+.external-authentication .title {
+	margin: 0 0 15px;
+	font-size: 20px;
+	color: #444;
 }
 .external-authentication .buttons {
     margin: 0 0 30px;
@@ -3004,6 +3073,9 @@ label, label + * {
 .delete-address-button,
 .cancel-recurring-order-button {
 	background: url('../images/remove.png') right center no-repeat;
+}
+.retry-recurring-order-button {
+	background: url('../images/retry.png') right center no-repeat;
 }
 .return-items-button {
 	background: url('../images/return.png') right center no-repeat;
@@ -3268,7 +3340,7 @@ label, label + * {
 	padding: 8px 10px;
 	font-size: 14px; /*reset zeroing*/
 }
-.checkout-attributes .color-squares li {
+.checkout-attributes .attribute-squares li {
      border: none;
      padding: 0;
      line-height: 0;
@@ -3671,24 +3743,20 @@ label, label + * {
 .order-review-data .title,
 .order-details-area .title,
 .shipment-details-area .title {
-	margin: 20px 0 5px;
+	margin: 0 0 5px;
 	padding: 0;
 	font-size: 16px;
 	font-weight: bold;
 }
-.order-review-data .title:first-child,
-.order-details-area .title:first-child,
-.shipment-details-area .title:first-child {
-	margin-top: 0;
-}
 .order-review-data .title strong,
 .order-details-area .title strong,
-.shipment-details-area .title strong{
+.shipment-details-area .title strong {
     font-weight: 700;
 }
-.order-review-data .side-list-wrap,
-.order-details-area .side-list-wrap,
-.shipment-details-area .side-list-wrap {
+.order-review-data .payment-method-info,
+.order-review-data .shipping-method-info,
+.order-details-area .payment-method-info,
+.order-details-area .shipping-method-info {
     margin-top: 20px;
 }
 .order-completed .details {
@@ -4741,12 +4809,12 @@ label, label + * {
 	font-size: 14px; /*reset zeroing*/
 	white-space: normal;
 }
-.forum-edit-page .toolbar,
-.private-message-send-page .toolbar {
-	max-width: 400px;
-	margin: 20px auto;
-	background-color: #ddd;
-	padding: 10px;
+.forum-edit-page .bb-code-editor-wrapper,
+.private-message-send-page .bb-code-editor-wrapper {
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #ddd;
+    padding: 10px;
 }
 .forum-edit-page .toolbar .button,
 .private-message-send-page .toolbar .button {
@@ -5267,7 +5335,7 @@ pre {
 .footer-block {
 	width: 85%;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 240px;
 }
 
@@ -5322,7 +5390,7 @@ pre {
     margin: 0 0 15px;
 }
 .item-box .prices {
-    height: 40px;
+    min-height: 40px;
 }
 .item-box .product-title {
     min-height: 42px;
@@ -6051,9 +6119,11 @@ pre {
 	text-align: left;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select {
-	min-height: 40px;
+    min-height: 40px;
 }
 .inputs .option-list li {
 	margin: 0 0 0 10px;
@@ -6383,7 +6453,7 @@ pre {
 .newsletter-email {
 	display: block;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 200px;
 }
 .newsletter-email .newsletter-subscribe-button {
@@ -6511,8 +6581,8 @@ pre {
 	width: 160px;
 	text-align: right;
 }
-.color-squares li {
-	margin: 0 0 0 10px 10px;
+.attribute-squares li {
+	margin: 0 0 10px 10px;
 }
 .product-details-page .title {
 	text-align: right;
@@ -6596,8 +6666,9 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 300px;
+    width: 300px;
 }
 
 .address-list-page .section,
@@ -6617,6 +6688,17 @@ pre {
 .avatar-page .message-error,
 .avatar-page .buttons {
 	text-align: right;
+}
+
+.registration-page .vat-note {
+    margin-right: 275px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-right: 150px;
+}
+.customer-info-page .vat-status {
+    display: inline-block;
 }
 
 
@@ -6761,12 +6843,12 @@ pre {
 	width: 600px;
 	height: 250px;
 }
-.private-message-send-page .toolbar {
-	display: inline-block;
-	width: 400px;
-	margin: 10px 0;
-	vertical-align: middle;
-}
+    .private-message-send-page .bb-code-editor-wrapper {
+        display: inline-block;
+        width: 400px;
+        margin: 10px 0;
+        vertical-align: middle;
+    }
 
 }
 
@@ -6842,8 +6924,16 @@ pre {
 
 
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 360px;
+    width: 360px;
+}
+.registration-page .vat-note {
+    margin-right: 385px;
+}
+.customer-info-page .vat-note, 
+.customer-info-page .email-to-revalidate-note {
+    margin-right: 225px;
 }
 
 

@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        private ICacheManager _cacheManager;
+        private IStaticCacheManager _cacheManager;
         private IRepository<ActivityLog> _activityLogRepository;
         private IRepository<ActivityLogType> _activityLogTypeRepository;
         private IWorkContext _workContext;
@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Logging
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType1,
+                ActivityLogType = _activityType2,
                 CustomerId = _customer2.Id,
                 Customer = _customer2
             };

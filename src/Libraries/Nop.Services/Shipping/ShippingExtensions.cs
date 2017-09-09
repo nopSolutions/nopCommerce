@@ -11,10 +11,10 @@ namespace Nop.Services.Shipping
             ShippingSettings shippingSettings)
         {
             if (srcm == null)
-                throw new ArgumentNullException("srcm");
+                throw new ArgumentNullException(nameof(srcm));
 
             if (shippingSettings == null)
-                throw new ArgumentNullException("shippingSettings");
+                throw new ArgumentNullException(nameof(shippingSettings));
 
             if (shippingSettings.ActiveShippingRateComputationMethodSystemNames == null)
                 return false;
@@ -27,10 +27,10 @@ namespace Nop.Services.Shipping
         public static bool IsPickupPointProviderActive(this IPickupPointProvider pickupPointProvider, ShippingSettings shippingSettings)
         {
             if (pickupPointProvider == null)
-                throw new ArgumentNullException("pickupPointProvider");
+                throw new ArgumentNullException(nameof(pickupPointProvider));
 
             if (shippingSettings == null)
-                throw new ArgumentNullException("shippingSettings");
+                throw new ArgumentNullException(nameof(shippingSettings));
 
             if (shippingSettings.ActivePickupPointProviderSystemNames == null)
                 return false;
@@ -46,7 +46,7 @@ namespace Nop.Services.Shipping
             int countryId)
         {
             if (shippingMethod == null)
-                throw new ArgumentNullException("shippingMethod");
+                throw new ArgumentNullException(nameof(shippingMethod));
 
             bool result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
             return result;

@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "";
+    Html.AddCssFileParts("~/Plugins/ExternalAuth.Facebook/Content/facebookstyles.css");    
+}
+<div class="facebook-login-block">
+    <div class="buttons">
+        <a asp-controller="facebookauthentication" asp-action="login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" class="facebook-btn"></a>
+    </div>
+</div>

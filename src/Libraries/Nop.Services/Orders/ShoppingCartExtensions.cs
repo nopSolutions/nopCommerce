@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Orders
@@ -83,7 +84,7 @@ namespace Nop.Services.Orders
                 var product= sci.Product;
                 if (product == null)
                 {
-                    throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
+                    throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");
                 }
 
                 if (product.IsRecurring)
@@ -132,8 +133,9 @@ namespace Nop.Services.Orders
 
         public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, int storeId)
         {
-            //simply replace the following code with "return cart"
-            //if you want to share shopping carts between stores
+            var shoppingCartSettings = EngineContext.Current.Resolve<ShoppingCartSettings>();
+            if (shoppingCartSettings.CartsSharedBetweenStores)
+                return cart;
 
             return cart.Where(x => x.StoreId == storeId);
         }

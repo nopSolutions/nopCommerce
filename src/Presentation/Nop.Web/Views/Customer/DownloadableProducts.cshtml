@@ -1,7 +1,6 @@
 ﻿@model CustomerDownloadableProductsModel
-@using Nop.Web.Models.Customer;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
@@ -11,7 +10,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
 <div class="page account-page downloadable-products-page">
     <div class="page-title">
@@ -50,7 +49,7 @@
                             var item = Model.Items[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="order">
-                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
+                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.CustomOrderNumber</a>
                                 </td>
                                 <td class="date">
                                     @item.CreatedOn.ToString("d")

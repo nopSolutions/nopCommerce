@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Tax
         public TaxBasedOn TaxBasedOn { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use pickup point address (when pickup point is chosen) for tax calculation
+        /// </summary>
+        public bool TaxBasedOnPickupPointAddress { get; set; }
+
+        /// <summary>
         /// Tax display type
         /// </summary>
         public TaxDisplayType TaxDisplayType { get; set; }
@@ -59,6 +64,11 @@ namespace Nop.Core.Domain.Tax
         /// Gets or sets a value indicating whether we should always exclude tax from order subtotal (no matter of selected tax dispay type)
         /// </summary>
         public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets a default tax category identifier for products
+        /// </summary>
+        public int DefaultTaxCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether shipping price is taxable

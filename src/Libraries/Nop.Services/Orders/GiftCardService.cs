@@ -46,7 +46,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
-                throw new ArgumentNullException("giftCard");
+                throw new ArgumentNullException(nameof(giftCard));
 
             _giftCardRepository.Delete(giftCard);
 
@@ -114,7 +114,7 @@ namespace Nop.Services.Orders
         public virtual void InsertGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
-                throw new ArgumentNullException("giftCard");
+                throw new ArgumentNullException(nameof(giftCard));
 
             _giftCardRepository.Insert(giftCard);
 
@@ -129,7 +129,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateGiftCard(GiftCard giftCard)
         {
             if (giftCard == null)
-                throw new ArgumentNullException("giftCard");
+                throw new ArgumentNullException(nameof(giftCard));
 
             _giftCardRepository.Update(giftCard);
 

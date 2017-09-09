@@ -1,7 +1,6 @@
 ﻿@model ContactUsModel
-@using Nop.Web.Models.Common;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.ContactUs").Text);
@@ -13,8 +12,8 @@
         <h1>@T("PageTitle.ContactUs")</h1>
     </div>
     <div class="page-body">
-        @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
-        @Html.Widget("contactus_top")
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_top" })
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -23,47 +22,41 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                var validationSummary = Html.ValidationSummary(true);
-                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                {
-                    <div class="message-error">@validationSummary</div> 
-                }
+            <form asp-route="ContactUs" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.FullName)
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.FullName)
+                            <label asp-for="FullName" asp-postfix=":"></label>
+                            <input asp-for="FullName" placeholder="@T("ContactUs.FullName.Hint")" class="fullname" />
+                            <nop-required />
+                            <span asp-validation-for="FullName"></span>
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Email)
+                            <label asp-for="Email" asp-postfix=":"></label>
+                            <input asp-for="Email" placeholder="@T("ContactUs.Email.Hint")" class="email"/>
+                            <nop-required />
+                            <span asp-validation-for="Email"></span>
                         </div>
                         @if (Model.SubjectEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Subject)
-                                @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactUs.Subject.Hint") })
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.Subject)
+                                <label asp-for="Subject" asp-postfix=":"></label>
+                                <input asp-for="Subject" placeholder="@T("ContactUs.Subject.Hint")" class="subject" />
+                                <nop-required />
+                                <span asp-validation-for="Subject"></span>
                             </div>
                         }
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Enquiry)
-                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Enquiry)
+                            <label asp-for="Enquiry" asp-postfix=":"></label>
+                            <textarea asp-for="Enquiry" placeholder="@T("ContactUs.Enquiry.Hint")" class="enquiry"></textarea>
+                            <nop-required />
+                            <span asp-validation-for="Enquiry"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                                <nop-captcha />
                             </div>
                         }
                     </div>
@@ -71,8 +64,8 @@
                 <div class="buttons">
                     <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
-            }
+            </form>
         }
-        @Html.Widget("contactus_bottom")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_bottom" })
     </div>
 </div>

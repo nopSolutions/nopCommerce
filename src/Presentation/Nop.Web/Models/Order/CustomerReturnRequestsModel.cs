@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Order
 {
@@ -26,6 +26,7 @@ namespace Nop.Web.Models.Order
             public string ReturnReason { get; set; }
             public string ReturnAction { get; set; }
             public string Comments { get; set; }
+            public Guid UploadedFileGuid { get; set; }
 
             public DateTime CreatedOn { get; set; }
         }

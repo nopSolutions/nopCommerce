@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
@@ -27,6 +27,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.OpeningHours")]
         public string OpeningHours { get; set; }
 
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
+
         public List<SelectListItem> AvailableStores { get; set; }
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Store")]
         public int StoreId { get; set; }
@@ -38,23 +41,24 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         public AddressModel()
         {
             AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
         }
-
-        public IList<SelectListItem> AvailableCountries { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Country")]
         public int? CountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
+
+        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
+        public int? StateProvinceId { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.City")]
-        [AllowHtml]
         public string City { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Address1")]
-        [AllowHtml]
         public string Address1 { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
-        [AllowHtml]
         public string ZipPostalCode { get; set; }
     }
 }

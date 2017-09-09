@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -22,13 +23,17 @@ namespace Nop.Services.Tests.Tax
     {
         private IAddressService _addressService;
         private IWorkContext _workContext;
+        private IStoreContext _storeContext;
         private TaxSettings _taxSettings;
         private IEventPublisher _eventPublisher;
         private ITaxService _taxService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private IStateProvinceService _stateProvinceService;
         private ILogger _logger;
+        private IWebHelper _webHelper;
         private CustomerSettings _customerSettings;
+        private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
 
         [SetUp]
@@ -38,6 +43,7 @@ namespace Nop.Services.Tests.Tax
             _taxSettings.DefaultTaxAddressId = 10;
 
             _workContext = null;
+            _storeContext = null;
 
             _addressService = MockRepository.GenerateMock<IAddressService>();
             //default tax address
@@ -50,13 +56,17 @@ namespace Nop.Services.Tests.Tax
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
             _logger = MockRepository.GenerateMock<ILogger>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
+
             _customerSettings = new CustomerSettings();
+            _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService, _logger
-                , _customerSettings, _addressSettings);
+            _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _stateProvinceService, _logger, _webHelper,
+                _customerSettings, _shippingSettings, _addressSettings);
         }
 
         [Test]
@@ -135,8 +145,7 @@ namespace Nop.Services.Tests.Tax
             var customer = new Customer();
             var product = new Product();
 
-            decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(1000);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out decimal taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1100);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
@@ -151,8 +160,7 @@ namespace Nop.Services.Tests.Tax
             //not taxable
             customer.IsTaxExempt = true;
 
-            decimal taxRate;
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out decimal taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
@@ -162,12 +170,9 @@ namespace Nop.Services.Tests.Tax
         public void Can_do_VAT_check()
         {
             //remove? this method requires Internet access
-
-            string name, address;
-            Exception exception;
-
+            
             VatNumberStatus vatNumberStatus1 = _taxService.DoVatCheck("GB", "523 2392 69",
-                out name, out address, out exception);
+                out string name, out string address, out Exception exception);
             vatNumberStatus1.ShouldEqual(VatNumberStatus.Valid);
             exception.ShouldBeNull();
 
@@ -181,10 +186,8 @@ namespace Nop.Services.Tests.Tax
         public void Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
         {
             _taxSettings.EuVatAssumeValid = true;
-            string name, address;
 
-            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00",
-                out name, out address);
+            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00", out string _, out string _);
             vatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
         }
     }

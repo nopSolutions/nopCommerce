@@ -23,7 +23,7 @@ namespace Nop.Services.Catalog
         public static IList<Category> SortCategoriesForTree(this IList<Category> source, int parentId = 0, bool ignoreCategoriesWithoutExistingParent = false)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             var result = new List<Category>();
 
@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
                 result = String.IsNullOrEmpty(result)
                     ? categoryName
-                    : string.Format("{0} {1} {2}", result, separator, categoryName);
+                    : $"{result} {separator} {categoryName}";
             }
 
             return result;
@@ -107,7 +107,7 @@ namespace Nop.Services.Catalog
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
                 result = String.IsNullOrEmpty(result)
                     ? categoryName
-                    : string.Format("{0} {1} {2}", result, separator, categoryName);
+                    : $"{result} {separator} {categoryName}";
             }
 
             return result;
@@ -129,7 +129,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var result = new List<Category>();
 
@@ -169,7 +169,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var result = new List<Category>();
 

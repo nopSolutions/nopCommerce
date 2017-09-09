@@ -42,8 +42,9 @@ namespace Nop.Services.Catalog
         private readonly IDbContext _dbContext;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IProductService _productService;
 
         #endregion
 
@@ -56,18 +57,20 @@ namespace Nop.Services.Catalog
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         /// <param name="eventPublisher">Event published</param>
-        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="productService">Product service</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IDataProvider dataProvider,
             IDbContext dbContext,
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
-            IEventPublisher eventPublisher)
+            IStaticCacheManager cacheManager,
+            IEventPublisher eventPublisher,
+            IProductService productService)
         {
             this._productTagRepository = productTagRepository;
             this._storeMappingRepository = storeMappingRepository;
@@ -77,6 +80,7 @@ namespace Nop.Services.Catalog
             this._catalogSettings = catalogSettings;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
+            this._productService = productService;
         }
 
         #endregion
@@ -168,7 +172,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Delete(productTag);
 
@@ -225,7 +229,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Insert(productTag);
 
@@ -243,7 +247,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductTag(ProductTag productTag)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Update(productTag);
 
@@ -269,6 +273,64 @@ namespace Nop.Services.Catalog
             return 0;
         }
 
+        /// <summary>
+        /// Update product tags
+        /// </summary>
+        /// <param name="product">Product for update</param>
+        /// <param name="productTags">Product tags</param>
+        public virtual void UpdateProductTags(Product product, string[] productTags)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            //product tags
+            var existingProductTags = product.ProductTags.ToList();
+            var productTagsToRemove = new List<ProductTag>();
+            foreach (var existingProductTag in existingProductTags)
+            {
+                var found = false;
+                foreach (var newProductTag in productTags)
+                {
+                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    productTagsToRemove.Add(existingProductTag);
+                }
+            }
+            foreach (var productTag in productTagsToRemove)
+            {
+                product.ProductTags.Remove(productTag);
+                _productService.UpdateProduct(product);
+            }
+            foreach (var productTagName in productTags)
+            {
+                ProductTag productTag;
+                var productTag2 = GetProductTagByName(productTagName);
+                if (productTag2 == null)
+                {
+                    //add new product tag
+                    productTag = new ProductTag
+                    {
+                        Name = productTagName
+                    };
+                    InsertProductTag(productTag);
+                }
+                else
+                {
+                    productTag = productTag2;
+                }
+                if (!product.ProductTagExists(productTag.Id))
+                {
+                    product.ProductTags.Add(productTag);
+                    _productService.UpdateProduct(product);
+                }
+            }
+        }
         #endregion
     }
 }

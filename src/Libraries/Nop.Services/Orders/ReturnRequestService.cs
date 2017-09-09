@@ -53,7 +53,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
         {
             if (returnRequest == null)
-                throw new ArgumentNullException("returnRequest");
+                throw new ArgumentNullException(nameof(returnRequest));
 
             _returnRequestRepository.Delete(returnRequest);
 
@@ -73,20 +73,23 @@ namespace Nop.Services.Orders
 
             return _returnRequestRepository.GetById(returnRequestId);
         }
-
+        
         /// <summary>
         /// Search return requests
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
-        /// <param name="customerId">Customer identifier; null to load all entries</param>
+        /// <param name="customerId">Customer identifier; 0 to load all entries</param>
         /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
+        /// <param name="customNumber">Custom number; null or empty to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-            int orderItemId = 0, ReturnRequestStatus? rs = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
+        public IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
+            int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null,  DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _returnRequestRepository.Table;
             if (storeId > 0)
@@ -100,6 +103,14 @@ namespace Nop.Services.Orders
             }
             if (orderItemId > 0)
                 query = query.Where(rr => rr.OrderItemId == orderItemId);
+
+            if(!string.IsNullOrEmpty(customNumber))
+                query = query.Where(rr => rr.CustomNumber == customNumber);
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(rr => createdFromUtc.Value <= rr.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(rr => createdToUtc.Value >= rr.CreatedOnUtc);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
 
@@ -116,7 +127,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Delete(returnRequestAction);
 
@@ -156,7 +167,7 @@ namespace Nop.Services.Orders
         public virtual void InsertReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Insert(returnRequestAction);
 
@@ -171,7 +182,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
         {
             if (returnRequestAction == null)
-                throw new ArgumentNullException("returnRequestAction");
+                throw new ArgumentNullException(nameof(returnRequestAction));
 
             _returnRequestActionRepository.Update(returnRequestAction);
 
@@ -183,13 +194,13 @@ namespace Nop.Services.Orders
         
 
         /// <summary>
-        /// Delete a return request reaspn
+        /// Delete a return request reason
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
         public virtual void DeleteReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Delete(returnRequestReason);
 
@@ -198,9 +209,9 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets all return request reaspns
+        /// Gets all return request reasons
         /// </summary>
-        /// <returns>Return request reaspns</returns>
+        /// <returns>Return request reasons</returns>
         public virtual IList<ReturnRequestReason> GetAllReturnRequestReasons()
         {
             var query = from rra in _returnRequestReasonRepository.Table
@@ -210,10 +221,10 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets a return request reaspn
+        /// Gets a return request reason
         /// </summary>
-        /// <param name="returnRequestReasonId">Return request reaspn identifier</param>
-        /// <returns>Return request reaspn</returns>
+        /// <param name="returnRequestReasonId">Return request reason identifier</param>
+        /// <returns>Return request reason</returns>
         public virtual ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId)
         {
             if (returnRequestReasonId == 0)
@@ -223,13 +234,13 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Inserts a return request reaspn
+        /// Inserts a return request reason
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         public virtual void InsertReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Insert(returnRequestReason);
 
@@ -238,13 +249,13 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Updates the  return request reaspn
+        /// Updates the  return request reason
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         public virtual void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason)
         {
             if (returnRequestReason == null)
-                throw new ArgumentNullException("returnRequestReason");
+                throw new ArgumentNullException(nameof(returnRequestReason));
 
             _returnRequestReasonRepository.Update(returnRequestReason);
 

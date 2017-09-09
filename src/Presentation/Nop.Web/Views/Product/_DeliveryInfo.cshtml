@@ -1,5 +1,4 @@
 ﻿@model ProductDetailsModel
-@using Nop.Web.Models.Catalog;
 @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery">

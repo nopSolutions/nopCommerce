@@ -1,0 +1,38 @@
+﻿@model ProductModel.ProductAttributeMappingModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="product-attribute-mapping-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-values">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")</nop-tab-header-item>
+                @if (Model.ConditionAllowed)
+                {
+                    <nop-tab-header-item asp-name="tab-condition">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")</nop-tab-header-item>
+                }
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Values", Model)</nop-tab-content-item>
+                @if (Model.ConditionAllowed)
+                {
+                    <nop-tab-content-item asp-name="tab-condition">@await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping.Condition", Model)</nop-tab-content-item>
+                }
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-mapping-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

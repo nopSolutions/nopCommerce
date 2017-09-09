@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
-using Nop.Plugin.Payments.PurchaseOrder.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -19,20 +18,27 @@ namespace Nop.Plugin.Payments.PurchaseOrder
     {
         #region Fields
 
-        private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
-        private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ISettingService _settingService;
+        private readonly IWebHelper _webHelper;
+        private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
 
         #endregion
 
         #region Ctor
 
-        public PurchaseOrderPaymentProcessor(PurchaseOrderPaymentSettings purchaseOrderPaymentSettings,
-            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
+        public PurchaseOrderPaymentProcessor(ILocalizationService localizationService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ISettingService settingService,
+            IWebHelper webHelper,
+            PurchaseOrderPaymentSettings purchaseOrderPaymentSettings)
         {
-            this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
-            this._settingService = settingService;
+            this._localizationService = localizationService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._settingService = settingService;
+            this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -46,9 +52,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Pending;
-            return result;
+            return new ProcessPaymentResult();
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
         public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
@@ -80,13 +84,12 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+            return this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
                 _purchaseOrderPaymentSettings.AdditionalFee, _purchaseOrderPaymentSettings.AdditionalFeePercentage);
-            return result;
         }
 
         /// <summary>
@@ -96,9 +99,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Capture payment result</returns>
         public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            var result = new CapturePaymentResult();
-            result.AddError("Capture method not supported");
-            return result;
+            return new CapturePaymentResult { Errors = new[] { "Capture method not supported" } };
         }
 
         /// <summary>
@@ -108,9 +109,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            var result = new RefundPaymentResult();
-            result.AddError("Refund method not supported");
-            return result;
+            return new RefundPaymentResult { Errors = new[] { "Refund method not supported" } };
         }
 
         /// <summary>
@@ -120,9 +119,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            var result = new VoidPaymentResult();
-            result.AddError("Void method not supported");
-            return result;
+            return new VoidPaymentResult { Errors = new[] { "Void method not supported" } };
         }
 
         /// <summary>
@@ -132,9 +129,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
+            return new ProcessPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
         /// <summary>
@@ -144,9 +139,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            var result = new CancelRecurringPaymentResult();
-            result.AddError("Recurring payment not supported");
-            return result;
+            return new CancelRecurringPaymentResult { Errors = new[] { "Recurring payment not supported" } };
         }
 
         /// <summary>
@@ -157,79 +150,91 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         public bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             //it's not a redirection payment method. So we always return false
             return false;
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = "Configure";
-            controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
+            return new List<string>();
         }
 
         /// <summary>
-        /// Gets a route for payment info
+        /// Get payment information
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
         {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
-        }
-
-        public Type GetControllerType()
-        {
-            return typeof(PaymentPurchaseOrderController);
+            return new ProcessPaymentRequest
+            {
+                CustomValues = new Dictionary<string, object>
+                {
+                    [_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber")] = form["PurchaseOrderNumber"]
+                }
+            };
         }
 
         /// <summary>
-        /// Install plugin
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentPurchaseOrder/Configure";
+        }
+
+        /// <summary>
+        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// </summary>
+        /// <param name="viewComponentName">View component name</param>
+        public void GetPublicViewComponent(out string viewComponentName)
+        {
+            viewComponentName = "PaymentPurchaseOrder";
+        }
+
+        /// <summary>
+        /// Install the plugin
         /// </summary>
         public override void Install()
         {
             //settings
-            var settings = new PurchaseOrderPaymentSettings
-            {
-                AdditionalFee = 0,
-            };
-            _settingService.SaveSetting(settings);
-
+            _settingService.SaveSetting(new PurchaseOrderPaymentSettings());
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PaymentMethodDescription", "Pay by purchase order (PO) number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired", "Shippable product required");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 
             base.Install();
         }
 
+        /// <summary>
+        /// Uninstall the plugin
+        /// </summary>
         public override void Uninstall()
         {
             //settings
             _settingService.DeleteSetting<PurchaseOrderPaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PaymentMethodDescription");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint");
 
@@ -245,10 +250,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public bool SupportCapture
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -256,10 +258,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public bool SupportPartiallyRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -267,10 +266,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public bool SupportRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -278,10 +274,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public bool SupportVoid
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -289,10 +282,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public RecurringPaymentType RecurringPaymentType
         {
-            get
-            {
-                return RecurringPaymentType.NotSupported;
-            }
+            get { return RecurringPaymentType.NotSupported; }
         }
 
         /// <summary>
@@ -300,10 +290,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public PaymentMethodType PaymentMethodType
         {
-            get
-            {
-                return PaymentMethodType.Standard;
-            }
+            get { return PaymentMethodType.Standard; }
         }
 
         /// <summary>
@@ -311,13 +298,20 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public bool SkipPaymentInfo
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public string PaymentMethodDescription
+        {
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            get { return _localizationService.GetResource("Plugins.Payment.PurchaseOrder.PaymentMethodDescription"); }
         }
 
         #endregion
-        
+
     }
 }

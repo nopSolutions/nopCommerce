@@ -1,0 +1,30 @@
+﻿@model CountryModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="country-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Countries.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-states">@T("Admin.Configuration.Countries.States")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-states">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "country-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

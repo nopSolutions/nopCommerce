@@ -1,6 +1,0 @@
-﻿@model List<ExternalAuthenticationMethodModel>
-@using Nop.Web.Models.Customer;
-@foreach (var eam in Model)
-{
-    @Html.Action(eam.ActionName, eam.ControllerName, eam.RouteValues)
-}

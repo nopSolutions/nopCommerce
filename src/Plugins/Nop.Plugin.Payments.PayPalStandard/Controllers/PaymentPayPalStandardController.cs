@@ -1,37 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalStandard.Models;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
     public class PaymentPayPalStandardController : BasePaymentController
     {
+        #region Fields
+
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IPermissionService _permissionService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
         private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
+
+        #endregion
+
+        #region Ctor
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService, 
@@ -39,12 +53,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService, 
             IOrderService orderService, 
             IOrderProcessingService orderProcessingService,
+            IPermissionService permissionService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStoreContext storeContext,
             ILogger logger, 
             IWebHelper webHelper,
             PaymentSettings paymentSettings,
-            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
+            PayPalStandardPaymentSettings payPalStandardPaymentSettings,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._storeService = storeService;
@@ -52,59 +69,64 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._permissionService = permissionService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
             this._paymentSettings = paymentSettings;
             this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
-        
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure()
+
+        #endregion
+
+        #region Methods
+
+        [AuthorizeAdmin]
+        [Area("Admin")]
+        public IActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
-            var model = new ConfigurationModel();
-            model.UseSandbox = payPalStandardPaymentSettings.UseSandbox;
-            model.BusinessEmail = payPalStandardPaymentSettings.BusinessEmail;
-            model.PdtToken = payPalStandardPaymentSettings.PdtToken;
-            model.PdtValidateOrderTotal = payPalStandardPaymentSettings.PdtValidateOrderTotal;
-            model.AdditionalFee = payPalStandardPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage;
-            model.PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals;
-            model.EnableIpn = payPalStandardPaymentSettings.EnableIpn;
-            model.IpnUrl = payPalStandardPaymentSettings.IpnUrl;
-            model.AddressOverride = payPalStandardPaymentSettings.AddressOverride;
-            model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
-
-            model.ActiveStoreScopeConfiguration = storeScope;
+            var model = new ConfigurationModel
+            {
+                UseSandbox = payPalStandardPaymentSettings.UseSandbox,
+                BusinessEmail = payPalStandardPaymentSettings.BusinessEmail,
+                PdtToken = payPalStandardPaymentSettings.PdtToken,
+                PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals,
+                AdditionalFee = payPalStandardPaymentSettings.AdditionalFee,
+                AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage,
+                ActiveStoreScopeConfiguration = storeScope
+            };
             if (storeScope > 0)
             {
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.UseSandbox, storeScope);
                 model.BusinessEmail_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.BusinessEmail, storeScope);
                 model.PdtToken_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtToken, storeScope);
-                model.PdtValidateOrderTotal_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, storeScope);
+                model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
-                model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-                model.EnableIpn_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-                model.IpnUrl_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-                model.AddressOverride_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-                model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
-            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PayPalStandard/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
-        public ActionResult Configure(ConfigurationModel model)
+        [AuthorizeAdmin]
+        [AdminAntiForgery]
+        [Area("Admin")]
+        public IActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
                 return Configure();
 
@@ -116,14 +138,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.UseSandbox = model.UseSandbox;
             payPalStandardPaymentSettings.BusinessEmail = model.BusinessEmail;
             payPalStandardPaymentSettings.PdtToken = model.PdtToken;
-            payPalStandardPaymentSettings.PdtValidateOrderTotal = model.PdtValidateOrderTotal;
+            payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
             payPalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
             payPalStandardPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
-            payPalStandardPaymentSettings.EnableIpn = model.EnableIpn;
-            payPalStandardPaymentSettings.IpnUrl = model.IpnUrl;
-            payPalStandardPaymentSettings.AddressOverride = model.AddressOverride;
-            payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -131,14 +148,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.BusinessEmail, model.BusinessEmail_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtToken, model.PdtToken_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PdtValidateOrderTotal, model.PdtValidateOrderTotal_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFee, model.AdditionalFee_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, model.AdditionalFeePercentage_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, model.PassProductNamesAndTotals_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.EnableIpn, model.EnableIpn_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.IpnUrl, model.IpnUrl_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.AddressOverride, model.AddressOverride_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, storeScope, false);
             
             //now clear settings cache
             _settingService.ClearCache();
@@ -148,42 +160,33 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
+        //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
+        [AuthorizeAdmin]
+        [Area("Admin")]
+        public IActionResult RoundingWarning(bool passProductNamesAndTotals)
         {
-            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/PaymentInfo.cshtml");
-        }
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
 
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
+            //prices and total aren't rounded, so display warning
+            if (passProductNamesAndTotals && !_shoppingCartSettings.RoundPricesDuringCalculation)
+                return Json(new { Result = _localizationService.GetResource("Plugins.Payments.PayPalStandard.RoundingWarning") });
 
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            return paymentInfo;
+            return Json(new { Result = string.Empty });
         }
-
-        [ValidateInput(false)]
-        public ActionResult PDTHandler(FormCollection form)
+        
+        public IActionResult PDTHandler()
         {
             var tx = _webHelper.QueryString<string>("tx");
-            Dictionary<string, string> values;
-            string response;
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.GetPdtDetails(tx, out values, out response))
+            if (processor.GetPdtDetails(tx, out Dictionary<string, string> values, out string response))
             {
-                string orderNumber = string.Empty;
-                values.TryGetValue("custom", out orderNumber);
+                values.TryGetValue("custom", out string orderNumber);
                 Guid orderNumberGuid = Guid.Empty;
                 try
                 {
@@ -203,33 +206,23 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                         _logger.Error("PayPal PDT. Error getting mc_gross", exc);
                     }
 
-                    string payer_status = string.Empty;
-                    values.TryGetValue("payer_status", out payer_status);
-                    string payment_status = string.Empty;
-                    values.TryGetValue("payment_status", out payment_status);
-                    string pending_reason = string.Empty;
-                    values.TryGetValue("pending_reason", out pending_reason);
-                    string mc_currency = string.Empty;
-                    values.TryGetValue("mc_currency", out mc_currency);
-                    string txn_id = string.Empty;
-                    values.TryGetValue("txn_id", out txn_id);
-                    string payment_type = string.Empty;
-                    values.TryGetValue("payment_type", out payment_type);
-                    string payer_id = string.Empty;
-                    values.TryGetValue("payer_id", out payer_id);
-                    string receiver_id = string.Empty;
-                    values.TryGetValue("receiver_id", out receiver_id);
-                    string invoice = string.Empty;
-                    values.TryGetValue("invoice", out invoice);
-                    string payment_fee = string.Empty;
-                    values.TryGetValue("payment_fee", out payment_fee);
+                    values.TryGetValue("payer_status", out string payer_status);
+                    values.TryGetValue("payment_status", out string payment_status);
+                    values.TryGetValue("pending_reason", out string pending_reason);
+                    values.TryGetValue("mc_currency", out string mc_currency);
+                    values.TryGetValue("txn_id", out string txn_id);
+                    values.TryGetValue("payment_type", out string payment_type);
+                    values.TryGetValue("payer_id", out string payer_id);
+                    values.TryGetValue("receiver_id", out string receiver_id);
+                    values.TryGetValue("invoice", out string invoice);
+                    values.TryGetValue("payment_fee", out string payment_fee);
 
                     var sb = new StringBuilder();
-                    sb.AppendLine("Paypal PDT:");
+                    sb.AppendLine("PayPal PDT:");
                     sb.AppendLine("mc_gross: " + mc_gross);
                     sb.AppendLine("Payer status: " + payer_status);
                     sb.AppendLine("Payment status: " + payment_status);
-                    sb.AppendLine("Pending reason: " + pending_reason);
+                    sb.AppendLine("Pending reason: " + string.Empty);
                     sb.AppendLine("mc_currency: " + mc_currency);
                     sb.AppendLine("txn_id: " + txn_id);
                     sb.AppendLine("payment_type: " + payment_type);
@@ -238,7 +231,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine("invoice: " + invoice);
                     sb.AppendLine("payment_fee: " + payment_fee);
 
-                    var newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
+                    var newPaymentStatus = PayPalHelper.GetPaymentStatus(payment_status, string.Empty);
                     sb.AppendLine("New payment status: " + newPaymentStatus);
 
                     //order note
@@ -250,14 +243,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     });
                     _orderService.UpdateOrder(order);
 
-                    //load settings for a chosen store scope
-                    var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-                    var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
-
                     //validate order total
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                    var orderTotalSentToPayPal = order.GetAttribute<decimal?>(PayPalHelper.OrderTotalSentToPayPal);
+                    if (orderTotalSentToPayPal.HasValue && mc_gross != orderTotalSentToPayPal.Value)
                     {
-                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                        string errorStr =
+                            $"PayPal PDT. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                         //log
                         _logger.Error(errorStr);
                         //order note
@@ -271,6 +262,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
+                    //clear attribute
+                    if (orderTotalSentToPayPal.HasValue)
+                        _genericAttributeService.SaveAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal, null);
 
                     //mark order as paid
                     if (newPaymentStatus == PaymentStatus.Paid)
@@ -312,20 +306,23 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
         }
-
-        [ValidateInput(false)]
-        public ActionResult IPNHandler()
+        
+        public IActionResult IPNHandler()
         {
-            byte[] param = Request.BinaryRead(Request.ContentLength);
-            string strRequest = Encoding.ASCII.GetString(param);
-            Dictionary<string, string> values;
+            byte[] parameters;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                this.Request.Body.CopyTo(stream);
+                parameters = stream.ToArray();
+            }
+            string strRequest = Encoding.ASCII.GetString(parameters);
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.VerifyIpn(strRequest, out values))
+            if (processor.VerifyIpn(strRequest, out Dictionary<string, string> values))
             {
                 #region values
                 decimal mc_gross = decimal.Zero;
@@ -335,41 +332,29 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 }
                 catch { }
 
-                string payer_status = string.Empty;
-                values.TryGetValue("payer_status", out payer_status);
-                string payment_status = string.Empty;
-                values.TryGetValue("payment_status", out payment_status);
-                string pending_reason = string.Empty;
-                values.TryGetValue("pending_reason", out pending_reason);
-                string mc_currency = string.Empty;
-                values.TryGetValue("mc_currency", out mc_currency);
-                string txn_id = string.Empty;
-                values.TryGetValue("txn_id", out txn_id);
-                string txn_type = string.Empty;
-                values.TryGetValue("txn_type", out txn_type);
-                string rp_invoice_id = string.Empty;
-                values.TryGetValue("rp_invoice_id", out rp_invoice_id);
-                string payment_type = string.Empty;
-                values.TryGetValue("payment_type", out payment_type);
-                string payer_id = string.Empty;
-                values.TryGetValue("payer_id", out payer_id);
-                string receiver_id = string.Empty;
-                values.TryGetValue("receiver_id", out receiver_id);
-                string invoice = string.Empty;
-                values.TryGetValue("invoice", out invoice);
-                string payment_fee = string.Empty;
-                values.TryGetValue("payment_fee", out payment_fee);
+                values.TryGetValue("payer_status", out string payer_status);
+                values.TryGetValue("payment_status", out string payment_status);
+                values.TryGetValue("pending_reason", out string pending_reason);
+                values.TryGetValue("mc_currency", out string mc_currency);
+                values.TryGetValue("txn_id", out string txn_id);
+                values.TryGetValue("txn_type", out string txn_type);
+                values.TryGetValue("rp_invoice_id", out string rp_invoice_id);
+                values.TryGetValue("payment_type", out string payment_type);
+                values.TryGetValue("payer_id", out string payer_id);
+                values.TryGetValue("receiver_id", out string receiver_id);
+                values.TryGetValue("invoice", out string _);
+                values.TryGetValue("payment_fee", out string payment_fee);
 
                 #endregion
 
                 var sb = new StringBuilder();
-                sb.AppendLine("Paypal IPN:");
+                sb.AppendLine("PayPal IPN:");
                 foreach (KeyValuePair<string, string> kvp in values)
                 {
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);
                 }
 
-                var newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
+                var newPaymentStatus = PayPalHelper.GetPaymentStatus(payment_status, pending_reason);
                 sb.AppendLine("New payment status: " + newPaymentStatus);
 
                 switch (txn_type)
@@ -377,8 +362,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case "recurring_payment_profile_created":
                         //do nothing here
                         break;
+                    #region Recurring payment
                     case "recurring_payment":
-                        #region Recurring payment
                         {
                             Guid orderNumberGuid = Guid.Empty;
                             try
@@ -427,6 +412,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 }
                                             }
                                             break;
+                                        case PaymentStatus.Voided:
+                                            //failed payment
+                                            var failedPaymentResult = new ProcessPaymentResult
+                                            {
+                                                Errors = new[] {$"PayPal IPN. Recurring payment is {payment_status} ."},
+                                                RecurringPaymentFailed = true
+                                            };
+                                            _orderProcessingService.ProcessNextRecurringPayment(rp, failedPaymentResult);
+                                            break;
                                     }
                                 }
 
@@ -437,14 +431,26 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
                                 _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
                             }
-                        }
-                        #endregion
+                        }                       
                         break;
+                    case "recurring_payment_failed":
+                        if (Guid.TryParse(rp_invoice_id, out Guid orderGuid))
+                        {
+                            var initialOrder = _orderService.GetOrderByGuid(orderGuid);
+                            if (initialOrder != null)
+                            {
+                                var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: initialOrder.Id).FirstOrDefault();
+                                //failed payment
+                                if (recurringPayment != null)
+                                    _orderProcessingService.ProcessNextRecurringPayment(recurringPayment, new ProcessPaymentResult { Errors = new[] { txn_type }, RecurringPaymentFailed = true });
+                            }
+                        }
+                        break;
+                    #endregion
                     default:
                         #region Standard payment
                         {
-                            string orderNumber = string.Empty;
-                            values.TryGetValue("custom", out orderNumber);
+                            values.TryGetValue("custom", out string orderNumber);
                             Guid orderNumberGuid = Guid.Empty;
                             try
                             {
@@ -487,7 +493,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr =
+                                                    $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
@@ -518,7 +525,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr =
+                                                    $"PayPal IPN. Returned order total {mc_gross} doesn't equal order total {order.OrderTotal}. Order# {order.Id}.";
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
@@ -583,20 +591,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return Content("");
         }
 
-        public ActionResult CancelOrder(FormCollection form)
+        public IActionResult CancelOrder()
         {
-            if (_payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
-            {
-                var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                    customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
-                    .FirstOrDefault();
-                if (order != null)
-                {
-                    return RedirectToRoute("OrderDetails", new { orderId = order.Id });
-                }
-            }
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id, 
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            if (order != null)
+                return RedirectToRoute("OrderDetails", new { orderId = order.Id });
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToRoute("HomePage");
         }
+
+        #endregion
     }
 }

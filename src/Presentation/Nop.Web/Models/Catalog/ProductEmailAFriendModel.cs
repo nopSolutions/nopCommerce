@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Catalog;
 
 namespace Nop.Web.Models.Catalog
@@ -15,15 +15,13 @@ namespace Nop.Web.Models.Catalog
 
         public string ProductSeName { get; set; }
 
-        [AllowHtml]
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Products.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
 
-        [AllowHtml]
         [NopResourceDisplayName("Products.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
 
-        [AllowHtml]
         [NopResourceDisplayName("Products.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 

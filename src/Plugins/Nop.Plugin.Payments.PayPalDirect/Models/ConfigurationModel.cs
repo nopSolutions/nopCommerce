@@ -1,6 +1,6 @@
-﻿using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Models
 {
@@ -8,26 +8,29 @@ namespace Nop.Plugin.Payments.PayPalDirect.Models
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ClientId")]
+        public string ClientId { get; set; }
+        public bool ClientId_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ClientSecret")]
+        public string ClientSecret { get; set; }
+        public bool ClientSecret_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.WebhookId")]
+        public string WebhookId { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
         public bool UseSandbox_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.PassPurchasedItems")]
+        public bool PassPurchasedItems { get; set; }
+        public bool PassPurchasedItems_OverrideForStore { get; set; }
 
         public int TransactModeId { get; set; }
         public bool TransactModeId_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.TransactMode")]
         public SelectList TransactModeValues { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ApiAccountName")]
-        public string ApiAccountName { get; set; }
-        public bool ApiAccountName_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword")]
-        public string ApiAccountPassword { get; set; }
-        public bool ApiAccountPassword_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.Signature")]
-        public string Signature { get; set; }
-        public bool Signature_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }

@@ -44,7 +44,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteCategoryTemplate(CategoryTemplate categoryTemplate)
         {
             if (categoryTemplate == null)
-                throw new ArgumentNullException("categoryTemplate");
+                throw new ArgumentNullException(nameof(categoryTemplate));
 
             _categoryTemplateRepository.Delete(categoryTemplate);
 
@@ -59,7 +59,7 @@ namespace Nop.Services.Catalog
         public virtual IList<CategoryTemplate> GetAllCategoryTemplates()
         {
             var query = from pt in _categoryTemplateRepository.Table
-                        orderby pt.DisplayOrder
+                        orderby pt.DisplayOrder, pt.Id
                         select pt;
 
             var templates = query.ToList();
@@ -86,7 +86,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
         {
             if (categoryTemplate == null)
-                throw new ArgumentNullException("categoryTemplate");
+                throw new ArgumentNullException(nameof(categoryTemplate));
 
             _categoryTemplateRepository.Insert(categoryTemplate);
 
@@ -101,7 +101,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateCategoryTemplate(CategoryTemplate categoryTemplate)
         {
             if (categoryTemplate == null)
-                throw new ArgumentNullException("categoryTemplate");
+                throw new ArgumentNullException(nameof(categoryTemplate));
 
             _categoryTemplateRepository.Update(categoryTemplate);
 

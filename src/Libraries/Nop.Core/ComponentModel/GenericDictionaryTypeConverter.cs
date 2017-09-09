@@ -66,7 +66,7 @@ namespace Nop.Core.ComponentModel
                     if (keyValueStr.Length == 2)
                     {
                         object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
-                        object dictionaryValue = typeConverterKey.ConvertFromInvariantString(keyValueStr[1]);
+                        object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
                         if (dictionaryKey != null && dictionaryValue != null)
                         {
                             if (!result.ContainsKey((K)dictionaryKey))
@@ -100,7 +100,7 @@ namespace Nop.Core.ComponentModel
                     var dictionary = (IDictionary<K, V>)value;
                     foreach (var keyValue in dictionary)
                     {
-                        result += string.Format("{0}, {1}", Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture), Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture));
+                        result += $"{Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture)}, {Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture)}";
                         //don't add ; after the last element
                         if (counter != dictionary.Count - 1)
                             result += ";";

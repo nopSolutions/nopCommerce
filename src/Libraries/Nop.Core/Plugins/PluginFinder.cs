@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Plugins
 {
@@ -42,7 +43,7 @@ namespace Nop.Core.Plugins
         protected virtual bool CheckLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             switch (loadMode)
             {
@@ -67,7 +68,7 @@ namespace Nop.Core.Plugins
         protected virtual bool CheckGroup(PluginDescriptor pluginDescriptor, string group)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             if (String.IsNullOrEmpty(group))
                 return true;
@@ -88,7 +89,7 @@ namespace Nop.Core.Plugins
         public virtual bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId)
         {
             if (pluginDescriptor == null)
-                throw new ArgumentNullException("pluginDescriptor");
+                throw new ArgumentNullException(nameof(pluginDescriptor));
 
             //no validation required
             if (storeId == 0)
@@ -98,6 +99,25 @@ namespace Nop.Core.Plugins
                 return true;
 
             return pluginDescriptor.LimitedToStores.Contains(storeId);
+        }
+
+        /// <summary>
+        /// Check that plugin is available for the specified customer
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if authorized; otherwise, false</returns>
+        public virtual bool AuthorizedForUser(PluginDescriptor pluginDescriptor, Customer customer)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (customer == null || !pluginDescriptor.LimitedToCustomerRoles.Any())
+                return true;
+
+            var customerRoleIds = customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id);
+
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customerRoleIds).Any();
         }
 
         /// <summary>
@@ -114,29 +134,31 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
-            int storeId = 0, string group = null) where T : class, IPlugin
+        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            Customer customer = null, int storeId = 0, string group = null) where T : class, IPlugin
         {
-            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>());
+            return GetPluginDescriptors<T>(loadMode, customer, storeId, group).Select(p => p.Instance<T>());
         }
 
         /// <summary>
         /// Get plugin descriptors
         /// </summary>
         /// <param name="loadMode">Load plugins mode</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null)
+            Customer customer = null, int storeId = 0, string group = null)
         {
             //ensure plugins are loaded
             EnsurePluginsAreLoaded();
 
-            return _plugins.Where(p => CheckLoadMode(p, loadMode) && AuthenticateStore(p, storeId) && CheckGroup(p, group));
+            return _plugins.Where(p => CheckLoadMode(p, loadMode) && AuthorizedForUser(p, customer) && AuthenticateStore(p, storeId) && CheckGroup(p, group));
         }
 
         /// <summary>
@@ -144,14 +166,15 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null) 
+            Customer customer = null, int storeId = 0, string group = null) 
             where T : class, IPlugin
         {
-            return GetPluginDescriptors(loadMode, storeId, group)
+            return GetPluginDescriptors(loadMode, customer, storeId, group)
                 .Where(p => typeof(T).IsAssignableFrom(p.PluginType));
         }
 

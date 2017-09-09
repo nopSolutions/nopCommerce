@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.ShoppingCart
 {
@@ -21,7 +21,7 @@ namespace Nop.Web.Models.ShoppingCart
         public int? StateProvinceId { get; set; }
         [NopResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
-
+        
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
     }

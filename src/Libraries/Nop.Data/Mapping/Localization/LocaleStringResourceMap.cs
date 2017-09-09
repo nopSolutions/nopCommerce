@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Localization
 
 
             this.HasRequired(lsr => lsr.Language)
-                .WithMany(l => l.LocaleStringResources)
+                .WithMany()
                 .HasForeignKey(lsr => lsr.LanguageId);
         }
     }

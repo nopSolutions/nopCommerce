@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using System.Linq;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -8,22 +9,53 @@ namespace Nop.Web.Models.Catalog
         public TopMenuModel()
         {
             Categories = new List<CategorySimpleModel>();
-            Topics = new List<TopMenuTopicModel>();
+            Topics = new List<TopicModel>();
         }
 
         public IList<CategorySimpleModel> Categories { get; set; }
-        public IList<TopMenuTopicModel> Topics { get; set; }
+        public IList<TopicModel> Topics { get; set; }
 
         public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
         public bool ForumEnabled { get; set; }
 
-        #region Nested classes
+        public bool DisplayHomePageMenuItem { get; set; }
+        public bool DisplayNewProductsMenuItem { get; set; }
+        public bool DisplayProductSearchMenuItem { get; set; }
+        public bool DisplayCustomerInfoMenuItem { get; set; }
+        public bool DisplayBlogMenuItem { get; set; }
+        public bool DisplayForumsMenuItem { get; set; }
+        public bool DisplayContactUsMenuItem { get; set; }
 
-        public class TopMenuTopicModel : BaseNopEntityModel
+        public bool HasOnlyCategories
+        {
+            get
+            {
+                return Categories.Any()
+                       && !Topics.Any()
+                       && !DisplayHomePageMenuItem
+                       && !(DisplayNewProductsMenuItem && NewProductsEnabled)
+                       && !DisplayProductSearchMenuItem
+                       && !DisplayCustomerInfoMenuItem
+                       && !(DisplayBlogMenuItem && BlogEnabled)
+                       && !(DisplayForumsMenuItem && ForumEnabled)
+                       && !DisplayContactUsMenuItem;
+            }
+        }
+
+        #region Nested classes
+        
+        public class TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
+        }
+
+        public class CategoryLineModel : BaseNopModel
+        {
+            public int Level { get; set; }
+            public bool ResponsiveMobileMenu { get; set; }
+            public CategorySimpleModel Category { get; set; }
         }
 
         #endregion

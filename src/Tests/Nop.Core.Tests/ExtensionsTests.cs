@@ -1,4 +1,5 @@
-﻿using Nop.Tests;
+﻿using Nop.Core.Extensions;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests

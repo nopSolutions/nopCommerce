@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -19,10 +20,10 @@ namespace Nop.Core.Domain.Customers
             string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (String.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException("customerRoleSystemName");
+                throw new ArgumentNullException(nameof(customerRoleSystemName));
 
             var result = customer.CustomerRoles
                 .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
@@ -37,7 +38,7 @@ namespace Nop.Core.Domain.Customers
         public static bool IsSearchEngineAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
                 return false;
@@ -54,7 +55,7 @@ namespace Nop.Core.Domain.Customers
         public static bool IsBackgroundTaskAccount(this Customer customer)
         {
             if (customer == null)
-                throw new ArgumentNullException("customer");
+                throw new ArgumentNullException(nameof(customer));
 
             if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
                 return false;
@@ -116,6 +117,23 @@ namespace Nop.Core.Domain.Customers
         public static bool IsVendor(this Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a default tax display type (if configured)
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static TaxDisplayType? GetDefaultTaxDisplayType(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var roleWithOVerriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            if (roleWithOVerriddenTaxType == null)
+                return null;
+
+            return (TaxDisplayType)roleWithOVerriddenTaxType.DefaultTaxDisplayTypeId;
         }
         #endregion
 

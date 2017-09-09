@@ -1,10 +1,22 @@
-﻿using Nop.Core.Domain.Discounts;
+﻿using System;
+using Nop.Core.Domain.Discounts;
 using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Discounts
 {
+    public static class DiscountExtensions
+    {
+        public static decimal GetDiscountAmount(this Discount discount, decimal amount)
+        {
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            return discount.MapDiscount().GetDiscountAmount(amount);
+        }
+    }
+
     [TestFixture]
     public class DiscountExtensionsTests : ServiceTest
     {

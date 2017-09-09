@@ -7,7 +7,7 @@ namespace Nop.Services.Customers
     /// <summary>
     /// Represents a task for deleting guest customers
     /// </summary>
-    public partial class DeleteGuestsTask : ITask
+    public partial class DeleteGuestsTask : IScheduleTask
     {
         private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;

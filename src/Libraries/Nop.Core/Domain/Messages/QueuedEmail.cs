@@ -48,7 +48,7 @@ namespace Nop.Core.Domain.Messages
         public string CC { get; set; }
 
         /// <summary>
-        /// Gets or sets the Bcc
+        /// Gets or sets the BCC
         /// </summary>
         public string Bcc { get; set; }
 

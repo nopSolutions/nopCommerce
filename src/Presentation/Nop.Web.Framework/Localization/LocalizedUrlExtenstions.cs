@@ -1,177 +1,116 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Localization
 {
-
+    /// <summary>
+    /// Represents extensions for localized URLs
+    /// </summary>
     public static class LocalizedUrlExtenstions
     {
-        private static int _seoCodeLength = 2;
-        
         /// <summary>
-        /// Returns a value indicating whether nopCommerce is run in virtual directory
+        /// Get a value indicating whether URL is localized (contains SEO code)
         /// </summary>
-        /// <param name="applicationPath">Application path</param>
-        /// <returns>Result</returns>
-        private static bool IsVirtualDirectory(this string applicationPath)
+        /// <param name="url">URL</param>
+        /// <param name="pathBase">Application path base</param>
+        /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
+        /// <param name="language">Language whose SEO code is in the URL if URL is localized</param>
+        /// <returns>True if passed URL contains SEO code; otherwise false</returns>
+        public static bool IsLocalizedUrl(this string url, PathString pathBase, bool isRawPath, out Language language)
         {
-            if (string.IsNullOrEmpty(applicationPath))
-                throw new ArgumentException("Application path is not specified");
+            language = null;
+            if (string.IsNullOrEmpty(url))
+                return false;
 
-            return applicationPath != "/";
+            //remove application path from raw URL
+            if (isRawPath)
+                url = url.RemoveApplicationPathFromRawUrl(pathBase);
+
+            //get first segment of passed URL
+            var firstSegment = url.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
+            if (string.IsNullOrEmpty(firstSegment))
+                return false;
+
+            //suppose that the first segment is the language code and try to get language
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+            language = languageService.GetAllLanguages()
+                .FirstOrDefault(urlLanguage => urlLanguage.UniqueSeoCode.Equals(firstSegment, StringComparison.InvariantCultureIgnoreCase));
+
+            //if language exists and published passed URL is localized
+            return language?.Published ?? false;
         }
 
         /// <summary>
         /// Remove application path from raw URL
         /// </summary>
         /// <param name="rawUrl">Raw URL</param>
-        /// <param name="applicationPath">Application path</param>
+        /// <param name="pathBase">Application path base</param>
         /// <returns>Result</returns>
-        public static string RemoveApplicationPathFromRawUrl(this string rawUrl, string applicationPath)
+        public static string RemoveApplicationPathFromRawUrl(this string rawUrl, PathString pathBase)
         {
-            if (string.IsNullOrEmpty(applicationPath))
-                throw new ArgumentException("Application path is not specified");
-
-            if (rawUrl.Length == applicationPath.Length)
-                return "/";
-
-            
-            var result = rawUrl.Substring(applicationPath.Length);
-            //raw url always starts with '/'
-            if (!result.StartsWith("/"))
-                result = "/" + result;
-            return result;
-        }
-
-        /// <summary>
-        /// Get language SEO code from URL
-        /// </summary>
-        /// <param name="url">URL</param>
-        /// <param name="applicationPath">Application path</param>
-        /// <param name="isRawPath">A value indicating whether war URL is passed</param>
-        /// <returns>Result</returns>
-        public static string GetLanguageSeoCodeFromUrl(this string url, string applicationPath, bool isRawPath)
-        {
-            if (isRawPath)
-            {
-                if (applicationPath.IsVirtualDirectory())
-                {
-                    //we're in virtual directory. So remove its path
-                    url = url.RemoveApplicationPathFromRawUrl(applicationPath);
-                }
-
-                return url.Substring(1, _seoCodeLength);
-            }
-            
-            return url.Substring(2, _seoCodeLength);
-        }
-
-        /// <summary>
-        /// Get a value indicating whether URL is localized (contains SEO code)
-        /// </summary>
-        /// <param name="url">URL</param>
-        /// <param name="applicationPath">Application path</param>
-        /// <param name="isRawPath">A value indicating whether war URL is passed</param>
-        /// <returns>Result</returns>
-        public static bool IsLocalizedUrl(this string url, string applicationPath, bool isRawPath)
-        {
-            if (string.IsNullOrEmpty(url))
-                return false;
-            if (isRawPath)
-            {
-                if (applicationPath.IsVirtualDirectory())
-                {
-                    //we're in virtual directory. So remove its path
-                    url = url.RemoveApplicationPathFromRawUrl(applicationPath);
-                }
-
-                int length = url.Length;
-                //too short url
-                if (length < 1 + _seoCodeLength)
-                    return false;
-
-                //url like "/en"
-                if (length == 1 + _seoCodeLength)
-                    return true;
-
-                //urls like "/en/" or "/en/somethingelse"
-                return (length > 1 + _seoCodeLength) && (url[1 + _seoCodeLength] == '/');
-            }
-            else
-            {
-                int length = url.Length;
-                //too short url
-                if (length < 2 + _seoCodeLength)
-                    return false;
-
-                //url like "/en"
-                if (length == 2 + _seoCodeLength)
-                    return true;
-
-                //urls like "/en/" or "/en/somethingelse"
-                return (length > 2 + _seoCodeLength) && (url[2 + _seoCodeLength] == '/');
-            }
+            new PathString(rawUrl).StartsWithSegments(pathBase, out PathString result);
+            return WebUtility.UrlDecode(result);
         }
 
         /// <summary>
         /// Remove language SEO code from URL
         /// </summary>
         /// <param name="url">Raw URL</param>
-        /// <param name="applicationPath">Application path</param>
-        /// <returns>Result</returns>
-        public static string RemoveLanguageSeoCodeFromRawUrl(this string url, string applicationPath)
+        /// <param name="pathBase">Application path base</param>
+        /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
+        /// <returns>URL without language SEO code</returns>
+        public static string RemoveLanguageSeoCodeFromUrl(this string url, PathString pathBase, bool isRawPath)
         {
             if (string.IsNullOrEmpty(url))
                 return url;
 
-            string result = null;
-            if (applicationPath.IsVirtualDirectory())
-            {
-                //we're in virtual directory. So remove its path
-                url = url.RemoveApplicationPathFromRawUrl(applicationPath);
-            }
+            //remove application path from raw URL
+            if (isRawPath)
+                url = url.RemoveApplicationPathFromRawUrl(pathBase);
 
-            int length = url.Length;
-            if (length < _seoCodeLength + 1)    //too short url
-                result = url;
-            else if (length == 1 + _seoCodeLength)  //url like "/en"
-                result = url.Substring(0, 1);
-            else
-                result = url.Substring(_seoCodeLength + 1); //urls like "/en/" or "/en/somethingelse"
+            //get result URL
+            url = url.TrimStart('/');
+            var result = url.Contains('/') ? url.Substring(url.IndexOf('/')) : string.Empty;
 
-            if (applicationPath.IsVirtualDirectory())
-                result = applicationPath + result;  //add back applciation path
+            //and add back application path to raw URL
+            if (isRawPath)
+                result = pathBase + result;
+
             return result;
         }
 
         /// <summary>
-        /// Add language SEO code from URL
+        /// Add language SEO code to URL
         /// </summary>
         /// <param name="url">Raw URL</param>
-        /// <param name="applicationPath">Application path</param>
+        /// <param name="pathBase">Application path base</param>
+        /// <param name="isRawPath">A value indicating whether passed URL is raw URL</param>
         /// <param name="language">Language</param>
         /// <returns>Result</returns>
-        public static string AddLanguageSeoCodeToRawUrl(this string url, string applicationPath,
-            Language language)
+        public static string AddLanguageSeoCodeToUrl(this string url, PathString pathBase, bool isRawPath, Language language)
         {
             if (language == null)
-                throw new ArgumentNullException("language");
+                throw new ArgumentNullException(nameof(language));
 
             //null validation is not required
             //if (string.IsNullOrEmpty(url))
             //    return url;
 
+            //remove application path from raw URL
+            if (isRawPath && !string.IsNullOrEmpty(url))
+                url = url.RemoveApplicationPathFromRawUrl(pathBase);
 
-            int startIndex = 0;
-            if (applicationPath.IsVirtualDirectory())
-            {
-                //we're in virtual directory.
-                startIndex = applicationPath.Length;
-            }
+            //add language code
+            url = $"/{language.UniqueSeoCode}{url}";
 
-            //add SEO code
-            url = url.Insert(startIndex, language.UniqueSeoCode);
-            url = url.Insert(startIndex, "/");
+            //and add back application path to raw URL
+            if (isRawPath)
+                url = pathBase + url;
 
             return url;
         }

@@ -1,0 +1,27 @@
+﻿@{
+    //copied the code from \Content\tinymce\plugins\jbimages\ci\application\views\ajax_upload_result.php
+    Layout = "";
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>JustBoil's Result Page</title>
+    <script language="javascript" type="text/javascript">
+        window.parent.window.jbImagesDialog.uploadFinish({
+            filename: '@ViewData["filename"]',
+            result: '@ViewData["result"]',
+            resultCode: '@ViewData["resultCode"]'
+        });
+    </script>
+    <style type="text/css">
+        body {
+            font-family: Courier, "Courier New", monospace;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    Result
+</body>
+</html>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
 {
@@ -20,29 +20,24 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         public bool ZoneId_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.GoogleId")]
-        [AllowHtml]
         public string GoogleId { get; set; }
         public bool GoogleId_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.TrackingScript")]
-        [AllowHtml]
         //tracking code
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.TrackingScript")]
         public string TrackingScript { get; set; }
         public bool TrackingScript_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.EcommerceScript")]
-        [AllowHtml]
         public string EcommerceScript { get; set; }
         public bool EcommerceScript_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.EcommerceDetailScript")]
-        [AllowHtml]
         public string EcommerceDetailScript { get; set; }
         public bool EcommerceDetailScript_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.IncludingTax")]
         public bool IncludingTax { get; set; }
         public bool IncludingTax_OverrideForStore { get; set; }
-
     }
 }

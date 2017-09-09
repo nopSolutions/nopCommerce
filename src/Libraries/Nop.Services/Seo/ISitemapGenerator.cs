@@ -1,5 +1,4 @@
 using System.IO;
-using System.Web.Mvc;
 
 namespace Nop.Services.Seo
 {
@@ -9,20 +8,19 @@ namespace Nop.Services.Seo
     public partial interface ISitemapGenerator
     {
         /// <summary>
-        /// This will build an xml sitemap for better index with search engines.
+        /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
+        /// <param name="id">Sitemap identifier</param>
         /// <returns>Sitemap.xml as string</returns>
-        string Generate(UrlHelper urlHelper);
+        string Generate(int? id);
 
         /// <summary>
-        /// This will build an xml sitemap for better index with search engines.
+        /// This will build an XML sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
-        /// <param name="urlHelper">URL helper</param>
+        /// <param name="id">Sitemap identifier</param>
         /// <param name="stream">Stream of sitemap.</param>
-        void Generate(UrlHelper urlHelper, Stream stream);
-
+        void Generate(Stream stream, int? id);
     }
 }

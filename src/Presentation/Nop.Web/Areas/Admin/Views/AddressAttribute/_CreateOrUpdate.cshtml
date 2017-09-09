@@ -1,0 +1,30 @@
+﻿@model AddressAttributeModel
+@inject IEventPublisher eventPublisher
+
+<div class="content">
+    <div asp-validation-summary="All"></div>
+    <input asp-for="Id" type="hidden"/>
+
+    <div class="form-horizontal">
+        <nop-tabs id="addressattribute-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Address.AddressAttributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-values">@T("Admin.Address.AddressAttributes.Values")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "addressattribute-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

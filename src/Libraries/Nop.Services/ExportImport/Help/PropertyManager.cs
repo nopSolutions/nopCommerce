@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -21,8 +21,8 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="properties">All acsess properties</param>
-        public PropertyManager(PropertyByName<T>[] properties)
+        /// <param name="properties">All access properties</param>
+        public PropertyManager(IEnumerable<PropertyByName<T>> properties)
         {
             _properties = new Dictionary<string, PropertyByName<T>>();
 
@@ -36,12 +36,12 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Curent object to acsess
+        /// Current object to access
         /// </summary>
         public T CurrentObject { get; set; }
 
         /// <summary>
-        /// Return properti index
+        /// Return property index
         /// </summary>
         /// <param name="propertyName">Property name</param>
         /// <returns></returns>
@@ -71,10 +71,12 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Write object data to XLSX worksheet
         /// </summary>
-        /// <param name="worksheet">worksheet</param>
+        /// <param name="worksheet">Data worksheet</param>
         /// <param name="row">Row index</param>
+        /// <param name="exportImportUseDropdownlistsForAssociatedEntities">Indicating whether need create dropdown list for export</param>
         /// <param name="cellOffset">Cell offset</param>
-        public void WriteToXlsx(ExcelWorksheet worksheet, int row, int cellOffset = 0)
+        /// <param name="fWorksheet">Filters worksheet</param>
+        public void WriteToXlsx(ExcelWorksheet worksheet, int row, bool exportImportUseDropdownlistsForAssociatedEntities, int cellOffset = 0, ExcelWorksheet fWorksheet=null)
         {
             if (CurrentObject == null)
                 return;
@@ -91,15 +93,30 @@ namespace Nop.Services.ExportImport.Help
                         continue;
                     }
 
-                    var validator = cell.DataValidation.AddListDataValidation();
-
                     cell.Value = prop.GetItemText(prop.GetProperty(CurrentObject));
+
+                    if(!exportImportUseDropdownlistsForAssociatedEntities)
+                        continue;
+
+                    var validator = cell.DataValidation.AddListDataValidation();
+                    
                     validator.AllowBlank = prop.AllowBlank;
 
-                    foreach (var enumItem in dropDownElements)
+                    if(fWorksheet == null)
+                        continue;
+
+                    var fRow = 1;
+                    foreach (var dropDownElement in dropDownElements)
                     {
-                        validator.Formula.Values.Add(enumItem);
+                        var fCell = fWorksheet.Cells[fRow++, prop.PropertyOrderPosition];
+
+                        if (fCell.Value != null && fCell.Value.ToString() == dropDownElement)
+                            break;
+                        
+                        fCell.Value = dropDownElement;
                     }
+
+                    validator.Formula.ExcelFormula = $"{fWorksheet.Name}!{fWorksheet.Cells[1, prop.PropertyOrderPosition].Address}:{fWorksheet.Cells[dropDownElements.Length, prop.PropertyOrderPosition].Address}";
                 }
                 else
                 {
@@ -168,14 +185,14 @@ namespace Nop.Services.ExportImport.Help
             get { return _properties.Values.ToArray(); }
         }
 
-
+        
         public void SetSelectList(string propertyName, SelectList list)
         {
             var tempProperty = GetProperty(propertyName);
             if (tempProperty != null)
                 tempProperty.DropDownElements = list;
         }
-        
+
         public bool IsCaption
         {
             get { return _properties.Values.All(p => p.IsCaption); }

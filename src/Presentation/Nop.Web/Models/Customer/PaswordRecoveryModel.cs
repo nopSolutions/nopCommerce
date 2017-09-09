@@ -1,7 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Customer
     [Validator(typeof(PasswordRecoveryValidator))]
     public partial class PasswordRecoveryModel : BaseNopModel
     {
-        [AllowHtml]
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.PasswordRecovery.Email")]
         public string Email { get; set; }
 

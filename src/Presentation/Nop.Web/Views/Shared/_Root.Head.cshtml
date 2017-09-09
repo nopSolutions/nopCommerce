@@ -1,29 +1,34 @@
-﻿@using Nop.Core.Domain.Common;
+﻿@using Nop.Core.Domain
+@using StackExchange.Profiling
+@using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
-@using Nop.Core.Infrastructure;
+@using Nop.Services.Security
+@inject CommonSettings commonSettings
+@inject IPermissionService permissionService
+@inject SeoSettings seoSettings
+@inject StoreInformationSettings storeInformationSettings
 @{
-    var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-
-    Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
-    Html.AppendScriptParts("~/Scripts/public.common.js");
-    Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
+    Html.AppendScriptParts("~/js/public.ajaxcart.js");
+    Html.AppendScriptParts("~/js/public.common.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
 
     //X-UA-Compatible tag
-    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
     if (commonSettings.RenderXuaCompatible)
     {
-        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
-    //custom tag(s)
-    var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+    //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
     {
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
+
+    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
+        && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
 }
 <!DOCTYPE html>
 <html@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
@@ -36,18 +41,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     @Html.NopHeadCustom()
     @*This is used so that themes can inject content into the header*@
-    @Html.Partial("Head")
-    @Html.Widget("head_html_tag")
+    @await Html.PartialAsync("Head")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
-    @Html.Action("RssHeaderLink", "News")
-    @Html.Action("RssHeaderLink", "Blog")
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
     @*Favicon - upload favicon.ico file to the root directory*@
-    @Html.Action("Favicon", "Common")
+    @await Component.InvokeAsync("Favicon")
     @if (displayMiniProfiler)
     {
-        @StackExchange.Profiling.MiniProfiler.RenderIncludes()
+        <mini-profiler />
     }
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
 </head>

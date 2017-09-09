@@ -1,5 +1,4 @@
 ﻿@model CatalogPagingFilteringModel.SpecificationFilterModel
-@using Nop.Web.Models.Catalog;
 @{
     var notFilteredItemsGroups = Model.NotFilteredItems.GroupBy(x => x.SpecificationAttributeName);
     var alreadyFilteredItemsGroups = Model.AlreadyFilteredItems.GroupBy(x => x.SpecificationAttributeName);
@@ -32,9 +31,9 @@
                                         }
                                         else
                                         {
-                                            <div class="color-squares">
-                                                <span class="color-container" title="@spec.SpecificationAttributeOptionName">
-                                                    <span class="color" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                            <div class="attribute-squares color-squares">
+                                                <span class="attribute-square-container" title="@spec.SpecificationAttributeOptionName">
+                                                    <span class="attribute-square" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
                                                 </span>
                                             </div>
                                         }
@@ -55,10 +54,9 @@
                         @foreach (var group in alreadyFilteredItemsGroups)
                         {
                             <li class="item">
-                                <strong>@group.First().SpecificationAttributeName</strong>: 
+                                <strong>@group.First().SpecificationAttributeName</strong>:
                                 @group.ToList().Aggregate(string.Empty, (current, next) =>
-                                    string.Format("{0}{1}", string.IsNullOrEmpty(current) ? string.Empty 
-                                    : string.Format("{0} {1}", current, T("Filtering.SpecificationFilter.Separator")), next.SpecificationAttributeOptionName))
+                                    $"{(string.IsNullOrEmpty(current) ? string.Empty : $"{current} {T("Filtering.SpecificationFilter.Separator")}")}{next.SpecificationAttributeOptionName}")
                             </li>
                         }
                     </ul>

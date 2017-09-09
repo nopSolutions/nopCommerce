@@ -33,6 +33,11 @@ namespace Nop.Core.Domain.Vendors
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether vendors have to accept terms of service during registration
+        /// </summary>
+        public bool TermsOfServiceEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value that indicates whether it is possible to carry out advanced search in the store by vendor
         /// </summary>
         public bool AllowSearchByVendor { get; set; }
@@ -51,5 +56,10 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets a maximum number of products per vendor
         /// </summary>
         public int MaximumProductNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether vendors are allowed to import products
+        /// </summary>
+        public bool AllowVendorsToImportProducts { get; set; }
     }
 }

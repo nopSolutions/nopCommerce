@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
-using Nop.Admin.Models.Catalog;
-using Nop.Admin.Validators.Catalog;
+using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Areas.Admin.Validators.Catalog;
 using Nop.Web.MVC.Tests.Public.Validators;
 using NUnit.Framework;
 

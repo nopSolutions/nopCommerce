@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Infrastructure.Cache;
 
@@ -29,6 +29,7 @@ namespace Nop.Web.Models.Catalog
             this.AvailableSortOptions = new List<SelectListItem>();
             this.AvailableViewModes = new List<SelectListItem>();
             this.PageSizeOptions = new List<SelectListItem>();
+
             this.PriceRangeFilter = new PriceRangeFilterModel();
             this.SpecificationFilter = new SpecificationFilterModel();
         }
@@ -50,6 +51,7 @@ namespace Nop.Web.Models.Catalog
         /// A value indicating whether product sorting is allowed
         /// </summary>
         public bool AllowProductSorting { get; set; }
+
         /// <summary>
         /// Available sort options
         /// </summary>
@@ -334,7 +336,7 @@ namespace Nop.Web.Models.Catalog
                     url = webHelper.RemoveQueryString(url, exclude);
                 return url;
             }
-            
+
             /// <summary>
             /// Generate URL of already filtered items
             /// </summary>
@@ -345,7 +347,7 @@ namespace Nop.Web.Models.Catalog
                 if (optionIds == null)
                     return "";
 
-                string result = string.Join(",", optionIds);
+                string result = string.Join(",", optionIds.OrderBy(id => id));
                 return result;
             }
 
@@ -368,8 +370,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int specId;
-                    int.TryParse(spec.Trim(), out specId);
+                    int.TryParse(spec.Trim(), out int specId);
                     if (!result.Contains(specId))
                         result.Add(specId);
                 }
@@ -437,7 +438,7 @@ namespace Nop.Web.Models.Catalog
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<int> { x.SpecificationAttributeOptionId });
-                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
+                    var queryString = $"{QUERYSTRINGPARAM}={GenerateFilteredSpecQueryParam(alreadyFiltered.ToList())}";
                     var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
 
                     return new SpecificationFilterItem()

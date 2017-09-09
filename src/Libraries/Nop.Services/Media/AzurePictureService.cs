@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
@@ -25,7 +26,9 @@ namespace Nop.Services.Media
         private static CloudBlobClient blobClient = null;
         private static CloudBlobContainer container_thumb = null;
 
+        private readonly MediaSettings _mediaSettings;
         private readonly NopConfig _config;
+
         #endregion
 
         #region Ctor
@@ -39,7 +42,8 @@ namespace Nop.Services.Media
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             NopConfig config,
-            IDataProvider dataProvider)
+            IDataProvider dataProvider,
+            IHostingEnvironment hostingEnvironment)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
@@ -48,8 +52,10 @@ namespace Nop.Services.Media
                 dbContext,
                 eventPublisher,
                 mediaSettings,
-                dataProvider)
+                dataProvider,
+                hostingEnvironment)
         {
+            this._mediaSettings = mediaSettings;
             this._config = config;
 
             if (String.IsNullOrEmpty(_config.AzureBlobStorageConnectionString))
@@ -83,7 +89,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected override void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}", picture.Id.ToString("0000000"));
+            string filter = $"{picture.Id.ToString("0000000")}";
             var files = container_thumb.ListBlobs(prefix: filter, useFlatBlobListing: false);
             foreach (var ff in files)
             {
@@ -142,12 +148,21 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
+        /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected override void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
-            blockBlob.UploadFromByteArray(binary, 0, binary.Length);
+            
+            //set mime type
+            if (!String.IsNullOrEmpty(mimeType))
+                blockBlob.Properties.ContentType = mimeType;
 
+            //set cache control
+            if (!string.IsNullOrEmpty(_mediaSettings.AzureCacheControlHeader))
+                blockBlob.Properties.CacheControl = _mediaSettings.AzureCacheControlHeader;
+
+            blockBlob.UploadFromByteArray(binary, 0, binary.Length);
         }
 
         #endregion

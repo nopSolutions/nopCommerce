@@ -1,13 +1,10 @@
 ﻿@model ForumPostModel
 @using Nop.Core
-@using Nop.Core.Infrastructure
-@using Nop.Web.Models.Boards;
+@inject IWebHelper webHelper;
 @{
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
-@Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
-<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+<div class="topic-post" id="@Html.Encode($"post{Model.Id}")">
     <div class="post-info">
         <div class="user-info">
             @if (Model.AllowViewingProfiles)
@@ -97,7 +94,6 @@
         <div class="post-body">
             <div class="post-text">
                 @Html.Raw(Model.FormattedText)
-                @Html.Hidden("Id", Model.Id)
             </div>
             @if (Model.AllowPostVoting)
             {
@@ -139,7 +135,7 @@
                 });
                 </script>
 
-                <div class="post-vote" id="@String.Format("post-vote-{0}", Model.Id)">
+                <div class="post-vote" id="@($"post-vote-{Model.Id}")">
                     <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
                           title="This post/answer is useful"></span>
                     <div class="vote-count-post"> @Model.VoteCount </div>

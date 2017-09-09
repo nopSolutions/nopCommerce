@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -11,12 +14,31 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
 {
     public partial class HasOneProductDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
-        private readonly ISettingService _settingService;
+        #region Fields
 
-        public HasOneProductDiscountRequirementRule(ISettingService settingService)
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IDiscountService _discountService;
+        private readonly ISettingService _settingService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+
+        #endregion
+
+        #region Ctor
+
+        public HasOneProductDiscountRequirementRule(IActionContextAccessor actionContextAccessor,
+            IDiscountService discountService,
+            ISettingService settingService,
+            IUrlHelperFactory urlHelperFactory)
         {
+            this._actionContextAccessor = actionContextAccessor;
+            this._discountService = discountService;
             this._settingService = settingService;
+            this._urlHelperFactory = urlHelperFactory;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Check discount requirement
@@ -26,13 +48,14 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
         public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
-                throw new ArgumentNullException("request");
+                throw new ArgumentNullException(nameof(request));
 
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirementId));
-            if (String.IsNullOrWhiteSpace(restrictedProductIds))
+            //try to get saved restricted product identifiers
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format(DiscountRequirementDefaults.SettingsKey, request.DiscountRequirementId));
+            if (string.IsNullOrWhiteSpace(restrictedProductIds))
             {
                 //valid
                 result.IsValid = true;
@@ -48,10 +71,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //      {Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
             //3. The comma-separated list of product identifiers with quantity range.
             //      {Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-            var restrictedProducts = restrictedProductIds
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .ToList();
+            var restrictedProducts = restrictedProductIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
             if (!restrictedProducts.Any())
                 return result;
             
@@ -79,16 +99,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the third way (the quantity rage specified)
                             //{Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out int restrictedProductId))
                                 //parsing error; exit;
                                 return result;
-                            int quantityMin;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out int quantityMin))
                                 //parsing error; exit;
                                 return result;
-                            int quantityMax;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out int quantityMax))
                                 //parsing error; exit;
                                 return result;
 
@@ -102,12 +119,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the second way (the quantity specified)
                             //{Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out int restrictedProductId))
                                 //parsing error; exit;
                                 return result;
-                            int quantity;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out quantity))
+                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out int quantity))
                                 //parsing error; exit;
                                 return result;
 
@@ -121,8 +136,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedProductId;
-                        if (int.TryParse(restrictedProduct, out restrictedProductId))
+                        if (int.TryParse(restrictedProduct, out int restrictedProductId))
                         {
                             if (sci.ProductId == restrictedProductId)
                             {
@@ -157,13 +171,14 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
         /// <returns>URL</returns>
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
         {
-            //configured in RouteProvider.cs
-            string result = "Plugins/DiscountRulesHasOneProduct/Configure/?discountId=" + discountId;
-            if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
-            return result;
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            return urlHelper.Action("Configure", "DiscountRulesHasOneProduct",
+                new { discountId = discountId, discountRequirementId = discountRequirementId }).TrimStart('/');
         }
 
+        /// <summary>
+        /// Install the plugin
+        /// </summary>
         public override void Install()
         {
             //locales
@@ -171,17 +186,32 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew", "Add product");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose", "Choose");
+
             base.Install();
         }
 
+        /// <summary>
+        /// Uninstall the plugin
+        /// </summary>
         public override void Uninstall()
         {
+            //discount requirements
+            var discountRequirements = _discountService.GetAllDiscountRequirements()
+                .Where(discountRequirement => discountRequirement.DiscountRequirementRuleSystemName == DiscountRequirementDefaults.SystemName);
+            foreach (var discountRequirement in discountRequirements)
+            {
+                _discountService.DeleteDiscountRequirement(discountRequirement);
+            }
+
             //locales
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products");
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint");
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew");
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose");
+
             base.Uninstall();
         }
+
+        #endregion
     }
 }

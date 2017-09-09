@@ -24,7 +24,7 @@ namespace Nop.Data
                 case "sqlce":
                     return new SqlCeDataProvider();
                 default:
-                    throw new NopException(string.Format("Not supported dataprovider name: {0}", providerName));
+                    throw new NopException($"Not supported dataprovider name: {providerName}");
             }
         }
 

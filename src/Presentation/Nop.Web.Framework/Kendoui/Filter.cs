@@ -98,17 +98,17 @@ namespace Nop.Web.Framework.Kendoui
             //original code below (case sensitive) commented
             //if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
             //{
-            //    return String.Format("{0}.{1}(@{2})", Field, comparison, index);
+            //    return $"{Field}.{comparison}(@{index})";
             //}
 
             //we ignore case
             if (comparison == "Contains")
             {
-                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) >= 0", Field, index);
+                return $"{Field}.IndexOf(@{index}, System.StringComparison.InvariantCultureIgnoreCase) >= 0";
             }
             if (comparison == "DoesNotContain")
             {
-                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) < 0", Field, index);
+                return $"{Field}.IndexOf(@{index}, System.StringComparison.InvariantCultureIgnoreCase) < 0";
             }
             if (comparison == "=" && Value is String)
             {
@@ -118,10 +118,10 @@ namespace Nop.Web.Framework.Kendoui
             }
             if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Equals")
             {
-                return String.Format("{0}.{1}(@{2}, System.StringComparison.InvariantCultureIgnoreCase)", Field, comparison, index);
+                return $"{Field}.{comparison}(@{index}, System.StringComparison.InvariantCultureIgnoreCase)";
             }
 
-            return String.Format("{0} {1} @{2}", Field, comparison, index);
+            return $"{Field} {comparison} @{index}";
         }
     }
 }

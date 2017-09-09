@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -25,49 +25,56 @@ namespace Nop.Web.Models.Catalog
         /// Query string
         /// </summary>
         [NopResourceDisplayName("Search.SearchTerm")]
-        [AllowHtml]
         public string q { get; set; }
+
         /// <summary>
         /// Category ID
         /// </summary>
         [NopResourceDisplayName("Search.Category")]
         public int cid { get; set; }
+
         [NopResourceDisplayName("Search.IncludeSubCategories")]
         public bool isc { get; set; }
+
         /// <summary>
         /// Manufacturer ID
         /// </summary>
         [NopResourceDisplayName("Search.Manufacturer")]
         public int mid { get; set; }
+
         /// <summary>
         /// Vendor ID
         /// </summary>
         [NopResourceDisplayName("Search.Vendor")]
         public int vid { get; set; }
+
         /// <summary>
         /// Price - From 
         /// </summary>
-        [AllowHtml]
         public string pf { get; set; }
+
         /// <summary>
         /// Price - To
         /// </summary>
-        [AllowHtml]
         public string pt { get; set; }
+
         /// <summary>
         /// A value indicating whether to search in descriptions
         /// </summary>
         [NopResourceDisplayName("Search.SearchInDescriptions")]
         public bool sid { get; set; }
+
         /// <summary>
         /// A value indicating whether "advanced search" is enabled
         /// </summary>
         [NopResourceDisplayName("Search.AdvancedSearch")]
         public bool adv { get; set; }
+
         /// <summary>
         /// A value indicating whether "allow search by vendor" is enabled
         /// </summary>
         public bool asv { get; set; }
+
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }

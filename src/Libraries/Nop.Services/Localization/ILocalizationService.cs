@@ -84,7 +84,7 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false);
 
         /// <summary>
-        /// Export language resources to xml
+        /// Export language resources to XML
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
@@ -95,6 +95,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        void ImportResourcesFromXml(Language language, string xml);
+        /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
+        void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true);
     }
 }

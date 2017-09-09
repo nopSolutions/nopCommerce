@@ -7,14 +7,15 @@ namespace Nop.Services.Messages
     /// <summary>
     /// Represents a task for sending queued message 
     /// </summary>
-    public partial class QueuedMessagesSendTask : ITask
+    public partial class QueuedMessagesSendTask : IScheduleTask
     {
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
         public QueuedMessagesSendTask(IQueuedEmailService queuedEmailService,
-            IEmailSender emailSender, ILogger logger)
+            IEmailSender emailSender, 
+            ILogger logger)
         {
             this._queuedEmailService = queuedEmailService;
             this._emailSender = emailSender;
@@ -59,7 +60,7 @@ namespace Nop.Services.Messages
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    _logger.Error($"Error sending e-mail. {exc.Message}", exc);
                 }
                 finally
                 {

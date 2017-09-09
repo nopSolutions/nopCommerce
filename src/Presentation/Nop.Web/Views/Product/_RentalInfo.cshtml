@@ -1,19 +1,21 @@
 ﻿@model ProductDetailsModel
 @using System.Globalization
 @using Nop.Core.Domain.Catalog
-@using Nop.Core.Infrastructure
-@using Nop.Web.Models.Catalog
+@using Nop.Services.Helpers
+@inject CatalogSettings catalogSettings
+@inject IUserAgentHelper userAgentHelper
 @if (Model.IsRental)
 {
     <div class="attributes rental-attributes">
         @{
-            string startDateControlId = string.Format("rental_start_date_{0}", Model.Id);
-            string endDateControlId = string.Format("rental_end_date_{0}", Model.Id);
+            string startDateControlId = $"rental_start_date_{Model.Id}";
+            string endDateControlId = $"rental_end_date_{Model.Id}";
             //currenly we support only this format
             //java-script format
             const string datePickerFormat = "mm/dd/yy";
             //C# format for ToString method
             const string datePickerFormat2 = "MM/dd/yyyy";
+            bool isMobileDevice = userAgentHelper.IsMobileDevice();
             <div class="attribute-item">
                 <div class="attribute-label">
                     <label class="text-prompt">
@@ -22,7 +24,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
@@ -38,7 +40,7 @@
                     <span class="required">*</span>
                 </div>
                 <div class="attribute-data">
-                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(Request.Browser.IsMobileDevice){<text>readonly</text>}/>
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
                     <script>
                         $(document).ready(function () {
                             $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
@@ -53,7 +55,7 @@
                 @{
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
                     var productId = Model.Id;
-                    if (EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange)
+                    if (catalogSettings.AjaxProcessAttributeChange)
                     {
                         <text>
                         $.ajax({

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
@@ -20,6 +20,8 @@ namespace Nop.Web.Models.Catalog
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         public string SeName { get; set; }
+
+        public string Sku { get; set; }
 
         public ProductType ProductType { get; set; }
 

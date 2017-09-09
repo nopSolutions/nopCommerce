@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.PurchaseOrder.Models.PaymentInfoModel
+<table width="100%" cellspacing="2" cellpadding="1" border="0">
+    <tr>
+        <td width="100px">
+            <label asp-for="PurchaseOrderNumber">@T("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber"):</label>
+        </td>
+        <td>
+            <input type="text" asp-for="PurchaseOrderNumber" style="width:165px;" autocomplete="off" />
+            <span asp-validation-for="PurchaseOrderNumber"></span>
+        </td>
+    </tr>
+</table>

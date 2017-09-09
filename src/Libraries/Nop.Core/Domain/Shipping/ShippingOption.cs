@@ -65,7 +65,7 @@ namespace Nop.Core.Domain.Shipping
                     }
                     catch
                     {
-                        //xml error
+                        //XML error
                     }
                 }
                 return shippingOption;
@@ -128,7 +128,7 @@ namespace Nop.Core.Domain.Shipping
                     }
                     catch
                     {
-                        //xml error
+                        //XML error
                     }
                 }
                 return shippingOptions;

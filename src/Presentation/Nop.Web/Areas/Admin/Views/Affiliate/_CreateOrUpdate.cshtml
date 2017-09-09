@@ -1,0 +1,38 @@
+﻿@model AffiliateModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden"/>
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="affiliate-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Affiliates.Info")</nop-tab-header-item>
+                @if (Model.Id > 0)
+                {
+                    <nop-tab-header-item asp-name="tab-customers">@T("Admin.Affiliates.Customers")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-orders">@T("Admin.Affiliates.Orders")</nop-tab-header-item>
+                }
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                @if (Model.Id > 0)
+                {
+                    <nop-tab-content-item asp-name="tab-customers">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-orders">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model.AffiliatedOrderList)</nop-tab-content-item>
+                }
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

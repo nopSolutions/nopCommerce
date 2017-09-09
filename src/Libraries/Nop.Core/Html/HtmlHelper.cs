@@ -1,7 +1,7 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace Nop.Core.Html
 {
@@ -89,7 +89,9 @@ namespace Nop.Core.Html
                     text = StripTags(text);
                 }
 
-                text = allowHtml ? EnsureOnlyAllowedHtml(text) : HttpUtility.HtmlEncode(text);
+
+                text = allowHtml ? EnsureOnlyAllowedHtml(text) : WebUtility.HtmlEncode(text);
+
 
                 if (convertPlainTextToHtml)
                 {
@@ -113,7 +115,7 @@ namespace Nop.Core.Html
             }
             catch (Exception exc)
             {
-                text = string.Format("Text cannot be formatted. Error: {0}", exc.Message);
+                text = $"Text cannot be formatted. Error: {exc.Message}";
             }
             return text;
         }
@@ -136,7 +138,7 @@ namespace Nop.Core.Html
         }
 
         /// <summary>
-        /// replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")
+        /// replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")
         /// </summary>
         /// <param name="text">Text</param>
         /// <returns>Text</returns>
@@ -167,22 +169,22 @@ namespace Nop.Core.Html
 
             return text;
         }
-        
+
         /// <summary>
         /// Converts HTML to plain text
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="decode">A value indicating whether to decode text</param>
-        /// <param name="replaceAnchorTags">A value indicating whether to replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")</param>
+        /// <param name="replaceAnchorTags">A value indicating whether to replace anchor text (remove a tag from the following URL <a href="http://example.com">Name</a> and output only the string "Name")</param>
         /// <returns>Formatted text</returns>
         public static string ConvertHtmlToPlainText(string text,
             bool decode = false, bool replaceAnchorTags = false)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
-
+            
             if (decode)
-                text = HttpUtility.HtmlDecode(text);
+                text = WebUtility.HtmlDecode(text);
 
             text = text.Replace("<br>", "\n");
             text = text.Replace("<br >", "\n");
@@ -222,6 +224,6 @@ namespace Nop.Core.Html
             }
             return builder.ToString();
         }
-        #endregion
+#endregion
     }
 }

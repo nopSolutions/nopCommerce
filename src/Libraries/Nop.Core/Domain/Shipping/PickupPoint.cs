@@ -40,6 +40,11 @@ namespace Nop.Core.Domain.Shipping
         public string City { get; set; }
 
         /// <summary>
+        /// Gets or sets a state abbreviation
+        /// </summary>
+        public string StateAbbreviation { get; set; }
+
+        /// <summary>
         /// Gets or sets a two-letter ISO country code
         /// </summary>
         public string CountryCode { get; set; }
@@ -65,9 +70,14 @@ namespace Nop.Core.Domain.Shipping
         public decimal PickupFee { get; set; }
 
         /// <summary>
-        /// Gets or sets an oppening hours
+        /// Gets or sets an opening hours
         /// </summary>
         public string OpeningHours { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 
     public class PickupPointTypeConverter : TypeConverter

@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.Stores
         public static string[] ParseHostValues(this Store store)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             var parsedValues = new List<string>();
             if (!String.IsNullOrEmpty(store.Hosts))
@@ -39,7 +39,7 @@ namespace Nop.Core.Domain.Stores
         public static bool ContainsHostValue(this Store store, string host)
         {
             if (store == null)
-                throw new ArgumentNullException("store");
+                throw new ArgumentNullException(nameof(store));
 
             if (String.IsNullOrEmpty(host))
                 return false;

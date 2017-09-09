@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Catalog
         public static int[] ParseRequiredProductIds(this Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (String.IsNullOrEmpty(product.RequiredProductIds))
                 return new int[0];
@@ -28,8 +28,7 @@ namespace Nop.Core.Domain.Catalog
                 .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {
-                int id;
-                if (int.TryParse(idStr, out id))
+                if (int.TryParse(idStr, out int id))
                     ids.Add(id);
             }
 
@@ -55,7 +54,7 @@ namespace Nop.Core.Domain.Catalog
         public static bool IsAvailable(this Product product, DateTime dateTime)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (product.AvailableStartDateTimeUtc.HasValue && product.AvailableStartDateTimeUtc.Value > dateTime)
             {

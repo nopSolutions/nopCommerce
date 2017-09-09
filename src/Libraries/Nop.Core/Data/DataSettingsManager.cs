@@ -70,11 +70,7 @@ namespace Nop.Core.Data
             if (settings == null)
                 return "";
 
-            return string.Format("DataProvider: {0}{2}DataConnectionString: {1}{2}",
-                                 settings.DataProvider,
-                                 settings.DataConnectionString,
-                                 Environment.NewLine
-                );
+            return $"DataProvider: {settings.DataProvider}{Environment.NewLine}DataConnectionString: {settings.DataConnectionString}{Environment.NewLine}";
         }
 
         /// <summary>
@@ -104,7 +100,7 @@ namespace Nop.Core.Data
         public virtual void SaveSettings(DataSettings settings)
         {
             if (settings == null)
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException(nameof(settings));
             
             string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))

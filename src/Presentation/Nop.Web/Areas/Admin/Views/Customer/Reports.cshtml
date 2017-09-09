@@ -1,0 +1,54 @@
+﻿@model CustomerReportsModel
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Reports").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customer reports");
+}
+
+<nop-antiforgery-token/>
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Customers.Reports")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="customer-reports">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-ordertotal" asp-default="true">@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-numberoforders">@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-registeredcustomers">@T("Admin.Customers.Reports.RegisteredCustomers")</nop-tab-header-item>
+            </nop-tab-header>
+            <nop-tab-content>
+                @{
+                    var dataDictAttributesByTotal = new ViewDataDictionary(ViewData);
+                    dataDictAttributesByTotal.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
+
+                    var dataDictAttributesByNumber = new ViewDataDictionary(ViewData);
+                    dataDictAttributesByNumber.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
+                }
+                <nop-tab-content-item asp-name="tab-ordertotal" asp-default="true">@await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-numberoforders">@await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-registeredcustomers">@await Html.PartialAsync("_ReportRegisteredCustomers", Model)</nop-tab-content-item>
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

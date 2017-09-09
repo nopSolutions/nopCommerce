@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Shipping.Date;
 
 namespace Nop.Services.Catalog
 {
@@ -14,34 +16,28 @@ namespace Nop.Services.Catalog
     public static class ProductExtensions
     {
         /// <summary>
-        /// Get product special price
+        /// Gets a preferred tier price
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Special price; null if product does not have special price specified</returns>
-        public static decimal? GetSpecialPrice(this Product product)
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="quantity">Quantity</param>
+        /// <returns>Tier price</returns>
+        public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, int storeId, int quantity)
         {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.SpecialPrice.HasValue)
+            if (!product.HasTierPrices)
                 return null;
 
-            //check date range
-            DateTime now = DateTime.UtcNow;
-            if (product.SpecialPriceStartDateTimeUtc.HasValue)
-            {
-                DateTime startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
-                if (startDate.CompareTo(now) > 0)
-                    return null;
-            }
-            if (product.SpecialPriceEndDateTimeUtc.HasValue)
-            {
-                DateTime endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
-                if (endDate.CompareTo(now) < 0)
-                    return null;
-            }
+            //get actual tier prices
+            var actualTierPrices = product.TierPrices.OrderBy(price => price.Quantity).ToList()
+                .FilterByStore(storeId)
+                .FilterForCustomer(customer)
+                .FilterByDate()
+                .RemoveDuplicatedQuantities();
 
-            return product.SpecialPrice.Value;
+            //get the most suitable tier price based on the passed quantity
+            var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
+            return tierPrice;
         }
         
         /// <summary>
@@ -83,18 +79,22 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Selected product attributes in XML format (if specified)</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="dateRangeService">Date range service</param>
         /// <returns>The stock message</returns>
         public static string FormatStockMessage(this Product product, string attributesXml,
-            ILocalizationService localizationService, IProductAttributeParser productAttributeParser)
+            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
 
             if (productAttributeParser == null)
-                throw new ArgumentNullException("productAttributeParser");
+                throw new ArgumentNullException(nameof(productAttributeParser));
+
+            if (dateRangeService == null)
+                throw new ArgumentNullException(nameof(dateRangeService));
 
             string stockMessage = string.Empty;
 
@@ -119,16 +119,21 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //out of stock
+                            var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
                             switch (product.BackorderMode)
                             {
                                 case BackorderMode.NoBackorders:
-                                    stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                        : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
                                     break;
                                 case BackorderMode.AllowQtyBelow0:
                                     stockMessage = localizationService.GetResource("Products.Availability.InStock");
                                     break;
                                 case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                                    stockMessage = localizationService.GetResource("Products.Availability.Backordering");
+                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.Backordering")
+                                        : string.Format(localizationService.GetResource("Products.Availability.BackorderingWithDate"),
+                                            productAvailabilityRange.GetLocalized(range => range.Name));
                                     break;
                                 default:
                                     break;
@@ -164,7 +169,10 @@ namespace Nop.Services.Catalog
                             }
                             else
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                        productAvailabilityRange.GetLocalized(range => range.Name));
                             }
                         }
                         else
@@ -172,7 +180,10 @@ namespace Nop.Services.Catalog
                             //no combination configured
                             if (product.AllowAddingOnlyExistingAttributeCombinations)
                             {
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
+                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
+                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                        productAvailabilityRange.GetLocalized(range => range.Name));
                             }
                             else
                             {
@@ -200,7 +211,7 @@ namespace Nop.Services.Catalog
             int productTagId)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
             return result;
@@ -214,7 +225,7 @@ namespace Nop.Services.Catalog
         public static int[] ParseAllowedQuantities(this Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             var result = new List<int>();
             if (!String.IsNullOrWhiteSpace(product.AllowedQuantities))
@@ -224,8 +235,7 @@ namespace Nop.Services.Catalog
                     .ToList()
                     .ForEach(qtyStr =>
                     {
-                        int qty;
-                        if (int.TryParse(qtyStr.Trim(), out qty))
+                        if (int.TryParse(qtyStr.Trim(), out int qty))
                         {
                             result.Add(qty);
                         }
@@ -252,7 +262,7 @@ namespace Nop.Services.Catalog
             bool useReservedQuantity = true, int warehouseId = 0)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
             {
@@ -289,7 +299,7 @@ namespace Nop.Services.Catalog
             DateTime startDate, DateTime endDate)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return 1;
@@ -356,7 +366,7 @@ namespace Nop.Services.Catalog
             out string sku, out string manufacturerPartNumber, out string gtin)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             sku = null;
             manufacturerPartNumber = null;
@@ -367,7 +377,7 @@ namespace Nop.Services.Catalog
             {
                 //manage stock by attribute combinations
                 if (productAttributeParser == null)
-                    throw new ArgumentNullException("productAttributeParser");
+                    throw new ArgumentNullException(nameof(productAttributeParser));
 
                 //let's find appropriate record
                 var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
@@ -397,14 +407,9 @@ namespace Nop.Services.Catalog
         public static string FormatSku(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string sku, out string _, out string _);
 
             return sku;
         }
@@ -419,14 +424,9 @@ namespace Nop.Services.Catalog
         public static string FormatMpn(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string _, out string manufacturerPartNumber, out string _);
 
             return manufacturerPartNumber;
         }
@@ -441,14 +441,9 @@ namespace Nop.Services.Catalog
         public static string FormatGtin(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
-            string sku;
-            string manufacturerPartNumber;
-            string gtin;
-
-            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
-                out sku, out manufacturerPartNumber, out gtin);
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser, out string _, out string _, out string gtin);
 
             return gtin;
         }
@@ -462,7 +457,7 @@ namespace Nop.Services.Catalog
         public static string FormatRentalDate(this Product product, DateTime date)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return null;
@@ -486,22 +481,22 @@ namespace Nop.Services.Catalog
             IWorkContext workContext, IPriceFormatter priceFormatter)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (localizationService == null)
-                throw new ArgumentNullException("localizationService");
+                throw new ArgumentNullException(nameof(localizationService));
             
             if (measureService == null)
-                throw new ArgumentNullException("measureService");
+                throw new ArgumentNullException(nameof(measureService));
 
             if (currencyService == null)
-                throw new ArgumentNullException("currencyService");
+                throw new ArgumentNullException(nameof(currencyService));
 
             if (workContext == null)
-                throw new ArgumentNullException("workContext");
+                throw new ArgumentNullException(nameof(workContext));
 
             if (priceFormatter == null)
-                throw new ArgumentNullException("priceFormatter");
+                throw new ArgumentNullException(nameof(priceFormatter));
 
             if (!product.BasepriceEnabled)
                 return null;

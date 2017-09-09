@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
@@ -11,6 +11,6 @@
         <h1>@T("PageTitle.PageNotFound")</h1>
     </div>
     <div class="page-body">
-        @Html.Action("TopicBlock", "Topic", new { systemName = "PageNotFound" })
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "PageNotFound" })
     </div>
 </div>

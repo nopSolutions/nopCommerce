@@ -1,0 +1,46 @@
+﻿@model CheckoutAttributeModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "checkoutattribute-advanced-mode" })
+                </div>
+            </div>
+        </div>
+        
+        <nop-tabs id="checkoutattribute-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-values">@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")</nop-tab-header-item>
+                @if (Model.ConditionAllowed)
+                {
+                    <nop-tab-header-item asp-name="tab-condition">@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")</nop-tab-header-item>
+                }
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab-content-item>
+                @if (Model.ConditionAllowed)
+                {
+                    <nop-tab-content-item asp-name="tab-condition">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-tab-content-item>
+                }
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

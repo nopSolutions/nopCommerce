@@ -5,7 +5,7 @@ namespace Nop.Services.Logging
     /// <summary>
     /// Represents a task to clear [Log] table
     /// </summary>
-    public partial class ClearLogTask : ITask
+    public partial class ClearLogTask : IScheduleTask
     {
         private readonly ILogger _logger;
 

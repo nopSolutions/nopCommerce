@@ -22,11 +22,12 @@ namespace Nop.Services.Directory
         StateProvince GetStateProvinceById(int stateProvinceId);
 
         /// <summary>
-        /// Gets a state/province 
+        /// Gets a state/province by abbreviation
         /// </summary>
         /// <param name="abbreviation">The state/province abbreviation</param>
+        /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
-        StateProvince GetStateProvinceByAbbreviation(string abbreviation);
+        StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null);
         
         /// <summary>
         /// Gets a state/province collection by country identifier

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
@@ -24,7 +25,7 @@ namespace Nop.Web.Models.Catalog
             Breadcrumb = new ProductBreadcrumbModel();
             ProductTags = new List<ProductTagModel>();
             ProductSpecifications= new List<ProductSpecificationModel>();
-            ProductManufacturers = new List<ManufacturerModel>();
+            ProductManufacturers = new List<ManufacturerBriefInfoModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
         }
@@ -37,7 +38,6 @@ namespace Nop.Web.Models.Catalog
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
-        public string ProductTemplateViewPath { get; set; }
         public string MetaKeywords { get; set; }
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
@@ -71,6 +71,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
 
+        public ManageInventoryMethod ManageInventoryMethod { get; set; }
+
         public string StockAvailability { get; set; }
 
         public bool DisplayBackInStockSubscription { get; set; }
@@ -92,7 +94,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
 
-        public IList<ManufacturerModel> ProductManufacturers { get; set; }
+        public IList<ManufacturerBriefInfoModel> ProductManufacturers { get; set; }
 
         public ProductReviewOverviewModel ProductReviewOverview { get; set; }
 
@@ -197,19 +199,21 @@ namespace Nop.Web.Models.Catalog
             public bool IsGiftCard { get; set; }
 
             [NopResourceDisplayName("Products.GiftCard.RecipientName")]
-            [AllowHtml]
+
             public string RecipientName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
-            [AllowHtml]
+
+            [DataType(DataType.EmailAddress)]
             public string RecipientEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderName")]
-            [AllowHtml]
+
             public string SenderName { get; set; }
             [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
-            [AllowHtml]
+
+            [DataType(DataType.EmailAddress)]
             public string SenderEmail { get; set; }
             [NopResourceDisplayName("Products.GiftCard.Message")]
-            [AllowHtml]
+
             public string Message { get; set; }
 
             public GiftCardType GiftCardType { get; set; }
@@ -297,8 +301,12 @@ namespace Nop.Web.Models.Catalog
 
             //product picture ID (associated to this value)
             public int PictureId { get; set; }
+
+            public bool CustomerEntersQty { get; set; }
+
+            public int Quantity { get; set; }
         }
 
-		#endregion
+#endregion
     }
 }

@@ -1,6 +1,6 @@
 using System;
+using System.Net;
 using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -73,7 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
-        /// <param name="serapator">Serapator</param>
+        /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="renderProductAttributes">A value indicating whether to render product attributes</param>
@@ -81,7 +81,7 @@ namespace Nop.Services.Catalog
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(Product product, string attributesXml,
-            Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
+            Customer customer, string separator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true)
         {
@@ -90,123 +90,106 @@ namespace Nop.Services.Catalog
             //attributes
             if (renderProductAttributes)
             {
-                var attributes = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
-                for (int i = 0; i < attributes.Count; i++)
+                foreach (var attribute in _productAttributeParser.ParseProductAttributeMappings(attributesXml))
                 {
-                    var attribute = attributes[i];
-                    var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
-                    for (int j = 0; j < valuesStr.Count; j++)
+                    //attributes without values
+                    if (!attribute.ShouldHaveValues())
                     {
-                        string valueStr = valuesStr[j];
-                        string formattedAttribute = string.Empty;
-                        if (!attribute.ShouldHaveValues())
+                        foreach (var value in _productAttributeParser.ParseValues(attributesXml, attribute.Id))
                         {
-                            //no values
+                            var formattedAttribute = string.Empty;
                             if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
                                 //multiline textbox
                                 var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+
                                 //encode (if required)
                                 if (htmlEncode)
-                                    attributeName = HttpUtility.HtmlEncode(attributeName);
-                                formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                                    attributeName = WebUtility.HtmlEncode(attributeName);
+
                                 //we never encode multiline textbox input
+                                formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(value, false, true, false, false, false, false)}";
                             }
                             else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
-                                Guid downloadGuid;
-                                Guid.TryParse(valueStr, out downloadGuid);
+                                Guid.TryParse(value, out Guid downloadGuid);
                                 var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                 if (download != null)
                                 {
+                                    var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
+
+                                    //encode (if required)
+                                    if (htmlEncode)
+                                        fileName = WebUtility.HtmlEncode(fileName);
+
                                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                                    string attributeText;
-                                    var fileName = string.Format("{0}{1}", 
-                                        download.Filename ?? download.DownloadGuid.ToString(),
-                                        download.Extension);
-                                    //encode (if required)
-                                    if (htmlEncode)
-                                        fileName = HttpUtility.HtmlEncode(fileName);
-                                    if (allowHyperlinks)
-                                    {
-                                        //hyperlinks are allowed
-                                        var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
-                                        attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
-                                    }
-                                    else
-                                    {
-                                        //hyperlinks aren't allowed
-                                        attributeText = fileName;
-                                    }
+                                    var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
+                                        : fileName;
+
                                     var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+
                                     //encode (if required)
                                     if (htmlEncode)
-                                        attributeName = HttpUtility.HtmlEncode(attributeName);
-                                    formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                        attributeName = WebUtility.HtmlEncode(attributeName);
+
+                                    formattedAttribute = $"{attributeName}: {attributeText}";
                                 }
                             }
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                                formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {value}";
+
                                 //encode (if required)
                                 if (htmlEncode)
-                                    formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                    formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                             }
-                        }
-                        else
-                        {
-                            //attributes with values
-                            int attributeValueId;
-                            if (int.TryParse(valueStr, out attributeValueId))
+
+                            if (!string.IsNullOrEmpty(formattedAttribute))
                             {
-                                var attributeValue = _productAttributeService.GetProductAttributeValueById(attributeValueId);
-                                if (attributeValue != null)
-                                {
-                                    formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
-                                    
-                                    if (renderPrices)
-                                    {
-                                        decimal taxRate;
-                                        decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
-                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                                        if (priceAdjustmentBase > 0)
-                                        {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                                            formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
-                                        }
-                                        else if (priceAdjustmentBase < decimal.Zero)
-                                        {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
-                                            formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
-                                        }
-                                    }
-
-                                    //display quantity
-                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
-                                        attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                                    {
-                                        //render only when more than 1
-                                        if (attributeValue.Quantity > 1)
-                                        {
-                                            //TODO localize resource
-                                            formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
-                                        }
-                                    }
-                                }                               
-                                //encode (if required)
-                                if (htmlEncode)
-                                    formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                                if (result.Length > 0)
+                                    result.Append(separator);
+                                result.Append(formattedAttribute);
                             }
                         }
-
-                        if (!String.IsNullOrEmpty(formattedAttribute))
+                    }
+                    //product attribute values
+                    else
+                    {
+                        foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(attributesXml, attribute.Id))
                         {
-                            if (i != 0 || j != 0)
-                                result.Append(serapator);
-                            result.Append(formattedAttribute);
+                            var formattedAttribute = $"{attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}: {attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id)}";
+
+                            if (renderPrices)
+                            {
+                                var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out decimal _);
+                                var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                if (priceAdjustmentBase > 0)
+                                    formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
+                                else if (priceAdjustmentBase < decimal.Zero)
+                                    formattedAttribute += $" [-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}]";
+                            }
+
+                            //display quantity
+                            if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity && attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                            {
+                                //render only when more than 1
+                                if (attributeValue.Quantity > 1)
+                                    formattedAttribute += string.Format(_localizationService.GetResource("ProductAttributes.Quantity"), attributeValue.Quantity);
+                            }
+
+                            //encode (if required)
+                            if (htmlEncode)
+                                formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+
+                            if (!string.IsNullOrEmpty(formattedAttribute))
+                            {
+                                if (result.Length > 0)
+                                    result.Append(separator);
+                                result.Append(formattedAttribute);
+                            }
                         }
                     }
                 }
@@ -217,13 +200,7 @@ namespace Nop.Services.Catalog
             {
                 if (product.IsGiftCard)
                 {
-                    string giftCardRecipientName;
-                    string giftCardRecipientEmail;
-                    string giftCardSenderName;
-                    string giftCardSenderEmail;
-                    string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out giftCardRecipientName, out giftCardRecipientEmail,
-                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out string giftCardRecipientName, out string giftCardRecipientEmail, out string giftCardSenderName, out string giftCardSenderEmail, out string _);
 
                     //sender
                     var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?
@@ -237,16 +214,16 @@ namespace Nop.Services.Catalog
                     //encode (if required)
                     if (htmlEncode)
                     {
-                        giftCardFrom = HttpUtility.HtmlEncode(giftCardFrom);
-                        giftCardFor = HttpUtility.HtmlEncode(giftCardFor);
+                        giftCardFrom = WebUtility.HtmlEncode(giftCardFrom);
+                        giftCardFor = WebUtility.HtmlEncode(giftCardFor);
                     }
 
                     if (!String.IsNullOrEmpty(result.ToString()))
                     {
-                        result.Append(serapator);
+                        result.Append(separator);
                     }
                     result.Append(giftCardFrom);
-                    result.Append(serapator);
+                    result.Append(separator);
                     result.Append(giftCardFor);
                 }
             }

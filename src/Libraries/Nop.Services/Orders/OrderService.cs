@@ -76,6 +76,19 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="customOrderNumber">The custom order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByCustomOrderNumber(string customOrderNumber)
+        {
+            if (string.IsNullOrEmpty(customOrderNumber))
+                return null;
+           
+            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
@@ -86,7 +99,7 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id)
+                        where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
             //sort by passed identifiers
@@ -124,10 +137,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             order.Deleted = true;
             UpdateOrder(order);
+
+            //event notification
+            _eventPublisher.EntityDeleted(order);
         }
 
         /// <summary>
@@ -233,7 +249,7 @@ namespace Nop.Services.Orders
         public virtual void InsertOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Insert(order);
 
@@ -248,7 +264,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             _orderRepository.Update(order);
 
@@ -278,7 +294,7 @@ namespace Nop.Services.Orders
         }
         
         #endregion
-        
+
         #region Orders items
 
         /// <summary>
@@ -341,7 +357,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             _orderItemRepository.Delete(orderItem);
 
@@ -373,7 +389,7 @@ namespace Nop.Services.Orders
         public virtual void DeleteOrderNote(OrderNote orderNote)
         {
             if (orderNote == null)
-                throw new ArgumentNullException("orderNote");
+                throw new ArgumentNullException(nameof(orderNote));
 
             _orderNoteRepository.Delete(orderNote);
 
@@ -392,10 +408,13 @@ namespace Nop.Services.Orders
         public virtual void DeleteRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             recurringPayment.Deleted = true;
             UpdateRecurringPayment(recurringPayment);
+
+            //event notification
+            _eventPublisher.EntityDeleted(recurringPayment);
         }
 
         /// <summary>
@@ -418,7 +437,7 @@ namespace Nop.Services.Orders
         public virtual void InsertRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Insert(recurringPayment);
 
@@ -433,7 +452,7 @@ namespace Nop.Services.Orders
         public virtual void UpdateRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
 
             _recurringPaymentRepository.Update(recurringPayment);
 

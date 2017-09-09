@@ -38,7 +38,7 @@ namespace Nop.Services.Security
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -52,13 +52,13 @@ namespace Nop.Services.Security
         /// <param name="workContext">Work context</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="cacheManager">Static cache manager</param>
         public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
             ICustomerService customerService,
             IWorkContext workContext,
-             ILocalizationService localizationService,
+            ILocalizationService localizationService,
             ILanguageService languageService,
-            ICacheManager cacheManager)
+            IStaticCacheManager cacheManager)
         {
             this._permissionRecordRepository = permissionRecordRepository;
             this._customerService = customerService;
@@ -105,7 +105,7 @@ namespace Nop.Services.Security
         public virtual void DeletePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Delete(permission);
 
@@ -164,7 +164,7 @@ namespace Nop.Services.Security
         public virtual void InsertPermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Insert(permission);
 
@@ -178,7 +178,7 @@ namespace Nop.Services.Security
         public virtual void UpdatePermissionRecord(PermissionRecord permission)
         {
             if (permission == null)
-                throw new ArgumentNullException("permission");
+                throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Update(permission);
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Customer
 {
@@ -19,6 +19,7 @@ namespace Nop.Web.Models.Customer
             public Guid OrderItemGuid { get; set; }
 
             public int OrderId { get; set; }
+            public string CustomOrderNumber { get; set; }
 
             public int ProductId { get; set; }
             public string ProductName { get; set; }

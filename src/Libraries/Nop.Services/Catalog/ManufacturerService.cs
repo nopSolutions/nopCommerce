@@ -121,10 +121,13 @@ namespace Nop.Services.Catalog
         public virtual void DeleteManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
             
             manufacturer.Deleted = true;
             UpdateManufacturer(manufacturer);
+
+            //event notification
+            _eventPublisher.EntityDeleted(manufacturer);
         }
 
         /// <summary>
@@ -148,7 +151,7 @@ namespace Nop.Services.Catalog
             if (!String.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
-            query = query.OrderBy(m => m.DisplayOrder);
+            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
@@ -179,7 +182,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder);
+                query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
@@ -206,7 +209,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Insert(manufacturer);
 
@@ -225,7 +228,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
+                throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Update(manufacturer);
 
@@ -245,7 +248,7 @@ namespace Nop.Services.Catalog
         public virtual void DeleteProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Delete(productManufacturer);
 
@@ -279,7 +282,7 @@ namespace Nop.Services.Catalog
                             where pm.ManufacturerId == manufacturerId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -315,7 +318,7 @@ namespace Nop.Services.Catalog
                             into pmGroup
                             orderby pmGroup.Key
                             select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
@@ -342,7 +345,7 @@ namespace Nop.Services.Catalog
                             where pm.ProductId == productId &&
                                 !m.Deleted &&
                                 (showHidden || m.Published)
-                            orderby pm.DisplayOrder
+                            orderby pm.DisplayOrder, pm.Id
                             select pm;
 
 
@@ -380,7 +383,7 @@ namespace Nop.Services.Catalog
                             into mGroup
                             orderby mGroup.Key
                             select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
+                    query = query.OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
 
                 var productManufacturers = query.ToList();
@@ -408,7 +411,7 @@ namespace Nop.Services.Catalog
         public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Insert(productManufacturer);
 
@@ -427,7 +430,7 @@ namespace Nop.Services.Catalog
         public virtual void UpdateProductManufacturer(ProductManufacturer productManufacturer)
         {
             if (productManufacturer == null)
-                throw new ArgumentNullException("productManufacturer");
+                throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Update(productManufacturer);
 
@@ -464,7 +467,7 @@ namespace Nop.Services.Catalog
         public virtual string[] GetNotExistingManufacturers(string[] manufacturerNames)
         {
             if (manufacturerNames == null)
-                throw new ArgumentNullException("manufacturerNames");
+                throw new ArgumentNullException(nameof(manufacturerNames));
 
             var query = _manufacturerRepository.Table;
             var queryFilter = manufacturerNames.Distinct().ToArray();

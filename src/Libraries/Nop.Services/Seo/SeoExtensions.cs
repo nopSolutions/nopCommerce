@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -42,7 +43,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ProductTag productTag, int languageId)
         {
             if (productTag == null)
-                throw new ArgumentNullException("productTag");
+                throw new ArgumentNullException(nameof(productTag));
             string seName = GetSeName(productTag.GetLocalized(x => x.Name, languageId));
             return seName;
         }
@@ -59,7 +60,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumGroup forumGroup)
         {
             if (forumGroup == null)
-                throw new ArgumentNullException("forumGroup");
+                throw new ArgumentNullException(nameof(forumGroup));
             string seName = GetSeName(forumGroup.Name);
             return seName;
         }
@@ -72,7 +73,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this Forum forum)
         {
             if (forum == null)
-                throw new ArgumentNullException("forum");
+                throw new ArgumentNullException(nameof(forum));
             string seName = GetSeName(forum.Name);
             return seName;
         }
@@ -85,7 +86,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumTopic forumTopic)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
+                throw new ArgumentNullException(nameof(forumTopic));
             string seName = GetSeName(forumTopic.Subject);
 
             // Trim SE name to avoid URLs that are too long
@@ -129,9 +130,9 @@ namespace Nop.Services.Seo
             where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
-            string entityName = typeof(T).Name;
+            string entityName = entity.GetUnproxiedEntityType().Name;
             return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
@@ -181,14 +182,28 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="seName">Search engine name to validate</param>
         /// <param name="name">User-friendly name used to generate sename</param>
-        /// <param name="ensureNotEmpty">Ensreu that sename is not empty</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
         /// <returns>Valid sename</returns>
         public static string ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty)
              where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
 
+            return ValidateSeName(entity.Id, entity.GetUnproxiedEntityType().Name, seName, name, ensureNotEmpty);
+        }
+
+        /// <summary>
+        /// Validate search engine name
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="entityName">Entity name</param>
+        /// <param name="seName">Search engine name to validate</param>
+        /// <param name="name">User-friendly name used to generate sename</param>
+        /// <param name="ensureNotEmpty">Ensure that sename is not empty</param>
+        /// <returns>Valid sename</returns>
+        public static string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
+        {
             //use name if sename is not specified
             if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
                 seName = name;
@@ -207,7 +222,7 @@ namespace Nop.Services.Seo
                 if (ensureNotEmpty)
                 {
                     //use entity identifier as sename if empty
-                    seName = entity.Id.ToString();
+                    seName = entityId.ToString();
                 }
                 else
                 {
@@ -217,22 +232,24 @@ namespace Nop.Services.Seo
             }
 
             //ensure this sename is not reserved yet
-            string entityName = typeof(T).Name;
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
             int i = 2;
             var tempSeName = seName;
             while (true)
             {
                 //check whether such slug already exists (and that is not the current entity)
                 var urlRecord = urlRecordService.GetBySlug(tempSeName);
-                var reserved1 = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
+                var reserved1 = urlRecord != null && !(urlRecord.EntityId == entityId && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
                 var reserved2 = seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
-                if (!reserved1 && !reserved2)
+                //and it's not equal to a language code
+                var reserved3 = languageService.GetAllLanguages(true).Any(language => language.UniqueSeoCode.Equals(tempSeName, StringComparison.InvariantCultureIgnoreCase));
+                if (!reserved1 && !reserved2 && !reserved3)
                     break;
 
-                tempSeName = string.Format("{0}-{1}", seName, i);
+                tempSeName = $"{seName}-{i}";
                 i++;
             }
             seName = tempSeName;

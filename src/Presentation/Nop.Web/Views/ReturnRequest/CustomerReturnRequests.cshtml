@@ -1,8 +1,6 @@
 ﻿@model CustomerReturnRequestsModel
-@using Nop.Web.Models.Customer
-@using Nop.Web.Models.Order
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
@@ -12,7 +10,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
 }
 <div class="page account-page return-request-list-page">
     <div class="page-title">
@@ -43,6 +41,17 @@
                         <label>@T("Account.CustomerReturnRequests.Date")</label>
                         <span>@item.CreatedOn.ToString()</span>
                     </li>
+                    @if (item.UploadedFileGuid != Guid.Empty)
+                    {
+                        <li class="uploaded-file">
+                            <label>@T("Account.CustomerReturnRequests.UploadedFile")</label>
+                            <span>
+                                <a href="@Url.Action("GetFileUpload", "Download", new {downloadId = item.UploadedFileGuid.ToString()})">
+                                    @T("Account.CustomerReturnRequests.UploadedFile.Download")
+                                </a>
+                            </span>
+                        </li>
+                    }
                     @if (!String.IsNullOrEmpty(item.Comments))
                     {
                         <li class="comments">

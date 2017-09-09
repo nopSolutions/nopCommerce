@@ -1,0 +1,62 @@
+﻿@model ProductModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                <div class="pull-left">
+                    @await Component.InvokeAsync("SettingMode", new { modeName = "product-advanced-mode" })
+                </div>
+                @if (!Model.IsLoggedInAsVendor)
+                {
+                    <button type="button" class="btn btn-info pull-left margin-l-10" id="product-editor-settings" data-toggle="modal" data-target="#productsettings-window">
+                        <i class="fa fa-gear"></i>
+                        @T("Admin.Configuration.Settings.ProductEditor.Button")
+                    </button>
+                }
+            </div>
+        </div>
+        
+
+        <nop-tabs id="product-edit">
+            <nop-tab-header>
+                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Products.Info")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-seo" class="@(Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")">@T("Admin.Common.SEO")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-pictures">@T("Admin.Catalog.Products.Pictures")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-product-attributes" class="@(Model.ProductEditorSettingsModel.ProductAttributes ? "" : "advanced-setting")">@T("Admin.Catalog.Products.ProductAttributes")</nop-tab-header-item>
+                <nop-tab-header-item asp-name="tab-specification-attributes" class="@(Model.ProductEditorSettingsModel.SpecificationAttributes ? "" : "advanced-setting")">@T("Admin.Catalog.Attributes.SpecificationAttributes")</nop-tab-header-item>
+                @if (Model.Id > 0)
+                {
+                    <nop-tab-header-item asp-name="tab-purchased-with-orders" class="@(Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")">@T("Admin.Catalog.Products.PurchasedWithOrders")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-stock-quantity-history" class="@(Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")">@T("Admin.Catalog.Products.StockQuantityHistory")</nop-tab-header-item>
+                }
+            </nop-tab-header>
+            <nop-tab-content>
+                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-pictures">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-product-attributes">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-tab-content-item>
+                <nop-tab-content-item asp-name="tab-specification-attributes">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-tab-content-item>
+                @if (Model.Id > 0)
+                {
+                    <nop-tab-content-item asp-name="tab-purchased-with-orders">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-stock-quantity-history">@await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model)</nop-tab-content-item>
+                }
+            </nop-tab-content>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

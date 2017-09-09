@@ -65,7 +65,7 @@ namespace Nop.Services.Catalog
             bool showCurrency, Currency targetCurrency)
         {
             if (targetCurrency == null)
-                throw new ArgumentNullException("targetCurrency");
+                throw new ArgumentNullException(nameof(targetCurrency));
 
             string result;
             if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
@@ -84,14 +84,14 @@ namespace Nop.Services.Catalog
                 {
                     //not possible because "DisplayLocale" should be always specified
                     //but anyway let's just handle this behavior
-                    result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
+                    result = $"{amount.ToString("N")} ({targetCurrency.CurrencyCode})";
                     return result;
                 }
             }
 
             //display currency code?
             if (showCurrency && _currencySettings.DisplayCurrencyLabel)
-                result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
+                result = $"{result} ({targetCurrency.CurrencyCode})";
             return result;
         }
 
@@ -241,7 +241,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatRentalProductPeriod(Product product, string price)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (!product.IsRental)
                 return price;

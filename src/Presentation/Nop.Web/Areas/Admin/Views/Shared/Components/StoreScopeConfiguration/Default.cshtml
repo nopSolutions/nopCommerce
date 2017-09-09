@@ -1,0 +1,42 @@
+﻿@model StoreScopeConfigurationModel
+@inject IHttpContextAccessor httpContextAccessor
+@inject IWebHelper webHelper
+@using System.Net
+@using Microsoft.AspNetCore.Http
+@using Nop.Core
+@{
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+
+    var stores = Model.Stores.Select(store => new SelectListItem
+    {
+        Text = store.Name,
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = store.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Selected = store.Id.Equals(Model.StoreId)
+    }).ToList();
+    stores.Insert(0, new SelectListItem
+    {
+        Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", "Setting", new { storeid = 0 }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Selected = 0.Equals(Model.StoreId)
+    });
+}
+
+<div class="form-group">
+    <div class="col-md-12 store-scope-configuration">
+        <div class="label-wrapper">
+            <label class="control-label">
+                @T("Admin.Configuration.Settings.StoreScope")
+            </label>
+        </div>
+        <nop-select asp-for-name="store-scope-configuration" asp-items="@stores" onchange="setLocation(this.value);" style="width: auto;min-width: 300px;" />
+        @if (Model.StoreId > 0)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" onclick="checkAllOverriddenStoreValue(this)">
+                    <b>@T("Admin.Configuration.Settings.StoreScope.CheckAll")</b> @T("Admin.Configuration.Settings.StoreScope.CheckAll.Hint")
+                </label>
+            </div>
+        }
+    </div>
+</div>

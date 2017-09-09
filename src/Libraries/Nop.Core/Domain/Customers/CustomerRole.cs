@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Customers
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the customer role is marked as free shiping
+        /// Gets or sets a value indicating whether the customer role is marked as free shippping
         /// </summary>
         public bool FreeShipping { get; set; }
 
@@ -39,6 +39,20 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customer role system name
         /// </summary>
         public string SystemName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customers must change passwords after a specified time
+        /// </summary>
+        public bool EnablePasswordLifetime { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customers of this role have other tax display type chosen instead of the default one
+        /// </summary>
+        public bool OverrideTaxDisplayType { get; set; }
+        /// <summary>
+        /// Gets or sets identifier of the default tax display type (used only with "OverrideTaxDisplayType" enabled)
+        /// </summary>
+        public int DefaultTaxDisplayTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a product identifier that is required by this customer role. 

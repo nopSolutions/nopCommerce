@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Returns a value indicating whether payment method should be hidden during checkout
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>true - hide; false - display.</returns>
         public bool HidePaymentMethod(IList<ShoppingCartItem> cart)
         {
@@ -49,7 +49,7 @@ namespace Nop.Services.Tests.Payments
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
@@ -124,42 +124,41 @@ namespace Nop.Services.Tests.Payments
         public bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             //it's not a redirection payment method. So we always return false
             return false;
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
+        /// Validate payment form
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>List of validating errors</returns>
+        public IList<string> ValidatePaymentForm(IFormCollection form)
         {
-            actionName = null;
-            controllerName = null;
-            routeValues = null;
+            return new List<string>();
         }
 
         /// <summary>
-        /// Gets a route for payment info
+        /// Get payment information
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        /// <param name="form">The parsed form values</param>
+        /// <returns>Payment info holder</returns>
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
         {
-            actionName = null;
-            controllerName = null;
-            routeValues = null;
+            return new ProcessPaymentRequest();
         }
 
-        public Type GetControllerType()
+        /// <summary>
+        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// </summary>
+        /// <param name="viewComponentName">View component name</param>
+        public void GetPublicViewComponent(out string viewComponentName)
         {
-            return typeof(TestPaymentMethod);
+            viewComponentName = null;
         }
+
 
         #endregion
 
@@ -170,10 +169,7 @@ namespace Nop.Services.Tests.Payments
         /// </summary>
         public bool SupportCapture
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -181,10 +177,7 @@ namespace Nop.Services.Tests.Payments
         /// </summary>
         public bool SupportPartiallyRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -192,10 +185,7 @@ namespace Nop.Services.Tests.Payments
         /// </summary>
         public bool SupportRefund
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -203,10 +193,7 @@ namespace Nop.Services.Tests.Payments
         /// </summary>
         public bool SupportVoid
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -215,10 +202,7 @@ namespace Nop.Services.Tests.Payments
         /// <returns>A recurring payment type of payment method</returns>
         public RecurringPaymentType RecurringPaymentType
         {
-            get
-            {
-                return RecurringPaymentType.NotSupported;
-            }
+            get { return RecurringPaymentType.NotSupported; }
         }
 
         /// <summary>
@@ -227,10 +211,7 @@ namespace Nop.Services.Tests.Payments
         /// <returns>A payment method type</returns>
         public PaymentMethodType PaymentMethodType
         {
-            get
-            {
-                return PaymentMethodType.Standard;
-            }
+            get { return PaymentMethodType.Standard; }
         }
 
         /// <summary>
@@ -238,10 +219,17 @@ namespace Nop.Services.Tests.Payments
         /// </summary>
         public bool SkipPaymentInfo
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets a payment method description that will be displayed on checkout pages in the public store
+        /// </summary>
+        public string PaymentMethodDescription
+        {
+            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
+            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
+            get { return string.Empty; }
         }
 
         #endregion

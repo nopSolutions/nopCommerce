@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using ImageResizer;
+using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -30,8 +31,6 @@ namespace Nop.Services.Media
 
         #region Fields
 
-        private static readonly object s_lock = new object();
-
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
@@ -41,6 +40,7 @@ namespace Nop.Services.Media
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly IDataProvider _dataProvider;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
@@ -58,6 +58,7 @@ namespace Nop.Services.Media
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         /// <param name="dataProvider">Data provider</param>
+        /// <param name="hostingEnvironment">Hosting environment</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
@@ -66,7 +67,8 @@ namespace Nop.Services.Media
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
-            IDataProvider dataProvider)
+            IDataProvider dataProvider,
+            IHostingEnvironment hostingEnvironment)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
@@ -77,6 +79,7 @@ namespace Nop.Services.Media
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._dataProvider = dataProvider;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -132,7 +135,7 @@ namespace Nop.Services.Media
                     height = 1;
             }
 
-            //we invoke Math.Round to ensure that no white background is rendered - http://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -146,7 +149,7 @@ namespace Nop.Services.Media
             if (mimeType == null)
                 return null;
 
-            //also see System.Web.MimeMapping for more mime types
+            //TODO use FileExtensionContentTypeProvider to get file extension
 
             string[] parts = mimeType.Split('/');
             string lastPart = parts[parts.Length - 1];
@@ -174,7 +177,7 @@ namespace Nop.Services.Media
         protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             var filePath = GetPictureLocalPath(fileName);
             if (!File.Exists(filePath))
                 return new byte[0];
@@ -190,7 +193,7 @@ namespace Nop.Services.Media
         protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
@@ -201,10 +204,10 @@ namespace Nop.Services.Media
         protected virtual void DeletePictureOnFileSystem(Picture picture)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string fileName = string.Format("{0}_0.{1}", picture.Id.ToString("0000000"), lastPart);
+            string fileName = $"{picture.Id.ToString("0000000")}_0.{lastPart}";
             string filePath = GetPictureLocalPath(fileName);
             if (File.Exists(filePath))
             {
@@ -218,8 +221,8 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
-            var thumbDirectoryPath = CommonHelper.MapPath("~/content/images/thumbs");
+            string filter = $"{picture.Id.ToString("0000000")}*.*";
+            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -235,7 +238,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            var thumbsDirectoryPath = CommonHelper.MapPath("~/content/images/thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -265,7 +268,7 @@ namespace Nop.Services.Media
             storeLocation = !String.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
                                     : _webHelper.GetStoreLocation();
-            var url = storeLocation + "content/images/thumbs/";
+            var url = storeLocation + "images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -289,7 +292,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
-            return Path.Combine(CommonHelper.MapPath("~/content/images/"), fileName);
+            return Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
         }
 
         /// <summary>
@@ -301,7 +304,7 @@ namespace Nop.Services.Media
         protected virtual byte[] LoadPictureBinary(Picture picture, bool fromDb)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
                 ? picture.PictureBinary
@@ -325,9 +328,16 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="thumbFilePath">Thumb file path</param>
         /// <param name="thumbFileName">Thumb file name</param>
+        /// <param name="mimeType">MIME type</param>
         /// <param name="binary">Picture binary</param>
-        protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
+        protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
+            //ensure \thumb directory exists
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
+            if (!System.IO.Directory.Exists(thumbsDirectoryPath))
+                System.IO.Directory.CreateDirectory(thumbsDirectoryPath);
+
+            //save
             File.WriteAllBytes(thumbFilePath, binary);
         }
 
@@ -389,16 +399,13 @@ namespace Nop.Services.Media
                 string url = (!String.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
-                                 + "content/images/" + defaultImageFileName;
+                                 + "images/" + defaultImageFileName;
                 return url;
             }
             else
             {
                 string fileExtension = Path.GetExtension(filePath);
-                string thumbFileName = string.Format("{0}_{1}{2}",
-                    Path.GetFileNameWithoutExtension(filePath),
-                    targetSize,
-                    fileExtension);
+                string thumbFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
@@ -415,7 +422,7 @@ namespace Nop.Services.Media
                                 Quality = _mediaSettings.DefaultImageQuality
                             });
                             var destBinary = destStream.ToArray();
-                            SaveThumb(thumbFilePath, thumbFileName, destBinary);
+                            SaveThumb(thumbFilePath, thumbFileName, "", destBinary);
                         }
                     }
                 }
@@ -493,14 +500,14 @@ namespace Nop.Services.Media
             if (targetSize == 0)
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
-                    ? string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart)
-                    : string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
+                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}.{lastPart}"
+                    : $"{picture.Id.ToString("0000000")}.{lastPart}";
             }
             else
             {
                 thumbFileName = !String.IsNullOrEmpty(seoFileName)
-                    ? string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart)
-                    : string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
+                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}_{targetSize}.{lastPart}"
+                    : $"{picture.Id.ToString("0000000")}_{targetSize}.{lastPart}";
             }
             string thumbFilePath = GetThumbLocalPath(thumbFileName);
 
@@ -530,7 +537,7 @@ namespace Nop.Services.Media
                                 }
                                 catch (ArgumentException exc)
                                 {
-                                    _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id),
+                                    _logger.Error($"Error generating picture thumb. ID={picture.Id}",
                                         exc);
                                 }
 
@@ -561,7 +568,7 @@ namespace Nop.Services.Media
                             pictureBinaryResized = pictureBinary.ToArray();
                         }
 
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinaryResized);
+                        SaveThumb(thumbFilePath, thumbFileName, picture.MimeType, pictureBinaryResized);
                     }
                     
                     mutex.ReleaseMutex();
@@ -612,7 +619,7 @@ namespace Nop.Services.Media
         public virtual void DeletePicture(Picture picture)
         {
             if (picture == null)
-                throw new ArgumentNullException("picture");
+                throw new ArgumentNullException(nameof(picture));
 
             //delete thumbs
             DeletePictureThumbs(picture);
@@ -642,8 +649,7 @@ namespace Nop.Services.Media
             var pics = new PagedList<Picture>(query, pageIndex, pageSize);
             return pics;
         }
-
-
+        
         /// <summary>
         /// Gets pictures by product identifier
         /// </summary>
@@ -658,7 +664,7 @@ namespace Nop.Services.Media
 
             var query = from p in _pictureRepository.Table
                         join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
-                        orderby pp.DisplayOrder
+                        orderby pp.DisplayOrder, pp.Id
                         where pp.ProductId == productId
                         select p;
 
@@ -929,7 +935,4 @@ namespace Nop.Services.Media
 
         #endregion
     }
-
-    
-
 }

@@ -81,21 +81,6 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductCost { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Special price' field is shown
-        /// </summary>
-        public bool SpecialPrice { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Special price start date' field is shown
-        /// </summary>
-        public bool SpecialPriceStartDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Special price end date' field is shown
-        /// </summary>
-        public bool SpecialPriceEndDate { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 'Tier prices' field is shown
         /// </summary>
         public bool TierPrices { get; set; }
@@ -189,6 +174,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Telecommunications, broadcasting and electronic services' field is shown
         /// </summary>
         public bool TelecommunicationsBroadcastingElectronicServices { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Product availability range' field is shown
+        /// </summary>
+        public bool ProductAvailabilityRange { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Use multiple warehouses' field is shown
@@ -350,5 +340,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Manufacturers' field is shown
         /// </summary>
         public bool Manufacturers { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
+        /// </summary>
+        public bool StockQuantityHistory { get; set; }
     }
 }

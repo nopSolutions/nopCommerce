@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Logging;
@@ -30,11 +31,6 @@ namespace Nop.Services.Events
         /// <param name="eventMessage">Event message</param>
         protected virtual void PublishToConsumer<T>(IConsumer<T> x, T eventMessage)
         {
-            //Ignore not installed plugins
-            var plugin = FindPlugin(x.GetType());
-            if (plugin != null && !plugin.Installed)
-                return;
-
             try
             {
                 x.HandleEvent(eventMessage);
@@ -56,39 +52,18 @@ namespace Nop.Services.Events
         }
 
         /// <summary>
-        /// Find a plugin descriptor by some type which is located into its assembly
-        /// </summary>
-        /// <param name="providerType">Provider type</param>
-        /// <returns>Plugin descriptor</returns>
-        protected virtual PluginDescriptor FindPlugin(Type providerType)
-        {
-            if (providerType == null)
-                throw new ArgumentNullException("providerType");
-
-            if (PluginManager.ReferencedPlugins == null)
-                return null;
-
-            foreach (var plugin in PluginManager.ReferencedPlugins)
-            {
-                if (plugin.ReferencedAssembly == null)
-                    continue;
-
-                if (plugin.ReferencedAssembly.FullName == providerType.Assembly.FullName)
-                    return plugin;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Publish event
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
         public virtual void Publish<T>(T eventMessage)
         {
-            var subscriptions = _subscriptionService.GetSubscriptions<T>();
-            subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
+            //get all event subscribers, excluding from not installed plugins
+            var subscribers = _subscriptionService.GetSubscriptions<T>()
+                .Where(subscriber => PluginManager.FindPlugin(subscriber.GetType())?.Installed ?? true).ToList();
+
+            //publish event to subscribers
+            subscribers.ForEach(subscriber => PublishToConsumer(subscriber, eventMessage));
         }
 
     }

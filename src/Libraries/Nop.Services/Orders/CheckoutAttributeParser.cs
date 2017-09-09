@@ -40,8 +40,7 @@ namespace Nop.Services.Orders
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             ids.Add(id);
                         }
@@ -63,6 +62,9 @@ namespace Nop.Services.Orders
         public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml)
         {
             var result = new List<CheckoutAttribute>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return result;
+
             var ids = ParseCheckoutAttributeIds(attributesXml);
             foreach (int id in ids)
             {
@@ -83,6 +85,9 @@ namespace Nop.Services.Orders
         public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
         {
             var values = new List<CheckoutAttributeValue>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
             var attributes = ParseCheckoutAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
@@ -94,8 +99,7 @@ namespace Nop.Services.Orders
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
+                        if (int.TryParse(valueStr, out int id))
                         {
                             var value = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
                             if (value != null)
@@ -116,6 +120,9 @@ namespace Nop.Services.Orders
         public virtual IList<string> ParseValues(string attributesXml, int checkoutAttributeId)
         {
             var selectedCheckoutAttributeValues = new List<string>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return selectedCheckoutAttributeValues;
+
             try
             {
                 var xmlDoc = new XmlDocument();
@@ -127,8 +134,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == checkoutAttributeId)
                             {
@@ -182,8 +188,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == ca.Id)
                             {
@@ -252,8 +257,7 @@ namespace Nop.Services.Orders
                         if (node.Attributes != null && node.Attributes["ID"] != null)
                         {
                             string str1 = node.Attributes["ID"].InnerText.Trim();
-                            int id;
-                            if (int.TryParse(str1, out id))
+                            if (int.TryParse(str1, out int id))
                             {
                                 if (checkoutAttributeIdsToRemove.Contains(id))
                                 {
@@ -285,7 +289,7 @@ namespace Nop.Services.Orders
         public virtual bool? IsConditionMet(CheckoutAttribute attribute, string selectedAttributesXml)
         {
             if (attribute == null)
-                throw new ArgumentNullException("attribute");
+                throw new ArgumentNullException(nameof(attribute));
 
             var conditionAttributeXml = attribute.ConditionAttributeXml;
             if (String.IsNullOrEmpty(conditionAttributeXml))
@@ -354,8 +358,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (int.TryParse(str1, out int id))
                         {
                             if (id == attribute.Id)
                             {

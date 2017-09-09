@@ -1,12 +1,11 @@
 ﻿@model TopicModel
 @using Nop.Core.Domain.Seo
-@using Nop.Core.Infrastructure
-@using Nop.Web.Models.Topics;
+@inject SeoSettings seoSettings
 @{
     var isPopup = ViewBag.IsPopup;
     if (isPopup == null || isPopup == false)
     {
-        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+        Layout = "_ColumnsOne";
     }
 
     if (!Model.IsPasswordProtected)
@@ -18,11 +17,10 @@
         Html.AddMetaKeywordParts(Model.MetaKeywords);
     }
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
-    if (canonicalUrlsEnabled)
+    if (seoSettings.CanonicalUrlsEnabled)
     {
-        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Request.Url.Scheme);
-        Html.AddCanonicalUrlParts(topicUrl);
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(topicUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
     }
 
     //page class
@@ -34,7 +32,7 @@
         $(document).ready(function () {
             $('#button-password').click(function () {
                 var postData = {
-                    id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                    id: $("#topic-@Model.Id").val(),
                     password: $('#password').val()
                 };
                 addAntiForgeryToken(postData);
@@ -55,6 +53,8 @@
                             $('#ph-topic .page-body').html(data.Body);
                             $('#ph-password').hide();
                             $('#ph-topic').show();
+                            //we need to re-run the validation plugin after the content is loaded after successful authentication
+                            $.validator.unobtrusive.parse('#ph-topic');
                         }
                         else {
                             $('#password-error').text(data.Error).fadeIn("slow");
@@ -72,19 +72,17 @@
         });
     </script>
     <div class="topic-password" id="ph-password">
-        @using (Html.BeginRouteForm("TopicAuthenticate"))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.Id)
+        <form asp-route="TopicAuthenticate" method="post">
+            <input asp-for="Id" id="topic-@Model.Id" type="hidden" />
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
             </div>
             <div class="enter-password-form">
-                @Html.Password("password")
-                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
+                <input name="password" id="password" type="password"/>
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
             </div>
             <div class="password-error" id="password-error" style="display: none;"></div>
-        }
+        </form>
     </div>
 }
 <div class="page topic-page" id="ph-topic">

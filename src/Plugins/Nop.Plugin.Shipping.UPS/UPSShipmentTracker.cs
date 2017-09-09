@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Web.Services.Protocols;
 using Nop.Plugin.Shipping.UPS.track;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -43,10 +42,10 @@ namespace Nop.Plugin.Shipping.UPS
         }
 
         /// <summary>
-        /// Gets a url for a page to show tracking info (third party tracking page).
+        /// Gets an URL for a page to show tracking info (third party tracking page).
         /// </summary>
         /// <param name="trackingNumber">The tracking number to track.</param>
-        /// <returns>A url to a tracking page.</returns>
+        /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
             string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
@@ -89,17 +88,9 @@ namespace Nop.Plugin.Shipping.UPS
                 var trackResponse = track.ProcessTrack(tr);
                 result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(ToStatusEvent)).ToList());
             }
-            catch (SoapException ex)
-            {
-                var sb = new StringBuilder();
-                sb.AppendFormat("SoapException Message= {0}.", ex.Message);
-                sb.AppendFormat("SoapException Category:Code:Message= {0}.", ex.Detail.LastChild.InnerText);
-                //sb.AppendFormat("SoapException XML String for all= {0}.", ex.Detail.LastChild.OuterXml);
-                _logger.Error(string.Format("Error while getting UPS shipment tracking info - {0}", trackingNumber), new Exception(sb.ToString()));
-            }
             catch (Exception exc)
             {
-                _logger.Error(string.Format("Error while getting UPS shipment tracking info - {0}", trackingNumber), exc);
+                _logger.Error($"Error while getting UPS shipment tracking info - {trackingNumber}", exc);
             }
             return result;
         }

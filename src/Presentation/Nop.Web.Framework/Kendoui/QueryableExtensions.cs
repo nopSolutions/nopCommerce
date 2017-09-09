@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Core;
+using System.Linq.Dynamic;
 
 namespace Nop.Web.Framework.Kendoui
 {

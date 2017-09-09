@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Blogs
 {
@@ -13,12 +13,14 @@ namespace Nop.Web.Models.Blogs
 
         public int GetFontSize(BlogPostTagModel blogPostTag)
         {
+            if (blogPostTag == null)
+                throw new ArgumentNullException(nameof(blogPostTag));
+
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.BlogPostCount);
-            double mean;
-            double stdDev = StdDev(itemWeights, out mean);
 
+            double stdDev = StdDev(itemWeights, out double mean);
             return GetFontSize(blogPostTag.BlogPostCount, mean, stdDev);
         }
 
@@ -26,7 +28,8 @@ namespace Nop.Web.Models.Blogs
         {
             double factor = (weight - mean);
 
-            if (factor != 0 && stdDev != 0) factor /= stdDev;
+            if (factor != 0 && stdDev != 0)
+                factor /= stdDev;
 
             return (factor > 2) ? 150 :
                 (factor > 1) ? 120 :
@@ -39,6 +42,9 @@ namespace Nop.Web.Models.Blogs
 
         protected double Mean(IEnumerable<double> values)
         {
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
+            
             double sum = 0;
             int count = 0;
 
@@ -48,12 +54,18 @@ namespace Nop.Web.Models.Blogs
                 count++;
             }
 
+            if (count == 0)
+                return 0;
             return sum / count;
         }
 
         protected double StdDev(IEnumerable<double> values, out double mean)
         {
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
+
             mean = Mean(values);
+
             double sumOfDiffSquares = 0;
             int count = 0;
 
@@ -64,7 +76,9 @@ namespace Nop.Web.Models.Blogs
                 count++;
             }
 
-            return Math.Sqrt(sumOfDiffSquares / count);
+            if (count == 0)
+                return 0;
+            return  Math.Sqrt(sumOfDiffSquares / count);
         }
 
 

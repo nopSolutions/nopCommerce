@@ -1,8 +1,9 @@
-﻿using Nop.Web.Framework;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Shipping.AustraliaPost.Models
 {
-    public class AustraliaPostShippingModel
+    public class AustraliaPostShippingModel : BaseNopModel
     {
         [NopResourceDisplayName("Plugins.Shipping.AustraliaPost.Fields.ApiKey")]
         public string ApiKey { get; set; }

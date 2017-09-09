@@ -1,0 +1,53 @@
+﻿@model OrderSettingsModel
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Order settings");
+}
+
+
+<form asp-controller="Setting" asp-action="Order" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Order")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-tabs id="ordersettings-edit">
+                <nop-tab-header>
+                    <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Settings.Order.OrderSettings")</nop-tab-header-item>
+                    <nop-tab-header-item asp-name="tab-returnrequest">@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")</nop-tab-header-item>
+                </nop-tab-header>
+                <nop-tab-content>
+                    <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab-content-item>
+                    <nop-tab-content-item asp-name="tab-returnrequest">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-tab-content-item>
+                </nop-tab-content>
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>

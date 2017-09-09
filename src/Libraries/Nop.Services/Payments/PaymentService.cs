@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
@@ -21,6 +22,7 @@ namespace Nop.Services.Payments
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+
         #endregion
 
         #region Ctor
@@ -47,18 +49,20 @@ namespace Nop.Services.Payments
 
         #region Methods
 
+        #region Payment methods
+
         /// <summary>
         /// Load active payment methods
         /// </summary>
-        /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0, int filterByCountryId = 0)
+        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0)
         {
-            return LoadAllPaymentMethods(storeId, filterByCountryId)
-                   .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
-                   .ToList();
+            return LoadAllPaymentMethods(customer, storeId, filterByCountryId)
+                .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames
+                    .Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -78,12 +82,13 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Load all payment providers
         /// </summary>
+        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment providers</returns>
-        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0, int filterByCountryId = 0)
+        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0)
         {
-            var paymentMethods = _pluginFinder.GetPlugins<IPaymentMethod>(storeId: storeId).ToList();
+            var paymentMethods = _pluginFinder.GetPlugins<IPaymentMethod>(customer: customer, storeId: storeId).ToList();
             if (filterByCountryId == 0)
                 return paymentMethods;
 
@@ -97,20 +102,25 @@ namespace Nop.Services.Payments
                     paymentMetodsByCountry.Add(pm);
                 }
             }
+
             return paymentMetodsByCountry;
         }
 
+        #endregion
+
+        #region Restrictions
+
         /// <summary>
-        /// Gets a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Gets a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of country identifiers</returns>
         public virtual IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
-            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
             var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey);
             if (restictedCountryIds == null)
                 restictedCountryIds = new List<int>();
@@ -118,20 +128,23 @@ namespace Nop.Services.Payments
         }
 
         /// <summary>
-        /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Saves a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
         public virtual void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds)
         {
             if (paymentMethod == null)
-                throw new ArgumentNullException("paymentMethod");
+                throw new ArgumentNullException(nameof(paymentMethod));
 
             //we should be sure that countryIds is of type List<int> (not IList<int>)
-            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
             _settingService.SetSetting(settingKey, countryIds);
         }
 
+        #endregion
+
+        #region Processing
 
         /// <summary>
         /// Process a payment
@@ -185,7 +198,7 @@ namespace Nop.Services.Payments
         public virtual bool CanRePostProcessPayment(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;
@@ -209,12 +222,10 @@ namespace Nop.Services.Payments
             return paymentMethod.CanRePostProcessPayment(order);
         }
 
-
-
         /// <summary>
         /// Gets an additional handling fee of a payment method
         /// </summary>
-        /// <param name="cart">Shoping cart</param>
+        /// <param name="cart">Shopping cart</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Additional handling fee</returns>
         public virtual decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName)
@@ -235,9 +246,7 @@ namespace Nop.Services.Payments
             }
             return result;
         }
-
-
-
+        
         /// <summary>
         /// Gets a value indicating whether capture is supported by payment method
         /// </summary>
@@ -263,9 +272,7 @@ namespace Nop.Services.Payments
                 throw new NopException("Payment method couldn't be loaded");
             return paymentMethod.Capture(capturePaymentRequest);
         }
-
-
-
+        
         /// <summary>
         /// Gets a value indicating whether partial refund is supported by payment method
         /// </summary>
@@ -305,8 +312,6 @@ namespace Nop.Services.Payments
             return paymentMethod.Refund(refundPaymentRequest);
         }
         
-
-
         /// <summary>
         /// Gets a value indicating whether void is supported by payment method
         /// </summary>
@@ -332,9 +337,7 @@ namespace Nop.Services.Payments
                 throw new NopException("Payment method couldn't be loaded");
             return paymentMethod.Void(voidPaymentRequest);
         }
-
-
-
+        
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
@@ -386,7 +389,6 @@ namespace Nop.Services.Payments
             return paymentMethod.CancelRecurringPayment(cancelPaymentRequest);
         }
 
-
         /// <summary>
         /// Gets masked credit card number
         /// </summary>
@@ -408,7 +410,9 @@ namespace Nop.Services.Payments
             }
             return maskedChars + last4;
         }
-        
+
+        #endregion
+
         #endregion
     }
 }

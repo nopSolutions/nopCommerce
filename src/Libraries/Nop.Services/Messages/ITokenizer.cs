@@ -5,7 +5,7 @@ namespace Nop.Services.Messages
     public partial interface ITokenizer
     {
         /// <summary>
-        /// Replace all of the token key occurences inside the specified template text with corresponded token values
+        /// Replace all of the token key occurrences inside the specified template text with corresponded token values
         /// </summary>
         /// <param name="template">The template with token keys inside</param>
         /// <param name="tokens">The sequence of tokens to use</param>

@@ -17,15 +17,15 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether auto registration is enabled
-        /// </summary>
-        public bool AutoRegisterEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether email validation is required with "AutoRegisterEnabled".
+        /// Gets or sets a value indicating whether email validation is required.
         /// In most cases we can skip email validation for Facebook or any other third-party external authentication plugins. I guess we can trust  Facebook for the validation.
         /// </summary>
         public bool RequireEmailValidation { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is allowed to remove external authentication associations
+        /// </summary>
+        public bool AllowCustomersToRemoveAssociations { get; set; }
 
         /// <summary>
         /// Gets or sets system names of active payment methods

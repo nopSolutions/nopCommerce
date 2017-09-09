@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Mvc.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
@@ -28,7 +28,7 @@ namespace Nop.Web.Models.Order
             public int Points { get; set; }
 
             [NopResourceDisplayName("RewardPoints.Fields.PointsBalance")]
-            public int PointsBalance { get; set; }
+            public string PointsBalance { get; set; }
 
             [NopResourceDisplayName("RewardPoints.Fields.Message")]
             public string Message { get; set; }
