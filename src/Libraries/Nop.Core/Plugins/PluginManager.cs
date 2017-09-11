@@ -319,6 +319,10 @@ namespace Nop.Core.Plugins
             PluginDescriptor pluginDescriptor = null;
             try
             {
+                var extension = Path.GetExtension(archivefile.FileName);
+                if (extension == null || !extension.Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                    throw new Exception("Only zip archives are supported");
+
                 //save
                 var pluginFolder = CommonHelper.MapPath(PluginsPath);
                 var pluginTempFolder = CommonHelper.MapPath(PluginsTempPath);
