@@ -263,9 +263,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            if (archivefile != null && archivefile.Length > 0)
 	            {
-	                var pluginDescriptor = PluginManager.UploadPlugin(archivefile);
-	                //activity log
-	                _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
+	                var pluginDescriptors = PluginManager.UploadPlugins(archivefile);
+
+                    //activity log
+                    foreach (var pluginDescriptor in pluginDescriptors)
+                    {
+                        _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
+                    }
                 }
                 else
 	            {
