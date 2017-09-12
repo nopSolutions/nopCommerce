@@ -130,24 +130,26 @@
                     <span asp-validation-for="CustomerSettings.UsernamesEnabled"></span>
                 </div>
             </div>
-            <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+            <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled">
+                <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
+                        <span asp-validation-for="CustomerSettings.AllowUsersToChangeUsernames"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.AllowUsersToChangeUsernames" />
-                    <span asp-validation-for="CustomerSettings.AllowUsersToChangeUsernames"></span>
+                <div class="form-group advanced-setting" id="pnlCheckUsernameAvailability">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
+                        <span asp-validation-for="CustomerSettings.CheckUsernameAvailabilityEnabled"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group advanced-setting" id="pnlCheckUsernameAvailability">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.CheckUsernameAvailabilityEnabled" />
-                    <span asp-validation-for="CustomerSettings.CheckUsernameAvailabilityEnabled"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CustomerNameFormat" />
@@ -166,15 +168,17 @@
                     <span asp-validation-for="CustomerSettings.AllowCustomersToUploadAvatars"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlDefaultAvatarEnabled">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />
+            <nop-nested-setting asp-for="CustomerSettings.AllowCustomersToUploadAvatars">
+                <div class="form-group" id="pnlDefaultAvatarEnabled">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.DefaultAvatarEnabled" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.DefaultAvatarEnabled" />
+                        <span asp-validation-for="CustomerSettings.DefaultAvatarEnabled"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.DefaultAvatarEnabled" />
-                    <span asp-validation-for="CustomerSettings.DefaultAvatarEnabled"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.HideDownloadableProductsTab" />

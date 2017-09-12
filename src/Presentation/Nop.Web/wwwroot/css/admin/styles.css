@@ -1116,6 +1116,77 @@ span.grid-report-item.red {
     margin: 0 5px 8px 0;
 }
 
+/*nested settings*/
+.parent-setting.opened {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.parent-setting.opened div + div {
+    padding-left: 30px;
+    height: 100%;
+}
+
+.parent-setting.opened div + div:before,
+.parent-setting.opened + .nested-setting .form-group div + div:before,
+.parent-setting.opened + .nested-setting .form-group:last-child div + div:before {
+    border-left: 1px solid #c1c1c1;
+}
+
+.parent-setting.opened div + div:before {
+    position: absolute;
+    height: 100%;
+    content: "";
+    margin-left: -10px;
+    top: 22px;
+}
+
+.parent-setting.opened div + div input[type=checkbox] {
+    margin-left: -15px;
+}
+
+.parent-setting.opened + .nested-setting .form-group {
+    margin-bottom: 0;
+}
+
+.parent-setting.opened + .nested-setting .form-group div + div {
+    position: relative;
+    padding-left: 30px;
+    height: 100%;
+}
+
+.parent-setting.opened + .nested-setting .form-group div + div:before {
+    position: absolute;
+    height: 100%;
+    content: "";
+    margin-left: -10px;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child {
+    margin-bottom: 5px;
+}
+
+.parent-setting.opened + .nested-setting .form-group > div + div:after {
+    border-bottom: 1px solid #c1c1c1;
+    content: "";
+    position: absolute;
+    width: 10px;
+    display: block;
+    margin-left: -10px;
+    top: 17px;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div + div {
+    border-left: none;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div + div:before {
+    position: absolute;
+    height: 17px;
+    content: "";
+    margin-left: -10px;
+}        
+
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {
     display: none !important;
@@ -1305,6 +1376,49 @@ span.grid-report-item.red {
     .k-grid.k-widget > table {
         min-width: 400px;
     }
+
+    /*nested settings*/
+    .parent-setting.opened {
+        margin-bottom: 5px;
+        position: static;
+        height: auto !important;
+    }
+
+    .parent-setting.opened div + div {
+        padding-left: 15px;
+        height: auto;
+    }
+
+    .parent-setting.opened div + div:before {
+        display: none;
+    }
+
+    .parent-setting.opened div + div input[type=checkbox] {
+        margin-left: 0;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group {
+        margin-bottom: 5px;
+        height: auto !important;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div + div {
+        position: static;
+        padding-left: 15px;
+        height: auto;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div + div:before {
+        display: none;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group > div + div:after {
+        display: none;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group:last-child div + div:before {
+        display: none;
+    }        
 }
 
 @media (max-width: 992px) {
