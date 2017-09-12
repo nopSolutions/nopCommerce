@@ -1,7 +1,7 @@
 ﻿//Contributor: https://www.codeproject.com/Articles/493455/Server-side-Google-Analytics-Transactions
 
 using System;
-using System.Net;
+using System.Net.Http;
 using Nop.Core;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
@@ -28,37 +28,23 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         
         #region Utilities
 
-        private void FireRequest(string url)
+        private async void FireRequest(string url)
         {
             if (_requestCount < 500)
             {
                 _requestCount++;
 
-                var gaRequest = WebRequest.Create(url);
-
+                var httpClient = new HttpClient();
                 try
                 {
                     // we don't need the response so this is the end of the request
-                    var response = gaRequest.GetResponse();
+                    var response = (await httpClient.GetAsync(url)).EnsureSuccessStatusCode();
                 }
                 catch (Exception exc)
                 {
                     //eat the error 
                 }
 
-                //TODO comment the code above and uncomment the code below when the issue with multiple products is fixed
-               //gaRequest.BeginGetResponse(r =>
-               // {
-               //     try
-               //     {
-               //         // we don't need the response so this is the end of the request
-               //         var response = gaRequest.EndGetResponse(r);
-               //     }
-               //     catch
-               //     {
-               //         //eat the error 
-               //     }
-               // }, null);
             }
         }
 
