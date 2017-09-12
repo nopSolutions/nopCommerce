@@ -47,6 +47,7 @@ namespace Nop.Services.Tests.ExportImport
         private CatalogSettings _catalogSettings;
         private IGenericAttributeService _genericAttributeService;
         private ICustomerAttributeFormatter _customerAttributeFormatter;
+        private ISpecificationAttributeService _specificationAttributeService;
         private OrderSettings _orderSettings;
 
         [SetUp]
@@ -69,6 +70,7 @@ namespace Nop.Services.Tests.ExportImport
             _catalogSettings=new CatalogSettings();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _customerAttributeFormatter = MockRepository.GenerateMock<ICustomerAttributeFormatter>();
+            _specificationAttributeService = MockRepository.GenerateMock<ISpecificationAttributeService>();
             _orderSettings = new OrderSettings();
 
 
@@ -78,7 +80,7 @@ namespace Nop.Services.Tests.ExportImport
                 _storeService, _workContext, _productEditorSettings,
                 _vendorService, _productTemplateService, _dateRangeService,
                 _taxCategoryService, _measureService, _catalogSettings,
-                _genericAttributeService, _customerAttributeFormatter, _orderSettings);
+                _genericAttributeService, _customerAttributeFormatter, _orderSettings, _specificationAttributeService);
         }
 
         //[Test]

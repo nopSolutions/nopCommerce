@@ -311,6 +311,12 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.AccountNumber.Hint">
     <Value>Specify UPS account number (required to get negotiated rates).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes">
+    <Value>Export/Import products with specification attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes.Hint">
+    <Value>Check if products should be exported/imported with specification attributes.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -654,5 +660,13 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadN
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'UploadNewPlugin', N'Upload a plugin', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportproductspecificationattributes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.exportimportproductspecificationattributes', N'True', 0)
 END
 GO
