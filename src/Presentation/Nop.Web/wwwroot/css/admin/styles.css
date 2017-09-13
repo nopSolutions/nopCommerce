@@ -1125,6 +1125,7 @@ span.grid-report-item.red {
 .parent-setting.opened div + div {
     padding-left: 30px;
     height: 100%;
+    position: static;
 }
 
 .parent-setting.opened div + div:before,
@@ -1138,19 +1139,23 @@ span.grid-report-item.red {
     height: 100%;
     content: "";
     margin-left: -10px;
-    top: 22px;
+    top: 15px;
+    z-index: 10;
 }
 
 .parent-setting.opened div + div input[type=checkbox] {
     margin-left: -15px;
+    z-index: 100;
+    position: relative;
 }
 
 .parent-setting.opened + .nested-setting .form-group {
     margin-bottom: 0;
+    position: relative;
 }
 
 .parent-setting.opened + .nested-setting .form-group div + div {
-    position: relative;
+    position: static;
     padding-left: 30px;
     height: 100%;
 }
@@ -1185,7 +1190,8 @@ span.grid-report-item.red {
     height: 17px;
     content: "";
     margin-left: -10px;
-}        
+}
+
 
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {

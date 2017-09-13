@@ -62,10 +62,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //script
             var script = new TagBuilder("script");
             script.InnerHtml.AppendHtml("$(document).ready(function () {" +
-                                            $"$('input[name=\"{parentSettingName}\"]').closest('.form-group').addClass('parent-setting').attr('id', '{parentSettingId}').css('height', ($('input[name=\"{parentSettingName}\"]').closest('.form-group').height() + 5) + 'px');" +
-
-                                            $"for(i = 0; i < $('#{nestedSettingId} .form-group').length-1; i++){{$($('#{nestedSettingId} .form-group')[i]).css('height', ($($('#{nestedSettingId} .form-group')[i]).height() + 5) + 'px');}}" +
-
+                                            $"$('input[name=\"{parentSettingName}\"]').closest('.form-group').addClass('parent-setting').attr('id', '{parentSettingId}');" +
                                             $"function toggleNestedSetting() {{if ($('input[name=\"{parentSettingName}\"]').is(':checked')) {{$('#{parentSettingId}').addClass('opened')}} else {{$('#{parentSettingId}').removeClass('opened')}}}}" +
                                             $"$('input[name=\"{parentSettingName}\"]').click(toggleNestedSetting);" +
                                             "toggleNestedSetting();" +
