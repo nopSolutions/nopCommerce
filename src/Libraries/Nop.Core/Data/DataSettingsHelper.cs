@@ -18,7 +18,7 @@ namespace Nop.Core.Data
             if (!_databaseIsInstalled.HasValue)
             {
                 var manager = new DataSettingsManager();
-                var settings = manager.LoadSettings();
+                var settings = manager.LoadSettings(reloadSettings:true);
                 _databaseIsInstalled = settings != null && !String.IsNullOrEmpty(settings.DataConnectionString);
             }
             return _databaseIsInstalled.Value;
