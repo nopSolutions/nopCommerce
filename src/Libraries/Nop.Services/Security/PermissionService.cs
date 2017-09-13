@@ -193,56 +193,55 @@ namespace Nop.Services.Security
         {
             //install new permissions
             var permissions = permissionProvider.GetPermissions();
+            //default customer role mappings
+            var defaultPermissions = permissionProvider.GetDefaultPermissions().ToList();
+
             foreach (var permission in permissions)
             {
                 var permission1 = GetPermissionRecordBySystemName(permission.SystemName);
-                if (permission1 == null)
+                if (permission1 != null)
+                    continue;
+
+                //new permission (install it)
+                permission1 = new PermissionRecord
                 {
-                    //new permission (install it)
-                    permission1 = new PermissionRecord
+                    Name = permission.Name,
+                    SystemName = permission.SystemName,
+                    Category = permission.Category,
+                };
+                    
+                foreach (var defaultPermission in defaultPermissions)
+                {
+                    var customerRole = _customerService.GetCustomerRoleBySystemName(defaultPermission.CustomerRoleSystemName);
+                    if (customerRole == null)
                     {
-                        Name = permission.Name,
-                        SystemName = permission.SystemName,
-                        Category = permission.Category,
-                    };
-
-
-                    //default customer role mappings
-                    var defaultPermissions = permissionProvider.GetDefaultPermissions();
-                    foreach (var defaultPermission in defaultPermissions)
-                    {
-                        var customerRole = _customerService.GetCustomerRoleBySystemName(defaultPermission.CustomerRoleSystemName);
-                        if (customerRole == null)
+                        //new role (save it)
+                        customerRole = new CustomerRole
                         {
-                            //new role (save it)
-                            customerRole = new CustomerRole
-                            {
-                                Name = defaultPermission.CustomerRoleSystemName,
-                                Active = true,
-                                SystemName = defaultPermission.CustomerRoleSystemName
-                            };
-                            _customerService.InsertCustomerRole(customerRole);
-                        }
-
-
-                        var defaultMappingProvided = (from p in defaultPermission.PermissionRecords
-                                                      where p.SystemName == permission1.SystemName
-                                                      select p).Any();
-                        var mappingExists = (from p in customerRole.PermissionRecords
-                                             where p.SystemName == permission1.SystemName
-                                             select p).Any();
-                        if (defaultMappingProvided && !mappingExists)
-                        {
-                            permission1.CustomerRoles.Add(customerRole);
-                        }
+                            Name = defaultPermission.CustomerRoleSystemName,
+                            Active = true,
+                            SystemName = defaultPermission.CustomerRoleSystemName
+                        };
+                        _customerService.InsertCustomerRole(customerRole);
                     }
 
-                    //save new permission
-                    InsertPermissionRecord(permission1);
-
-                    //save localization
-                    permission1.SaveLocalizedPermissionName(_localizationService, _languageService);
+                    var defaultMappingProvided = (from p in defaultPermission.PermissionRecords
+                        where p.SystemName == permission1.SystemName
+                        select p).Any();
+                    var mappingExists = (from p in customerRole.PermissionRecords
+                        where p.SystemName == permission1.SystemName
+                        select p).Any();
+                    if (defaultMappingProvided && !mappingExists)
+                    {
+                        permission1.CustomerRoles.Add(customerRole);
+                    }
                 }
+
+                //save new permission
+                InsertPermissionRecord(permission1);
+
+                //save localization
+                permission1.SaveLocalizedPermissionName(_localizationService, _languageService);
             }
         }
 
