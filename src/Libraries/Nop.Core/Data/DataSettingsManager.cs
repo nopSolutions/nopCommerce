@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 
 namespace Nop.Core.Data
@@ -9,9 +11,19 @@ namespace Nop.Core.Data
     /// </summary>
     public partial class DataSettingsManager
     {
-        protected const char separator = ':';
-        protected const string filename = "Settings.txt";
-               
+        protected const char Separator = ':';
+        protected const string DefaultFilename = "Settings.txt";
+        protected static DataSettings DataSettings;
+
+        public string FilePath
+        {
+            get
+            {
+                var fileName = ConfigurationManager.AppSettings["NopCommerce.SettingsFile"] ?? DefaultFilename;
+                return Path.Combine(CommonHelper.MapPath("~/App_Data/"), fileName);
+            }
+        }
+
         /// <summary>
         /// Parse settings
         /// </summary>
@@ -20,7 +32,7 @@ namespace Nop.Core.Data
         protected virtual DataSettings ParseSettings(string text)
         {
             var shellSettings = new DataSettings();
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return shellSettings;
 
             //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
@@ -35,7 +47,7 @@ namespace Nop.Core.Data
 
             foreach (var setting in settings)
             {
-                var separatorIndex = setting.IndexOf(separator);
+                var separatorIndex = setting.IndexOf(Separator);
                 if (separatorIndex == -1)
                 {
                     continue;
@@ -76,21 +88,18 @@ namespace Nop.Core.Data
         /// <summary>
         /// Load settings
         /// </summary>
-        /// <param name="filePath">File path; pass null to use default settings file path</param>
         /// <returns></returns>
-        public virtual DataSettings LoadSettings(string filePath = null)
+        public virtual DataSettings LoadSettings()
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
-            }
-            if (File.Exists(filePath))
-            {
-                string text = File.ReadAllText(filePath);
-                return ParseSettings(text);
-            }
+            if (DataSettings != null)
+                return DataSettings;
             
-            return new DataSettings();
+            if (!File.Exists(FilePath))
+                return new DataSettings();
+
+            var text = File.ReadAllText(FilePath);
+            DataSettings = ParseSettings(text);
+            return DataSettings;
         }
 
         /// <summary>
@@ -102,17 +111,18 @@ namespace Nop.Core.Data
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
             
-            string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
-            if (!File.Exists(filePath))
+            if (!File.Exists(FilePath))
             {
-                using (File.Create(filePath))
+                using (File.Create(FilePath))
                 {
                     //we use 'using' to close the file after it's created
                 }
             }
             
             var text = ComposeSettings(settings);
-            File.WriteAllText(filePath, text);
+            File.WriteAllText(FilePath, text);
+
+            DataSettings = null;
         }
     }
 }
