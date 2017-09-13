@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             var feed = new RssFeed(
                 $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: News",
                 "News",
-                new Uri(_webHelper.GetStoreLocation(false)),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)

@@ -115,7 +115,7 @@ namespace Nop.Web.Controllers
             var feed = new RssFeed(
                 $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: Blog",
                 "Blog",
-                new Uri(_webHelper.GetStoreLocation(false)),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
