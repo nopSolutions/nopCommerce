@@ -1017,6 +1017,15 @@ namespace Nop.Web.Controllers
 
             }
 
+            var isFreeShipping = product.IsFreeShipping;
+            if (isFreeShipping && !string.IsNullOrEmpty(attributeXml))
+            {
+                isFreeShipping = _productAttributeParser.ParseProductAttributeValues(attributeXml)
+                    .Where(attributeValue => attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    .Select(attributeValue => _productService.GetProductById(attributeValue.AssociatedProductId))
+                    .All(associatedProduct => associatedProduct == null || !associatedProduct.IsShipEnabled || associatedProduct.IsFreeShipping);
+            }
+
             return Json(new
             {
                 gtin = gtin,
@@ -1028,6 +1037,7 @@ namespace Nop.Web.Controllers
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
                 pictureFullSizeUrl = pictureFullSizeUrl,
                 pictureDefaultSizeUrl = pictureDefaultSizeUrl,
+                isFreeShipping = isFreeShipping,
                 message = errors.Any() ? errors.ToArray() : null
             });
         }

@@ -2,6 +2,11 @@
 @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery">
+        <script type="text/javascript">
+            $(document).on("product_attributes_changed", function (data) {
+                $(".free-shipping").toggle(data.changedData.isFreeShipping);
+            });
+        </script>
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
             <div class="free-shipping">@T("Products.FreeShipping")</div>
