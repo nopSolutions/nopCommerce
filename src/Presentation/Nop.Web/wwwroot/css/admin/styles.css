@@ -1122,10 +1122,15 @@ span.grid-report-item.red {
     position: relative;
 }
 
+.parent-setting.opened > div:first-child {
+    padding-bottom: 5px;
+}
+
 .parent-setting.opened div + div {
     padding-left: 30px;
     height: 100%;
     position: static;
+    padding-bottom: 5px;
 }
 
 .parent-setting.opened div + div:before,
@@ -1154,10 +1159,23 @@ span.grid-report-item.red {
     position: relative;
 }
 
+.parent-setting.opened + .nested-setting .form-group > div:first-child {
+    padding-bottom: 5px;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child > div:first-child {
+    padding-bottom: 0;
+}
+
 .parent-setting.opened + .nested-setting .form-group div + div {
     position: static;
     padding-left: 30px;
+    padding-bottom: 5px;
     height: 100%;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div + div {
+    padding-bottom: 0;
 }
 
 .parent-setting.opened + .nested-setting .form-group div + div:before {
@@ -1165,6 +1183,17 @@ span.grid-report-item.red {
     height: 100%;
     content: "";
     margin-left: -10px;
+}
+
+.parent-setting.opened + .nested-setting .form-group.parent-setting div + div:before {
+    position: absolute;
+    height: 18px;
+    content: "";
+    margin-left: -10px;
+}
+
+.parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div + div:after {
+    display: none;
 }
 
 .parent-setting.opened + .nested-setting .form-group:last-child {
@@ -1192,6 +1221,9 @@ span.grid-report-item.red {
     margin-left: -10px;
 }
 
+.basic-settings-mode .parent-setting.parent-setting-advanced.opened div + div:before {
+    display: none;
+}
 
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {
@@ -1390,6 +1422,14 @@ span.grid-report-item.red {
         height: auto !important;
     }
 
+    .parent-setting.opened > div:first-child {
+        padding-bottom: 0;
+    }
+
+    .parent-setting.opened div + div {
+        padding-bottom: 0;
+    }
+
     .parent-setting.opened div + div {
         padding-left: 15px;
         height: auto;
@@ -1424,7 +1464,15 @@ span.grid-report-item.red {
 
     .parent-setting.opened + .nested-setting .form-group:last-child div + div:before {
         display: none;
-    }        
+    }
+
+    .parent-setting.opened + .nested-setting .form-group > div:first-child {
+        padding-bottom: 0;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div + div {
+        padding-bottom: 0;
+    }
 }
 
 @media (max-width: 992px) {

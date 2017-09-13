@@ -62,14 +62,16 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //script
             var script = new TagBuilder("script");
             script.InnerHtml.AppendHtml("$(document).ready(function () {" +
-                                            $"$('input[name=\"{parentSettingName}\"]').closest('.form-group').addClass('parent-setting').attr('id', '{parentSettingId}');" +
-                                            $"function toggleNestedSetting() {{if ($('input[name=\"{parentSettingName}\"]').is(':checked')) {{$('#{parentSettingId}').addClass('opened')}} else {{$('#{parentSettingId}').removeClass('opened')}}}}" +
+                                            $"var parentFormGroup = $('input[name=\"{parentSettingName}\"]').closest('.form-group');" +
+                                            $"var parentFormGroupId = $(parentFormGroup).attr('id');" +
+                                            $"if(!parentFormGroupId){{parentFormGroupId = '{parentSettingId}'}}" +
+                                            $"$(parentFormGroup).addClass('parent-setting').attr('id', parentFormGroupId);" +
+                                            $"if($('#{nestedSettingId} .form-group').length == $('#{nestedSettingId} .form-group.advanced-setting').length){{$('#' + parentFormGroupId).addClass('parent-setting-advanced')}}" +
+                                            $"function toggleNestedSetting() {{if ($('input[name=\"{parentSettingName}\"]').is(':checked')) {{$('#' + parentFormGroupId).addClass('opened')}} else {{$('#' + parentFormGroupId).removeClass('opened')}}}}" +
                                             $"$('input[name=\"{parentSettingName}\"]').click(toggleNestedSetting);" +
                                             "toggleNestedSetting();" +
                                         "});");
             output.PreContent.SetHtmlContent(script.RenderHtmlContent());
         }
-
-        public override int Order => 100;
     }
 }
