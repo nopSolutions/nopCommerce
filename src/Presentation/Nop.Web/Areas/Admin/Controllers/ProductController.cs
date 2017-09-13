@@ -2678,8 +2678,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
             {
                 psa.AllowFiltering = model.AllowFiltering;
-                if (int.TryParse(model.ValueRaw, out int specificationAttributeOptionId))
-                    psa.SpecificationAttributeOptionId = specificationAttributeOptionId;
+                psa.SpecificationAttributeOptionId = model.SpecificationAttributeOptionId;
             }
 
             psa.ShowOnProductPage = model.ShowOnProductPage;

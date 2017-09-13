@@ -100,7 +100,7 @@
                                         encoded: false,
                                         editor: function setDropDownEditor(container, options) {
                                                     if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
-                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ValueRaw"/>')
+                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationAttributeOptionId"/>')
                                                             .appendTo(container).kendoDropDownList().data("kendoDropDownList");
                                                         $.ajax({
                                                             type: "GET",
