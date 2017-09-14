@@ -796,6 +796,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.ShowProductReviewsOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, storeScope);
                 model.ProductReviewsPageSizeOnAccountPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x=> x.ProductReviewsPageSizeOnAccountPage, storeScope);
                 model.ExportImportProductAttributes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductAttributes, storeScope);
+                model.ExportImportProductCategoryBreadcrumb_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, storeScope);
             }
 
             return View(model);
@@ -869,7 +870,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductReviewsTabOnAccountPage, model.ShowProductReviewsOnAccountPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductReviewsPageSizeOnAccountPage, model.ProductReviewsPageSizeOnAccountPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductAttributes, model.ExportImportProductAttributes_OverrideForStore, storeScope, false);
-            
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductCategoryBreadcrumb, model.ExportImportProductCategoryBreadcrumb_OverrideForStore, storeScope, false); 
+
             //now settings not overridable per store
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreDiscounts, 0, false);
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, 0, false);
