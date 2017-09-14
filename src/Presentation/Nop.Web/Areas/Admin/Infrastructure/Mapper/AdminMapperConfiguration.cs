@@ -298,7 +298,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.LastStockQuantity, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductEditorSettingsModel, mo => mo.Ignore())
                 .ForMember(dest => dest.StockQuantityHistory, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.ProductAttributesExist, mo => mo.Ignore());
             CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
