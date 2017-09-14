@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Data
 {
@@ -11,7 +12,7 @@ namespace Nop.Core.Data
     {
         protected const char separator = ':';
         protected const string filename = "Settings.txt";
-               
+
         /// <summary>
         /// Parse settings
         /// </summary>
@@ -77,20 +78,22 @@ namespace Nop.Core.Data
         /// Load settings
         /// </summary>
         /// <param name="filePath">File path; pass null to use default settings file path</param>
+        /// <param name="reloadSettings">Indicates whether to reload data, if they already loaded</param>
         /// <returns></returns>
-        public virtual DataSettings LoadSettings(string filePath = null)
+        public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
+            if (!reloadSettings && Singleton<DataSettings>.Instance != null)
+                return Singleton<DataSettings>.Instance;
+
+            if (string.IsNullOrEmpty(filePath))
                 filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
-            }
-            if (File.Exists(filePath))
-            {
-                string text = File.ReadAllText(filePath);
-                return ParseSettings(text);
-            }
-            
-            return new DataSettings();
+
+            if (!File.Exists(filePath))
+                return new DataSettings();
+
+            var text = File.ReadAllText(filePath);
+            Singleton<DataSettings>.Instance = ParseSettings(text);
+            return Singleton<DataSettings>.Instance;
         }
 
         /// <summary>
@@ -101,7 +104,9 @@ namespace Nop.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
-            
+
+            Singleton<DataSettings>.Instance = settings;
+
             string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
