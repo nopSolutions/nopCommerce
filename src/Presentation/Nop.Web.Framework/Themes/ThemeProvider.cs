@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
+using Newtonsoft.Json;
 using Nop.Core;
 
 namespace Nop.Web.Framework.Themes
@@ -15,44 +15,40 @@ namespace Nop.Web.Framework.Themes
         #region Constants
 
         private const string ThemesPath = "~/Themes/";
-        private const string ThemeConfigurationFileName = "theme.config";
+        private const string ThemeConfigurationFileName = "theme.json";
 
         #endregion
 
         #region Fields
-        
+
         private IList<ThemeConfiguration> _themeConfigurations;
 
         #endregion
 
         #region Utilities
 
-        private void LoadConfigurations()
+        /// <summary>
+        /// Get theme configuration from the file
+        /// </summary>
+        /// <param name="filePath">Path to the configuration file</param>
+        /// <returns>Theme configuration</returns>
+        protected virtual ThemeConfiguration GeThemeConfiguration(string filePath)
         {
-            _themeConfigurations = new List<ThemeConfiguration>();
-            foreach (string themeName in Directory.GetDirectories(CommonHelper.MapPath(ThemesPath)))
-            {
-                var configuration = CreateThemeConfiguration(themeName);
-                if (configuration != null)
-                {
-                    _themeConfigurations.Add(configuration);
-                }
-            }
-        }
+            var text = File.ReadAllText(filePath);
+            if (string.IsNullOrEmpty(text))
+                return new ThemeConfiguration();
 
-        private ThemeConfiguration CreateThemeConfiguration(string themePath)
-        {
-            var themeDirectory = new DirectoryInfo(themePath);
-            var themeConfigFile = new FileInfo(Path.Combine(themeDirectory.FullName, ThemeConfigurationFileName));
+            //get theme configuration from the JSON file
+            var themeConfiguration = JsonConvert.DeserializeObject<ThemeConfiguration>(text);
 
-            if (themeConfigFile.Exists)
-            {
-                var doc = new XmlDocument();
-                doc.Load(themeConfigFile.FullName);
-                return new ThemeConfiguration(themeDirectory.Name, doc);
-            }
+            //some validation
+            if (string.IsNullOrEmpty(themeConfiguration?.SystemName))
+                throw new Exception($"A theme configuration '{filePath}' has no system name");
 
-            return null;
+            if (_themeConfigurations?.Any(configuration => configuration.SystemName.Equals(themeConfiguration.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
+                throw new Exception($"A theme with '{themeConfiguration.SystemName}' system name is already defined");
+
+            return themeConfiguration;
         }
 
         #endregion
@@ -68,7 +64,12 @@ namespace Nop.Web.Framework.Themes
             if (_themeConfigurations == null)
             {
                 //load all theme configurations
-                LoadConfigurations();
+                var themeFolder = new DirectoryInfo(CommonHelper.MapPath(ThemesPath));
+                _themeConfigurations = new List<ThemeConfiguration>();
+                foreach (var configurationFile in themeFolder.GetFiles(ThemeConfigurationFileName, SearchOption.AllDirectories))
+                {
+                    _themeConfigurations.Add(GeThemeConfiguration(configurationFile.FullName));
+                }
             }
 
             return _themeConfigurations;
