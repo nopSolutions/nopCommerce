@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.30</Version> 
+    <Version>1.31</Version> 
     <Description>This plugin enables check and money order payments</Description> 
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
@@ -14,8 +14,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Remove="Description.txt" />
     <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
@@ -32,11 +32,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

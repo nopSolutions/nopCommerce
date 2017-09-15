@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.80</Version> 
+    <Version>1.83</Version> 
     <Description>This plugin enables integration with Google Shopping, formerly Google Product Search and Froogle</Description> 
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
@@ -15,9 +15,9 @@
   
   <ItemGroup>
     <None Remove="Content\styles.css" />
-    <None Remove="Description.txt" />
     <None Remove="Files\taxonomy.txt" />
     <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\_Configure.General.cshtml" />
     <None Remove="Views\_Configure.Override.cshtml" />
@@ -38,7 +38,7 @@
     <Content Include="Content\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Description.txt">
+    <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Files\taxonomy.txt">

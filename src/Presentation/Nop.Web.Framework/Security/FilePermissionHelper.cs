@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core;
+using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Security
 {
@@ -174,11 +175,11 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetFilesWrite()
         {
-            string rootDir = CommonHelper.MapPath("~/");
-            var filesToCheck = new List<string>();
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\InstalledPlugins.txt"));
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
-            return filesToCheck;
+            return new List<string>
+            {
+                CommonHelper.MapPath(PluginManager.InstalledPluginsFilePath),
+                Path.Combine(CommonHelper.MapPath("~/"), "App_Data\\Settings.txt")
+            };
         }
     }
 }

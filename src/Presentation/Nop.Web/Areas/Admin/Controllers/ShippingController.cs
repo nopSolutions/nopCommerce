@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Primitives;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
@@ -20,6 +17,9 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Directory;
+using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
@@ -175,7 +175,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             var pluginDescriptor = srcm.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+
+            //update the description file
+            PluginManager.SavePluginDescriptor(pluginDescriptor);
+
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 
@@ -247,7 +250,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             var pluginDescriptor = pickupPointProvider.PluginDescriptor;
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+
+            //update the description file
+            PluginManager.SavePluginDescriptor(pluginDescriptor);
+
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 

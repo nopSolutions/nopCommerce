@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.21</Version> 
+    <Version>1.22</Version> 
     <Description>This plugin allows you to change the contents of main page slider</Description> 
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
@@ -39,8 +39,8 @@
     <None Remove="Content\nivoslider\themes\light\bullets.png" />
     <None Remove="Content\nivoslider\themes\light\light.css" />
     <None Remove="Content\nivoslider\themes\light\loading.gif" />
-    <None Remove="Description.txt" />
     <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
     <None Remove="Scripts\jquery.nivo.slider.js" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PublicInfo.cshtml" />
@@ -134,11 +134,11 @@
     <Content Include="Content\nivoslider\themes\light\loading.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\jquery.nivo.slider.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

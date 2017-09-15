@@ -4,8 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
@@ -26,6 +24,8 @@ using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Web.Areas.Admin.Extensions;
+using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Services.Events;
@@ -432,9 +432,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pluginDescriptor.LimitedToCustomerRoles.Clear();
                 if (model.SelectedCustomerRoleIds.Any())
                     pluginDescriptor.LimitedToCustomerRoles = model.SelectedCustomerRoleIds;
-                PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+
+                //update the description file
+                PluginManager.SavePluginDescriptor(pluginDescriptor);
+
                 //reset plugin cache
                 _pluginFinder.ReloadPlugins();
+
                 //locales
                 foreach (var localized in model.Locales)
                 {

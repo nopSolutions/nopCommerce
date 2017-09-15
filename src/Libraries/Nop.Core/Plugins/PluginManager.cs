@@ -24,14 +24,15 @@ namespace Nop.Core.Plugins
     {
         #region Const
 
-        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        private const string ObsoleteInstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        private const string InstalledPluginsFilePath_ = "~/App_Data/installedPlugins.json";
         private const string PluginsPath = "~/Plugins";
         private const string PluginsTempPath = "~/App_Data/TempUploads";
         private const string PluginsPathName = "Plugins";
         private const string ShadowCopyPath = "~/Plugins/bin";
         private const string RefsPathName = "refs";
-        private const string PluginDescriptorFile = "Description.txt";
         private const string UploadedPluginsDescriptionFile = "uploadedPlugins.json";
+        private const string PluginDescriptionFileName = "plugin.json";
 
         #endregion
 
@@ -50,9 +51,11 @@ namespace Nop.Core.Plugins
             //get all libraries from /bin/{version}/ directory
             BaseAppLibraries = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory)
                 .GetFiles("*.dll", SearchOption.TopDirectoryOnly).Select(fi => fi.Name).ToList();
+
             //get all libraries from base site directory
             if(!AppDomain.CurrentDomain.BaseDirectory.Equals(Environment.CurrentDirectory, StringComparison.InvariantCultureIgnoreCase))
                 BaseAppLibraries.AddRange(new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.dll", SearchOption.TopDirectoryOnly).Select(fi => fi.Name));
+
             //get all libraries from refs directory
             var refsPathName = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, RefsPathName));
             if(refsPathName.Exists)
@@ -61,7 +64,12 @@ namespace Nop.Core.Plugins
 
         #endregion
 
-        #region Methods
+        #region Properties
+
+        /// <summary>
+        /// Gets the path to file that contains installed plugin system names
+        /// </summary>
+        public static string InstalledPluginsFilePath => InstalledPluginsFilePath_;
 
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied
@@ -72,6 +80,10 @@ namespace Nop.Core.Plugins
         /// Returns a collection of all plugin which are not compatible with the current version
         /// </summary>
         public static IEnumerable<string> IncompatiblePlugins { get; set; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Initialize
@@ -99,7 +111,7 @@ namespace Nop.Core.Plugins
                 
                 try
                 {
-                    var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
+                    var installedPluginSystemNames = GetInstalledPluginNames(CommonHelper.MapPath(InstalledPluginsFilePath));
 
                     Debug.WriteLine("Creating shadow copy folder and querying for DLLs");
                     //ensure folders are created
@@ -168,9 +180,9 @@ namespace Nop.Core.Plugins
 
                             //other plugin description info
                             var mainPluginFile = pluginFiles
-                                .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.InvariantCultureIgnoreCase));
+                                .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.AssemblyFileName, StringComparison.InvariantCultureIgnoreCase));
                             if (mainPluginFile == null)
-                                throw new Exception($"{pluginDescriptor.PluginFileName} cannot be loaded");
+                                throw new Exception($"{pluginDescriptor.AssemblyFileName} cannot be loaded");
 
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
@@ -238,22 +250,28 @@ namespace Nop.Core.Plugins
         /// <param name="systemName">Plugin system name</param>
         public static void MarkPluginAsInstalled(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
-            if (!File.Exists(filePath))
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
 
-            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
+            //create file if not exists
+            if (!File.Exists(filePath))
+            {
+                //we use 'using' to close the file after it's created
+                using (File.Create(filePath)) { }
+            }
+
+            //get installed plugin names
+            var installedPluginSystemNames = GetInstalledPluginNames(filePath);
+
+            //add plugin system name to the list if doesn't already exist
+            var alreadyMarkedAsInstalled = installedPluginSystemNames.Any(pluginName => pluginName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             if (!alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Add(systemName);
-            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
+
+            //save installed plugin names to the file
+            SaveInstalledPluginNames(installedPluginSystemNames,filePath);
         }
 
         /// <summary>
@@ -262,23 +280,28 @@ namespace Nop.Core.Plugins
         /// <param name="systemName">Plugin system name</param>
         public static void MarkPluginAsUninstalled(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException(nameof(systemName));
 
             var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
+
+            //create file if not exists
             if (!File.Exists(filePath))
-                using (File.Create(filePath))
-                {
-                    //we use 'using' to close the file after it's created
-                }
+            {
+                //we use 'using' to close the file after it's created
+                using (File.Create(filePath)) { }
+            }
 
+            //get installed plugin names
+            var installedPluginSystemNames = GetInstalledPluginNames(filePath);
 
-            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
-            bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
+            //remove plugin system name from the list if exists
+            var alreadyMarkedAsInstalled = installedPluginSystemNames.Any(pluginName => pluginName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
             if (alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Remove(systemName);
-            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
+
+            //save installed plugin names to the file
+            SaveInstalledPluginNames(installedPluginSystemNames,filePath);
         }
 
         /// <summary>
@@ -366,6 +389,28 @@ namespace Nop.Core.Plugins
             return pluginDescriptors;
         }
         
+        /// <summary>
+        /// Save plugin descriptor to the plugin description file
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        public static void SavePluginDescriptor(PluginDescriptor pluginDescriptor)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentException(nameof(pluginDescriptor));
+
+            //get the description file path
+            if (pluginDescriptor.OriginalAssemblyFile == null)
+                throw new Exception($"Cannot load original assembly path for {pluginDescriptor.SystemName} plugin.");
+
+            var filePath = Path.Combine(pluginDescriptor.OriginalAssemblyFile.Directory.FullName, PluginDescriptionFileName);
+            if (!File.Exists(filePath))
+                throw new Exception($"Description file for {pluginDescriptor.SystemName} plugin does not exist. {filePath}");
+
+            //save the file
+            var text = JsonConvert.SerializeObject(pluginDescriptor, Formatting.Indented);
+            File.WriteAllText(filePath, text);
+        }
+
         #endregion
 
         #region Utilities
@@ -384,13 +429,13 @@ namespace Nop.Core.Plugins
             var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
             
             //add display order and path to list
-            foreach (var descriptionFile in pluginFolder.GetFiles(PluginDescriptorFile, SearchOption.AllDirectories))
+            foreach (var descriptionFile in pluginFolder.GetFiles(PluginDescriptionFileName, SearchOption.AllDirectories))
             {
                 if (!IsPackagePluginFolder(descriptionFile.Directory))
                     continue;
 
                 //parse file
-                var pluginDescriptor = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+                var pluginDescriptor = GetPluginDescriptorFromFile(descriptionFile.FullName);
 
                 //populate list
                 result.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
@@ -425,7 +470,7 @@ namespace Nop.Core.Plugins
 
                 foreach (var entry in archive.Entries)
                 {
-                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/{PluginDescriptorFile}",
+                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/{PluginDescriptionFileName}",
                         StringComparison.InvariantCultureIgnoreCase))
                     {
                         using (var unzippedEntryStream = entry.Open())
@@ -433,7 +478,7 @@ namespace Nop.Core.Plugins
                             using (var reader = new StreamReader(unzippedEntryStream))
                             {
                                 string text = reader.ReadToEnd();
-                                pluginDescriptor = PluginFileParser.ParsePluginDescription(text);
+                                pluginDescriptor = GetPluginDescriptor(text);
                                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
                                     StringComparer.InvariantCultureIgnoreCase))
                                     throw new Exception(
@@ -447,7 +492,7 @@ namespace Nop.Core.Plugins
             }
 
             if (pluginDescriptor == null)
-                throw new Exception($"No {PluginDescriptorFile} file is found. It should be in the root of the archive.");
+                throw new Exception($"No {PluginDescriptionFileName} file is found. It should be in the root of the archive.");
 
             //new plugin path
             if (uploadedPluginDirectoryName == null)
@@ -502,7 +547,7 @@ namespace Nop.Core.Plugins
                     var directoryName = Path.GetFileName(pluginPath.TrimEnd('/'));
 
                     //try to get the plugin descriptor entry
-                    var pluginDescriptorPath = $"{pluginPath}{PluginDescriptorFile}";
+                    var pluginDescriptorPath = $"{pluginPath}{PluginDescriptionFileName}";
                     var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(pluginDescriptorPath, StringComparison.InvariantCultureIgnoreCase));
                     if (descriptorEntry == null)
                         return null;
@@ -511,7 +556,7 @@ namespace Nop.Core.Plugins
                     {
                         using (var reader = new StreamReader(unzippedEntryStream))
                         {
-                            var pluginDescriptor = PluginFileParser.ParsePluginDescription(reader.ReadToEnd());
+                            var pluginDescriptor = GetPluginDescriptor(reader.ReadToEnd());
                             return new { DirectoryName = directoryName, PluginPath = pluginPath, PluginDescriptor = pluginDescriptor };
                         }
                     }
@@ -546,6 +591,94 @@ namespace Nop.Core.Plugins
 
                 return pluginsInArchive.Select(plugin => plugin.PluginDescriptor).ToList();
             }
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the plugin description file
+        /// </summary>
+        /// <param name="filePath">Path to the description file</param>
+        /// <returns>Plugin descriptor</returns>
+        private static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
+        {
+            var text = File.ReadAllText(filePath);
+
+            return GetPluginDescriptor(text);
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        private static PluginDescriptor GetPluginDescriptor(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
+        }
+
+        /// <summary>
+        /// Get system names of installed plugins
+        /// </summary>
+        /// <param name="filePath">Path to the file</param>
+        /// <returns>List of plugin system names</returns>
+        private static IList<string> GetInstalledPluginNames(string filePath)
+        {
+            //check whether file exists
+            if (!File.Exists(filePath))
+            {
+                //if not, try to parse the file that was used in previous nopCommerce versions
+                filePath = CommonHelper.MapPath(ObsoleteInstalledPluginsFilePath);
+                if (!File.Exists(filePath))
+                    return new List<string>();
+
+                //get plugin system names from the old txt file
+                var pluginSystemNames = new List<string>();
+                using (var reader = new StringReader(File.ReadAllText(filePath)))
+                {
+                    var pluginName = string.Empty;
+                    while ((pluginName = reader.ReadLine()) != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(pluginName))
+                            pluginSystemNames.Add(pluginName.Trim());
+                    }
+                }
+
+                //save system names of installed plugins to the new file
+                SaveInstalledPluginNames(pluginSystemNames, CommonHelper.MapPath(InstalledPluginsFilePath));
+
+                //and delete the old one
+                File.Delete(filePath);
+
+                return pluginSystemNames;
+            }
+
+            var text = File.ReadAllText(filePath);
+            if (string.IsNullOrEmpty(text))
+                return new List<string>();
+
+            //get plugin system names from the JSON file
+            return JsonConvert.DeserializeObject<IList<string>>(text);
+        }
+
+        /// <summary>
+        /// Save system names of installed plugins to the file
+        /// </summary>
+        /// <param name="pluginSystemNames">List of plugin system names</param>
+        /// <param name="filePath">Path to the file</param>
+        private static void SaveInstalledPluginNames(IList<string> pluginSystemNames, string filePath)
+        {
+            //save the file
+            var text = JsonConvert.SerializeObject(pluginSystemNames, Formatting.Indented);
+            File.WriteAllText(filePath, text);
         }
 
         /// <summary>
@@ -688,15 +821,6 @@ namespace Nop.Core.Plugins
             return true;
         }
 
-        /// <summary>
-        /// Gets the full path of InstalledPlugins.txt file
-        /// </summary>
-        /// <returns></returns>
-        private static string GetInstalledPluginsFilePath()
-        { 
-            return CommonHelper.MapPath(InstalledPluginsFilePath);
-        }
-        
         #endregion
     }
 }

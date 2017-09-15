@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
@@ -32,76 +33,91 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Gets or sets the plugin group
         /// </summary>
+        [JsonProperty(PropertyName = "Group")]
         public virtual string Group { get; set; }
 
         /// <summary>
         /// Gets or sets the friendly name
         /// </summary>
+        [JsonProperty(PropertyName = "FriendlyName")]
         public virtual string FriendlyName { get; set; }
 
         /// <summary>
         /// Gets or sets the system name
         /// </summary>
+        [JsonProperty(PropertyName = "SystemName")]
         public virtual string SystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the version
         /// </summary>
+        [JsonProperty(PropertyName = "Version")]
         public virtual string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the supported versions of nopCommerce
         /// </summary>
+        [JsonProperty(PropertyName = "SupportedVersions")]
         public virtual IList<string> SupportedVersions { get; set; }
 
         /// <summary>
         /// Gets or sets the author
         /// </summary>
+        [JsonProperty(PropertyName = "Author")]
         public virtual string Author { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
+        [JsonProperty(PropertyName = "DisplayOrder")]
         public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the assembly file
         /// </summary>
+        [JsonProperty(PropertyName = "FileName")]
         public virtual string AssemblyFileName { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
+        [JsonProperty(PropertyName = "Description")]
         public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
         /// </summary>
+        [JsonProperty(PropertyName = "LimitedToStores")]
         public virtual IList<int> LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the list of customer role identifiers for which this plugin is available. If empty, then this plugin is available for all ones.
         /// </summary>
+        [JsonProperty(PropertyName = "LimitedToCustomerRoles")]
         public virtual IList<int> LimitedToCustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed
         /// </summary>
+        [JsonIgnore]
         public virtual bool Installed { get; set; }
 
         /// <summary>
         /// Gets or sets the plugin type
         /// </summary>
+        [JsonIgnore]
         public virtual Type PluginType { get; set; }
 
         /// <summary>
         /// Gets or sets the original assembly file that a shadow copy was made from it
         /// </summary>
+        [JsonIgnore]
         public virtual FileInfo OriginalAssemblyFile { get; internal set; }
 
         /// <summary>
         /// Gets or sets the assembly that has been shadow copied that is active in the application
         /// </summary>
+        [JsonIgnore]
         public virtual Assembly ReferencedAssembly { get; internal set; }
 
         #endregion

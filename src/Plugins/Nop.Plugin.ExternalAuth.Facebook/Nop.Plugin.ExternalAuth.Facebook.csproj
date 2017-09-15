@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
     <Company>Nop Solutions, Ltd</Company> 
     <Authors>Nop Solutions, Ltd</Authors> 
-    <Version>1.43</Version> 
+    <Version>1.44</Version> 
     <Description>This plugin enables Facebook authentication (login using Facebook account)</Description> 
     <PackageLicenseUrl></PackageLicenseUrl> 
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
@@ -16,8 +16,8 @@
   <ItemGroup>
     <None Remove="Content\facebookstyles.css" />
     <None Remove="Content\Images\facebook-signing.png" />
-    <None Remove="Description.txt" />
     <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PublicInfo.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
@@ -40,11 +40,11 @@
     <Content Include="Content\Images\facebook-signing.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Description.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

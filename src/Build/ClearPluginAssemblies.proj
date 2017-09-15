@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -80,7 +80,7 @@
       <!-- Get file name without extension for all libraries from /bin/{version}/ directory-->
       <DllFileNames Include="@(BaseDllFiles->'%(filename)')" />
       <!-- Get plugin description files to get plugin paths -->
-      <PluginsDescription Include="$(NopWebPath)\Plugins\**\Description.txt;" />      
+      <PluginsDescription Include="$(NopWebPath)\Plugins\**\plugin.json;" />      
       <!-- Get paths for all plugins -->
       <PluginsFolders Include="@(PluginsDescription->'%(relativedir)')" />
     </ItemGroup>  
