@@ -8,31 +8,40 @@ using Nop.Services.Common;
 namespace Nop.Web.Framework.Themes
 {
     /// <summary>
-    /// Theme context
+    /// Represents the theme context implementation
     /// </summary>
     public partial class ThemeContext : IThemeContext
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IGenericAttributeService _genericAttributeService;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly IThemeProvider _themeProvider;
+        #region Fields
 
-        private bool _themeIsCached;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IStoreContext _storeContext;
+        private readonly IThemeProvider _themeProvider;
+        private readonly IWorkContext _workContext;
+        private readonly StoreInformationSettings _storeInformationSettings;
+        
         private string _cachedThemeName;
 
-        public ThemeContext(IWorkContext workContext,
+        #endregion
+
+        #region Ctor
+
+        public ThemeContext(IGenericAttributeService genericAttributeService,
             IStoreContext storeContext,
-            IGenericAttributeService genericAttributeService, 
-            StoreInformationSettings storeInformationSettings, 
-            IThemeProvider themeProvider)
+            IThemeProvider themeProvider,
+            IWorkContext workContext,
+            StoreInformationSettings storeInformationSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
             this._genericAttributeService = genericAttributeService;
-            this._storeInformationSettings = storeInformationSettings;
+            this._storeContext = storeContext;
             this._themeProvider = themeProvider;
+            this._workContext = workContext;
+            this._storeInformationSettings = storeInformationSettings;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Get or set current theme system name
@@ -41,48 +50,47 @@ namespace Nop.Web.Framework.Themes
         {
             get
             {
-                if (_themeIsCached)
+                if (!string.IsNullOrEmpty(_cachedThemeName))
                     return _cachedThemeName;
 
-                string theme = "";
-                if (_storeInformationSettings.AllowCustomerToSelectTheme)
-                {
-                    if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
-                }
+                var themeName = string.Empty;
 
-                //default store theme
-                if (string.IsNullOrEmpty(theme))
-                    theme = _storeInformationSettings.DefaultStoreTheme;
+                //whether customers are allowed to select a theme
+                if (_storeInformationSettings.AllowCustomerToSelectTheme && _workContext.CurrentCustomer != null)
+                    themeName = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
 
-                //ensure that theme exists
-                if (!_themeProvider.ThemeConfigurationExists(theme))
+                //if not, try to get default store theme
+                if (string.IsNullOrEmpty(themeName))
+                    themeName = _storeInformationSettings.DefaultStoreTheme;
+
+                //ensure that this theme exists
+                if (!_themeProvider.ThemeConfigurationExists(themeName))
                 {
-                    var themeInstance = _themeProvider.GetThemeConfigurations()
-                        .FirstOrDefault();
-                    if (themeInstance == null)
-                        throw new Exception("No theme could be loaded");
-                    theme = themeInstance.ThemeName;
+                    //if it does not exist, try to get the first one
+                    themeName = _themeProvider.GetThemeConfigurations()
+                        .FirstOrDefault()?.SystemName ?? throw new Exception("No theme could be loaded");
                 }
                 
-                //cache theme
-                this._cachedThemeName = theme;
-                this._themeIsCached = true;
-                return theme;
+                //cache theme system name
+                this._cachedThemeName = themeName;
+
+                return themeName;
             }
             set
             {
-                if (!_storeInformationSettings.AllowCustomerToSelectTheme)
+                //whether customers are allowed to select a theme
+                if (!_storeInformationSettings.AllowCustomerToSelectTheme || _workContext.CurrentCustomer == null)
                     return;
 
-                if (_workContext.CurrentCustomer == null)
-                    return;
-
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingThemeName, value, _storeContext.CurrentStore.Id);
+                //save selected by customer theme system name
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                    SystemCustomerAttributeNames.WorkingThemeName, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
-                this._themeIsCached = false;
+                this._cachedThemeName = null;
             }
         }
+
+        #endregion
     }
 }

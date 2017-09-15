@@ -2,18 +2,19 @@
 
 namespace Nop.Web.Framework.Themes
 {
+    /// <summary>
+    /// Represents a theme configuration
+    /// </summary>
     public class ThemeConfiguration
     {
-        public ThemeConfiguration(string themeName, string path, XmlDocument doc)
+        public ThemeConfiguration(string systemName, XmlDocument doc)
         {
-            ThemeName = themeName;
-            Path = path;
+            SystemName = systemName;
             var node = doc.SelectSingleNode("Theme");
             if (node != null)
             {
-                ConfigurationNode = node;
                 var attribute = node.Attributes["title"];
-                ThemeTitle = attribute == null ? string.Empty : attribute.Value;
+                Title = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["supportRTL"];
                 SupportRtl = attribute != null && bool.Parse(attribute.Value);
                 attribute = node.Attributes["previewImageUrl"];
@@ -23,19 +24,29 @@ namespace Nop.Web.Framework.Themes
             }
         }
 
-        public XmlNode ConfigurationNode { get; protected set; }
+        /// <summary>
+        /// Gets or sets the theme system name
+        /// </summary>
+        public string SystemName { get; set; }
 
-        public string Path { get; protected set; }
+        /// <summary>
+        /// Gets or sets the theme title
+        /// </summary>
+        public string Title { get; set; }
 
-        public string PreviewImageUrl { get; protected set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether the theme supports RTL (right-to-left)
+        /// </summary>
+        public bool SupportRtl { get; set; }
 
-        public string PreviewText { get; protected set; }
+        /// <summary>
+        /// Gets or sets the path to the preview image of the theme
+        /// </summary>
+        public string PreviewImageUrl { get; set; }
 
-        public bool SupportRtl { get; protected set; }
-
-        public string ThemeName { get; protected set; }
-
-        public string ThemeTitle { get; protected set; }
-
+        /// <summary>
+        /// Gets or sets the preview text of the theme
+        /// </summary>
+        public string PreviewText { get; set; }
     }
 }

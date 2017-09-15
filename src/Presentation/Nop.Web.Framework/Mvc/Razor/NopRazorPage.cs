@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Mvc.Razor
                 //ensure that the active theme also supports it
                 var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
                 var themeContext = EngineContext.Current.Resolve<IThemeContext>();
-                supportRtl = themeProvider.GetThemeConfiguration(themeContext.WorkingThemeName).SupportRtl;
+                supportRtl = themeProvider.GetThemeConfigurationBySystemName(themeContext.WorkingThemeName)?.SupportRtl ?? false;
             }
             return supportRtl;
         }

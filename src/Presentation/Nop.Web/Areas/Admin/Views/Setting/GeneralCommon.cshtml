@@ -71,9 +71,8 @@
                                         <div class="checkbox">
                                             <label>
                                                 <span>
-                                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
-                                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>    }>
-                                                    @theme.ThemeTitle
+                                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.SystemName" @if (theme.SystemName.Equals(Model.StoreInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)) { <text> checked="checked" </text> }>
+                                                    @theme.Title
                                                 </span>
                                                 <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText">
                                             </label>

@@ -587,19 +587,20 @@ namespace Nop.Web.Factories
         public virtual StoreThemeSelectorModel PrepareStoreThemeSelectorModel()
         {
             var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
+
+            var currentTheme = _themeProvider.GetThemeConfigurationBySystemName(_themeContext.WorkingThemeName);
             model.CurrentStoreTheme = new StoreThemeModel
             {
-                Name = currentTheme.ThemeName,
-                Title = currentTheme.ThemeTitle
+                Name = currentTheme?.SystemName,
+                Title = currentTheme?.Title
             };
-            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
-                .Select(x => new StoreThemeModel
-                {
-                    Name = x.ThemeName,
-                    Title = x.ThemeTitle
-                })
-                .ToList();
+
+            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations().Select(x => new StoreThemeModel
+            {
+                Name = x.SystemName,
+                Title = x.Title
+            }).ToList();
+
             return model;
         }
 
@@ -778,6 +779,6 @@ namespace Nop.Web.Factories
             return sb.ToString();
         }
         
-#endregion
+        #endregion
     }
 }
