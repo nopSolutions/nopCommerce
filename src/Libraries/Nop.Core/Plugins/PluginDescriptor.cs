@@ -6,8 +6,13 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
 {
+    /// <summary>
+    /// Represents a plugin descriptor
+    /// </summary>
     public class PluginDescriptor : IComparable<PluginDescriptor>
     {
+        #region Ctors
+
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();
@@ -15,34 +20,14 @@ namespace Nop.Core.Plugins
             this.LimitedToCustomerRoles = new List<int>();
         }
 
-
-        public PluginDescriptor(Assembly referencedAssembly, FileInfo originalAssemblyFile,
-            Type pluginType)
-            : this()
+        public PluginDescriptor(Assembly referencedAssembly) : this()
         {
             this.ReferencedAssembly = referencedAssembly;
-            this.OriginalAssemblyFile = originalAssemblyFile;
-            this.PluginType = pluginType;
         }
-        /// <summary>
-        /// Plugin type
-        /// </summary>
-        public virtual string PluginFileName { get; set; }
 
-        /// <summary>
-        /// Plugin type
-        /// </summary>
-        public virtual Type PluginType { get; set; }
+        #endregion
 
-        /// <summary>
-        /// The assembly that has been shadow copied that is active in the application
-        /// </summary>
-        public virtual Assembly ReferencedAssembly { get; internal set; }
-
-        /// <summary>
-        /// The original assembly file that a shadow copy was made from it
-        /// </summary>
-        public virtual FileInfo OriginalAssemblyFile { get; internal set; }
+        #region Properties
 
         /// <summary>
         /// Gets or sets the plugin group
@@ -75,14 +60,19 @@ namespace Nop.Core.Plugins
         public virtual string Author { get; set; }
 
         /// <summary>
-        /// Gets or sets the description
-        /// </summary>
-        public virtual string Description { get; set; }
-
-        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the assembly file
+        /// </summary>
+        public virtual string AssemblyFileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description
+        /// </summary>
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
@@ -99,6 +89,39 @@ namespace Nop.Core.Plugins
         /// </summary>
         public virtual bool Installed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the plugin type
+        /// </summary>
+        public virtual Type PluginType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the original assembly file that a shadow copy was made from it
+        /// </summary>
+        public virtual FileInfo OriginalAssemblyFile { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the assembly that has been shadow copied that is active in the application
+        /// </summary>
+        public virtual Assembly ReferencedAssembly { get; internal set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the instance of the plugin
+        /// </summary>
+        /// <returns>Plugin instance</returns>
+        public IPlugin Instance()
+        {
+            return Instance<IPlugin>();
+        }
+
+        /// <summary>
+        /// Get the instance of the plugin
+        /// </summary>
+        /// <typeparam name="T">Type of the plugin</typeparam>
+        /// <returns>Plugin instance</returns>
         public virtual T Instance<T>() where T : class, IPlugin
         {
             object instance = null;
@@ -121,11 +144,11 @@ namespace Nop.Core.Plugins
             return typedInstance;
         }
 
-        public IPlugin Instance()
-        {
-            return Instance<IPlugin>();
-        }
-
+        /// <summary>
+        /// Compares this instance with a specified PluginDescriptor object
+        /// </summary>
+        /// <param name="other">The PluginDescriptor to compare with this instance</param>
+        /// <returns>An integer that indicates whether this instance precedes, follows, or appears in the same position in the sort order as the specified parameter</returns>
         public int CompareTo(PluginDescriptor other)
         {
             if (DisplayOrder != other.DisplayOrder)
@@ -134,22 +157,34 @@ namespace Nop.Core.Plugins
             return FriendlyName.CompareTo(other.FriendlyName);
         }
 
+        /// <summary>
+        /// Returns the plugin as a string
+        /// </summary>
+        /// <returns>Value of the FriendlyName</returns>
         public override string ToString()
         {
             return FriendlyName;
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Determines whether this instance and another specified PluginDescriptor object have the same SystemName
+        /// </summary>
+        /// <param name="value">The PluginDescriptor to compare to this instance</param>
+        /// <returns>True if the SystemName of the value parameter is the same as the SystemName of this instance; otherwise, false</returns>
+        public override bool Equals(object value)
         {
-            var other = obj as PluginDescriptor;
-            return other != null && 
-                SystemName != null &&
-                SystemName.Equals(other.SystemName);
+            return SystemName?.Equals((value as PluginDescriptor)?.SystemName) ?? false;
         }
 
+        /// <summary>
+        /// Returns the hash code for this plugin descriptor
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code</returns>
         public override int GetHashCode()
         {
             return SystemName.GetHashCode();
         }
+
+        #endregion
     }
 }
