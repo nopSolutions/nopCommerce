@@ -128,5 +128,12 @@ namespace Nop.Services.Catalog
         /// <param name="productIds">Products IDs</param>
         /// <returns>Category IDs for products</returns>
         IDictionary<int, int[]> GetProductCategoryIds(int[] productIds);
+
+        /// <summary>
+        /// Gets categories by identifier
+        /// </summary>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <returns>Categories</returns>
+        List<Category> GetCategoriesByIds(int [] categoryIds);
     }
 }

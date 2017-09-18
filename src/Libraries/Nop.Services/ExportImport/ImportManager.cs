@@ -312,6 +312,171 @@ namespace Nop.Services.ExportImport
             return properties;
         }
 
+        protected virtual string UpdateCategoryByXlsx(Category category, PropertyManager<Category> manager, Dictionary<string, Category> allCategories, bool isNew, out bool isParentCategoryExists)
+        {
+            var seName = string.Empty;
+            isParentCategoryExists = true;
+            var isParentCategorySet = false;
+
+            foreach (var property in manager.GetProperties)
+            {
+                switch (property.PropertyName)
+                {
+                    case "Name":
+                        category.Name = property.StringValue.Split(new[] { ">>" }, StringSplitOptions.RemoveEmptyEntries).Last().Trim();
+                        break;
+                    case "Description":
+                        category.Description = property.StringValue;
+                        break;
+                    case "CategoryTemplateId":
+                        category.CategoryTemplateId = property.IntValue;
+                        break;
+                    case "MetaKeywords":
+                        category.MetaKeywords = property.StringValue;
+                        break;
+                    case "MetaDescription":
+                        category.MetaDescription = property.StringValue;
+                        break;
+                    case "MetaTitle":
+                        category.MetaTitle = property.StringValue;
+                        break;
+                    case "ParentCategoryId":
+                        if (!isParentCategorySet)
+                        {
+                            var parentCategory = allCategories.Values.FirstOrDefault(c => c.Id == property.IntValue);
+                            isParentCategorySet = parentCategory != null;
+
+                            isParentCategoryExists = isParentCategorySet || property.IntValue == 0;
+
+                            category.ParentCategoryId = parentCategory?.Id ?? property.IntValue;
+                        }
+                        break;
+                    case "ParentCategoryName":
+                        if (_catalogSettings.ExportImportCategoriesUsingCategoryName && !isParentCategorySet)
+                        {
+                            var categoryName = manager.GetProperty("ParentCategoryName").StringValue;
+                            if (!string.IsNullOrEmpty(categoryName))
+                            {
+                                var parentCategory = allCategories.ContainsKey(categoryName)
+                                    //try find category by full name with all parent category names
+                                    ? allCategories[categoryName]
+                                    //try find category by name
+                                    : allCategories.Values.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.InvariantCulture));
+
+                                if (parentCategory != null)
+                                {
+                                    category.ParentCategoryId = parentCategory.Id;
+                                    isParentCategorySet = true;
+                                }
+                                else
+                                {
+                                    isParentCategoryExists = false;
+                                }
+                            }
+                        }
+                        break;
+                    case "Picture":
+                        var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
+                        if (picture != null)
+                            category.PictureId = picture.Id;
+                        break;
+                    case "PageSize":
+                        category.PageSize = property.IntValue;
+                        break;
+                    case "AllowCustomersToSelectPageSize":
+                        category.AllowCustomersToSelectPageSize = property.BooleanValue;
+                        break;
+                    case "PageSizeOptions":
+                        category.PageSizeOptions = property.StringValue;
+                        break;
+                    case "PriceRanges":
+                        category.PriceRanges = property.StringValue;
+                        break;
+                    case "ShowOnHomePage":
+                        category.ShowOnHomePage = property.BooleanValue;
+                        break;
+                    case "IncludeInTopMenu":
+                        category.IncludeInTopMenu = property.BooleanValue;
+                        break;
+                    case "Published":
+                        category.Published = property.BooleanValue;
+                        break;
+                    case "DisplayOrder":
+                        category.DisplayOrder = property.IntValue;
+                        break;
+                    case "SeName":
+                        seName = property.StringValue;
+                        break;
+                }
+            }
+
+            category.UpdatedOnUtc = DateTime.UtcNow;
+            return seName;
+        }
+
+        protected virtual Category GetCategoryFromXlsx(PropertyManager<Category> manager, ExcelWorksheet worksheet, int iRow, Dictionary<string, Category> allCategories, out bool isNew, out string curentCategoryBreadCrumb)
+        {
+            manager.ReadFromXlsx(worksheet, iRow);
+
+            //try get category from database by ID
+            var category = allCategories.Values.FirstOrDefault(c => c.Id == manager.GetProperty("Id")?.IntValue);
+
+            if (_catalogSettings.ExportImportCategoriesUsingCategoryName && category == null)
+            {
+                var categoryName = manager.GetProperty("Name").StringValue;
+                if (!string.IsNullOrEmpty(categoryName))
+                {
+                    category = allCategories.ContainsKey(categoryName)
+                        //try find category by full name with all parent category names
+                        ? allCategories[categoryName]
+                        //try find category by name
+                        : allCategories.Values.FirstOrDefault(c => c.Name.Equals(categoryName, StringComparison.InvariantCulture));
+                }
+            }
+
+            isNew = category == null;
+
+            category = category ?? new Category();
+
+            curentCategoryBreadCrumb = string.Empty;
+
+            if (isNew)
+            {
+                category.CreatedOnUtc = DateTime.UtcNow;
+                //default values
+                category.PageSize = _catalogSettings.DefaultCategoryPageSize;
+                category.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
+                category.Published = true;
+                category.IncludeInTopMenu = true;
+                category.AllowCustomersToSelectPageSize = true;
+            }
+            else
+            {
+                curentCategoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
+            }
+
+            return category;
+        }
+
+        protected virtual void SaveCategory(bool isNew, Category category, Dictionary<string, Category> allCategories, string curentCategoryBreadCrumb, bool setSeName, string seName)
+        {
+            if (isNew)
+                _categoryService.InsertCategory(category);
+            else
+                _categoryService.UpdateCategory(category);
+
+            var categoryBreadCrumb = category.GetFormattedBreadCrumb(_categoryService);
+            if (!allCategories.ContainsKey(categoryBreadCrumb))
+                allCategories.Add(categoryBreadCrumb, category);
+            if (!string.IsNullOrEmpty(curentCategoryBreadCrumb) && allCategories.ContainsKey(curentCategoryBreadCrumb) &&
+                categoryBreadCrumb != curentCategoryBreadCrumb)
+                allCategories.Remove(curentCategoryBreadCrumb);
+
+            //search engine name
+            if (setSeName)
+                _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
+        }
+
         #endregion
 
         #region Methods
@@ -477,21 +642,21 @@ namespace Nop.Services.ExportImport
                 var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesNames.ToArray());
                 if (notExistingCategories.Any())
                 {
-                    throw new ArgumentException($"The following category name(s) don't exist - {string.Join(", ", notExistingCategories)}");
+                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.CategoriesDontExist"), string.Join(", ", notExistingCategories)));
                 }
 
                 //performance optimization, the check for the existence of the manufacturers in one SQL request
                 var notExistingManufacturers = _manufacturerService.GetNotExistingManufacturers(allManufacturersNames.ToArray());
                 if (notExistingManufacturers.Any())
                 {
-                    throw new ArgumentException($"The following manufacturer name(s) don't exist - {string.Join(", ", notExistingManufacturers)}");
+                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.ManufacturersDontExist"), string.Join(", ", notExistingManufacturers)));
                 }
 
                 //performance optimization, the check for the existence of the product attributes in one SQL request
                 var notExistingProductAttributes = _productAttributeService.GetNotExistingAttributes(allAttributeIds.ToArray());
                 if (notExistingProductAttributes.Any())
                 {
-                    throw new ArgumentException($"The following product attribute ID(s) don't exist - {string.Join(", ", notExistingProductAttributes)}");
+                    throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.Import.ProductAttributesDontExist"), string.Join(", ", notExistingProductAttributes)));
                 }
 
                 //performance optimization, load all products by SKU in one SQL request
@@ -1372,115 +1537,87 @@ namespace Nop.Services.ExportImport
                 var iRow = 2;
                 var setSeName = properties.Any(p => p.PropertyName == "SeName");
 
+                //performance optimization, load all categories in one SQL request
+                var allCategories = _categoryService.GetAllCategories()
+                    .GroupBy(c => c.GetFormattedBreadCrumb(_categoryService))
+                    .ToDictionary(c => c.Key, c => c.First());
+
+                var saveNextTime = new List<int>();
+
                 while (true)
                 {
                     var allColumnsAreEmpty = manager.GetProperties
                         .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+                        .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
 
                     if (allColumnsAreEmpty)
                         break;
 
-                    manager.ReadFromXlsx(worksheet, iRow);
+                    //get category by data in xlsx file if it possible, or create new category
+                    var category = GetCategoryFromXlsx(manager, worksheet, iRow, allCategories, out bool isNew, out string curentCategoryBreadCrumb);
 
-                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").IntValue);
+                    //update category by data in xlsx file
+                    var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out bool isParentCategoryExists);
 
-                    var isNew = category == null;
-
-                    category = category ?? new Category();
-
-                    if (isNew)
+                    if (isParentCategoryExists)
                     {
-                        category.CreatedOnUtc = DateTime.UtcNow;
-                        //default values
-                        category.PageSize = _catalogSettings.DefaultCategoryPageSize;
-                        category.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
-                        category.Published = true;
-                        category.IncludeInTopMenu = true;
-                        category.AllowCustomersToSelectPageSize = true;
+                        //if parent category exists in database then save category into database
+                        SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
                     }
-
-                    var seName = string.Empty;
-
-                    foreach (var property in manager.GetProperties)
-                    {
-                        switch (property.PropertyName)
-                        {
-                            case "Name":
-                                category.Name = property.StringValue;
-                                break;
-                            case "Description":
-                                category.Description = property.StringValue;
-                                break;
-                            case "CategoryTemplateId":
-                                category.CategoryTemplateId = property.IntValue;
-                                break;
-                            case "MetaKeywords":
-                                category.MetaKeywords = property.StringValue;
-                                break;
-                            case "MetaDescription":
-                                category.MetaDescription = property.StringValue;
-                                break;
-                            case "MetaTitle":
-                                category.MetaTitle = property.StringValue;
-                                break;
-                            case "ParentCategoryId":
-                                category.ParentCategoryId = property.IntValue;
-                                break;
-                            case "Picture":
-                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
-                                if (picture != null)
-                                    category.PictureId = picture.Id;
-                                break;
-                            case "PageSize":
-                                category.PageSize = property.IntValue;
-                                break;
-                            case "AllowCustomersToSelectPageSize":
-                                category.AllowCustomersToSelectPageSize = property.BooleanValue;
-                                break;
-                            case "PageSizeOptions":
-                                category.PageSizeOptions = property.StringValue;
-                                break;
-                            case "PriceRanges":
-                                category.PriceRanges = property.StringValue;
-                                break;
-                            case "ShowOnHomePage":
-                                category.ShowOnHomePage = property.BooleanValue;
-                                break;
-                            case "IncludeInTopMenu":
-                                category.IncludeInTopMenu = property.BooleanValue;
-                                break;
-                            case "Published":
-                                category.Published = property.BooleanValue;
-                                break;
-                            case "DisplayOrder":
-                                category.DisplayOrder = property.IntValue;
-                                break;
-                            case "SeName":
-                                seName = property.StringValue;
-                                break;
-                        }
-                    }
-
-                    category.UpdatedOnUtc = DateTime.UtcNow;
-
-                    if (isNew)
-                        _categoryService.InsertCategory(category);
                     else
-                        _categoryService.UpdateCategory(category);
-
-                    //search engine name
-                    if (setSeName)
-                        _urlRecordService.SaveSlug(category, category.ValidateSeName(seName, category.Name, true), 0);
+                    {
+                        //if parent category doesn't exists in database then try save category into database next time
+                        saveNextTime.Add(iRow);
+                    }
 
                     iRow++;
                 }
 
+                var needSave = saveNextTime.Any();
+
+                while (needSave)
+                {
+                    var remove = new List<int>();
+
+                    //try to save unsaved categories
+                    foreach (var rowId in saveNextTime)
+                    {
+                        //get category by data in xlsx file if it possible, or create new category
+                        var category = GetCategoryFromXlsx(manager, worksheet, rowId, allCategories, out bool isNew, out string curentCategoryBreadCrumb);
+                        //update category by data in xlsx file
+                        var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out bool isParentCategoryExists);
+
+                        if (!isParentCategoryExists)
+                            continue;
+
+                        //if parent category exists in database then save category into database
+                        SaveCategory(isNew, category, allCategories, curentCategoryBreadCrumb, setSeName, seName);
+                        remove.Add(rowId);
+                    }
+                    
+                    saveNextTime.RemoveAll(item => remove.Contains(item));
+
+                    needSave = remove.Any() && saveNextTime.Any();
+                }
+
                 //activity log
-                _customerActivityService.InsertActivity("ImportCategories", _localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2);
+                _customerActivityService.InsertActivity("ImportCategories", _localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count);
+
+                if (!saveNextTime.Any())
+                    return;
+
+                var caregoriesName = new List<string>();
+
+                foreach (var rowId in saveNextTime)
+                {
+                    manager.ReadFromXlsx(worksheet, rowId);
+                    caregoriesName.Add(manager.GetProperty("Name").StringValue);
+                }
+
+                throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Categories.Import.CategoriesArentImported"), string.Join(", ", caregoriesName)));
             }
         }
-        
+
         #endregion
         
         #region Nested classes

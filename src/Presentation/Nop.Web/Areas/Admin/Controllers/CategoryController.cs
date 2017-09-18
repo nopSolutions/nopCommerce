@@ -594,7 +594,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p => !p.Deleted));
+                var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p => !p.Deleted).ToList());
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
             catch (Exception exc)
