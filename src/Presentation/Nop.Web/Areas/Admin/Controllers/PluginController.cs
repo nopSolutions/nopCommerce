@@ -28,6 +28,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Services.Events;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -50,7 +51,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly WidgetSettings _widgetSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
-        
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -69,7 +71,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings, 
             WidgetSettings widgetSettings,
             ICustomerActivityService customerActivityService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IEventPublisher eventPublisher)
         {
             this._pluginFinder = pluginFinder;
             this._officialFeedManager = officialFeedManager;
@@ -86,6 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._widgetSettings = widgetSettings;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
         }
 
 		#endregion 
@@ -270,6 +274,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
                     }
+
+                    //event
+                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
                 }
                 else
 	            {
