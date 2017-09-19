@@ -9,6 +9,7 @@ using Nop.Services.Directory;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -17,7 +18,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 {
     [AuthorizeAdmin]
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class FixedOrByCountryStateZipController : BasePluginController
     {
         #region Fields

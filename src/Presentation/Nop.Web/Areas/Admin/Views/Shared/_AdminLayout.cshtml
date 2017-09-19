@@ -159,7 +159,7 @@
                                         <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
                                         <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
                                             <li>
-                                                <form asp-controller="Common" asp-action="ClearCache" asp-area="Admin">
+                                                <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
                                                     <input name="returnurl" type="hidden" value="@rawUrl">
                                                     <button type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.ClearCache")</span>
@@ -167,7 +167,7 @@
                                                 </form>
                                             </li>
                                             <li>
-                                                <form asp-controller="Common" asp-action="RestartApplication" asp-area="Admin">
+                                                <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
                                                     <input name="returnurl" type="hidden" value="@rawUrl">
                                                     <button id="restart-application" type="submit" class="bg-light-blue">
                                                         <span>@T("Admin.Header.RestartApplication")</span>

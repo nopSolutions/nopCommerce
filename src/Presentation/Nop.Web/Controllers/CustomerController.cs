@@ -29,6 +29,7 @@ using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Factories;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
@@ -349,7 +350,7 @@ namespace Nop.Web.Controllers
 
                 //redirect back to customer details page (admin area)
                 return this.RedirectToAction("Edit", "Customer",
-                    new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
+                    new { id = _workContext.CurrentCustomer.Id, area = AreaNames.Admin });
 
             }
 

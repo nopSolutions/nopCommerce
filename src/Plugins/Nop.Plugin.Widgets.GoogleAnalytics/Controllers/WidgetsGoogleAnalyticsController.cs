@@ -6,12 +6,13 @@ using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         private readonly IWorkContext _workContext;

@@ -9,13 +9,14 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AuthorizeAdmin]
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
         #region Fields

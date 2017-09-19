@@ -17,9 +17,9 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
@@ -85,7 +85,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         #region Methods
 
         [AuthorizeAdmin]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -121,7 +121,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [HttpPost]
         [AuthorizeAdmin]
         [AdminAntiForgery]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -162,7 +162,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         //action displaying notification (warning) to a store owner about inaccurate PayPal rounding
         [AuthorizeAdmin]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult RoundingWarning(bool passProductNamesAndTotals)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

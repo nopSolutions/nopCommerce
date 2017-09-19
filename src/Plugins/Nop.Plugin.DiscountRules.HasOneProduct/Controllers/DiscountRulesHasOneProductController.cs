@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
@@ -22,7 +23,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 {
     [AuthorizeAdmin]
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class DiscountRulesHasOneProductController : BasePluginController
     {
         #region Fields

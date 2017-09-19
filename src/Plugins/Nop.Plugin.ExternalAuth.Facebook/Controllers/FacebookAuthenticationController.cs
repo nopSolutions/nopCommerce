@@ -11,9 +11,9 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
@@ -52,7 +52,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         #region Methods
 
         [AuthorizeAdmin]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
@@ -70,7 +70,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [HttpPost]
         [AdminAntiForgery]
         [AuthorizeAdmin]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))

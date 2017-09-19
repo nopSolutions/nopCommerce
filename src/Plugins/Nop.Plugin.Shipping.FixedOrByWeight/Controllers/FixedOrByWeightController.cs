@@ -13,6 +13,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -21,7 +22,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Shipping.FixedOrByWeight.Controllers
 {
     [AuthorizeAdmin]
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class FixedOrByWeightController : BasePluginController
     {
         #region Fields

@@ -88,7 +88,7 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.ActionName = actionName;
 
                 //apply admin area as described here - https://www.nopcommerce.com/boards/t/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page.aspx
-                siteMapNode.RouteValues = new RouteValueDictionary { { "area", "Admin" } };
+                siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
             }
             else if (!string.IsNullOrEmpty(url))
             {

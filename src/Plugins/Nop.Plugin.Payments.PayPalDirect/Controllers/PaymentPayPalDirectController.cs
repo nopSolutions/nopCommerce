@@ -17,9 +17,9 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using PayPal.Api;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Controllers
@@ -126,7 +126,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         #region Methods
 
         [AuthorizeAdmin]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -167,7 +167,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [FormValueRequired("save")]
         [AuthorizeAdmin]
         [AdminAntiForgery]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
@@ -214,7 +214,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [FormValueRequired("createwebhook")]
         [AuthorizeAdmin]
         [AdminAntiForgery]
-        [Area("Admin")]
+        [Area(AreaNames.Admin)]
         public IActionResult GetWebhookId(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

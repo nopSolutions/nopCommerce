@@ -17,6 +17,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -24,8 +25,8 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Feed.GoogleShopping.Controllers
 {
-    [Area("Admin")]
     [AuthorizeAdmin]
+    [Area(AreaNames.Admin)]
     public class FeedGoogleShoppingController : BasePluginController
     {
         private readonly IGoogleService _googleService;

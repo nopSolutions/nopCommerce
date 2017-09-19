@@ -8,11 +8,12 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 {
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class WidgetsNivoSliderController : BasePluginController
     {
         private readonly IWorkContext _workContext;

@@ -3,6 +3,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
 
@@ -48,7 +49,7 @@ namespace Nop.Web.Controllers
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = "Admin" }));
+                DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
             var model = _profileModelFactory.PrepareProfileIndexModel(customer, page);
             return View(model);
