@@ -268,6 +268,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public virtual object ResolveUnregistered(Type type)
         {
+            Exception innerException = null;
             foreach (var constructor in type.GetConstructors())
             {
                 try
@@ -284,9 +285,12 @@ namespace Nop.Core.Infrastructure
                     //all is ok, so create instance
                     return Activator.CreateInstance(type, parameters.ToArray());
                 }
-                catch (NopException) { }
+                catch (Exception ex)
+                {
+                    innerException = ex;
+                }
             }
-            throw new NopException("No constructor was found that had all the dependencies satisfied.");
+            throw new NopException("No constructor was found that had all the dependencies satisfied.", innerException);
         }
 
         #endregion
