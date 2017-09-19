@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Tax;
 
@@ -20,7 +19,7 @@ namespace Nop.Services.Orders
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>True if the shopping cart item requires shipping; otherwise false</returns>
         public static bool IsShipEnabled(this ShoppingCartItem shoppingCartItem,
-            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
+            IProductService productService, IProductAttributeParser productAttributeParser)
         {
             //whether the product requires shipping
             if (shoppingCartItem.Product != null && shoppingCartItem.Product.IsShipEnabled)
@@ -28,9 +27,6 @@ namespace Nop.Services.Orders
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return false;
-
-            productService = productService ?? EngineContext.Current.Resolve<IProductService>();
-            productAttributeParser = productAttributeParser ?? EngineContext.Current.Resolve<IProductAttributeParser>();
 
             //or whether associated products of the shopping cart item require shipping
             return productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
@@ -46,7 +42,7 @@ namespace Nop.Services.Orders
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
         public static bool IsFreeShipping(this ShoppingCartItem shoppingCartItem,
-            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
+            IProductService productService, IProductAttributeParser productAttributeParser)
         {
             //first, check whether shipping is required
             if (!shoppingCartItem.IsShipEnabled(productService, productAttributeParser))
@@ -58,9 +54,6 @@ namespace Nop.Services.Orders
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return true;
-
-            productService = productService ?? EngineContext.Current.Resolve<IProductService>();
-            productAttributeParser = productAttributeParser ?? EngineContext.Current.Resolve<IProductAttributeParser>();
 
             //and whether associated products of the shopping cart item is free shipping
             return productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
@@ -76,7 +69,7 @@ namespace Nop.Services.Orders
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>The additional shipping charge of the shopping cart item</returns>
         public static decimal GetAdditionalShippingCharge(this ShoppingCartItem shoppingCartItem,
-            IProductService productService = null, IProductAttributeParser productAttributeParser = null)
+            IProductService productService, IProductAttributeParser productAttributeParser)
         {
             //first, check whether shipping is free
             if (shoppingCartItem.IsFreeShipping(productService, productAttributeParser))
@@ -87,9 +80,6 @@ namespace Nop.Services.Orders
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return additionalShippingCharge;
-
-            productService = productService ?? EngineContext.Current.Resolve<IProductService>();
-            productAttributeParser = productAttributeParser ?? EngineContext.Current.Resolve<IProductAttributeParser>();
 
             //and sum with associated products additional shipping charges
             additionalShippingCharge += productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
@@ -105,10 +95,8 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="taxService">Tax service</param>
         /// <returns>True if the shopping cart item is tax exempt; otherwise false</returns>
-        public static bool IsTaxExempt(this ShoppingCartItem shoppingCartItem, ITaxService taxService = null)
+        public static bool IsTaxExempt(this ShoppingCartItem shoppingCartItem, ITaxService taxService)
         {
-            taxService = taxService ?? EngineContext.Current.Resolve<ITaxService>();
-
             return taxService.IsTaxExempt(shoppingCartItem.Product, shoppingCartItem.Customer);
         }
     }

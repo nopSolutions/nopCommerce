@@ -23,6 +23,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
 
         private readonly FixedOrByWeightSettings _fixedOrByWeightSettings;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IShippingByWeightService _shippingByWeightService;
         private readonly IShippingService _shippingService;
@@ -36,6 +38,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
 
         public FixedOrByWeightComputationMethod(FixedOrByWeightSettings fixedOrByWeightSettings,
             IPriceCalculationService priceCalculationService,
+            IProductAttributeParser productAttributeParser,
+            IProductService productService,
             ISettingService settingService,
             IShippingByWeightService shippingByWeightService,
             IShippingService shippingService,
@@ -45,6 +49,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         {
             this._fixedOrByWeightSettings = fixedOrByWeightSettings;
             this._priceCalculationService = priceCalculationService;
+            this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._settingService = settingService;
             this._shippingByWeightService = shippingByWeightService;
             this._shippingService = shippingService;
@@ -153,7 +159,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 var subTotal = decimal.Zero;
                 foreach (var packageItem in getShippingOptionRequest.Items)
                 {
-                    if (packageItem.ShoppingCartItem.IsFreeShipping())
+                    if (packageItem.ShoppingCartItem.IsFreeShipping(_productService, _productAttributeParser))
                         continue;
 
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
