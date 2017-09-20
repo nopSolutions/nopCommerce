@@ -6525,6 +6525,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProducts.Hint">
     <Value>Check if you want to include products in sitemap.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProductTags">
+    <Value>Sitemap includes product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProductTags.Hint">
+    <Value>Check if you want to include product tags in sitemap.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed">
     <Value>Store closed</Value>
   </LocaleResource>
@@ -16560,6 +16566,9 @@
   <LocaleResource Name="Sitemap.Products">
     <Value>Products</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.ProductTags">
+    <Value>Product tags</Value>
+  </LocaleResource>  
   <LocaleResource Name="StoreClosed">
     <Value>This store is currently closed</Value>
   </LocaleResource>

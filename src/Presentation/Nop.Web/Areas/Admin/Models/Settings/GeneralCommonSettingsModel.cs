@@ -111,6 +111,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public bool SitemapIncludeProducts { get; set; }
             public bool SitemapIncludeProducts_OverrideForStore { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SitemapIncludeProductTags")]
+            public bool SitemapIncludeProductTags { get; set; }
+            public bool SitemapIncludeProductTags_OverrideForStore { get; set; }
+
             #region Nested classes
 
             public partial class ThemeConfigurationModel

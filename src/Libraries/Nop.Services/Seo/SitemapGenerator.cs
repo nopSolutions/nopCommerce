@@ -50,6 +50,7 @@ namespace Nop.Services.Seo
         private readonly NewsSettings _newsSettings;
         private readonly ForumSettings _forumSettings;
         private readonly SecuritySettings _securitySettings;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -67,7 +68,8 @@ namespace Nop.Services.Seo
             BlogSettings blogSettings,
             NewsSettings newsSettings,
             ForumSettings forumSettings,
-            SecuritySettings securitySettings)
+            SecuritySettings securitySettings,
+            IProductTagService productTagService)
         {
             this._storeContext = storeContext;
             this._categoryService = categoryService;
@@ -82,6 +84,7 @@ namespace Nop.Services.Seo
             this._newsSettings = newsSettings;
             this._forumSettings = forumSettings;
             this._securitySettings = securitySettings;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -192,6 +195,10 @@ namespace Nop.Services.Seo
             if (_commonSettings.SitemapIncludeProducts)
                 sitemapUrls.AddRange(GetProductUrls());
 
+            //product tags
+            if (_commonSettings.SitemapIncludeProductTags)
+                sitemapUrls.AddRange(GetProductTagUrls());
+
             //topics
             sitemapUrls.AddRange(GetTopicUrls());
 
@@ -246,6 +253,16 @@ namespace Nop.Services.Seo
             { 
                 var url = urlHelper.RouteUrl("Product", new { SeName = product.GetSeName() }, GetHttpProtocol());
                 return new SitemapUrl(url, UpdateFrequency.Weekly, product.UpdatedOnUtc);
+            });
+        }
+
+        protected virtual IEnumerable<SitemapUrl> GetProductTagUrls()
+        {
+            var urlHelper = GetUrlHelper();
+            return _productTagService.GetAllProductTags().Select(productTag =>
+            {
+                var url = urlHelper.RouteUrl("ProductsByTag", new { productTagId = productTag.Id, SeName = productTag.GetSeName() }, GetHttpProtocol());
+                return new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             });
         }
 

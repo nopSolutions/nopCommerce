@@ -64,7 +64,8 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly IPictureService _pictureService;
-        private readonly IHostingEnvironment _hostingEnvironment; 
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IProductTagService _productTagService;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -108,7 +109,8 @@ namespace Nop.Web.Factories
             ForumSettings forumSettings,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            IProductTagService productTagService)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -139,6 +141,7 @@ namespace Nop.Web.Factories
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
             this._vendorSettings = vendorSettings;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -530,6 +533,16 @@ namespace Nop.Web.Factories
                         ShortDescription = product.GetLocalized(x => x.ShortDescription),
                         FullDescription = product.GetLocalized(x => x.FullDescription),
                         SeName = product.GetSeName(),
+                    }).ToList();
+                }
+                //product tags
+                if (_commonSettings.SitemapIncludeProductTags)
+                {
+                    model.ProductTags = _productTagService.GetAllProductTags().Select(pt => new ProductTagModel
+                    {
+                        Id = pt.Id,
+                        Name = pt.GetLocalized(x => x.Name),
+                        SeName = pt.GetSeName()
                     }).ToList();
                 }
 
