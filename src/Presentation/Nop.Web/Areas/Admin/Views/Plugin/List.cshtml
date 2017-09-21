@@ -22,6 +22,10 @@
                     });
                 });
             </script>
+            <button type="button" name="uploadplugin" class="btn bg-olive" data-toggle="modal" data-target="#uploadplugin-window">
+                <i class="fa fa-upload"></i>
+                @T("Admin.Configuration.Plugins.Upload")
+            </button>
         </div>
     </div>
 
@@ -40,6 +44,13 @@
                     $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
                         $("html, body").animate({ scrollTop: 0 }, 400);
                         showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                        return true;
+                    });
+
+                    //upload a plugin
+                    $("#upload-plugin").on("click", function (e) {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Upload.Progress").Text))');
                         return true;
                     });
                 });
@@ -223,3 +234,52 @@
         </div>
     </div>
 </form>
+
+
+@*upload plugin form*@
+<div id="uploadplugin-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadplugin-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="uploadplugin-window-title">@T("Admin.Configuration.Plugins.Upload")</h4>
+            </div>
+            <form asp-controller="Plugin" asp-action="UploadPlugin" method="post" enctype="multipart/form-data">
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint1")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint2")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
+                            </li>
+                        </ul>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="label-wrapper">
+                                    <label class="control-label">
+                                        @T("Admin.Common.ZipFile")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="file" id="archivefile" name="archivefile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="upload-plugin">
+                            @T("Admin.Configuration.Plugins.Upload")
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

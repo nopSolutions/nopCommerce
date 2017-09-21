@@ -1035,6 +1035,9 @@
   <LocaleResource Name="ActivityLog.UninstallPlugin">
     <Value>Uninstalled a plugin (FriendlyName: '{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewPlugin">
+    <Value>Uploaded a new plugin (FriendlyName: '{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
@@ -4026,6 +4029,9 @@
   <LocaleResource Name="Admin.Common.Yes">
     <Value>Yes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ZipFile">
+    <Value>Zip file</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration">
     <Value>Configuration</Value>
   </LocaleResource>
@@ -4976,6 +4982,24 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Uninstalled">
     <Value>The plugin has been uninstalled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
+    <Value>The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
+    <Value>The archive should contain only already compiled plugin version.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
+    <Value>Please note that you can also manually upload a plugin using FTP if this method doesn't work for you.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
+    <Value>Uploading plugin...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>The plugin has been uploaded.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings">
     <Value>Settings</Value>

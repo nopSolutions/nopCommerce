@@ -11931,7 +11931,13 @@ namespace Nop.Services.Installation
                     SystemKeyword = "PublicStore.DeleteForumPost",
                     Enabled = false,
                     Name = "Public store. Delete forum post"
-                }
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UploadNewPlugin",
+                    Enabled = true,
+                    Name = "Upload a plugin"
+                },
             };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
