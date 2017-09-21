@@ -1,7 +1,7 @@
 ﻿Group: Widgets
 FriendlyName: Google Analytics or Universal Analytics
 SystemName: Widgets.GoogleAnalytics
-Version: 1.34
+Version: 1.35
 SupportedVersions: 4.00
 Author: nopCommerce team, Nicolas Muniere
 DisplayOrder: 1

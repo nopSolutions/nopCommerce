@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -16,34 +12,24 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
     [ViewComponent(Name = "WidgetsGoogleAnalytics")]
     public class WidgetsGoogleAnalyticsViewComponent : ViewComponent
     {
-        private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
-        private readonly ICategoryService _categoryService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
 
         public WidgetsGoogleAnalyticsViewComponent(
             IWorkContext workContext,
             IStoreContext storeContext,
             ISettingService settingService,
             IOrderService orderService,
-            ILogger logger,
-            ICategoryService categoryService,
-            IProductAttributeParser productAttributeParser,
-            IGenericAttributeService genericAttributeService)
+            ILogger logger)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._settingService = settingService;
             this._orderService = orderService;
             this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._genericAttributeService = genericAttributeService;
         }
 
         public IViewComponentResult Invoke()
