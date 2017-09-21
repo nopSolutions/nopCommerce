@@ -632,7 +632,8 @@
 							<span asp-validation-for="ShowOnHomePage"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                    <nop-nested-setting asp-for="ShowOnHomePage">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                         <div class="col-md-3">
 							<nop-label asp-for="DisplayOrder" />
                         </div>
@@ -641,6 +642,7 @@
 							<span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.AllowCustomerReviews ? null : "advanced-setting")">
                         <div class="col-md-3">
 							<nop-label asp-for="AllowCustomerReviews" />
@@ -677,24 +679,26 @@
 							<span asp-validation-for="MarkAsNew"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewStartDate ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
-                        <div class="col-md-3">
-							<nop-label asp-for="MarkAsNewStartDateTimeUtc" />
+                    <nop-nested-setting asp-for="MarkAsNew">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewStartDate ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MarkAsNewStartDateTimeUtc" />
+                                <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="MarkAsNewStartDateTimeUtc" />
-							<span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewEndDate ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MarkAsNewEndDateTimeUtc" />
+                                <span asp-validation-for="MarkAsNewEndDateTimeUtc"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewEndDate ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
-                        <div class="col-md-3">
-							<nop-label asp-for="MarkAsNewEndDateTimeUtc" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="MarkAsNewEndDateTimeUtc" />
-							<span asp-validation-for="MarkAsNewEndDateTimeUtc"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.AdminComment ? null : "advanced-setting")">
                         <div class="col-md-3">
 							<nop-label asp-for="AdminComment" />
@@ -742,24 +746,26 @@
 							<span asp-validation-for="IsGiftCard"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlGiftCardType">
-                        <div class="col-md-3">
-							<nop-label asp-for="GiftCardTypeId" />
+                    <nop-nested-setting asp-for="IsGiftCard">
+                        <div class="form-group" id="pnlGiftCardType">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GiftCardTypeId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="GiftCardTypeId" asp-items="@(((GiftCardType)Model.GiftCardTypeId).ToSelectList())" />
+                                <span asp-validation-for="GiftCardTypeId"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="GiftCardTypeId" asp-items="@(((GiftCardType)Model.GiftCardTypeId).ToSelectList())" />
-							<span asp-validation-for="GiftCardTypeId"></span>
+                        <div class="form-group" id="pnlOverriddenGiftCardAmount">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OverriddenGiftCardAmount" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="OverriddenGiftCardAmount" />
+                                <span asp-validation-for="OverriddenGiftCardAmount"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlOverriddenGiftCardAmount">
-                        <div class="col-md-3">
-							<nop-label asp-for="OverriddenGiftCardAmount" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="OverriddenGiftCardAmount" />
-							<span asp-validation-for="OverriddenGiftCardAmount"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                 </div>
             </div>
             <div class="panel panel-default @(Model.ProductEditorSettingsModel.DownloadableProduct ? null : "advanced-setting")" id="group-downloads">
@@ -776,87 +782,91 @@
 							<span asp-validation-for="IsDownload"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlDownloadFile">
-                        <div class="col-md-3">
-							<nop-label asp-for="DownloadId" />
+                    <nop-nested-setting asp-for="IsDownload">
+                        <div class="form-group" id="pnlDownloadFile">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DownloadId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DownloadId" />
+                                <span asp-validation-for="DownloadId"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="DownloadId" />
-							<span asp-validation-for="DownloadId"></span>
+                        <div class="form-group" id="pnlUnlimitedDownloads">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UnlimitedDownloads" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="UnlimitedDownloads" />
+                                <span asp-validation-for="UnlimitedDownloads"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlUnlimitedDownloads">
-                        <div class="col-md-3">
-							<nop-label asp-for="UnlimitedDownloads" />
+                        <div class="form-group" id="pnlMaxNumberOfDownloads">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaxNumberOfDownloads" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaxNumberOfDownloads" />
+                                <span asp-validation-for="MaxNumberOfDownloads"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="UnlimitedDownloads" />
-							<span asp-validation-for="UnlimitedDownloads"></span>
+                        <div class="form-group" id="pnlDownloadExpirationDays">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DownloadExpirationDays" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DownloadExpirationDays" />
+                                <span asp-validation-for="DownloadExpirationDays"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlMaxNumberOfDownloads">
-                        <div class="col-md-3">
-							<nop-label asp-for="MaxNumberOfDownloads" />
+                        <div class="form-group" id="pnlDownloadActivationType">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DownloadActivationTypeId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DownloadActivationTypeId" asp-items="@(((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())" />
+                                <span asp-validation-for="DownloadActivationTypeId"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="MaxNumberOfDownloads" />
-							<span asp-validation-for="MaxNumberOfDownloads"></span>
+                        <div class="form-group" id="pnlHasUserAgreement">
+                            <div class="col-md-3">
+                                <nop-label asp-for="HasUserAgreement" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="HasUserAgreement" />
+                                <span asp-validation-for="HasUserAgreement"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlDownloadExpirationDays">
-                        <div class="col-md-3">
-							<nop-label asp-for="DownloadExpirationDays" />
+                        <div class="form-group" id="pnlUserAgreementText">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UserAgreementText" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="UserAgreementText" />
+                                <span asp-validation-for="UserAgreementText"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="DownloadExpirationDays" />
-							<span asp-validation-for="DownloadExpirationDays"></span>
+                        <div class="form-group" id="pnlHasSampleDownload">
+                            <div class="col-md-3">
+                                <nop-label asp-for="HasSampleDownload" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="HasSampleDownload" />
+                                <span asp-validation-for="HasSampleDownload"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlDownloadActivationType">
-                        <div class="col-md-3">
-							<nop-label asp-for="DownloadActivationTypeId" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="DownloadActivationTypeId" asp-items="@(((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())" />
-							<span asp-validation-for="DownloadActivationTypeId"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlHasUserAgreement">
-                        <div class="col-md-3">
-							<nop-label asp-for="HasUserAgreement" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="HasUserAgreement" />
-							<span asp-validation-for="HasUserAgreement"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlUserAgreementText">
-                        <div class="col-md-3">
-							<nop-label asp-for="UserAgreementText" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-textarea asp-for="UserAgreementText" />
-							<span asp-validation-for="UserAgreementText"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlHasSampleDownload">
-                        <div class="col-md-3">
-							<nop-label asp-for="HasSampleDownload" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="HasSampleDownload" />
-							<span asp-validation-for="HasSampleDownload"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlSampleDownloadFile">
-                        <div class="col-md-3">
-							<nop-label asp-for="SampleDownloadId" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="SampleDownloadId" />
-							<span asp-validation-for="SampleDownloadId"></span>
-                        </div>
-                    </div>
+                        <nop-nested-setting asp-for="HasSampleDownload">
+                            <div class="form-group" id="pnlSampleDownloadFile">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SampleDownloadId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SampleDownloadId" />
+                                    <span asp-validation-for="SampleDownloadId"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </nop-nested-setting>
                 </div>
             </div>
             <div class="panel panel-default @(Model.ProductEditorSettingsModel.RecurringProduct ? null : "advanced-setting")" id="group-recurring">
@@ -873,33 +883,35 @@
 							<span asp-validation-for="IsRecurring"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlCycleLength">
-                        <div class="col-md-3">
-							<nop-label asp-for="RecurringCycleLength" />
+                    <nop-nested-setting asp-for="IsRecurring">
+                        <div class="form-group" id="pnlCycleLength">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RecurringCycleLength" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RecurringCycleLength" />
+                                <span asp-validation-for="RecurringCycleLength"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="RecurringCycleLength" />
-							<span asp-validation-for="RecurringCycleLength"></span>
+                        <div class="form-group" id="pnlCyclePeriod">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RecurringCyclePeriodId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="RecurringCyclePeriodId" asp-items="@(((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())" />
+                                <span asp-validation-for="RecurringCyclePeriodId"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlCyclePeriod">
-                        <div class="col-md-3">
-							<nop-label asp-for="RecurringCyclePeriodId" />
+                        <div class="form-group" id="pnlTotalCycles">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RecurringTotalCycles" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RecurringTotalCycles" />
+                                <span asp-validation-for="RecurringTotalCycles"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="RecurringCyclePeriodId" asp-items="@(((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())" />
-							<span asp-validation-for="RecurringCyclePeriodId"></span>
-                        </div>
-                    </div>
-                    <div class="form-group" id="pnlTotalCycles">
-                        <div class="col-md-3">
-							<nop-label asp-for="RecurringTotalCycles" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="RecurringTotalCycles" />
-							<span asp-validation-for="RecurringTotalCycles"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>                    
                 </div>
             </div>
             <div class="panel panel-default @(Model.ProductEditorSettingsModel.IsRental ? null : "advanced-setting")" id="group-rental">
@@ -916,24 +928,26 @@
 							<span asp-validation-for="IsRental"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlRentalPriceLength">
-                        <div class="col-md-3">
-							<nop-label asp-for="RentalPriceLength" />
+                    <nop-nested-setting asp-for="IsRental">
+                        <div class="form-group" id="pnlRentalPriceLength">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RentalPriceLength" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RentalPriceLength" />
+                                <span asp-validation-for="RentalPriceLength"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="RentalPriceLength" />
-							<span asp-validation-for="RentalPriceLength"></span>
+                        <div class="form-group" id="pnlRentalPricePeriod">
+                            <div class="col-md-3">
+                                <nop-label asp-for="RentalPricePeriodId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="RentalPricePeriodId" asp-items="@(((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())" />
+                                <span asp-validation-for="RentalPricePeriodId"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlRentalPricePeriod">
-                        <div class="col-md-3">
-							<nop-label asp-for="RentalPricePeriodId" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="RentalPricePeriodId" asp-items="@(((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())" />
-							<span asp-validation-for="RentalPricePeriodId"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                 </div>
             </div>
             <div class="panel panel-default" id="group-prices">
@@ -995,15 +1009,17 @@
 							<span asp-validation-for="AvailableForPreOrder"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.AvailableForPreOrder ? null : "advanced-setting")" id="pnlPreOrderAvailabilityStartDateTimeUtc">
-                        <div class="col-md-3">
-							<nop-label asp-for="PreOrderAvailabilityStartDateTimeUtc" />
+                    <nop-nested-setting asp-for="AvailableForPreOrder">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.AvailableForPreOrder ? null : "advanced-setting")" id="pnlPreOrderAvailabilityStartDateTimeUtc">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PreOrderAvailabilityStartDateTimeUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PreOrderAvailabilityStartDateTimeUtc" />
+                                <span asp-validation-for="PreOrderAvailabilityStartDateTimeUtc"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="PreOrderAvailabilityStartDateTimeUtc" />
-							<span asp-validation-for="PreOrderAvailabilityStartDateTimeUtc"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.CallForPrice ? null : "advanced-setting")">
                         <div class="col-md-3">
 							<nop-label asp-for="CallForPrice" />
@@ -1022,24 +1038,26 @@
 							<span asp-validation-for="CustomerEntersPrice"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMinimumCustomerEnteredPrice">
-                        <div class="col-md-3">
-							<nop-label asp-for="MinimumCustomerEnteredPrice" />
+                    <nop-nested-setting asp-for="CustomerEntersPrice">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMinimumCustomerEnteredPrice">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MinimumCustomerEnteredPrice" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MinimumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                                <span asp-validation-for="MinimumCustomerEnteredPrice"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="MinimumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-							<span asp-validation-for="MinimumCustomerEnteredPrice"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMaximumCustomerEnteredPrice">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaximumCustomerEnteredPrice" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                                <span asp-validation-for="MaximumCustomerEnteredPrice"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.CustomerEntersPrice ? null : "advanced-setting")" id="pnlMaximumCustomerEnteredPrice">
-                        <div class="col-md-3">
-							<nop-label asp-for="MaximumCustomerEnteredPrice" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="MaximumCustomerEnteredPrice" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-							<span asp-validation-for="MaximumCustomerEnteredPrice"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")">
                         <div class="col-md-3">
 							<nop-label asp-for="BasepriceEnabled" />
@@ -1049,42 +1067,44 @@
 							<span asp-validation-for="BasepriceEnabled"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceAmount">
-                        <div class="col-md-3">
-							<nop-label asp-for="BasepriceAmount" />
+                    <nop-nested-setting asp-for="BasepriceEnabled">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceAmount">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BasepriceAmount" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BasepriceAmount" />
+                                <span asp-validation-for="BasepriceAmount"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="BasepriceAmount" />
-							<span asp-validation-for="BasepriceAmount"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceUnit">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BasepriceUnitId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="BasepriceUnitId" asp-items="Model.AvailableBasepriceUnits" />
+                                <span asp-validation-for="BasepriceUnitId"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceUnit">
-                        <div class="col-md-3">
-							<nop-label asp-for="BasepriceUnitId" />
+                        <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseAmount">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BasepriceBaseAmount" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BasepriceBaseAmount" />
+                                <span asp-validation-for="BasepriceBaseAmount"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="BasepriceUnitId" asp-items="Model.AvailableBasepriceUnits" />
-							<span asp-validation-for="BasepriceUnitId"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseUnit">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BasepriceBaseUnitId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="BasepriceBaseUnitId" asp-items="Model.AvailableBasepriceBaseUnits" />
+                                <span asp-validation-for="BasepriceBaseUnitId"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseAmount">
-                        <div class="col-md-3">
-							<nop-label asp-for="BasepriceBaseAmount" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-editor asp-for="BasepriceBaseAmount" />
-							<span asp-validation-for="BasepriceBaseAmount"></span>
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.PAngV ? null : "advanced-setting")" id="pnlBasepriceBaseUnit">
-                        <div class="col-md-3">
-							<nop-label asp-for="BasepriceBaseUnitId" />
-                        </div>
-                        <div class="col-md-9">
-							<nop-select asp-for="BasepriceBaseUnitId" asp-items="Model.AvailableBasepriceBaseUnits" />
-							<span asp-validation-for="BasepriceBaseUnitId"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group @(Model.ProductEditorSettingsModel.Discounts ? null : "advanced-setting")">
                         <div class="col-md-3">
 							<nop-label asp-for="SelectedDiscountIds" />
@@ -1685,78 +1705,80 @@
 							<span asp-validation-for="IsShipEnabled"></span>
                         </div>
                     </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.Weight ? null : "advanced-setting")" id="pnlWeight">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="Weight" />
+                    <nop-nested-setting asp-for="IsShipEnabled">
+                        <div class="form-group @(Model.ProductEditorSettingsModel.Weight ? null : "advanced-setting")" id="pnlWeight">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="Weight" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="Weight" asp-postfix="@Model.BaseWeightIn" />
+                                <span asp-validation-for="Weight"></span>
+                            </div>
                         </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="Weight" asp-postfix="@Model.BaseWeightIn" />
-							<span asp-validation-for="Weight"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlLength">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="Length" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="Length" asp-postfix="@Model.BaseDimensionIn" />
+                                <span asp-validation-for="Length"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlLength">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="Length" />
+                        <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlWidth">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="Width" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="Width" asp-postfix="@Model.BaseDimensionIn" />
+                                <span asp-validation-for="Width"></span>
+                            </div>
                         </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="Length" asp-postfix="@Model.BaseDimensionIn" />
-							<span asp-validation-for="Length"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlHeight">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="Height" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="Height" asp-postfix="@Model.BaseDimensionIn" />
+                                <span asp-validation-for="Height"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlWidth">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="Width" />
+                        <div class="form-group @(Model.ProductEditorSettingsModel.FreeShipping ? null : "advanced-setting")" id="pnlFreeShipping">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="IsFreeShipping" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="IsFreeShipping" />
+                                <span asp-validation-for="IsFreeShipping"></span>
+                            </div>
                         </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="Width" asp-postfix="@Model.BaseDimensionIn" />
-							<span asp-validation-for="Width"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.ShipSeparately ? null : "advanced-setting")" id="pnlShipSeparately">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="ShipSeparately" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="ShipSeparately" />
+                                <span asp-validation-for="ShipSeparately"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.Dimensions ? null : "advanced-setting")" id="pnlHeight">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="Height" />
+                        <div class="form-group @(Model.ProductEditorSettingsModel.AdditionalShippingCharge ? null : "advanced-setting")" id="pnlAdditionalShippingCharge">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="AdditionalShippingCharge" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-editor asp-for="AdditionalShippingCharge" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                                <span asp-validation-for="AdditionalShippingCharge"></span>
+                            </div>
                         </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="Height" asp-postfix="@Model.BaseDimensionIn" />
-							<span asp-validation-for="Height"></span>
+                        <div class="form-group @(Model.ProductEditorSettingsModel.DeliveryDate ? null : "advanced-setting")" id="pnlDeliveryDate">
+                            <div class="@leftColumnClass">
+                                <nop-label asp-for="DeliveryDateId" />
+                            </div>
+                            <div class="@rightColumnClass">
+                                <nop-select asp-for="DeliveryDateId" asp-items="Model.AvailableDeliveryDates" />
+                                <span asp-validation-for="DeliveryDateId"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.FreeShipping ? null : "advanced-setting")" id="pnlFreeShipping">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="IsFreeShipping" />
-                        </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="IsFreeShipping" />
-							<span asp-validation-for="IsFreeShipping"></span>
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.ShipSeparately ? null : "advanced-setting")" id="pnlShipSeparately">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="ShipSeparately" />
-                        </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="ShipSeparately" />
-							<span asp-validation-for="ShipSeparately"></span>
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.AdditionalShippingCharge ? null : "advanced-setting")" id="pnlAdditionalShippingCharge">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="AdditionalShippingCharge" />
-                        </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="AdditionalShippingCharge" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
-							<span asp-validation-for="AdditionalShippingCharge"></span>
-                        </div>
-                    </div>
-                    <div class="form-group @(Model.ProductEditorSettingsModel.DeliveryDate ? null : "advanced-setting")" id="pnlDeliveryDate">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="DeliveryDateId" />
-                        </div>
-                        <div class="@rightColumnClass">
-							<nop-select asp-for="DeliveryDateId" asp-items="Model.AvailableDeliveryDates" />
-							<span asp-validation-for="DeliveryDateId"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -1912,19 +1934,22 @@
                             <span asp-validation-for="RequireOtherProducts"></span>
                         </div>
                     </div>
-                    <div id="pnlRequiredProductIds">
-                        <div class="form-group">
+                    <nop-nested-setting asp-for="RequireOtherProducts">
+                        <div class="form-group" id="pnlRequiredProductIds">
                             <div class="@leftColumnClass">
-							<nop-label asp-for="RequiredProductIds" />
+                                <nop-label asp-for="RequiredProductIds" />
+                                <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
+                                    @T("Common.Wait...")
+                                </span>
                             </div>
                             <div class="@rightColumnClass">
                                 <div class="input-group">
-									<nop-editor asp-for="RequiredProductIds" />
+                                    <nop-editor asp-for="RequiredProductIds" />
                                     <span class="input-group-btn">
                                         <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
                                         <script type="text/javascript">
-                                            $(document).ready(function() {
-                                                $('#btnRefreshRequiredProducts').click(function() {
+                                            $(document).ready(function () {
+                                                $('#btnRefreshRequiredProducts').click(function () {
                                                     //refresh product list
                                                     loadRequiredProductFriendlyNames();
 
@@ -1938,27 +1963,20 @@
                                         </button>
                                     </span>
                                 </div>
+                                <span id="required-product-names"></span>
                                 @Html.ValidationMessageFor(model => model.RequiredProductIds)
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
                             <div class="@leftColumnClass">
-                                <span id="required-products-check-progress" style="display: none; float: right" class="please-wait">@T("Common.Wait...")</span>
+                                <nop-label asp-for="AutomaticallyAddRequiredProducts" />
                             </div>
                             <div class="@rightColumnClass">
-                                <span id="required-product-names"></span>
+                                <nop-editor asp-for="AutomaticallyAddRequiredProducts" />
+                                <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
-                        <div class="@leftColumnClass">
-							<nop-label asp-for="AutomaticallyAddRequiredProducts" />
-                        </div>
-                        <div class="@rightColumnClass">
-							<nop-editor asp-for="AutomaticallyAddRequiredProducts" />
-                            <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                 </div>
             </div>
             <div class="panel panel-default @(Model.ProductEditorSettingsModel.RelatedProducts ? null : "advanced-setting")">
