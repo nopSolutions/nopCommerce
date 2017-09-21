@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Core;
 using Nop.Web.Framework.Extensions;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
     [HtmlTargetElement("nop-nested-setting", Attributes = ForAttributeName)]
     public class NopNestedSettingTagHelper : TagHelper
     {
+        private readonly AdminAreaSettings _adminAreaSettings;
+
         private const string ForAttributeName = "asp-for";
 
         /// <summary>
@@ -30,9 +33,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
-        public NopNestedSettingTagHelper(IHtmlGenerator generator)
+        public NopNestedSettingTagHelper(IHtmlGenerator generator, AdminAreaSettings adminAreaSettings)
         {
             Generator = generator;
+            _adminAreaSettings = adminAreaSettings;
         }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -59,19 +63,15 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("class", "nested-setting");
             output.Attributes.Add("id", nestedSettingId);
 
-            //script
-            var script = new TagBuilder("script");
-            script.InnerHtml.AppendHtml("$(document).ready(function () {" +
-                                            $"var parentFormGroup = $('input[name=\"{parentSettingName}\"]').closest('.form-group');" +
-                                            $"var parentFormGroupId = $(parentFormGroup).attr('id');" +
-                                            $"if(!parentFormGroupId){{parentFormGroupId = '{parentSettingId}'}}" +
-                                            $"$(parentFormGroup).addClass('parent-setting').attr('id', parentFormGroupId);" +
-                                            $"if($('#{nestedSettingId} .form-group').length == $('#{nestedSettingId} .form-group.advanced-setting').length){{$('#' + parentFormGroupId).addClass('parent-setting-advanced')}}" +
-                                            $"function toggleNestedSetting() {{if ($('input[name=\"{parentSettingName}\"]').is(':checked')) {{$('#' + parentFormGroupId).addClass('opened')}} else {{$('#' + parentFormGroupId).removeClass('opened')}}}}" +
-                                            $"$('input[name=\"{parentSettingName}\"]').click(toggleNestedSetting);" +
-                                            "toggleNestedSetting();" +
-                                        "});");
-            output.PreContent.SetHtmlContent(script.RenderHtmlContent());
+            //use javascript
+            if (_adminAreaSettings.UseNestedSettingJavascript)
+            {
+                var script = new TagBuilder("script");
+                script.InnerHtml.AppendHtml("$(document).ready(function () {" +
+                                                $"initNestedSetting('{parentSettingName}', '{parentSettingId}', '{nestedSettingId}');" +
+                                            "});");
+                output.PreContent.SetHtmlContent(script.RenderHtmlContent());
+            }
         }
     }
 }

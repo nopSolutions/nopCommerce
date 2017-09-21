@@ -142,6 +142,35 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
     });
 };
 
+function toggleNestedSetting(parentSettingName, parentFormGroupId) {
+    if ($('input[name="' + parentSettingName + '"]').is(':checked')) {
+        $('#' + parentFormGroupId).addClass('opened');
+    } else {
+        $('#' + parentFormGroupId).removeClass('opened');
+    }
+}
+
+function parentSettingClick(e) {
+    toggleNestedSetting(e.data.parentSettingName, e.data.parentFormGroupId);
+}
+
+function initNestedSetting(parentSettingName, parentSettingId, nestedSettingId) {
+    var parentFormGroup = $('input[name="' + parentSettingName +'"]').closest('.form-group');
+    var parentFormGroupId = $(parentFormGroup).attr('id');
+    if (!parentFormGroupId) {
+        parentFormGroupId = parentSettingId;
+    }
+    $(parentFormGroup).addClass('parent-setting').attr('id', parentFormGroupId);
+    if ($('#' + nestedSettingId + ' .form-group').length == $('#' + nestedSettingId + ' .form-group.advanced-setting').length) {
+        $('#' + parentFormGroupId).addClass('parent-setting-advanced');
+    }
+
+    //$(document).on('click', 'input[name="' + parentSettingName + '"]', toggleNestedSetting(parentSettingName, parentFormGroupId));
+    $('input[name="' + parentSettingName + '"]').click(
+        { parentSettingName: parentSettingName, parentFormGroupId: parentFormGroupId }, parentSettingClick);
+    toggleNestedSetting(parentSettingName, parentFormGroupId);
+}
+
 //scroll to top
 (function ($) {
     $.fn.backTop = function () {
