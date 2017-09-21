@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
@@ -47,8 +46,9 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <summary>
         /// Gets a view component for displaying plugin in public store
         /// </summary>
+        /// <param name="widgetZone">Name of the widget zone</param>
         /// <param name="viewComponentName">View component name</param>
-        public void GetPublicViewComponent(out string viewComponentName)
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
         {
             viewComponentName = "WidgetsNivoSlider";
         }

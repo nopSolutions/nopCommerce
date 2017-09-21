@@ -32,7 +32,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             this._logger = logger;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string widgetZone)
         {
             string globalScript = "";
             var routeData = Url.ActionContext.RouteData;

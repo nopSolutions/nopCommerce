@@ -17,7 +17,8 @@ namespace Nop.Services.Cms
         /// <summary>
         /// Gets a view component for displaying plugin in public store
         /// </summary>
+        /// <param name="widgetZone">Name of the widget zone</param>
         /// <param name="viewComponentName">View component name</param>
-        void GetPublicViewComponent(out string viewComponentName);
+        void GetPublicViewComponent(string widgetZone, out string viewComponentName);
     }
 }
