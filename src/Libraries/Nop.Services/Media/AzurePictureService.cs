@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -21,10 +22,28 @@ namespace Nop.Services.Media
     /// </summary>
     public partial class AzurePictureService : PictureService
     {
-        #region Fields
+        #region Constants
+
+        /// <summary>
+        /// Key to cache whether thumb exists
+        /// </summary>
+        /// <remarks>
+        /// {0} : thumb file name
+        /// </remarks>
+        private const string THUMB_EXISTS_KEY = "Nop.azure.thumb.exists-{0}";
         
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string THUMBS_PATTERN_KEY = "Nop.azure.thumb";
+
+        #endregion
+
+        #region Fields
+
         private static CloudBlobContainer _container = null;
 
+        private readonly IStaticCacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
         private readonly NopConfig _config;
 
@@ -39,6 +58,7 @@ namespace Nop.Services.Media
             ILogger logger,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
+            IStaticCacheManager cacheManager,
             MediaSettings mediaSettings,
             NopConfig config,
             IDataProvider dataProvider,
@@ -54,6 +74,7 @@ namespace Nop.Services.Media
                 dataProvider,
                 hostingEnvironment)
         {
+            this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;
             this._config = config;
 
@@ -72,7 +93,7 @@ namespace Nop.Services.Media
         #endregion
 
         #region Utilities
-        
+
         protected virtual async void CreateCloudBlobContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_config.AzureBlobStorageConnectionString);
@@ -168,6 +189,8 @@ namespace Nop.Services.Media
                 continuationToken = resultSegment.ContinuationToken;
             }
             while (continuationToken != null);
+
+            _cacheManager.RemoveByPattern(THUMBS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -180,10 +203,14 @@ namespace Nop.Services.Media
         {
             try
             {
-                //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
-                var blockBlob = _container.GetBlockBlobReference(thumbFileName);
+                var key = string.Format(THUMB_EXISTS_KEY, thumbFileName);
+                return await _cacheManager.Get(key, async () =>
+                {
+                    //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
+                    var blockBlob = _container.GetBlockBlobReference(thumbFileName);
 
-                return await blockBlob.ExistsAsync();
+                    return await blockBlob.ExistsAsync();
+                });
             }
             catch { return false; }
         }
@@ -209,6 +236,8 @@ namespace Nop.Services.Media
                 blockBlob.Properties.CacheControl = _mediaSettings.AzureCacheControlHeader;
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
+
+            _cacheManager.RemoveByPattern(THUMBS_PATTERN_KEY);
         }
 
         #endregion
