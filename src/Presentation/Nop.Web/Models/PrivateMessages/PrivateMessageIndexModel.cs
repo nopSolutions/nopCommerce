@@ -1,7 +1,8 @@
-﻿
+﻿using Nop.Web.Framework.Mvc.Models;
+
 namespace Nop.Web.Models.PrivateMessages
 {
-    public partial class PrivateMessageIndexModel
+    public partial class PrivateMessageIndexModel : BaseNopModel
     {
         public int InboxPage { get; set; }
         public int SentItemsPage { get; set; }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class BoardsIndexModel
+    public partial class BoardsIndexModel : BaseNopModel
     {
         public BoardsIndexModel()
         {

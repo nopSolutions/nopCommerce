@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class CustomerForumSubscriptionsModel
+    public partial class CustomerForumSubscriptionsModel : BaseNopModel
     {
         public CustomerForumSubscriptionsModel()
         {

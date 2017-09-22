@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumTopicPageModel
+    public partial class ForumTopicPageModel : BaseNopModel
     {
         public ForumTopicPageModel()
         {

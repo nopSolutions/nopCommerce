@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class SearchModel
+    public partial class SearchModel : BaseNopModel
     {
         public SearchModel()
         {
