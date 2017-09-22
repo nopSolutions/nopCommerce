@@ -1131,6 +1131,116 @@ span.grid-report-item.red {
     margin: 0 0 8px 5px;
 }
 
+/*nested settings*/
+.parent-setting.opened {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.parent-setting.opened > div:first-child {
+    padding-bottom: 5px;
+}
+
+.parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
+    padding-right: 30px;
+    height: 100%;
+    position: static;
+    padding-bottom: 5px;
+}
+
+.parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"]:before,
+.parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"]:before,
+.parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"]:before {
+    border-right: 1px solid #c1c1c1;
+}
+
+.parent-setting.opened div + div:before {
+    position: absolute;
+    height: 100%;
+    content: "";
+    margin-right: -10px;
+    top: 15px;
+    z-index: 10;
+}
+
+.parent-setting.opened div + div input[type=checkbox] {
+    margin-right: -15px;
+    z-index: 100;
+    position: relative;
+}
+
+.parent-setting.opened + .nested-setting .form-group {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"]:first-child {
+    padding-bottom: 5px;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child > div[class^="col-md-"]:first-child {
+    padding-bottom: 0;
+}
+
+.parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
+    position: static;
+    padding-right: 30px;
+    padding-bottom: 5px;
+    height: 100%;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"] {
+    padding-bottom: 0;
+}
+
+.parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"]:before {
+    position: absolute;
+    height: 100%;
+    content: "";
+    margin-right: -10px;
+}
+
+.parent-setting.opened + .nested-setting .form-group.parent-setting div[class^="col-md-"] + div[class^="col-md-"]:before {
+    position: absolute;
+    height: 36px;
+    content: "";
+    margin-right: -10px;
+    margin-top: -18px;
+}
+
+.parent-setting.opened + .nested-setting .form-group.parent-setting.opened > div[class^="col-md-"] + div[class^="col-md-"]:after {
+    display: none;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child {
+    margin-bottom: 5px;
+}
+
+.parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"] + div[class^="col-md-"]:after {
+    border-bottom: 1px solid #c1c1c1;
+    content: "";
+    position: absolute;
+    width: 10px;
+    display: block;
+    margin-right: -10px;
+    top: 17px;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"] {
+    border-right: none;
+}
+
+.parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"]:before {
+    position: absolute;
+    height: 17px;
+    content: "";
+    margin-right: -10px;
+}
+
+.basic-settings-mode .parent-setting.parent-setting-advanced.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
+    display: none;
+}
+
 /*advanced settings*/
 .basic-settings-mode .advanced-setting {
     display: none !important;
@@ -1321,6 +1431,66 @@ span.grid-report-item.red {
     .k-grid.k-widget > table {
         min-width: 400px;
     }
+
+    /*nested settings*/
+    .parent-setting.opened {
+        margin-bottom: 5px;
+        position: static;
+        height: auto !important;
+    }
+
+    .parent-setting.opened > div[class^="col-md-"]:first-child {
+        padding-bottom: 0;
+    }
+
+    .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
+        padding-bottom: 0;
+    }
+
+    .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] {
+        padding-right: 15px;
+        height: auto;
+    }
+
+    .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"]:before {
+        display: none;
+    }
+
+    .parent-setting.opened div[class^="col-md-"] + div[class^="col-md-"] input[type=checkbox] {
+        margin-right: 0;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group {
+        margin-bottom: 5px;
+        height: auto !important;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
+        position: static;
+        padding-right: 15px;
+        height: auto;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"]:before {
+        display: none;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"] + div[class^="col-md-"]:after {
+        display: none;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group:last-child div[class^="col-md-"] + div[class^="col-md-"]:before {
+        display: none;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group > div[class^="col-md-"]:first-child {
+        padding-bottom: 0;
+    }
+
+    .parent-setting.opened + .nested-setting .form-group div[class^="col-md-"] + div[class^="col-md-"] {
+        padding-bottom: 0;
+    }
+
 }
 
 @media (max-width: 992px) {
