@@ -61,7 +61,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("class", "nested-setting");
-            output.Attributes.Add("id", nestedSettingId);
+            if (context.AllAttributes.ContainsName("id"))
+                nestedSettingId = context.AllAttributes["id"].Value.ToString();
 
             //use javascript
             if (_adminAreaSettings.UseNestedSettingJavascript)
