@@ -302,6 +302,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
     <Value>Please note that you can also manually upload a plugin using FTP if this method doesn''t work for you.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Instructions">
+    <Value>This payment method stores credit card information in database (it''s not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.</Value>
+  </LocaleResource>
 </Language>
 '
 

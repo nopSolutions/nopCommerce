@@ -268,6 +268,7 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.SaveSetting(settings);
 
             //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Instructions", "This payment method stores credit card information in database (it's not sent to any third-party processor). In order to store credit card information, you must be PCI compliant.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -288,6 +289,7 @@ namespace Nop.Plugin.Payments.Manual
             _settingService.DeleteSetting<ManualPaymentSettings>();
 
             //locales
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Instructions");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
