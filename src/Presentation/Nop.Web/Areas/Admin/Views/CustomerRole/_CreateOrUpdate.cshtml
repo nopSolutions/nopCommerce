@@ -78,15 +78,17 @@
                             <span asp-validation-for="OverrideTaxDisplayType"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="pnlDefaultTaxDisplayType">
-                        <div class="col-md-3">
-                            <nop-label asp-for="DefaultTaxDisplayTypeId" />
+                    <nop-nested-setting asp-for="OverrideTaxDisplayType">
+                        <div class="form-group" id="pnlDefaultTaxDisplayType">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DefaultTaxDisplayTypeId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultTaxDisplayTypeId" asp-items="Model.TaxDisplayTypeValues" />
+                                <span asp-validation-for="DefaultTaxDisplayTypeId"></span>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-                            <nop-select asp-for="DefaultTaxDisplayTypeId" asp-items="Model.TaxDisplayTypeValues" />
-                            <span asp-validation-for="DefaultTaxDisplayTypeId"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="EnablePasswordLifetime"/>

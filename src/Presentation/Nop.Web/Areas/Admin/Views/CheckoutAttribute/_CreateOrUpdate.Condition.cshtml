@@ -30,8 +30,7 @@
                         <span asp-validation-for="ConditionModel.EnableCondition"></span>
                     </div>
                 </div>
-
-                <div id="pnlAttributes">
+                <nop-nested-setting asp-for="ConditionModel.EnableCondition" id="pnlAttributes">
                     @if (Model.ConditionModel.ConditionAttributes.Count > 0)
                     {
                         <div class="form-group">
@@ -59,7 +58,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
+                            <div class="col-md-3">&nbsp;</div>
+                            <div class="col-md-9">
                                 @for (int i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
                                 {
                                     <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Id"/>
@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     }
-                </div>
+                </nop-nested-setting>
             </div>
         }
         else

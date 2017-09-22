@@ -127,24 +127,26 @@
                     <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
                 </div>
             </div>
-            <div id="pnlPageSize" class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="PageSize" />
+            <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
+                <div id="pnlPageSize" class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PageSize" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PageSize" />
+                        <span asp-validation-for="PageSize"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="PageSize" />
-                    <span asp-validation-for="PageSize"></span>
+                <div id="pnlPageSizeOptions" class="form-group advanced-setting">
+                    <div class="col-md-3">
+                        <nop-label asp-for="PageSizeOptions" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="PageSizeOptions" />
+                        <span asp-validation-for="PageSizeOptions"></span>
+                    </div>
                 </div>
-            </div>
-            <div id="pnlPageSizeOptions" class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="PageSizeOptions" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="PageSizeOptions" />
-                    <span asp-validation-for="PageSizeOptions"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group advanced-setting">
                 <div class="col-md-3">
                     <nop-label asp-for="SelectedDiscountIds" />

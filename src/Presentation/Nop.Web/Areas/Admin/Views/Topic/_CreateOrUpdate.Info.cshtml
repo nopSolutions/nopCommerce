@@ -85,15 +85,17 @@
                     <span asp-validation-for="IsPasswordProtected"></span>
                 </div>
             </div>
-            <div class="form-group advanced-setting" id="pnlPasswordEnabled">
-                <div class="col-md-3">
-                    <nop-label asp-for="Password" />
+            <nop-nested-setting asp-for="IsPasswordProtected">
+                <div class="form-group advanced-setting" id="pnlPasswordEnabled">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Password" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="Password" />
-                    <span asp-validation-for="Password"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="IncludeInTopMenu" />
