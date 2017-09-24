@@ -162,7 +162,7 @@ namespace Nop.Core.Infrastructure
             if (assembly != null)
                 return assembly;
 
-            //get assembly fron TypeFinder
+            //get assembly from TypeFinder
             var tf = Resolve<ITypeFinder>();
             assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
