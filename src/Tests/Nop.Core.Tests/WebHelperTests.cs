@@ -79,13 +79,6 @@ namespace Nop.Core.Tests
         }
 
         [Test]
-        public void Can_remove_queryString_should_ignore_input_parameter_case()
-        {
-            _webHelper.RemoveQueryString("http://www.example.com/?param1=value1&parAm2=value2", "paRAm1")
-                .ShouldEqual("http://www.example.com/?parAm2=value2");
-        }
-
-        [Test]
         public void Can_modify_queryString()
         {
             //first param (?)
