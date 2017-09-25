@@ -64,6 +64,7 @@ namespace Nop.Services.ExportImport
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly VendorSettings _vendorSettings;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
 
         #endregion
 
@@ -93,7 +94,8 @@ namespace Nop.Services.ExportImport
             IWorkContext workContext,
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            ISpecificationAttributeService specificationAttributeService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -120,6 +122,7 @@ namespace Nop.Services.ExportImport
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
             this._vendorSettings = vendorSettings;
+            this._specificationAttributeService = specificationAttributeService;
         }
 
         #endregion
@@ -190,8 +193,7 @@ namespace Nop.Services.ExportImport
 
             if (pictureAlreadyExists) return null;
 
-            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType,
-                _pictureService.GetPictureSeName(name));
+            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(name));
             return newPicture;
         }
 
@@ -364,7 +366,26 @@ namespace Nop.Services.ExportImport
                         new PropertyByName<ExportProductAttribute>("PictureId")
                     };
 
-                var managerProductAttribute = new PropertyManager<ExportProductAttribute>(attributProperties);
+                var productAttributeManager = new PropertyManager<ExportProductAttribute>(attributProperties);
+
+                var attributeProperties = new[]
+                {
+                    new PropertyByName<ExportSpecificationAttribute>("AttributeType", p => p.AttributeTypeId)
+                    {
+                        DropDownElements = SpecificationAttributeType.Option.ToSelectList(useLocalization: false)
+                    },
+                    new PropertyByName<ExportSpecificationAttribute>("SpecificationAttribute", p => p.SpecificationAttributeId)
+                    {
+                        DropDownElements = _specificationAttributeService.GetSpecificationAttributes().Select(sa => sa as BaseEntity).ToSelectList(p => (p as SpecificationAttribute)?.Name ?? string.Empty)
+                    },
+                    new PropertyByName<ExportSpecificationAttribute>("CustomValue", p => p.CustomValue),
+                    new PropertyByName<ExportSpecificationAttribute>("SpecificationAttributeOptionId", p => p.SpecificationAttributeOptionId),
+                    new PropertyByName<ExportSpecificationAttribute>("AllowFiltering", p => p.AllowFiltering),
+                    new PropertyByName<ExportSpecificationAttribute>("ShowOnProductPage", p => p.ShowOnProductPage),
+                    new PropertyByName<ExportSpecificationAttribute>("DisplayOrder", p => p.DisplayOrder)
+                };
+
+                var specificationAttributeManager = new PropertyManager<ExportSpecificationAttribute>(attributeProperties);
 
                 var endRow = 2;
                 var allCategoriesNames = new List<string>();
@@ -394,11 +415,14 @@ namespace Nop.Services.ExportImport
                 manager.SetSelectList("DeliveryDate", _dateRangeService.GetAllDeliveryDates().Select(dd => dd as BaseEntity).ToSelectList(p => (p as DeliveryDate)?.Name ?? string.Empty));
                 manager.SetSelectList("ProductAvailabilityRange", _dateRangeService.GetAllProductAvailabilityRanges().Select(range => range as BaseEntity).ToSelectList(p => (p as ProductAvailabilityRange)?.Name ?? string.Empty));
                 manager.SetSelectList("TaxCategory", _taxCategoryService.GetAllTaxCategories().Select(tc => tc as BaseEntity).ToSelectList(p => (p as TaxCategory)?.Name ?? string.Empty));
-                manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p =>(p as MeasureWeight)?.Name ?? string.Empty));
+                manager.SetSelectList("BasepriceUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty));
                 manager.SetSelectList("BasepriceBaseUnit", _measureService.GetAllMeasureWeights().Select(mw => mw as BaseEntity).ToSelectList(p => (p as MeasureWeight)?.Name ?? string.Empty));
 
                 var allAttributeIds = new List<int>();
-                var attributeIdCellNum = managerProductAttribute.GetProperty("AttributeId").PropertyOrderPosition + ExportProductAttribute.ProducAttributeCellOffset;
+                var allSpecificationAttributeOptionIds = new List<int>();
+
+                var attributeIdCellNum = 1 + ExportProductAttribute.ProducAttributeCellOffset;
+                var specificationAttributeOptionIdCellNum = specificationAttributeManager.GetIndex("SpecificationAttributeOptionId") + ExportProductAttribute.ProducAttributeCellOffset;
 
                 var countProductsInFile = 0;
 
@@ -407,37 +431,36 @@ namespace Nop.Services.ExportImport
                 {
                     var allColumnsAreEmpty = manager.GetProperties
                         .Select(property => worksheet.Cells[endRow, property.PropertyOrderPosition])
-                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+                        .All(cell => string.IsNullOrEmpty(cell?.Value?.ToString()));
 
                     if (allColumnsAreEmpty)
                         break;
 
-                    if (new[] { 1, 2 }.Select(cellNum => worksheet.Cells[endRow, cellNum]).All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString())) && worksheet.Row(endRow).OutlineLevel == 0)
+                    if (new[] { 1, 2 }.Select(cellNum => worksheet.Cells[endRow, cellNum]).All(cell => string.IsNullOrEmpty(cell?.Value?.ToString())) && worksheet.Row(endRow).OutlineLevel == 0)
                     {
                         var cellValue = worksheet.Cells[endRow, attributeIdCellNum].Value;
-                        try
-                        {
-                            var aid = Convert.ToInt32(cellValue ?? -1);
-
-                            var productAttribute = _productAttributeService.GetProductAttributeById(aid);
-
-                            if (productAttribute != null)
-                                worksheet.Row(endRow).OutlineLevel = 1;
-                        }
-                        catch (FormatException)
-                        {
-                            if ((cellValue ?? string.Empty).ToString() == "AttributeId")
-                                worksheet.Row(endRow).OutlineLevel = 1;
-                        }
+                        SetOutLineForProductAttributeRow(cellValue, worksheet, endRow);
+                        SetOutLineForSpecificationAttributeRow(cellValue, worksheet, endRow);
                     }
 
                     if (worksheet.Row(endRow).OutlineLevel != 0)
                     {
-                        managerProductAttribute.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
-                        if (!managerProductAttribute.IsCaption)
+                        productAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
+                        if (!productAttributeManager.IsCaption)
                         {
-                            var aid = Convert.ToInt32(worksheet.Cells[endRow, attributeIdCellNum].Value ?? -1);
-                            allAttributeIds.Add(aid);
+                            if (int.TryParse((worksheet.Cells[endRow, attributeIdCellNum].Value ?? string.Empty).ToString(), out int aid))
+                            {
+                                allAttributeIds.Add(aid);
+                            }
+                            else
+                            {
+                                specificationAttributeManager.ReadFromXlsx(worksheet, endRow, ExportProductAttribute.ProducAttributeCellOffset);
+                                
+                                if (!specificationAttributeManager.IsCaption && int.TryParse((worksheet.Cells[endRow, specificationAttributeOptionIdCellNum].Value ?? string.Empty).ToString(), out int saoid))
+                                {
+                                    allSpecificationAttributeOptionIds.Add(saoid);
+                                }
+                            }
                         }
 
                         endRow++;
@@ -494,6 +517,13 @@ namespace Nop.Services.ExportImport
                     throw new ArgumentException($"The following product attribute ID(s) don't exist - {string.Join(", ", notExistingProductAttributes)}");
                 }
 
+                //performance optimization, the check for the existence of the specification attribute options in one SQL request
+                var notExistingSpecificationAttributeOptions = _specificationAttributeService.GetNotExistingSpecificationAttributeOptions(allSpecificationAttributeOptionIds.Where(saoId => saoId != 0).ToArray());
+                if (notExistingSpecificationAttributeOptions.Any())
+                {
+                    throw new ArgumentException($"The following specification attribute option ID(s) don't exist - {string.Join(", ", notExistingSpecificationAttributeOptions)}");
+                }
+
                 //performance optimization, load all products by SKU in one SQL request
                 var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray(), _workContext.CurrentVendor?.Id ?? 0);
 
@@ -502,7 +532,7 @@ namespace Nop.Services.ExportImport
                     _workContext.CurrentVendor != null)
                 {
                     var newProductsCount = countProductsInFile - allProductsBySku.Count;
-                    if(_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
+                    if (_productService.GetNumberOfProductsByVendorId(_workContext.CurrentVendor.Id) + newProductsCount > _vendorSettings.MaximumProductNumber)
                         throw new ArgumentException(string.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
                 }
 
@@ -522,119 +552,39 @@ namespace Nop.Services.ExportImport
                 var productPictureMetadata = new List<ProductPictureMetadata>();
 
                 Product lastLoadedProduct = null;
+                var typeOfExportedAttribute = ExportedAttributeType.NotSpecified;
 
                 for (var iRow = 2; iRow < endRow; iRow++)
                 {
                     //imports product attributes
                     if (worksheet.Row(iRow).OutlineLevel != 0)
                     {
-                        if (_catalogSettings.ExportImportProductAttributes)
+                        if (lastLoadedProduct == null)
+                            continue;
+
+                        var newTypeOfExportedAttribute = GetTypeOfExportedAttribute(worksheet, productAttributeManager, specificationAttributeManager, iRow);
+                        
+                        //skip caption row
+                        if (newTypeOfExportedAttribute != ExportedAttributeType.NotSpecified &&
+                            newTypeOfExportedAttribute != typeOfExportedAttribute)
                         {
-                            managerProductAttribute.ReadFromXlsx(worksheet, iRow,
-                                ExportProductAttribute.ProducAttributeCellOffset);
-                            if (lastLoadedProduct == null || managerProductAttribute.IsCaption)
-                                continue;
-
-                            var productAttributeId = managerProductAttribute.GetProperty("AttributeId").IntValue;
-                            var attributeControlTypeId = managerProductAttribute.GetProperty("AttributeControlType").IntValue;
-                            
-                            var productAttributeValueId = managerProductAttribute.GetProperty("ProductAttributeValueId").IntValue;
-                            var associatedProductId = managerProductAttribute.GetProperty("AssociatedProductId").IntValue;
-                            var valueName = managerProductAttribute.GetProperty("ValueName").StringValue;
-                            var attributeValueTypeId = managerProductAttribute.GetProperty("AttributeValueType").IntValue;
-                            var colorSquaresRgb = managerProductAttribute.GetProperty("ColorSquaresRgb").StringValue;
-                            var imageSquaresPictureId = managerProductAttribute.GetProperty("ImageSquaresPictureId").IntValue;
-                            var priceAdjustment = managerProductAttribute.GetProperty("PriceAdjustment").DecimalValue;
-                            var weightAdjustment = managerProductAttribute.GetProperty("WeightAdjustment").DecimalValue;
-                            var cost = managerProductAttribute.GetProperty("Cost").DecimalValue;
-                            var customerEntersQty = managerProductAttribute.GetProperty("CustomerEntersQty").BooleanValue;
-                            var quantity = managerProductAttribute.GetProperty("Quantity").IntValue;
-                            var isPreSelected = managerProductAttribute.GetProperty("IsPreSelected").BooleanValue;
-                            var displayOrder = managerProductAttribute.GetProperty("DisplayOrder").IntValue;
-                            var pictureId = managerProductAttribute.GetProperty("PictureId").IntValue;
-                            var textPrompt = managerProductAttribute.GetProperty("AttributeTextPrompt").StringValue;
-                            var isRequired = managerProductAttribute.GetProperty("AttributeIsRequired").BooleanValue;
-                            var attributeDisplayOrder = managerProductAttribute.GetProperty("AttributeDisplayOrder").IntValue;
-
-                            var productAttributeMapping = lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
-                            
-                            if (productAttributeMapping == null)
-                            {
-                                //insert mapping
-                                productAttributeMapping = new ProductAttributeMapping
-                                {
-                                    ProductId = lastLoadedProduct.Id,
-                                    ProductAttributeId = productAttributeId,
-                                    TextPrompt = textPrompt,
-                                    IsRequired = isRequired,
-                                    AttributeControlTypeId = attributeControlTypeId,
-                                    DisplayOrder = attributeDisplayOrder
-                                };
-                                _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
-                            }
-                            else
-                            {
-                                productAttributeMapping.AttributeControlTypeId = attributeControlTypeId;
-                                productAttributeMapping.TextPrompt = textPrompt;
-                                productAttributeMapping.IsRequired = isRequired;
-                                productAttributeMapping.DisplayOrder = attributeDisplayOrder;
-                                _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
-                            }
-
-                            var pav = _productAttributeService.GetProductAttributeValueById(productAttributeValueId);
-
-                            var attributeControlType = (AttributeControlType) attributeControlTypeId;
-
-                            if (pav == null)
-                            {
-                                switch (attributeControlType)
-                                {
-                                    case AttributeControlType.Datepicker:
-                                    case AttributeControlType.FileUpload:
-                                    case AttributeControlType.MultilineTextbox:
-                                    case AttributeControlType.TextBox:
-                                        continue;
-                                }
-
-                                pav = new ProductAttributeValue
-                                {
-                                    ProductAttributeMappingId = productAttributeMapping.Id,
-                                    AttributeValueType = (AttributeValueType) attributeValueTypeId,
-                                    AssociatedProductId = associatedProductId,
-                                    Name = valueName,
-                                    PriceAdjustment = priceAdjustment,
-                                    WeightAdjustment = weightAdjustment,
-                                    Cost = cost,
-                                    IsPreSelected = isPreSelected,
-                                    DisplayOrder = displayOrder,
-                                    ColorSquaresRgb = colorSquaresRgb,
-                                    ImageSquaresPictureId = imageSquaresPictureId,
-                                    CustomerEntersQty = customerEntersQty,
-                                    Quantity = quantity,
-                                    PictureId = pictureId
-                                };
-
-                                _productAttributeService.InsertProductAttributeValue(pav);
-                            }
-                            else
-                            {
-                                pav.AttributeValueTypeId = attributeValueTypeId;
-                                pav.AssociatedProductId = associatedProductId;
-                                pav.Name = valueName;
-                                pav.ColorSquaresRgb = colorSquaresRgb;
-                                pav.ImageSquaresPictureId = imageSquaresPictureId;
-                                pav.PriceAdjustment = priceAdjustment;
-                                pav.WeightAdjustment = weightAdjustment;
-                                pav.Cost = cost;
-                                pav.CustomerEntersQty = customerEntersQty;
-                                pav.Quantity = quantity;
-                                pav.IsPreSelected = isPreSelected;
-                                pav.DisplayOrder = displayOrder;
-                                pav.PictureId = pictureId;
-
-                                _productAttributeService.UpdateProductAttributeValue(pav);
-                            }
+                            typeOfExportedAttribute = newTypeOfExportedAttribute;
+                            continue;
                         }
+
+                        switch (typeOfExportedAttribute)
+                        {
+                            case ExportedAttributeType.ProductAttribute:
+                                ImportProductAttribute(productAttributeManager, lastLoadedProduct);
+                                break;
+                            case ExportedAttributeType.SpecificationAttribute:
+                                ImportSpecificationAttribute(specificationAttributeManager, lastLoadedProduct);
+                                break;
+                            case ExportedAttributeType.NotSpecified:
+                            default:
+                                continue;
+                        }
+
                         continue;
                     }
 
@@ -965,6 +915,7 @@ namespace Nop.Services.ExportImport
                             if (oldWarehouse != null)
                                 oldWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.Old"), oldWarehouse.Name);
                         }
+
                         var newWarehouseMessage = string.Empty;
                         if (product.WarehouseId > 0)
                         {
@@ -972,6 +923,7 @@ namespace Nop.Services.ExportImport
                             if (newWarehouse != null)
                                 newWarehouseMessage = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditWarehouse.New"), newWarehouse.Name);
                         }
+
                         var message = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
 
                         //record history
@@ -1090,7 +1042,228 @@ namespace Nop.Services.ExportImport
                 _customerActivityService.InsertActivity("ImportProducts", _localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile);
             }
         }
+
+        private static ExportedAttributeType GetTypeOfExportedAttribute(ExcelWorksheet worksheet, PropertyManager<ExportProductAttribute> productAttributeManager, PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, int iRow)
+        {
+            productAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+
+            if (productAttributeManager.IsCaption)
+            {
+                return ExportedAttributeType.ProductAttribute;
+            }
+
+            specificationAttributeManager.ReadFromXlsx(worksheet, iRow, ExportProductAttribute.ProducAttributeCellOffset);
+
+            if (specificationAttributeManager.IsCaption)
+            {
+                return ExportedAttributeType.SpecificationAttribute;
+            }
+
+            return ExportedAttributeType.NotSpecified;
+        }
+
+        private static void SetOutLineForSpecificationAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
+        {
+            var attributeType = (cellValue ?? string.Empty).ToString();
+
+            if (attributeType.Equals("AttributeType", StringComparison.InvariantCultureIgnoreCase))
+            {
+                worksheet.Row(endRow).OutlineLevel = 1;
+            }
+            else
+            {
+                if (SpecificationAttributeType.Option.ToSelectList(useLocalization: false)
+                    .Any(p => p.Text.Equals(attributeType, StringComparison.InvariantCultureIgnoreCase)))
+                    worksheet.Row(endRow).OutlineLevel = 1;
+            }
+        }
+
+        private void SetOutLineForProductAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
+        {
+            try
+            {
+                var aid = Convert.ToInt32(cellValue ?? -1);
+
+                var productAttribute = _productAttributeService.GetProductAttributeById(aid);
+
+                if (productAttribute != null)
+                    worksheet.Row(endRow).OutlineLevel = 1;
+            }
+            catch (FormatException)
+            {
+                if ((cellValue ?? string.Empty).ToString() == "AttributeId")
+                    worksheet.Row(endRow).OutlineLevel = 1;
+            }
+        }
         
+        private void ImportProductAttribute(PropertyManager<ExportProductAttribute> productAttributeManager,
+            Product lastLoadedProduct)
+        {
+            if (!_catalogSettings.ExportImportProductAttributes || lastLoadedProduct == null)
+                return;
+
+            var productAttributeId = productAttributeManager.GetProperty("AttributeId").IntValue;
+            var attributeControlTypeId = productAttributeManager.GetProperty("AttributeControlType").IntValue;
+
+            var productAttributeValueId = productAttributeManager.GetProperty("ProductAttributeValueId").IntValue;
+            var associatedProductId = productAttributeManager.GetProperty("AssociatedProductId").IntValue;
+            var valueName = productAttributeManager.GetProperty("ValueName").StringValue;
+            var attributeValueTypeId = productAttributeManager.GetProperty("AttributeValueType").IntValue;
+            var colorSquaresRgb = productAttributeManager.GetProperty("ColorSquaresRgb").StringValue;
+            var imageSquaresPictureId = productAttributeManager.GetProperty("ImageSquaresPictureId").IntValue;
+            var priceAdjustment = productAttributeManager.GetProperty("PriceAdjustment").DecimalValue;
+            var weightAdjustment = productAttributeManager.GetProperty("WeightAdjustment").DecimalValue;
+            var cost = productAttributeManager.GetProperty("Cost").DecimalValue;
+            var customerEntersQty = productAttributeManager.GetProperty("CustomerEntersQty").BooleanValue;
+            var quantity = productAttributeManager.GetProperty("Quantity").IntValue;
+            var isPreSelected = productAttributeManager.GetProperty("IsPreSelected").BooleanValue;
+            var displayOrder = productAttributeManager.GetProperty("DisplayOrder").IntValue;
+            var pictureId = productAttributeManager.GetProperty("PictureId").IntValue;
+            var textPrompt = productAttributeManager.GetProperty("AttributeTextPrompt").StringValue;
+            var isRequired = productAttributeManager.GetProperty("AttributeIsRequired").BooleanValue;
+            var attributeDisplayOrder = productAttributeManager.GetProperty("AttributeDisplayOrder").IntValue;
+
+            var productAttributeMapping =
+                lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(
+                    pam => pam.ProductAttributeId == productAttributeId);
+
+            if (productAttributeMapping == null)
+            {
+                //insert mapping
+                productAttributeMapping = new ProductAttributeMapping
+                {
+                    ProductId = lastLoadedProduct.Id,
+                    ProductAttributeId = productAttributeId,
+                    TextPrompt = textPrompt,
+                    IsRequired = isRequired,
+                    AttributeControlTypeId = attributeControlTypeId,
+                    DisplayOrder = attributeDisplayOrder
+                };
+                _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
+            }
+            else
+            {
+                productAttributeMapping.AttributeControlTypeId = attributeControlTypeId;
+                productAttributeMapping.TextPrompt = textPrompt;
+                productAttributeMapping.IsRequired = isRequired;
+                productAttributeMapping.DisplayOrder = attributeDisplayOrder;
+                _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
+            }
+
+            var pav = _productAttributeService.GetProductAttributeValueById(productAttributeValueId);
+
+            var attributeControlType = (AttributeControlType)attributeControlTypeId;
+
+            if (pav == null)
+            {
+                switch (attributeControlType)
+                {
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    case AttributeControlType.MultilineTextbox:
+                    case AttributeControlType.TextBox:
+                        return;
+                }
+
+                pav = new ProductAttributeValue
+                {
+                    ProductAttributeMappingId = productAttributeMapping.Id,
+                    AttributeValueType = (AttributeValueType)attributeValueTypeId,
+                    AssociatedProductId = associatedProductId,
+                    Name = valueName,
+                    PriceAdjustment = priceAdjustment,
+                    WeightAdjustment = weightAdjustment,
+                    Cost = cost,
+                    IsPreSelected = isPreSelected,
+                    DisplayOrder = displayOrder,
+                    ColorSquaresRgb = colorSquaresRgb,
+                    ImageSquaresPictureId = imageSquaresPictureId,
+                    CustomerEntersQty = customerEntersQty,
+                    Quantity = quantity,
+                    PictureId = pictureId
+                };
+
+                _productAttributeService.InsertProductAttributeValue(pav);
+            }
+            else
+            {
+                pav.AttributeValueTypeId = attributeValueTypeId;
+                pav.AssociatedProductId = associatedProductId;
+                pav.Name = valueName;
+                pav.ColorSquaresRgb = colorSquaresRgb;
+                pav.ImageSquaresPictureId = imageSquaresPictureId;
+                pav.PriceAdjustment = priceAdjustment;
+                pav.WeightAdjustment = weightAdjustment;
+                pav.Cost = cost;
+                pav.CustomerEntersQty = customerEntersQty;
+                pav.Quantity = quantity;
+                pav.IsPreSelected = isPreSelected;
+                pav.DisplayOrder = displayOrder;
+                pav.PictureId = pictureId;
+
+                _productAttributeService.UpdateProductAttributeValue(pav);
+            }
+        }
+
+        private void ImportSpecificationAttribute(PropertyManager<ExportSpecificationAttribute> specificationAttributeManager, Product lastLoadedProduct)
+        {
+            var attributeTypeId = specificationAttributeManager.GetProperty("AttributeType").IntValue;
+            var allowFiltering = specificationAttributeManager.GetProperty("AllowFiltering").BooleanValue;
+            var specificationAttributeOptionId = specificationAttributeManager.GetProperty("SpecificationAttributeOptionId").IntValue;
+            var productId = lastLoadedProduct.Id;
+            var customValue = specificationAttributeManager.GetProperty("CustomValue").StringValue;
+            var displayOrder = specificationAttributeManager.GetProperty("DisplayOrder").IntValue;
+            var showOnProductPage = specificationAttributeManager.GetProperty("ShowOnProductPage").BooleanValue;
+
+            //if specification attribute option isn't set, try to get first of possible specification attribute option for current specification attribute
+            if (specificationAttributeOptionId == 0)
+            {
+                var specificationAttribute = specificationAttributeManager.GetProperty("SpecificationAttribute").IntValue;
+                specificationAttributeOptionId = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute)
+                    .FirstOrDefault()?.Id ?? specificationAttributeOptionId;
+            }
+
+            var productSpecificationAttribute = specificationAttributeOptionId == 0
+                ? null
+                : _specificationAttributeService.GetProductSpecificationAttributes(productId, specificationAttributeOptionId).FirstOrDefault();
+            
+            var isNew = productSpecificationAttribute == null;
+
+            if (isNew)
+            {
+                productSpecificationAttribute = new ProductSpecificationAttribute();
+            }
+            
+            if (attributeTypeId != (int)SpecificationAttributeType.Option)
+            {
+                //we allow filtering only for "Option" attribute type
+                allowFiltering = false;
+            }
+
+            //we don't allow CustomValue for "Option" attribute type
+            if (attributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                customValue = null;
+            }
+
+            productSpecificationAttribute.AttributeTypeId = attributeTypeId;
+            productSpecificationAttribute.SpecificationAttributeOptionId = specificationAttributeOptionId;
+            productSpecificationAttribute.ProductId = productId;
+            productSpecificationAttribute.CustomValue = customValue;
+            productSpecificationAttribute.AllowFiltering = allowFiltering;
+            productSpecificationAttribute.ShowOnProductPage = showOnProductPage;
+            productSpecificationAttribute.DisplayOrder = displayOrder;
+
+            if (isNew)
+            {
+                _specificationAttributeService.InsertProductSpecificationAttribute(productSpecificationAttribute);
+            }
+            else
+            {
+                _specificationAttributeService.UpdateProductSpecificationAttribute(productSpecificationAttribute);
+            }
+        }
+
         /// <summary>
         /// Import newsletter subscribers from TXT file
         /// </summary>
@@ -1153,6 +1326,7 @@ namespace Nop.Services.ExportImport
                         };
                         _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
                     }
+
                     count++;
                 }
             }
@@ -1217,6 +1391,7 @@ namespace Nop.Services.ExportImport
                         };
                         _stateProvinceService.InsertStateProvince(state);
                     }
+
                     count++;
                 }
             }
@@ -1301,8 +1476,7 @@ namespace Nop.Services.ExportImport
                                 manufacturer.MetaTitle = property.StringValue;
                                 break;
                             case "Picture":
-                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                                    isNew ? null : (int?) manufacturer.PictureId);
+                                var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name, isNew ? null : (int?)manufacturer.PictureId);
 
                                 if (picture != null)
                                     manufacturer.PictureId = picture.Id;
@@ -1488,9 +1662,13 @@ namespace Nop.Services.ExportImport
         protected class ProductPictureMetadata
         {
             public Product ProductItem { get; set; }
+
             public string Picture1Path { get; set; }
+
             public string Picture2Path { get; set; }
+
             public string Picture3Path { get; set; }
+
             public bool IsNew { get; set; }
         }
         

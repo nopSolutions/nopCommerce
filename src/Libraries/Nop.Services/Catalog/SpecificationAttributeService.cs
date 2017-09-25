@@ -261,6 +261,22 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(specificationAttributeOption);
         }
 
+        /// <summary>
+        /// Returns a list of IDs of not existing specification attribute options
+        /// </summary>
+        /// <param name="attributeOptionIds">The IDs of the attribute options to check</param>
+        /// <returns>List of IDs not existing specification attribute options</returns>
+        public virtual int[] GetNotExistingSpecificationAttributeOptions(int[] attributeOptionIds)
+        {
+            if (attributeOptionIds == null)
+                throw new ArgumentNullException(nameof(attributeOptionIds));
+
+            var query = _specificationAttributeOptionRepository.Table;
+            var queryFilter = attributeOptionIds.Distinct().ToArray();
+            var filter = query.Select(a => a.Id).Where(m => queryFilter.Contains(m)).ToList();
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
 
         #region Product specification attribute
