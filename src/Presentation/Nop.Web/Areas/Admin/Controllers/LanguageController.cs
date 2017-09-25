@@ -349,7 +349,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedKendoGridJson();
 
             var query = _localizationService
-                .GetAllResourceValues(languageId)
+                .GetAllResourceValues(languageId, null)
                 .OrderBy(x => x.Key)
                 .AsQueryable();
 
