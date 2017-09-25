@@ -48,6 +48,10 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public bool SitemapIncludeProducts { get; set; }
         /// <summary>
+        /// Gets or sets a value indicating whether to include product tags to sitemap
+        /// </summary>
+        public bool SitemapIncludeProductTags { get; set; }
+        /// <summary>
         /// A list of custom URLs to be added to sitemap.xml (include page names only)
         /// </summary>
         public List<string> SitemapCustomUrls { get; set; }
