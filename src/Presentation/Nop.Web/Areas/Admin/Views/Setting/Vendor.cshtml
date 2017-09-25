@@ -67,16 +67,18 @@
                                 <span asp-validation-for="AllowCustomersToApplyForVendorAccount"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="pnlTermsOfServiceEnabled">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="TermsOfServiceEnabled_OverrideForStore" asp-input="TermsOfServiceEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="TermsOfServiceEnabled" />
+                        <nop-nested-setting asp-for="AllowCustomersToApplyForVendorAccount">
+                            <div class="form-group" id="pnlTermsOfServiceEnabled">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="TermsOfServiceEnabled_OverrideForStore" asp-input="TermsOfServiceEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="TermsOfServiceEnabled" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="TermsOfServiceEnabled" />
+                                    <span asp-validation-for="TermsOfServiceEnabled"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="TermsOfServiceEnabled" />
-                                <span asp-validation-for="TermsOfServiceEnabled"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="AllowVendorsToEditInfo_OverrideForStore" asp-input="AllowVendorsToEditInfo" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -87,16 +89,18 @@
                                 <span asp-validation-for="AllowVendorsToEditInfo"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlNotifyStoreOwnerAboutVendorInformationChange">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore" asp-input="NotifyStoreOwnerAboutVendorInformationChange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
+                        <nop-nested-setting asp-for="AllowVendorsToEditInfo">
+                            <div class="form-group advanced-setting" id="pnlNotifyStoreOwnerAboutVendorInformationChange">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore" asp-input="NotifyStoreOwnerAboutVendorInformationChange" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
+                                    <span asp-validation-for="NotifyStoreOwnerAboutVendorInformationChange"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
-                                <span asp-validation-for="NotifyStoreOwnerAboutVendorInformationChange"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="MaximumProductNumber_OverrideForStore" asp-input="MaximumProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />

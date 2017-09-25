@@ -64,23 +64,21 @@
                         </div>
                         <div class="col-md-9">
                             <nop-editor asp-for="SslEnabled" />
+                            <div><em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em></div>
                             <span asp-validation-for="SslEnabled"></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em>
+                    <nop-nested-setting asp-for="SslEnabled">
+                        <div class="form-group" id="pnlSecureUrl">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SecureUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SecureUrl" />
+                                <span asp-validation-for="SecureUrl"></span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group" id="pnlSecureUrl">
-                        <div class="col-md-3">
-                            <nop-label asp-for="SecureUrl" />
-                        </div>
-                        <div class="col-md-9">
-                            <nop-editor asp-for="SecureUrl" />
-                            <span asp-validation-for="SecureUrl"></span>
-                        </div>
-                    </div>
+                    </nop-nested-setting>
                     <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="Hosts" />

@@ -179,16 +179,18 @@
                                 <span asp-validation-for="AllowPostVoting"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlMaxVotes">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="MaxVotesPerDay_OverrideForStore" asp-input="MaxVotesPerDay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="MaxVotesPerDay" />
+                        <nop-nested-setting asp-for="AllowPostVoting">
+                            <div class="form-group advanced-setting" id="pnlMaxVotes">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="MaxVotesPerDay_OverrideForStore" asp-input="MaxVotesPerDay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="MaxVotesPerDay" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="MaxVotesPerDay" />
+                                    <span asp-validation-for="MaxVotesPerDay"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="MaxVotesPerDay" />
-                                <span asp-validation-for="MaxVotesPerDay"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="AllowPrivateMessages_OverrideForStore" asp-input="AllowPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -199,26 +201,28 @@
                                 <span asp-validation-for="AllowPrivateMessages"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlShowAlertForPM">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShowAlertForPM_OverrideForStore" asp-input="ShowAlertForPM" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShowAlertForPM" />
+                        <nop-nested-setting asp-for="AllowPrivateMessages">
+                            <div class="form-group advanced-setting" id="pnlShowAlertForPM">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowAlertForPM_OverrideForStore" asp-input="ShowAlertForPM" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowAlertForPM" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowAlertForPM" />
+                                    <span asp-validation-for="ShowAlertForPM"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShowAlertForPM" />
-                                <span asp-validation-for="ShowAlertForPM"></span>
+                            <div class="form-group advanced-setting" id="pnlNotifyAboutPrivateMessages">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NotifyAboutPrivateMessages_OverrideForStore" asp-input="NotifyAboutPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NotifyAboutPrivateMessages" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NotifyAboutPrivateMessages" />
+                                    <span asp-validation-for="NotifyAboutPrivateMessages"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group advanced-setting" id="pnlNotifyAboutPrivateMessages">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="NotifyAboutPrivateMessages_OverrideForStore" asp-input="NotifyAboutPrivateMessages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="NotifyAboutPrivateMessages" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="NotifyAboutPrivateMessages" />
-                                <span asp-validation-for="NotifyAboutPrivateMessages"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">

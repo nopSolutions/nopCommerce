@@ -146,24 +146,28 @@
                     <span asp-validation-for="CustomerSettings.DateOfBirthEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerDateOfBirthRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.DateOfBirthRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.DateOfBirthEnabled">
+                <div class="form-group" id="pnlCustomerDateOfBirthRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.DateOfBirthRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.DateOfBirthRequired" />
+                        <span asp-validation-for="CustomerSettings.DateOfBirthRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.DateOfBirthRequired" />
-                    <span asp-validation-for="CustomerSettings.DateOfBirthRequired"></span>
-                </div>
-            </div>
-            <div class="form-group" id="pnlDateOfBirthMinimumAge">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.DateOfBirthMinimumAge" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.DateOfBirthMinimumAge" />
-                    <span asp-validation-for="CustomerSettings.DateOfBirthMinimumAge"></span>
-                </div>
-            </div>
+                <nop-nested-setting asp-for="CustomerSettings.DateOfBirthRequired">
+                    <div class="form-group" id="pnlDateOfBirthMinimumAge">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomerSettings.DateOfBirthMinimumAge" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CustomerSettings.DateOfBirthMinimumAge" />
+                            <span asp-validation-for="CustomerSettings.DateOfBirthMinimumAge"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CompanyEnabled" />
@@ -173,15 +177,17 @@
                     <span asp-validation-for="CustomerSettings.CompanyEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerCompanyRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.CompanyRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.CompanyEnabled">
+                <div class="form-group" id="pnlCustomerCompanyRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.CompanyRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.CompanyRequired" />
+                        <span asp-validation-for="CustomerSettings.CompanyRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.CompanyRequired" />
-                    <span asp-validation-for="CustomerSettings.CompanyRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StreetAddressEnabled" />
@@ -191,15 +197,17 @@
                     <span asp-validation-for="CustomerSettings.StreetAddressEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerStreetAddressRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.StreetAddressRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.StreetAddressEnabled">
+                <div class="form-group" id="pnlCustomerStreetAddressRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.StreetAddressRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.StreetAddressRequired" />
+                        <span asp-validation-for="CustomerSettings.StreetAddressRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.StreetAddressRequired" />
-                    <span asp-validation-for="CustomerSettings.StreetAddressRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StreetAddress2Enabled" />
@@ -209,15 +217,17 @@
                     <span asp-validation-for="CustomerSettings.StreetAddress2Enabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerStreetAddress2Required">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.StreetAddress2Required" />
+            <nop-nested-setting asp-for="CustomerSettings.StreetAddress2Enabled">
+                <div class="form-group" id="pnlCustomerStreetAddress2Required">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.StreetAddress2Required" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.StreetAddress2Required" />
+                        <span asp-validation-for="CustomerSettings.StreetAddress2Required"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.StreetAddress2Required" />
-                    <span asp-validation-for="CustomerSettings.StreetAddress2Required"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.ZipPostalCodeEnabled" />
@@ -227,15 +237,17 @@
                     <span asp-validation-for="CustomerSettings.ZipPostalCodeEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerZipPostalCodeRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.ZipPostalCodeRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.ZipPostalCodeEnabled">
+                <div class="form-group" id="pnlCustomerZipPostalCodeRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.ZipPostalCodeRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.ZipPostalCodeRequired" />
+                        <span asp-validation-for="CustomerSettings.ZipPostalCodeRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.ZipPostalCodeRequired" />
-                    <span asp-validation-for="CustomerSettings.ZipPostalCodeRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CityEnabled" />
@@ -245,15 +257,17 @@
                     <span asp-validation-for="CustomerSettings.CityEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerCityRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.CityRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.CityEnabled">
+                <div class="form-group" id="pnlCustomerCityRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.CityRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.CityRequired" />
+                        <span asp-validation-for="CustomerSettings.CityRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.CityRequired" />
-                    <span asp-validation-for="CustomerSettings.CityRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.CountryEnabled" />
@@ -263,15 +277,17 @@
                     <span asp-validation-for="CustomerSettings.CountryEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerCountryRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.CountryRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.CountryEnabled">
+                <div class="form-group" id="pnlCustomerCountryRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.CountryRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.CountryRequired" />
+                        <span asp-validation-for="CustomerSettings.CountryRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.CountryRequired" />
-                    <span asp-validation-for="CustomerSettings.CountryRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group" id="pnlCustomerStateProvinceEnabled">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.StateProvinceEnabled" />
@@ -281,15 +297,17 @@
                     <span asp-validation-for="CustomerSettings.StateProvinceEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerStateProvinceRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.StateProvinceRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.StateProvinceEnabled">
+                <div class="form-group" id="pnlCustomerStateProvinceRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.StateProvinceRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.StateProvinceRequired" />
+                        <span asp-validation-for="CustomerSettings.StateProvinceRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.StateProvinceRequired" />
-                    <span asp-validation-for="CustomerSettings.StateProvinceRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.PhoneEnabled" />
@@ -299,15 +317,17 @@
                     <span asp-validation-for="CustomerSettings.PhoneEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerPhoneRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.PhoneRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.PhoneEnabled">
+                <div class="form-group" id="pnlCustomerPhoneRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.PhoneRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.PhoneRequired" />
+                        <span asp-validation-for="CustomerSettings.PhoneRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.PhoneRequired" />
-                    <span asp-validation-for="CustomerSettings.PhoneRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.FaxEnabled" />
@@ -317,15 +337,17 @@
                     <span asp-validation-for="CustomerSettings.FaxEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerFaxRequired">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.FaxRequired" />
+            <nop-nested-setting asp-for="CustomerSettings.FaxEnabled">
+                <div class="form-group" id="pnlCustomerFaxRequired">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.FaxRequired" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.FaxRequired" />
+                        <span asp-validation-for="CustomerSettings.FaxRequired"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.FaxRequired" />
-                    <span asp-validation-for="CustomerSettings.FaxRequired"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="CustomerSettings.AcceptPrivacyPolicyEnabled" />
@@ -344,15 +366,17 @@
                     <span asp-validation-for="CustomerSettings.NewsletterEnabled"></span>
                 </div>
             </div>
-            <div class="form-group" id="pnlCustomerNewsletterTickedByDefault">
-                <div class="col-md-3">
-                    <nop-label asp-for="CustomerSettings.NewsletterTickedByDefault" />
+            <nop-nested-setting asp-for="CustomerSettings.NewsletterEnabled">
+                <div class="form-group" id="pnlCustomerNewsletterTickedByDefault">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CustomerSettings.NewsletterTickedByDefault" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CustomerSettings.NewsletterTickedByDefault" />
+                        <span asp-validation-for="CustomerSettings.NewsletterTickedByDefault"></span>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="CustomerSettings.NewsletterTickedByDefault" />
-                    <span asp-validation-for="CustomerSettings.NewsletterTickedByDefault"></span>
-                </div>
-            </div>
+            </nop-nested-setting>
         </div>
     </div>
     @*render custom customer attributes*@

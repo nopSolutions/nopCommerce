@@ -43,26 +43,28 @@
                                 <span asp-validation-for="ProductSearchAutoCompleteEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlProductSearchAutoCompleteNumberOfProducts">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteNumberOfProducts_OverrideForStore" asp-input="ProductSearchAutoCompleteNumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                        <nop-nested-setting asp-for="ProductSearchAutoCompleteEnabled">
+                            <div class="form-group advanced-setting" id="pnlProductSearchAutoCompleteNumberOfProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteNumberOfProducts_OverrideForStore" asp-input="ProductSearchAutoCompleteNumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                                    <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductSearchAutoCompleteNumberOfProducts" />
-                                <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
+                            <div class="form-group advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowProductImagesInSearchAutoComplete" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowProductImagesInSearchAutoComplete" />
+                                    <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShowProductImagesInSearchAutoComplete" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShowProductImagesInSearchAutoComplete" />
-                                <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group advanced-setting">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ProductSearchTermMinimumLength_OverrideForStore" asp-input="ProductSearchTermMinimumLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -83,26 +85,28 @@
                                 <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlSearchPageProductsPerPage">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="SearchPageProductsPerPage_OverrideForStore" asp-input="SearchPageProductsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SearchPageProductsPerPage" />
+                        <nop-nested-setting asp-for="SearchPageAllowCustomersToSelectPageSize">
+                            <div class="form-group advanced-setting" id="pnlSearchPageProductsPerPage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="SearchPageProductsPerPage_OverrideForStore" asp-input="SearchPageProductsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SearchPageProductsPerPage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SearchPageProductsPerPage" />
+                                    <span asp-validation-for="SearchPageProductsPerPage"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SearchPageProductsPerPage" />
-                                <span asp-validation-for="SearchPageProductsPerPage"></span>
+                            <div class="form-group advanced-setting" id="pnlSearchPagePageSizeOptions">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="SearchPagePageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SearchPagePageSizeOptions" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SearchPagePageSizeOptions" />
+                                    <span asp-validation-for="SearchPagePageSizeOptions"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group advanced-setting" id="pnlSearchPagePageSizeOptions">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="SearchPagePageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="SearchPagePageSizeOptions" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="SearchPagePageSizeOptions" />
-                                <span asp-validation-for="SearchPagePageSizeOptions"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -200,16 +204,18 @@
                                 <span asp-validation-for="ShowProductReviewsTabOnAccountPage"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
+                        <nop-nested-setting asp-for="ShowProductReviewsTabOnAccountPage">
+                            <div class="form-group advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductReviewsPageSizeOnAccountPage" />
+                                    <span asp-validation-for="ProductReviewsPageSizeOnAccountPage"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductReviewsPageSizeOnAccountPage" />
-                                <span asp-validation-for="ProductReviewsPageSizeOnAccountPage"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                     </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -295,16 +301,18 @@
                                 <span asp-validation-for="ShowShareButton"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlPageShareCode">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PageShareCode_OverrideForStore" asp-input="PageShareCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PageShareCode" />
+                        <nop-nested-setting asp-for="ShowShareButton">
+                            <div class="form-group advanced-setting" id="pnlPageShareCode">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PageShareCode_OverrideForStore" asp-input="PageShareCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PageShareCode" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea asp-for="PageShareCode" />
+                                    <span asp-validation-for="PageShareCode"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-textarea asp-for="PageShareCode" />
-                                <span asp-validation-for="PageShareCode"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="EmailAFriendEnabled_OverrideForStore" asp-input="EmailAFriendEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -315,16 +323,18 @@
                                 <span asp-validation-for="EmailAFriendEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlAllowAnonymousUsersToEmailAFriend">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailAFriend_OverrideForStore" asp-input="AllowAnonymousUsersToEmailAFriend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowAnonymousUsersToEmailAFriend" />
+                        <nop-nested-setting asp-for="EmailAFriendEnabled">
+                            <div class="form-group advanced-setting" id="pnlAllowAnonymousUsersToEmailAFriend">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailAFriend_OverrideForStore" asp-input="AllowAnonymousUsersToEmailAFriend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="AllowAnonymousUsersToEmailAFriend" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="AllowAnonymousUsersToEmailAFriend" />
+                                    <span asp-validation-for="AllowAnonymousUsersToEmailAFriend"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowAnonymousUsersToEmailAFriend" />
-                                <span asp-validation-for="AllowAnonymousUsersToEmailAFriend"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
@@ -356,26 +366,28 @@
                                 <span asp-validation-for="CompareProductsEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlIncludeShortDescriptionInCompareProducts">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="IncludeShortDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeShortDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="IncludeShortDescriptionInCompareProducts" />
+                        <nop-nested-setting asp-for="CompareProductsEnabled">
+                            <div class="form-group advanced-setting" id="pnlIncludeShortDescriptionInCompareProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IncludeShortDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeShortDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IncludeShortDescriptionInCompareProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IncludeShortDescriptionInCompareProducts" />
+                                    <span asp-validation-for="IncludeShortDescriptionInCompareProducts"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="IncludeShortDescriptionInCompareProducts" />
-                                <span asp-validation-for="IncludeShortDescriptionInCompareProducts"></span>
+                            <div class="form-group advanced-setting" id="IncludeFullDescriptionInCompareProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IncludeFullDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeFullDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IncludeFullDescriptionInCompareProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IncludeFullDescriptionInCompareProducts" />
+                                    <span asp-validation-for="IncludeFullDescriptionInCompareProducts"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group advanced-setting" id="IncludeFullDescriptionInCompareProducts">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="IncludeFullDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeFullDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="IncludeFullDescriptionInCompareProducts" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="IncludeFullDescriptionInCompareProducts" />
-                                <span asp-validation-for="IncludeFullDescriptionInCompareProducts"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
@@ -409,16 +421,18 @@
                                 <span asp-validation-for="ShowBestsellersOnHomepage"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="NumberOfBestsellersOnHomepage" />
+                        <nop-nested-setting asp-for="ShowBestsellersOnHomepage">
+                            <div class="form-group advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NumberOfBestsellersOnHomepage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NumberOfBestsellersOnHomepage" />
+                                    <span asp-validation-for="NumberOfBestsellersOnHomepage"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="NumberOfBestsellersOnHomepage" />
-                                <span asp-validation-for="NumberOfBestsellersOnHomepage"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedEnabled_OverrideForStore" asp-input="ProductsAlsoPurchasedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -429,16 +443,18 @@
                                 <span asp-validation-for="ProductsAlsoPurchasedEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlProductsAlsoPurchasedNumber">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductsAlsoPurchasedNumber" />
+                        <nop-nested-setting asp-for="ProductsAlsoPurchasedEnabled">
+                            <div class="form-group advanced-setting" id="pnlProductsAlsoPurchasedNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsAlsoPurchasedNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsAlsoPurchasedNumber" />
+                                    <span asp-validation-for="ProductsAlsoPurchasedNumber"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductsAlsoPurchasedNumber" />
-                                <span asp-validation-for="ProductsAlsoPurchasedNumber"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="RecentlyViewedProductsEnabled_OverrideForStore" asp-input="RecentlyViewedProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -449,16 +465,18 @@
                                 <span asp-validation-for="RecentlyViewedProductsEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group advanced-setting" id="pnlRecentlyViewedProductsNumber">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="RecentlyViewedProductsNumber" />
+                        <nop-nested-setting asp-for="RecentlyViewedProductsEnabled">
+                            <div class="form-group advanced-setting" id="pnlRecentlyViewedProductsNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="RecentlyViewedProductsNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="RecentlyViewedProductsNumber" />
+                                    <span asp-validation-for="RecentlyViewedProductsNumber"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="RecentlyViewedProductsNumber" />
-                                <span asp-validation-for="RecentlyViewedProductsNumber"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="NewProductsEnabled_OverrideForStore" asp-input="NewProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -469,16 +487,18 @@
                                 <span asp-validation-for="NewProductsEnabled"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="pnlNewProductsNumber">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="NewProductsNumber" />
+                        <nop-nested-setting asp-for="NewProductsEnabled">
+                            <div class="form-group" id="pnlNewProductsNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NewProductsNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NewProductsNumber" />
+                                    <span asp-validation-for="NewProductsNumber"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="NewProductsNumber" />
-                                <span asp-validation-for="NewProductsNumber"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
@@ -600,16 +620,18 @@
                                 <span asp-validation-for="ShowCategoryProductNumber"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                        <nop-nested-setting asp-for="ShowCategoryProductNumber">
+                            <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                                    <span asp-validation-for="ShowCategoryProductNumberIncludingSubcategories"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShowCategoryProductNumberIncludingSubcategories" />
-                                <span asp-validation-for="ShowCategoryProductNumberIncludingSubcategories"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>
                         <div class="form-group">
                             <div class="col-md-3">
                                 <nop-override-store-checkbox asp-for="CategoryBreadcrumbEnabled_OverrideForStore" asp-input="CategoryBreadcrumbEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -657,26 +679,28 @@
                                 <span asp-validation-for="ProductsByTagAllowCustomersToSelectPageSize"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="pnlProductsByTagPageSize">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductsByTagPageSize_OverrideForStore" asp-input="ProductsByTagPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductsByTagPageSize" />
+                        <nop-nested-setting asp-for="ProductsByTagAllowCustomersToSelectPageSize">
+                            <div class="form-group" id="pnlProductsByTagPageSize">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSize_OverrideForStore" asp-input="ProductsByTagPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsByTagPageSize" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsByTagPageSize" />
+                                    <span asp-validation-for="ProductsByTagPageSize"></span>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductsByTagPageSize" />
-                                <span asp-validation-for="ProductsByTagPageSize"></span>
+                            <div class="form-group" id="pnlProductsByTagPageSizeOptions">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="ProductsByTagPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsByTagPageSizeOptions" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsByTagPageSizeOptions" />
+                                    <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group" id="pnlProductsByTagPageSizeOptions">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="ProductsByTagPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductsByTagPageSizeOptions" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductsByTagPageSizeOptions" />
-                                <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
-                            </div>
-                        </div>
+                        </nop-nested-setting>                        
                     </div>
 
                     <script type="text/javascript">
