@@ -26,6 +26,22 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.50, 13.00, RoundingType.Rounding1)]
         [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding001)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding005Down)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding005Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding01Down)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding01Up)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding05)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding1)]
+        [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding001)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding005Down)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding005Up)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding01Down)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding01Up)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding05)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding1)]
+        [TestCase(0.00, 0.00, RoundingType.Rounding1Up)]
         public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
         {
             valueToRoundig.Round(roundingType).ShouldEqual(roundedValue);
