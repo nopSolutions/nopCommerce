@@ -325,7 +325,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Sitemap.ProductTags">
     <Value>Product tags</Value>
-  </LocaleResource>   
+  </LocaleResource> 
+  <LocaleResource Name="Admin.System.Warnings.IncompatiblePlugin">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
+    <Value>''{0}'' plugin is not compatible or cannot be loaded.</Value>
+  </LocaleResource>    
 </Language>
 '
 
