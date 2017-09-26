@@ -31,10 +31,10 @@
 
         function toggleSitemapSettings() {
             if ($('#@Html.IdFor(model => model.StoreInformationSettings.SitemapEnabled)').is(':checked')) {
-                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTagss").show();
+                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").show();
             }
             else {
-                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTagss").hide();
+                $("#pnlSitemapIncludeCategories, #pnlSitemapIncludeManufacturers, #pnlSitemapIncludeProducts, #pnlSitemapIncludeProductTags").hide();
             }
         }
 
@@ -329,7 +329,7 @@
                                     <span asp-validation-for="StoreInformationSettings.SitemapIncludeProducts"></span>
                                 </div>
                             </div>
-                            <div class="form-group advanced-setting" id="pnlSitemapIncludeProductTagss">
+                            <div class="form-group advanced-setting" id="pnlSitemapIncludeProductTags">
                                 <div class="col-md-3">
                                     <nop-override-store-checkbox asp-for="StoreInformationSettings.SitemapIncludeProductTags_OverrideForStore" asp-input="StoreInformationSettings.SitemapIncludeProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                                     <nop-label asp-for="StoreInformationSettings.SitemapIncludeProductTags" />
