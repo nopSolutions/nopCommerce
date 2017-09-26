@@ -180,14 +180,16 @@ namespace Nop.Services.ExportImport
             {
                 //compare with existing product pictures
                 var existingPicture = _pictureService.GetPictureById(picId.Value);
-
-                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
-                //picture binary after validation (like in database)
-                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                if (existingBinary.SequenceEqual(validatedPictureBinary) ||
-                    existingBinary.SequenceEqual(newPictureBinary))
+                if (existingPicture != null)
                 {
-                    pictureAlreadyExists = true;
+                    var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
+                    //picture binary after validation (like in database)
+                    var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                    if (existingBinary.SequenceEqual(validatedPictureBinary) ||
+                        existingBinary.SequenceEqual(newPictureBinary))
+                    {
+                        pictureAlreadyExists = true;
+                    }
                 }
             }
 
