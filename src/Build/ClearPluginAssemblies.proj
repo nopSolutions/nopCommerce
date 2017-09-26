@@ -37,7 +37,7 @@
         {
             Paths = PluginPath;
         }
-        var filesToDelete = "dotnet-bundle.exe;";
+        var filesToDelete = "dotnet-bundle.exe;Nop.Web.pdb;Nop.Web.exe;Nop.Web.exe.config";
         foreach (var pluginPath in Paths.Split(';'))
         {  
             try
