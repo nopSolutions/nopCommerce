@@ -1999,6 +1999,13 @@ label, label + * {
     font-size: 15px;
 	color: #444;
 }
+.overview .qty-dropdown,
+.variant-overview .qty-dropdown {
+    height: 43px;
+    padding: 0 12px;
+    font-size: 15px;
+    color: #444;
+}
 .overview .add-to-cart-button,
 .variant-overview .add-to-cart-button {
 	height: 43px;
