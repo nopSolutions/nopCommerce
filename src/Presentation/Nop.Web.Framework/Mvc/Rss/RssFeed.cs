@@ -142,7 +142,7 @@ namespace Nop.Web.Framework.Mvc.Rss
             root.Add(channel);
             document.Add(root);
 
-            return XmlHelper.XmlDecode(document.ToString());
+            return document.ToString();
         }
     }
 }
