@@ -46,7 +46,11 @@ namespace Nop.Services.Catalog
         {
             //default round (Rounding001)
             var rez = Math.Round(value, 2);
-            decimal t;
+            var fractionPart = (rez - Math.Truncate(rez)) * 10;
+
+            //cash rounding not needed
+            if (fractionPart == 0)
+                return rez;
 
             //Cash rounding (details: https://en.wikipedia.org/wiki/Cash_rounding)
             switch (roundingType)
@@ -54,45 +58,43 @@ namespace Nop.Services.Catalog
                 //rounding with 0.05 or 5 intervals
                 case RoundingType.Rounding005Up:
                 case RoundingType.Rounding005Down:
-                    t = (rez - Math.Truncate(rez)) * 10;
-                    t = (t - Math.Truncate(t)) * 10;
+                    fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
 
                     if (roundingType == RoundingType.Rounding005Down)
-                        t = t >= 5 ? 5 - t : t * -1;
+                        fractionPart = fractionPart >= 5 ? 5 - fractionPart : fractionPart * -1;
                     else
-                        t = t >= 5 ? 10 - t : 5 - t;
+                        fractionPart = fractionPart >= 5 ? 10 - fractionPart : 5 - fractionPart;
 
-                    rez += t / 100;
+                    rez += fractionPart / 100;
                     break;
                 //rounding with 0.10 intervals
                 case RoundingType.Rounding01Up:
                 case RoundingType.Rounding01Down:
-                    t = (rez - Math.Truncate(rez)) * 10;
-                    t = (t - Math.Truncate(t)) * 10;
+                    fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
 
-                    if (roundingType == RoundingType.Rounding01Down && t == 5)
-                        t = -5;
+                    if (roundingType == RoundingType.Rounding01Down && fractionPart == 5)
+                        fractionPart = -5;
                     else
-                        t = t < 5 ? t * -1 : 10 - t;
+                        fractionPart = fractionPart < 5 ? fractionPart * -1 : 10 - fractionPart;
 
-                    rez += t / 100;
+                    rez += fractionPart / 100;
                     break;
                 //rounding with 0.50 intervals
                 case RoundingType.Rounding05:
-                    t = (rez - Math.Truncate(rez)) * 100;
-                    t = t < 25 ? t * -1 : t < 50 || t < 75 ? 50 - t : 100 - t;
+                    fractionPart *= 10;
+                    fractionPart = fractionPart < 25 ? fractionPart * -1 : fractionPart < 50 || fractionPart < 75 ? 50 - fractionPart : 100 - fractionPart;
 
-                    rez += t / 100;
+                    rez += fractionPart / 100;
                     break;
                 //rounding with 1.00 intervals
                 case RoundingType.Rounding1:
                 case RoundingType.Rounding1Up:
-                    t = (rez - Math.Truncate(rez)) * 100;
+                    fractionPart *= 10;
 
-                    if (roundingType == RoundingType.Rounding1Up && t > 0)
+                    if (roundingType == RoundingType.Rounding1Up && fractionPart > 0)
                         rez = Math.Truncate(rez) + 1;
                     else
-                        rez = t < 50 ? Math.Truncate(rez) : Math.Truncate(rez) + 1;
+                        rez = fractionPart < 50 ? Math.Truncate(rez) : Math.Truncate(rez) + 1;
 
                     break;
                 case RoundingType.Rounding001:
