@@ -1,8 +1,9 @@
 ﻿using System;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumPostModel
+    public partial class ForumPostModel : BaseNopModel
     {
         public int Id { get; set; }
         public int ForumTopicId { get; set; }

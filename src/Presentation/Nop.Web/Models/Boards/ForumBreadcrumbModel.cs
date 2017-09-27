@@ -1,6 +1,8 @@
-﻿namespace Nop.Web.Models.Boards
+﻿using Nop.Web.Framework.Mvc.Models;
+
+namespace Nop.Web.Models.Boards
 {
-    public partial class ForumBreadcrumbModel
+    public partial class ForumBreadcrumbModel : BaseNopModel
     {
         public int ForumGroupId { get; set; }
         public string ForumGroupName { get; set; }

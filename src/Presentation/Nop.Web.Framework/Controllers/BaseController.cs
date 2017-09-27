@@ -28,6 +28,7 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// Base controller
     /// </summary>
+    [PublishModelEvents]
     [SignOutFromExternalAuthentication]
     [ValidatePassword]
     [SaveIpAddress]

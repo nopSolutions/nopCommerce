@@ -4,7 +4,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CustomerBackInStockSubscriptionsModel
+    public partial class CustomerBackInStockSubscriptionsModel : BaseNopModel
     {
         public CustomerBackInStockSubscriptionsModel()
         {

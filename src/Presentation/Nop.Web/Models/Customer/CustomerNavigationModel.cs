@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationEnum SelectedTab { get; set; }
     }
 
-    public class CustomerNavigationItemModel
+    public class CustomerNavigationItemModel : BaseNopModel
     {
         public string RouteName { get; set; }
         public string Title { get; set; }

@@ -2,10 +2,11 @@
 
 using System;
 using Nop.Core;
+using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.UI.Paging
 {
-    public abstract class BasePageableModel : IPageableModel
+    public abstract class BasePageableModel : BaseNopModel, IPageableModel
     {
         #region Methods
 
