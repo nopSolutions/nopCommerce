@@ -673,10 +673,10 @@ END
 GO
 
 --new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.usenestedsettingjavascript')
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.usenestedsetting')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
-	VALUES (N'adminareasettings.usenestedsettingjavascript', N'True', 0)
+	VALUES (N'adminareasettings.usenestedsetting', N'True', 0)
 END
 GO
 

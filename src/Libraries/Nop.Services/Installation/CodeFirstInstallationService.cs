@@ -5974,7 +5974,7 @@ namespace Nop.Services.Installation
                 RichEditorAllowJavaScript = false,
                 UseRichEditorInMessageTemplates = false,
                 UseIsoDateTimeConverterInJson = true,
-                UseNestedSettingJavascript = true
+                UseNestedSetting = true
             });
 
 

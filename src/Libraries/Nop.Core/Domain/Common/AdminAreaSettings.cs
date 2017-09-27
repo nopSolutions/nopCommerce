@@ -50,8 +50,8 @@ namespace Nop.Core.Domain.Common
         public bool UseIsoDateTimeConverterInJson { get; set; }
 
         /// <summary>
-        /// Indicates whether to use javascript for the nested settings appearance 
+        /// Indicates whether to use nested setting design
         /// </summary>
-        public bool UseNestedSettingJavascript { get; set; }
+        public bool UseNestedSetting { get; set; }
     }
 }

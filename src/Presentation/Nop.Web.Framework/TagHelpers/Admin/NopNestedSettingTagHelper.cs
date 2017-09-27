@@ -65,7 +65,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 nestedSettingId = context.AllAttributes["id"].Value.ToString();
 
             //use javascript
-            if (_adminAreaSettings.UseNestedSettingJavascript)
+            if (_adminAreaSettings.UseNestedSetting)
             {
                 var script = new TagBuilder("script");
                 script.InnerHtml.AppendHtml("$(document).ready(function () {" +
