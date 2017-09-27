@@ -2002,6 +2002,7 @@ label, label + * {
 .overview .add-to-cart-panel > *,
 .variant-overview .add-to-cart-panel > * {
 	float: right;
+    height: 43px;
 }
 .overview .qty-label,
 .variant-overview .qty-label {
@@ -2010,7 +2011,6 @@ label, label + * {
 .overview .qty-input,
 .variant-overview .qty-input {
 	width: 45px;
-    height: 43px;
 	padding: 0 12px;
 	text-align: center;
     font-size: 15px;
