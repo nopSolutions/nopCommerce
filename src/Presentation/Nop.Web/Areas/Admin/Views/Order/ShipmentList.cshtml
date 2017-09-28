@@ -49,6 +49,7 @@
                 <i class="fa fa-check-square-o"></i>
                 @T("Admin.Orders.Shipments.DeliverySelected")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipment_list_buttons" })
         </div>
     </div>
     <div class="content">

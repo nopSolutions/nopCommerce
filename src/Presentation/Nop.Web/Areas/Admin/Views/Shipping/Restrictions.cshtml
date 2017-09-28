@@ -18,6 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_shipping_restriction_list_buttons" })
         </div>
     </div>
 

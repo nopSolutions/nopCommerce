@@ -77,6 +77,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete.Selected")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_list_buttons" })
         </div>
     </div>
 

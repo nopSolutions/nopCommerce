@@ -9,6 +9,7 @@
 }
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="backinstock-subscriptions-grid"></div>
@@ -72,4 +73,5 @@
             </script>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_bottom", additionalData = Model.Id })
 </div>

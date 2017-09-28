@@ -33,6 +33,7 @@
                     @T("Admin.Common.Delete")
                 </span>
             }
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_edit_buttons", additionalData = Model.Id })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

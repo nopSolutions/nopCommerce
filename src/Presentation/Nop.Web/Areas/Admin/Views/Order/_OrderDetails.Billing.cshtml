@@ -1,6 +1,7 @@
 ﻿@model OrderModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_billing_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -153,4 +154,5 @@
             }
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_billing_bottom", additionalData = Model.Id })
 </div>

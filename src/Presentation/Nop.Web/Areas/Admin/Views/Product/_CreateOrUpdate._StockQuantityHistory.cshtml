@@ -10,6 +10,7 @@
     <p>
         @T("Admin.Catalog.Products.StockQuantityHistory.Hint")
     </p>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_stock_quantity_history_top", additionalData = Model.Id })
     @*hide the entire search block if no elements are displayed*@
     <div class="panel panel-default panel-search" @(Model.AvailableWarehouses.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
         <div class="panel-body">
@@ -127,4 +128,5 @@
             </script>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_stock_quantity_history_bottom", additionalData = Model.Id })
 </div>

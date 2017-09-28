@@ -4,6 +4,7 @@
     <p>
         @T("Admin.Catalog.Products.ProductAttributes.Hint")
     </p>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_top", additionalData = Model.Id })
     @if (Model.Id > 0)
     {
         if (Model.ProductAttributesExist)
@@ -36,4 +37,5 @@
             </div>
         </div>
     }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_bottom", additionalData = Model.Id })
 </div>

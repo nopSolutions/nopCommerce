@@ -1,6 +1,7 @@
 ﻿@model OrderModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_shipping_top", additionalData = Model.Id })
     @if (Model.IsShippable)
     {
         if (Model.ShippingAddress != null)
@@ -467,4 +468,5 @@
             </div>
         </div>
     }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_shipping_bottom", additionalData = Model.Id })
 </div>

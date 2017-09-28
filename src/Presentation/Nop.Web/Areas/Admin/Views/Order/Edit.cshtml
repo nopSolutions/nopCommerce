@@ -38,6 +38,7 @@
                     });
                 });
             </script>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_edit_buttons", additionalData = Model.Id })
         </div>
     </div>
 

@@ -15,6 +15,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_list_buttons" })
     </div>
 </div>
 

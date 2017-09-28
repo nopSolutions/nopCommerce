@@ -460,7 +460,8 @@
 
 <div class="raw clearfix">
     <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-7")">
-        <div class="panel-group">
+        <div class="panel-group">            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_left_top", additionalData = Model.Id })
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.CommonInfo")
@@ -1299,6 +1300,7 @@
                     </div>
                 }
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_left_bottom", additionalData = Model.Id })
         </div>
     </div>
     <div class="@(Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-12" : "col-md-5")">
@@ -1307,7 +1309,7 @@
                 var leftColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-3" : "col-md-4";
                 var rightColumnClass = Model.ProductEditorSettingsModel.OneColumnProductPage ? "col-md-9" : "col-md-8";
             }
-
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_right_top", additionalData = Model.Id })
             <div class="panel panel-default margin-bottom" id="group-associated-products">
                 <div class="panel-heading">
                     @T("Admin.Catalog.Products.AssociatedProducts")
@@ -2219,6 +2221,7 @@
                     </div>
                 }
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_info_column_right_bottom", additionalData = Model.Id })        
         </div>
     </div>
 </div>

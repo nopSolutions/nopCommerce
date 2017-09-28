@@ -20,6 +20,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.Common.Clear")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_activity_log_list_buttons" })
     </div>
 </div>
 

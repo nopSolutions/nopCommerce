@@ -1,6 +1,7 @@
 ﻿@model ProductModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_top", additionalData = Model.Id })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
@@ -214,4 +215,5 @@
             </div>
         </div>
     }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_bottom", additionalData = Model.Id })
 </div>

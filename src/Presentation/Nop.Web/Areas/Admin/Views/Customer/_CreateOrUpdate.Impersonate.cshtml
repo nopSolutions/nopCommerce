@@ -1,6 +1,7 @@
 ﻿@model CustomerModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_impersonate_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <ul class="common-list">
@@ -13,4 +14,5 @@
             </button>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_impersonate_bottom", additionalData = Model.Id })
 </div>
