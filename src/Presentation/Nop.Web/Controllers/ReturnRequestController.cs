@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult UploadFileReturnRequest()
         {
-            if (!_orderSettings.ReturnRequestsEnabled && !_orderSettings.ReturnRequestsAllowFiles)
+            if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)
             {
                 return Json(new
                 {
