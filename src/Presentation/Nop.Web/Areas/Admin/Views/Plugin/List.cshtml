@@ -145,6 +145,7 @@
                                         mode: "inline"
                                     },
                                     scrollable: false,
+                                    dataBound: onDataBound,
                                     columns: [
                                         {
                                             field: "Group",
@@ -181,7 +182,7 @@
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> #} #',
+                                            template: '# if(Installed) {# <button type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn bg-red uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</button> #} else {#  <button type="submit" name="install-plugin-link-#=SystemName#" class="btn bg-green install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</button> <button type="button" name="delete-plugin-link-#=SystemName#" class="btn bg-red delete-plugin-link" >@T("Admin.Configuration.Plugins.Fields.Delete")</button> #} #',
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
                                             width: 150
@@ -191,6 +192,44 @@
                             });
                         </script>
                     </div>
+
+                    <div id="plugin-delete-confirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="plugin-delete-confirmation-title" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title" id="plugindelete-confirmation-title">@T("Admin.Common.AreYouSure")</h4>
+                                </div>
+                                    <div class="form-horizontal">
+                                        <div class="modal-body">
+                                            @T("Admin.Common.DeleteConfirmation")
+                                        </div>
+                                        <div class="modal-footer">
+                                            <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+                                            <button type="submit" class="btn btn-primary pull-right">@T("Delete")</button>
+                                        </div>
+                                    </div>                                    
+                            </div>
+                        </div>
+                        <script>
+                            function onDataBound(e) {
+                                $('button[name^="delete-plugin-link-"]')
+                                    .attr("data-toggle", "modal")
+                                    .attr("data-target", "#plugin-delete-confirmation")
+                                    .on("click", function () {
+                                        $("#plugin-delete-confirmation button[type=submit]").attr("name", $(this).attr("name"));
+                                    });
+
+                                $("#plugin-delete-confirmation button[type=submit]").on("click",
+                                    function() {
+                                        $('#plugin-delete-confirmation').modal('toggle');
+                                        $("html, body").animate({ scrollTop: 0 }, 400);
+                                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Delete.Progress").Text))');
+                                        return true;
+                                    });
+                            }
+                        </script>
+                    </div> 
 
                     <div>
                         <input type="submit" id="btnRefresh" style="display: none" />
