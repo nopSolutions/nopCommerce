@@ -108,7 +108,7 @@ namespace Nop.Core.Plugins
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
-                
+
                 try
                 {
                     var installedPluginSystemNames = GetInstalledPluginNames(CommonHelper.MapPath(InstalledPluginsFilePath));
@@ -181,8 +181,13 @@ namespace Nop.Core.Plugins
                             //other plugin description info
                             var mainPluginFile = pluginFiles
                                 .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.AssemblyFileName, StringComparison.InvariantCultureIgnoreCase));
+                            
+                            //plugin have wrong directory
                             if (mainPluginFile == null)
-                                throw new Exception($"{pluginDescriptor.AssemblyFileName} cannot be loaded");
+                            {
+                                incompatiblePlugins.Add(pluginDescriptor.SystemName);
+                                continue;
+                            }
 
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
@@ -240,7 +245,6 @@ namespace Nop.Core.Plugins
 
                 ReferencedPlugins = referencedPlugins;
                 IncompatiblePlugins = incompatiblePlugins;
-
             }
         }
 

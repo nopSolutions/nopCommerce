@@ -389,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.Add(new SystemWarningModel
                     {
                         Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.PluginNotLoaded"), pluginName)
                     });
 
             //performance settings
