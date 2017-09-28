@@ -21,9 +21,10 @@ namespace Nop.Web.Areas.Admin.Components
             var model = new List<RenderWidgetModel>();
 
             //add widget zone to view component arguments
-            additionalData = new RouteValueDictionary(additionalData)
+            additionalData = new RouteValueDictionary()
             {
-                { "widgetZone", widgetZone }
+                { "widgetZone", widgetZone },
+                { "additionalData", additionalData }
             };
 
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);

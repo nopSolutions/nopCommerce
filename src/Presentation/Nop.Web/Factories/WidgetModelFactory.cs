@@ -55,9 +55,10 @@ namespace Nop.Web.Factories
                 _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
             //add widget zone to view component arguments
-            additionalData = new RouteValueDictionary(additionalData)
+            additionalData = new RouteValueDictionary()
             {
-                { "widgetZone", widgetZone }
+                { "widgetZone", widgetZone },
+                { "additionalData", additionalData }
             };
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>

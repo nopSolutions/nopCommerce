@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
             this._pictureService = pictureService;
         }
 
-        public IViewComponentResult Invoke(string widgetZone)
+        public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(_storeContext.CurrentStore.Id);
 
