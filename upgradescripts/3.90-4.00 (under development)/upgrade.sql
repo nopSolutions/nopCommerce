@@ -331,7 +331,13 @@ set @resources='
   </LocaleResource>  
   <LocaleResource Name="Admin.System.Warnings.PluginNotLoaded">
     <Value>''{0}'' plugin is not compatible or cannot be loaded.</Value>
-  </LocaleResource>    
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb">
+    <Value>Export/Import products with category breadcrumb</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb.Hint">
+    <Value>Check if products should be exported/imported with a full category name including names of all its parents.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -698,5 +704,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.sitemapin
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.sitemapincludeproducttags', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportproductcategorybreadcrumb')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.exportimportproductcategorybreadcrumb', N'True', 0)
 END
 GO

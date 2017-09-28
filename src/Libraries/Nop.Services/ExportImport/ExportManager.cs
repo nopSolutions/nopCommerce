@@ -195,7 +195,7 @@ namespace Nop.Services.ExportImport
             string categoryNames = null;
             foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id, true))
             {
-                categoryNames += pc.Category.Name;
+                categoryNames += _catalogSettings.ExportImportProductCategoryBreadcrumb ? pc.Category.GetFormattedBreadCrumb(_categoryService) : pc.Category.Name;
                 categoryNames += ";";
             }
 

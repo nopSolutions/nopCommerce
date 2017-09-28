@@ -474,7 +474,7 @@ namespace Nop.Services.ExportImport
                         var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value?.ToString() ?? string.Empty;
 
                         if (!string.IsNullOrEmpty(categoryIds))
-                            allCategoriesNames.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()));
+                            allCategoriesNames.AddRange(categoryIds.Split(new[] { ";", ">>" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).Distinct());
                     }
 
                     if (skuCellNum > 0)
@@ -542,7 +542,7 @@ namespace Nop.Services.ExportImport
                 var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 //performance optimization, load all categories in one SQL request
-                var allCategories = _categoryService.GetAllCategories(showHidden: true);
+                var allCategories = _categoryService.GetAllCategories(showHidden: true).ToDictionary(c => c.GetFormattedBreadCrumb(_categoryService), c => c);
 
                 //performance optimization, load all manufacturers IDs for products in one SQL request
                 var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
@@ -949,7 +949,7 @@ namespace Nop.Services.ExportImport
 
                         //category mappings
                         var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
-                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.First(c => c.Name == x.Trim()).Id).ToList();
+                        var importedCategories = categoryNames.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => allCategories.ContainsKey(x.Trim()) ? allCategories[x.Trim()].Id : allCategories.Values.First(c => c.Name == x.Trim()).Id).ToList();
                         foreach (var categoryId in importedCategories)
                         {
                             if (categories.Any(c => c == categoryId))

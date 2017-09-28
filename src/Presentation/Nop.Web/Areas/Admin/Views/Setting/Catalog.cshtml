@@ -875,6 +875,16 @@
                                 <span asp-validation-for="ExportImportProductSpecificationAttributes"></span>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportProductCategoryBreadcrumb_OverrideForStore" asp-input="ExportImportProductCategoryBreadcrumb" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportProductCategoryBreadcrumb" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportProductCategoryBreadcrumb" />
+                                <span asp-validation-for="ExportImportProductCategoryBreadcrumb"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel panel-default advanced-setting">
