@@ -7,6 +7,7 @@
 }
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_used_by_products_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <p>
@@ -77,4 +78,5 @@
             </script>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_used_by_products_bottom", additionalData = Model.Id })
 </div>

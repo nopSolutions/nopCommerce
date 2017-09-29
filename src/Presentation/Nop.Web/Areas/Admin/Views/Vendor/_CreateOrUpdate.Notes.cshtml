@@ -1,6 +1,7 @@
 ﻿@model VendorModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_notes_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="vendornotes-grid"></div>
@@ -105,6 +106,7 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_notes_bottom", additionalData = Model.Id })
 </div>
 
 <script type="text/javascript">

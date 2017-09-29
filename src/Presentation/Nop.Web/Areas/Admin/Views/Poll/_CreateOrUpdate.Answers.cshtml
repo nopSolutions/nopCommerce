@@ -1,6 +1,7 @@
 ﻿@model PollModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_details_answers_top", additionalData = Model.Id })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
@@ -124,4 +125,5 @@
             </div>
         }
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_details_answers_bottom", additionalData = Model.Id })
 </div>

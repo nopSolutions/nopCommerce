@@ -26,6 +26,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_details_buttons" })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

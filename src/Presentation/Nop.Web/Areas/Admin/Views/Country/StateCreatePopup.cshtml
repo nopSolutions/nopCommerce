@@ -20,6 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_state_details_buttons" })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateState", Model)

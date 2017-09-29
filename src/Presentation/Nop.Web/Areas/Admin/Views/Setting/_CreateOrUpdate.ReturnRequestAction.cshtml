@@ -4,6 +4,7 @@
 <input asp-for="Id" type="hidden" />
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_action_settings_top" })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
@@ -43,4 +44,5 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_action_settings_bottom" })
 </div>

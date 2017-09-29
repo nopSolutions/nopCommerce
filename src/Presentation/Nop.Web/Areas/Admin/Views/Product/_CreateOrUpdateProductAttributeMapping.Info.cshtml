@@ -53,6 +53,7 @@
 </script>
 <input asp-for="ProductId" type="hidden" />
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -164,4 +165,5 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_info_bottom", additionalData = Model.Id })
 </div>

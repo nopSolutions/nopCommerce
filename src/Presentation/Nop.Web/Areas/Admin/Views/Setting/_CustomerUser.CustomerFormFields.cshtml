@@ -120,6 +120,7 @@
 </script>
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_customer_form_fields_top" })
     <div class="panel panel-default">
         <div class="panel-heading">
             @T("Admin.Configuration.Settings.CustomerUser.BlockTitle.DefaultFields")
@@ -381,4 +382,5 @@
     </div>
     @*render custom customer attributes*@
     @await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml")
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_customer_form_fields_bottom" })
 </div>

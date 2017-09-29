@@ -1,6 +1,7 @@
 ﻿@model ProductAttributeModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
@@ -49,4 +50,5 @@
                   ))
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_details_info_bottom", additionalData = Model.Id })
 </div>

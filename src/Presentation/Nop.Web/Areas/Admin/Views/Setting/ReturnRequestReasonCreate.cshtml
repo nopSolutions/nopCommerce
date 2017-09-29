@@ -26,6 +26,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_return_request_reason_details_buttons" })
         </div>
     </div>
 

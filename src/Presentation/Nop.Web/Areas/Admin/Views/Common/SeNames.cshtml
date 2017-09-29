@@ -20,12 +20,14 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.System.SeNames.DeleteSelected")
         </button>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_buttons" })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_top" })
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
                     <div class="row">
@@ -133,6 +135,7 @@
                     </script>
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_senames_bottom" })
         </div>
     </div>
 </div>

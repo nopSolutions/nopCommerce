@@ -18,6 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_user_settings_buttons" })
         </div>
     </div>
     <div asp-validation-summary="All"></div>

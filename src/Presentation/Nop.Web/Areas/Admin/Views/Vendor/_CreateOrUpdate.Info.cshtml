@@ -1,6 +1,7 @@
 ﻿@model VendorModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
@@ -158,6 +159,7 @@
             <nop-editor asp-for="Address" asp-template="Address" />
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_vendor_details_info_bottom", additionalData = Model.Id })
 </div>
 
 <script type="text/javascript">

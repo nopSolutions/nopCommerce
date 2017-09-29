@@ -18,6 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_buttons" })
         </div>
     </div>
 
@@ -28,6 +29,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_top" })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")
@@ -138,7 +140,6 @@
                         }
                     </script>
                 </div>
-
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews")
@@ -233,7 +234,6 @@
                         }
                     </script>
                 </div>
-
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Performance")
@@ -782,7 +782,6 @@
 
                     </script>
                 </div>
-
                 <div class="panel panel-default advanced-setting">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Catalog.BlockTitle.Tax")
@@ -988,6 +987,7 @@
                         </script>
                     </div>
                 </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_bottom" })
             </div>
         </div>
     </div>

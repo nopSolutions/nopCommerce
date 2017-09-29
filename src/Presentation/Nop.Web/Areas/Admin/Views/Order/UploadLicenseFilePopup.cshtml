@@ -26,6 +26,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_upload_license_buttons", additionalData = Model.Id })
         </div>
     </div>
 
