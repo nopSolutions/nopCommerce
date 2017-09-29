@@ -338,6 +338,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb.Hint">
     <Value>Check if products should be exported/imported with a full category name including names of all its parents.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.BlockTitle.AdminArea">
+    <Value>Admin area</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates">
+    <Value>Use rich editor on message templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates.Hint">
+    <Value>Indicates whether to use rich editor on message templates and campaigns details pages.</Value>
+  </LocaleResource>  
 </Language>
 '
 
