@@ -127,10 +127,6 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (context.HttpContext.Request == null)
                     return;
 
-                //only in GET requests
-                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
-                    return;
-
                 //model prepared event
                 if (context.Controller is Controller controller && controller.ViewData.Model is BaseNopModel model)
                 {
