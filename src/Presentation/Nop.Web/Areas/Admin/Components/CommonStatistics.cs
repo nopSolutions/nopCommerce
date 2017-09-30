@@ -7,10 +7,11 @@ using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Models.Home;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class CommonStatisticsViewComponent : ViewComponent
+    public class CommonStatisticsViewComponent : NopViewComponent
     {
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;

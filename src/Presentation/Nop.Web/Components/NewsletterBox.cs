@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class NewsletterBoxViewComponent : ViewComponent
+    public class NewsletterBoxViewComponent : NopViewComponent
     {
         private readonly INewsletterModelFactory _newsletterModelFactory;
 

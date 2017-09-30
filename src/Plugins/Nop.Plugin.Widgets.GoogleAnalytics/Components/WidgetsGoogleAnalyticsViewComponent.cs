@@ -6,11 +6,12 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 {
     [ViewComponent(Name = "WidgetsGoogleAnalytics")]
-    public class WidgetsGoogleAnalyticsViewComponent : ViewComponent
+    public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;

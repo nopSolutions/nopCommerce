@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ManufacturerNavigationViewComponent : ViewComponent
+    public class ManufacturerNavigationViewComponent : NopViewComponent
     {
         private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly CatalogSettings _catalogSettings;

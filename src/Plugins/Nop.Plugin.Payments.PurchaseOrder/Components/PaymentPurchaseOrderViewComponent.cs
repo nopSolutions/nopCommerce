@@ -1,11 +1,12 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Payments.PurchaseOrder.Models;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Payments.PurchaseOrder.Components
 {
     [ViewComponent(Name = "PaymentPurchaseOrder")]
-    public class PaymentPurchaseOrderViewComponent : ViewComponent
+    public class PaymentPurchaseOrderViewComponent : NopViewComponent
     {
         public IViewComponentResult Invoke()
         {

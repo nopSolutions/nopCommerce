@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class TaxTypeSelectorViewComponent : ViewComponent
+    public class TaxTypeSelectorViewComponent : NopViewComponent
     {
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly TaxSettings _taxSettings;

@@ -2,10 +2,11 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Stores;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class MultistoreDisabledWarningViewComponent : ViewComponent
+    public class MultistoreDisabledWarningViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly ISettingService _settingService;

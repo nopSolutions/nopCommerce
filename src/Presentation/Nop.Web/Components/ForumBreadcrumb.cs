@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ForumBreadcrumbViewComponent : ViewComponent
+    public class ForumBreadcrumbViewComponent : NopViewComponent
     {
         private readonly IForumModelFactory _forumModelFactory;
 

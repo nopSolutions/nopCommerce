@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Blogs;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class BlogRssHeaderLinkViewComponent : ViewComponent
+    public class BlogRssHeaderLinkViewComponent : NopViewComponent
     {
         private readonly BlogSettings _blogSettings;
 

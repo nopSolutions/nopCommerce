@@ -2,11 +2,12 @@
 using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Components
 {
     [ViewComponent(Name = "CheckMoneyOrder")]
-    public class CheckMoneyOrderViewComponent : ViewComponent
+    public class CheckMoneyOrderViewComponent : NopViewComponent
     {
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
         private readonly IStoreContext _storeContext;

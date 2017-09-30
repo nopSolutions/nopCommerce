@@ -1,14 +1,14 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class AdminLanguageSelectorViewComponent : ViewComponent
+    public class AdminLanguageSelectorViewComponent : NopViewComponent
     {
         private readonly ILanguageService _languageService;
         private readonly IStoreContext _storeContext;

@@ -1,10 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class PollBlockViewComponent : ViewComponent
+    public class PollBlockViewComponent : NopViewComponent
     {
         private readonly IPollModelFactory _pollModelFactory;
 

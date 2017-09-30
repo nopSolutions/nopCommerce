@@ -9,11 +9,12 @@ using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
+using Nop.Web.Framework.Components;
 using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class NopCommerceNewsViewComponent : ViewComponent
+    public class NopCommerceNewsViewComponent : NopViewComponent
     {
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly IStoreContext _storeContext;

@@ -5,11 +5,12 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Payments.Manual.Models;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Payments.Manual.Components
 {
     [ViewComponent(Name = "PaymentManual")]
-    public class PaymentManualViewComponent : ViewComponent
+    public class PaymentManualViewComponent : NopViewComponent
     {
         public IViewComponentResult Invoke()
         {

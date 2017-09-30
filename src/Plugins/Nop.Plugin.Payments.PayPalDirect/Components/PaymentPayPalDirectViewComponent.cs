@@ -5,11 +5,12 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Payments.PayPalDirect.Models;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Components
 {
     [ViewComponent(Name = "PaymentPayPalDirect")]
-    public class PaymentPayPalDirectViewComponent : ViewComponent
+    public class PaymentPayPalDirectViewComponent : NopViewComponent
     {
         public IViewComponentResult Invoke()
         {

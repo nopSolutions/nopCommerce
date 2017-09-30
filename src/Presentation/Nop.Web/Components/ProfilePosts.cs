@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Customers;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ProfilePostsViewComponent : ViewComponent
+    public class ProfilePostsViewComponent : NopViewComponent
     {
         private readonly ICustomerService _customerService;
         private readonly IProfileModelFactory _profileModelFactory;

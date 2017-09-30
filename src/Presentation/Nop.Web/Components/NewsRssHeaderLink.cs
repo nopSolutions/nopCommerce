@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.News;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class NewsRssHeaderLinkViewComponent : ViewComponent
+    public class NewsRssHeaderLinkViewComponent : NopViewComponent
     {
         private readonly NewsSettings _newsSettings;
 

@@ -2,10 +2,11 @@
 using Nop.Core;
 using Nop.Services.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class SettingModeViewComponent : ViewComponent
+    public class SettingModeViewComponent : NopViewComponent
     {
         private readonly IWorkContext _workContext;
 

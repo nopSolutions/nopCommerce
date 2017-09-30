@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Blogs;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class BlogMonthsViewComponent : ViewComponent
+    public class BlogMonthsViewComponent : NopViewComponent
     {
         private readonly IBlogModelFactory _blogModelFactory;
         private readonly BlogSettings _blogSettings;

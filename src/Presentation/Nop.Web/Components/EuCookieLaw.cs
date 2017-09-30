@@ -4,10 +4,11 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class EuCookieLawViewComponent : ViewComponent
+    public class EuCookieLawViewComponent : NopViewComponent
     {
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IWorkContext _workContext;

@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Nop.Services.Cms;
 using Nop.Web.Areas.Admin.Models.Cms;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class AdminWidgetViewComponent : ViewComponent
+    public class AdminWidgetViewComponent : NopViewComponent
     {
         private readonly IWidgetService _widgetService;
 

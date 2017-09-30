@@ -4,10 +4,11 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Orders;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class EstimateShippingViewComponent : ViewComponent
+    public class EstimateShippingViewComponent : NopViewComponent
     {
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IStoreContext _storeContext;

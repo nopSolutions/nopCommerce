@@ -6,11 +6,12 @@ using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Components
 {
-    public class RecentlyViewedProductsBlockViewComponent : ViewComponent
+    public class RecentlyViewedProductsBlockViewComponent : NopViewComponent
     {
         private readonly IAclService _aclService;
         private readonly CatalogSettings _catalogSettings;

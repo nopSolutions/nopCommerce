@@ -5,10 +5,11 @@ using Nop.Services.Common;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Areas.Admin.Components
 {
-    public class StoreScopeConfigurationViewComponent : ViewComponent
+    public class StoreScopeConfigurationViewComponent : NopViewComponent
     {
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;

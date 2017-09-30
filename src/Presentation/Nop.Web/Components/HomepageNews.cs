@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.News;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class HomepageNewsViewComponent : ViewComponent
+    public class HomepageNewsViewComponent : NopViewComponent
     {
         private readonly INewsModelFactory _newsModelFactory;
         private readonly NewsSettings _newsSettings;

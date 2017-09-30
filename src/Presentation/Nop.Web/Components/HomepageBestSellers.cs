@@ -8,11 +8,12 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Components
 {
-    public class HomepageBestSellersViewComponent : ViewComponent
+    public class HomepageBestSellersViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IProductModelFactory _productModelFactory;

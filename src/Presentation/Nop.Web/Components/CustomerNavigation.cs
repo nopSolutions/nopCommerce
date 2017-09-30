@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CustomerNavigationViewComponent : ViewComponent
+    public class CustomerNavigationViewComponent : NopViewComponent
     {
         private readonly ICustomerModelFactory _customerModelFactory;
 
