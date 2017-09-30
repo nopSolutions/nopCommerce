@@ -28,15 +28,15 @@
   </ItemGroup>
   
   <ItemGroup>
-	<!-- We copy the entire \App_Data directory. But we ignore installedPlugins.json and Settings.txt files  -->
-	<Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.txt;App_Data\*.json" />
+	<!-- We copy the entire \App_Data directory. But we ignore JSON files  -->
+	<Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
 	
 	<Compile Remove="Plugins\**" />
 	<EmbeddedResource Remove="Plugins\**" />
 	<None Remove="Plugins\**" />
 	
 	<!-- We copy the entire \Plugins and \Themes directories.
-	But we ignore cshtml and json files to avoid "Duplicate 'Content' items were included" error during publishing.
+	But we ignore cshtml and JSON files to avoid "Duplicate 'Content' items were included" error during publishing.
 	We also can use "CheckForDuplicateItemsContinueOnError" as per https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/build/Microsoft.NET.Sdk.DefaultItems.targets -->
 	<Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml;Plugins\**\*.json" />
 	<Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.cshtml;Themes\**\*.json" />

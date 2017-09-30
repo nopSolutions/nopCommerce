@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Security
@@ -178,7 +179,7 @@ namespace Nop.Web.Framework.Security
             return new List<string>
             {
                 CommonHelper.MapPath(PluginManager.InstalledPluginsFilePath),
-                Path.Combine(CommonHelper.MapPath("~/"), "App_Data\\Settings.txt")
+                CommonHelper.MapPath(DataSettingsManager.DataSettingsFilePath)
             };
         }
     }
