@@ -557,6 +557,7 @@ namespace Nop.Web.Factories
                     IncludeInSitemap = topic.IncludeInSitemap,
                     IsPasswordProtected = topic.IsPasswordProtected,
                     Title = topic.GetLocalized(x => x.Title),
+                    SeName = topic.GetSeName(),
                 })
                 .ToList();
                 return model;
