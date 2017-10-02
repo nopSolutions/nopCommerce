@@ -40,7 +40,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                     // we don't need the response so this is the end of the request
                     var response = (await httpClient.GetAsync(url)).EnsureSuccessStatusCode();
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     //eat the error 
                 }
