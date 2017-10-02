@@ -48,7 +48,7 @@
                         }
                         <div class="inputs">
                             <label asp-for="Enquiry" asp-postfix=":"></label>
-                            <input asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="enquiry" />
+                            <textarea asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="enquiry"></textarea>
                             <nop-required />
                             <span asp-validation-for="Enquiry"></span>
                         </div>
