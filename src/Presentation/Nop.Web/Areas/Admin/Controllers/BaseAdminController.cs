@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nop.Core.Domain.Common;
@@ -28,10 +29,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             //default root tab
             SaveSelectedTabName(tabName, "selected-tab-name", null, persistForTheNextRequest);
             //child tabs (usually used for localization)
-            foreach (var key in this.Request.Form.Keys)
-                if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
-                    SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
+            //Form is available for POST only
+            if (this.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                foreach (var key in this.Request.Form.Keys)
+                    if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
+                        SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
         }
+
         /// <summary>
         /// Save selected tab name
         /// </summary>
