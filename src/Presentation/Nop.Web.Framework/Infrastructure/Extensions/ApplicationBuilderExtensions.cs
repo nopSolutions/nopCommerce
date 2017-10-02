@@ -62,7 +62,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             application.UseStatusCodePages(async context =>
             {
                 //handle 404 Not Found
-                if (context.HttpContext.Response.StatusCode == 404)
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     if (!webHelper.IsStaticResource())

@@ -512,7 +512,7 @@ namespace Nop.Core
             {
                 var response = _httpContextAccessor.HttpContext.Response;
                 //ASP.NET 4 style - return response.IsRequestBeingRedirected;
-                int[] redirectionStatusCodes = {301, 302};
+                int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found};
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }
         }
