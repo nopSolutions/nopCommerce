@@ -74,11 +74,15 @@ namespace Nop.Web.Framework.Security.Captcha
 
         private void SetTheme()
         {
+            if (Theme == null)
+                Theme = "";
+            Theme = Theme.ToLower();
+
             var themes = new[] {"white", "blackglass", "red", "clean", "light", "dark"};
 
             if (_version == ReCaptchaVersion.Version1)
             {
-                switch (Theme.ToLower())
+                switch (Theme)
                 {
                     case "light":
                         Theme = "white";
@@ -87,7 +91,7 @@ namespace Nop.Web.Framework.Security.Captcha
                         Theme = "blackglass";
                         break;
                     default:
-                        if (!themes.Contains(Theme.ToLower()))
+                        if (!themes.Contains(Theme))
                         {
                             Theme = "white";
                         }
@@ -96,7 +100,7 @@ namespace Nop.Web.Framework.Security.Captcha
             }
             else if (_version == ReCaptchaVersion.Version2)
             {
-                switch (Theme.ToLower())
+                switch (Theme)
                 {
                     case "clean":
                     case "red":
@@ -107,7 +111,7 @@ namespace Nop.Web.Framework.Security.Captcha
                         Theme = "dark";
                         break;
                     default:
-                        if (!themes.Contains(Theme.ToLower()))
+                        if (!themes.Contains(Theme))
                         {
                             Theme = "light";
                         }
