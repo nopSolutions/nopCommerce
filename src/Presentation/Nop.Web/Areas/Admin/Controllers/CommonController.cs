@@ -132,32 +132,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return false;
         }
 
-        private DateTime GetBuildDate(Assembly assembly, TimeZoneInfo target = null)
-        {
-            var filePath = assembly.Location;
-
-            const int cPeHeaderOffset = 60;
-            const int cLinkerTimestampOffset = 8;
-
-            var buffer = new byte[2048];
-
-            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-            {
-                stream.Read(buffer, 0, 2048);
-            }
-
-            var offset = BitConverter.ToInt32(buffer, cPeHeaderOffset);
-            var secondsSince1970 = BitConverter.ToInt32(buffer, offset + cLinkerTimestampOffset);
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
-
-            var tz = target ?? TimeZoneInfo.Local;
-            var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
-
-            return localTime;
-        }
-
         #endregion
         
         #region Methods
@@ -214,7 +188,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var canGetLocation = trustLevel >= AspNetHostingPermissionLevel.High && !assembly.IsDynamic;
                     loadedAssembly.Location = canGetLocation ? assembly.Location : null;
                     loadedAssembly.IsDebug = IsDebugAssembly(assembly);
-                    loadedAssembly.BuildDate = canGetLocation ? (DateTime?)GetBuildDate(assembly, TimeZoneInfo.Local) : null;
+
+                    //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
+                    //we use a simple method because the more Jeff Atwood's solution doesn't work anymore (more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/)
+                    loadedAssembly.BuildDate = canGetLocation ? (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(System.IO.File.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local) : null;
                 }
                 catch (Exception) { }
                 model.LoadedAssemblies.Add(loadedAssembly);
