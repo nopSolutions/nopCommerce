@@ -29,7 +29,10 @@ namespace Nop.Web.Framework.Infrastructure
             //exception handling
             application.UseNopExceptionHandler();
 
-            //handle 404 errors
+            //handle 400 errors (bad request)
+            application.UseBadRequestResult();
+
+            //handle 404 errors (not found)
             application.UsePageNotFound();
         }
 

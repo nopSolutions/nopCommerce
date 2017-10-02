@@ -10,6 +10,7 @@ using Nop.Core.Domain;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -95,6 +96,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
                         }
                     }
+                }
+            });
+        }
+
+
+        /// <summary>
+        /// Adds a special handler that checks for responses with the 400 status code (bad request)
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseBadRequestResult(this IApplicationBuilder application)
+        {
+            application.UseStatusCodePages(async context =>
+            {
+                //handle 404 (Bad request)
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
+                {
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
             });
         }
