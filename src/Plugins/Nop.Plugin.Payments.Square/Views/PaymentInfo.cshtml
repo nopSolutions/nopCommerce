@@ -5,6 +5,29 @@
 @inject SquarePaymentSettings squarePaymentSettings
 @inject Nop.Core.Domain.Orders.OrderSettings orderSettings
 
+<style type="text/css">
+    .square-input {
+        height: 36px;
+        border: 1px solid #ddd;
+        padding: 8px;
+        vertical-align: middle;
+        color: #777;
+    }
+
+    select.square-input {
+        width: 100%;
+    }
+
+    .square-input--focus {
+        border-color: #ccc;
+        color: #444;
+    }
+
+    .square-input--error {
+        outline: #e4434b;
+    }
+</style>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.StoredCardId)').change(toggleStoredCard);
@@ -111,7 +134,7 @@
                 <label asp-for="StoredCardId">@T("Plugins.Payments.Square.Fields.StoredCard"):</label>
             </td>
             <td>
-                <select asp-for="StoredCardId" asp-items="Model.StoredCards" class="dropdownlists"></select>
+                <select asp-for="StoredCardId" asp-items="Model.StoredCards" class="square-input"></select>
             </td>
         </tr>
     </table>
