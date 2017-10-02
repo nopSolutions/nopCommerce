@@ -1,6 +1,7 @@
 ﻿@model CountryModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
@@ -142,4 +143,5 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_country_details_info_bottom", additionalData = Model.Id })
 </div>

@@ -32,11 +32,11 @@
                 @T("Admin.ContentManagement.MessageTemplates.Copy")
             </button>
             <nop-action-confirmation asp-button-id="message-template-copy" />
-
             <span id="message-template-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_message_template_details_buttons", additionalData = Model.Id })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

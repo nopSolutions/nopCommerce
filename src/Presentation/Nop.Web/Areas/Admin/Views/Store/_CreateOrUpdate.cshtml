@@ -21,6 +21,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_store_details_top", additionalData = Model.Id })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
@@ -144,6 +145,7 @@
                     </div>
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_store_details_bottom", additionalData = Model.Id })
         </div>
     </div>
 </div>

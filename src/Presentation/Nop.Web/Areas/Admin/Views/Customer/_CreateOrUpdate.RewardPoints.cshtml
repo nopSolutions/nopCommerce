@@ -9,6 +9,7 @@
 }
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_reward_points_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="customer-rewardpoints-grid"></div>
@@ -151,4 +152,5 @@
             });
         </script>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_reward_points_bottom", additionalData = Model.Id })
 </div>

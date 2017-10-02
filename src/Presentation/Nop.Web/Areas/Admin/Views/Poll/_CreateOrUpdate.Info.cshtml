@@ -1,6 +1,7 @@
 ﻿@model PollModel
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_details_info_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group" @(Model.AvailableLanguages.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
@@ -86,4 +87,5 @@
             </div>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_poll_details_info_bottom", additionalData = Model.Id })
 </div>

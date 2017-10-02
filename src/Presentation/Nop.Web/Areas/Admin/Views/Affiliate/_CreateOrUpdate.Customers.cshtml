@@ -5,6 +5,7 @@
     var gridPageSizes = adminAreaSettings.GridPageSizes;
 }
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_customers_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="customers-grid"></div>
@@ -70,4 +71,5 @@
             </script>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_affiliate_details_customers_bottom", additionalData = Model.Id })
 </div>

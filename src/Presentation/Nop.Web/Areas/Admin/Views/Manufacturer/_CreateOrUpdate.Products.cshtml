@@ -2,6 +2,7 @@
 @inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_products_top", additionalData = Model.Id })
     @if (Model.Id > 0)
     {
         <div class="panel panel-default">
@@ -154,4 +155,5 @@
         </div>
 
     }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_manufacturer_details_products_bottom", additionalData = Model.Id })
 </div>

@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_buttons" })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateWarehouse", Model)

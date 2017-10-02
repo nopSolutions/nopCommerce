@@ -13,12 +13,14 @@
     </h1>
     <div class="pull-right">
         &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_buttons" })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_top" })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @foreach (var warning in Model)
@@ -53,6 +55,7 @@
                     }
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warnings_bottom" })
         </div>
     </div>
 </div>

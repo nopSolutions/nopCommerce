@@ -26,6 +26,7 @@
                 @T("Admin.System.Log.ClearLog")
             </button>
             <nop-action-confirmation asp-button-id="clearall" />
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_log_list_buttons" })
         </div>
     </div>
 

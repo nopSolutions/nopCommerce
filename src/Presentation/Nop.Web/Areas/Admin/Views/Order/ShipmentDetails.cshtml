@@ -66,6 +66,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_shipment_details_buttons", additionalData = Model.Id })
         </div>
     </div>
 

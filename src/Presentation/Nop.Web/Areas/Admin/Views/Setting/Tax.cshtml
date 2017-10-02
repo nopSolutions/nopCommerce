@@ -17,6 +17,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_tax_settings_buttons" })
         </div>
     </div>
     
@@ -27,6 +28,7 @@
             <div asp-validation-summary="All"></div>
 
             <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_tax_settings_top" })
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @T("Admin.Configuration.Settings.Tax.BlockTitle.Common")
@@ -381,6 +383,7 @@
                         </script>
                     </div>
                 </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_tax_settings_bottom" })
             </div>
         </div>
     </div>

@@ -59,6 +59,7 @@
                         </button>
                     </li>
                 </ul>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_list_buttons" })
             </div>
         </div>
     </div>

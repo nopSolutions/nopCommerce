@@ -21,6 +21,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_address_details_buttons", additionalData = Model.Address.Id })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)

@@ -19,10 +19,10 @@
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
     </h1>
-    @if (!Model.IsLoggedInAsVendor)
-    {
-        //these buttons are not visible to vendors
-        <div class="pull-right">
+    <div class="pull-right">
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            //these buttons are not visible to vendors
             <button type="button" id="approve-selected" class="btn bg-green">
                 <i class="fa fa-check-square-o"></i>
                 @T("Admin.Catalog.ProductReviews.ApproveSelected")
@@ -35,8 +35,9 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Catalog.ProductReviews.DeleteSelected")
             </button>
-        </div>
-    }
+        }
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_list_buttons" })
+    </div>
 </div>
 
 <div class="content">

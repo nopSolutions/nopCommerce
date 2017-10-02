@@ -21,6 +21,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_gift_card_list_buttons" })
     </div>
 </div>
 

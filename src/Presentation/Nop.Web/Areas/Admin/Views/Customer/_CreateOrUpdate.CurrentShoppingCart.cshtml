@@ -7,6 +7,7 @@
 }  
 
 <div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_top", additionalData = Model.Id })
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="currentshoppingcart-grid"></div>
@@ -84,4 +85,5 @@
             </script>
         </div>
     </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_bottom", additionalData = Model.Id })
 </div>

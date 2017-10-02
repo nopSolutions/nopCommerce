@@ -6,6 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_top", additionalData = Model.Id })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -210,6 +211,7 @@
                     }
                 </script>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_bottom", additionalData = Model.Id })
         </div>
     </div>
 </div>

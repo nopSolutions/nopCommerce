@@ -30,6 +30,7 @@
             <i class="fa fa-trash-o"></i>
             @T("Admin.ContentManagement.Blog.Comments.DeleteSelected")
         </button>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_comment_list_buttons" })
     </div>
 </div>
 
