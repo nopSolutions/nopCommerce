@@ -49,6 +49,28 @@ namespace Nop.Data
             return msg;
         }
 
+        /// <summary>
+        /// Rollback of entity changes and return full error message
+        /// </summary>
+        /// <param name="dbEx">Exception</param>
+        /// <returns>Error</returns>
+        protected string GetFullErrorTextAndRollbackEntityChanges(DbEntityValidationException dbEx)
+        {
+            var fullErrorText = GetFullErrorText(dbEx);
+
+            foreach (var entry in dbEx.EntityValidationErrors.Select(error => error.Entry))
+            {
+                if (entry == null)
+                    continue;
+
+                //rollback of entity changes
+                entry.State = EntityState.Unchanged;
+            }
+
+            this._context.SaveChanges();
+            return fullErrorText;
+        }
+
         #endregion
 
         #region Methods
@@ -82,7 +104,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
 
@@ -104,7 +127,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
 
@@ -123,7 +147,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
 
@@ -142,7 +167,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
 
@@ -163,7 +189,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
 
@@ -185,7 +212,8 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //ensure that the detailed error text is saved in the Log
+                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
             }
         }
         
