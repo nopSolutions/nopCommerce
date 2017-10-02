@@ -82,7 +82,9 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                throw new Exception(GetFullErrorText(dbEx), dbEx);
+                //don't throw a double exception if SqlCe errors because it can't save text over 4000 characters
+                if (!dbEx.EntityValidationErrors.FirstOrDefault().ValidationErrors.FirstOrDefault().ErrorMessage.Contains("4000"))
+                    throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
