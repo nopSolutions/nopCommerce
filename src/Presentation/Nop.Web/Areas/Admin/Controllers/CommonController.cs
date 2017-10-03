@@ -1,12 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -172,9 +170,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Value = header.Value
                 });
             }
-
-            var trustLevel = CommonHelper.GetTrustLevel();
-
+            
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var loadedAssembly = new SystemInfoModel.LoadedAssembly
@@ -185,13 +181,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //ensure no exception is thrown
                 try
                 {
-                    var canGetLocation = trustLevel >= AspNetHostingPermissionLevel.High && !assembly.IsDynamic;
-                    loadedAssembly.Location = canGetLocation ? assembly.Location : null;
+                    loadedAssembly.Location = assembly.IsDynamic ? null : assembly.Location;
                     loadedAssembly.IsDebug = IsDebugAssembly(assembly);
 
                     //https://stackoverflow.com/questions/2050396/getting-the-date-of-a-net-assembly
                     //we use a simple method because the more Jeff Atwood's solution doesn't work anymore (more info at https://blog.codinghorror.com/determining-build-date-the-hard-way/)
-                    loadedAssembly.BuildDate = canGetLocation ? (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(System.IO.File.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local) : null;
+                    loadedAssembly.BuildDate = assembly.IsDynamic ? null : (DateTime?)TimeZoneInfo.ConvertTimeFromUtc(System.IO.File.GetLastWriteTimeUtc(assembly.Location), TimeZoneInfo.Local);
                 }
                 catch (Exception) { }
                 model.LoadedAssemblies.Add(loadedAssembly);
