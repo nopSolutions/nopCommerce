@@ -64,22 +64,413 @@ namespace Nop.Core.Plugins
 
         #endregion
 
-        #region Properties
+        #region Utilities
 
         /// <summary>
-        /// Gets the path to file that contains installed plugin system names
+        /// Get description files
         /// </summary>
-        public static string InstalledPluginsFilePath => InstalledPluginsFilePath_;
+        /// <param name="pluginFolder">Plugin directory info</param>
+        /// <returns>Original and parsed description files</returns>
+        private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
+        {
+            if (pluginFolder == null)
+                throw new ArgumentNullException(nameof(pluginFolder));
+
+            //create list (<file info, parsed plugin descritor>)
+            var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
+
+            //add display order and path to list
+            foreach (var descriptionFile in pluginFolder.GetFiles(PluginDescriptionFileName, SearchOption.AllDirectories))
+            {
+                if (!IsPackagePluginFolder(descriptionFile.Directory))
+                    continue;
+
+                //parse file
+                var pluginDescriptor = GetPluginDescriptorFromFile(descriptionFile.FullName);
+
+                //populate list
+                result.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
+            }
+
+            //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
+            //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
+            return result;
+        }
 
         /// <summary>
-        /// Returns a collection of all referenced plugin assemblies that have been shadow copied
+        /// Upload the single plugin from the archive into the plugin folder
         /// </summary>
-        public static IEnumerable<PluginDescriptor> ReferencedPlugins { get; set; }
+        /// <param name="archivePath">Path to the archive</param>
+        /// <returns>Plugin descriptor</returns>
+        private static PluginDescriptor UploadSinglePlugin(string archivePath)
+        {
+            //ensure we have a valid plugin description file and the current version is supported
+            PluginDescriptor pluginDescriptor = null;
+            var uploadedPluginDirectoryName = string.Empty;
+            using (var archive = ZipFile.OpenRead(archivePath))
+            {
+                //the archive should contain only one root directory (the plugin one)
+                var rootDirectories = archive.Entries
+                    .Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/"))
+                    .ToList();
+                if (rootDirectories.Count != 1)
+                    throw new Exception("The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.");
+                //the plugin directory name (remove the ending /)
+                uploadedPluginDirectoryName = rootDirectories.First().FullName.Replace("/", "");
+
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/{PluginDescriptionFileName}",
+                        StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        using (var unzippedEntryStream = entry.Open())
+                        {
+                            using (var reader = new StreamReader(unzippedEntryStream))
+                            {
+                                string text = reader.ReadToEnd();
+                                pluginDescriptor = GetPluginDescriptor(text);
+                                if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
+                                    StringComparer.InvariantCultureIgnoreCase))
+                                    throw new Exception(
+                                        $"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pluginDescriptor == null)
+                throw new Exception($"No {PluginDescriptionFileName} file is found. It should be in the root of the archive.");
+
+            //new plugin path
+            if (uploadedPluginDirectoryName == null)
+                throw new Exception("Cannot get the plugin directory name");
+
+            var pluginFolder = CommonHelper.MapPath(PluginsPath);
+            var uploadedPluginPath = Path.Combine(pluginFolder, uploadedPluginDirectoryName);
+
+            //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
+            //furthermore, zip extract functionality cannot override existing files
+            //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
+            if (Directory.Exists(uploadedPluginPath))
+                CommonHelper.DeleteDirectory(uploadedPluginPath);
+
+            //extract to /Plugins
+            ZipFile.ExtractToDirectory(archivePath, pluginFolder);
+
+            return pluginDescriptor;
+        }
 
         /// <summary>
-        /// Returns a collection of all plugin which are not compatible with the current version
+        /// Upload multiple plugins from the archive into the plugin folder
         /// </summary>
-        public static IEnumerable<string> IncompatiblePlugins { get; set; }
+        /// <param name="archivePath">Path to the archive</param>
+        /// <returns>List of plugin descriptor</returns>
+        private static IList<PluginDescriptor> UploadMultiplePlugins(string archivePath)
+        {
+            using (var archive = ZipFile.OpenRead(archivePath))
+            {
+                //get plugin directory names from the descriptive JSON file
+                var pluginDirectories = new List<string>();
+                var jsonFileEntry = archive.Entries
+                    .FirstOrDefault(entry => entry.Name.Equals(UploadedPluginsDescriptionFile, StringComparison.InvariantCultureIgnoreCase)
+                        && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
+                using (var unzippedEntryStream = jsonFileEntry.Open())
+                {
+                    using (var reader = new StreamReader(unzippedEntryStream))
+                    {
+                        var definitionType = new[] { new { SystemName = string.Empty, Version = string.Empty, DirectoryPath = string.Empty, SourceDirectoryPath = string.Empty } };
+                        pluginDirectories = JsonConvert.DeserializeAnonymousType(reader.ReadToEnd(), definitionType)
+                            .Select(plugin => plugin.DirectoryPath).ToList();
+                    }
+                }
+
+                //get plugins descriptors contained in the archive and ensure that the current version is supported
+                var pluginsInArchive = pluginDirectories.Select(directoryPath =>
+                {
+                    //the plugin path should end with a slash
+                    var pluginPath = $"{directoryPath.TrimEnd('/')}/";
+
+                    //get the plugin directory name
+                    var directoryName = Path.GetFileName(pluginPath.TrimEnd('/'));
+
+                    //try to get the plugin descriptor entry
+                    var pluginDescriptorPath = $"{pluginPath}{PluginDescriptionFileName}";
+                    var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(pluginDescriptorPath, StringComparison.InvariantCultureIgnoreCase));
+                    if (descriptorEntry == null)
+                        return null;
+
+                    using (var unzippedEntryStream = descriptorEntry.Open())
+                    {
+                        using (var reader = new StreamReader(unzippedEntryStream))
+                        {
+                            var pluginDescriptor = GetPluginDescriptor(reader.ReadToEnd());
+                            return new { DirectoryName = directoryName, PluginPath = pluginPath, PluginDescriptor = pluginDescriptor };
+                        }
+                    }
+                }).Where(plugin => plugin?.PluginDescriptor?.SupportedVersions.Contains(NopVersion.CurrentVersion) ?? false).ToList();
+
+                //extract plugins into the plugin folder
+                var pluginFolder = CommonHelper.MapPath(PluginsPath);
+                foreach (var plugin in pluginsInArchive)
+                {
+                    var pluginPath = Path.Combine(pluginFolder, plugin.DirectoryName);
+
+                    //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
+                    //furthermore, zip extract functionality cannot override existing files
+                    //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
+                    if (Directory.Exists(pluginPath))
+                        CommonHelper.DeleteDirectory(pluginPath);
+                    Directory.CreateDirectory(pluginPath);
+
+                    //extract entries into files
+                    var pluginEntries = archive.Entries.Where(entry => entry.FullName.StartsWith(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase)
+                        && !entry.FullName.Equals(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase));
+                    foreach (var entry in pluginEntries)
+                    {
+                        var entryPath = Path.Combine(pluginPath, entry.FullName.Substring(plugin.PluginPath.Length));
+                        var directoryPath = Path.GetDirectoryName(entryPath);
+                        if (!Directory.Exists(directoryPath))
+                            Directory.CreateDirectory(directoryPath);
+                        else
+                            entry.ExtractToFile(entryPath);
+                    }
+                }
+
+                return pluginsInArchive.Select(plugin => plugin.PluginDescriptor).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the plugin description file
+        /// </summary>
+        /// <param name="filePath">Path to the description file</param>
+        /// <returns>Plugin descriptor</returns>
+        private static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
+        {
+            var text = File.ReadAllText(filePath);
+
+            return GetPluginDescriptor(text);
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        private static PluginDescriptor GetPluginDescriptor(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
+        }
+
+        /// <summary>
+        /// Get system names of installed plugins
+        /// </summary>
+        /// <param name="filePath">Path to the file</param>
+        /// <returns>List of plugin system names</returns>
+        private static IList<string> GetInstalledPluginNames(string filePath)
+        {
+            //check whether file exists
+            if (!File.Exists(filePath))
+            {
+                //if not, try to parse the file that was used in previous nopCommerce versions
+                filePath = CommonHelper.MapPath(ObsoleteInstalledPluginsFilePath);
+                if (!File.Exists(filePath))
+                    return new List<string>();
+
+                //get plugin system names from the old txt file
+                var pluginSystemNames = new List<string>();
+                using (var reader = new StringReader(File.ReadAllText(filePath)))
+                {
+                    var pluginName = string.Empty;
+                    while ((pluginName = reader.ReadLine()) != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(pluginName))
+                            pluginSystemNames.Add(pluginName.Trim());
+                    }
+                }
+
+                //save system names of installed plugins to the new file
+                SaveInstalledPluginNames(pluginSystemNames, CommonHelper.MapPath(InstalledPluginsFilePath));
+
+                //and delete the old one
+                File.Delete(filePath);
+
+                return pluginSystemNames;
+            }
+
+            var text = File.ReadAllText(filePath);
+            if (string.IsNullOrEmpty(text))
+                return new List<string>();
+
+            //get plugin system names from the JSON file
+            return JsonConvert.DeserializeObject<IList<string>>(text);
+        }
+
+        /// <summary>
+        /// Save system names of installed plugins to the file
+        /// </summary>
+        /// <param name="pluginSystemNames">List of plugin system names</param>
+        /// <param name="filePath">Path to the file</param>
+        private static void SaveInstalledPluginNames(IList<string> pluginSystemNames, string filePath)
+        {
+            //save the file
+            var text = JsonConvert.SerializeObject(pluginSystemNames, Formatting.Indented);
+            File.WriteAllText(filePath, text);
+        }
+
+        /// <summary>
+        /// Indicates whether assembly file is already loaded
+        /// </summary>
+        /// <param name="fileInfo">File info</param>
+        /// <returns>Result</returns>
+        private static bool IsAlreadyLoaded(FileInfo fileInfo)
+        {
+            //search library file name in base directory to ignore already existing (loaded) libraries
+            //(we do it because not all libraries are loaded immediately after application start)
+            if (BaseAppLibraries.Any(sli => sli.Equals(fileInfo.Name, StringComparison.InvariantCultureIgnoreCase)))
+                return true;
+
+            //compare full assembly name
+            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
+            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            //{
+            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
+            //        return true;
+            //}
+            //return false;
+
+            //do not compare the full assembly name, just filename
+            try
+            {
+                var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                if (string.IsNullOrEmpty(fileNameWithoutExt))
+                    throw new Exception($"Cannot get file extension for {fileInfo.Name}");
+
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    var assemblyName = a.FullName.Split(',').FirstOrDefault();
+                    if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Perform file deploy
+        /// </summary>
+        /// <param name="plug">Plugin file info</param>
+        /// <param name="applicationPartManager">Application part manager</param>
+        /// <returns>Assembly</returns>
+        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager)
+        {
+            if (plug.Directory == null || plug.Directory.Parent == null)
+                throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
+
+            //but in order to avoid possible issues we still copy libraries into ~/Plugins/bin/ directory
+            var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
+            var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
+
+            //we can now register the plugin definition
+            var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
+            Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
+            applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
+
+            return shadowCopiedAssembly;
+        }
+
+        /// <summary>
+        /// Copy the plugin file to shadow copy directory
+        /// </summary>
+        /// <param name="plug"></param>
+        /// <param name="shadowCopyPlugFolder"></param>
+        /// <returns></returns>
+        private static FileInfo ShadowCopyFile(FileInfo plug, DirectoryInfo shadowCopyPlugFolder)
+        {
+            var shouldCopy = true;
+            var shadowCopiedPlug = new FileInfo(Path.Combine(shadowCopyPlugFolder.FullName, plug.Name));
+
+            //check if a shadow copied file already exists and if it does, check if it's updated, if not don't copy
+            if (shadowCopiedPlug.Exists)
+            {
+                //it's better to use LastWriteTimeUTC, but not all file systems have this property
+                //maybe it is better to compare file hash?
+                var areFilesIdentical = shadowCopiedPlug.CreationTimeUtc.Ticks >= plug.CreationTimeUtc.Ticks;
+                if (areFilesIdentical)
+                {
+                    Debug.WriteLine("Not copying; files appear identical: '{0}'", shadowCopiedPlug.Name);
+                    shouldCopy = false;
+                }
+                else
+                {
+                    //delete an existing file
+
+                    //More info: https://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
+                    Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
+                    File.Delete(shadowCopiedPlug.FullName);
+                }
+            }
+
+            if (!shouldCopy)
+                return shadowCopiedPlug;
+
+            try
+            {
+                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
+            }
+            catch (IOException)
+            {
+                Debug.WriteLine(shadowCopiedPlug.FullName + " is locked, attempting to rename");
+                //this occurs when the files are locked,
+                //for some reason devenv locks plugin files some times and for another crazy reason you are allowed to rename them
+                //which releases the lock, so that it what we are doing here, once it's renamed, we can re-shadow copy
+                try
+                {
+                    var oldFile = shadowCopiedPlug.FullName + Guid.NewGuid().ToString("N") + ".old";
+                    File.Move(shadowCopiedPlug.FullName, oldFile);
+                }
+                catch (IOException exc)
+                {
+                    throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
+                }
+                //OK, we've made it this far, now retry the shadow copy
+                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
+            }
+
+            return shadowCopiedPlug;
+        }
+
+        /// <summary>
+        /// Determines if the folder is a bin plugin folder for a package
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        private static bool IsPackagePluginFolder(DirectoryInfo folder)
+        {
+            if (folder == null) return false;
+            if (folder.Parent == null) return false;
+            if (!folder.Parent.Name.Equals(PluginsPathName, StringComparison.InvariantCultureIgnoreCase)) return false;
+
+            return true;
+        }
 
         #endregion
 
@@ -417,414 +808,24 @@ namespace Nop.Core.Plugins
 
         #endregion
 
-        #region Utilities
+        #region Properties
 
         /// <summary>
-        /// Get description files
+        /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        /// <param name="pluginFolder">Plugin directory info</param>
-        /// <returns>Original and parsed description files</returns>
-        private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
-        {
-            if (pluginFolder == null)
-                throw new ArgumentNullException(nameof(pluginFolder));
-
-            //create list (<file info, parsed plugin descritor>)
-            var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
-            
-            //add display order and path to list
-            foreach (var descriptionFile in pluginFolder.GetFiles(PluginDescriptionFileName, SearchOption.AllDirectories))
-            {
-                if (!IsPackagePluginFolder(descriptionFile.Directory))
-                    continue;
-
-                //parse file
-                var pluginDescriptor = GetPluginDescriptorFromFile(descriptionFile.FullName);
-
-                //populate list
-                result.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
-            }
-
-            //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
-            result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
-            return result;
-        }
+        public static string InstalledPluginsFilePath => InstalledPluginsFilePath_;
 
         /// <summary>
-        /// Upload the single plugin from the archive into the plugin folder
+        /// Returns a collection of all referenced plugin assemblies that have been shadow copied
         /// </summary>
-        /// <param name="archivePath">Path to the archive</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor UploadSinglePlugin(string archivePath)
-        {
-            //ensure we have a valid plugin description file and the current version is supported
-            PluginDescriptor pluginDescriptor = null;
-            var uploadedPluginDirectoryName = string.Empty;
-            using (var archive = ZipFile.OpenRead(archivePath))
-            {
-                //the archive should contain only one root directory (the plugin one)
-                var rootDirectories = archive.Entries
-                    .Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/"))
-                    .ToList();
-                if (rootDirectories.Count != 1)
-                    throw new Exception("The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.");
-                //the plugin directory name (remove the ending /)
-                uploadedPluginDirectoryName = rootDirectories.First().FullName.Replace("/", "");
-
-                foreach (var entry in archive.Entries)
-                {
-                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/{PluginDescriptionFileName}",
-                        StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var unzippedEntryStream = entry.Open())
-                        {
-                            using (var reader = new StreamReader(unzippedEntryStream))
-                            {
-                                string text = reader.ReadToEnd();
-                                pluginDescriptor = GetPluginDescriptor(text);
-                                if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
-                                    StringComparer.InvariantCultureIgnoreCase))
-                                    throw new Exception(
-                                        $"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (pluginDescriptor == null)
-                throw new Exception($"No {PluginDescriptionFileName} file is found. It should be in the root of the archive.");
-
-            //new plugin path
-            if (uploadedPluginDirectoryName == null)
-                throw new Exception("Cannot get the plugin directory name");
-
-            var pluginFolder = CommonHelper.MapPath(PluginsPath);
-            var uploadedPluginPath = Path.Combine(pluginFolder, uploadedPluginDirectoryName);
-
-            //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
-            //furthermore, zip extract functionality cannot override existing files
-            //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-            if (Directory.Exists(uploadedPluginPath))
-                CommonHelper.DeleteDirectory(uploadedPluginPath);
-
-            //extract to /Plugins
-            ZipFile.ExtractToDirectory(archivePath, pluginFolder);
-
-            return pluginDescriptor;
-        }
+        public static IEnumerable<PluginDescriptor> ReferencedPlugins { get; set; }
 
         /// <summary>
-        /// Upload multiple plugins from the archive into the plugin folder
+        /// Returns a collection of all plugin which are not compatible with the current version
         /// </summary>
-        /// <param name="archivePath">Path to the archive</param>
-        /// <returns>List of plugin descriptor</returns>
-        private static IList<PluginDescriptor> UploadMultiplePlugins(string archivePath)
-        {
-            using (var archive = ZipFile.OpenRead(archivePath))
-            {
-                //get plugin directory names from the descriptive JSON file
-                var pluginDirectories = new List<string>();
-                var jsonFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(UploadedPluginsDescriptionFile, StringComparison.InvariantCultureIgnoreCase)
-                        && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
-                using (var unzippedEntryStream = jsonFileEntry.Open())
-                {
-                    using (var reader = new StreamReader(unzippedEntryStream))
-                    {
-                        var definitionType = new[] { new { SystemName = string.Empty, Version = string.Empty, DirectoryPath = string.Empty, SourceDirectoryPath = string.Empty } };
-                        pluginDirectories = JsonConvert.DeserializeAnonymousType(reader.ReadToEnd(), definitionType)
-                            .Select(plugin => plugin.DirectoryPath).ToList();
-                    }
-                }
-
-                //get plugins descriptors contained in the archive and ensure that the current version is supported
-                var pluginsInArchive = pluginDirectories.Select(directoryPath =>
-                {
-                    //the plugin path should end with a slash
-                    var pluginPath = $"{directoryPath.TrimEnd('/')}/";
-
-                    //get the plugin directory name
-                    var directoryName = Path.GetFileName(pluginPath.TrimEnd('/'));
-
-                    //try to get the plugin descriptor entry
-                    var pluginDescriptorPath = $"{pluginPath}{PluginDescriptionFileName}";
-                    var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(pluginDescriptorPath, StringComparison.InvariantCultureIgnoreCase));
-                    if (descriptorEntry == null)
-                        return null;
-                    
-                    using (var unzippedEntryStream = descriptorEntry.Open())
-                    {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            var pluginDescriptor = GetPluginDescriptor(reader.ReadToEnd());
-                            return new { DirectoryName = directoryName, PluginPath = pluginPath, PluginDescriptor = pluginDescriptor };
-                        }
-                    }
-                }).Where(plugin => plugin?.PluginDescriptor?.SupportedVersions.Contains(NopVersion.CurrentVersion) ?? false).ToList();
-
-                //extract plugins into the plugin folder
-                var pluginFolder = CommonHelper.MapPath(PluginsPath);
-                foreach (var plugin in pluginsInArchive)
-                {
-                    var pluginPath = Path.Combine(pluginFolder, plugin.DirectoryName);
-
-                    //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
-                    //furthermore, zip extract functionality cannot override existing files
-                    //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                    if (Directory.Exists(pluginPath))
-                        CommonHelper.DeleteDirectory(pluginPath);
-                    Directory.CreateDirectory(pluginPath);
-
-                    //extract entries into files
-                    var pluginEntries = archive.Entries.Where(entry => entry.FullName.StartsWith(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase)
-                        && !entry.FullName.Equals(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase));
-                    foreach (var entry in pluginEntries)
-                    {
-                        var entryPath = Path.Combine(pluginPath, entry.FullName.Substring(plugin.PluginPath.Length));
-                        var directoryPath = Path.GetDirectoryName(entryPath);
-                        if (!Directory.Exists(directoryPath))
-                            Directory.CreateDirectory(directoryPath);
-                        else
-                            entry.ExtractToFile(entryPath);
-                    }
-                }
-
-                return pluginsInArchive.Select(plugin => plugin.PluginDescriptor).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Get plugin descriptor from the plugin description file
-        /// </summary>
-        /// <param name="filePath">Path to the description file</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
-        {
-            var text = File.ReadAllText(filePath);
-
-            return GetPluginDescriptor(text);
-        }
-
-        /// <summary>
-        /// Get plugin descriptor from the description text
-        /// </summary>
-        /// <param name="text">Description text</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor GetPluginDescriptor(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return new PluginDescriptor();
-
-            //get plugin descriptor from the JSON file
-            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
-
-            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
-            if (!descriptor.SupportedVersions.Any())
-                descriptor.SupportedVersions.Add("2.00");
-
-            return descriptor;
-        }
-
-        /// <summary>
-        /// Get system names of installed plugins
-        /// </summary>
-        /// <param name="filePath">Path to the file</param>
-        /// <returns>List of plugin system names</returns>
-        private static IList<string> GetInstalledPluginNames(string filePath)
-        {
-            //check whether file exists
-            if (!File.Exists(filePath))
-            {
-                //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = CommonHelper.MapPath(ObsoleteInstalledPluginsFilePath);
-                if (!File.Exists(filePath))
-                    return new List<string>();
-
-                //get plugin system names from the old txt file
-                var pluginSystemNames = new List<string>();
-                using (var reader = new StringReader(File.ReadAllText(filePath)))
-                {
-                    var pluginName = string.Empty;
-                    while ((pluginName = reader.ReadLine()) != null)
-                    {
-                        if (!string.IsNullOrWhiteSpace(pluginName))
-                            pluginSystemNames.Add(pluginName.Trim());
-                    }
-                }
-
-                //save system names of installed plugins to the new file
-                SaveInstalledPluginNames(pluginSystemNames, CommonHelper.MapPath(InstalledPluginsFilePath));
-
-                //and delete the old one
-                File.Delete(filePath);
-
-                return pluginSystemNames;
-            }
-
-            var text = File.ReadAllText(filePath);
-            if (string.IsNullOrEmpty(text))
-                return new List<string>();
-
-            //get plugin system names from the JSON file
-            return JsonConvert.DeserializeObject<IList<string>>(text);
-        }
-
-        /// <summary>
-        /// Save system names of installed plugins to the file
-        /// </summary>
-        /// <param name="pluginSystemNames">List of plugin system names</param>
-        /// <param name="filePath">Path to the file</param>
-        private static void SaveInstalledPluginNames(IList<string> pluginSystemNames, string filePath)
-        {
-            //save the file
-            var text = JsonConvert.SerializeObject(pluginSystemNames, Formatting.Indented);
-            File.WriteAllText(filePath, text);
-        }
-
-        /// <summary>
-        /// Indicates whether assembly file is already loaded
-        /// </summary>
-        /// <param name="fileInfo">File info</param>
-        /// <returns>Result</returns>
-        private static bool IsAlreadyLoaded(FileInfo fileInfo)
-        {
-            //search library file name in base directory to ignore already existing (loaded) libraries
-            //(we do it because not all libraries are loaded immediately after application start)
-            if (BaseAppLibraries.Any(sli => sli.Equals(fileInfo.Name, StringComparison.InvariantCultureIgnoreCase)))
-                return true;
-
-            //compare full assembly name
-            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
-            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-            //{
-            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
-            //        return true;
-            //}
-            //return false;
-
-            //do not compare the full assembly name, just filename
-            try
-            {
-                var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-                if (string.IsNullOrEmpty(fileNameWithoutExt))
-                    throw new Exception($"Cannot get file extension for {fileInfo.Name}");
-
-                foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    var assemblyName = a.FullName.Split(',').FirstOrDefault();
-                    if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
-                        return true;
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Perform file deploy
-        /// </summary>
-        /// <param name="plug">Plugin file info</param>
-        /// <param name="applicationPartManager">Application part manager</param>
-        /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager)
-        {
-            if (plug.Directory == null || plug.Directory.Parent == null)
-                throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
-
-            //but in order to avoid possible issues we still copy libraries into ~/Plugins/bin/ directory
-            var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
-            var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
-
-            //we can now register the plugin definition
-            var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
-            Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
-            applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
-
-            return shadowCopiedAssembly;
-        }
-        
-        /// <summary>
-        /// Copy the plugin file to shadow copy directory
-        /// </summary>
-        /// <param name="plug"></param>
-        /// <param name="shadowCopyPlugFolder"></param>
-        /// <returns></returns>
-        private static FileInfo ShadowCopyFile(FileInfo plug, DirectoryInfo shadowCopyPlugFolder)
-        {
-            var shouldCopy = true;
-            var shadowCopiedPlug = new FileInfo(Path.Combine(shadowCopyPlugFolder.FullName, plug.Name));
-
-            //check if a shadow copied file already exists and if it does, check if it's updated, if not don't copy
-            if (shadowCopiedPlug.Exists)
-            {
-                //it's better to use LastWriteTimeUTC, but not all file systems have this property
-                //maybe it is better to compare file hash?
-                var areFilesIdentical = shadowCopiedPlug.CreationTimeUtc.Ticks >= plug.CreationTimeUtc.Ticks;
-                if (areFilesIdentical)
-                {
-                    Debug.WriteLine("Not copying; files appear identical: '{0}'", shadowCopiedPlug.Name);
-                    shouldCopy = false;
-                }
-                else
-                {
-                    //delete an existing file
-
-                    //More info: https://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
-                    Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
-                    File.Delete(shadowCopiedPlug.FullName);
-                }
-            }
-
-            if (!shouldCopy)
-                return shadowCopiedPlug;
-
-            try
-            {
-                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
-            }
-            catch (IOException)
-            {
-                Debug.WriteLine(shadowCopiedPlug.FullName + " is locked, attempting to rename");
-                //this occurs when the files are locked,
-                //for some reason devenv locks plugin files some times and for another crazy reason you are allowed to rename them
-                //which releases the lock, so that it what we are doing here, once it's renamed, we can re-shadow copy
-                try
-                {
-                    var oldFile = shadowCopiedPlug.FullName + Guid.NewGuid().ToString("N") + ".old";
-                    File.Move(shadowCopiedPlug.FullName, oldFile);
-                }
-                catch (IOException exc)
-                {
-                    throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
-                }
-                //OK, we've made it this far, now retry the shadow copy
-                File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
-            }
-
-            return shadowCopiedPlug;
-        }
-
-        /// <summary>
-        /// Determines if the folder is a bin plugin folder for a package
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        private static bool IsPackagePluginFolder(DirectoryInfo folder)
-        {
-            if (folder == null) return false;
-            if (folder.Parent == null) return false;
-            if (!folder.Parent.Name.Equals(PluginsPathName, StringComparison.InvariantCultureIgnoreCase)) return false;
-
-            return true;
-        }
+        public static IEnumerable<string> IncompatiblePlugins { get; set; }
 
         #endregion
+
     }
 }
