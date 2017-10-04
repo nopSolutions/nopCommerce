@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BundlerMinifier.Core" Version="2.4.337" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.5.357" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.1" />
   </ItemGroup>
 

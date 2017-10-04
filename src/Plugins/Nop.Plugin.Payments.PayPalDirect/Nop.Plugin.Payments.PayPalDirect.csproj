@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PayPal" Version="1.8.0" />
+    <PackageReference Include="PayPal" Version="1.9.0" />
   </ItemGroup>
 
   <ItemGroup>
