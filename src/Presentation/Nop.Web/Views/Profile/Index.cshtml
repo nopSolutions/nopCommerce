@@ -34,7 +34,7 @@
             @if (Model.ForumsEnabled)
             {
                 <div id="tabs-2" class="tab-content">
-                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                    @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
                 </div>
             }
         </div>

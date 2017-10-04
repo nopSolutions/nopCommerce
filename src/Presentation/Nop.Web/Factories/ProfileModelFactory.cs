@@ -239,7 +239,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerProfilePaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { page = page, id = customer.Id }
+                RouteValues = new RouteValues { pageNumber = page, id = customer.Id }
             };
 
             var model = new ProfilePostsModel

@@ -141,7 +141,7 @@ namespace Nop.Web.Controllers
 
         //My account / Reward points
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual IActionResult CustomerRewardPoints(int? page)
+        public virtual IActionResult CustomerRewardPoints(int? pageNumber)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
@@ -149,7 +149,7 @@ namespace Nop.Web.Controllers
             if (!_rewardPointsSettings.Enabled)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = _orderModelFactory.PrepareCustomerRewardPoints(page);
+            var model = _orderModelFactory.PrepareCustomerRewardPoints(pageNumber);
             return View(model);
         }
 

@@ -57,7 +57,7 @@ namespace Nop.Web.Controllers
         
         #region Methods
 
-        public virtual IActionResult Index(int? page, string tab)
+        public virtual IActionResult Index(int? pageNumber, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
             }
 
-            var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(page, tab);
+            var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(pageNumber, tab);
             return View(model);
         }
 

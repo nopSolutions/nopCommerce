@@ -17,13 +17,13 @@ namespace Nop.Web.Components
             this._profileModelFactory = profileModelFactory;
         }
 
-        public IViewComponentResult Invoke(int customerProfileId, int page)
+        public IViewComponentResult Invoke(int customerProfileId, int pageNumber)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var model = _profileModelFactory.PrepareProfilePostsModel(customer, page);
+            var model = _profileModelFactory.PrepareProfilePostsModel(customer, pageNumber);
             return View(model);
         }
     }

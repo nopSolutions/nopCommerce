@@ -13,9 +13,9 @@ namespace Nop.Web.Components
             this._privateMessagesModelFactory = privateMessagesModelFactory;
         }
 
-        public IViewComponentResult Invoke(int page, string tab)
+        public IViewComponentResult Invoke(int pageNumber, string tab)
         {
-            var model = _privateMessagesModelFactory.PrepareSentModel(page, tab);
+            var model = _privateMessagesModelFactory.PrepareSentModel(pageNumber, tab);
             return View(model);
         }
     }

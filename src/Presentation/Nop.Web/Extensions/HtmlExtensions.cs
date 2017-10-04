@@ -69,7 +69,7 @@ namespace Nop.Web.Extensions
                     //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        model.RouteValues.page = 1;
+                        model.RouteValues.pageNumber = 1;
 
                         links.Append("<li class=\"first-page\">");
                         if (model.UseRouteLinks)
@@ -90,7 +90,7 @@ namespace Nop.Web.Extensions
                     //previous page
                     if (model.PageIndex > 0)
                     {
-                        model.RouteValues.page = (model.PageIndex);
+                        model.RouteValues.pageNumber = (model.PageIndex);
 
                         links.Append("<li class=\"previous-page\">");
                         if (model.UseRouteLinks)
@@ -119,7 +119,7 @@ namespace Nop.Web.Extensions
                         }
                         else
                         {
-                            model.RouteValues.page = (i + 1);
+                            model.RouteValues.pageNumber = (i + 1);
 
                             links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
@@ -141,7 +141,7 @@ namespace Nop.Web.Extensions
                     //next page
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        model.RouteValues.page = (model.PageIndex + 2);
+                        model.RouteValues.pageNumber = (model.PageIndex + 2);
 
                         links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
@@ -162,7 +162,7 @@ namespace Nop.Web.Extensions
                     //last page
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        model.RouteValues.page = model.TotalPages;
+                        model.RouteValues.pageNumber = model.TotalPages;
 
                         links.Append("<li class=\"last-page\">");
                         if (model.UseRouteLinks)

@@ -439,7 +439,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public virtual IActionResult CustomerProductReviews(int? page)
+        public virtual IActionResult CustomerProductReviews(int? pageNumber)
         {
             if (_workContext.CurrentCustomer.IsGuest())
                 return Challenge();
@@ -449,7 +449,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             }
 
-            var model = _productModelFactory.PrepareCustomerProductReviewsModel(page);
+            var model = _productModelFactory.PrepareCustomerProductReviewsModel(pageNumber);
             return View(model);
         }
 

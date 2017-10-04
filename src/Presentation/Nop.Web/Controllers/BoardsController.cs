@@ -67,14 +67,14 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        public virtual IActionResult ActiveDiscussions(int forumId = 0, int page = 1)
+        public virtual IActionResult ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
 
-            var model = _forumModelFactory.PrepareActiveDiscussionsModel(forumId, page);
+            var model = _forumModelFactory.PrepareActiveDiscussionsModel(forumId, pageNumber);
             return View(model);
         }
 
@@ -137,7 +137,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult Forum(int id, int page = 1)
+        public virtual IActionResult Forum(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -148,7 +148,7 @@ namespace Nop.Web.Controllers
             if (forum == null)
                 return RedirectToRoute("Boards");
 
-            var model = _forumModelFactory.PrepareForumPageModel(forum, page);
+            var model = _forumModelFactory.PrepareForumPageModel(forum, pageNumber);
             return View(model);
         }
         
@@ -249,7 +249,7 @@ namespace Nop.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        public virtual IActionResult Topic(int id, int page = 1)
+        public virtual IActionResult Topic(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -262,9 +262,9 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            var model = _forumModelFactory.PrepareForumTopicPageModel(forumTopic, page);
+            var model = _forumModelFactory.PrepareForumTopicPageModel(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
-            if (!model.ForumPostModels.Any() && page > 1)
+            if (!model.ForumPostModels.Any() && pageNumber > 1)
                 return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
             
             //update view count
@@ -987,14 +987,14 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        public virtual IActionResult CustomerForumSubscriptions(int? page)
+        public virtual IActionResult CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
             {
                 return RedirectToRoute("CustomerInfo");
             }
 
-            var model = _forumModelFactory.PrepareCustomerForumSubscriptionsModel(page);
+            var model = _forumModelFactory.PrepareCustomerForumSubscriptionsModel(pageNumber);
             return View(model);
         }
         [HttpPost, ActionName("CustomerForumSubscriptions")]

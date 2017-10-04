@@ -28,7 +28,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
-        public virtual IActionResult Index(int? id, int? page)
+        public virtual IActionResult Index(int? id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -51,7 +51,7 @@ namespace Nop.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 DisplayEditLink(Url.Action("Edit", "Customer", new { id = customer.Id, area = AreaNames.Admin }));
 
-            var model = _profileModelFactory.PrepareProfileIndexModel(customer, page);
+            var model = _profileModelFactory.PrepareProfileIndexModel(customer, pageNumber);
             return View(model);
         }
     }

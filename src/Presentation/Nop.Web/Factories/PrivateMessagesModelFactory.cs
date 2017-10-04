@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "PrivateMessagesPaged",
                 UseRouteLinks = true,
-                RouteValues = new PrivateMessageRouteValues { page = page, tab = tab }
+                RouteValues = new PrivateMessageRouteValues { pageNumber = page, tab = tab }
             };
 
             var model = new PrivateMessageListModel
@@ -161,7 +161,7 @@ namespace Nop.Web.Factories
                 ShowTotalSummary = false,
                 RouteActionName = "PrivateMessagesPaged",
                 UseRouteLinks = true,
-                RouteValues = new PrivateMessageRouteValues { page = page, tab = tab }
+                RouteValues = new PrivateMessageRouteValues { pageNumber = page, tab = tab }
             };
 
             var model = new PrivateMessageListModel

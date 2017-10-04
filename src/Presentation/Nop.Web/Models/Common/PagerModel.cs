@@ -394,7 +394,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public interface IRouteValues
     {
-        int page { get; set; }
+        int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -405,7 +405,7 @@ namespace Nop.Web.Models.Common
     {
         public int id { get; set; }
         public string slug { get; set; }
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -418,7 +418,7 @@ namespace Nop.Web.Models.Common
         public string forumId { get; set; }
         public string within { get; set; }
         public string limitDays { get; set; }
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -427,7 +427,7 @@ namespace Nop.Web.Models.Common
     public partial class PrivateMessageRouteValues : IRouteValues
     {
         public string tab { get; set; }
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -435,7 +435,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public partial class ForumActiveDiscussionsRouteValues : IRouteValues
     {
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -443,7 +443,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public partial class ForumSubscriptionsRouteValues : IRouteValues
     {        
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -451,7 +451,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public partial class BackInStockSubscriptionsRouteValues : IRouteValues
     {
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     /// <summary>
@@ -459,7 +459,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public partial class RewardPointsRouteValues : IRouteValues
     {
-        public int page { get; set; }
+        public int pageNumber { get; set; }
     }
 
     #endregion Classes
