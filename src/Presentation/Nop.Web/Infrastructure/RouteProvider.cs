@@ -380,7 +380,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("UploadFileCheckoutAttribute", "uploadfilecheckoutattribute/{attributeId:min(0)}",
 				new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
 
-            //return request with "upload file" tsupport
+            //return request with "upload file" support
             routeBuilder.MapLocalizedRoute("UploadFileReturnRequest", "uploadfilereturnrequest",
 				new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
 
