@@ -201,3 +201,33 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_Product_SubjectToAcl] ON [Product] ([SubjectToAcl] ASC)
 GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Category_Mapping_CategoryId] ON [Product_Category_Mapping] (CategoryId ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Category_Mapping_IsFeaturedProduct] ON [Product_Category_Mapping] (IsFeaturedProduct ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_ManufacturerId] ON [Product_Manufacturer_Mapping] (ManufacturerId ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_IsFeaturedProduct] ON [Product_Manufacturer_Mapping] (IsFeaturedProduct ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_ProductId] ON [Product_Manufacturer_Mapping] (ProductId ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Customer_CustomerRole_Mapping_Customer_Id] ON [Customer_CustomerRole_Mapping] (Customer_Id ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Shipment_OrderId] ON [Shipment] (OrderId ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_CustomerId] ON [ShoppingCartItem] (CustomerId ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Delete_Id] ON [Product] (Deleted ASC, Id ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Product_Delete_Id] ON [Product] (Deleted ASC, Id ASC)
+GO

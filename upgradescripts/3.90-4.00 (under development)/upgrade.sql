@@ -723,3 +723,66 @@ BEGIN
 	VALUES (N'catalogsettings.exportimportproductcategorybreadcrumb', N'True', 0)
 END
 GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Category_Mapping_CategoryId' and object_id=object_id(N'[dbo].[Product_Category_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Category_Mapping_CategoryId] ON [Product_Category_Mapping] (CategoryId ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Category_Mapping_IsFeaturedProduct' and object_id=object_id(N'[dbo].[Product_Category_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Category_Mapping_IsFeaturedProduct] ON [Product_Category_Mapping] (IsFeaturedProduct ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Manufacturer_Mapping_ManufacturerId' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_ManufacturerId] ON [Product_Manufacturer_Mapping] (ManufacturerId ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Manufacturer_Mapping_IsFeaturedProduct' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_IsFeaturedProduct] ON [Product_Manufacturer_Mapping] (IsFeaturedProduct ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Manufacturer_Mapping_ProductId' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Manufacturer_Mapping_ProductId] ON [Product_Manufacturer_Mapping] (ProductId ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_CustomerRole_Mapping_Customer_Id' and object_id=object_id(N'[dbo].[Customer_CustomerRole_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_CustomerRole_Mapping_Customer_Id] ON [Customer_CustomerRole_Mapping] (Customer_Id ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Shipment_OrderId' and object_id=object_id(N'[dbo].[Shipment]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Shipment_OrderId] ON [Shipment] (OrderId ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Delete_Id' and object_id=object_id(N'[dbo].[Product]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Delete_Id] ON [Product] (Deleted ASC, Id ASC)
+END
+GO
+
+--new index
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ShoppingCartItem_CustomerId' and object_id=object_id(N'[dbo].[ShoppingCartItem]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_CustomerId] ON [ShoppingCartItem] (CustomerId ASC)
+END
+GO
