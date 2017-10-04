@@ -228,6 +228,3 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_Product_Delete_Id] ON [Product] (Deleted ASC, Id ASC)
 GO
-
-CREATE NONCLUSTERED INDEX [IX_Product_Delete_Id] ON [Product] (Deleted ASC, Id ASC)
-GO
