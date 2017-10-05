@@ -103,7 +103,7 @@ namespace Nop.Web.Models.Catalog
             #region Ctor
 
             /// <summary>
-            /// Constuctor
+            /// Ctor
             /// </summary>
             public PriceRangeFilterModel()
             {

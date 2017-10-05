@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.UI
         #region Ctor
 
         /// <summary>
-        /// Constuctor
+        /// Ctor
         /// </summary>
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
