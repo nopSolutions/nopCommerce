@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
