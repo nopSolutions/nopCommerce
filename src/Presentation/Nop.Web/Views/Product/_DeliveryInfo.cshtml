@@ -4,7 +4,11 @@
     <div class="delivery">
         <script type="text/javascript">
             $(document).on("product_attributes_changed", function (data) {
-                $(".free-shipping").toggle(data.changedData.isFreeShipping);
+                if (data.changedData.isFreeShipping){
+                    $(".free-shipping").addClass("visible");
+                } else {
+                    $(".free-shipping").removeClass("visible");
+                }
             });
         </script>
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)

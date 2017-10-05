@@ -1892,7 +1892,6 @@ label, label + * {
 }
 .overview .delivery,
 .variant-overview .delivery {
-	margin: 25px 0;
 	overflow: hidden;
 }
 .overview .min-qty-notification,
@@ -1903,12 +1902,20 @@ label, label + * {
 }
 .overview .free-shipping,
 .variant-overview .free-shipping {
-	display: inline-block;
-	margin: 0 0 10px;
-	background: url('../images/shipping.png') right center no-repeat;
-	padding: 2px 28px 2px 0;
-	font-weight: bold;
-	color: #444;
+    display: none;
+    margin: 0 0 10px;
+    background: url('../images/shipping.png') right center no-repeat;
+    padding: 2px 28px 2px 0;
+    font-weight: bold;
+    color: #444;
+}
+.overview .free-shipping.visible,
+.variant-overview .free-shipping.visible {
+    display: inline-block;
+}
+.overview .delivery-date,
+.variant-overview .delivery-date {
+    margin: 10px 0;
 }
 .overview .download-sample,
 .variant-overview .download-sample {
