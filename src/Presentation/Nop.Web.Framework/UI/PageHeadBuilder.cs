@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Seo;
 
@@ -25,6 +26,7 @@ namespace Nop.Web.Framework.UI
 
         private readonly SeoSettings _seoSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IStaticCacheManager _cacheManager;
         private BundleFileProcessor _processor;
 
         private readonly List<string> _titleParts;
@@ -38,6 +40,9 @@ namespace Nop.Web.Framework.UI
         private string _editPageUrl;
         private string _activeAdminMenuSystemName;
 
+        //in minutes
+        private const int RecheckBundledFilesPeriod = 2;
+
         #endregion
 
         #region Ctor
@@ -47,10 +52,14 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="seoSettings">SEO settings</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public PageHeadBuilder(SeoSettings seoSettings, IHostingEnvironment hostingEnvironment)
+        /// <param name="cacheManager">Cache manager</param>
+        public PageHeadBuilder(SeoSettings seoSettings, 
+            IHostingEnvironment hostingEnvironment,
+            IStaticCacheManager cacheManager)
         {
             this._seoSettings = seoSettings;
             this._hostingEnvironment = hostingEnvironment;
+            this._cacheManager = cacheManager;
             this._processor = new BundleFileProcessor();
 
             this._titleParts = new List<string>();
@@ -295,11 +304,20 @@ namespace Nop.Web.Framework.UI
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
-                        //store json file to see a generated config file (for debugging purposes)
-                        //BundleHandler.AddBundle(configFilePath, bundle);
+                        //performance optimization. do not bundle and minify for each HTTP request
+                        //we re-check already bundles file each two minutes
+                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
+                        var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        if (shouldRebuild)
+                        {
+                            //store json file to see a generated config file (for debugging purposes)
+                            //BundleHandler.AddBundle(configFilePath, bundle);
 
-                        //process
-                        _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            //process
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
+                            _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
+                        }
                     }
                     //render
                     result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), MimeTypes.TextJavascript);
@@ -430,11 +448,20 @@ namespace Nop.Web.Framework.UI
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
-                        //store json file to see a generated config file (for debugging purposes)
-                        //BundleHandler.AddBundle(configFilePath, bundle);
+                        //performance optimization. do not bundle and minify for each HTTP request
+                        //we re-check already bundles file each two minutes
+                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
+                        var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
+                        if (shouldRebuild)
+                        {
+                            //store json file to see a generated config file (for debugging purposes)
+                            //BundleHandler.AddBundle(configFilePath, bundle);
 
-                        //process
-                        _processor.Process(configFilePath, new List<Bundle> { bundle });
+                            //process
+                            _processor.Process(configFilePath, new List<Bundle> {bundle});
+                            _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
+                        }
                     }
                     //render
                     result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), MimeTypes.TextCss);

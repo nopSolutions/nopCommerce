@@ -346,7 +346,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminArea.UseRichEditorInMessageTemplates.Hint">
     <Value>Indicates whether to use rich editor on message templates and campaigns details pages.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you''re running nopCommerce in IIS virtual directory. Currently it doesn''t support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Currently it doesn''t support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
 </Language>
 '
 
