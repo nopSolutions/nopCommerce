@@ -723,8 +723,15 @@ namespace Nop.Services.ExportImport
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
-        public virtual byte[] ExportCategoriesToXlsx(IEnumerable<Category> categories)
+        public virtual byte[] ExportCategoriesToXlsx(IList<Category> categories)
         {
+            var parentCatagories = new List<Category>();
+            if (_catalogSettings.ExportImportCategoriesUsingCategoryName)
+            {
+                //performance optimization, load all parent categories in one SQL request
+                parentCatagories = _categoryService.GetCategoriesByIds(categories.Select(c => c.ParentCategoryId).Where(id => id != 0).ToArray());
+            }
+
             //property array
             var properties = new[]
             {
@@ -737,6 +744,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("MetaTitle", p => p.MetaTitle, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("SeName", p => p.GetSeName(0), IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
+                new PropertyByName<Category>("ParentCategoryName", p => parentCatagories.FirstOrDefault(c => c.Id == p.ParentCategoryId)?.GetFormattedBreadCrumb(_categoryService), !_catalogSettings.ExportImportCategoriesUsingCategoryName),
                 new PropertyByName<Category>("Picture", p => GetPictures(p.PictureId)),
                 new PropertyByName<Category>("PageSize", p => p.PageSize, IgnoreExportCategoryProperty()),
                 new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty()),

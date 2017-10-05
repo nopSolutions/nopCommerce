@@ -2106,6 +2106,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Imported">
     <Value>Categories have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Import.CategoriesArentImported">
+    <Value>Categories with the following names aren''t imported - {0}</Value>
+  </LocaleResource>    
   <LocaleResource Name="Admin.Catalog.Categories.Info">
     <Value>Category info</Value>
   </LocaleResource>
@@ -3212,6 +3215,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
+    <Value>Categories with the following names don''t exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
+    <Value>Manufacturers with the following names don''t exist: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
+    <Value>Product attributes with the following IDs don''t exist: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product info</Value>
@@ -3335,7 +3347,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Prices">
     <Value>Prices</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
   </LocaleResource>
@@ -5228,6 +5240,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled.Hint">
     <Value>Check to allow customers to use the 'Email a friend' option in your store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName">
+    <Value>Export/Import categories using name of category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName.Hint">
+    <Value>Check if categories should be exported/imported using name of category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportProductAttributes">
     <Value>Export/Import products with attributes</Value>

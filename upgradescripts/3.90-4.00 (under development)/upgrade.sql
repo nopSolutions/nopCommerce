@@ -353,6 +353,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
     <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Currently it doesn''t support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName">
+    <Value>Export/Import categories using name of category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName.Hint">
+    <Value>Check if categories should be exported/imported using name of category.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.CategoriesDontExist">
+    <Value>Categories with the following names don''t exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Import.ManufacturersDontExist">
+    <Value>Manufacturers with the following names don''t exist: {0}</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Products.Import.ProductAttributesDontExist">
+    <Value>Product attributes with the following IDs don''t exist: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Import.CategoriesArentImported">
+    <Value>Categories with the following names aren''t imported - {0}</Value>
+  </LocaleResource> 
 </Language>
 '
 
@@ -790,5 +808,13 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ShoppingCartItem_CustomerId' and object_id=object_id(N'[dbo].[ShoppingCartItem]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_CustomerId] ON [ShoppingCartItem] (CustomerId ASC)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.exportimportcategoriesusingcategoryname')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.exportimportcategoriesusingcategoryname', N'False', 0)
 END
 GO

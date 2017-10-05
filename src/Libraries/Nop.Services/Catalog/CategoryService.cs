@@ -673,7 +673,24 @@ namespace Nop.Services.Catalog
                 .Select(p => new {p.ProductId, p.CategoryId}).ToList()
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
-        } 
+        }
+
+        /// <summary>
+        /// Gets categories by identifier
+        /// </summary>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <returns>Categories</returns>
+        public virtual List<Category> GetCategoriesByIds(int[] categoryIds)
+        {
+            if (categoryIds == null || categoryIds.Length == 0)
+                return new List<Category>();
+
+            var query = from p in _categoryRepository.Table
+                where categoryIds.Contains(p.Id) && !p.Deleted
+                select p;
+            
+            return query.ToList();
+        }
         #endregion
     }
 }
