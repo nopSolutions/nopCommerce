@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Extensions;
 using Nop.Data;
 using Nop.Services.Events;
 
@@ -107,57 +108,36 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
-
+                //stored procedures are enabled and supported by the database. 
+                //It's much faster than the LINQ implementation below 
                 if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
                 {
-                    //stored procedures are enabled and supported by the database. 
-                    //It's much faster than the LINQ implementation below 
-
-                    #region Use stored procedure
-
                     //prepare parameters
-                    var pStoreId = _dataProvider.GetParameter();
-                    pStoreId.ParameterName = "StoreId";
-                    pStoreId.Value = storeId;
-                    pStoreId.DbType = DbType.Int32;
-
+                    var pStoreId = _dataProvider.GetInt32Parameter("StoreId", storeId);
 
                     //invoke stored procedure
-                    var result = _dbContext.SqlQuery<ProductTagWithCount>(
-                        "Exec ProductTagCountLoadAll @StoreId",
-                        pStoreId);
+                    var result = _dbContext.SqlQuery<ProductTagWithCount>("Exec ProductTagCountLoadAll @StoreId", pStoreId);
 
-                    var dictionary = new Dictionary<int, int>();
-                    foreach (var item in result)
-                        dictionary.Add(item.ProductTagId, item.ProductCount);
-                    return dictionary;
-
-                    #endregion
+                    return result.ToDictionary(item => item.ProductTagId, item => item.ProductCount);
                 }
-                else
+
+                //stored procedures aren't supported. Use LINQ
+                var query = _productTagRepository.Table.Select(pt => new
                 {
-                    //stored procedures aren't supported. Use LINQ
-                    #region Search products
-                    var query = _productTagRepository.Table.Select(pt => new
-                    {
-                        Id = pt.Id,
-                        ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
-                            pt.Products.Count(p => !p.Deleted && p.Published)
-                            : (from p in pt.Products
-                               join sm in _storeMappingRepository.Table
-                               on new { p1 = p.Id, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
-                               from sm in p_sm.DefaultIfEmpty()
-                               where (!p.LimitedToStores || storeId == sm.StoreId) && !p.Deleted && p.Published
-                               select p).Count()
-                    });
-                    var dictionary = new Dictionary<int, int>();
-                    foreach (var item in query)
-                        dictionary.Add(item.Id, item.ProductCount);
-                    return dictionary;
-
-                    #endregion
-
-                }
+                    Id = pt.Id,
+                    ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
+                        pt.Products.Count(p => !p.Deleted && p.Published)
+                        : (from p in pt.Products
+                            join sm in _storeMappingRepository.Table
+                                on new { p1 = p.Id, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
+                            from sm in p_sm.DefaultIfEmpty()
+                            where (!p.LimitedToStores || storeId == sm.StoreId) && !p.Deleted && p.Published
+                            select p).Count()
+                });
+                var dictionary = new Dictionary<int, int>();
+                foreach (var item in query)
+                    dictionary.Add(item.Id, item.ProductCount);
+                return dictionary;
             });
         }
 
