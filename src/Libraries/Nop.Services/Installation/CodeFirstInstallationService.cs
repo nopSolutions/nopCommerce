@@ -11456,6 +11456,12 @@ namespace Nop.Services.Installation
                 },
                 new ActivityLogType
                 {
+                    SystemKeyword = "DeletePlugin",
+                    Enabled = true,
+                    Name = "Delete a plugin"
+                },
+                new ActivityLogType
+                {
                     SystemKeyword = "DeleteProduct",
                     Enabled = true,
                     Name = "Delete a product"

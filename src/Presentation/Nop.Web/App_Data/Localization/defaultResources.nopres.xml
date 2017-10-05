@@ -846,6 +846,9 @@
   <LocaleResource Name="ActivityLog.DeleteOrder">
     <Value>Deleted an order (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeletePlugin">
+    <Value>Deleted a plugin (FriendlyName: '{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteProduct">
     <Value>Deleted a product ('{0}')</Value>
   </LocaleResource>
@@ -4821,6 +4824,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.AdditionalInfo">
     <Value>Additional info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Deleted">
+    <Value>The plugin has been deleted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Description">
     <Value>Manual plugin installation</Value>
   </LocaleResource>
@@ -4856,6 +4862,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Configure">
     <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Delete">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Delete.Progress">
+    <Value>Deleting plugin...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.DisplayOrder">
     <Value>Display order</Value>
