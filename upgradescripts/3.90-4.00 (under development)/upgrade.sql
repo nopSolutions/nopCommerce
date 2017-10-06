@@ -382,7 +382,10 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Deleted">
     <Value>The plugin has been deleted.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit.Hint">
+    <Value>Lower weight limit. This field can be used for "per extra weight unit" scenarios.</Value>
+  </LocaleResource>
 </Language>
 '
 
