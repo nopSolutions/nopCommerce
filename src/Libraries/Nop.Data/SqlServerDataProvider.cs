@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
@@ -14,6 +13,17 @@ namespace Nop.Data
 {
     public class SqlServerDataProvider : IDataProvider
     {
+        private string dataConnectionString;
+
+        DbContextOptions<DbContext> _options;
+
+        public SqlServerDataProvider(string dataConnectionString)
+        {
+            this.dataConnectionString = dataConnectionString;
+            DbContextOptionsBuilder<DbContext> builder = new DbContextOptionsBuilder<DbContext>();
+            builder.UseSqlServer(this.dataConnectionString);
+            _options = builder.Options;
+        }
         #region Utilities
 
         protected virtual string[] ParseCommands(string filePath, bool throwExceptionIfNonExists)
@@ -72,27 +82,15 @@ namespace Nop.Data
         /// <summary>
         /// Initialize connection factory
         /// </summary>
-        public virtual void InitConnectionFactory()
+        public virtual DbContextOptions<DbContext> GetOptions()
         {
-            var connectionFactory = new SqlConnectionFactory();
-            //TODO fix compilation warning (below)
-            #pragma warning disable 0618
-            Database.DefaultConnectionFactory = connectionFactory;
-        }
-
-        /// <summary>
-        /// Initialize database
-        /// </summary>
-        public virtual void InitDatabase()
-        {
-            InitConnectionFactory();
-            SetDatabaseInitializer();
+            return _options;
         }
 
         /// <summary>
         /// Set database initializer
         /// </summary>
-        public virtual void SetDatabaseInitializer()
+        public virtual void SetDatabaseInitializer(IDbContext context)
         {
             //pass some table names to ensure that we have nopCommerce 2.X installed
             var tablesToValidate = new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
@@ -104,7 +102,7 @@ namespace Nop.Data
             customCommands.AddRange(ParseCommands(CommonHelper.MapPath("~/App_Data/Install/SqlServer.StoredProcedures.sql"), false));
 
             var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
-            Database.SetInitializer(initializer);
+            initializer.InitializeDatabase((NopObjectContext)context);
         }
 
         /// <summary>

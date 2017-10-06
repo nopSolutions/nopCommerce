@@ -20,9 +20,13 @@ namespace Nop.Data
             switch (providerName.ToLowerInvariant())
             {
                 case "sqlserver":
-                    return new SqlServerDataProvider();
-                case "sqlce":
-                    return new SqlCeDataProvider();
+                    return new SqlServerDataProvider(Settings.DataConnectionString);
+                case "sqlite":
+                    return new SqliteDataProvider(Settings.DataConnectionString);
+                case "mysql":
+                    return new MySqlDataProvider(Settings.DataConnectionString);
+                case "npgsql":
+                    return new NpgSqlDataProvider(Settings.DataConnectionString);
                 default:
                     throw new NopException($"Not supported dataprovider name: {providerName}");
             }

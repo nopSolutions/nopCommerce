@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity.Core.Objects;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 
@@ -20,9 +20,7 @@ namespace Nop.Data
         /// <returns></returns>
         public static Type GetUnproxiedEntityType(this BaseEntity entity)
         {
-            var type = entity is IEntityForCaching ? 
-               ((IEntityForCaching) entity).GetType().BaseType :
-               ObjectContext.GetObjectType(entity.GetType());
+            var type = entity.GetType();
             if (type == null)
                 throw new Exception("Original entity type cannot be loaded");
 

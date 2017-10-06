@@ -14,7 +14,8 @@ namespace Nop.Data
                 var provider = EngineContext.Current.Resolve<IDataProvider>();
                 if (provider == null)
                     throw new NopException("No IDataProvider found");
-                provider.SetDatabaseInitializer();
+                var db = EngineContext.Current.Resolve<IDbContext>();
+                //provider.SetDatabaseInitializer(db);
             }
         }
 

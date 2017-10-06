@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 
 namespace Nop.Data
@@ -11,7 +11,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>DbSet</returns>
-        IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
+        DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Save changes
@@ -36,7 +36,7 @@ namespace Nop.Data
         /// <param name="sql">The SQL query string.</param>
         /// <param name="parameters">The parameters to apply to the SQL query string.</param>
         /// <returns>Result</returns>
-        IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters);
+        IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters) where TElement : new();
 
         /// <summary>
         /// Executes the given DDL/DML command against the database.

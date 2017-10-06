@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -16,7 +15,7 @@ namespace Nop.Data
         #region Fields
 
         private readonly IDbContext _context;
-        private IDbSet<T> _entities;
+        private DbSet<T> _entities;
 
         #endregion
 
@@ -40,12 +39,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="exc">Exception</param>
         /// <returns>Error</returns>
-        protected string GetFullErrorText(DbEntityValidationException exc)
+        protected string GetFullErrorText(Exception exc)
         {
             var msg = string.Empty;
-            foreach (var validationErrors in exc.EntityValidationErrors)
-                foreach (var error in validationErrors.ValidationErrors)
-                    msg += $"Property: {error.PropertyName} Error: {error.ErrorMessage}" + Environment.NewLine;
+            msg = exc.Message;
             return msg;
         }
 
@@ -54,19 +51,15 @@ namespace Nop.Data
         /// </summary>
         /// <param name="dbEx">Exception</param>
         /// <returns>Error</returns>
-        protected string GetFullErrorTextAndRollbackEntityChanges(DbEntityValidationException dbEx)
+        protected string GetFullErrorTextAndRollbackEntityChanges(Exception dbEx)
         {
             var fullErrorText = GetFullErrorText(dbEx);
-
-            foreach (var entry in dbEx.EntityValidationErrors.Select(error => error.Entry))
+            System.Console.WriteLine(fullErrorText);
+            foreach (var a in ((DbContext) _context).ChangeTracker.Entries())
             {
-                if (entry == null)
-                    continue;
-
-                //rollback of entity changes
-                entry.State = EntityState.Unchanged;
+                a.State = EntityState.Unchanged;
             }
-
+            
             this._context.SaveChanges();
             return fullErrorText;
         }
@@ -102,7 +95,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -125,7 +118,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -145,7 +138,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -165,7 +158,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -187,7 +180,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -210,7 +203,7 @@ namespace Nop.Data
 
                 this._context.SaveChanges();
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
                 //ensure that the detailed error text is saved in the Log
                 throw new Exception(GetFullErrorTextAndRollbackEntityChanges(dbEx), dbEx);
@@ -246,7 +239,7 @@ namespace Nop.Data
         /// <summary>
         /// Entities
         /// </summary>
-        protected virtual IDbSet<T> Entities
+        protected virtual DbSet<T> Entities
         {
             get
             {

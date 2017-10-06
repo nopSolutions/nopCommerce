@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 using Nop.Core;
@@ -18,17 +17,18 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public NopObjectContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
+        public NopObjectContext(DbContextOptions<DbContext> options)
+            : base(options)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
         
+
         #endregion
 
         #region Utilities
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //dynamically load all configuration
             //System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
@@ -41,7 +41,8 @@ namespace Nop.Data
             foreach (var type in typesToRegister)
             {
                 dynamic configurationInstance = Activator.CreateInstance(type);
-                modelBuilder.Configurations.Add(configurationInstance);
+                modelBuilder.ApplyConfiguration(configurationInstance);
+                //modelBuilder.Configurations.Add(configurationInstance);
             }
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
@@ -83,7 +84,8 @@ namespace Nop.Data
         /// <returns>SQL to generate database</returns>
         public string CreateDatabaseScript()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
+            return "";
+            //return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
         }
 
         /// <summary>
@@ -91,7 +93,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>DbSet</returns>
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -124,24 +126,37 @@ namespace Nop.Data
                     }
                 }
             }
-
-            var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
-
-            //performance hack applied as described here - https://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
-            bool acd = this.Configuration.AutoDetectChangesEnabled;
-            try
+            var command = this.Database.GetDbConnection().CreateCommand();
+            command.CommandText = commandText;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddRange(parameters);
+            var read = command.ExecuteReader();
+            List<TEntity> res = new List<TEntity>();
+            PropertyInfo[] props = typeof(TEntity).GetProperties();
+            while (read.Read())
             {
-                this.Configuration.AutoDetectChangesEnabled = false;
-
-                for (int i = 0; i < result.Count; i++)
-                    result[i] = AttachEntityToContext(result[i]);
+                TEntity entity = new TEntity();
+                IEnumerable<string> actualNames = read.GetColumnSchema().Select(o => o.ColumnName);
+                for (int i = 0; i < props.Length; ++i)
+                {
+                    PropertyInfo pi = props[i];
+                    if (!pi.CanWrite) continue;
+                    System.ComponentModel.DataAnnotations.Schema.ColumnAttribute ca = pi.GetCustomAttribute(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute)) as System.ComponentModel.DataAnnotations.Schema.ColumnAttribute;
+                    string name = ca?.Name ?? pi.Name;
+                    if (pi == null) continue;
+                    if (!actualNames.Contains(name)) { continue; }
+                    object value = read[name];
+                    Type pt = pi.DeclaringType;
+                    bool nullable = pt.GetTypeInfo().IsGenericType && pt.GetGenericTypeDefinition() == typeof(Nullable<>);
+                    if (value == DBNull.Value) { value = null; }
+                    if (value == null && pt.GetTypeInfo().IsValueType && !nullable)
+                    { value = Activator.CreateInstance(pt); }
+                    pi.SetValue(entity, value);
+                }
+                res.Add(entity);
             }
-            finally
-            {
-                this.Configuration.AutoDetectChangesEnabled = acd;
-            }
 
-            return result;
+            return res;
         }
 
         /// <summary>
@@ -151,9 +166,39 @@ namespace Nop.Data
         /// <param name="sql">The SQL query string.</param>
         /// <param name="parameters">The parameters to apply to the SQL query string.</param>
         /// <returns>Result</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters) where TElement : new()
         {
-            return this.Database.SqlQuery<TElement>(sql, parameters);
+            var command = this.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+            command.CommandType = CommandType.Text;
+            command.Parameters.AddRange(parameters);
+            var read = command.ExecuteReader();
+            List<TElement> res = new List<TElement>();
+            PropertyInfo[] props = typeof(TElement).GetProperties();
+            while (read.Read())
+            {
+                TElement entity = new TElement();
+                IEnumerable<string> actualNames = read.GetColumnSchema().Select(o => o.ColumnName);
+                for (int i = 0; i < props.Length; ++i)
+                {
+                    PropertyInfo pi = props[i];
+                    if (!pi.CanWrite) continue;
+                    System.ComponentModel.DataAnnotations.Schema.ColumnAttribute ca = pi.GetCustomAttribute(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute)) as System.ComponentModel.DataAnnotations.Schema.ColumnAttribute;
+                    string name = ca?.Name ?? pi.Name;
+                    if (pi == null) continue;
+                    if (!actualNames.Contains(name)) { continue; }
+                    object value = read[name];
+                    Type pt = pi.DeclaringType;
+                    bool nullable = pt.GetTypeInfo().IsGenericType && pt.GetGenericTypeDefinition() == typeof(Nullable<>);
+                    if (value == DBNull.Value) { value = null; }
+                    if (value == null && pt.GetTypeInfo().IsValueType && !nullable)
+                    { value = Activator.CreateInstance(pt); }
+                    pi.SetValue(entity, value);
+                }
+                res.Add(entity);
+            }
+
+            return res;
         }
     
         /// <summary>
@@ -166,23 +211,29 @@ namespace Nop.Data
         /// <returns>The result returned by the database after executing the command.</returns>
         public int ExecuteSqlCommand(string sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
         {
-            int? previousTimeout = null;
+            var command = this.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+            command.CommandType = CommandType.Text;
+            command.Parameters.AddRange(parameters);
+            int result = 0;
             if (timeout.HasValue)
             {
-                //store previous timeout
-                previousTimeout = ((IObjectContextAdapter) this).ObjectContext.CommandTimeout;
-                ((IObjectContextAdapter) this).ObjectContext.CommandTimeout = timeout;
+                command.CommandTimeout = timeout.Value;
             }
 
-            var transactionalBehavior = doNotEnsureTransaction
-                ? TransactionalBehavior.DoNotEnsureTransaction
-                : TransactionalBehavior.EnsureTransaction;
-            var result = this.Database.ExecuteSqlCommand(transactionalBehavior, sql, parameters);
-
-            if (timeout.HasValue)
+            if (doNotEnsureTransaction)
             {
-                //Set previous timeout back
-                ((IObjectContextAdapter) this).ObjectContext.CommandTimeout = previousTimeout;
+                var trans = this.Database.GetDbConnection().BeginTransaction();
+                try
+                {
+                    result = command.ExecuteNonQuery();
+                    trans.Commit();
+                }
+                catch (Exception)
+                {
+                    trans.Rollback();
+                    result = 0;
+                }
             }
 
             //return result
@@ -197,8 +248,7 @@ namespace Nop.Data
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
-            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+            ((DbContext)this).Remove(entity);
         }
 
         #endregion
@@ -212,11 +262,11 @@ namespace Nop.Data
         {
             get
             {
-                return this.Configuration.ProxyCreationEnabled;
+                return false;
             }
             set
             {
-                this.Configuration.ProxyCreationEnabled = value;
+                ;
             }
         }
 
@@ -227,11 +277,11 @@ namespace Nop.Data
         {
             get
             {
-                return this.Configuration.AutoDetectChangesEnabled;
+                return true;
             }
             set
             {
-                this.Configuration.AutoDetectChangesEnabled = value;
+                ;
             }
         }
 
