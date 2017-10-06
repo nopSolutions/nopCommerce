@@ -390,7 +390,7 @@ namespace Nop.Core.Plugins
             var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
 
             //we can now register the plugin definition
-            var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
+            var shadowCopiedAssembly = Assembly.LoadFile(shadowCopiedPlug.FullName);
             Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
             applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
 
