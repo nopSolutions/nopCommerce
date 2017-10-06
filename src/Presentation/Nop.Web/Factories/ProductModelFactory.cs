@@ -552,13 +552,13 @@ namespace Nop.Web.Factories
             var model = _cacheManager.Get(productTagsCacheKey, () =>
                 product.ProductTags
                 //filter by store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                .Where(x => _productTagService.GetProductCount(x.ProductId, _storeContext.CurrentStore.Id) > 0)
                 .Select(x => new ProductTagModel
                 {
-                    Id = x.Id,
-                    Name = x.GetLocalized(y => y.Name),
-                    SeName = x.GetSeName(),
-                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                    Id = x.ProductId,
+                    Name = x.Product.GetLocalized(y => y.Name),
+                    SeName = x.Product.GetSeName(),
+                    ProductCount = _productTagService.GetProductCount(x.ProductId, _storeContext.CurrentStore.Id)
                 })
                 .ToList());
 

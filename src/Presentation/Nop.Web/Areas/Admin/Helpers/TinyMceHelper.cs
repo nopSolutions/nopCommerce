@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
-            var path = Path.Combine(hostingEnvironment.WebRootPath, "lib\\tinymce\\langs");
+            var path = Path.Combine(hostingEnvironment.WebRootPath, "lib/tinymce/langs");
             var fileExists = File.Exists($"{path}{langFile}");
 
             if (!fileExists)

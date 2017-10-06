@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
@@ -14,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
+using SixLabors.ImageSharp;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -437,7 +436,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         using (var stream = new FileStream(file.FullName, FileMode.Open))
                         {
-                            using (var image = Image.FromStream(stream))
+                            using (var image = Image.Load(stream))
                             {
                                 width = image.Width;
                                 height = image.Height;
@@ -844,7 +843,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             path = GetFullPath(GetVirtualPath(path));
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                using (var image = new Bitmap(Bitmap.FromStream(stream)))
+                using (var image = Image.Load(stream))
                 {
                     var cropWidth = image.Width;
                     var cropHeight = image.Height;
@@ -882,32 +881,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (cropHeight < image.Height)
                         cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
 
-                    using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
+                    using (var cropImg = image.Clone())
                     {
+                        cropImg.Mutate(x => x.Crop(new SixLabors.Primitives.Rectangle(cropX, cropY, cropWidth, cropHeight)));
                         this.HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(this.HttpContext.Response.Body, ImageFormat.Png);
+                        cropImg.Save(this.HttpContext.Response.Body,ImageFormats.Png);
                         this.HttpContext.Response.Body.Close();
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Get the file format of the image
-        /// </summary>
-        /// <param name="path">Path to the image</param>
-        /// <returns>Image format</returns>
-        protected virtual ImageFormat GetImageFormat(string path)
-        {
-            var fileExtension = new FileInfo(path).Extension.ToLower();
-            switch (fileExtension)
-            {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
             }
         }
 
@@ -922,7 +903,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             using (var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
             {
-                using (var image = Image.FromStream(stream))
+                using (var image = Image.Load(stream))
                 {
                     var ratio = (float)image.Width / (float)image.Height;
                     if ((image.Width <= width && image.Height <= height) || (width == 0 && height == 0))
@@ -936,15 +917,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                         newWidth = Convert.ToInt16(Math.Floor((float)newHeight * ratio));
                     }
 
-                    using (var newImage = new Bitmap(newWidth, newHeight))
+                    image.Mutate(x => x.Resize(newWidth, newHeight));
+                    if (!string.IsNullOrEmpty(destinstionPath))
                     {
-                        using (var graphics = Graphics.FromImage(newImage))
-                        {
-                            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-                            if (!string.IsNullOrEmpty(destinstionPath))
-                                newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
-                        }
+                        image.Save(destinstionPath);
                     }
                 }
             }

@@ -177,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && manufacturer != null)
-                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToList();
+                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.DiscountId).ToList();
 
             foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true))
             {
@@ -368,7 +368,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        manufacturer.AppliedDiscounts.Add(discount);
+                        manufacturer.AppliedDiscountsAdd(discount);
                 }
                 _manufacturerService.UpdateManufacturer(manufacturer);
                 //update picture seo file name
@@ -468,14 +468,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            manufacturer.AppliedDiscounts.Add(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                            manufacturer.AppliedDiscountsAdd(discount);
                     }
                     else
                     {
                         //remove discount
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            manufacturer.AppliedDiscounts.Remove(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                            manufacturer.AppliedDiscountsRemove(discount);
                     }
                 }
                 _manufacturerService.UpdateManufacturer(manufacturer);

@@ -190,7 +190,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && category != null)
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToList();
+                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.DiscountId).ToList();
 
             foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true))
             {
@@ -387,7 +387,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        category.AppliedDiscounts.Add(discount);
+                        category.AppliedDiscountsAdd(discount);
                 }
                 _categoryService.UpdateCategory(category);
                 //update picture seo file name
@@ -490,14 +490,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            category.AppliedDiscounts.Add(discount);
+                        if (category.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                            category.AppliedDiscountsAdd(discount);
                     }
                     else
                     {
                         //remove discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            category.AppliedDiscounts.Remove(discount);
+                        if (category.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                            category.AppliedDiscountsRemove(discount);
                     }
                 }
                 _categoryService.UpdateCategory(category);

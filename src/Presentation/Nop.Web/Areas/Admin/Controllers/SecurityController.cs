@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var pr in permissionRecords)
                 foreach (var cr in customerRoles)
                 {
-                    bool allowed = pr.CustomerRoles.Count(x => x.Id == cr.Id) > 0;
+                    bool allowed = pr.CustomerRoles.Count(x => x.CustomerRole.Id == cr.Id) > 0;
                     if (!model.Allowed.ContainsKey(pr.SystemName))
                         model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[pr.SystemName][cr.Id] = allowed;
@@ -120,17 +120,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.CustomerRoleId == cr.Id) == null)
                         {
-                            pr.CustomerRoles.Add(cr);
+                            pr.CustomerRolesAdd(cr);
                             _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
                     else
                     {
-                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.CustomerRoleId == cr.Id) != null)
                         {
-                            pr.CustomerRoles.Remove(cr);
+                            pr.CustomerRolesRemove(cr);
                             _permissionService.UpdatePermissionRecord(pr);
                         }
                     }

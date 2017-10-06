@@ -1716,7 +1716,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.AddressHtml = addressHtmlSb.ToString();
                     return model;
                 }),
-                Total = addresses.Count
+                Total = addresses.Count()
             };
 
             return Json(gridModel);

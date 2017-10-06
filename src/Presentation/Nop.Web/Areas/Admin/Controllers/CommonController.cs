@@ -482,7 +482,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            string path = Path.Combine(_hostingEnvironment.WebRootPath, "files\\exportimport");
+            string path = Path.Combine(_hostingEnvironment.WebRootPath, "files/exportimport");
             foreach (var fullPath in Directory.GetFiles(path))
             {
                 try

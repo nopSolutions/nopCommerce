@@ -512,7 +512,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 try
                 {
                     //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);TODOCHRIS
                 }
                 catch (Exception exc)
                 {
@@ -600,7 +600,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 try
                 {
                     //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);TODOCHRIS
                 }
                 catch (Exception exc)
                 {

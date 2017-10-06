@@ -347,7 +347,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
                     foreach (var p in products)
-                        _productService.UpdateHasDiscountsApplied(p);
+                        _productService.UpdateHasDiscountsApplied(p.Product);
                 }
 
                 //activity log
@@ -389,7 +389,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //update "HasDiscountsApplied" properties
             foreach (var p in products)
-                _productService.UpdateHasDiscountsApplied(p);
+                _productService.UpdateHasDiscountsApplied(p.Product);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
@@ -557,14 +557,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var products = discount
                 .AppliedToProducts
-                .Where(x => !x.Deleted)
+                .Where(x => !x.Product.Deleted)
                 .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = products.Select(x => new DiscountModel.AppliedToProductModel
                 {
-                    ProductId = x.Id,
-                    ProductName = x.Name
+                    ProductId = x.ProductId,
+                    ProductName = x.Product.Name
                 }),
                 Total = products.Count
             };
@@ -586,8 +586,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new Exception("No product found with the specified id");
 
             //remove discount
-            if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                product.AppliedDiscounts.Remove(discount);
+            if (product.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                product.AppliedDiscountsRemove(discount);
 
             _productService.UpdateProduct(product);
             _productService.UpdateHasDiscountsApplied(product);
@@ -673,8 +673,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            product.AppliedDiscounts.Add(discount);
+                        if (product.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                            product.AppliedDiscountsAdd(discount);
 
                         _productService.UpdateProduct(product);
                         _productService.UpdateHasDiscountsApplied(product);
@@ -702,16 +702,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var categories = discount
                 .AppliedToCategories
-                .Where(x => !x.Deleted)
+                .Where(x => !x.Category.Deleted)
                 .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x => new DiscountModel.AppliedToCategoryModel
                 {
-                    CategoryId = x.Id,
-                    CategoryName = x.GetFormattedBreadCrumb(_categoryService)
+                    CategoryId = x.CategoryId,
+                    CategoryName = x.Category.GetFormattedBreadCrumb(_categoryService)
                 }),
-                Total = categories.Count
+                Total = categories.Count()
             };
 
             return Json(gridModel);
@@ -731,8 +731,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new Exception("No category found with the specified id");
 
             //remove discount
-            if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                category.AppliedDiscounts.Remove(discount);
+            if (category.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                category.AppliedDiscounts.Remove(category.AppliedDiscounts.First(d => d.DiscountId == discount.Id));
 
             _categoryService.UpdateCategory(category);
 
@@ -788,8 +788,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var category = _categoryService.GetCategoryById(id);
                     if (category != null)
                     {
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            category.AppliedDiscounts.Add(discount);
+                        if (category.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                            category.AppliedDiscountsAdd(discount);
 
                         _categoryService.UpdateCategory(category);
                     }
@@ -816,14 +816,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var manufacturers = discount
                 .AppliedToManufacturers
-                .Where(x => !x.Deleted)
+                .Where(x => !x.Manufacturer.Deleted)
                 .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = manufacturers.Select(x => new DiscountModel.AppliedToManufacturerModel
                 {
-                    ManufacturerId = x.Id,
-                    ManufacturerName = x.Name
+                    ManufacturerId = x.ManufacturerId,
+                    ManufacturerName = x.Manufacturer.Name
                 }),
                 Total = manufacturers.Count
             };
@@ -845,8 +845,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new Exception("No manufacturer found with the specified id");
 
             //remove discount
-            if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                manufacturer.AppliedDiscounts.Remove(discount);
+            if (manufacturer.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                manufacturer.AppliedDiscountsRemove(discount);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
 
@@ -897,8 +897,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var manufacturer = _manufacturerService.GetManufacturerById(id);
                     if (manufacturer != null)
                     {
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            manufacturer.AppliedDiscounts.Add(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                            manufacturer.AppliedDiscountsAdd(discount);
 
                         _manufacturerService.UpdateManufacturer(manufacturer);
                     }

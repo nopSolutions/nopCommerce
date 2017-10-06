@@ -942,17 +942,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                     bool restrict = countryIdsToRestrict.Contains(country.Id);
                     if (restrict)
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.CountryId == country.Id) == null)
                         {
-                            shippingMethod.RestrictedCountries.Add(country);
+                            shippingMethod.RestrictedCountriesAdd(country);
                             _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
                     else
                     {
-                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.CountryId == country.Id) != null)
                         {
-                            shippingMethod.RestrictedCountries.Remove(country);
+                            shippingMethod.RestrictedCountriesRemove(country);
                             _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }

@@ -325,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Json("Access denied");
 
             var flagNames = Directory
-                .EnumerateFiles(Path.Combine(_hostingEnvironment.WebRootPath, "images\\flags"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(Path.Combine(_hostingEnvironment.WebRootPath, "images/flags"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
 

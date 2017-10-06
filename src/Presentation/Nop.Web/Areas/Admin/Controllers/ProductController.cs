@@ -453,7 +453,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(model));
 
             if (!excludeProperties && product != null)
-                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToList();
+                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.DiscountId).ToList();
 
             foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true))
             {
@@ -475,14 +475,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                 {
                     //new discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                        product.AppliedDiscounts.Add(discount);
+                    if (product.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) == 0)
+                        product.AppliedDiscountsAdd(discount);
                 }
                 else
                 {
                     //remove discount
-                    if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                        product.AppliedDiscounts.Remove(discount);
+                    if (product.AppliedDiscounts.Count(d => d.DiscountId == discount.Id) > 0)
+                        product.AppliedDiscountsRemove(discount);
                 }
             }
 
@@ -735,7 +735,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 for (int i = 0; i < product.ProductTags.Count; i++)
                 {
                     var pt = product.ProductTags.ToList()[i];
-                    result.Append(pt.Name);
+                    result.Append(pt.ProductTag.Name);
                     if (i != product.ProductTags.Count - 1)
                         result.Append(", ");
                 }
@@ -3979,7 +3979,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 try
                 {
                     //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);TODOCHRIS
                 }
                 catch (Exception exc)
                 {
@@ -4127,7 +4127,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 try
                 {
                     //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);TODOCHRIS
                 }
                 catch (Exception exc)
                 {

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -12,6 +13,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Installation;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
@@ -289,7 +291,7 @@ namespace Nop.Web.Controllers
                 var settingsManager = new DataSettingsManager();
                 try
                 {
-                    string connectionString;
+                    string connectionString="";
                     if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL Server
@@ -333,12 +335,26 @@ namespace Nop.Web.Controllers
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
-                    else
+                    else if (model.DataProvider.Equals("sqlce", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL CE
                         string databaseFileName = "Nop.Db.sdf";
                         string databasePath = @"|DataDirectory|\" + databaseFileName;
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
+
+                        //drop database if exists
+                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
+                        if (System.IO.File.Exists(databaseFullPath))
+                        {
+                            System.IO.File.Delete(databaseFullPath);
+                        }
+                    }
+                    else if (model.DataProvider.Equals("sqlite", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        //SQLite
+                        string databaseFileName = "NopDb.sqlite";
+                        string databasePath = @"|DataDirectory|" + databaseFileName;
+                        connectionString = "Data Source=" + databasePath + ";";
 
                         //drop database if exists
                         string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
@@ -356,49 +372,52 @@ namespace Nop.Web.Controllers
                         DataConnectionString = connectionString
                     };
                     settingsManager.SaveSettings(settings);
-
+                    
                     //init data provider
                     var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
-                    dataProviderInstance.InitDatabase();
-
-
-                    //now resolve installation service
-                    var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
-
-                    //reset cache
-                    DataSettingsHelper.ResetCache();
-
-                    //install plugins
-                    PluginManager.MarkAllPluginsAsUninstalled();
-                    var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
-                        .ToList()
-                        .OrderBy(x => x.PluginDescriptor.Group)
-                        .ThenBy(x => x.PluginDescriptor.DisplayOrder)
-                        .ToList();
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
-                        new List<string>() :
-                        _config.PluginsIgnoredDuringInstallation
-                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim())
-                        .ToList();
-                    foreach (var plugin in plugins)
+                    var db = EngineContext.Current.Resolve<IDbContext>();
+                    dataProviderInstance.SetDatabaseInitializer(db);
+                    //using (var scope = container.BeginLifetimeScope())
                     {
-                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
-                            continue;
+                        //now resolve installation service
+                        var installationService = EngineContext.Current.Resolve<IInstallationService>();
+                        installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
-                        plugin.Install();
-                    }
+                        //reset cache
+                        DataSettingsHelper.ResetCache();
 
-                    //register default permissions
-                    //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
-                    var permissionProviders = new List<Type>();
-                    permissionProviders.Add(typeof(StandardPermissionProvider));
-                    foreach (var providerType in permissionProviders)
-                    {
-                        var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
-                        EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                        //install plugins
+                        PluginManager.MarkAllPluginsAsUninstalled();
+                        var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+                        var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
+                            .ToList()
+                            .OrderBy(x => x.PluginDescriptor.Group)
+                            .ThenBy(x => x.PluginDescriptor.DisplayOrder)
+                            .ToList();
+                        var pluginsIgnoredDuringInstallation =
+                            String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation)
+                                ? new List<string>()
+                                : _config.PluginsIgnoredDuringInstallation
+                                    .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(x => x.Trim())
+                                    .ToList();
+                        foreach (var plugin in plugins)
+                        {
+                            if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
+                                continue;
+
+                            plugin.Install();
+                        }
+
+                        //register default permissions
+                        //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                        var permissionProviders = new List<Type>();
+                        permissionProviders.Add(typeof(StandardPermissionProvider));
+                        foreach (var providerType in permissionProviders)
+                        {
+                            var provider = (IPermissionProvider) Activator.CreateInstance(providerType);
+                            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+                        }
                     }
 
                     //restart application
