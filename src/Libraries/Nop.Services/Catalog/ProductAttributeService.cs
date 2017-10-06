@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -280,7 +281,7 @@ namespace Nop.Services.Catalog
 
             return _cacheManager.Get(key, () =>
             {
-                var query = from pam in _productAttributeMappingRepository.Table
+                var query = from pam in _productAttributeMappingRepository.Table.Include("ProductAttribute").Include("ProductAttributeValues")
                             orderby pam.DisplayOrder, pam.Id
                             where pam.ProductId == productId
                             select pam;

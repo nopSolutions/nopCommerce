@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -134,7 +135,7 @@ namespace Nop.Services.Common
                 return null;
 
             string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
+            return _cacheManager.Get(key, () => _addressRepository.Table.Include("Country").Include("StateProvince").Single(t => t.Id == addressId));
         }
 
         /// <summary>

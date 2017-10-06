@@ -51,7 +51,7 @@ namespace Nop.Services.Common
 
         protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
-            var path = Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
+            var path = Path.Combine(_hostingEnvironment.WebRootPath, "db_backups/");
             if (ensureFolderCreated)
                 System.IO.Directory.CreateDirectory(path);
             return path;

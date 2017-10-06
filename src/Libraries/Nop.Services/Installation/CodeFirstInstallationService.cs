@@ -228,7 +228,7 @@ namespace Nop.Services.Installation
 
         protected virtual string GetSamplesPath()
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "images\\samples\\");
+            return Path.Combine(_hostingEnvironment.WebRootPath, "images/samples/");
         }
 
         protected virtual void InstallStores()
@@ -12241,7 +12241,7 @@ namespace Nop.Services.Installation
                     Name = tag,
                 };
             }
-            product.ProductTags.Add(productTag);
+            product.ProductTagsAdd(productTag);
             _productRepository.Update(product);
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -72,7 +73,17 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return null;
 
-            return _orderRepository.GetById(orderId);
+            //return _orderRepository.GetById(orderId);
+            return _orderRepository.Table
+                .Include("BillingAddress")
+                .Include("Customer")
+                .Include("DiscountUsageHistory")
+                .Include("GiftCardUsageHistory")
+                .Include("OrderItems.Product")
+                .Include("OrderNotes")
+                .Include("Shipments")
+                .Include("ShippingAddress")
+                .FirstOrDefault(o => o.Id == orderId);
         }
 
         /// <summary>
@@ -85,7 +96,16 @@ namespace Nop.Services.Orders
             if (string.IsNullOrEmpty(customOrderNumber))
                 return null;
            
-            return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+            return _orderRepository.Table
+                    .Include("BillingAddress")
+                    .Include("Customer")
+                    .Include("DiscountUsageHistory")
+                    .Include("GiftCardUsageHistory")
+                    .Include("OrderItems")
+                    .Include("OrderNotes")
+                    .Include("Shipments")
+                    .Include("ShippingAddress")
+                .FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
         }
 
         /// <summary>
@@ -99,7 +119,15 @@ namespace Nop.Services.Orders
                 return new List<Order>();
 
             var query = from o in _orderRepository.Table
-                        where orderIds.Contains(o.Id) && !o.Deleted
+                .Include("BillingAddress")
+                .Include("Customer")
+                .Include("DiscountUsageHistory")
+                .Include("GiftCardUsageHistory")
+                .Include("OrderItems")
+                .Include("OrderNotes")
+                .Include("Shipments")
+                .Include("ShippingAddress")
+            where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
             var orders = query.ToList();
             //sort by passed identifiers
@@ -124,7 +152,15 @@ namespace Nop.Services.Orders
                 return null;
 
             var query = from o in _orderRepository.Table
-                        where o.OrderGuid == orderGuid
+                .Include("BillingAddress")
+                .Include("Customer")
+                .Include("DiscountUsageHistory")
+                .Include("GiftCardUsageHistory")
+                .Include("OrderItems")
+                .Include("OrderNotes")
+                .Include("Shipments")
+                .Include("ShippingAddress")
+            where o.OrderGuid == orderGuid
                         select o;
             var order = query.FirstOrDefault();
             return order;
@@ -177,7 +213,15 @@ namespace Nop.Services.Orders
             string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _orderRepository.Table;
+            var query = _orderRepository.Table
+                .Include("BillingAddress")
+                .Include("Customer")
+                .Include("DiscountUsageHistory")
+                .Include("GiftCardUsageHistory")
+                .Include("OrderItems")
+                .Include("OrderNotes")
+                .Include("Shipments")
+                .Include("ShippingAddress");
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
             if (vendorId > 0)
@@ -281,7 +325,15 @@ namespace Nop.Services.Orders
         public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
             string paymentMethodSystemName)
         { 
-            var query = _orderRepository.Table;
+            var query = _orderRepository.Table
+                .Include("BillingAddress")
+                .Include("Customer")
+                .Include("DiscountUsageHistory")
+                .Include("GiftCardUsageHistory")
+                .Include("OrderItems")
+                .Include("OrderNotes")
+                .Include("Shipments")
+                .Include("ShippingAddress");
             if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
                 query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
             

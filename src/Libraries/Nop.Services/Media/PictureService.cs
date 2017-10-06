@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using ImageResizer;
 using Microsoft.AspNetCore.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
@@ -15,6 +13,10 @@ using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Seo;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Helpers;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
 namespace Nop.Services.Media
 {
@@ -222,7 +224,7 @@ namespace Nop.Services.Media
         protected virtual void DeletePictureThumbs(Picture picture)
         {
             string filter = $"{picture.Id.ToString("0000000")}*.*";
-            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
+            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images/thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -238,7 +240,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images/thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -333,7 +335,7 @@ namespace Nop.Services.Media
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, string mimeType, byte[] binary)
         {
             //ensure \thumb directory exists
-            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images/thumbs");
             if (!System.IO.Directory.Exists(thumbsDirectoryPath))
                 System.IO.Directory.CreateDirectory(thumbsDirectoryPath);
 
@@ -409,18 +411,18 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using (var b = new Bitmap(filePath))
+                    using (Image<Rgba32> b = Image.Load(filePath))
                     {
                         using (var destStream = new MemoryStream())
                         {
-                            var newSize = CalculateDimensions(b.Size, targetSize);
-                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                            var newSize = CalculateDimensions(new Size(b.Width,b.Height), targetSize);
+                            var options = new ResizeOptions
                             {
-                                Width = newSize.Width,
-                                Height = newSize.Height,
-                                Scale = ScaleMode.Both,
-                                Quality = _mediaSettings.DefaultImageQuality
-                            });
+                                Size = new SixLabors.Primitives.Size(newSize.Width, newSize.Height),
+                                Mode = ResizeMode.Pad
+                            };
+                            b.Mutate(x => x.Resize(options));
+                            b.Save(destStream, ImageFormats.Jpeg);
                             var destBinary = destStream.ToArray();
                             SaveThumb(thumbFilePath, thumbFileName, "", destBinary);
                         }
@@ -527,38 +529,19 @@ namespace Nop.Services.Media
                         //resizing required
                         if (targetSize != 0)
                         {
-                            using (var stream = new MemoryStream(pictureBinary))
+                            using (Image<Rgba32> b = Image.Load(pictureBinary))
                             {
-                                Bitmap b = null;
-                                try
-                                {
-                                    //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
-                                    b = new Bitmap(stream);
-                                }
-                                catch (ArgumentException exc)
-                                {
-                                    _logger.Error($"Error generating picture thumb. ID={picture.Id}",
-                                        exc);
-                                }
-
-                                if (b == null)
-                                {
-                                    //bitmap could not be loaded for some reasons
-                                    return url;
-                                }
-
                                 using (var destStream = new MemoryStream())
                                 {
-                                    var newSize = CalculateDimensions(b.Size, targetSize);
-                                    ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                                    var newSize = CalculateDimensions(new Size(b.Width, b.Height), targetSize);
+                                    var options = new ResizeOptions
                                     {
-                                        Width = newSize.Width,
-                                        Height = newSize.Height,
-                                        Scale = ScaleMode.Both,
-                                        Quality = _mediaSettings.DefaultImageQuality
-                                    });
+                                        Size = new SixLabors.Primitives.Size(newSize.Width, newSize.Height),
+                                        Mode = ResizeMode.Pad
+                                    };
+                                    b.Mutate(x => x.Resize(options));
+                                    b.Save(destStream, ImageFormats.Jpeg);
                                     pictureBinaryResized = destStream.ToArray();
-                                    b.Dispose();
                                 }
                             }
                         }
@@ -804,15 +787,34 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (var destStream = new MemoryStream())
+            using (Image<Rgba32> b = Image.Load(pictureBinary))
             {
-                ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
+                using (var destStream = new MemoryStream())
                 {
-                    MaxWidth = _mediaSettings.MaximumImageSize,
-                    MaxHeight = _mediaSettings.MaximumImageSize,
-                    Quality = _mediaSettings.DefaultImageQuality
-                });
-                return destStream.ToArray();
+                    var options = new ResizeOptions
+                    {
+                        Size = new SixLabors.Primitives.Size(_mediaSettings.MaximumImageSize, _mediaSettings.MaximumImageSize),
+                        Mode = ResizeMode.Max
+                    };
+                    b.Mutate(x => x.Resize(options));
+                    if (ImageFormats.Jpeg.MimeTypes.Contains(mimeType))
+                    {
+                        b.Save(destStream, ImageFormats.Jpeg);
+                    }
+                    else if (ImageFormats.Png.MimeTypes.Contains(mimeType))
+                    {
+                        b.Save(destStream, ImageFormats.Png);
+                    }
+                    else if (ImageFormats.Gif.MimeTypes.Contains(mimeType))
+                    {
+                        b.Save(destStream, ImageFormats.Gif);
+                    }
+                    else if (ImageFormats.Bmp.MimeTypes.Contains(mimeType))
+                    {
+                        b.Save(destStream, ImageFormats.Bmp);
+                    }
+                    return destStream.ToArray();
+                }
             }
         }
 

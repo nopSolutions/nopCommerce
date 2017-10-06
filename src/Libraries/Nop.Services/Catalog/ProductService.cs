@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -833,7 +834,7 @@ namespace Nop.Services.Catalog
                                   //SKU (exact match)
                                   (searchSku && p.Sku == keywords) ||
                                   //product tags (exact match)
-                                  (searchProductTags && pt.Name == keywords) ||
+                                  (searchProductTags && pt.ProductTag.Name == keywords) ||
                                   //localized values
                                   (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
                                   (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "ShortDescription" && lp.LocaleValue.Contains(keywords)) ||
@@ -918,7 +919,7 @@ namespace Nop.Services.Catalog
                 if (productTagId > 0)
                 {
                     query = from p in query
-                            from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
+                            from pt in p.ProductTags.Where(pt => pt.ProductTagId == productTagId)
                             select p;
                 }
 
@@ -1963,7 +1964,10 @@ namespace Nop.Services.Catalog
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _productReviewRepository.Table;
+            var query = _productReviewRepository.Table
+                .Include("ProductReviewHelpfulnessEntries")
+                .Include("Product")
+                .Include("Store");
             if (approved.HasValue)
                 query = query.Where(pr => pr.IsApproved == approved);
             if (customerId > 0)
@@ -2012,7 +2016,10 @@ namespace Nop.Services.Catalog
                 return new List<ProductReview>();
 
             var query = from pr in _productReviewRepository.Table
-                        where productReviewIds.Contains(pr.Id)
+                .Include("ProductReviewHelpfulnessEntries")
+                .Include("Product")
+                .Include("Store")
+            where productReviewIds.Contains(pr.Id)
                         select pr;
             var productReviews = query.ToList();
             //sort by passed identifiers

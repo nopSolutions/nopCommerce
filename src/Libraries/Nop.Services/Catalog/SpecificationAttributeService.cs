@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -180,7 +181,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOptionIds == null || specificationAttributeOptionIds.Length == 0)
                 return new List<SpecificationAttributeOption>();
 
-            var query = from sao in _specificationAttributeOptionRepository.Table
+            var query = from sao in _specificationAttributeOptionRepository.Table.Include("SpecificationAttribute")
                         where specificationAttributeOptionIds.Contains(sao.Id)
                         select sao;
             var specificationAttributeOptions = query.ToList();
@@ -202,7 +203,7 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attribute option</returns>
         public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsBySpecificationAttribute(int specificationAttributeId)
         {
-            var query = from sao in _specificationAttributeOptionRepository.Table
+            var query = from sao in _specificationAttributeOptionRepository.Table.Include("SpecificationAttribute")
                         orderby sao.DisplayOrder, sao.Id
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
@@ -316,7 +317,7 @@ namespace Nop.Services.Catalog
             
             return _cacheManager.Get(key, () =>
             {
-                var query = _productSpecificationAttributeRepository.Table;
+                var query = _productSpecificationAttributeRepository.Table.Include("SpecificationAttributeOption.SpecificationAttribute");
                 if (productId > 0)
                     query = query.Where(psa => psa.ProductId == productId);
                 if (specificationAttributeOptionId > 0)
@@ -387,7 +388,7 @@ namespace Nop.Services.Catalog
         /// <returns>Count</returns>
         public virtual int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeOptionId = 0)
         {
-            var query = _productSpecificationAttributeRepository.Table;
+            var query = _productSpecificationAttributeRepository.Table.Include("SpecificationAttributeOption.SpecificationAttribute");
             if (productId > 0)
                 query = query.Where(psa => psa.ProductId == productId);
             if (specificationAttributeOptionId > 0)

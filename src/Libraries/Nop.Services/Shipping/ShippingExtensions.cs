@@ -48,7 +48,7 @@ namespace Nop.Services.Shipping
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            bool result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
+            bool result = shippingMethod.RestrictedCountries.ToList().Find(c => c.CountryId == countryId) != null;
             return result;
         }
     }

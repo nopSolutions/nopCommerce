@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -277,7 +278,7 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pm in _productManufacturerRepository.Table
+                var query = from pm in _productManufacturerRepository.Table.Include("Manufacturer")
                             join p in _productRepository.Table on pm.ProductId equals p.Id
                             where pm.ManufacturerId == manufacturerId &&
                                   !p.Deleted &&
@@ -340,7 +341,7 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
-                var query = from pm in _productManufacturerRepository.Table
+                var query = from pm in _productManufacturerRepository.Table.Include("Manufacturer")
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             where pm.ProductId == productId &&
                                 !m.Deleted &&
@@ -356,7 +357,7 @@ namespace Nop.Services.Catalog
                         //ACL (access control list)
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from pm in query
-                                join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                                join m in _manufacturerRepository.Table.Include("Manufacturer") on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table
                                 on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
                                 from acl in m_acl.DefaultIfEmpty()
@@ -369,7 +370,7 @@ namespace Nop.Services.Catalog
                         //Store mapping
                         var currentStoreId = _storeContext.CurrentStore.Id;
                         query = from pm in query
-                                join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                                join m in _manufacturerRepository.Table.Include("Manufacturer") on pm.ManufacturerId equals m.Id
                                 join sm in _storeMappingRepository.Table
                                 on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
                                 from sm in m_sm.DefaultIfEmpty()
@@ -469,7 +470,7 @@ namespace Nop.Services.Catalog
             if (manufacturerNames == null)
                 throw new ArgumentNullException(nameof(manufacturerNames));
 
-            var query = _manufacturerRepository.Table;
+            var query = _manufacturerRepository.Table.Include("Manufacturer");
             var queryFilter = manufacturerNames.Distinct().ToArray();
             var filter = query.Select(m => m.Name).Where(m => queryFilter.Contains(m)).ToList();
             return queryFilter.Except(filter).ToArray();

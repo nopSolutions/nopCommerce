@@ -142,12 +142,12 @@ namespace Nop.Services.Catalog
                     {
                         Id = pt.Id,
                         ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
-                            pt.Products.Count(p => !p.Deleted && p.Published)
+                            pt.Products.Count(p => !p.Product.Deleted && p.Product.Published)
                             : (from p in pt.Products
                                join sm in _storeMappingRepository.Table
-                               on new { p1 = p.Id, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
+                               on new { p1 = p.ProductId, p2 = "Product" } equals new { p1 = sm.EntityId, p2 = sm.EntityName } into p_sm
                                from sm in p_sm.DefaultIfEmpty()
-                               where (!p.LimitedToStores || storeId == sm.StoreId) && !p.Deleted && p.Published
+                               where (!p.Product.LimitedToStores || storeId == sm.StoreId) && !p.Product.Deleted && p.Product.Published
                                select p).Count()
                     });
                     var dictionary = new Dictionary<int, int>();
@@ -291,7 +291,7 @@ namespace Nop.Services.Catalog
                 var found = false;
                 foreach (var newProductTag in productTags)
                 {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                    if (existingProductTag.ProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
                     {
                         found = true;
                         break;
@@ -299,12 +299,12 @@ namespace Nop.Services.Catalog
                 }
                 if (!found)
                 {
-                    productTagsToRemove.Add(existingProductTag);
+                    productTagsToRemove.Add(existingProductTag.ProductTag);
                 }
             }
             foreach (var productTag in productTagsToRemove)
             {
-                product.ProductTags.Remove(productTag);
+                product.ProductTagsRemove(productTag);
                 _productService.UpdateProduct(product);
             }
             foreach (var productTagName in productTags)
@@ -326,7 +326,7 @@ namespace Nop.Services.Catalog
                 }
                 if (!product.ProductTagExists(productTag.Id))
                 {
-                    product.ProductTags.Add(productTag);
+                    product.ProductTagsAdd(productTag);
                     _productService.UpdateProduct(product);
                 }
             }

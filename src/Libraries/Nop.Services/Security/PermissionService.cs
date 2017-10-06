@@ -87,7 +87,7 @@ namespace Nop.Services.Security
             return _cacheManager.Get(key, () =>
             {
                 foreach (var permission1 in customerRole.PermissionRecords)
-                    if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
+                    if (permission1.PermissionRecord.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
                         return true;
 
                 return false;
@@ -229,11 +229,11 @@ namespace Nop.Services.Security
                         where p.SystemName == permission1.SystemName
                         select p).Any();
                     var mappingExists = (from p in customerRole.PermissionRecords
-                        where p.SystemName == permission1.SystemName
+                        where p.PermissionRecord.SystemName == permission1.SystemName
                         select p).Any();
                     if (defaultMappingProvided && !mappingExists)
                     {
-                        permission1.CustomerRoles.Add(customerRole);
+                        permission1.CustomerRolesAdd(customerRole);
                     }
                 }
 

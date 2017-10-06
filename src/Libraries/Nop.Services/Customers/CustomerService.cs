@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -155,7 +156,14 @@ namespace Nop.Services.Customers
             string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _customerRepository.Table;
+            var query = _customerRepository.Table
+                .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                .Include("CustomerAddresses.Address")
+                .Include("BillingAddress")
+                .Include("ShippingAddress")
+                .Include("ShoppingCartItems")
+                .Include("ReturnRequests")
+                .Include("ExternalAuthenticationRecords");
             if (createdFromUtc.HasValue)
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
@@ -302,7 +310,8 @@ namespace Nop.Services.Customers
         public virtual IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = _customerRepository.Table;
+            var query = _customerRepository.Table.Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                .Include("CustomerAddresses");
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
@@ -351,7 +360,14 @@ namespace Nop.Services.Customers
             if (customerId == 0)
                 return null;
             
-            return _customerRepository.GetById(customerId);
+            //return _customerRepository.GetById(customerId);
+            return _customerRepository.Table
+                .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                .Include("CustomerAddresses.Address")
+                .Include("BillingAddress")
+                .Include("ShippingAddress")
+                .Include("ShoppingCartItems.Product")
+                .Include("ReturnRequests").Include("ExternalAuthenticationRecords").FirstOrDefault(c => c.Id == customerId);
         }
 
         /// <summary>
@@ -365,6 +381,13 @@ namespace Nop.Services.Customers
                 return new List<Customer>();
 
             var query = from c in _customerRepository.Table
+                    .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                    .Include("CustomerAddresses.Address")
+                    .Include("BillingAddress")
+                    .Include("ShippingAddress")
+                    .Include("ShoppingCartItems.Product")
+                    .Include("ReturnRequests")
+                    .Include("ExternalAuthenticationRecords")
                         where customerIds.Contains(c.Id) && !c.Deleted
                         select c;
             var customers = query.ToList();
@@ -390,6 +413,13 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
+                    .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                    .Include("CustomerAddresses.Address")
+                    .Include("BillingAddress")
+                    .Include("ShippingAddress")
+                    .Include("ShoppingCartItems.Product")
+                    .Include("ReturnRequests")
+                    .Include("ExternalAuthenticationRecords")
                         where c.CustomerGuid == customerGuid
                         orderby c.Id
                         select c;
@@ -408,6 +438,13 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
+                        .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                        .Include("CustomerAddresses.Address")
+                        .Include("BillingAddress")
+                        .Include("ShippingAddress")
+                        .Include("ShoppingCartItems.Product")
+                        .Include("ReturnRequests")
+                        .Include("ExternalAuthenticationRecords")
                         orderby c.Id
                         where c.Email == email
                         select c;
@@ -426,6 +463,13 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
+                    .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                    .Include("CustomerAddresses.Address")
+                    .Include("BillingAddress")
+                    .Include("ShippingAddress")
+                    .Include("ShoppingCartItems.Prodeuct")
+                    .Include("ReturnRequests")
+                    .Include("ExternalAuthenticationRecords")
                         orderby c.Id
                         where c.SystemName == systemName
                         select c;
@@ -442,8 +486,15 @@ namespace Nop.Services.Customers
         {
             if (string.IsNullOrWhiteSpace(username))
                 return null;
-
+            
             var query = from c in _customerRepository.Table
+                    .Include("CustomerCustomerRoles.CustomerRole.PermissionRecords.PermissionRecord")
+                    .Include("CustomerAddresses.Address")
+                    .Include("BillingAddress")
+                    .Include("ShippingAddress")
+                    .Include("ShoppingCartItems.Product")
+                    .Include("ReturnRequests")
+                    .Include("ExternalAuthenticationRecords")
                         orderby c.Id
                         where c.Username == username
                         select c;
@@ -748,7 +799,7 @@ namespace Nop.Services.Customers
             if (customerRoleId == 0)
                 return null;
 
-            return _customerRoleRepository.GetById(customerRoleId);
+            return _customerRoleRepository.Table.Include("PermissionRecords").Single(r => r.Id == customerRoleId);
         }
 
         /// <summary>
@@ -764,7 +815,7 @@ namespace Nop.Services.Customers
             string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table
+                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords")
                             orderby cr.Id
                             where cr.SystemName == systemName
                             select cr;
@@ -783,7 +834,7 @@ namespace Nop.Services.Customers
             string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table
+                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords")
                             orderby cr.Name
                             where showHidden || cr.Active
                             select cr;

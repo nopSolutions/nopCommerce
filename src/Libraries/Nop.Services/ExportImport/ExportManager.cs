@@ -230,7 +230,7 @@ namespace Nop.Services.ExportImport
 
             foreach (var productTag in product.ProductTags)
             {
-                productTagNames += productTag.Name;
+                productTagNames += productTag.ProductTag.Name;
                 productTagNames += ";";
             }
 
@@ -878,8 +878,8 @@ namespace Nop.Services.ExportImport
                     foreach (var discount in discounts)
                     {
                         xmlWriter.WriteStartElement("Discount");
-                        xmlWriter.WriteString("DiscountId", discount.Id);
-                        xmlWriter.WriteString("Name", discount.Name);
+                        xmlWriter.WriteString("DiscountId", discount.DiscountId);
+                        xmlWriter.WriteString("Name", discount.Discount.Name);
                         xmlWriter.WriteEndElement();
                     }
 
@@ -1059,8 +1059,8 @@ namespace Nop.Services.ExportImport
                     foreach (var productTag in productTags)
                     {
                         xmlWriter.WriteStartElement("ProductTag");
-                        xmlWriter.WriteString("Id", productTag.Id);
-                        xmlWriter.WriteString("Name", productTag.Name);
+                        xmlWriter.WriteString("Id", productTag.ProductTagId);
+                        xmlWriter.WriteString("Name", productTag.ProductTag.Name);
                         xmlWriter.WriteEndElement();
                     }
 

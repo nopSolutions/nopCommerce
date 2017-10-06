@@ -96,9 +96,9 @@ namespace Nop.Services.Catalog
                 //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
                 foreach (var discount in product.AppliedDiscounts)
                 {
-                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        discount.DiscountType == DiscountType.AssignedToSkus)
-                        allowedDiscounts.Add(discount.MapDiscount());
+                    if (_discountService.ValidateDiscount(discount.Discount, customer).IsValid &&
+                        discount.Discount.DiscountType == DiscountType.AssignedToSkus)
+                        allowedDiscounts.Add(discount.Discount.MapDiscount());
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -340,7 +341,7 @@ namespace Nop.Services.Discounts
             {
                 var ids = new List<int>();
                 var rootCategoryIds = _discountRepository.Table.Where(x => x.Id == discountId)
-                        .SelectMany(x => x.AppliedToCategories.Select(c => c.Id))
+                        .SelectMany(x => x.AppliedToCategories.Select(c => c.CategoryId))
                         .ToList();
                 foreach (var categoryId in rootCategoryIds)
                 {
@@ -383,7 +384,7 @@ namespace Nop.Services.Discounts
             var result = _cacheManager.Get(cacheKey, () =>
             {
                 return _discountRepository.Table.Where(x => x.Id == discountId)
-                    .SelectMany(x => x.AppliedToManufacturers.Select(c => c.Id))
+                    .SelectMany(x => x.AppliedToManufacturers.Select(c => c.ManufacturerId))
                     .ToList();
             });
 
@@ -647,7 +648,8 @@ namespace Nop.Services.Discounts
             if (discountUsageHistoryId == 0)
                 return null;
 
-            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
+            //return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
+            return _discountUsageHistoryRepository.Table.Include("Order").Single(d => d.Id == discountUsageHistoryId);
         }
 
         /// <summary>
@@ -662,7 +664,9 @@ namespace Nop.Services.Discounts
         public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
             int? customerId = null, int? orderId = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var discountUsageHistory = _discountUsageHistoryRepository.Table;
+            var discountUsageHistory = _discountUsageHistoryRepository.Table.Include("Order");
+            //ignore deleted orders
+            discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order.Deleted == false);
 
             //filter by discount
             if (discountId.HasValue && discountId.Value > 0)
@@ -670,14 +674,11 @@ namespace Nop.Services.Discounts
 
             //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
-                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && historyRecord.Order.CustomerId == customerId.Value);
+                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order.CustomerId == customerId.Value);
 
             //filter by order
             if (orderId.HasValue && orderId.Value > 0)
                 discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.OrderId == orderId.Value);
-
-            //ignore deleted orders
-            discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && !historyRecord.Order.Deleted);
 
             //order
             discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);
