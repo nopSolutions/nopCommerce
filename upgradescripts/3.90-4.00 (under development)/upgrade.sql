@@ -386,6 +386,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.FixedOrByWeight.Fields.LowerWeightLimit.Hint">
     <Value>Lower weight limit. This field can be used for "per extra weight unit" scenarios.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.Step5">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

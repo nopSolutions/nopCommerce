@@ -4845,9 +4845,6 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step4">
     <Value>Click on the 'Install' link to install the plugin.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Description.Step5">
-    <Value>Note: If you're running nopCommerce in medium trust, then it's recommended to clear your \Plugins\bin\ directory</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.EditDetails">
     <Value>Edit plugin details</Value>
   </LocaleResource>
