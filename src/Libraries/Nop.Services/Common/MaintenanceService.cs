@@ -79,8 +79,8 @@ namespace Nop.Services.Common
             {
                 //stored procedures are enabled and supported by the database
                 var tableName = _dbContext.GetTableName<T>();
-                var result = _dbContext.SqlQuery<decimal>($"SELECT IDENT_CURRENT('[{tableName}]')");
-                return Convert.ToInt32(result.FirstOrDefault());
+                var result = _dbContext.SqlQuery<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]')").FirstOrDefault();
+                return result.HasValue ? Convert.ToInt32(result) : 1;
             }
             
             //stored procedures aren't supported
