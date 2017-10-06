@@ -87,7 +87,7 @@ namespace Nop.Services.Helpers
                     return false;
 
                 var userAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
-                return browscapXmlHelper.IsCrawler(userAgent);
+                return !string.IsNullOrWhiteSpace(userAgent) && browscapXmlHelper.IsCrawler(userAgent);
             }
             catch
             {
