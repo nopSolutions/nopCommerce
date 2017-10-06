@@ -157,16 +157,22 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
                 var subTotal = decimal.Zero;
 
+                decimal weightFreeShipping = decimal.Zero;
+
                 foreach (var packageItem in getShippingOptionRequest.Items)
                 {
                     if (packageItem.ShoppingCartItem.IsFreeShipping)
+                    {
+                        weightFreeShipping += _shippingService.GetShoppingCartItemWeight(packageItem.ShoppingCartItem) * packageItem.GetQuantity();
                         continue;
+                    }
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
                     subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
                 }
 
-                var weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
-
+                //items with free shipping should not be considerated in weight calculation
+                var weight = Math.Max(_shippingService.GetTotalWeight(getShippingOptionRequest) - weightFreeShipping, decimal.Zero);
+                
                 var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
                 foreach (var shippingMethod in shippingMethods)
                 {
@@ -213,22 +219,64 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         public decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest)
         {
-            //if the "shipping calculation by weight" method is selected, the fixed rate isn't calculated
-            if (_fixedOrByWeightSettings.ShippingByWeightEnabled)
-                return null;
-
+            
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException(nameof(getShippingOptionRequest));
 
+                                   
             var restrictByCountryId = getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
             var shippingMethods = _shippingService.GetAllShippingMethods(restrictByCountryId);
-            
+
             var rates = new List<decimal>();
-            foreach (var shippingMethod in shippingMethods)
+
+            if (!_fixedOrByWeightSettings.ShippingByWeightEnabled)
             {
-                var rate = GetRate(shippingMethod.Id);
-                if (!rates.Contains(rate))
-                    rates.Add(rate);
+                foreach (var shippingMethod in shippingMethods)
+                {
+                    var rate = GetRate(shippingMethod.Id);
+                    if (!rates.Contains(rate))
+                        rates.Add(rate);
+                }
+            }
+            else
+            {   //if the "shipping calculation by weight" method is selected, then check if there is a fixed rate for possible shipping adress
+
+                if (getShippingOptionRequest.ShippingAddress == null)
+                {
+                    //Shipping address is not set
+                    return null;
+                }
+                var storeId = getShippingOptionRequest.StoreId;
+
+                if (storeId == 0)
+                    storeId = _storeContext.CurrentStore.Id;
+
+                var countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
+                var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
+                var warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : 0;
+                var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
+                var subTotal = decimal.Zero;
+
+                foreach (var packageItem in getShippingOptionRequest.Items)
+                {
+                    if (packageItem.ShoppingCartItem.IsFreeShipping)                 
+                        continue;                 
+                    //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
+                    subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
+                }
+
+                foreach (var shippingMethod in shippingMethods)
+                {
+                    var rateZero = GetRate(subTotal, 0, shippingMethod.Id, storeId, warehouseId, countryId, stateProvinceId, zip);
+                    var rateLarge = GetRate(subTotal, 100000, shippingMethod.Id, storeId, warehouseId, countryId, stateProvinceId, zip);
+                    
+                    if (!rateZero.HasValue || !rateLarge.HasValue) continue;
+
+                    //is rate independent from weight?
+                    if (rateZero == rateLarge && !rates.Contains(rateZero ?? decimal.Zero))
+                        rates.Add(rateZero ?? decimal.Zero);
+                }
+
             }
 
             //return default rate if all of them equal
@@ -236,6 +284,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight
                 return rates[0];
 
             return null;
+
         }
 
         /// <summary>
