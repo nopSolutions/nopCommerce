@@ -806,6 +806,27 @@ namespace Nop.Core.Plugins
             File.WriteAllText(filePath, text);
         }
 
+        /// <summary>
+        /// Delete plugin directory from disk storage
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor</param>
+        /// <returns>True if plugin directory is deleted, false if not</returns>
+        public static bool DeletePlugin(PluginDescriptor pluginDescriptor)
+        {
+            //no plugin descriptor set
+            if (pluginDescriptor == null)
+                return false;
+
+            //check whether plugin is installed
+            if (pluginDescriptor.Installed)
+                return false;
+
+            if (pluginDescriptor.OriginalAssemblyFile.Directory.Exists)
+                CommonHelper.DeleteDirectory(pluginDescriptor.OriginalAssemblyFile.FullName);
+
+            return true;
+        }
+
         #endregion
 
         #region Properties

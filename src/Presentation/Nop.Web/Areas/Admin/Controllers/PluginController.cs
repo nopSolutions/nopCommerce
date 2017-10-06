@@ -398,19 +398,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 	                    systemName = formValue.Substring("delete-plugin-link-".Length);
 
 	            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
-	            if (pluginDescriptor == null)
-	                //No plugin found with the specified id
-	                return RedirectToAction("List");
+	            if (!PluginManager.DeletePlugin(pluginDescriptor))
+                    return RedirectToAction("List");
 
-	            //check whether plugin is installed
-	            if (pluginDescriptor.Installed)
-	                return RedirectToAction("List");
-
-	            if (pluginDescriptor.OriginalAssemblyFile.Directory.Exists)
-	                pluginDescriptor.OriginalAssemblyFile.Directory.Delete(true);
-	            
-	            //activity log
-	            _customerActivityService.InsertActivity("DeletePlugin", _localizationService.GetResource("ActivityLog.DeletePlugin"), pluginDescriptor.FriendlyName);
+                //activity log
+                _customerActivityService.InsertActivity("DeletePlugin", _localizationService.GetResource("ActivityLog.DeletePlugin"), pluginDescriptor.FriendlyName);
 
 	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Deleted"));
 
