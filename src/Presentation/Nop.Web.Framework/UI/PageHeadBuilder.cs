@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.UI
         private string _activeAdminMenuSystemName;
 
         //in minutes
-        private const int RecheckBundledFilesPeriod = 2;
+        private const int RecheckBundledFilesPeriod = 120;
 
         #endregion
 
