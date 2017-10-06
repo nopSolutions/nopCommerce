@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   			<PropertyGroup>
-    				<TargetFramework>net461</TargetFramework>
+    				<TargetFramework>netcoreapp2.0</TargetFramework>
     				<Version>4.0.0.0</Version>
     				<Authors>Nop Solutions, Ltd</Authors>
     				<Company>Nop Solutions, Ltd</Company>
