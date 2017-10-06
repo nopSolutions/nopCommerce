@@ -10,6 +10,7 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Logging;
@@ -18,6 +19,7 @@ using Nop.Web.Framework.FluentValidation;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Themes;
+using Microsoft.EntityFrameworkCore;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -149,6 +151,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.DefaultChallengeScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.DefaultScheme = NopCookieAuthenticationDefaults.AuthenticationScheme;
             });
 
             //add main cookie authentication

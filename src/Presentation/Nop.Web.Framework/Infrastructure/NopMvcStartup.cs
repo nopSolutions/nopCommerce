@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
+using Nop.Services.Security;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using StackExchange.Profiling.Storage;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -21,6 +25,8 @@ namespace Nop.Web.Framework.Infrastructure
             //add MiniProfiler services
             services.AddMiniProfiler();
 
+
+
             //add and configure MVC feature
             services.AddNopMvc();
         }
@@ -32,7 +38,7 @@ namespace Nop.Web.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             //add MiniProfiler
-            application.UseMiniProfiler();
+            application.UseMiniProfilerInternal();
 
             //MVC routing
             application.UseNopMvc();

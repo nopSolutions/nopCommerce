@@ -8,6 +8,7 @@ using Autofac.Core;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -68,7 +69,12 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
+            //set App_Data path as base data directory (required to create and save SQL Server Compact database file in App_Data folder)
+            AppDomain.CurrentDomain.SetData("DataDirectory", CommonHelper.MapPath("~/App_Data/"));
+
             //web helper
+
+
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
 
             //user agent helper
@@ -86,13 +92,15 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 var efDataProviderManager = new EfDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = efDataProviderManager.LoadDataProvider();
-                dataProvider.InitConnectionFactory();
-
-                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
+                builder.Register<IDbContext>(c => new NopObjectContext(dataProvider.GetOptions()))
+                    .InstancePerLifetimeScope();
             }
             else
-                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerLifetimeScope();
-
+            {
+                builder.Register<IDbContext>(c => new NopObjectContext(new EfDataProviderManager(dataSettingsManager.LoadSettings()).LoadDataProvider().GetOptions()))
+                    .InstancePerLifetimeScope();
+            }
+            
             //repositories
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
@@ -104,7 +112,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
 
             //static cache manager
-            if (config.RedisCachingEnabled)
+            /*if (config.RedisCachingEnabled)
             {
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
@@ -119,7 +127,7 @@ namespace Nop.Web.Framework.Infrastructure
                     }).As<IXmlRepository>().SingleInstance();
                 }
             }
-            else
+            else*/
                 builder.RegisterType<MemoryCacheManager>().As<IStaticCacheManager>().SingleInstance();
 
             //work context

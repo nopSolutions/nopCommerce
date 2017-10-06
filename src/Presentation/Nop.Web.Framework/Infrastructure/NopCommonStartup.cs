@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using ImageResizer.Configuration;
-using ImageResizer.Plugins.PrettyGifs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -52,9 +50,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
-            
-            //add gif resizing support
-            new PrettyGifs().Install(Config.Current);
         }
 
         /// <summary>

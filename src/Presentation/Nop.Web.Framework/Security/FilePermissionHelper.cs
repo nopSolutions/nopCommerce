@@ -36,7 +36,8 @@ namespace Nop.Web.Framework.Security
             AuthorizationRuleCollection rules;
             try
             {
-                rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
+                System.Security.AccessControl.FileSecurity ds = new FileSecurity(path, AccessControlSections.Access);
+                rules = ds.GetAccessRules(true, true, typeof(SecurityIdentifier));
             }
             catch
             {
@@ -160,13 +161,13 @@ namespace Nop.Web.Framework.Security
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
             dirsToCheck.Add(Path.Combine(rootDir, "bin"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
-            dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\bundles"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\db_backups"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\files\\exportimport"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images\\thumbs"));
-            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\images\\uploaded"));
+            dirsToCheck.Add(Path.Combine(rootDir, "plugins/bin"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/bundles"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/db_backups"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/files/exportimport"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/images"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/images/thumbs"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot/images/uploaded"));
             return dirsToCheck;
         }
 

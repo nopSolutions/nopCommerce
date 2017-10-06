@@ -176,7 +176,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Create and configure MiniProfiler service
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseMiniProfiler(this IApplicationBuilder application)
+        public static void UseMiniProfilerInternal(this IApplicationBuilder application)
         {
             //whether database is already installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -188,7 +188,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 application.UseMiniProfiler(miniProfilerOptions =>
                 {
                     //use memory cache provider for storing each result
-                    miniProfilerOptions.Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60));
+                    //(miniProfilerOptions.Storage as MemoryCacheStorage).CacheDuration
 
                     //determine who can access the MiniProfiler results
                     miniProfilerOptions.ResultsAuthorize = request =>

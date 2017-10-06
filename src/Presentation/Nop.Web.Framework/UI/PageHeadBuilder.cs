@@ -300,7 +300,7 @@ namespace Nop.Web.Framework.UI
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    string configFilePath = _hostingEnvironment.ContentRootPath + "/" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
