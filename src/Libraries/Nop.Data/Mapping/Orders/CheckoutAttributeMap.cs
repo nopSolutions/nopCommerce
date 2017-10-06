@@ -1,16 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     public partial class CheckoutAttributeMap : NopEntityTypeConfiguration<CheckoutAttribute>
     {
-        public CheckoutAttributeMap()
+        public override void Configure(EntityTypeBuilder<CheckoutAttribute> builder)
         {
-            this.ToTable("CheckoutAttribute");
-            this.HasKey(ca => ca.Id);
-            this.Property(ca => ca.Name).IsRequired().HasMaxLength(400);
+            base.Configure(builder);
+            builder.ToTable("CheckoutAttribute");
+            builder.HasKey(ca => ca.Id);
+            builder.Property(ca => ca.Name).IsRequired().HasMaxLength(400);
 
-            this.Ignore(ca => ca.AttributeControlType);
+            builder.Ignore(ca => ca.AttributeControlType);
         }
     }
 }

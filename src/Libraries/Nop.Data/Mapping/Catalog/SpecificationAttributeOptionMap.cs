@@ -1,19 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class SpecificationAttributeOptionMap : NopEntityTypeConfiguration<SpecificationAttributeOption>
     {
-        public SpecificationAttributeOptionMap()
+        public override void Configure(EntityTypeBuilder<SpecificationAttributeOption> builder)
         {
-            this.ToTable("SpecificationAttributeOption");
-            this.HasKey(sao => sao.Id);
-            this.Property(sao => sao.Name).IsRequired();
-            this.Property(sao => sao.ColorSquaresRgb).HasMaxLength(100);
+            base.Configure(builder);
+            builder.ToTable("SpecificationAttributeOption");
+            builder.HasKey(sao => sao.Id);
+            builder.Property(sao => sao.Name).IsRequired();
+            builder.Property(sao => sao.ColorSquaresRgb).HasMaxLength(100);
 
-            this.HasRequired(sao => sao.SpecificationAttribute)
+            builder.HasOne(sao => sao.SpecificationAttribute)
                 .WithMany(sa => sa.SpecificationAttributeOptions)
-                .HasForeignKey(sao => sao.SpecificationAttributeId);
+                .HasForeignKey(sao => sao.SpecificationAttributeId)
+                .IsRequired(true);
         }
     }
 }

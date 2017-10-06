@@ -1,21 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     public partial class EmailAccountMap : NopEntityTypeConfiguration<EmailAccount>
     {
-        public EmailAccountMap()
+        public override void Configure(EntityTypeBuilder<EmailAccount> builder)
         {
-            this.ToTable("EmailAccount");
-            this.HasKey(ea => ea.Id);
+            base.Configure(builder);
+            builder.ToTable("EmailAccount");
+            builder.HasKey(ea => ea.Id);
 
-            this.Property(ea => ea.Email).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.DisplayName).HasMaxLength(255);
-            this.Property(ea => ea.Host).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.Username).IsRequired().HasMaxLength(255);
-            this.Property(ea => ea.Password).IsRequired().HasMaxLength(255);
+            builder.Property(ea => ea.Email).IsRequired().HasMaxLength(255);
+            builder.Property(ea => ea.DisplayName).HasMaxLength(255);
+            builder.Property(ea => ea.Host).IsRequired().HasMaxLength(255);
+            builder.Property(ea => ea.Username).IsRequired().HasMaxLength(255);
+            builder.Property(ea => ea.Password).IsRequired().HasMaxLength(255);
 
-            this.Ignore(ea => ea.FriendlyName);
+            builder.Ignore(ea => ea.FriendlyName);
         }
     }
 }

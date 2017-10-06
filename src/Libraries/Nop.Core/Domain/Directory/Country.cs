@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Directory
     public partial class Country : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         private ICollection<StateProvince> _stateProvinces;
-        private ICollection<ShippingMethod> _restrictedShippingMethods;
+        private ICollection<ShippingMethodCountry> _restrictedShippingMethods;
 
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the restricted shipping methods
         /// </summary>
-        public virtual ICollection<ShippingMethod> RestrictedShippingMethods
+        public virtual ICollection<ShippingMethodCountry> RestrictedShippingMethods
         {
-            get { return _restrictedShippingMethods ?? (_restrictedShippingMethods = new List<ShippingMethod>()); }
+            get { return _restrictedShippingMethods ?? (_restrictedShippingMethods = new List<ShippingMethodCountry>()); }
             protected set { _restrictedShippingMethods = value; }
         }
     }

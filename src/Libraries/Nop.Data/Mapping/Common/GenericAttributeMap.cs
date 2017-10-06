@@ -1,17 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
     public partial class GenericAttributeMap : NopEntityTypeConfiguration<GenericAttribute>
     {
-        public GenericAttributeMap()
+        public override void Configure(EntityTypeBuilder<GenericAttribute> builder)
         {
-            this.ToTable("GenericAttribute");
-            this.HasKey(ga => ga.Id);
+            base.Configure(builder);
+            builder.ToTable("GenericAttribute");
+            builder.HasKey(ga => ga.Id);
 
-            this.Property(ga => ga.KeyGroup).IsRequired().HasMaxLength(400);
-            this.Property(ga => ga.Key).IsRequired().HasMaxLength(400);
-            this.Property(ga => ga.Value).IsRequired();
+            builder.Property(ga => ga.KeyGroup).IsRequired().HasMaxLength(400);
+            builder.Property(ga => ga.Key).IsRequired().HasMaxLength(400);
+            builder.Property(ga => ga.Value).IsRequired();
         }
     }
 }

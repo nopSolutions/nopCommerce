@@ -1,18 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
     public partial class PollAnswerMap : NopEntityTypeConfiguration<PollAnswer>
     {
-        public PollAnswerMap()
+        public override void Configure(EntityTypeBuilder<PollAnswer> builder)
         {
-            this.ToTable("PollAnswer");
-            this.HasKey(pa => pa.Id);
-            this.Property(pa => pa.Name).IsRequired();
+            base.Configure(builder);
+            builder.ToTable("PollAnswer");
+            builder.HasKey(pa => pa.Id);
+            builder.Property(pa => pa.Name).IsRequired();
 
-            this.HasRequired(pa => pa.Poll)
+            builder.HasOne(pa => pa.Poll)
                 .WithMany(p => p.PollAnswers)
-                .HasForeignKey(pa => pa.PollId).WillCascadeOnDelete(true);
+                .IsRequired(true)
+                .HasForeignKey(pa => pa.PollId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

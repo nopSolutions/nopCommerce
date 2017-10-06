@@ -1,20 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
     public partial class ReturnRequestMap : NopEntityTypeConfiguration<ReturnRequest>
     {
-        public ReturnRequestMap()
+        public override void Configure(EntityTypeBuilder<ReturnRequest> builder)
         {
-            this.ToTable("ReturnRequest");
-            this.HasKey(rr => rr.Id);
-            this.Property(rr => rr.ReasonForReturn).IsRequired();
-            this.Property(rr => rr.RequestedAction).IsRequired();
+            base.Configure(builder);
+            builder.ToTable("ReturnRequest");
+            builder.HasKey(rr => rr.Id);
+            builder.Property(rr => rr.ReasonForReturn).IsRequired();
+            builder.Property(rr => rr.RequestedAction).IsRequired();
 
-            this.Ignore(rr => rr.ReturnRequestStatus);
+            builder.Ignore(rr => rr.ReturnRequestStatus);
 
-            this.HasRequired(rr => rr.Customer)
+            builder.HasOne(rr => rr.Customer)
                 .WithMany(c => c.ReturnRequests)
+                .IsRequired(true)
                 .HasForeignKey(rr => rr.CustomerId);
         }
     }

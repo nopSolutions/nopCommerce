@@ -18,11 +18,11 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-        private ICollection<ProductTag> _productTags;
+        private ICollection<Product_ProductTag_Mappng> _productTags;
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<Discount_AppliedToProducts> _appliedDiscounts;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
 
 
@@ -656,10 +656,28 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product tags
         /// </summary>
-        public virtual ICollection<ProductTag> ProductTags
+        public virtual ICollection<Product_ProductTag_Mappng> ProductTags
         {
-            get { return _productTags ?? (_productTags = new List<ProductTag>()); }
+            get { return _productTags ?? (_productTags = new List<Product_ProductTag_Mappng>()); }
             protected set { _productTags = value; }
+        }
+
+        public void ProductTagsAdd(ProductTag productTag)
+        {
+            Product_ProductTag_Mappng ppt = new Product_ProductTag_Mappng()
+            {
+                ProductTag = productTag,
+                ProductTagId = productTag.Id,
+                Product = this,
+                ProductId = this.Id
+            };
+            ProductTags.Add(ppt);
+        }
+
+        public void ProductTagsRemove(ProductTag productTag)
+        {
+            var item = ((List<Product_ProductTag_Mappng>)ProductTags).Find(p => p.ProductTagId == productTag.Id && p.ProductId == this.Id);
+            ProductTags.Remove(item);
         }
 
         /// <summary>
@@ -692,12 +710,30 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual ICollection<Discount_AppliedToProducts> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount_AppliedToProducts>()); }
             protected set { _appliedDiscounts = value; }
         }
-        
+
+        public void AppliedDiscountsAdd(Discount discount)
+        {
+            Discount_AppliedToProducts dap = new Discount_AppliedToProducts
+            {
+                Discount = discount,
+                DiscountId = discount.Id,
+                Product = this,
+                ProductId = this.Id
+            };
+            AppliedDiscounts.Add(dap);
+        }
+
+        public void AppliedDiscountsRemove(Discount discount)
+        {
+            var item = ((List<Discount_AppliedToProducts>)AppliedDiscounts).Find(p => p.DiscountId == discount.Id && p.ProductId == this.Id);
+            AppliedDiscounts.Remove(item);
+        }
+
         /// <summary>
         /// Gets or sets the collection of "ProductWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true" and ManageInventoryMethod" to "ManageStock"
         /// </summary>

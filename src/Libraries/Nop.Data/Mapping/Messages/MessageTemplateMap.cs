@@ -1,20 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     public partial class MessageTemplateMap : NopEntityTypeConfiguration<MessageTemplate>
     {
-        public MessageTemplateMap()
+        public override void Configure(EntityTypeBuilder<MessageTemplate> builder)
         {
-            this.ToTable("MessageTemplate");
-            this.HasKey(mt => mt.Id);
+            base.Configure(builder);
+            builder.ToTable("MessageTemplate");
+            builder.HasKey(mt => mt.Id);
 
-            this.Property(mt => mt.Name).IsRequired().HasMaxLength(200);
-            this.Property(mt => mt.BccEmailAddresses).HasMaxLength(200);
-            this.Property(mt => mt.Subject).HasMaxLength(1000);
-            this.Property(mt => mt.EmailAccountId).IsRequired();
+            builder.Property(mt => mt.Name).IsRequired().HasMaxLength(200);
+            builder.Property(mt => mt.BccEmailAddresses).HasMaxLength(200);
+            builder.Property(mt => mt.Subject).HasMaxLength(1000);
+            builder.Property(mt => mt.EmailAccountId).IsRequired();
 
-            this.Ignore(mt => mt.DelayPeriod);
+            builder.Ignore(mt => mt.DelayPeriod);
         }
     }
 }

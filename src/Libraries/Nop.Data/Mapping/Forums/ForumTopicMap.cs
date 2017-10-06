@@ -1,24 +1,29 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     public partial class ForumTopicMap : NopEntityTypeConfiguration<ForumTopic>
     {
-        public ForumTopicMap()
+        public override void Configure(EntityTypeBuilder<ForumTopic> builder)
         {
-            this.ToTable("Forums_Topic");
-            this.HasKey(ft => ft.Id);
-            this.Property(ft => ft.Subject).IsRequired().HasMaxLength(450);
-            this.Ignore(ft => ft.ForumTopicType);
+            base.Configure(builder);
+            builder.ToTable("Forums_Topic");
+            builder.HasKey(ft => ft.Id);
+            builder.Property(ft => ft.Subject).IsRequired().HasMaxLength(450);
+            builder.Ignore(ft => ft.ForumTopicType);
 
-            this.HasRequired(ft => ft.Forum)
+            builder.HasOne(ft => ft.Forum)
                 .WithMany()
+                .IsRequired(true)
                 .HasForeignKey(ft => ft.ForumId);
 
-            this.HasRequired(ft => ft.Customer)
+            builder.HasOne(ft => ft.Customer)
                .WithMany()
+               .IsRequired(true)
                .HasForeignKey(ft => ft.CustomerId)
-               .WillCascadeOnDelete(false);
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

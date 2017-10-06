@@ -1,25 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class ProductReviewMap : NopEntityTypeConfiguration<ProductReview>
     {
-        public ProductReviewMap()
+        public override void Configure(EntityTypeBuilder<ProductReview> builder)
         {
-            this.ToTable("ProductReview");
-            this.HasKey(pr => pr.Id);
+            base.Configure(builder);
+            builder.ToTable("ProductReview");
+            builder.HasKey(pr => pr.Id);
 
-            this.HasRequired(pr => pr.Product)
+            builder.HasOne(pr => pr.Product)
                 .WithMany(p => p.ProductReviews)
-                .HasForeignKey(pr => pr.ProductId);
+                .HasForeignKey(pr => pr.ProductId)
+                .IsRequired(true);
 
-            this.HasRequired(pr => pr.Customer)
+            builder.HasOne(pr => pr.Customer)
                 .WithMany()
-                .HasForeignKey(pr => pr.CustomerId);
+                .HasForeignKey(pr => pr.CustomerId)
+                .IsRequired(true);
 
-            this.HasRequired(pr => pr.Store)
+            builder.HasOne(pr => pr.Store)
                 .WithMany()
-                .HasForeignKey(pr => pr.StoreId);
+                .HasForeignKey(pr => pr.StoreId)
+                .IsRequired(true);
         }
     }
 }

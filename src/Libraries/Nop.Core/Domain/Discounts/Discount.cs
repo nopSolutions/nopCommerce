@@ -10,9 +10,9 @@ namespace Nop.Core.Domain.Discounts
     public partial class Discount : BaseEntity
     {
         private ICollection<DiscountRequirement> _discountRequirements;
-        private ICollection<Category> _appliedToCategories;
-        private ICollection<Manufacturer> _appliedToManufacturers;
-        private ICollection<Product> _appliedToProducts;
+        private ICollection<Discount_AppliedToCategories> _appliedToCategories;
+        private ICollection<Discount_AppliedToManufacturers> _appliedToManufacturers;
+        private ICollection<Discount_AppliedToProducts> _appliedToProducts;
 
         /// <summary>
         /// Gets or sets the name
@@ -132,25 +132,26 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the categories
         /// </summary>
-        public virtual ICollection<Category> AppliedToCategories
+        public virtual ICollection<Discount_AppliedToCategories> AppliedToCategories
         {
-            get { return _appliedToCategories ?? (_appliedToCategories = new List<Category>()); }
+            get { return _appliedToCategories ?? (_appliedToCategories = new List<Discount_AppliedToCategories>()); }
             protected set { _appliedToCategories = value; }
         }
+
         /// <summary>
         /// Gets or sets the categories
         /// </summary>
-        public virtual ICollection<Manufacturer> AppliedToManufacturers
+        public virtual ICollection<Discount_AppliedToManufacturers> AppliedToManufacturers
         {
-            get { return _appliedToManufacturers ?? (_appliedToManufacturers = new List<Manufacturer>()); }
+            get { return _appliedToManufacturers ?? (_appliedToManufacturers = new List<Discount_AppliedToManufacturers>()); }
             protected set { _appliedToManufacturers = value; }
         }
         /// <summary>
         /// Gets or sets the products 
         /// </summary>
-        public virtual ICollection<Product> AppliedToProducts
+        public virtual ICollection<Discount_AppliedToProducts> AppliedToProducts
         {
-            get { return _appliedToProducts ?? (_appliedToProducts = new List<Product>()); }
+            get { return _appliedToProducts ?? (_appliedToProducts = new List<Discount_AppliedToProducts>()); }
             protected set { _appliedToProducts = value; }
         }
     }

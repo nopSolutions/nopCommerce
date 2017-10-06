@@ -1,26 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class ProductSpecificationAttributeMap : NopEntityTypeConfiguration<ProductSpecificationAttribute>
     {
-        public ProductSpecificationAttributeMap()
+        public override void Configure(EntityTypeBuilder<ProductSpecificationAttribute> builder)
         {
-            this.ToTable("Product_SpecificationAttribute_Mapping");
-            this.HasKey(psa => psa.Id);
+            base.Configure(builder);
+            builder.ToTable("Product_SpecificationAttribute_Mapping");
+            builder.HasKey(psa => psa.Id);
 
-            this.Property(psa => psa.CustomValue).HasMaxLength(4000);
+            builder.Property(psa => psa.CustomValue).HasMaxLength(4000);
 
-            this.Ignore(psa => psa.AttributeType);
+            builder.Ignore(psa => psa.AttributeType);
 
-            this.HasRequired(psa => psa.SpecificationAttributeOption)
+            builder.HasOne(psa => psa.SpecificationAttributeOption)
                 .WithMany()
-                .HasForeignKey(psa => psa.SpecificationAttributeOptionId);
+                .HasForeignKey(psa => psa.SpecificationAttributeOptionId)
+                .IsRequired(true);
 
 
-            this.HasRequired(psa => psa.Product)
+            builder.HasOne(psa => psa.Product)
                 .WithMany(p => p.ProductSpecificationAttributes)
-                .HasForeignKey(psa => psa.ProductId);
+                .HasForeignKey(psa => psa.ProductId)
+                .IsRequired(true);
         }
     }
 }

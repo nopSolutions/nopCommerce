@@ -8,7 +8,8 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        private ICollection<PermissionRecord> _permissionRecords;
+        private ICollection<CustomerRole_PermissionRecord> _permissionRecords;
+        private ICollection<Customer_CustomerRole_Mapping> _customers;
 
         /// <summary>
         /// Gets or sets the customer role name
@@ -49,6 +50,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether the customers of this role have other tax display type chosen instead of the default one
         /// </summary>
         public bool OverrideTaxDisplayType { get; set; }
+
         /// <summary>
         /// Gets or sets identifier of the default tax display type (used only with "OverrideTaxDisplayType" enabled)
         /// </summary>
@@ -59,15 +61,21 @@ namespace Nop.Core.Domain.Customers
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>
         public int PurchasedWithProductId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the permission records
         /// </summary>
-        public virtual ICollection<PermissionRecord> PermissionRecords
+        public virtual ICollection<CustomerRole_PermissionRecord> PermissionRecords
         {
-            get { return _permissionRecords ?? (_permissionRecords = new List<PermissionRecord>()); }
+            get { return _permissionRecords ?? (_permissionRecords = new List<CustomerRole_PermissionRecord>()); }
             protected set { _permissionRecords = value; }
         }
-    }
 
+        public ICollection<Customer_CustomerRole_Mapping> Customers
+        {
+            get { return _customers ?? (_customers = new List<Customer_CustomerRole_Mapping>()); }
+            protected set { _customers = value; }
+        }
+
+    }
 }

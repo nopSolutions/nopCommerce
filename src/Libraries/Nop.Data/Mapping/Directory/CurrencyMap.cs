@@ -1,20 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
     public partial class CurrencyMap : NopEntityTypeConfiguration<Currency>
     {
-        public CurrencyMap()
+        public override void Configure(EntityTypeBuilder<Currency> builder)
         {
-            this.ToTable("Currency");
-            this.HasKey(c =>c.Id);
-            this.Property(c => c.Name).IsRequired().HasMaxLength(50);
-            this.Property(c => c.CurrencyCode).IsRequired().HasMaxLength(5);
-            this.Property(c => c.DisplayLocale).HasMaxLength(50);
-            this.Property(c => c.CustomFormatting).HasMaxLength(50);
-            this.Property(c => c.Rate).HasPrecision(18, 4);
+            base.Configure(builder);
+            builder.ToTable("Currency");
+            builder.HasKey(c => c.Id);
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(50);
+            builder.Property(c => c.CurrencyCode).IsRequired().HasMaxLength(5);
+            builder.Property(c => c.DisplayLocale).HasMaxLength(50);
+            builder.Property(c => c.CustomFormatting).HasMaxLength(50);
+            builder.Property(c => c.Rate);
 
-            this.Ignore(c => c.RoundingType);
+            builder.Ignore(c => c.RoundingType);
         }
     }
 }

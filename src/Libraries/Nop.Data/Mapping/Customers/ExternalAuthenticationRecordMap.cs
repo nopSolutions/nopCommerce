@@ -1,19 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
     public partial class ExternalAuthenticationRecordMap : NopEntityTypeConfiguration<ExternalAuthenticationRecord>
     {
-        public ExternalAuthenticationRecordMap()
+        public override void Configure(EntityTypeBuilder<ExternalAuthenticationRecord> builder)
         {
-            this.ToTable("ExternalAuthenticationRecord");
+            base.Configure(builder);
+            builder.ToTable("ExternalAuthenticationRecord");
 
-            this.HasKey(ear => ear.Id);
+            builder.HasKey(ear => ear.Id);
 
-            this.HasRequired(ear => ear.Customer)
+            builder.HasOne(ear => ear.Customer)
                 .WithMany(c => c.ExternalAuthenticationRecords)
-                .HasForeignKey(ear => ear.CustomerId);
-
+                .HasForeignKey(ear => ear.CustomerId)
+                .IsRequired(true);
         }
     }
 }

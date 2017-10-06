@@ -1,15 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Affiliates;
 
 namespace Nop.Data.Mapping.Affiliates
 {
     public partial class AffiliateMap : NopEntityTypeConfiguration<Affiliate>
     {
-        public AffiliateMap()
+        public override void Configure(EntityTypeBuilder<Affiliate> builder)
         {
-            this.ToTable("Affiliate");
-            this.HasKey(a => a.Id);
-
-            this.HasRequired(a => a.Address).WithMany().HasForeignKey(x => x.AddressId).WillCascadeOnDelete(false);
+            base.Configure(builder);
+            builder.ToTable("Affiliate");
+            builder.HasKey(a => a.Id);
+            builder.HasOne(a => a.Address).WithMany().HasForeignKey(x => x.AddressId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

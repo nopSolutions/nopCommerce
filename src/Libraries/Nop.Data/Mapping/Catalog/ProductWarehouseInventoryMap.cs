@@ -1,23 +1,28 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class ProductWarehouseInventoryMap : NopEntityTypeConfiguration<ProductWarehouseInventory>
     {
-        public ProductWarehouseInventoryMap()
+        public override void Configure(EntityTypeBuilder<ProductWarehouseInventory> builder)
         {
-            this.ToTable("ProductWarehouseInventory");
-            this.HasKey(x => x.Id);
+            base.Configure(builder);
+            builder.ToTable("ProductWarehouseInventory");
+            builder.HasKey(x => x.Id);
 
-            this.HasRequired(x => x.Product)
+            builder.HasOne(x => x.Product)
                 .WithMany(p => p.ProductWarehouseInventory)
                 .HasForeignKey(x => x.ProductId)
-                .WillCascadeOnDelete(true);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
 
-            this.HasRequired(x => x.Warehouse)
+            builder.HasOne(x => x.Warehouse)
                 .WithMany()
                 .HasForeignKey(x => x.WarehouseId)
-                .WillCascadeOnDelete(true);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
         }
     }
 }

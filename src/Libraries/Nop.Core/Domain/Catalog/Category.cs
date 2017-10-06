@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<Discount_AppliedToCategories> _appliedDiscounts;
 
         /// <summary>
         /// Gets or sets the name
@@ -123,10 +123,28 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual ICollection<Discount_AppliedToCategories> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount_AppliedToCategories>()); }
             protected set { _appliedDiscounts = value; }
+        }
+
+        public void AppliedDiscountsAdd(Discount discount)
+        {
+            Discount_AppliedToCategories dac = new Discount_AppliedToCategories
+            {
+                Discount = discount,
+                DiscountId = discount.Id,
+                Category = this,
+                CategoryId = this.Id
+            };
+            AppliedDiscounts.Add(dac);
+        }
+
+        public void AppliedDiscountsRemove(Discount discount)
+        {
+            var item = ((List<Discount_AppliedToCategories>) AppliedDiscounts).Find(p => p.DiscountId == discount.Id && p.CategoryId == this.Id);
+            AppliedDiscounts.Remove(item);
         }
     }
 }

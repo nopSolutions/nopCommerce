@@ -1,15 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
     public partial class NewsLetterSubscriptionMap : NopEntityTypeConfiguration<NewsLetterSubscription>
     {
-        public NewsLetterSubscriptionMap()
+        public override void Configure(EntityTypeBuilder<NewsLetterSubscription> builder)
         {
-            this.ToTable("NewsLetterSubscription");
-            this.HasKey(nls => nls.Id);
+            base.Configure(builder);
+            builder.ToTable("NewsLetterSubscription");
+            builder.HasKey(nls => nls.Id);
 
-            this.Property(nls => nls.Email).IsRequired().HasMaxLength(255);
+            builder.Property(nls => nls.Email).IsRequired().HasMaxLength(255);
         }
     }
 }

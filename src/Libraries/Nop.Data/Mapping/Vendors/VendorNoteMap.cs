@@ -1,17 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
 {
     public partial class VendorNoteMap : NopEntityTypeConfiguration<VendorNote>
     {
-        public VendorNoteMap()
+        public override void Configure(EntityTypeBuilder<VendorNote> builder)
         {
-            this.ToTable("VendorNote");
-            this.HasKey(vn => vn.Id);
-            this.Property(vn => vn.Note).IsRequired();
+            base.Configure(builder);
+            builder.ToTable("VendorNote");
+            builder.HasKey(vn => vn.Id);
+            builder.Property(vn => vn.Note).IsRequired();
 
-            this.HasRequired(vn => vn.Vendor)
+            builder.HasOne(vn => vn.Vendor)
                 .WithMany(v => v.VendorNotes)
+                .IsRequired(true)
                 .HasForeignKey(vn => vn.VendorId);
         }
     }

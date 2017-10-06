@@ -1,46 +1,44 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class ProductMap : NopEntityTypeConfiguration<Product>
     {
-        public ProductMap()
+        public override void Configure(EntityTypeBuilder<Product> builder)
         {
-            this.ToTable("Product");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.Name).IsRequired().HasMaxLength(400);
-            this.Property(p => p.MetaKeywords).HasMaxLength(400);
-            this.Property(p => p.MetaTitle).HasMaxLength(400);
-            this.Property(p => p.Sku).HasMaxLength(400);
-            this.Property(p => p.ManufacturerPartNumber).HasMaxLength(400);
-            this.Property(p => p.Gtin).HasMaxLength(400);
-            this.Property(p => p.AdditionalShippingCharge).HasPrecision(18, 4);
-            this.Property(p => p.Price).HasPrecision(18, 4);
-            this.Property(p => p.OldPrice).HasPrecision(18, 4);
-            this.Property(p => p.ProductCost).HasPrecision(18, 4);
-            this.Property(p => p.MinimumCustomerEnteredPrice).HasPrecision(18, 4);
-            this.Property(p => p.MaximumCustomerEnteredPrice).HasPrecision(18, 4);
-            this.Property(p => p.Weight).HasPrecision(18, 4);
-            this.Property(p => p.Length).HasPrecision(18, 4);
-            this.Property(p => p.Width).HasPrecision(18, 4);
-            this.Property(p => p.Height).HasPrecision(18, 4);
-            this.Property(p => p.RequiredProductIds).HasMaxLength(1000);
-            this.Property(p => p.AllowedQuantities).HasMaxLength(1000);
-            this.Property(p => p.BasepriceAmount).HasPrecision(18, 4);
-            this.Property(p => p.BasepriceBaseAmount).HasPrecision(18, 4);
-
-            this.Ignore(p => p.ProductType);
-            this.Ignore(p => p.BackorderMode);
-            this.Ignore(p => p.DownloadActivationType);
-            this.Ignore(p => p.GiftCardType);
-            this.Ignore(p => p.LowStockActivity);
-            this.Ignore(p => p.ManageInventoryMethod);
-            this.Ignore(p => p.RecurringCyclePeriod);
-            this.Ignore(p => p.RentalPricePeriod);
-
-            this.HasMany(p => p.ProductTags)
-                .WithMany(pt => pt.Products)
-                .Map(m => m.ToTable("Product_ProductTag_Mapping"));
+            base.Configure(builder);
+            builder.ToTable("Product");
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.Name).IsRequired().HasMaxLength(400);
+            builder.Property(p => p.MetaKeywords).HasMaxLength(400);
+            builder.Property(p => p.MetaTitle).HasMaxLength(400);
+            builder.Property(p => p.Sku).HasMaxLength(400);
+            builder.Property(p => p.ManufacturerPartNumber).HasMaxLength(400);
+            builder.Property(p => p.Gtin).HasMaxLength(400);
+            builder.Property(p => p.AdditionalShippingCharge);
+            builder.Property(p => p.Price);
+            builder.Property(p => p.OldPrice);
+            builder.Property(p => p.ProductCost);
+            builder.Property(p => p.MinimumCustomerEnteredPrice);
+            builder.Property(p => p.MaximumCustomerEnteredPrice);
+            builder.Property(p => p.Weight);
+            builder.Property(p => p.Length);
+            builder.Property(p => p.Width);
+            builder.Property(p => p.Height);
+            builder.Property(p => p.RequiredProductIds).HasMaxLength(1000);
+            builder.Property(p => p.AllowedQuantities).HasMaxLength(1000);
+            builder.Property(p => p.BasepriceAmount);
+            builder.Property(p => p.BasepriceBaseAmount);
+            builder.Ignore(p => p.ProductType);
+            builder.Ignore(p => p.BackorderMode);
+            builder.Ignore(p => p.DownloadActivationType);
+            builder.Ignore(p => p.GiftCardType);
+            builder.Ignore(p => p.LowStockActivity);
+            builder.Ignore(p => p.ManageInventoryMethod);
+            builder.Ignore(p => p.RecurringCyclePeriod);
+            builder.Ignore(p => p.RentalPricePeriod);
         }
     }
 }

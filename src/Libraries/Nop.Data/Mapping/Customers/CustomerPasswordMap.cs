@@ -1,19 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
     public partial class CustomerPasswordMap : NopEntityTypeConfiguration<CustomerPassword>
     {
-        public CustomerPasswordMap()
+        public override void Configure(EntityTypeBuilder<CustomerPassword> builder)
         {
-            this.ToTable("CustomerPassword");
-            this.HasKey(password => password.Id);
+            base.Configure(builder);
+            builder.ToTable("CustomerPassword");
+            builder.HasKey(password => password.Id);
 
-            this.HasRequired(password => password.Customer)
+            builder.HasOne(password => password.Customer)
                 .WithMany()
-                .HasForeignKey(password => password.CustomerId);
+                .HasForeignKey(password => password.CustomerId)
+                .IsRequired(true);
 
-            this.Ignore(password => password.PasswordFormat);
+            builder.Ignore(password => password.PasswordFormat);
         }
     }
 }

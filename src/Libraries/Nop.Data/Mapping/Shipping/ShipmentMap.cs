@@ -1,18 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
     public partial class ShipmentMap : NopEntityTypeConfiguration<Shipment>
     {
-        public ShipmentMap()
+        public override void Configure(EntityTypeBuilder<Shipment> builder)
         {
-            this.ToTable("Shipment");
-            this.HasKey(s => s.Id);
+            base.Configure(builder);
+            builder.ToTable("Shipment");
+            builder.HasKey(s => s.Id);
 
-            this.Property(s => s.TotalWeight).HasPrecision(18, 4);
-            
-            this.HasRequired(s => s.Order)
+            builder.Property(s => s.TotalWeight);
+
+            builder.HasOne(s => s.Order)
                 .WithMany(o => o.Shipments)
+                .IsRequired(true)
                 .HasForeignKey(s => s.OrderId);
         }
     }

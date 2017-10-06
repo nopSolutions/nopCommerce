@@ -1,14 +1,17 @@
-﻿using Nop.Core.Domain.Shipping;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
     public class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
     {
-        public ProductAvailabilityRangeMap()
+        public override void Configure(EntityTypeBuilder<ProductAvailabilityRange> builder)
         {
-            this.ToTable("ProductAvailabilityRange");
-            this.HasKey(range => range.Id);
-            this.Property(range => range.Name).IsRequired().HasMaxLength(400);
+            base.Configure(builder);
+            builder.ToTable("ProductAvailabilityRange");
+            builder.HasKey(range => range.Id);
+            builder.Property(range => range.Name).IsRequired().HasMaxLength(400);
         }
     }
 }

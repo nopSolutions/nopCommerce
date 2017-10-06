@@ -1,22 +1,27 @@
-﻿using Nop.Core.Domain.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
 {
     public partial class ActivityLogMap : NopEntityTypeConfiguration<ActivityLog>
     {
-        public ActivityLogMap()
+        public override void Configure(EntityTypeBuilder<ActivityLog> builder)
         {
-            this.ToTable("ActivityLog");
-            this.HasKey(al => al.Id);
-            this.Property(al => al.Comment).IsRequired();
-            this.Property(al => al.IpAddress).HasMaxLength(200);
+            base.Configure(builder);
+            builder.ToTable("ActivityLog");
+            builder.HasKey(al => al.Id);
+            builder.Property(al => al.Comment).IsRequired();
+            builder.Property(al => al.IpAddress).HasMaxLength(200);
 
-            this.HasRequired(al => al.ActivityLogType)
+            builder.HasOne(al => al.ActivityLogType)
                 .WithMany()
+                .IsRequired(true)
                 .HasForeignKey(al => al.ActivityLogTypeId);
 
-            this.HasRequired(al => al.Customer)
+            builder.HasOne(al => al.Customer)
                 .WithMany()
+                .IsRequired(true)
                 .HasForeignKey(al => al.CustomerId);
         }
     }

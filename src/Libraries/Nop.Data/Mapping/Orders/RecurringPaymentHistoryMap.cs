@@ -1,15 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class RecurringPaymentHistoryMap : NopEntityTypeConfiguration<RecurringPaymentHistory>
+    public partial class RecurringPaymenbuildertoryMap : NopEntityTypeConfiguration<RecurringPaymentHistory>
     {
-        public RecurringPaymentHistoryMap()
+        public override void Configure(EntityTypeBuilder<RecurringPaymentHistory> builder)
         {
-            this.ToTable("RecurringPaymentHistory");
-            this.HasKey(rph => rph.Id);
+            base.Configure(builder);
+            builder.ToTable("RecurringPaymentHistory");
+            builder.HasKey(rph => rph.Id);
 
-            this.HasRequired(rph => rph.RecurringPayment)
+            builder.HasOne(rph => rph.RecurringPayment)
                 .WithMany(rp => rp.RecurringPaymentHistory)
                 .HasForeignKey(rph => rph.RecurringPaymentId);
 

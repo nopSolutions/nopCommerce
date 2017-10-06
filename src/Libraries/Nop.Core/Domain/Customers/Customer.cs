@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
@@ -11,10 +12,12 @@ namespace Nop.Core.Domain.Customers
     public partial class Customer : BaseEntity
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<CustomerRole> _customerRoles;
+        private ICollection<Customer_CustomerRole_Mapping> _customerRoles;
+        private ICollection<CustomerRole> _customerRolesonly;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
-        private ICollection<Address> _addresses;
+        private ICollection<CustomerAddresses> _addresses;
+        private ICollection<Address> _addressesonly;
 
         /// <summary>
         /// Ctor
@@ -22,6 +25,14 @@ namespace Nop.Core.Domain.Customers
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();
+            _addresses = new ObservableCollection<CustomerAddresses>();
+            _addressesonly = new ObservableCollection<Address>();
+            ((ObservableCollection<Address>)_addressesonly).CollectionChanged += Customer_CollectionChanged;
+            ((ObservableCollection<CustomerAddresses>)_addresses).CollectionChanged += Customer_CollectionChanged1;
+            _customerRoles = new ObservableCollection<Customer_CustomerRole_Mapping>();
+            _customerRolesonly = new ObservableCollection<CustomerRole>();
+            ((ObservableCollection<CustomerRole>)_customerRolesonly).CollectionChanged += Customer_CollectionChanged2; ;
+            ((ObservableCollection<Customer_CustomerRole_Mapping>)_customerRoles).CollectionChanged += Customer_CollectionChanged3;
         }
 
         /// <summary>
@@ -145,9 +156,9 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer roles
         /// </summary>
-        public virtual ICollection<CustomerRole> CustomerRoles
+        public virtual ICollection<Customer_CustomerRole_Mapping> CustomerCustomerRoles
         {
-            get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
+            get { return _customerRoles; }
             protected set { _customerRoles = value; }
         }
 
@@ -182,12 +193,178 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets customer addresses
         /// </summary>
-        public virtual ICollection<Address> Addresses
+        public virtual ICollection<CustomerAddresses> CustomerAddresses
         {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }            
+            get
+            {
+                if (_addresses != null)
+                {
+                    
+                }
+                else
+                {
+                    
+                }
+                return _addresses;
+
+            }
+            protected set
+            {
+                _addresses = value;
+            }            
         }
-        
+        private bool internalmodify = false;
+        private void Customer_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (Address newitem in e.NewItems)
+                {
+                    var ca = new CustomerAddresses()
+                    {
+                        Address = newitem,
+                        AddressId = newitem.Id,
+                        Customer = this,
+                        CustomerId = this.Id
+                    };
+                    internalmodify = true;
+                    _addresses.Add(ca);
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Address olditem in e.OldItems)
+                {
+                    var item = ((List<CustomerAddresses>) _addresses).Find(p =>
+                        p.AddressId == olditem.Id && p.CustomerId == this.Id);
+                    internalmodify = true;
+                    _addresses.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
+
+        private void Customer_CollectionChanged1(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (CustomerAddresses newitem in e.NewItems)
+                {
+                    internalmodify = true;
+                    _addressesonly.Add(newitem.Address);
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (CustomerAddresses olditem in e.OldItems)
+                {
+                    var item = ((List<Address>) _addressesonly).Find(p => p.Id == olditem.AddressId);
+                    internalmodify = true;
+                    _addressesonly.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
+
+
+        public ICollection<Address> Addresses
+        {
+
+            get
+            {
+                if (_addressesonly.Contains(null))
+                {
+                    internalmodify = true;
+                    _addressesonly.Clear();
+                    foreach (var item in _addresses)
+                    {
+                        _addressesonly.Add(item.Address);
+                    }
+                    internalmodify = false;
+                }
+                return _addressesonly;
+            }
+        }
+
+        private void Customer_CollectionChanged2(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (CustomerRole newitem in e.NewItems)
+                {
+                    var ca = new Customer_CustomerRole_Mapping()
+                    {
+                        CustomerRole = newitem,
+                        CustomerRoleId = newitem.Id,
+                        Customer = this,
+                        CustomerId = this.Id
+                    };
+                    internalmodify = true;
+                    _customerRoles.Add(ca);
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (CustomerRole olditem in e.OldItems)
+                {
+                    var item = ((List<Customer_CustomerRole_Mapping>)_customerRoles).Find(p =>
+                        p.CustomerRoleId == olditem.Id && p.CustomerId == this.Id);
+                    internalmodify = true;
+                    _customerRoles.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
+
+        private void Customer_CollectionChanged3(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (internalmodify == true) return;
+            if (e.NewItems != null)
+            {
+                foreach (Customer_CustomerRole_Mapping newitem in e.NewItems)
+                {
+                    internalmodify = true;
+                    _customerRolesonly.Add(newitem.CustomerRole);
+                    internalmodify = false;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Customer_CustomerRole_Mapping olditem in e.OldItems)
+                {
+                    var item = ((List<CustomerRole>)_customerRolesonly).Find(p => p.Id == olditem.CustomerRoleId);
+                    internalmodify = true;
+                    _customerRolesonly.Remove(item);
+                    internalmodify = false;
+                }
+            }
+        }
+
+        public virtual ICollection<CustomerRole> CustomerRoles
+        {
+            get
+            {
+                if (_customerRolesonly.Contains(null))
+                {
+                    //regenerate
+                    internalmodify = true;
+                    _customerRolesonly.Clear();
+                    foreach (var item in _customerRoles)
+                    {
+                        _customerRolesonly.Add(item.CustomerRole);
+                    }
+                    internalmodify = false;
+                }
+                return _customerRolesonly;
+            }
+        }
+
         #endregion
     }
 }

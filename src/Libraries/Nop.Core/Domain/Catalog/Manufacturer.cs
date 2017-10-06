@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<Discount_AppliedToManufacturers> _appliedDiscounts;
 
         /// <summary>
         /// Gets or sets the name
@@ -109,10 +109,28 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual ICollection<Discount_AppliedToManufacturers> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount_AppliedToManufacturers>()); }
             protected set { _appliedDiscounts = value; }
+        }
+
+        public void AppliedDiscountsAdd(Discount discount)
+        {
+            Discount_AppliedToManufacturers dam = new Discount_AppliedToManufacturers
+            {
+                Discount = discount,
+                DiscountId = discount.Id,
+                Manufacturer = this,
+                ManufacturerId = this.Id
+            };
+            AppliedDiscounts.Add(dam);
+        }
+
+        public void AppliedDiscountsRemove(Discount discount)
+        {
+            var item = ((List<Discount_AppliedToManufacturers>)AppliedDiscounts).Find(p => p.DiscountId == discount.Id && p.ManufacturerId == this.Id);
+            AppliedDiscounts.Remove(item);
         }
     }
 }

@@ -1,20 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
     public partial class StateProvinceMap : NopEntityTypeConfiguration<StateProvince>
     {
-        public StateProvinceMap()
+        public override void Configure(EntityTypeBuilder<StateProvince> builder)
         {
-            this.ToTable("StateProvince");
-            this.HasKey(sp => sp.Id);
-            this.Property(sp => sp.Name).IsRequired().HasMaxLength(100);
-            this.Property(sp => sp.Abbreviation).HasMaxLength(100);
+            base.Configure(builder);
+            builder.ToTable("StateProvince");
+            builder.HasKey(sp => sp.Id);
+            builder.Property(sp => sp.Name).IsRequired().HasMaxLength(100);
+            builder.Property(sp => sp.Abbreviation).HasMaxLength(100);
 
 
-            this.HasRequired(sp => sp.Country)
+            builder.HasOne(sp => sp.Country)
                 .WithMany(c => c.StateProvinces)
-                .HasForeignKey(sp => sp.CountryId);
+                .HasForeignKey(sp => sp.CountryId)
+                .IsRequired(true);
         }
     }
 }

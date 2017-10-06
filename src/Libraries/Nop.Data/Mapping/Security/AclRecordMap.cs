@@ -1,20 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
     public partial class AclRecordMap : NopEntityTypeConfiguration<AclRecord>
     {
-        public AclRecordMap()
+        public override void Configure(EntityTypeBuilder<AclRecord> builder)
         {
-            this.ToTable("AclRecord");
-            this.HasKey(ar => ar.Id);
+            base.Configure(builder);
+            builder.ToTable("AclRecord");
+            builder.HasKey(ar => ar.Id);
 
-            this.Property(ar => ar.EntityName).IsRequired().HasMaxLength(400);
+            builder.Property(ar => ar.EntityName).IsRequired().HasMaxLength(400);
 
-            this.HasRequired(ar => ar.CustomerRole)
+            builder.HasOne(ar => ar.CustomerRole)
                 .WithMany()
+                .IsRequired(true)
                 .HasForeignKey(ar => ar.CustomerRoleId)
-                .WillCascadeOnDelete(true);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

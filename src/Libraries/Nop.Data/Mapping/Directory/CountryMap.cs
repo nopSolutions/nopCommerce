@@ -1,16 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
     public partial class CountryMap : NopEntityTypeConfiguration<Country>
     {
-        public CountryMap()
+        public override void Configure(EntityTypeBuilder<Country> builder)
         {
-            this.ToTable("Country");
-            this.HasKey(c =>c.Id);
-            this.Property(c => c.Name).IsRequired().HasMaxLength(100);
-            this.Property(c =>c.TwoLetterIsoCode).HasMaxLength(2);
-            this.Property(c =>c.ThreeLetterIsoCode).HasMaxLength(3);
+            base.Configure(builder);
+            builder.ToTable("Country");
+            builder.HasKey(c => c.Id);
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            builder.Property(c => c.TwoLetterIsoCode).HasMaxLength(2);
+            builder.Property(c => c.ThreeLetterIsoCode).HasMaxLength(3);
         }
     }
 }

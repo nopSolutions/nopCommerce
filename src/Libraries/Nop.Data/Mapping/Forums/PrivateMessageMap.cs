@@ -1,25 +1,30 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
     public partial class PrivateMessageMap : NopEntityTypeConfiguration<PrivateMessage>
     {
-        public PrivateMessageMap()
+        public override void Configure(EntityTypeBuilder<PrivateMessage> builder)
         {
-            this.ToTable("Forums_PrivateMessage");
-            this.HasKey(pm => pm.Id);
-            this.Property(pm => pm.Subject).IsRequired().HasMaxLength(450);
-            this.Property(pm => pm.Text).IsRequired();
+            base.Configure(builder);
+            builder.ToTable("Forums_PrivateMessage");
+            builder.HasKey(pm => pm.Id);
+            builder.Property(pm => pm.Subject).IsRequired().HasMaxLength(450);
+            builder.Property(pm => pm.Text).IsRequired();
 
-            this.HasRequired(pm => pm.FromCustomer)
+            builder.HasOne(pm => pm.FromCustomer)
                .WithMany()
+               .IsRequired(true)
                .HasForeignKey(pm => pm.FromCustomerId)
-               .WillCascadeOnDelete(false);
+               .OnDelete(DeleteBehavior.Restrict);
 
-            this.HasRequired(pm => pm.ToCustomer)
+            builder.HasOne(pm => pm.ToCustomer)
                .WithMany()
+               .IsRequired(true)
                .HasForeignKey(pm => pm.ToCustomerId)
-               .WillCascadeOnDelete(false);
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

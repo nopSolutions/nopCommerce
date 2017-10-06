@@ -1,14 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
 {
     public partial class DownloadMap : NopEntityTypeConfiguration<Download>
     {
-        public DownloadMap()
+        public override void Configure(EntityTypeBuilder<Download> builder)
         {
-            this.ToTable("Download");
-            this.HasKey(p => p.Id);
-            this.Property(p => p.DownloadBinary).IsMaxLength();
+            base.Configure(builder);
+            builder.ToTable("Download");
+            builder.HasKey(p => p.Id);
+            builder.Property(p => p.DownloadBinary).HasMaxLength(100*1024*1024);//100MB
         }
     }
 }

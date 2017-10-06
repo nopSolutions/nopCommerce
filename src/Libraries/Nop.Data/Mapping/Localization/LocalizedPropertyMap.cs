@@ -1,20 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
     public partial class LocalizedPropertyMap : NopEntityTypeConfiguration<LocalizedProperty>
     {
-        public LocalizedPropertyMap()
+        public override void Configure(EntityTypeBuilder<LocalizedProperty> builder)
         {
-            this.ToTable("LocalizedProperty");
-            this.HasKey(lp => lp.Id);
+            base.Configure(builder);
+            builder.ToTable("LocalizedProperty");
+            builder.HasKey(lp => lp.Id);
 
-            this.Property(lp => lp.LocaleKeyGroup).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.LocaleKey).IsRequired().HasMaxLength(400);
-            this.Property(lp => lp.LocaleValue).IsRequired();
-            
-            this.HasRequired(lp => lp.Language)
+            builder.Property(lp => lp.LocaleKeyGroup).IsRequired().HasMaxLength(400);
+            builder.Property(lp => lp.LocaleKey).IsRequired().HasMaxLength(400);
+            builder.Property(lp => lp.LocaleValue).IsRequired();
+
+            builder.HasOne(lp => lp.Language)
                 .WithMany()
+                .IsRequired(true)
                 .HasForeignKey(lp => lp.LanguageId);
         }
     }

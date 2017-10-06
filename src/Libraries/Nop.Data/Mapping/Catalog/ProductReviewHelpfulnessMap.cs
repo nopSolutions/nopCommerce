@@ -1,17 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
     public partial class ProductReviewHelpfulnessMap : NopEntityTypeConfiguration<ProductReviewHelpfulness>
     {
-        public ProductReviewHelpfulnessMap()
+        public override void Configure(EntityTypeBuilder<ProductReviewHelpfulness> builder)
         {
-            this.ToTable("ProductReviewHelpfulness");
-            this.HasKey(pr => pr.Id);
+            base.Configure(builder);
+            builder.ToTable("ProductReviewHelpfulness");
+            builder.HasKey(pr => pr.Id);
 
-            this.HasRequired(prh => prh.ProductReview)
+            builder.HasOne(prh => prh.ProductReview)
                 .WithMany(pr => pr.ProductReviewHelpfulnessEntries)
-                .HasForeignKey(prh => prh.ProductReviewId).WillCascadeOnDelete(true);
+                .HasForeignKey(prh => prh.ProductReviewId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
         }
     }
 }
