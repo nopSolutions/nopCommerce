@@ -98,7 +98,16 @@
         var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
         if (selectedProvider == 'provider_sqlce') {
             $('#sqlConnectionInfo').hide();
-        } else if (selectedProvider == 'provider_sqlserver') {
+        } else if (selectedProvider == 'provider_sqlite') {
+            $('#sqlConnectionInfo').hide();
+        }
+        else if (selectedProvider == 'provider_sqlserver') {
+            $('#sqlConnectionInfo').show();
+        }
+        else if (selectedProvider == 'provider_mysql') {
+            $('#sqlConnectionInfo').show();
+        }
+        else if (selectedProvider == 'provider_npgsql') {
             $('#sqlConnectionInfo').show();
         }
     }
@@ -205,19 +214,28 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @if (!Model.DisableSqlCompact)
-                                    {
-                                        <div class="radio">
-                                            <label>
-                                                <input asp-for="DataProvider" value="sqlce" type="radio" checked="@(Model.DataProvider == "sqlce")" id="provider_sqlce"/>
-                                                @ILS.GetResource("SqlCompact")
-                                            </label>
-                                        </div>
-                                    }
                                     <div class="radio">
                                         <label>
                                             <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == "sqlserver")" id="provider_sqlserver" />
                                             @ILS.GetResource("SqlStandard") <strong>@ILS.GetResource("Recommended")</strong>
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input asp-for="DataProvider" value="sqlite" type="radio" checked="@(Model.DataProvider == "sqlite")" id="provider_sqlite" />
+                                            Use built -in sqlite
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input asp-for="DataProvider" value="mysql" type="radio" checked="@(Model.DataProvider == "mysql")" id="provider_mysql" />
+                                            Use MySQL provider
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input asp-for="DataProvider" value="npgsql" type="radio" checked="@(Model.DataProvider == "npgsql")" id="provider_npgsql" />
+                                            Use PostgreSQL provider
                                         </label>
                                     </div>
                                 </div>

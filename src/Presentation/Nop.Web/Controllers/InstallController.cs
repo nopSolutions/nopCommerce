@@ -19,6 +19,8 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
+using Npgsql;
+using MySql;
 
 namespace Nop.Web.Controllers
 {
@@ -62,6 +64,40 @@ namespace Nop.Web.Controllers
             {
                 //just try to connect
                 using (var conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool NpgsqlDatabaseExists(string connectionString)
+        {
+            try
+            {
+                //just try to connect
+                using (var conn = new Npgsql.NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool MySQLDatabaseExists(string connectionString)
+        {
+            try
+            {
+                //just try to connect
+                using (var conn = new MySql.Data.MySqlClient.MySqlConnection(connectionString))
                 {
                     conn.Open();
                 }
@@ -133,6 +169,104 @@ namespace Nop.Web.Controllers
             }
         }
 
+        protected virtual string NpgsqlCreateDatabase(string connectionString, string collation, int triesToConnect = 10)
+        {
+            try
+            {
+                //parse database name
+                var builder = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
+                var databaseName = builder.Database;
+                //now create connection string to 'master' dabatase. It always exists.
+                builder.Database = "master";
+                var masterCatalogConnectionString = builder.ToString();
+                string query = $"CREATE DATABASE [{databaseName}]";
+                if (!String.IsNullOrWhiteSpace(collation))
+                    query = $"{query} COLLATE {collation}";
+                using (var conn = new Npgsql.NpgsqlConnection(masterCatalogConnectionString))
+                {
+                    conn.Open();
+                    using (var command = new Npgsql.NpgsqlCommand(query, conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                //try connect
+                if (triesToConnect > 0)
+                {
+                    //Sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+                    //But we have already started creation of tables and sample data.
+                    //As a result there is an exception thrown and the installation process cannot continue.
+                    //That's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+                    for (var i = 0; i <= triesToConnect; i++)
+                    {
+                        if (i == triesToConnect)
+                            throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                        if (!this.NpgsqlDatabaseExists(connectionString))
+                            Thread.Sleep(1000);
+                        else
+                            break;
+                    }
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message);
+            }
+        }
+
+        protected virtual string MySQLCreateDatabase(string connectionString, string collation, int triesToConnect = 10)
+        {
+            try
+            {
+                //parse database name
+                var builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(connectionString);
+                var databaseName = builder.Database;
+                //now create connection string to 'master' dabatase. It always exists.
+                builder.Database = "master";
+                var masterCatalogConnectionString = builder.ToString();
+                string query = $"CREATE DATABASE [{databaseName}]";
+                if (!String.IsNullOrWhiteSpace(collation))
+                    query = $"{query} COLLATE {collation}";
+                using (var conn = new MySql.Data.MySqlClient.MySqlConnection(masterCatalogConnectionString))
+                {
+                    conn.Open();
+                    using (var command = new MySql.Data.MySqlClient.MySqlCommand(query, conn))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                //try connect
+                if (triesToConnect > 0)
+                {
+                    //Sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+                    //But we have already started creation of tables and sample data.
+                    //As a result there is an exception thrown and the installation process cannot continue.
+                    //That's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+                    for (var i = 0; i <= triesToConnect; i++)
+                    {
+                        if (i == triesToConnect)
+                            throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                        if (!this.MySQLDatabaseExists(connectionString))
+                            Thread.Sleep(1000);
+                        else
+                            break;
+                    }
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message);
+            }
+        }
+
         /// <summary>
         /// Create contents of connection strings used by the SqlConnection class
         /// </summary>
@@ -183,8 +317,6 @@ namespace Nop.Web.Controllers
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
                 DataProvider = "sqlserver",
-                //fast installation service does not support SQL compact
-                DisableSqlCompact = _config.UseFastInstallationService,
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
@@ -225,7 +357,6 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            model.DisableSqlCompact = _config.UseFastInstallationService;
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
@@ -335,20 +466,6 @@ namespace Nop.Web.Controllers
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
-                    else if (model.DataProvider.Equals("sqlce", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        //SQL CE
-                        string databaseFileName = "Nop.Db.sdf";
-                        string databasePath = @"|DataDirectory|\" + databaseFileName;
-                        connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
-
-                        //drop database if exists
-                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
-                        if (System.IO.File.Exists(databaseFullPath))
-                        {
-                            System.IO.File.Delete(databaseFullPath);
-                        }
-                    }
                     else if (model.DataProvider.Equals("sqlite", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQLite
@@ -361,6 +478,81 @@ namespace Nop.Web.Controllers
                         if (System.IO.File.Exists(databaseFullPath))
                         {
                             System.IO.File.Delete(databaseFullPath);
+                        }
+                    }
+                    else if (model.DataProvider.Equals("npgsql", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase)) {
+                                //raw connection string
+                                var sqlCsb = new Npgsql.NpgsqlConnectionStringBuilder(model.DatabaseConnectionString);
+                            connectionString = sqlCsb.ToString();
+                        }
+                        else
+                        {
+                            var builder = new Npgsql.NpgsqlConnectionStringBuilder();
+                            builder.Username = model.SqlServerUsername;
+                            builder.Password = model.SqlServerPassword;
+                            builder.Database = model.SqlDatabaseName;
+                            builder.Host = model.SqlServerName;
+                            builder.IntegratedSecurity = model.SqlAuthenticationType == "windowsauthentication";
+                            builder.SslMode = Npgsql.SslMode.Require;
+                            connectionString = builder.ConnectionString;
+                        }
+
+                        if (model.SqlServerCreateDatabase)
+                        {
+                            if (!NpgsqlDatabaseExists(connectionString))
+                            {
+                                //create database
+                                var collation = model.UseCustomCollation ? model.Collation : "";
+                                var errorCreatingDatabase = NpgsqlCreateDatabase(connectionString, collation);
+                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
+                                    throw new Exception(errorCreatingDatabase);
+                            }
+                        }
+                        else
+                        {
+                            //check whether database exists
+                            if (!NpgsqlDatabaseExists(connectionString))
+                                throw new Exception(_locService.GetResource("DatabaseNotExists"));
+                        }
+                    }
+                    else if (model.DataProvider.Equals("mysql", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            //raw connection string
+                            var sqlCsb = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder(model.DatabaseConnectionString);
+                            connectionString = sqlCsb.ToString();
+                        }
+                        else
+                        {
+                            var builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder();
+                            builder.UserID = model.SqlServerUsername;
+                            builder.Password = model.SqlServerPassword;
+                            builder.Database = model.SqlDatabaseName;
+                            builder.Server = model.SqlServerName;
+                            builder.IntegratedSecurity = model.SqlAuthenticationType == "windowsauthentication";
+                            builder.SslMode = MySql.Data.MySqlClient.MySqlSslMode.VerifyFull;
+                            connectionString = builder.ConnectionString;
+                        }
+
+                        if (model.SqlServerCreateDatabase)
+                        {
+                            if (!MySQLDatabaseExists(connectionString))
+                            {
+                                //create database
+                                var collation = model.UseCustomCollation ? model.Collation : "";
+                                var errorCreatingDatabase = MySQLCreateDatabase(connectionString, collation);
+                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
+                                    throw new Exception(errorCreatingDatabase);
+                            }
+                        }
+                        else
+                        {
+                            //check whether database exists
+                            if (!MySQLDatabaseExists(connectionString))
+                                throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
 

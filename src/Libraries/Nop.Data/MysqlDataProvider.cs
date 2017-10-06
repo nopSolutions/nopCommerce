@@ -58,7 +58,7 @@ namespace Nop.Data
         /// <returns>Parameter</returns>
         public virtual DbParameter GetParameter()
         {
-            return new SqlParameter();
+            return new MySql.Data.MySqlClient.MySqlParameter();
         }
 
         /// <summary>
