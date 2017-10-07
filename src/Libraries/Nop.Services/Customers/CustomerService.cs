@@ -467,7 +467,7 @@ namespace Nop.Services.Customers
                     .Include("CustomerAddresses.Address")
                     .Include("BillingAddress")
                     .Include("ShippingAddress")
-                    .Include("ShoppingCartItems.Prodeuct")
+                    .Include("ShoppingCartItems.Product")
                     .Include("ReturnRequests")
                     .Include("ExternalAuthenticationRecords")
                         orderby c.Id
