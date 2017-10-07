@@ -321,7 +321,7 @@ namespace Nop.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public static string MapPath(string path)
         {
-            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+            path = path.Replace("~/", "").TrimStart('/');
             return Path.Combine(BaseDirectory??String.Empty, path);
         }
 
