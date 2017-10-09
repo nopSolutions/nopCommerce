@@ -4788,6 +4788,9 @@
   <LocaleResource Name="Admin.Configuration.Payment.Methods.Configure">
     <Value>Configure</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
+    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=2&utm_source=admin-panel&utm_medium=payment-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.Methods.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -8103,6 +8106,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Configure">
     <Value>Configure</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.DownloadMorePlugins">
+    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=3&utm_source=admin-panel&utm_medium=shipping-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -8312,6 +8318,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Providers.Configure">
     <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Providers.DownloadMorePlugins">
+    <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=11&utm_source=admin-panel&utm_medium=tax-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Providers.Fields.FriendlyName">
     <Value>Friendly name</Value>
