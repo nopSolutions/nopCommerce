@@ -82,7 +82,7 @@
                                     }
                                 </div>
                                 <span asp-validation-for="StoreInformationSettings.DefaultStoreTheme"></span>
-                                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="https://www.nopcommerce.com/marketplace.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/marketplace.aspx</a></em>
+                                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore")</em>
                             </div>
                         </div>
                         <div class="form-group" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>

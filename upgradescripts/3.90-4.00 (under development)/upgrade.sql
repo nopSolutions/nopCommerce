@@ -392,6 +392,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Instructions">
     <Value><![CDATA[<p>Here you can find third-party extensions and themes which are developed by our community and partners. They are also available in our <a href="https://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=official-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore">
+    <Value><![CDATA[<p>You can get more themes in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">marketplace</a></p>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
