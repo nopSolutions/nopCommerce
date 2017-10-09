@@ -4486,145 +4486,146 @@ namespace Nop.Web.Areas.Admin.Controllers
             var form = model.Form;
             var warnings = new List<string>();
 
-            #region Product attributes
-
-                var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                    //ignore non-combinable attributes for combinations
-                    .Where(x => !x.IsNonCombinable())
-                    .ToList();
-                foreach (var attribute in attributes)
+            //product attributes
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                //ignore non-combinable attributes for combinations
+                .Where(x => !x.IsNonCombinable()).ToList();
+            foreach (var attribute in attributes)
+            {
+                string controlId = $"product_attribute_{attribute.Id}";
+                switch (attribute.AttributeControlType)
                 {
-                    string controlId = $"product_attribute_{attribute.Id}";
-                    switch (attribute.AttributeControlType)
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
                     {
-                        case AttributeControlType.DropdownList:
-                        case AttributeControlType.RadioList:
-                        case AttributeControlType.ColorSquares:
-                        case AttributeControlType.ImageSquares:
+                        var ctrlAttributes = form[controlId];
+                        if (!String.IsNullOrEmpty(ctrlAttributes))
+                        {
+                            int selectedAttributeId = int.Parse(ctrlAttributes);
+                            if (selectedAttributeId > 0)
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString());
+                        }
+                    }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                    {
+                        var cblAttributes = form[controlId].ToString();
+                        if (!String.IsNullOrEmpty(cblAttributes))
+                        {
+                            foreach (var item in cblAttributes.Split(new[] {','},
+                                StringSplitOptions.RemoveEmptyEntries))
                             {
-                                var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
-                                {
-                                    int selectedAttributeId = int.Parse(ctrlAttributes);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                            break;
-                        case AttributeControlType.Checkboxes:
-                            {
-                                var cblAttributes = form[controlId].ToString();
-                                if (!String.IsNullOrEmpty(cblAttributes))
-                                {
-                                    foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                    {
-                                        int selectedAttributeId = int.Parse(item);
-                                        if (selectedAttributeId > 0)
-                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                                attribute, selectedAttributeId.ToString());
-                                    }
-                                }
-                            }
-                            break;
-                        case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                //load read-only (already server-side selected) values
-                                var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                                foreach (var selectedAttributeId in attributeValues
-                                    .Where(v => v.IsPreSelected)
-                                    .Select(v => v.Id)
-                                    .ToList())
-                                {
+                                int selectedAttributeId = int.Parse(item);
+                                if (selectedAttributeId > 0)
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
-                                }
                             }
-                            break;
-                        case AttributeControlType.TextBox:
-                        case AttributeControlType.MultilineTextbox:
-                            {
-                                var ctrlAttributes = form[controlId].ToString();
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
-                                {
-                                    string enteredText = ctrlAttributes.Trim();
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, enteredText);
-                                }
-                            }
-                            break;
-                        case AttributeControlType.Datepicker:
-                            {
-                                var date = form[controlId + "_day"];
-                                var month = form[controlId + "_month"];
-                                var year = form[controlId + "_year"];
-                                DateTime? selectedDate = null;
-                                try
-                                {
-                                    selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
-                                }
-                                catch { }
-                                if (selectedDate.HasValue)
-                                {
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedDate.Value.ToString("D"));
-                                }
-                            }
-                            break;
-                        case AttributeControlType.FileUpload:
-                            {
-                                var httpPostedFile = this.Request.Form.Files[controlId];
-                                if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
-                                {
-                                    var fileSizeOk = true;
-                                    if (attribute.ValidationFileMaximumSize.HasValue)
-                                    {
-                                        //compare in bytes
-                                        var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
-                                        if (httpPostedFile.Length > maxFileSizeBytes)
-                                        {
-                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value));
-                                            fileSizeOk = false;
-                                        }
-                                    }
-                                    if (fileSizeOk)
-                                    {
-                                        //save an uploaded file
-                                        var download = new Download
-                                        {
-                                            DownloadGuid = Guid.NewGuid(),
-                                            UseDownloadUrl = false,
-                                            DownloadUrl = "",
-                                            DownloadBinary = httpPostedFile.GetDownloadBits(),
-                                            ContentType = httpPostedFile.ContentType,
-                                            Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                            Extension = Path.GetExtension(httpPostedFile.FileName),
-                                            IsNew = true
-                                        };
-                                        _downloadService.InsertDownload(download);
-
-                                        //save attribute
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, download.DownloadGuid.ToString());
-                                    }
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                        }
                     }
-                }
-                //validate conditional attributes (if specified)
-                foreach (var attribute in attributes)
-                {
-                    var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
-                    if (conditionMet.HasValue && !conditionMet.Value)
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
                     {
-                        attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                        //load read-only (already server-side selected) values
+                        var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                        foreach (var selectedAttributeId in attributeValues
+                            .Where(v => v.IsPreSelected)
+                            .Select(v => v.Id)
+                            .ToList())
+                        {
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, selectedAttributeId.ToString());
+                        }
                     }
-                }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                    {
+                        var ctrlAttributes = form[controlId].ToString();
+                        if (!String.IsNullOrEmpty(ctrlAttributes))
+                        {
+                            string enteredText = ctrlAttributes.Trim();
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, enteredText);
+                        }
+                    }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    {
+                        var date = form[controlId + "_day"];
+                        var month = form[controlId + "_month"];
+                        var year = form[controlId + "_year"];
+                        DateTime? selectedDate = null;
+                        try
+                        {
+                            selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                        }
+                        catch
+                        {
+                        }
+                        if (selectedDate.HasValue)
+                        {
+                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                attribute, selectedDate.Value.ToString("D"));
+                        }
+                    }
+                        break;
+                    case AttributeControlType.FileUpload:
+                    {
+                        var httpPostedFile = this.Request.Form.Files[controlId];
+                        if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                        {
+                            var fileSizeOk = true;
+                            if (attribute.ValidationFileMaximumSize.HasValue)
+                            {
+                                //compare in bytes
+                                var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                                if (httpPostedFile.Length > maxFileSizeBytes)
+                                {
+                                    warnings.Add(string.Format(
+                                        _localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"),
+                                        attribute.ValidationFileMaximumSize.Value));
+                                    fileSizeOk = false;
+                                }
+                            }
+                            if (fileSizeOk)
+                            {
+                                //save an uploaded file
+                                var download = new Download
+                                {
+                                    DownloadGuid = Guid.NewGuid(),
+                                    UseDownloadUrl = false,
+                                    DownloadUrl = "",
+                                    DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                    ContentType = httpPostedFile.ContentType,
+                                    Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                    Extension = Path.GetExtension(httpPostedFile.FileName),
+                                    IsNew = true
+                                };
+                                _downloadService.InsertDownload(download);
 
-                #endregion
+                                //save attribute
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in attributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                }
+            }
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
