@@ -82,7 +82,7 @@
                                     }
                                 </div>
                                 <span asp-validation-for="StoreInformationSettings.DefaultStoreTheme"></span>
-                                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore")</em>
+                                <p><em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore")</em></p>
                             </div>
                         </div>
                         <div class="form-group" @(Model.StoreInformationSettings.AvailableStoreThemes.Count == 1 ? Html.Raw("style=\"display:none\"") : null)>
