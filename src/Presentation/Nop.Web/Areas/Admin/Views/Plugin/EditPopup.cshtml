@@ -20,7 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_plugin_details_buttons", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_plugin_details_buttons", additionalData = Model.SystemName })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdatePlugin", Model)
