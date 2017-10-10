@@ -686,7 +686,7 @@ namespace Nop.Services.Catalog
             CopyCategoriesMapping(product, productCopy);
             //product <-> manufacturers mappings
             CopyManufacturersMapping(product, productCopy);
-            //product <-> releated products mappings
+            //product <-> related products mappings
             CopyReleatedProductsMapping(product, productCopy);
             //product <-> cross sells mappings
             CopyCrossSellsMapping(product, productCopy);
