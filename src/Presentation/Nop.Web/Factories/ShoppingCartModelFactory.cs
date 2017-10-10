@@ -841,8 +841,7 @@ namespace Nop.Web.Factories
                 model.Items.Add(cartItemModel);
             }
             
-            #region Payment methods
-
+            //payment methods
             //all payment methods (do not filter by country here as it could be not specified yet)
             var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
@@ -856,7 +855,6 @@ namespace Nop.Web.Factories
             var buttonPaymentMethods = paymentMethods
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
-
             foreach (var pm in buttonPaymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
@@ -868,8 +866,6 @@ namespace Nop.Web.Factories
             //hide "Checkout" button if we have only "Button" payment methods
             model.HideCheckoutButton = !nonButtonPaymentMethods.Any() && model.ButtonPaymentMethodViewComponentNames.Any();
             
-            #endregion
-
             //order review data
             if (prepareAndDisplayOrderReviewData)
             {
@@ -938,7 +934,6 @@ namespace Nop.Web.Factories
                 CurrentCustomerIsGuest = _workContext.CurrentCustomer.IsGuest(),
                 AnonymousCheckoutAllowed = _orderSettings.AnonymousCheckoutAllowed,
             };
-
 
             //performance optimization (use "HasShoppingCartItems" property)
             if (_workContext.CurrentCustomer.HasShoppingCartItems)

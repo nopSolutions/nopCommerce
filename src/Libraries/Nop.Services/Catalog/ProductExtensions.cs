@@ -15,6 +15,111 @@ namespace Nop.Services.Catalog
     /// </summary>
     public static class ProductExtensions
     {
+        #region Utilities
+
+        private static string GeStockMessage(Product product, string attributesXml, ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IDateRangeService dateRangeService)
+        {
+            if (!product.DisplayStockAvailability)
+                return string.Empty;
+
+            string stockMessage;
+
+            var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            if (combination != null)
+            {
+                //combination exists
+                var stockQuantity = combination.StockQuantity;
+                if (stockQuantity > 0)
+                {
+                    stockMessage = product.DisplayStockQuantity
+                        ?
+                        //display "in stock" with stock quantity
+                        string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"),
+                            stockQuantity)
+                        :
+                        //display "in stock" without stock quantity
+                        localizationService.GetResource("Products.Availability.InStock");
+                }
+                else if (combination.AllowOutOfStockOrders)
+                {
+                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                }
+                else
+                {
+                    var productAvailabilityRange =
+                        dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                    stockMessage = productAvailabilityRange == null
+                        ? localizationService.GetResource("Products.Availability.OutOfStock")
+                        : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                            productAvailabilityRange.GetLocalized(range => range.Name));
+                }
+            }
+            else
+            {
+                //no combination configured
+                if (product.AllowAddingOnlyExistingAttributeCombinations)
+                {
+                    var productAvailabilityRange =
+                        dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                    stockMessage = productAvailabilityRange == null
+                        ? localizationService.GetResource("Products.Availability.OutOfStock")
+                        : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                            productAvailabilityRange.GetLocalized(range => range.Name));
+                }
+                else
+                {
+                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                }
+            }
+            return stockMessage;
+        }
+
+        private static string GetStockMessage(Product product, ILocalizationService localizationService, IDateRangeService dateRangeService, string stockMessage)
+        {
+            if (!product.DisplayStockAvailability)
+                return string.Empty;
+
+            var stockQuantity = product.GetTotalStockQuantity();
+            if (stockQuantity > 0)
+            {
+                stockMessage = product.DisplayStockQuantity
+                    ?
+                    //display "in stock" with stock quantity
+                    string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
+                    :
+                    //display "in stock" without stock quantity
+                    localizationService.GetResource("Products.Availability.InStock");
+            }
+            else
+            {
+                //out of stock
+                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
+                switch (product.BackorderMode)
+                {
+                    case BackorderMode.NoBackorders:
+                        stockMessage = productAvailabilityRange == null
+                            ? localizationService.GetResource("Products.Availability.OutOfStock")
+                            : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
+                                productAvailabilityRange.GetLocalized(range => range.Name));
+                        break;
+                    case BackorderMode.AllowQtyBelow0:
+                        stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                        break;
+                    case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
+                        stockMessage = productAvailabilityRange == null
+                            ? localizationService.GetResource("Products.Availability.Backordering")
+                            : string.Format(localizationService.GetResource("Products.Availability.BackorderingWithDate"),
+                                productAvailabilityRange.GetLocalized(range => range.Name));
+                        break;
+                }
+            }
+            return stockMessage;
+        }
+
+        #endregion
+
+        #region Methods
+       
         /// <summary>
         /// Gets a preferred tier price
         /// </summary>
@@ -96,111 +201,21 @@ namespace Nop.Services.Catalog
             if (dateRangeService == null)
                 throw new ArgumentNullException(nameof(dateRangeService));
 
-            string stockMessage = string.Empty;
+            var stockMessage = string.Empty;
 
             switch (product.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.ManageStock:
-                {
-                        #region Manage stock
-                        
-                        if (!product.DisplayStockAvailability)
-                            return stockMessage;
-
-                        var stockQuantity = product.GetTotalStockQuantity();
-                        if (stockQuantity > 0)
-                        {
-                            stockMessage = product.DisplayStockQuantity ?
-                                //display "in stock" with stock quantity
-                                string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity) :
-                                //display "in stock" without stock quantity
-                                localizationService.GetResource("Products.Availability.InStock");
-                        }
-                        else
-                        {
-                            //out of stock
-                            var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
-                            switch (product.BackorderMode)
-                            {
-                                case BackorderMode.NoBackorders:
-                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
-                                        : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                                            productAvailabilityRange.GetLocalized(range => range.Name));
-                                    break;
-                                case BackorderMode.AllowQtyBelow0:
-                                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                                    break;
-                                case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                                    stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.Backordering")
-                                        : string.Format(localizationService.GetResource("Products.Availability.BackorderingWithDate"),
-                                            productAvailabilityRange.GetLocalized(range => range.Name));
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        
-                        #endregion
-                    }
+                    stockMessage = GetStockMessage(product, localizationService, dateRangeService, stockMessage);
                     break;
                 case ManageInventoryMethod.ManageStockByAttributes:
-                    {
-                        #region Manage stock by attributes
-
-                        if (!product.DisplayStockAvailability)
-                            return stockMessage;
-
-                        var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-                        if (combination != null)
-                        {
-                            //combination exists
-                            var stockQuantity = combination.StockQuantity;
-                            if (stockQuantity > 0)
-                            {
-                                stockMessage = product.DisplayStockQuantity ?
-                                    //display "in stock" with stock quantity
-                                    string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity) :
-                                    //display "in stock" without stock quantity
-                                    localizationService.GetResource("Products.Availability.InStock");
-                            }
-                            else if (combination.AllowOutOfStockOrders)
-                            {
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                            }
-                            else
-                            {
-                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
-                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
-                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                                        productAvailabilityRange.GetLocalized(range => range.Name));
-                            }
-                        }
-                        else
-                        {
-                            //no combination configured
-                            if (product.AllowAddingOnlyExistingAttributeCombinations)
-                            {
-                                var productAvailabilityRange = dateRangeService.GetProductAvailabilityRangeById(product.ProductAvailabilityRangeId);
-                                stockMessage = productAvailabilityRange == null ? localizationService.GetResource("Products.Availability.OutOfStock")
-                                    : string.Format(localizationService.GetResource("Products.Availability.AvailabilityRange"),
-                                        productAvailabilityRange.GetLocalized(range => range.Name));
-                            }
-                            else
-                            {
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                            }
-                        }
-
-                        #endregion
-                    }
+                    stockMessage = GeStockMessage(product, attributesXml, localizationService, productAttributeParser, dateRangeService);
                     break;
-                case ManageInventoryMethod.DontManageStock:
-                default:
-                    return stockMessage;
             }
+
             return stockMessage;
         }
-        
+
         /// <summary>
         /// Indicates whether a product tag exists
         /// </summary>
@@ -270,22 +285,21 @@ namespace Nop.Services.Catalog
                 return 0;
             }
 
-            if (product.UseMultipleWarehouses)
+            if (!product.UseMultipleWarehouses)
+                return product.StockQuantity;
+
+            var pwi = product.ProductWarehouseInventory;
+            if (warehouseId > 0)
             {
-                var pwi = product.ProductWarehouseInventory;
-                if (warehouseId > 0)
-                {
-                    pwi = pwi.Where(x => x.WarehouseId == warehouseId).ToList();
-                }
-                var result = pwi.Sum(x => x.StockQuantity);
-                if (useReservedQuantity)
-                {
-                    result = result - pwi.Sum(x => x.ReservedQuantity);
-                }
-                return result;
+                pwi = pwi.Where(x => x.WarehouseId == warehouseId).ToList();
             }
-            
-            return product.StockQuantity;
+            var result = pwi.Sum(x => x.StockQuantity);
+            if (useReservedQuantity)
+            {
+                result = result - pwi.Sum(x => x.ReservedQuantity);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -350,8 +364,6 @@ namespace Nop.Services.Catalog
 
             return totalPeriods;
         }
-
-
 
         /// <summary>
         /// Gets SKU, Manufacturer part number and GTIN
@@ -528,5 +540,7 @@ namespace Nop.Services.Catalog
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
             return result;
         }
+
+        #endregion
     }
 }

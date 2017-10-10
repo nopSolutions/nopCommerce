@@ -66,26 +66,418 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
-        /// <summary>
-        /// Create a copy of product with all depended data
-        /// </summary>
-        /// <param name="product">The product to copy</param>
-        /// <param name="newName">The name of product duplicate</param>
-        /// <param name="isPublished">A value indicating whether the product duplicate should be published</param>
-        /// <param name="copyImages">A value indicating whether the product images should be copied</param>
-        /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
-        /// <returns>Product copy</returns>
-        public virtual Product CopyProduct(Product product, string newName,
-            bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
+        protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            foreach (var discount in product.AppliedDiscounts)
+            {
+                productCopy.AppliedDiscounts.Add(discount);
+                _productService.UpdateProduct(productCopy);
+            }
+        }
 
-            if (String.IsNullOrEmpty(newName))
-                throw new ArgumentException("Product name is required");
+        protected virtual void CopyAssociatedProducts(Product product, bool isPublished, bool copyImages, bool copyAssociatedProducts, Product productCopy)
+        {
+            if (!copyAssociatedProducts)
+                return;
 
+            var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
+            foreach (var associatedProduct in associatedProducts)
+            {
+                var associatedProductCopy = CopyProduct(associatedProduct, $"Copy of {associatedProduct.Name}",
+                    isPublished, copyImages, false);
+                associatedProductCopy.ParentGroupedProductId = productCopy.Id;
+                _productService.UpdateProduct(productCopy);
+            }
+        }
+
+        protected virtual void CopyTierPrices(Product product, Product productCopy)
+        {
+            foreach (var tierPrice in product.TierPrices)
+            {
+                _productService.InsertTierPrice(new TierPrice
+                {
+                    ProductId = productCopy.Id,
+                    StoreId = tierPrice.StoreId,
+                    CustomerRoleId = tierPrice.CustomerRoleId,
+                    Quantity = tierPrice.Quantity,
+                    Price = tierPrice.Price,
+                    StartDateTimeUtc = tierPrice.StartDateTimeUtc,
+                    EndDateTimeUtc = tierPrice.EndDateTimeUtc
+                });
+            }
+        }
+
+        protected virtual void CopyAttributesMapping(Product product, Product productCopy, Dictionary<int, int> originalNewPictureIdentifiers)
+        {
+            var associatedAttributes = new Dictionary<int, int>();
+            var associatedAttributeValues = new Dictionary<int, int>();
+
+            //attribute mapping with condition attributes
+            var oldCopyWithConditionAttributes = new List<ProductAttributeMapping>();
+
+            //all product attribute mapping copies
+            var productAttributeMappingCopies = new Dictionary<int, ProductAttributeMapping>();
+
+            var languages = _languageService.GetAllLanguages(true);
+
+            foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
+            {
+                var productAttributeMappingCopy = new ProductAttributeMapping
+                {
+                    ProductId = productCopy.Id,
+                    ProductAttributeId = productAttributeMapping.ProductAttributeId,
+                    TextPrompt = productAttributeMapping.TextPrompt,
+                    IsRequired = productAttributeMapping.IsRequired,
+                    AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId,
+                    DisplayOrder = productAttributeMapping.DisplayOrder,
+                    ValidationMinLength = productAttributeMapping.ValidationMinLength,
+                    ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
+                    ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
+                    ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
+                    DefaultValue = productAttributeMapping.DefaultValue
+                };
+                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+                //localization
+                foreach (var lang in languages)
+                {
+                    var textPrompt = productAttributeMapping.GetLocalized(x => x.TextPrompt, lang.Id, false, false);
+                    if (!String.IsNullOrEmpty(textPrompt))
+                        _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
+                            lang.Id);
+                }
+
+                productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
+
+                if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                {
+                    oldCopyWithConditionAttributes.Add(productAttributeMapping);
+                }
+
+                //save associated value (used for combinations copying)
+                associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
+
+                // product attribute values
+                var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                foreach (var productAttributeValue in productAttributeValues)
+                {
+                    int attributeValuePictureId = 0;
+                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
+                    {
+                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
+                    }
+                    var attributeValueCopy = new ProductAttributeValue
+                    {
+                        ProductAttributeMappingId = productAttributeMappingCopy.Id,
+                        AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
+                        AssociatedProductId = productAttributeValue.AssociatedProductId,
+                        Name = productAttributeValue.Name,
+                        ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
+                        PriceAdjustment = productAttributeValue.PriceAdjustment,
+                        WeightAdjustment = productAttributeValue.WeightAdjustment,
+                        Cost = productAttributeValue.Cost,
+                        CustomerEntersQty = productAttributeValue.CustomerEntersQty,
+                        Quantity = productAttributeValue.Quantity,
+                        IsPreSelected = productAttributeValue.IsPreSelected,
+                        DisplayOrder = productAttributeValue.DisplayOrder,
+                        PictureId = attributeValuePictureId,
+                    };
+                    //picture associated to "iamge square" attribute type (if exists)
+                    if (productAttributeValue.ImageSquaresPictureId > 0)
+                    {
+                        var origImageSquaresPicture =
+                            _pictureService.GetPictureById(productAttributeValue.ImageSquaresPictureId);
+                        if (origImageSquaresPicture != null)
+                        {
+                            //copy the picture
+                            var imageSquaresPictureCopy = _pictureService.InsertPicture(
+                                _pictureService.LoadPictureBinary(origImageSquaresPicture),
+                                origImageSquaresPicture.MimeType,
+                                origImageSquaresPicture.SeoFilename,
+                                origImageSquaresPicture.AltAttribute,
+                                origImageSquaresPicture.TitleAttribute);
+                            attributeValueCopy.ImageSquaresPictureId = imageSquaresPictureCopy.Id;
+                        }
+                    }
+
+                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
+
+                    //save associated value (used for combinations copying)
+                    associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
+
+                    //localization
+                    foreach (var lang in languages)
+                    {
+                        var name = productAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
+                        if (!String.IsNullOrEmpty(name))
+                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
+                    }
+                }
+            }
+
+            //copy attribute conditions
+            foreach (var productAttributeMapping in oldCopyWithConditionAttributes)
+            {
+                var oldConditionAttributeMapping = _productAttributeParser
+                    .ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml).FirstOrDefault();
+
+                if (oldConditionAttributeMapping == null)
+                    continue;
+
+                var oldConditionValues =
+                    _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml,
+                        oldConditionAttributeMapping.Id);
+
+                if (!oldConditionValues.Any())
+                    continue;
+
+                var newAttributeMappingId = associatedAttributes[oldConditionAttributeMapping.Id];
+                var newConditionAttributeMapping = productAttributeMappingCopies[newAttributeMappingId];
+
+                var newConditionAttributeXml = string.Empty;
+
+                foreach (var oldConditionValue in oldConditionValues)
+                {
+                    newConditionAttributeXml = _productAttributeParser.AddProductAttribute(newConditionAttributeXml,
+                        newConditionAttributeMapping, associatedAttributeValues[oldConditionValue.Id].ToString());
+                }
+
+                var attributeMappingId = associatedAttributes[productAttributeMapping.Id];
+                var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
+                conditionAttribute.ConditionAttributeXml = newConditionAttributeXml;
+
+                _productAttributeService.UpdateProductAttributeMapping(conditionAttribute);
+            }
+
+            //attribute combinations
+            foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
+            {
+                //generate new AttributesXml according to new value IDs
+                string newAttributesXml = "";
+                var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
+                foreach (var oldAttribute in parsedProductAttributes)
+                {
+                    if (associatedAttributes.ContainsKey(oldAttribute.Id))
+                    {
+                        var newAttribute =
+                            _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
+                        if (newAttribute != null)
+                        {
+                            var oldAttributeValuesStr =
+                                _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
+                            foreach (var oldAttributeValueStr in oldAttributeValuesStr)
+                            {
+                                if (newAttribute.ShouldHaveValues())
+                                {
+                                    //attribute values
+                                    int oldAttributeValue = int.Parse(oldAttributeValueStr);
+                                    if (associatedAttributeValues.ContainsKey(oldAttributeValue))
+                                    {
+                                        var newAttributeValue =
+                                            _productAttributeService.GetProductAttributeValueById(
+                                                associatedAttributeValues[oldAttributeValue]);
+                                        if (newAttributeValue != null)
+                                        {
+                                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                                newAttribute, newAttributeValue.Id.ToString());
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //just a text
+                                    newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                        newAttribute, oldAttributeValueStr);
+                                }
+                            }
+                        }
+                    }
+                }
+                var combinationCopy = new ProductAttributeCombination
+                {
+                    ProductId = productCopy.Id,
+                    AttributesXml = newAttributesXml,
+                    StockQuantity = combination.StockQuantity,
+                    AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
+                    Sku = combination.Sku,
+                    ManufacturerPartNumber = combination.ManufacturerPartNumber,
+                    Gtin = combination.Gtin,
+                    OverriddenPrice = combination.OverriddenPrice,
+                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
+                };
+                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
+
+                //quantity change history
+                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity, combination.StockQuantity,
+                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"),
+                        product.Id), combinationId: combination.Id);
+            }
+        }
+
+        protected virtual void CopyProductSpecifications(Product product, Product productCopy)
+        {
+            foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
+            {
+                var psaCopy = new ProductSpecificationAttribute
+                {
+                    ProductId = productCopy.Id,
+                    AttributeTypeId = productSpecificationAttribute.AttributeTypeId,
+                    SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
+                    CustomValue = productSpecificationAttribute.CustomValue,
+                    AllowFiltering = productSpecificationAttribute.AllowFiltering,
+                    ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
+                    DisplayOrder = productSpecificationAttribute.DisplayOrder
+                };
+                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
+            }
+        }
+
+        protected virtual void CopyCrossSellsMapping(Product product, Product productCopy)
+        {
+            foreach (var csProduct in _productService.GetCrossSellProductsByProductId1(product.Id, true))
+            {
+                _productService.InsertCrossSellProduct(
+                    new CrossSellProduct
+                    {
+                        ProductId1 = productCopy.Id,
+                        ProductId2 = csProduct.ProductId2,
+                    });
+            }
+        }
+
+        protected virtual void CopyReleatedProductsMapping(Product product, Product productCopy)
+        {
+            foreach (var relatedProduct in _productService.GetRelatedProductsByProductId1(product.Id, true))
+            {
+                _productService.InsertRelatedProduct(
+                    new RelatedProduct
+                    {
+                        ProductId1 = productCopy.Id,
+                        ProductId2 = relatedProduct.ProductId2,
+                        DisplayOrder = relatedProduct.DisplayOrder
+                    });
+            }
+        }
+
+        protected virtual void CopyManufacturersMapping(Product product, Product productCopy)
+        {
+            foreach (var productManufacturers in product.ProductManufacturers)
+            {
+                var productManufacturerCopy = new ProductManufacturer
+                {
+                    ProductId = productCopy.Id,
+                    ManufacturerId = productManufacturers.ManufacturerId,
+                    IsFeaturedProduct = productManufacturers.IsFeaturedProduct,
+                    DisplayOrder = productManufacturers.DisplayOrder
+                };
+
+                _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
+            }
+        }
+
+        protected virtual void CopyCategoriesMapping(Product product, Product productCopy)
+        {
+            foreach (var productCategory in product.ProductCategories)
+            {
+                var productCategoryCopy = new ProductCategory
+                {
+                    ProductId = productCopy.Id,
+                    CategoryId = productCategory.CategoryId,
+                    IsFeaturedProduct = productCategory.IsFeaturedProduct,
+                    DisplayOrder = productCategory.DisplayOrder
+                };
+
+                _categoryService.InsertProductCategory(productCategoryCopy);
+            }
+        }
+
+        protected virtual void CopyWarehousesMapping(Product product, Product productCopy)
+        {
+            foreach (var pwi in product.ProductWarehouseInventory)
+            {
+                var pwiCopy = new ProductWarehouseInventory
+                {
+                    ProductId = productCopy.Id,
+                    WarehouseId = pwi.WarehouseId,
+                    StockQuantity = pwi.StockQuantity,
+                    ReservedQuantity = 0,
+                };
+
+                productCopy.ProductWarehouseInventory.Add(pwiCopy);
+
+                //quantity change history
+                var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
+                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
+            }
+            _productService.UpdateProduct(productCopy);
+        }
+
+        protected virtual Dictionary<int, int> CopyProductPictures(Product product, string newName, bool copyImages, Product productCopy)
+        {
+            //variable to store original and new picture identifiers
+            var originalNewPictureIdentifiers = new Dictionary<int, int>();
+            if (copyImages)
+            {
+                foreach (var productPicture in product.ProductPictures)
+                {
+                    var picture = productPicture.Picture;
+                    var pictureCopy = _pictureService.InsertPicture(
+                        _pictureService.LoadPictureBinary(picture),
+                        picture.MimeType,
+                        _pictureService.GetPictureSeName(newName),
+                        picture.AltAttribute,
+                        picture.TitleAttribute);
+                    _productService.InsertProductPicture(new ProductPicture
+                    {
+                        ProductId = productCopy.Id,
+                        PictureId = pictureCopy.Id,
+                        DisplayOrder = productPicture.DisplayOrder
+                    });
+                    originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
+                }
+            }
+            return originalNewPictureIdentifiers;
+        }
+
+        protected virtual void CopyLocalizationData(Product product, Product productCopy)
+        {
+            var languages = _languageService.GetAllLanguages(true);
+
+            //localization
+            foreach (var lang in languages)
+            {
+                var name = product.GetLocalized(x => x.Name, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(name))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id);
+
+                var shortDescription = product.GetLocalized(x => x.ShortDescription, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(shortDescription))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
+
+                var fullDescription = product.GetLocalized(x => x.FullDescription, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(fullDescription))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id);
+
+                var metaKeywords = product.GetLocalized(x => x.MetaKeywords, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(metaKeywords))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
+
+                var metaDescription = product.GetLocalized(x => x.MetaDescription, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(metaDescription))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
+
+                var metaTitle = product.GetLocalized(x => x.MetaTitle, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(metaTitle))
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
+
+                //search engine name
+                _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", name, false), lang.Id);
+            }
+        }
+
+        protected virtual Product CopyBaseProductData(Product product, string newName, bool isPublished)
+        {
             //product download & sample download
             int downloadId = product.DownloadId;
             int sampleDownloadId = product.SampleDownloadId;
@@ -132,8 +524,8 @@ namespace Nop.Services.Catalog
             }
 
             var newSku = !String.IsNullOrWhiteSpace(product.Sku)
-                ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku) :
-                product.Sku;
+                ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku)
+                : product.Sku;
             // product
             var productCopy = new Product
             {
@@ -185,7 +577,8 @@ namespace Nop.Services.Catalog
                 DeliveryDateId = product.DeliveryDateId,
                 IsTaxExempt = product.IsTaxExempt,
                 TaxCategoryId = product.TaxCategoryId,
-                IsTelecommunicationsOrBroadcastingOrElectronicServices = product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
+                IsTelecommunicationsOrBroadcastingOrElectronicServices =
+                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 ProductAvailabilityRangeId = product.ProductAvailabilityRangeId,
                 UseMultipleWarehouses = product.UseMultipleWarehouses,
@@ -240,161 +633,67 @@ namespace Nop.Services.Catalog
 
             //search engine name
             _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", productCopy.Name, true), 0);
+            return productCopy;
+        }
+        
+        #endregion
 
-            var languages = _languageService.GetAllLanguages(true);
+        #region Methods
+
+        /// <summary>
+        /// Create a copy of product with all depended data
+        /// </summary>
+        /// <param name="product">The product to copy</param>
+        /// <param name="newName">The name of product duplicate</param>
+        /// <param name="isPublished">A value indicating whether the product duplicate should be published</param>
+        /// <param name="copyImages">A value indicating whether the product images should be copied</param>
+        /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
+        /// <returns>Product copy</returns>
+        public virtual Product CopyProduct(Product product, string newName,
+            bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (String.IsNullOrEmpty(newName))
+                throw new ArgumentException("Product name is required");
+
+            var productCopy = CopyBaseProductData(product, newName, isPublished);
 
             //localization
-            foreach (var lang in languages)
-            {
-                var name = product.GetLocalized(x => x.Name, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(name))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id);
+            CopyLocalizationData(product, productCopy);
 
-                var shortDescription = product.GetLocalized(x => x.ShortDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(shortDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
-
-                var fullDescription = product.GetLocalized(x => x.FullDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(fullDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id);
-
-                var metaKeywords = product.GetLocalized(x => x.MetaKeywords, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaKeywords))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
-
-                var metaDescription = product.GetLocalized(x => x.MetaDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
-
-                var metaTitle = product.GetLocalized(x => x.MetaTitle, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaTitle))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
-
-                //search engine name
-                _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", name, false), lang.Id);
-            }
-
-            //product tags
+            //copy product tags
             foreach (var productTag in product.ProductTags)
             {
                 productCopy.ProductTags.Add(productTag);
             }
             _productService.UpdateProduct(productCopy);
 
-            //product pictures
-            //variable to store original and new picture identifiers
-            var originalNewPictureIdentifiers = new Dictionary<int, int>();
-            if (copyImages)
-            {
-                foreach (var productPicture in product.ProductPictures)
-                {
-                    var picture = productPicture.Picture;
-                    var pictureCopy = _pictureService.InsertPicture(
-                        _pictureService.LoadPictureBinary(picture),
-                        picture.MimeType,
-                        _pictureService.GetPictureSeName(newName),
-                        picture.AltAttribute,
-                        picture.TitleAttribute);
-                    _productService.InsertProductPicture(new ProductPicture
-                    {
-                        ProductId = productCopy.Id,
-                        PictureId = pictureCopy.Id,
-                        DisplayOrder = productPicture.DisplayOrder
-                    });
-                    originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
-                }
-            }
+            //copy product pictures
+            var originalNewPictureIdentifiers = CopyProductPictures(product, newName, copyImages, productCopy);
 
             //quantity change history
             _productService.AddStockQuantityHistoryEntry(productCopy, product.StockQuantity, product.StockQuantity, product.WarehouseId,
                 string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
 
-            // product <-> warehouses mappings
-            foreach (var pwi in product.ProductWarehouseInventory)
-            {
-                var pwiCopy = new ProductWarehouseInventory
-                {
-                    ProductId = productCopy.Id,
-                    WarehouseId = pwi.WarehouseId,
-                    StockQuantity = pwi.StockQuantity,
-                    ReservedQuantity = 0,
-                };
+            //product specifications
+            CopyProductSpecifications(product, productCopy);
 
-                productCopy.ProductWarehouseInventory.Add(pwiCopy);
-
-                //quantity change history
-                var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
-                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
-            }
-            _productService.UpdateProduct(productCopy);
-
-            // product <-> categories mappings
-            foreach (var productCategory in product.ProductCategories)
-            {
-                var productCategoryCopy = new ProductCategory
-                {
-                    ProductId = productCopy.Id,
-                    CategoryId = productCategory.CategoryId,
-                    IsFeaturedProduct = productCategory.IsFeaturedProduct,
-                    DisplayOrder = productCategory.DisplayOrder
-                };
-
-                _categoryService.InsertProductCategory(productCategoryCopy);
-            }
-
-            // product <-> manufacturers mappings
-            foreach (var productManufacturers in product.ProductManufacturers)
-            {
-                var productManufacturerCopy = new ProductManufacturer
-                {
-                    ProductId = productCopy.Id,
-                    ManufacturerId = productManufacturers.ManufacturerId,
-                    IsFeaturedProduct = productManufacturers.IsFeaturedProduct,
-                    DisplayOrder = productManufacturers.DisplayOrder
-                };
-
-                _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
-            }
-
-            // product <-> releated products mappings
-            foreach (var relatedProduct in _productService.GetRelatedProductsByProductId1(product.Id, true))
-            {
-                _productService.InsertRelatedProduct(
-                    new RelatedProduct
-                    {
-                        ProductId1 = productCopy.Id,
-                        ProductId2 = relatedProduct.ProductId2,
-                        DisplayOrder = relatedProduct.DisplayOrder
-                    });
-            }
-
-            // product <-> cross sells mappings
-            foreach (var csProduct in _productService.GetCrossSellProductsByProductId1(product.Id, true))
-            {
-                _productService.InsertCrossSellProduct(
-                    new CrossSellProduct
-                    {
-                        ProductId1 = productCopy.Id,
-                        ProductId2 = csProduct.ProductId2,
-                    });
-            }
-
-            // product specifications
-            foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
-            {
-                var psaCopy = new ProductSpecificationAttribute
-                {
-                    ProductId = productCopy.Id,
-                    AttributeTypeId = productSpecificationAttribute.AttributeTypeId,
-                    SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
-                    CustomValue = productSpecificationAttribute.CustomValue,
-                    AllowFiltering = productSpecificationAttribute.AllowFiltering,
-                    ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
-                    DisplayOrder = productSpecificationAttribute.DisplayOrder
-                };
-                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
-            }
-
+            //product <-> warehouses mappings
+            CopyWarehousesMapping(product, productCopy);
+            //product <-> categories mappings
+            CopyCategoriesMapping(product, productCopy);
+            //product <-> manufacturers mappings
+            CopyManufacturersMapping(product, productCopy);
+            //product <-> related products mappings
+            CopyReleatedProductsMapping(product, productCopy);
+            //product <-> cross sells mappings
+            CopyCrossSellsMapping(product, productCopy);
+            //product <-> attributes mappings
+            CopyAttributesMapping(product, productCopy, originalNewPictureIdentifiers);
+            //product <-> discounts mapping
+            CopyDiscountsMapping(product, productCopy);
             //store mapping
             var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
             foreach (var id in selectedStoreIds)
@@ -402,236 +701,15 @@ namespace Nop.Services.Catalog
                 _storeMappingService.InsertStoreMapping(productCopy, id);
             }
 
-            //product <-> attributes mappings
-            var associatedAttributes = new Dictionary<int, int>();
-            var associatedAttributeValues = new Dictionary<int, int>();
-
-            //attribute mapping with condition attributes
-            var oldCopyWithConditionAttributes = new List<ProductAttributeMapping>();
-
-            //all product attribute mapping copies
-            var productAttributeMappingCopies = new Dictionary<int, ProductAttributeMapping>();
-
-            foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
-            {
-                var productAttributeMappingCopy = new ProductAttributeMapping
-                {
-                    ProductId = productCopy.Id,
-                    ProductAttributeId = productAttributeMapping.ProductAttributeId,
-                    TextPrompt = productAttributeMapping.TextPrompt,
-                    IsRequired = productAttributeMapping.IsRequired,
-                    AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId,
-                    DisplayOrder = productAttributeMapping.DisplayOrder,
-                    ValidationMinLength = productAttributeMapping.ValidationMinLength,
-                    ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
-                    ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
-                    ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
-                    DefaultValue = productAttributeMapping.DefaultValue
-                };
-                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
-                //localization
-                foreach (var lang in languages)
-                {
-                    var textPrompt = productAttributeMapping.GetLocalized(x => x.TextPrompt, lang.Id, false, false);
-                    if (!String.IsNullOrEmpty(textPrompt))
-                        _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt, lang.Id);
-                }
-
-                productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
-
-                if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
-                {
-                    oldCopyWithConditionAttributes.Add(productAttributeMapping);
-                }
-
-                //save associated value (used for combinations copying)
-                associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
-
-                // product attribute values
-                var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
-                foreach (var productAttributeValue in productAttributeValues)
-                {
-                    int attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
-                    {
-                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
-                    }
-                    var attributeValueCopy = new ProductAttributeValue
-                    {
-                        ProductAttributeMappingId = productAttributeMappingCopy.Id,
-                        AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
-                        AssociatedProductId = productAttributeValue.AssociatedProductId,
-                        Name = productAttributeValue.Name,
-                        ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
-                        PriceAdjustment = productAttributeValue.PriceAdjustment,
-                        WeightAdjustment = productAttributeValue.WeightAdjustment,
-                        Cost = productAttributeValue.Cost,
-                        CustomerEntersQty = productAttributeValue.CustomerEntersQty,
-                        Quantity = productAttributeValue.Quantity,
-                        IsPreSelected = productAttributeValue.IsPreSelected,
-                        DisplayOrder = productAttributeValue.DisplayOrder,
-                        PictureId = attributeValuePictureId,
-                    };
-                    //picture associated to "iamge square" attribute type (if exists)
-                    if (productAttributeValue.ImageSquaresPictureId > 0)
-                    {
-                        var origImageSquaresPicture = _pictureService.GetPictureById(productAttributeValue.ImageSquaresPictureId);
-                        if (origImageSquaresPicture != null)
-                        {
-                            //copy the picture
-                            var imageSquaresPictureCopy = _pictureService.InsertPicture(
-                                _pictureService.LoadPictureBinary(origImageSquaresPicture),
-                                origImageSquaresPicture.MimeType,
-                                origImageSquaresPicture.SeoFilename,
-                                origImageSquaresPicture.AltAttribute,
-                                origImageSquaresPicture.TitleAttribute);
-                            attributeValueCopy.ImageSquaresPictureId = imageSquaresPictureCopy.Id;
-                        }
-                    }
-
-                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
-
-                    //save associated value (used for combinations copying)
-                    associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
-
-                    //localization
-                    foreach (var lang in languages)
-                    {
-                        var name = productAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
-                        if (!String.IsNullOrEmpty(name))
-                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
-                    }
-                }
-            }
-
-            //copy attribute conditions
-            foreach (var productAttributeMapping in oldCopyWithConditionAttributes)
-            {
-                var oldConditionAttributeMapping = _productAttributeParser.ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml).FirstOrDefault();
-
-                if (oldConditionAttributeMapping == null)
-                    continue;
-
-                var oldConditionValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml, oldConditionAttributeMapping.Id);
-
-                if (!oldConditionValues.Any())
-                    continue;
-
-                var newAttributeMappingId = associatedAttributes[oldConditionAttributeMapping.Id];
-                var newConditionAttributeMapping = productAttributeMappingCopies[newAttributeMappingId];
-
-                var newConditionAttributeXml = string.Empty;
-
-                foreach (var oldConditionValue in oldConditionValues)
-                {
-                    newConditionAttributeXml = _productAttributeParser.AddProductAttribute(newConditionAttributeXml, newConditionAttributeMapping, associatedAttributeValues[oldConditionValue.Id].ToString());
-                }
-
-                var attributeMappingId = associatedAttributes[productAttributeMapping.Id];
-                var conditionAttribute = productAttributeMappingCopies[attributeMappingId];
-                conditionAttribute.ConditionAttributeXml = newConditionAttributeXml;
-
-                _productAttributeService.UpdateProductAttributeMapping(conditionAttribute);
-            }
-
-            //attribute combinations
-            foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
-            {
-                //generate new AttributesXml according to new value IDs
-                string newAttributesXml = "";
-                var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
-                foreach (var oldAttribute in parsedProductAttributes)
-                {
-                    if (associatedAttributes.ContainsKey(oldAttribute.Id))
-                    {
-                        var newAttribute = _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
-                        if (newAttribute != null)
-                        {
-                            var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
-                            foreach (var oldAttributeValueStr in oldAttributeValuesStr)
-                            {
-                                if (newAttribute.ShouldHaveValues())
-                                {
-                                    //attribute values
-                                    int oldAttributeValue = int.Parse(oldAttributeValueStr);
-                                    if (associatedAttributeValues.ContainsKey(oldAttributeValue))
-                                    {
-                                        var newAttributeValue = _productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
-                                        if (newAttributeValue != null)
-                                        {
-                                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                                newAttribute, newAttributeValue.Id.ToString());
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //just a text
-                                    newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                        newAttribute, oldAttributeValueStr);
-                                }
-                            }
-                        }
-                    }
-                }
-                var combinationCopy = new ProductAttributeCombination
-                {
-                    ProductId = productCopy.Id,
-                    AttributesXml = newAttributesXml,
-                    StockQuantity = combination.StockQuantity,
-                    AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
-                    Sku = combination.Sku,
-                    ManufacturerPartNumber = combination.ManufacturerPartNumber,
-                    Gtin = combination.Gtin,
-                    OverriddenPrice = combination.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
-                };
-                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
-
-                //quantity change history
-                _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity, combination.StockQuantity,
-                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
-            }
-
             //tier prices
-            foreach (var tierPrice in product.TierPrices)
-            {
-                _productService.InsertTierPrice(
-                    new TierPrice
-                    {
-                        ProductId = productCopy.Id,
-                        StoreId = tierPrice.StoreId,
-                        CustomerRoleId = tierPrice.CustomerRoleId,
-                        Quantity = tierPrice.Quantity,
-                        Price = tierPrice.Price,
-                        StartDateTimeUtc = tierPrice.StartDateTimeUtc,
-                        EndDateTimeUtc = tierPrice.EndDateTimeUtc
-                    });
-            }
+            CopyTierPrices(product, productCopy);
 
-            // product <-> discounts mapping
-            foreach (var discount in product.AppliedDiscounts)
-            {
-                productCopy.AppliedDiscounts.Add(discount);
-                _productService.UpdateProduct(productCopy);
-            }
-            
             //update "HasTierPrices" and "HasDiscountsApplied" properties
             _productService.UpdateHasTierPricesProperty(productCopy);
             _productService.UpdateHasDiscountsApplied(productCopy);
 
             //associated products
-            if (copyAssociatedProducts)
-            {
-                var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
-                foreach (var associatedProduct in associatedProducts)
-                {
-                    var associatedProductCopy = CopyProduct(associatedProduct, $"Copy of {associatedProduct.Name}",
-                        isPublished, copyImages, false);
-                    associatedProductCopy.ParentGroupedProductId = productCopy.Id;
-                    _productService.UpdateProduct(productCopy);
-                }
-            }
+            CopyAssociatedProducts(product, isPublished, copyImages, copyAssociatedProducts, productCopy);
 
             return productCopy;
         }
