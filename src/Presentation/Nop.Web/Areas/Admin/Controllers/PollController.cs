@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 		#endregion
 
-		#region Constructors
+		#region Ctor
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,

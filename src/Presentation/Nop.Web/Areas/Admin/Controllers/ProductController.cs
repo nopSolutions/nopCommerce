@@ -102,7 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public ProductController(IProductService productService,
             IProductTemplateService productTemplateService,

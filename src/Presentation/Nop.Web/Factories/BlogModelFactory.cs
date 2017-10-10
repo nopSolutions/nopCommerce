@@ -39,7 +39,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public BlogModelFactory(IBlogService blogService,
             IWorkContext workContext,

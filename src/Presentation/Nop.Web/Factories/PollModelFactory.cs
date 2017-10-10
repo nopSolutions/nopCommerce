@@ -23,7 +23,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PollModelFactory(IWorkContext workContext,
             IPollService pollService,

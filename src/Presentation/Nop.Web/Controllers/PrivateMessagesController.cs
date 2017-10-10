@@ -32,7 +32,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PrivateMessagesController(IPrivateMessagesModelFactory privateMessagesModelFactory,
             IForumService forumService,

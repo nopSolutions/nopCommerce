@@ -28,7 +28,7 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public BackwardCompatibility1XController(IWebHelper webHelper,
             IProductService productService,

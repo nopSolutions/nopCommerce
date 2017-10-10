@@ -48,7 +48,7 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public BlogController(IBlogService blogService,
             IWorkContext workContext,

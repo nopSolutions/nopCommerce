@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion Fields
 
-        #region Constructors
+        #region Ctor
 
         public ReturnRequestController(IReturnRequestService returnRequestService,
             IOrderService orderService,

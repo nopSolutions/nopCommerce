@@ -5,7 +5,7 @@ namespace Nop.Web.Models.Common
 {
     public partial class PagerModel
     {
-        #region Constructors
+        #region Ctor
 
         public PagerModel()
             : this(EngineContext.Current.Resolve<ILocalizationService>())

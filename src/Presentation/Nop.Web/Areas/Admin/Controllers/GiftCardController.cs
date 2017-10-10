@@ -41,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public GiftCardController(IGiftCardService giftCardService,
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,

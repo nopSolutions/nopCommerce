@@ -46,7 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public AffiliateController(ILocalizationService localizationService,
             IWorkContext workContext, IDateTimeHelper dateTimeHelper, IWebHelper webHelper,

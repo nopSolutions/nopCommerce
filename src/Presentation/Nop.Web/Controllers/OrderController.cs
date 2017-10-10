@@ -34,7 +34,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public OrderController(IOrderModelFactory orderModelFactory,
             IOrderService orderService, 
