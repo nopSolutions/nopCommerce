@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 

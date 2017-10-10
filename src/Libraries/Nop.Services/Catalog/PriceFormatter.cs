@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PriceFormatter(IWorkContext workContext,
             ICurrencyService currencyService,

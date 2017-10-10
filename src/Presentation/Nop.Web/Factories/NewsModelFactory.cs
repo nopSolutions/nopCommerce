@@ -38,7 +38,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public NewsModelFactory(INewsService newsService,
             IWorkContext workContext, 

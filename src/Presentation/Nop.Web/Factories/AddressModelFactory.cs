@@ -30,7 +30,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public AddressModelFactory(IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser,

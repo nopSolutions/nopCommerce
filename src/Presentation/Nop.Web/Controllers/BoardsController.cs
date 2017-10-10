@@ -33,7 +33,7 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public BoardsController(IForumService forumService,
             ILocalizationService localizationService,

@@ -66,7 +66,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public CatalogModelFactory(IProductModelFactory productModelFactory,
             ICategoryService categoryService, 

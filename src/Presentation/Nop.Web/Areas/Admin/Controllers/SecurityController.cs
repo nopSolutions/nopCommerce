@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 		#endregion
 
-		#region Constructors
+		#region Ctor
 
         public SecurityController(ILogger logger, IWorkContext workContext,
             IPermissionService permissionService,

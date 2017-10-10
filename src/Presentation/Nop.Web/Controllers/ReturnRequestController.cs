@@ -39,7 +39,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public ReturnRequestController(IReturnRequestModelFactory returnRequestModelFactory,
             IReturnRequestService returnRequestService,

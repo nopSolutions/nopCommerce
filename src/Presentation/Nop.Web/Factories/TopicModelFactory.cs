@@ -31,7 +31,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public TopicModelFactory(ITopicService topicService,
             IWorkContext workContext,

@@ -28,7 +28,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public VendorModelFactory(IWorkContext workContext,
             ILocalizationService localizationService,

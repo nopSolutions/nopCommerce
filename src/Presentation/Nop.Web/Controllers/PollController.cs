@@ -20,7 +20,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PollController(IPollModelFactory pollModelFactory,
             ILocalizationService localizationService,

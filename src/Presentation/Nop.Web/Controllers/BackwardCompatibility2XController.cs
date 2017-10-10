@@ -22,7 +22,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public BackwardCompatibility2XController(IProductService productService,
             ICategoryService categoryService, 

@@ -40,7 +40,7 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public VendorController(IVendorModelFactory vendorModelFactory,
             IWorkContext workContext,

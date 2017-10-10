@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public AddressAttributeController(IAddressAttributeService addressAttributeService,
             ILanguageService languageService, 

@@ -23,7 +23,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public TopicController(ITopicModelFactory topicModelFactory,
             ITopicService topicService,

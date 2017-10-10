@@ -27,7 +27,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PrivateMessagesModelFactory(IForumService forumService,
             IWorkContext workContext, 
