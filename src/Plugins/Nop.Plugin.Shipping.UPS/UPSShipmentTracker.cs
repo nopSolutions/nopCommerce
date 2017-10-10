@@ -48,7 +48,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
+            var url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
             url = string.Format(url, trackingNumber);
             return url;
         }
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Shipping.UPS
                     ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Delivered");
                     break;
             }
-            string dateString = string.Concat(activity.Date, " ", activity.Time);
+            var dateString = string.Concat(activity.Date, " ", activity.Time);
             ev.Date = DateTime.ParseExact(dateString, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
             ev.CountryCode = activity.ActivityLocation.Address.CountryCode;
             ev.Location = activity.ActivityLocation.Address.City;

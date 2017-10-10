@@ -124,7 +124,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
 
-            bool isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
+            var isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
             return isInRegisteredRole;
         }
     }

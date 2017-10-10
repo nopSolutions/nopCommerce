@@ -92,8 +92,8 @@ namespace Nop.Core.Html.CodeFormatter
 		{
 			//generate the keyword and preprocessor regexes from the keyword lists
 			var r = new Regex(@"\w+|-\w+|#\w+|@@\w+|#(?:\\(?:s|w)(?:\*|\+)?\w+)+|@\\w\*+");
-			string regKeyword = r.Replace(Keywords, @"(?<=^|\W)$0(?=\W)");
-			string regPreproc = r.Replace(Preprocessors, @"(?<=^|\s)$0(?=\s|$)");
+			var regKeyword = r.Replace(Keywords, @"(?<=^|\W)$0(?=\W)");
+			var regPreproc = r.Replace(Preprocessors, @"(?<=^|\s)$0(?=\s|$)");
 			r = new Regex(@" +");
 			regKeyword = r.Replace(regKeyword, @"|");
 			regPreproc = r.Replace(regPreproc, @"|");
@@ -118,7 +118,7 @@ namespace Nop.Core.Html.CodeFormatter
 			regAll.Append(regKeyword);
 			regAll.Append(")");
 
-			RegexOptions caseInsensitive = CaseSensitive ? 0 : RegexOptions.IgnoreCase;
+			var caseInsensitive = CaseSensitive ? 0 : RegexOptions.IgnoreCase;
 			CodeRegex = new Regex(regAll.ToString(), RegexOptions.Singleline | caseInsensitive);
 		}
 

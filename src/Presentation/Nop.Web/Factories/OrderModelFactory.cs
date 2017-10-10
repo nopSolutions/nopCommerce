@@ -295,8 +295,8 @@ namespace Nop.Web.Factories
             }
 
             //tax
-            bool displayTax = true;
-            bool displayTaxRates = true;
+            var displayTax = true;
+            var displayTaxRates = true;
             if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 displayTax = false;
@@ -558,15 +558,15 @@ namespace Nop.Web.Factories
             };
 
             //current amount/balance
-            int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-            decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+            var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+            var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+            var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance;
             model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
             //minimum amount/balance
-            int minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
-            decimal minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
-            decimal minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
+            var minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
+            var minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
+            var minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
             model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
             model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);
             return model;

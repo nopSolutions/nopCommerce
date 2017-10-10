@@ -137,7 +137,7 @@ namespace Nop.Services.Stores
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(STORES_BY_ID_KEY, storeId);
+                var key = string.Format(STORES_BY_ID_KEY, storeId);
                 return _cacheManager.Get(key, () =>
                 {
                     var store = loadStoreFunc();

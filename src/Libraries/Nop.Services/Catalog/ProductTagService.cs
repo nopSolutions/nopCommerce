@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId)
         {
-            string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
+            var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
                 //stored procedures are enabled and supported by the database. 

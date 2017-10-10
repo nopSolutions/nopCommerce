@@ -163,8 +163,8 @@ namespace Nop.Web.Factories
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            DateTime? dateFrom = command.GetFromMonth();
-            DateTime? dateTo = command.GetToMonth();
+            var dateFrom = command.GetFromMonth();
+            var dateTo = command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
             if (String.IsNullOrEmpty(command.Tag))
@@ -256,7 +256,7 @@ namespace Nop.Web.Factories
                     }
 
 
-                    int current = 0;
+                    var current = 0;
                     foreach (var kvp in months)
                     {
                         var date = kvp.Key;

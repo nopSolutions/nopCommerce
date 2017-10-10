@@ -104,7 +104,7 @@ namespace Nop.Services.Orders
             var orders = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Order>();
-            foreach (int id in orderIds)
+            foreach (var id in orderIds)
             {
                 var order = orders.Find(x => x.Id == id);
                 if (order != null)

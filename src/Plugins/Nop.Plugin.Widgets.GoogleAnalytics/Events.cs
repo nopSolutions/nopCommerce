@@ -104,7 +104,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 foreach (var item in order.OrderItems)
                 {
                     //get category
-                    string category = "";
+                    var category = "";
                     var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
                     if (defaultProductCategory != null)
                         category = defaultProductCategory.Category.Name;

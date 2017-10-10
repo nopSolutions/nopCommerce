@@ -147,7 +147,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             }
 
-            int pageIndex = 0;
+            var pageIndex = 0;
             if (pageNumber > 0)
             {
                 pageIndex = pageNumber.Value - 1;

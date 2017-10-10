@@ -35,7 +35,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
-            string globalScript = "";
+            var globalScript = "";
             var routeData = Url.ActionContext.RouteData;
 
             try

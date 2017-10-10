@@ -155,7 +155,7 @@ namespace Nop.Web.Controllers
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            bool downloadableProductsRequireRegistration =
+            var downloadableProductsRequireRegistration =
                 _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
             if (_workContext.CurrentCustomer.IsGuest() && (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration))
@@ -188,7 +188,7 @@ namespace Nop.Web.Controllers
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart");
             //validation (each shopping cart item)
-            foreach (ShoppingCartItem sci in cart)
+            foreach (var sci in cart)
             {
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                     sci.ShoppingCartType,
@@ -610,8 +610,8 @@ namespace Nop.Web.Controllers
             var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
                 return ShippingMethod();
-            string selectedName = splittedOption[0];
-            string shippingRateComputationMethodSystemName = splittedOption[1];
+            var selectedName = splittedOption[0];
+            var shippingRateComputationMethodSystemName = splittedOption[1];
             
             //find it
             //performance optimization. try cache first
@@ -658,7 +658,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
+            var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -667,7 +667,7 @@ namespace Nop.Web.Controllers
             }
 
             //filter by country
-            int filterByCountryId = 0;
+            var filterByCountryId = 0;
             if (_addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 _workContext.CurrentCustomer.BillingAddress.Country != null)
@@ -721,7 +721,7 @@ namespace Nop.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -763,7 +763,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -814,7 +814,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -977,11 +977,11 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
+            var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
-                int filterByCountryId = 0;
+                var filterByCountryId = 0;
                 if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     _workContext.CurrentCustomer.BillingAddress.Country != null)
@@ -1402,8 +1402,8 @@ namespace Nop.Web.Controllers
                 var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
                     throw new Exception("Selected shipping method can't be parsed");
-                string selectedName = splittedOption[0];
-                string shippingRateComputationMethodSystemName = splittedOption[1];
+                var selectedName = splittedOption[0];
+                var shippingRateComputationMethodSystemName = splittedOption[1];
                 
                 //find it
                 //performance optimization. try cache first
@@ -1470,7 +1470,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
+                var isPaymentWorkflowRequired = _orderProcessingService.IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required

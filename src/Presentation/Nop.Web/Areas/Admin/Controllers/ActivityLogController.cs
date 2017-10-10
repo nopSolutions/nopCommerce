@@ -64,7 +64,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditActivityLogTypes", _localizationService.GetResource("ActivityLog.EditActivityLogTypes"));
 
-            string formKey = "checkbox_activity_types";
+            var formKey = "checkbox_activity_types";
             var checkedActivityTypes = !StringValues.IsNullOrEmpty(form[formKey]) ?
                 form[formKey].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : 
                 new List<int>();
@@ -114,10 +114,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedKendoGridJson();
 
-            DateTime? startDateValue = (model.CreatedOnFrom == null) ? null
+            var startDateValue = (model.CreatedOnFrom == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.CreatedOnTo == null) ? null
+            var endDateValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue,null, model.ActivityLogTypeId, command.Page - 1, command.PageSize, model.IpAddress);

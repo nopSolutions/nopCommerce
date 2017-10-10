@@ -33,7 +33,7 @@ namespace Nop.Services.Payments
 
             if (paymentSettings.ActivePaymentMethodSystemNames == null)
                 return false;
-            foreach (string activeMethodSystemName in paymentSettings.ActivePaymentMethodSystemNames)
+            foreach (var activeMethodSystemName in paymentSettings.ActivePaymentMethodSystemNames)
                 if (paymentMethod.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
@@ -183,15 +183,15 @@ namespace Nop.Services.Payments
 
             public void ReadXml(XmlReader reader)
             {
-                bool wasEmpty = reader.IsEmptyElement;
+                var wasEmpty = reader.IsEmptyElement;
                 reader.Read();
                 if (wasEmpty)
                     return;
                 while (reader.NodeType != XmlNodeType.EndElement)
                 {
                     reader.ReadStartElement("item");
-                    string key = reader.ReadElementString("key");
-                    string value = reader.ReadElementString("value");
+                    var key = reader.ReadElementString("key");
+                    var value = reader.ReadElementString("value");
                     this.Dictionary.Add(key, value);
                     reader.ReadEndElement();
                     reader.MoveToContent();

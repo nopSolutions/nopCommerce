@@ -208,8 +208,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
+                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 _workflowMessageService.SendContactUsMessage(_workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);
@@ -262,8 +262,8 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
-                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
+                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
                 _workflowMessageService.SendContactVendorMessage(vendor, _workContext.WorkingLanguage.Id,
                     model.Email.Trim(), model.FullName, subject, body);

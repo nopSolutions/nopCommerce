@@ -152,7 +152,7 @@ namespace Nop.Services.Helpers
             TimeZoneInfo timeZoneInfo = null;
             if (_dateTimeSettings.AllowCustomersToSetTimeZone)
             {
-                string timeZoneId = string.Empty;
+                var timeZoneId = string.Empty;
                 if (customer != null)
                     timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId, _genericAttributeService);
 
@@ -199,7 +199,7 @@ namespace Nop.Services.Helpers
             }
             set
             {
-                string defaultTimeZoneId = string.Empty;
+                var defaultTimeZoneId = string.Empty;
                 if (value != null)
                 {
                     defaultTimeZoneId = value.Id;
@@ -224,7 +224,7 @@ namespace Nop.Services.Helpers
                 if (!_dateTimeSettings.AllowCustomersToSetTimeZone)
                     return;
 
-                string timeZoneId = string.Empty;
+                var timeZoneId = string.Empty;
                 if (value != null)
                 {
                     timeZoneId = value.Id;

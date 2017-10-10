@@ -218,8 +218,8 @@ namespace Nop.Services.Orders
             item.OrderStatus = os;
             var orderStatuses = new List<int>() { (int)os };
 
-            DateTime nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
-            TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
+            var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+            var timeZone = _dateTimeHelper.CurrentTimeZone;
 
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
@@ -233,9 +233,9 @@ namespace Nop.Services.Orders
                 item.CountTodayOrders = todayResult.CountOrders;
             }
             //week
-            DayOfWeek fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+            var fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
             var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
-            DateTime t2 = today.AddDays(-(today.DayOfWeek - fdow));
+            var t2 = today.AddDays(-(today.DayOfWeek - fdow));
             if (!timeZone.IsInvalidTime(t2))
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
@@ -337,7 +337,7 @@ namespace Nop.Services.Orders
                          (showHidden || p.Published)
                          select orderItem;
 
-            IQueryable<BestsellersReportLine> query2 = 
+            var query2 = 
                 //group by products
                 from orderItem in query1
                 group orderItem by orderItem.ProductId into g
@@ -501,13 +501,13 @@ namespace Nop.Services.Orders
             string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
             //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
+            var dontSearchEmail = String.IsNullOrEmpty(billingEmail);
             //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchLastName = String.IsNullOrEmpty(billingLastName);
+            var dontSearchLastName = String.IsNullOrEmpty(billingLastName);
             //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
+            var dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
             //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
+            var dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
             if (osIds != null && osIds.Any())

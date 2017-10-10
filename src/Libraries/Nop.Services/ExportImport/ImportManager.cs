@@ -137,7 +137,7 @@ namespace Nop.Services.ExportImport
             if (columnName == null)
                 throw new ArgumentNullException(nameof(columnName));
 
-            for (int i = 0; i < properties.Length; i++)
+            for (var i = 0; i < properties.Length; i++)
                 if (properties[i].Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
                     return i + 1; //excel indexes start from 1
             return 0;
@@ -1438,19 +1438,19 @@ namespace Nop.Services.ExportImport
         /// <returns>Number of imported subscribers</returns>
         public virtual int ImportNewsletterSubscribersFromTxt(Stream stream)
         {
-            int count = 0;
+            var count = 0;
             using (var reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
                     if (String.IsNullOrWhiteSpace(line))
                         continue;
-                    string[] tmp = line.Split(',');
+                    var tmp = line.Split(',');
 
                     string email;
-                    bool isActive = true;
-                    int storeId = _storeContext.CurrentStore.Id;
+                    var isActive = true;
+                    var storeId = _storeContext.CurrentStore.Id;
                     //parse
                     if (tmp.Length == 1)
                     {
@@ -1508,15 +1508,15 @@ namespace Nop.Services.ExportImport
         /// <returns>Number of imported states</returns>
         public virtual int ImportStatesFromTxt(Stream stream)
         {
-            int count = 0;
+            var count = 0;
             using (var reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
                     if (String.IsNullOrWhiteSpace(line))
                         continue;
-                    string[] tmp = line.Split(',');
+                    var tmp = line.Split(',');
 
                     if (tmp.Length != 5)
                         throw new NopException("Wrong file format");
@@ -1525,8 +1525,8 @@ namespace Nop.Services.ExportImport
                     var countryTwoLetterIsoCode = tmp[0].Trim();
                     var name = tmp[1].Trim();
                     var abbreviation = tmp[2].Trim();
-                    bool published = Boolean.Parse(tmp[3].Trim());
-                    int displayOrder = Int32.Parse(tmp[4].Trim());
+                    var published = Boolean.Parse(tmp[3].Trim());
+                    var displayOrder = Int32.Parse(tmp[4].Trim());
 
                     var country = _countryService.GetCountryByTwoLetterIsoCode(countryTwoLetterIsoCode);
                     if (country == null)

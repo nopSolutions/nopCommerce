@@ -28,7 +28,7 @@ namespace Nop.Core.Plugins
                 using (var dataStream = response.GetResponseStream())
                 using (var reader = new StreamReader(dataStream))
                 {
-                    string responseFromServer = reader.ReadToEnd();
+                    var responseFromServer = reader.ReadToEnd();
 
                     var xmlDoc = new XmlDocument();
                     xmlDoc.LoadXml(responseFromServer);
@@ -80,7 +80,7 @@ namespace Nop.Core.Plugins
             string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            int totalRecords = 0;
+            var totalRecords = 0;
 
             //pageSize parameter is currently ignored by official site (set to 15)
             var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",

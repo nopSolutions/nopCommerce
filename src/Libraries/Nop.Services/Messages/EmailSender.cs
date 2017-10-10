@@ -108,7 +108,7 @@ namespace Nop.Services.Messages
                     //we do not support URLs as attachments
                     if (!download.UseDownloadUrl)
                     {
-                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+                        var fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
                         fileName += download.Extension;
 
 

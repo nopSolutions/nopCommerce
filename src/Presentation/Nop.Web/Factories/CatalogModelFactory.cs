@@ -140,7 +140,7 @@ namespace Nop.Web.Factories
         /// <returns>List of child category identifiers</returns>
         protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
                 parentCategoryId, 
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
@@ -385,7 +385,7 @@ namespace Nop.Web.Factories
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
+                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
                     category.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id,
@@ -408,7 +408,7 @@ namespace Nop.Web.Factories
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
-            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+            var subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 category.Id,
                 pictureSize,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -455,7 +455,7 @@ namespace Nop.Web.Factories
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
+                var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
@@ -553,7 +553,7 @@ namespace Nop.Web.Factories
         public virtual CategoryNavigationModel PrepareCategoryNavigationModel(int currentCategoryId, int currentProductId)
         {
             //get active category
-            int activeCategoryId = 0;
+            var activeCategoryId = 0;
             if (currentCategoryId > 0)
             {
                 //category details page
@@ -587,7 +587,7 @@ namespace Nop.Web.Factories
             var cachedCategoriesModel = PrepareCategorySimpleModels();
 
             //top menu topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
+            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -628,7 +628,7 @@ namespace Nop.Web.Factories
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
-            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
+            var categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 pictureSize,
                 _storeContext.CurrentStore.Id,
@@ -680,7 +680,7 @@ namespace Nop.Web.Factories
         public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
         {
             //load and cache them
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -727,7 +727,7 @@ namespace Nop.Web.Factories
                 //number of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                    var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id,
                         category.Id);
@@ -812,7 +812,7 @@ namespace Nop.Web.Factories
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, 
+                var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, 
                     manufacturer.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
@@ -908,7 +908,7 @@ namespace Nop.Web.Factories
                 };
 
                 //prepare picture model
-                int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
+                var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
@@ -935,7 +935,7 @@ namespace Nop.Web.Factories
         /// <returns>Manufacturer navigation model</returns>
         public virtual ManufacturerNavigationModel PrepareManufacturerNavigationModel(int currentManufacturerId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
                 currentManufacturerId, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -1047,7 +1047,7 @@ namespace Nop.Web.Factories
                 };
 
                 //prepare picture model
-                int pictureSize = _mediaSettings.VendorThumbPictureSize;
+                var pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 vendorModel.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
                 {
@@ -1073,7 +1073,7 @@ namespace Nop.Web.Factories
         /// <returns>Vendor navigation model</returns>
         public virtual VendorNavigationModel PrepareVendorNavigationModel()
         {
-            string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
+            var cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
@@ -1246,7 +1246,7 @@ namespace Nop.Web.Factories
                 _catalogSettings.SearchPageProductsPerPage);
 
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id); 
@@ -1258,9 +1258,9 @@ namespace Nop.Web.Factories
                 foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)
-                    string categoryBreadcrumb= "";
+                    var categoryBreadcrumb= "";
                     var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
-                    for (int i = 0; i <= breadcrumb.Count - 1; i++)
+                    for (var i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
                         if (i != breadcrumb.Count - 1)
@@ -1345,11 +1345,11 @@ namespace Nop.Web.Factories
                 else
                 {
                     var categoryIds = new List<int>();
-                    int manufacturerId = 0;
+                    var manufacturerId = 0;
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
-                    bool searchInDescriptions = false;
-                    int vendorId = 0;
+                    var searchInDescriptions = false;
+                    var vendorId = 0;
                     if (model.adv)
                     {
                         //advanced search

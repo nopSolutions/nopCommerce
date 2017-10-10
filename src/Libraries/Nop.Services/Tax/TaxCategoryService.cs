@@ -85,7 +85,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            string key = string.Format(TAXCATEGORIES_ALL_KEY);
+            var key = string.Format(TAXCATEGORIES_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
@@ -106,7 +106,7 @@ namespace Nop.Services.Tax
             if (taxCategoryId == 0)
                 return null;
             
-            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
+            var key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
             return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }
 

@@ -32,19 +32,19 @@ namespace Nop.Core.Domain.Orders
             if (String.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
-            string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in lines)
+            var lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
             {
                 if (String.IsNullOrEmpty(line.Trim()))
                     continue;
 
-                string[] taxes = line.Split(new [] { ':' });
+                var taxes = line.Split(new [] { ':' });
                 if (taxes.Length == 2)
                 {
                     try
                     {
-                        decimal taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
-                        decimal taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
+                        var taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
+                        var taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
                         taxRatesDictionary.Add(taxRate, taxValue);
                     }
                     catch (Exception exc)

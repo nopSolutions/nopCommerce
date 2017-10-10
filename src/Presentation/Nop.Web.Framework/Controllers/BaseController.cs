@@ -89,7 +89,7 @@ namespace Nop.Web.Framework.Controllers
                 var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
                 (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-                Task<IHtmlContent> result = viewComponentResult.ViewComponentType == null ? 
+                var result = viewComponentResult.ViewComponentType == null ? 
                     viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
                     viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 

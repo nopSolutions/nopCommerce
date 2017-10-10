@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
             }
 
             var topics = _forumService.GetActiveTopics(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+            var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
 
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
@@ -109,8 +109,8 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                string content = $"{repliesText}: {topic.NumReplies.ToString()}, {viewsText}: {topic.Views.ToString()}";
+                var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                var content = $"{repliesText}: {topic.NumReplies.ToString()}, {viewsText}: {topic.Views.ToString()}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -164,7 +164,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            int topicLimit = _forumSettings.ForumFeedCount;
+            var topicLimit = _forumSettings.ForumFeedCount;
             var forum = _forumService.GetForumById(id);
 
             if (forum != null)
@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
                 var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                var url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
 
                 var feedTitle = _localizationService.GetResource("Forum.ForumFeedTitle");
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
@@ -191,8 +191,8 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                    string content = $"{repliesText}: {topic.NumReplies}, {viewsText}: {topic.Views}";
+                    var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                    var content = $"{repliesText}: {topic.NumReplies}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{_storeContext.CurrentStore.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
                 }
@@ -208,9 +208,9 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult ForumWatch(int id)
         {
-            string watchTopic = _localizationService.GetResource("Forum.WatchForum");
-            string unwatchTopic = _localizationService.GetResource("Forum.UnwatchForum");
-            string returnText = watchTopic;
+            var watchTopic = _localizationService.GetResource("Forum.WatchForum");
+            var unwatchTopic = _localizationService.GetResource("Forum.UnwatchForum");
+            var returnText = watchTopic;
 
             var forum = _forumService.GetForumById(id);
             if (forum == null)
@@ -277,9 +277,9 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult TopicWatch(int id)
         {
-            string watchTopic = _localizationService.GetResource("Forum.WatchTopic");
-            string unwatchTopic = _localizationService.GetResource("Forum.UnwatchTopic");
-            string returnText = watchTopic;
+            var watchTopic = _localizationService.GetResource("Forum.WatchTopic");
+            var unwatchTopic = _localizationService.GetResource("Forum.UnwatchTopic");
+            var returnText = watchTopic;
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
@@ -448,7 +448,7 @@ namespace Nop.Web.Controllers
                         return Challenge();
                     }
 
-                    string subject = model.Subject;
+                    var subject = model.Subject;
                     var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
@@ -464,7 +464,7 @@ namespace Nop.Web.Controllers
 
                     var topicType = ForumTopicType.Normal;
 
-                    string ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
 
                     var nowUtc = DateTime.UtcNow;
 
@@ -588,7 +588,7 @@ namespace Nop.Web.Controllers
                         return Challenge();
                     }
 
-                    string subject = model.Subject;
+                    var subject = model.Subject;
                     var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
                     if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
                     {
@@ -604,9 +604,9 @@ namespace Nop.Web.Controllers
 
                     var topicType = ForumTopicType.Normal;
 
-                    string ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
 
-                    DateTime nowUtc = DateTime.UtcNow;
+                    var nowUtc = DateTime.UtcNow;
 
                     if (_forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer))
                     {
@@ -783,9 +783,9 @@ namespace Nop.Web.Controllers
                     if (maxPostLength > 0 && text.Length > maxPostLength)
                         text = text.Substring(0, maxPostLength);
 
-                    string ipAddress = _webHelper.GetCurrentIpAddress();
+                    var ipAddress = _webHelper.GetCurrentIpAddress();
 
-                    DateTime nowUtc = DateTime.UtcNow;
+                    var nowUtc = DateTime.UtcNow;
 
                     var forumPost = new ForumPost
                     {
@@ -827,9 +827,9 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    int pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
+                    var pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
 
-                    int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                    var pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
@@ -910,7 +910,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    DateTime nowUtc = DateTime.UtcNow;
+                    var nowUtc = DateTime.UtcNow;
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
@@ -951,8 +951,8 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    int pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
-                    int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                    var pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
+                    var pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {

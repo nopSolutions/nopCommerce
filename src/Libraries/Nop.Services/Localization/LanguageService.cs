@@ -136,7 +136,7 @@ namespace Nop.Services.Localization
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+                var key = string.Format(LANGUAGES_ALL_KEY, showHidden);
                 languages = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Language>();
@@ -179,7 +179,7 @@ namespace Nop.Services.Localization
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
+                var key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     var language = loadLanguageFunc();

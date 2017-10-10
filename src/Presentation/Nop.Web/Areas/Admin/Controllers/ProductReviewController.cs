@@ -146,10 +146,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
+            var createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
+            var createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             bool? approved = null;

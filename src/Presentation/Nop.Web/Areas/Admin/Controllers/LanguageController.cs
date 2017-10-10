@@ -499,7 +499,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
-                        string content = sr.ReadToEnd();
+                        var content = sr.ReadToEnd();
                         _localizationService.ImportResourcesFromXml(language, content);
                     }
 

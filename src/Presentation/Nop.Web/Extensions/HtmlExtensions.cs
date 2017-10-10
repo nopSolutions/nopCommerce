@@ -31,7 +31,7 @@ namespace Nop.Web.Extensions
             var sb = new StringBuilder();
 
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-            string bbEditorWebRoot = $"{storeLocation}js/";
+            var bbEditorWebRoot = $"{storeLocation}js/";
 
             sb.AppendFormat("<script src=\"{0}js/bbeditor/ed.js\" type=\"{1}\"></script>", storeLocation, MimeTypes.TextJavascript);
             sb.AppendLine();
@@ -109,9 +109,9 @@ namespace Nop.Web.Extensions
                 if (model.ShowIndividualPages)
                 {
                     //individual pages
-                    int firstIndividualPageIndex = model.GetFirstIndividualPageIndex();
-                    int lastIndividualPageIndex = model.GetLastIndividualPageIndex();
-                    for (int i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
+                    var firstIndividualPageIndex = model.GetFirstIndividualPageIndex();
+                    var lastIndividualPageIndex = model.GetLastIndividualPageIndex();
+                    for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
                         if (model.PageIndex == i)
                         {
@@ -200,7 +200,7 @@ namespace Nop.Web.Extensions
 
                 if (totalPages <= 4)
                 {
-                    for (int x = 1; x <= totalPages; x++)
+                    for (var x = 1; x <= totalPages; x++)
                     {
                         var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link.ToHtmlString());
@@ -216,7 +216,7 @@ namespace Nop.Web.Extensions
                     links.Append(link1.ToHtmlString());
                     links.Append(" ... ");
 
-                    for (int x = (totalPages - 2); x <= totalPages; x++)
+                    for (var x = (totalPages - 2); x <= totalPages; x++)
                     {
                         var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link2.ToHtmlString());

@@ -236,7 +236,7 @@ namespace Nop.Services.Tests.Shipping
         {
             //take 8 cubes of 1x1x1 which is "packed" as 2x2x2 
             var items = new List<GetShippingOptionRequest.PackageItem>();
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
                 items.Add(new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                         {
                             Quantity = 1,

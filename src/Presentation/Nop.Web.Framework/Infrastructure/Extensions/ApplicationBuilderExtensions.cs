@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes

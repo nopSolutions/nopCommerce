@@ -110,7 +110,7 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
-            int count = 0;
+            var count = 0;
 
             var downloadId = 0;
             if (_orderSettings.ReturnRequestsAllowFiles)
@@ -125,8 +125,8 @@ namespace Nop.Web.Controllers
             var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
             foreach (var orderItem in orderItems)
             {
-                int quantity = 0; //parse quantity
-                foreach (string formKey in form.Keys)
+                var quantity = 0; //parse quantity
+                foreach (var formKey in form.Keys)
                     if (formKey.Equals($"quantity{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out quantity);
@@ -214,7 +214,7 @@ namespace Nop.Web.Controllers
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
-            int validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
+            var validationFileMaximumSize = _orderSettings.ReturnRequestsFileMaximumSize;
             if (validationFileMaximumSize > 0)
             {
                 //compare in bytes
