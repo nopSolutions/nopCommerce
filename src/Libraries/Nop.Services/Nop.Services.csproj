@@ -18,11 +18,6 @@
     <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.1.10" />
     <PackageReference Include="iTextSharp" Version="5.5.12" />
     <PackageReference Include="MaxMind.GeoIP2" Version="2.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.7" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" />
