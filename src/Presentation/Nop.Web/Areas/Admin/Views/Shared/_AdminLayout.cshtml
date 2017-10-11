@@ -85,8 +85,7 @@
     var currentCustomer = workContext.CurrentCustomer;
 
     //event
-    var eventMessage = new PageRenderingEvent(this.Html);
-    eventPublisher.Publish(eventMessage);
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
