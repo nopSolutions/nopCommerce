@@ -15,10 +15,10 @@ namespace Nop.Data
         private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<EntityEntry<T>, Microsoft.EntityFrameworkCore.ChangeTracking.PropertyValues> func) where T : BaseEntity
         {
             //Get the database context
-            DbContext dbContext = CastOrThrow(context);
+            var dbContext = CastOrThrow(context);
 
             //Get the entity tracking object
-            EntityEntry<T> entry = GetEntityOrReturnNull(currentCopy, dbContext);
+            var entry = GetEntityOrReturnNull(currentCopy, dbContext);
 
             //The output 
             T output = null;

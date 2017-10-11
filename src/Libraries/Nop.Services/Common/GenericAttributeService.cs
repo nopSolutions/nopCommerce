@@ -156,7 +156,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            string key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
+            var key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ga in _genericAttributeRepository.Table
@@ -184,7 +184,7 @@ namespace Nop.Services.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            string keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)

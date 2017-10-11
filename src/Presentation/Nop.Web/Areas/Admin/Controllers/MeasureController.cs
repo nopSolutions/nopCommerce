@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public MeasureController(IMeasureService measureService,
             MeasureSettings measureSettings, ISettingService settingService,

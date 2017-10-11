@@ -6321,9 +6321,7 @@ namespace Nop.Services.Installation
                 ActivePaymentMethodSystemNames = new List<string>
                     {
                         "Payments.CheckMoneyOrder",
-                        "Payments.Manual",
-                        "Payments.PayInStore",
-                        "Payments.PurchaseOrder",
+                        "Payments.Manual"
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,

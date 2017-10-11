@@ -15,7 +15,6 @@ namespace Nop.Services.Orders
         /// Checks order status
         /// </summary>
         /// <param name="order">Order</param>
-        /// <returns>Validated order</returns>
         void CheckOrderStatus(Order order);
 
         /// <summary>

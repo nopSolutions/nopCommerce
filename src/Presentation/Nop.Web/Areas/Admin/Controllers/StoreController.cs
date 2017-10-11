@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public StoreController(IStoreService storeService,
             ISettingService settingService,

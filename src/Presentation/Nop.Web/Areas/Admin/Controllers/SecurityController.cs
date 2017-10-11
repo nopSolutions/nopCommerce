@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 		#endregion
 
-		#region Constructors
+		#region Ctor
 
         public SecurityController(ILogger logger, IWorkContext workContext,
             IPermissionService permissionService,
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var pr in permissionRecords)
                 foreach (var cr in customerRoles)
                 {
-                    bool allowed = pr.CustomerRoles.Count(x => x.CustomerRole.Id == cr.Id) > 0;
+                    var allowed = pr.CustomerRoles.Count(x => x.CustomerRole.Id == cr.Id) > 0;
                     if (!model.Allowed.ContainsKey(pr.SystemName))
                         model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[pr.SystemName][cr.Id] = allowed;
@@ -109,7 +109,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             foreach (var cr in customerRoles)
             {
-                string formKey = "allow_" + cr.Id;
+                var formKey = "allow_" + cr.Id;
                 var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
                     ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
                     : new List<string>();
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var pr in permissionRecords)
                 {
 
-                    bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+                    var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
                         if (pr.CustomerRoles.FirstOrDefault(x => x.CustomerRoleId == cr.Id) == null)

@@ -58,7 +58,7 @@ namespace Nop.Services.Discounts
             //first we check simple discounts
             foreach (var discount in discounts)
             {
-                decimal currentDiscountValue = discount.GetDiscountAmount(amount);
+                var currentDiscountValue = discount.GetDiscountAmount(amount);
                 if (currentDiscountValue > discountAmount)
                 {
                     discountAmount = currentDiscountValue;

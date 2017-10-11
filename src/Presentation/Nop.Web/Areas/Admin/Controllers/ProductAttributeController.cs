@@ -28,7 +28,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion Fields
 
-        #region Constructors
+        #region Ctor
 
         public ProductAttributeController(IProductService productService,
             IProductAttributeService productAttributeService,

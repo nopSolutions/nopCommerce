@@ -128,7 +128,7 @@ namespace Nop.Core.Plugins
                         {
                             using (var reader = new StreamReader(unzippedEntryStream))
                             {
-                                string text = reader.ReadToEnd();
+                                var text = reader.ReadToEnd();
                                 pluginDescriptor = GetPluginDescriptor(text);
                                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
                                     StringComparer.InvariantCultureIgnoreCase))

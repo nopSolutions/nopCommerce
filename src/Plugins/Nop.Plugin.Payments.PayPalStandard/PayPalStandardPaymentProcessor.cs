@@ -112,7 +112,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
 
-            string formContent = $"cmd=_notify-synch&at={_paypalStandardPaymentSettings.PdtToken}&tx={tx}";
+            var formContent = $"cmd=_notify-synch&at={_paypalStandardPaymentSettings.PdtToken}&tx={tx}";
             req.ContentLength = formContent.Length;
             
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -123,9 +123,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             bool firstLine = true, success = false;
-            foreach (string l in response.Split('\n'))
+            foreach (var l in response.Split('\n'))
             {
-                string line = l.Trim();
+                var line = l.Trim();
                 if (firstLine)
                 {
                     success = line.Equals("SUCCESS", StringComparison.OrdinalIgnoreCase);
@@ -133,7 +133,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 }
                 else
                 {
-                    int equalPox = line.IndexOf('=');
+                    var equalPox = line.IndexOf('=');
                     if (equalPox >= 0)
                         values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
                 }
@@ -169,13 +169,13 @@ namespace Nop.Plugin.Payments.PayPalStandard
             {
                 response = WebUtility.UrlDecode(sr.ReadToEnd());
             }
-            bool success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+            var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (string l in formString.Split('&'))
+            foreach (var l in formString.Split('&'))
             {
-                string line = l.Trim();
-                int equalPox = line.IndexOf('=');
+                var line = l.Trim();
+                var equalPox = line.IndexOf('=');
                 if (equalPox >= 0)
                     values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
             }

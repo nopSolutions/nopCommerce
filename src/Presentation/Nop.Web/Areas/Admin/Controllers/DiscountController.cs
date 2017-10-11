@@ -108,7 +108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            string url = $"{_webHelper.GetStoreLocation()}{discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId)}";
+            var url = $"{_webHelper.GetStoreLocation()}{discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId)}";
             return url;
         }
         
@@ -181,7 +181,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             //recursively delete child requirements
             var tmpRequirements = requirements.ToList();
-            for (int i = 0; i < tmpRequirements.Count; i++)
+            for (var i = 0; i < tmpRequirements.Count; i++)
             {
                 if (tmpRequirements[i].ChildRequirements.Any())
                     DeleteRequirement(tmpRequirements[i].ChildRequirements);
@@ -418,7 +418,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            var url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
             return Json(new { url = url });
         }
 
@@ -668,7 +668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -783,7 +783,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (model.SelectedCategoryIds != null)
             {
-                foreach (int id in model.SelectedCategoryIds)
+                foreach (var id in model.SelectedCategoryIds)
                 {
                     var category = _categoryService.GetCategoryById(id);
                     if (category != null)
@@ -892,7 +892,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (model.SelectedManufacturerIds != null)
             {
-                foreach (int id in model.SelectedManufacturerIds)
+                foreach (var id in model.SelectedManufacturerIds)
                 {
                     var manufacturer = _manufacturerService.GetManufacturerById(id);
                     if (manufacturer != null)

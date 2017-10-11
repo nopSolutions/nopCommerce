@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Web.Framework.Diagnostic;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using StackExchange.Profiling.Storage;
@@ -40,7 +42,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -51,6 +53,18 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //or use special exception handler
                 application.UseExceptionHandler("/errorpage.htm");
             }
+        }
+
+        /// <summary>
+        /// Add diagnostic listener
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDiagnosticListener(this IApplicationBuilder application)
+        {
+            var diagnosticListener = EngineContext.Current.Resolve<DiagnosticListener>();
+
+            //listen for middleware events
+            diagnosticListener.SubscribeWithAdapter(new NopDiagnosticListener());
         }
 
         /// <summary>

@@ -153,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
                 foreach (var c in countries)
                 {
-                    bool resticted = restictedCountries.Contains(c.Id);
+                    var resticted = restictedCountries.Contains(c.Id);
                     if (!model.Resticted.ContainsKey(pm.PluginDescriptor.SystemName))
                         model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
@@ -174,7 +174,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             foreach (var pm in paymentMethods)
             {
-                string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
+                var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
                         ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
                         : new List<string>())

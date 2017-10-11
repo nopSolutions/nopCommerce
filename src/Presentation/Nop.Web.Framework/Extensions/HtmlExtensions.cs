@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Extensions
                 tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                 tabStrip.AppendLine("</div>");
 
-                for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                 {
                     //languages
                     var language = languageService.GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.Extensions
             //keep this method synchronized with
             //"SaveSelectedTab" method of \Area\Admin\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
-            string dataKey = "nop.selected-tab-name";
+            var dataKey = "nop.selected-tab-name";
             if (!String.IsNullOrEmpty(dataKeyPrefix))
                 dataKey += $"-{dataKeyPrefix}";
 
@@ -233,13 +233,13 @@ namespace Nop.Web.Framework.Extensions
             }
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
-            for (int i = 1; i <= 31; i++)
+            for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (selectedDay.HasValue && selectedDay.Value == i) ? " selected=\"selected\"" : null);
 
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                                     i,
@@ -257,13 +257,13 @@ namespace Nop.Web.Framework.Extensions
 
             if (endYear > beginYear)
             {
-                for (int i = beginYear.Value; i <= endYear.Value; i++)
+                for (var i = beginYear.Value; i <= endYear.Value; i++)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
             else
             {
-                for (int i = beginYear.Value; i >= endYear.Value; i--)
+                for (var i = beginYear.Value; i >= endYear.Value; i--)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
@@ -274,9 +274,9 @@ namespace Nop.Web.Framework.Extensions
 
             if (wrapTags) 
             {
-                string wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";
-                string wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderHtmlContent() + "</span>";
-                string wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderHtmlContent() + "</span>";
+                var wrapDaysList = "<span class=\"days-list select-wrapper\">" + daysList.RenderHtmlContent() + "</span>";
+                var wrapMonthsList = "<span class=\"months-list select-wrapper\">" + monthsList.RenderHtmlContent() + "</span>";
+                var wrapYearsList = "<span class=\"years-list select-wrapper\">" + yearsList.RenderHtmlContent() + "</span>";
 
                 return new HtmlString(string.Concat(wrapDaysList, wrapMonthsList, wrapYearsList));
             }

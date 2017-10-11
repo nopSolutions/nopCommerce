@@ -113,8 +113,8 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -157,8 +157,8 @@ namespace Nop.Services.Security
             if (customerRoleId == 0)
                 throw new ArgumentOutOfRangeException("customerRoleId");
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var aclRecord = new AclRecord
             {
@@ -199,10 +199,10 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ur in _aclRecordRepository.Table

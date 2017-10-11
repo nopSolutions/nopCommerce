@@ -29,7 +29,7 @@ namespace Nop.Core.Html
                 return url;
 
             // Remove the protocal
-            int startIndex = url.IndexOf("://");
+            var startIndex = url.IndexOf("://");
             if (startIndex > -1)
                 url = url.Substring(startIndex + 3);
 
@@ -37,8 +37,8 @@ namespace Nop.Core.Html
                 return url;
 
             // Compress folder structure
-            int firstIndex = url.IndexOf("/") + 1;
-            int lastIndex = url.LastIndexOf("/");
+            var firstIndex = url.IndexOf("/") + 1;
+            var lastIndex = url.LastIndexOf("/");
             if (firstIndex < lastIndex)
             {
                 url = url.Remove(firstIndex, lastIndex - firstIndex);
@@ -49,7 +49,7 @@ namespace Nop.Core.Html
                 return url;
 
             // Remove URL parameters
-            int queryIndex = url.IndexOf("?");
+            var queryIndex = url.IndexOf("?");
             if (queryIndex > -1)
                 url = url.Substring(0, queryIndex);
 
@@ -57,7 +57,7 @@ namespace Nop.Core.Html
                 return url;
 
             // Remove URL fragment
-            int fragmentIndex = url.IndexOf("#");
+            var fragmentIndex = url.IndexOf("#");
             if (fragmentIndex > -1)
                 url = url.Substring(0, fragmentIndex);
 
@@ -69,8 +69,8 @@ namespace Nop.Core.Html
             lastIndex = url.LastIndexOf(".");
             if (lastIndex - firstIndex > 10)
             {
-                string page = url.Substring(firstIndex, lastIndex - firstIndex);
-                int length = url.Length - max + 3;
+                var page = url.Substring(firstIndex, lastIndex - firstIndex);
+                var length = url.Length - max + 3;
                 if (page.Length > length)
                     url = url.Replace(page, "..." + page.Substring(length));
             }

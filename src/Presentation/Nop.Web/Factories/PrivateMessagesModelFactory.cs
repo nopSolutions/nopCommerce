@@ -27,7 +27,7 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public PrivateMessagesModelFactory(IForumService forumService,
             IWorkContext workContext, 
@@ -56,9 +56,9 @@ namespace Nop.Web.Factories
         /// <returns>Private message index model</returns>
         public virtual PrivateMessageIndexModel PreparePrivateMessageIndexModel(int? page, string tab)
         {
-            int inboxPage = 0;
-            int sentItemsPage = 0;
-            bool sentItemsTabSelected = false;
+            var inboxPage = 0;
+            var sentItemsPage = 0;
+            var sentItemsTabSelected = false;
 
             switch (tab)
             {

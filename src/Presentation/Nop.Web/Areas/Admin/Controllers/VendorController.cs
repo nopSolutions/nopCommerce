@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public VendorController(ICustomerService customerService, 
             ILocalizationService localizationService,
@@ -334,7 +334,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = vendor.PictureId;
+                var prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
 

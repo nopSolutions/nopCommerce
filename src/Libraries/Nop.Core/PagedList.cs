@@ -19,7 +19,7 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            int total = source.Count();
+            var total = source.Count();
             this.TotalCount = total;
             this.TotalPages = total / pageSize;
 

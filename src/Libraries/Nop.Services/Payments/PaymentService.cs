@@ -237,7 +237,7 @@ namespace Nop.Services.Payments
             if (paymentMethod == null)
                 return decimal.Zero;
 
-            decimal result = paymentMethod.GetAdditionalHandlingFee(cart);
+            var result = paymentMethod.GetAdditionalHandlingFee(cart);
             if (result < decimal.Zero)
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
@@ -402,9 +402,9 @@ namespace Nop.Services.Payments
             if (creditCardNumber.Length <= 4)
                 return creditCardNumber;
 
-            string last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
-            string maskedChars = string.Empty;
-            for (int i = 0; i < creditCardNumber.Length - 4; i++)
+            var last4 = creditCardNumber.Substring(creditCardNumber.Length - 4, 4);
+            var maskedChars = string.Empty;
+            for (var i = 0; i < creditCardNumber.Length - 4; i++)
             {
                 maskedChars += "*";
             }

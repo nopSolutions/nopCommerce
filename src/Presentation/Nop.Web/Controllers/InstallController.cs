@@ -130,7 +130,7 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = $"CREATE DATABASE [{databaseName}]";
+                var query = $"CREATE DATABASE [{databaseName}]";
                 if (!String.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
@@ -408,12 +408,12 @@ namespace Nop.Web.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
-            foreach (string dir in dirsToCheck)
+            foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = FilePermissionHelper.GetFilesWrite();
-            foreach (string file in filesToCheck)
+            foreach (var file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
 
@@ -474,7 +474,7 @@ namespace Nop.Web.Controllers
                         connectionString = "Data Source=" + databasePath + ";";
 
                         //drop database if exists
-                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
+                        var databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
                         if (System.IO.File.Exists(databaseFullPath))
                         {
                             System.IO.File.Delete(databaseFullPath);

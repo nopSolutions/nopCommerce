@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
         
         #endregion
 
-		#region Constructors
+		#region Ctor
 
         public BackInStockSubscriptionController(IProductService productService,
             IWorkContext workContext, 
@@ -147,7 +147,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             }
 
-            int pageIndex = 0;
+            var pageIndex = 0;
             if (pageNumber > 0)
             {
                 pageIndex = pageNumber.Value - 1;

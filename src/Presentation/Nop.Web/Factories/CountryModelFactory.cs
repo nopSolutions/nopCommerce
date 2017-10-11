@@ -26,7 +26,7 @@ namespace Nop.Web.Factories
 
 	    #endregion
 
-		#region Constructors
+		#region Ctor
 
         public CountryModelFactory(ICountryService countryService, 
             IStateProvinceService stateProvinceService, 
@@ -56,7 +56,7 @@ namespace Nop.Web.Factories
             if (String.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var country = _countryService.GetCountryById(Convert.ToInt32(countryId));

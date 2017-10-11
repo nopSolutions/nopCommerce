@@ -248,7 +248,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_add_and_parse_productAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -287,7 +287,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_add_and_remove_productAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -313,7 +313,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_add_and_parse_giftCardAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
@@ -335,7 +335,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_render_virtual_gift_cart()
         {
-            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
@@ -345,7 +345,7 @@ namespace Nop.Services.Tests.Catalog
                 GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
@@ -353,7 +353,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_render_physical_gift_cart()
         {
-            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+            var attributes = _productAttributeParser.AddGiftCardAttribute("",
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
@@ -363,7 +363,7 @@ namespace Nop.Services.Tests.Catalog
                 GiftCardType = GiftCardType.Physical,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("From: senderName 1<br />For: recipientName 1");
         }
@@ -371,7 +371,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_render_attributes_withoutPrices()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -391,7 +391,7 @@ namespace Nop.Services.Tests.Catalog
                 GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }

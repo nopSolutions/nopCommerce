@@ -110,7 +110,7 @@ namespace Nop.Data
             //add parameters to command
             if (parameters != null && parameters.Length > 0)
             {
-                for (int i = 0; i <= parameters.Length - 1; i++)
+                for (var i = 0; i <= parameters.Length - 1; i++)
                 {
                     var p = parameters[i] as DbParameter;
                     if (p == null)

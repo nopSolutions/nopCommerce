@@ -180,7 +180,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            int result = 0;
+            var result = 0;
             var subscriptions = GetAllSubscriptionsByProductId(product.Id);
             foreach (var subscription in subscriptions)
             {
@@ -193,7 +193,7 @@ namespace Nop.Services.Catalog
                     result++;
                 }
             }
-            for (int i = 0; i <= subscriptions.Count - 1; i++)
+            for (var i = 0; i <= subscriptions.Count - 1; i++)
                 DeleteSubscription(subscriptions[i]);
             return result;
         }

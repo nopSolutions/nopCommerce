@@ -13,6 +13,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Core.Html;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -48,7 +49,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Ctor
+        #region Methods
 
         public virtual IActionResult Index()
         {
@@ -88,7 +89,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     Id = logItem.Id,
                     LogLevel = logItem.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
-                    ShortMessage = logItem.ShortMessage,
+                    ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false),
                     FullMessage = string.Empty, //little performance optimization: ensure that "FullMessage" is not returned
                     IpAddress = logItem.IpAddress,
                     CustomerId = logItem.CustomerId,
@@ -133,8 +134,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Id = log.Id,
                 LogLevel = log.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
-                ShortMessage = log.ShortMessage,
-                FullMessage = log.FullMessage,
+                ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false),
+                FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false),
                 IpAddress = log.IpAddress,
                 CustomerId = log.CustomerId,
                 CustomerEmail = log.Customer?.Email,

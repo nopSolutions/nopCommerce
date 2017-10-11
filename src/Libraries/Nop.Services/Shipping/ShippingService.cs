@@ -324,7 +324,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            var key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
@@ -756,7 +756,7 @@ namespace Nop.Services.Shipping
                         warehouse = GetWarehouseById(product.WarehouseId);
                     }
                 }
-                int warehouseId = warehouse != null ? warehouse.Id : 0;
+                var warehouseId = warehouse != null ? warehouse.Id : 0;
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
@@ -895,7 +895,7 @@ namespace Nop.Services.Shipping
                     else
                     {
                         //errors
-                        foreach (string error in getShippingOptionResponse.Errors)
+                        foreach (var error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
                             _logger.Warning($"Shipping ({srcm.PluginDescriptor.FriendlyName}). {error}");
@@ -965,7 +965,7 @@ namespace Nop.Services.Shipping
                     allPickupPoints.AddRange(pickPointsResponse.PickupPoints);
                 else
                 {
-                    foreach (string error in pickPointsResponse.Errors)
+                    foreach (var error in pickPointsResponse.Errors)
                     {
                         result.AddError(error);
                         _logger.Warning($"PickupPoints ({provider.PluginDescriptor.FriendlyName}). {error}");
