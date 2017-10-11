@@ -255,7 +255,7 @@
                                 @if (Model.TermsOfServicePopup)
                                 {
                                     <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                                    <script>
+                                    <script type="text/javascript" asp-location="Foot">
                                         $(document).ready(function() {
                                             $('#read-terms').on('click',
                                                 function(e) {
@@ -276,7 +276,7 @@
                         <div class="checkout-buttons">
                             @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                             {
-                                <script type="text/javascript">
+                                <script type="text/javascript" asp-location="Foot">
                                     $(document).ready(function () {
                                         $('#checkout').click(function () {
                                             //terms of service

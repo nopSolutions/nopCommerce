@@ -7,16 +7,13 @@
     //page class
     Html.AppendPageCssClassParts("html-search-page");
 }
-<script type="text/javascript">
+<script type="text/javascript" asp-location="Foot">
     $(document).ready(function () {
-
         $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
-
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
-
         if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }

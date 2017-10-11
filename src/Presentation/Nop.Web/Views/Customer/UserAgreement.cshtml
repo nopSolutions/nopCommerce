@@ -5,14 +5,11 @@
     //page class
     Html.AppendPageCssClassParts("html-user-agreement-page");
 }
-<script type="text/javascript">
+ <script type="text/javascript" asp-location="Foot">
     $(document).ready(function () {
-
         $("#agreement-agree").click(toggleContinueButton);
-
         toggleContinueButton();
     });
-
     function toggleContinueButton() {
         if ($('#agreement-agree').is(':checked')) {
             $('#continue-downloading').removeAttr('disabled');

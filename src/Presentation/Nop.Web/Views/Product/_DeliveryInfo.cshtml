@@ -2,9 +2,9 @@
 @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery">
-        <script type="text/javascript">
+        <script type="text/javascript" asp-location="Foot">
             $(document).on("product_attributes_changed", function (data) {
-                if (data.changedData.isFreeShipping){
+                if (data.changedData.isFreeShipping) {
                     $(".free-shipping").addClass("visible");
                 } else {
                     $(".free-shipping").removeClass("visible");

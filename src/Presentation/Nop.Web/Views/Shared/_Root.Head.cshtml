@@ -8,13 +8,15 @@
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
 @{
-    Html.AppendScriptParts("~/js/public.ajaxcart.js");
-    Html.AppendScriptParts("~/js/public.common.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
-    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/js/public.ajaxcart.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/js/public.common.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery.validate.min.js");
+    //jQuery is the only js file in the head. if we decide to move it to the footer, then ensure that all inline scripts (with jQuery usage) with are also moved to the footer
+    //the issue that it's not possible in some cases (e.g. "Edit address", when Ajax request is made on one-page checkout)
+    Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery-1.10.2.min.js");
 
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
@@ -31,34 +33,36 @@
         && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
 }
 <!DOCTYPE html>
-<html@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
-<head>
-    <title>@Html.NopTitle()</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.NopMetaDescription())" />
-    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
-    <meta name="generator" content="nopCommerce" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    @Html.NopHeadCustom()
-    @*This is used so that themes can inject content into the header*@
-    @await Html.PartialAsync("Head")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
-    @Html.NopCanonicalUrls()
-    @await Component.InvokeAsync("NewsRssHeaderLink")
-    @await Component.InvokeAsync("BlogRssHeaderLink")
-    @*Favicon - upload favicon.ico file to the root directory*@
-    @await Component.InvokeAsync("Favicon")
-    @if (displayMiniProfiler)
-    {
-        <mini-profiler />
-    }
-    <!--Powered by nopCommerce - http://www.nopCommerce.com-->
-</head>
-<body>
-    @RenderBody()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.NopScripts(this.Url, ResourceLocation.Foot)
-</body>
+<html @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
+    <head>
+        <title>@Html.NopTitle()</title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <meta name="description" content="@(Html.NopMetaDescription())" />
+        <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+        <meta name="generator" content="nopCommerce" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        @Html.NopHeadCustom()
+        @*This is used so that themes can inject content into the header*@
+        @await Html.PartialAsync("Head")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+        @Html.NopScripts(this.Url, ResourceLocation.Head)
+        @Html.NopCanonicalUrls()
+        @await Component.InvokeAsync("NewsRssHeaderLink")
+        @await Component.InvokeAsync("BlogRssHeaderLink")
+        @*Favicon - upload favicon.ico file to the root directory*@
+        @await Component.InvokeAsync("Favicon")
+        @if (displayMiniProfiler)
+            {
+            <mini-profiler />
+        }
+        @Html.NopInlineScripts(this.Url, ResourceLocation.Head)
+        <!--Powered by nopCommerce - http://www.nopCommerce.com-->
+    </head>
+    <body>
+        @RenderBody()
+        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+        @Html.NopScripts(this.Url, ResourceLocation.Foot)
+        @Html.NopInlineScripts(this.Url, ResourceLocation.Foot)
+    </body>
 </html>

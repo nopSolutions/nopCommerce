@@ -22,9 +22,8 @@
             <div class="description">
                 @T("Account.BackInStockSubscriptions.Description")
             </div>
-            <script type="text/javascript">
+            <script type="text/javascript" asp-location="Foot">
                 $(document).ready(function () {
-
                     $('#selectall').click(function () {
                         $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
                     });
@@ -36,7 +35,6 @@
                     });
                 });
             </script>
-            
             <form asp-route="CustomerBackInStockSubscriptions" method="post">
                 <div class="subscription-list">
                     <div class="table-wrapper">

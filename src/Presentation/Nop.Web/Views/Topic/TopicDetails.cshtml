@@ -28,7 +28,7 @@
 }
 @if (Model.IsPasswordProtected)
 {
-    <script type="text/javascript">
+    <script type="text/javascript" asp-location="Foot">
         $(document).ready(function () {
             $('#button-password').click(function () {
                 var postData = {

@@ -97,42 +97,42 @@
             </div>
             @if (Model.AllowPostVoting)
             {
-                <script type="text/javascript">
-                $(document).ready(function () {
-                    var post = '#post-vote-' + @Model.Id;
-                    $(post + ' span.vote').click(function () {
-                        var postData = {
-                            postId: @Model.Id,
-                            IsUp: $(this).hasClass('up')
-                        };
-                        addAntiForgeryToken(postData);
-                        $.ajax({
-                            cache: false,
-                            type: "POST",
-                            url: '@Url.Action("PostVote", "Boards")',
-                            data: postData,
-                            success: function (data) {
-                                if (data.Error) {
-                                    alert(data.Error);
-                                }
-                                else {
-                                    $(post + ' div.vote-count-post').html(data.VoteCount);
-                                    $(post + ' span.up').removeClass('selected');
-                                    $(post + ' span.down').removeClass('selected');
-                                    if (data.IsUp) {
-                                        $(post + ' span.up').addClass('selected');
+                <script type="text/javascript" asp-location="Foot">
+                    $(document).ready(function () {
+                        var post = '#post-vote-' + @Model.Id;
+                        $(post + ' span.vote').click(function () {
+                            var postData = {
+                                postId: @Model.Id,
+                                IsUp: $(this).hasClass('up')
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: '@Url.Action("PostVote", "Boards")',
+                                data: postData,
+                                success: function (data) {
+                                    if (data.Error) {
+                                        alert(data.Error);
                                     }
-                                    if (data.IsUp == false) {
-                                        $(post + ' span.down').addClass('selected');
+                                    else {
+                                        $(post + ' div.vote-count-post').html(data.VoteCount);
+                                        $(post + ' span.up').removeClass('selected');
+                                        $(post + ' span.down').removeClass('selected');
+                                        if (data.IsUp) {
+                                            $(post + ' span.up').addClass('selected');
+                                        }
+                                        if (data.IsUp == false) {
+                                            $(post + ' span.down').addClass('selected');
+                                        }
                                     }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to vote');
                                 }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to vote');
-                            }
+                            });
                         });
                     });
-                });
                 </script>
 
                 <div class="post-vote" id="@($"post-vote-{Model.Id}")">

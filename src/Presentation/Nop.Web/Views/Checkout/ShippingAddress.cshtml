@@ -25,7 +25,7 @@
                     <div class="description">
                         @T("Checkout.PickupPoints.Description")
                     </div>
-                    <script type="text/javascript">
+                    <script type="text/javascript" asp-location="Foot">
                         $(document).ready(function() {
                             $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
                             togglePickUpInStore();
@@ -106,7 +106,7 @@
                         {
                             var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
                             <div class="pickup-points-map" id="map">
-                                <script type="text/javascript">
+                                <script type="text/javascript" asp-location="Foot">
                                     var markers = new Map();
                                     var googleMap = null;
                                     $(document).ready(function () {

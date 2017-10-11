@@ -33,6 +33,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
+        private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts;
         private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
@@ -66,6 +67,7 @@ namespace Nop.Web.Framework.UI
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
             this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
             this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
@@ -158,8 +160,7 @@ namespace Nop.Web.Framework.UI
             }
             return result;
         }
-
-
+        
         public virtual void AddMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -180,8 +181,7 @@ namespace Nop.Web.Framework.UI
             var result = !String.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
             return result;
         }
-
-
+        
         public virtual void AddMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -203,7 +203,6 @@ namespace Nop.Web.Framework.UI
             return result;
         }
     
-
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
@@ -347,7 +346,44 @@ namespace Nop.Web.Framework.UI
                 return result.ToString();
             }
         }
-        
+
+        public virtual void AddInlineScriptParts(ResourceLocation location, string script)
+        {
+            if (!_inlineScriptParts.ContainsKey(location))
+                _inlineScriptParts.Add(location, new List<string>());
+
+            if (string.IsNullOrEmpty(script))
+                return;
+
+            _inlineScriptParts[location].Add(script);
+        }
+        public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
+        {
+            if (!_inlineScriptParts.ContainsKey(location))
+                _inlineScriptParts.Add(location, new List<string>());
+
+            if (string.IsNullOrEmpty(script))
+                return;
+
+            _inlineScriptParts[location].Insert(0, script);
+        }
+        public virtual string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location)
+        {
+            if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
+                return "";
+
+            if (!_inlineScriptParts.Any())
+                return "";
+
+            var result = new StringBuilder();
+            foreach (var item in _inlineScriptParts[location])
+            {
+                result.Append(item);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
+        }
+
         public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -516,8 +552,7 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-
-
+        
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -547,7 +582,6 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-
         
         public virtual void AddPageCssClassParts(string part)
         {
@@ -568,8 +602,7 @@ namespace Nop.Web.Framework.UI
             string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
-
-
+        
         /// <summary>
         /// Specify "edit page" URL
         /// </summary>
@@ -586,8 +619,7 @@ namespace Nop.Web.Framework.UI
         {
             return _editPageUrl;
         }
-
-
+        
         /// <summary>
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>

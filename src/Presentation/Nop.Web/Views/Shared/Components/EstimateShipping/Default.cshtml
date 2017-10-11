@@ -1,6 +1,6 @@
 ﻿@model EstimateShippingModel
 <div class="shipping">
-    <script type="text/javascript">
+    <script type="text/javascript" asp-location="Foot">
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
@@ -26,8 +26,7 @@
                 });
             });
         });
-    </script>
-    <script type="text/javascript">
+    
         $(document).ready(function () {
             $('#estimate-shipping-button').click(function() {
                 displayAjaxLoading(true);
