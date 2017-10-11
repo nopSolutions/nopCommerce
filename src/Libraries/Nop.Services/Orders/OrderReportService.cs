@@ -159,7 +159,7 @@ namespace Nop.Services.Orders
             }
             if (billingCountryId > 0)
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+            if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
@@ -171,11 +171,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!String.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
-            if (!String.IsNullOrEmpty(orderNotes))
+            if (!string.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!string.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+            if (!string.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             
 			var item = (from oq in query
@@ -500,14 +500,14 @@ namespace Nop.Services.Orders
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
-            //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
-            //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchLastName = String.IsNullOrEmpty(billingLastName);
-            //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
-            //We cannot use String.IsNullOrEmpty() in SQL Compact
-            bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
+            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            bool dontSearchEmail = string.IsNullOrEmpty(billingEmail);
+            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            bool dontSearchLastName = string.IsNullOrEmpty(billingLastName);
+            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            bool dontSearchOrderNotes = string.IsNullOrEmpty(orderNotes);
+            //We cannot use string.IsNullOrEmpty() in SQL Compact
+            bool dontSearchPaymentMethods = string.IsNullOrEmpty(paymentMethodSystemName);
 
             var orders = _orderRepository.Table;
             if (osIds != null && osIds.Any())
@@ -529,8 +529,8 @@ namespace Nop.Services.Orders
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
-                              (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
-                              (dontSearchLastName || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
+                              (dontSearchEmail || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
+                              (dontSearchLastName || (o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
                               (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
                         select orderItem;
 

@@ -21,7 +21,7 @@ namespace Nop.Data.Initializers
             if (context.Database.Connection is SqlCeConnection)
             {
                 var builder = new SqlCeConnectionStringBuilder(context.Database.Connection.ConnectionString);
-                if (!String.IsNullOrWhiteSpace(builder.DataSource))
+                if (!string.IsNullOrWhiteSpace(builder.DataSource))
                 {
                     builder.DataSource = ReplaceDataDirectory(builder.DataSource);
                     return new DbContext(builder.ConnectionString);

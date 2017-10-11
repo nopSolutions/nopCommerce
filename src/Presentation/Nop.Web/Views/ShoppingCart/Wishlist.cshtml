@@ -20,7 +20,7 @@
             }
             else
             {
-                @String.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname)
+                @string.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname)
             }
         </h1>
     </div>
@@ -137,19 +137,19 @@
                                         }
                                         <td class="product">
                                             <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">
                                                     @Html.Raw(item.AttributeInfo)
                                                 </div>
                                             }
-                                            @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                            @if (!string.IsNullOrEmpty(item.RecurringInfo))
                                             {
                                                 <div class="recurring-info">
                                                     @Html.Raw(item.RecurringInfo)
                                                 </div>
                                             }
-                                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                            @if (!string.IsNullOrEmpty(item.RentalInfo))
                                             {
                                                 <div class="rental-info">
                                                     @Html.Raw(item.RentalInfo)
@@ -205,7 +205,7 @@
                                         <td class="subtotal">
                                             <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>
                                             <span class="product-subtotal">@item.SubTotal</span>
-                                            @if (!String.IsNullOrEmpty(item.Discount))
+                                            @if (!string.IsNullOrEmpty(item.Discount))
                                             {
                                                 <div class="discount">
                                                     @T("ShoppingCart.ItemYouSave", item.Discount)

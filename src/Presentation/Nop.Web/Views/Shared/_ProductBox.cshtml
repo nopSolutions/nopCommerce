@@ -58,7 +58,7 @@
         <div class="add-info">
             @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
             <div class="prices">
-                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                @if (!string.IsNullOrEmpty(Model.ProductPrice.OldPrice))
                 {
                     <span class="price old-price">@Model.ProductPrice.OldPrice</span>
                 }
@@ -72,7 +72,7 @@
                         @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                     </span>
                 }
-                @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                @if (!string.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
                 {
                     <div class="base-price-pangv">
                         @Model.ProductPrice.BasePricePAngV

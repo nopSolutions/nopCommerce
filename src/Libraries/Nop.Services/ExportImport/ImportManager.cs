@@ -170,7 +170,7 @@ namespace Nop.Services.ExportImport
         /// <returns>The image or null if the image has not changed</returns>
         protected virtual Picture LoadPicture(string picturePath, string name, int? picId = null)
         {
-            if (String.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
+            if (string.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
                 return null;
 
             var mimeType = GetMimeTypeFromFilePath(picturePath);
@@ -205,7 +205,7 @@ namespace Nop.Services.ExportImport
             {
                 foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
                 {
-                    if (String.IsNullOrEmpty(picturePath))
+                    if (string.IsNullOrEmpty(picturePath))
                         continue;
 
                     var mimeType = GetMimeTypeFromFilePath(picturePath);
@@ -257,7 +257,7 @@ namespace Nop.Services.ExportImport
             {
                 foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
                 {
-                    if (String.IsNullOrEmpty(picturePath))
+                    if (string.IsNullOrEmpty(picturePath))
                         continue;
 
                     var mimeType = GetMimeTypeFromFilePath(picturePath);
@@ -1444,7 +1444,7 @@ namespace Nop.Services.ExportImport
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-                    if (String.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
                     string[] tmp = line.Split(',');
 
@@ -1461,14 +1461,14 @@ namespace Nop.Services.ExportImport
                     {
                         //"email" and "active" fields specified
                         email = tmp[0].Trim();
-                        isActive = Boolean.Parse(tmp[1].Trim());
+                        isActive = bool.Parse(tmp[1].Trim());
                     }
                     else if (tmp.Length == 3)
                     {
                         //"email" and "active" and "storeId" fields specified
                         email = tmp[0].Trim();
-                        isActive = Boolean.Parse(tmp[1].Trim());
-                        storeId = Int32.Parse(tmp[2].Trim());
+                        isActive = bool.Parse(tmp[1].Trim());
+                        storeId = int.Parse(tmp[2].Trim());
                     }
                     else
                         throw new NopException("Wrong file format");
@@ -1514,7 +1514,7 @@ namespace Nop.Services.ExportImport
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-                    if (String.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
                     string[] tmp = line.Split(',');
 
@@ -1525,8 +1525,8 @@ namespace Nop.Services.ExportImport
                     var countryTwoLetterIsoCode = tmp[0].Trim();
                     var name = tmp[1].Trim();
                     var abbreviation = tmp[2].Trim();
-                    bool published = Boolean.Parse(tmp[3].Trim());
-                    int displayOrder = Int32.Parse(tmp[4].Trim());
+                    bool published = bool.Parse(tmp[3].Trim());
+                    int displayOrder = int.Parse(tmp[4].Trim());
 
                     var country = _countryService.GetCountryByTwoLetterIsoCode(countryTwoLetterIsoCode);
                     if (country == null)
@@ -1594,7 +1594,7 @@ namespace Nop.Services.ExportImport
                 {
                     var allColumnsAreEmpty = manager.GetProperties
                         .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+                        .All(cell => cell == null || cell.Value == null || string.IsNullOrEmpty(cell.Value.ToString()));
 
                     if (allColumnsAreEmpty)
                         break;

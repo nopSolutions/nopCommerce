@@ -29,13 +29,13 @@ namespace Nop.Core.Domain.Orders
         protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
         {
             var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
-            if (String.IsNullOrEmpty(taxRatesStr))
+            if (string.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
             string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
-                if (String.IsNullOrEmpty(line.Trim()))
+                if (string.IsNullOrEmpty(line.Trim()))
                     continue;
 
                 string[] taxes = line.Split(new [] { ':' });

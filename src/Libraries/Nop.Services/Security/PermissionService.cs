@@ -80,7 +80,7 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
         {
-            if (String.IsNullOrEmpty(permissionRecordSystemName))
+            if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
             
             string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
@@ -132,7 +132,7 @@ namespace Nop.Services.Security
         /// <returns>Permission</returns>
         public virtual PermissionRecord GetPermissionRecordBySystemName(string systemName)
         {
-            if (String.IsNullOrWhiteSpace(systemName))
+            if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
             var query = from pr in _permissionRecordRepository.Table
@@ -320,7 +320,7 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize(string permissionRecordSystemName, Customer customer)
         {
-            if (String.IsNullOrEmpty(permissionRecordSystemName))
+            if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);

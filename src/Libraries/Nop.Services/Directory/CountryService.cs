@@ -209,7 +209,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table
@@ -226,7 +226,7 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
-            if (String.IsNullOrEmpty(threeLetterIsoCode))
+            if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
             var query = from c in _countryRepository.Table

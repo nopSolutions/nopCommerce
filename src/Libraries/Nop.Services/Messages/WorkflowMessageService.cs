@@ -1869,7 +1869,7 @@ namespace Nop.Services.Messages
 
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
-            if (String.IsNullOrEmpty(subject))
+            if (string.IsNullOrEmpty(subject))
                 subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
 

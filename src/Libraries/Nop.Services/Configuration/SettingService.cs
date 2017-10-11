@@ -224,7 +224,7 @@ namespace Nop.Services.Configuration
         /// <returns>Setting</returns>
         public virtual Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return null;
 
             var settings = GetAllSettingsCached();
@@ -257,7 +257,7 @@ namespace Nop.Services.Configuration
         public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), 
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
             var settings = GetAllSettingsCached();

@@ -60,7 +60,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual ScheduleTask GetTaskByType(string type)
         {
-            if (String.IsNullOrWhiteSpace(type))
+            if (string.IsNullOrWhiteSpace(type))
                 return null;
 
             var query = _taskRepository.Table;

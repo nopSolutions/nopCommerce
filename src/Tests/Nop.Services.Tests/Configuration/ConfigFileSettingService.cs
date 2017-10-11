@@ -28,7 +28,7 @@ namespace Nop.Services.Tests.Configuration
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
 
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
                 return defaultValue;
 
             var settings = GetAllSettings();

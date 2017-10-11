@@ -31,13 +31,13 @@
                 {
                     var paymentMethod = Model.PaymentMethods[i];
                     var paymentMethodName = paymentMethod.Name;
-                    if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                    if (!string.IsNullOrEmpty(paymentMethod.Fee))
                     {
                         paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                     }
                     <li>
                         <div class="method-name">
-                            @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
+                            @if (!string.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
                                 <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">

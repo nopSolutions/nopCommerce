@@ -40,7 +40,7 @@
                                     }
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
@@ -66,7 +66,7 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
@@ -98,7 +98,7 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
@@ -151,7 +151,7 @@
                         case AttributeControlType.FileUpload:
                             {
                                 Download download = null;
-                                if (!String.IsNullOrEmpty(attribute.DefaultValue))
+                                if (!string.IsNullOrEmpty(attribute.DefaultValue))
                                 {
                                     download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
                                 }
@@ -258,7 +258,7 @@
                                 <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
@@ -295,7 +295,7 @@
                                 <ul class="option-list attribute-squares image-squares" id="image-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>

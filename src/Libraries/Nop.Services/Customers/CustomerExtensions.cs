@@ -28,14 +28,14 @@ namespace Nop.Services.Customers
             var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
 
             string fullName = "";
-            if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
             {
-                if (!String.IsNullOrWhiteSpace(firstName))
+                if (!string.IsNullOrWhiteSpace(firstName))
                     fullName = firstName;
 
-                if (!String.IsNullOrWhiteSpace(lastName))
+                if (!string.IsNullOrWhiteSpace(lastName))
                     fullName = lastName;
             }
             return fullName;
@@ -99,7 +99,7 @@ namespace Nop.Services.Customers
                 genericAttributeService);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingCouponCodes))
+            if (string.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
             try
@@ -144,7 +144,7 @@ namespace Nop.Services.Customers
                 couponCode = couponCode.Trim().ToLower();
 
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingCouponCodes))
+                if (string.IsNullOrEmpty(existingCouponCodes))
                 {
                     var element1 = xmlDoc.CreateElement("DiscountCouponCodes");
                     xmlDoc.AppendChild(element1);
@@ -229,7 +229,7 @@ namespace Nop.Services.Customers
                 genericAttributeService);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingCouponCodes))
+            if (string.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
             try
@@ -274,7 +274,7 @@ namespace Nop.Services.Customers
                 couponCode = couponCode.Trim().ToLower();
 
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingCouponCodes))
+                if (string.IsNullOrEmpty(existingCouponCodes))
                 {
                     var element1 = xmlDoc.CreateElement("GiftCardCouponCodes");
                     xmlDoc.AppendChild(element1);
@@ -355,7 +355,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
+            if (string.IsNullOrEmpty(cPrt))
                 return false;
 
             if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))

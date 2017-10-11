@@ -231,7 +231,7 @@ namespace Nop.Services.Messages
             {
                 //do not filter by customer role
                 var query = _subscriptionRepository.Table;
-                if (!String.IsNullOrEmpty(email))
+                if (!string.IsNullOrEmpty(email))
                     query = query.Where(nls => nls.Email.Contains(email));
                 if (createdFromUtc.HasValue)
                     query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
@@ -257,7 +257,7 @@ namespace Nop.Services.Messages
                 {
                     //guests
                     var query = _subscriptionRepository.Table;
-                    if (!String.IsNullOrEmpty(email))
+                    if (!string.IsNullOrEmpty(email))
                         query = query.Where(nls => nls.Email.Contains(email));
                     if (createdFromUtc.HasValue)
                         query = query.Where(nls => nls.CreatedOnUtc >= createdFromUtc.Value);
@@ -285,7 +285,7 @@ namespace Nop.Services.Messages
                             Customer = c
                         });
                     query = query.Where(x => x.Customer.CustomerRoles.Any(cr => cr.Id == customerRoleId));
-                    if (!String.IsNullOrEmpty(email))
+                    if (!string.IsNullOrEmpty(email))
                         query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
                     if (createdFromUtc.HasValue)
                         query = query.Where(x => x.NewsletterSubscribers.CreatedOnUtc >= createdFromUtc.Value);

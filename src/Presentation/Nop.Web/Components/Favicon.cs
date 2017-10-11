@@ -17,7 +17,7 @@ namespace Nop.Web.Components
         public IViewComponentResult Invoke()
         {
             var model = _commonModelFactory.PrepareFaviconModel();
-            if (String.IsNullOrEmpty(model.FaviconUrl))
+            if (string.IsNullOrEmpty(model.FaviconUrl))
                 return Content("");
             return View(model);
         }

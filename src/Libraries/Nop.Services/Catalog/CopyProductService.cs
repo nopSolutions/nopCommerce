@@ -143,7 +143,7 @@ namespace Nop.Services.Catalog
                 foreach (var lang in languages)
                 {
                     var textPrompt = productAttributeMapping.GetLocalized(x => x.TextPrompt, lang.Id, false, false);
-                    if (!String.IsNullOrEmpty(textPrompt))
+                    if (!string.IsNullOrEmpty(textPrompt))
                         _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
                             lang.Id);
                 }
@@ -210,7 +210,7 @@ namespace Nop.Services.Catalog
                     foreach (var lang in languages)
                     {
                         var name = productAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
-                        if (!String.IsNullOrEmpty(name))
+                        if (!string.IsNullOrEmpty(name))
                             _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
                     }
                 }
@@ -448,27 +448,27 @@ namespace Nop.Services.Catalog
             foreach (var lang in languages)
             {
                 var name = product.GetLocalized(x => x.Name, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(name))
+                if (!string.IsNullOrEmpty(name))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id);
 
                 var shortDescription = product.GetLocalized(x => x.ShortDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(shortDescription))
+                if (!string.IsNullOrEmpty(shortDescription))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
 
                 var fullDescription = product.GetLocalized(x => x.FullDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(fullDescription))
+                if (!string.IsNullOrEmpty(fullDescription))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id);
 
                 var metaKeywords = product.GetLocalized(x => x.MetaKeywords, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaKeywords))
+                if (!string.IsNullOrEmpty(metaKeywords))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
 
                 var metaDescription = product.GetLocalized(x => x.MetaDescription, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaDescription))
+                if (!string.IsNullOrEmpty(metaDescription))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
 
                 var metaTitle = product.GetLocalized(x => x.MetaTitle, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(metaTitle))
+                if (!string.IsNullOrEmpty(metaTitle))
                     _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
 
                 //search engine name
@@ -523,7 +523,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            var newSku = !String.IsNullOrWhiteSpace(product.Sku)
+            var newSku = !string.IsNullOrWhiteSpace(product.Sku)
                 ? string.Format(_localizationService.GetResource("Admin.Catalog.Products.Copy.SKU.New"), product.Sku)
                 : product.Sku;
             // product
@@ -655,7 +655,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            if (String.IsNullOrEmpty(newName))
+            if (string.IsNullOrEmpty(newName))
                 throw new ArgumentException("Product name is required");
 
             var productCopy = CopyBaseProductData(product, newName, isPublished);

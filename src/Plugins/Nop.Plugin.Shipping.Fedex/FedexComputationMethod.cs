@@ -611,7 +611,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 string serviceName = FedexServices.GetServiceName(rateDetail.ServiceType.ToString());
 
                 // Skip the current service if services are selected and this service hasn't been selected
-                if (!String.IsNullOrEmpty(_fedexSettings.CarrierServicesOffered) && !_fedexSettings.CarrierServicesOffered.Contains(rateDetail.ServiceType.ToString()))
+                if (!string.IsNullOrEmpty(_fedexSettings.CarrierServicesOffered) && !_fedexSettings.CarrierServicesOffered.Contains(rateDetail.ServiceType.ToString()))
                 {
                     continue;
                 }
@@ -831,7 +831,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     {
                         if (reply.Notifications != null &&
                             reply.Notifications.Length > 0 &&
-                            !String.IsNullOrEmpty(reply.Notifications[0].Message))
+                            !string.IsNullOrEmpty(reply.Notifications[0].Message))
                         {
                             response.AddError($"{reply.Notifications[0].Message} (code: {reply.Notifications[0].Code})");
                             return response;

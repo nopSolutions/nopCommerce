@@ -226,7 +226,7 @@ namespace Nop.Services.Seo
         /// <returns>Found URL record</returns>
         public virtual UrlRecord GetBySlug(string slug)
         {
-            if (String.IsNullOrEmpty(slug))
+            if (string.IsNullOrEmpty(slug))
                 return null;
 
             var query = from ur in _urlRecordRepository.Table
@@ -247,7 +247,7 @@ namespace Nop.Services.Seo
         /// <returns>Found URL record</returns>
         public virtual UrlRecordForCaching GetBySlugCached(string slug)
         {
-            if (String.IsNullOrEmpty(slug))
+            if (string.IsNullOrEmpty(slug))
                 return null;
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
@@ -286,7 +286,7 @@ namespace Nop.Services.Seo
         public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
-            if (!String.IsNullOrWhiteSpace(slug))
+            if (!string.IsNullOrWhiteSpace(slug))
                 query = query.Where(ur => ur.Slug.Contains(slug));
             query = query.OrderBy(ur => ur.Slug);
 

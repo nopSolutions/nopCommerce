@@ -667,7 +667,7 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
-            if (String.IsNullOrWhiteSpace(fullVatNumber))
+            if (string.IsNullOrWhiteSpace(fullVatNumber))
                 return VatNumberStatus.Empty;
             fullVatNumber = fullVatNumber.Trim();
 
@@ -708,10 +708,10 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
-            if (String.IsNullOrEmpty(twoLetterIsoCode))
+            if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return VatNumberStatus.Empty;
 
-            if (String.IsNullOrEmpty(vatNumber))
+            if (string.IsNullOrEmpty(vatNumber))
                 return VatNumberStatus.Empty;
 
             if (_taxSettings.EuVatAssumeValid)
@@ -744,7 +744,7 @@ namespace Nop.Services.Tax
 
             if (twoLetterIsoCode == null)
                 twoLetterIsoCode = string.Empty;
-            if (!String.IsNullOrEmpty(twoLetterIsoCode))
+            if (!string.IsNullOrEmpty(twoLetterIsoCode))
                 //The service returns INVALID_INPUT for country codes that are not uppercase.
                 twoLetterIsoCode = twoLetterIsoCode.ToUpper();
 

@@ -605,7 +605,7 @@ namespace Nop.Web.Controllers
             }
 
             //parse selected method 
-            if (String.IsNullOrEmpty(shippingoption))
+            if (string.IsNullOrEmpty(shippingoption))
                 return ShippingMethod();
             var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
@@ -630,7 +630,7 @@ namespace Nop.Web.Controllers
             }
 
             var shippingOption = shippingOptions
-                .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+                .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
             if (shippingOption == null)
                 return ShippingMethod();
 
@@ -729,7 +729,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
             //payment method 
-            if (String.IsNullOrEmpty(paymentmethod))
+            if (string.IsNullOrEmpty(paymentmethod))
                 return PaymentMethod();
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
@@ -1397,7 +1397,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 
-                if (String.IsNullOrEmpty(shippingoption))
+                if (string.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
                 var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
@@ -1422,7 +1422,7 @@ namespace Nop.Web.Controllers
                 }
                 
                 var shippingOption = shippingOptions
-                    .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+                    .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
                 if (shippingOption == null)
                     throw new Exception("Selected shipping method can't be loaded");
 
@@ -1458,7 +1458,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Anonymous checkout is not allowed");
 
                 //payment method 
-                if (String.IsNullOrEmpty(paymentmethod))
+                if (string.IsNullOrEmpty(paymentmethod))
                     throw new Exception("Selected payment method can't be parsed");
 
                 //reward points

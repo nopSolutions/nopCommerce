@@ -30,7 +30,7 @@ namespace Nop.Services.Customers
         protected virtual IList<int> ParseCustomerAttributeIds(string attributesXml)
         {
             var ids = new List<int>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return ids;
 
             try
@@ -65,7 +65,7 @@ namespace Nop.Services.Customers
         public virtual IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml)
         {
             var result = new List<CustomerAttribute>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return result;
 
             var ids = ParseCustomerAttributeIds(attributesXml);
@@ -88,7 +88,7 @@ namespace Nop.Services.Customers
         public virtual IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml)
         {
             var values = new List<CustomerAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
             var attributes = ParseCustomerAttributes(attributesXml);
@@ -100,7 +100,7 @@ namespace Nop.Services.Customers
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
                 foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
                         if (int.TryParse(valueStr, out int id))
                         {
@@ -123,7 +123,7 @@ namespace Nop.Services.Customers
         public virtual IList<string> ParseValues(string attributesXml, int customerAttributeId)
         {
             var selectedCustomerAttributeValues = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return selectedCustomerAttributeValues;
 
             try
@@ -172,7 +172,7 @@ namespace Nop.Services.Customers
             try
             {
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
+                if (string.IsNullOrEmpty(attributesXml))
                 {
                     var element1 = xmlDoc.CreateElement("Attributes");
                     xmlDoc.AppendChild(element1);
@@ -253,7 +253,7 @@ namespace Nop.Services.Customers
                             var valuesStr = ParseValues(attributesXml, a1.Id);
                             foreach (string str1 in valuesStr)
                             {
-                                if (!String.IsNullOrEmpty(str1.Trim()))
+                                if (!string.IsNullOrEmpty(str1.Trim()))
                                 {
                                     found = true;
                                     break;

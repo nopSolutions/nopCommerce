@@ -505,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 
             // This action method gets called via an ajax request
-            if (String.IsNullOrEmpty(countryId))
+            if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
@@ -580,7 +580,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
                     int count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
-                    SuccessNotification(String.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
+                    SuccessNotification(string.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
                     return RedirectToAction("List");
                 }
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));

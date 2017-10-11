@@ -20,7 +20,7 @@
         <div class="page-body">
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
             <div class="fieldset">
-                @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <div class="image">
                         <img src="@(Model.AvatarUrl)" alt="avatar" />
@@ -30,7 +30,7 @@
             </div>
             <div class="buttons">
                 <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
-                @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
                 }

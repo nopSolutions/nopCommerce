@@ -119,7 +119,7 @@ namespace Nop.Web.Framework.Extensions
                     tmp1 = EngineContext.Current.Resolve<IDateTimeHelper>().ConvertToUserTime(tmp1, DateTimeKind.Utc);
                 }
                 //default formatting
-                if (!String.IsNullOrEmpty(defaultFormat))
+                if (!string.IsNullOrEmpty(defaultFormat))
                 {
                     result = tmp1.ToString(defaultFormat);
                 }

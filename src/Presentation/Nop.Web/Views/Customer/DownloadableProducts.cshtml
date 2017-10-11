@@ -56,7 +56,7 @@
                                 </td>
                                 <td class="product">
                                     <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                    @if (!String.IsNullOrEmpty(item.ProductAttributes))
+                                    @if (!string.IsNullOrEmpty(item.ProductAttributes))
                                     {
                                         <div class="attributes">
                                             @Html.Raw(item.ProductAttributes)

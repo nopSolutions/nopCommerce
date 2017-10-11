@@ -230,7 +230,7 @@ namespace Nop.Web.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
                             }
                             catch { }
                             if (selectedDate.HasValue)
@@ -454,7 +454,7 @@ namespace Nop.Web.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                             }
                             catch
                             {
@@ -1130,7 +1130,7 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
@@ -1138,7 +1138,7 @@ namespace Nop.Web.Controllers
             var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
             if (attribute.ValidationFileMaximumSize.HasValue)
@@ -1211,7 +1211,7 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
@@ -1219,7 +1219,7 @@ namespace Nop.Web.Controllers
             var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
             if (attribute.ValidationFileMaximumSize.HasValue)
@@ -1352,7 +1352,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
             }
@@ -1416,7 +1416,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
             
             var model = new ShoppingCartModel();
-            if (!String.IsNullOrWhiteSpace(discountcouponcode))
+            if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
                 var discounts = _discountService.GetAllDiscountsForCaching(couponCode: discountcouponcode, showHidden: true)
@@ -1483,7 +1483,7 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
             {
-                if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
+                if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
                     var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode).FirstOrDefault();
                     bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();

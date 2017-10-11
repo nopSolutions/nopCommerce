@@ -91,13 +91,13 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
                 const string cssClass = "multi-store-override-option";
                 string dataInputSelector = "";
-                if (!String.IsNullOrEmpty(ParentContainer))
+                if (!string.IsNullOrEmpty(ParentContainer))
                 {
                     dataInputSelector = "#" + ParentContainer + " input, #" + ParentContainer + " textarea, #" + ParentContainer + " select";
                 }
                 if (dataInputIds.Any())
                 {
-                    dataInputSelector = "#" + String.Join(", #", dataInputIds);
+                    dataInputSelector = "#" + string.Join(", #", dataInputIds);
                 }
                 var onClick = $"checkOverriddenStoreValue(this, '{dataInputSelector}')";
 

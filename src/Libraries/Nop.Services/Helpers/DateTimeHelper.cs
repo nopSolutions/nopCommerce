@@ -158,7 +158,7 @@ namespace Nop.Services.Helpers
 
                 try
                 {
-                    if (!String.IsNullOrEmpty(timeZoneId))
+                    if (!string.IsNullOrEmpty(timeZoneId))
                         timeZoneInfo = FindTimeZoneById(timeZoneId);
                 }
                 catch (Exception exc)
@@ -184,7 +184,7 @@ namespace Nop.Services.Helpers
                 TimeZoneInfo timeZoneInfo = null;
                 try
                 {
-                    if (!String.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
+                    if (!string.IsNullOrEmpty(_dateTimeSettings.DefaultStoreTimeZoneId))
                         timeZoneInfo = FindTimeZoneById(_dateTimeSettings.DefaultStoreTimeZoneId);
                 }
                 catch (Exception exc)

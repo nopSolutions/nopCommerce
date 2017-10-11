@@ -126,7 +126,7 @@ namespace Nop.Services.Tests.ExportImport
 
         //    string result = _exportManager.ExportManufacturersToXml(manufacturers);
         //    //TODO test it
-        //    String.IsNullOrEmpty(result).ShouldBeFalse();
+        //    string.IsNullOrEmpty(result).ShouldBeFalse();
         //}
 
         [Test]

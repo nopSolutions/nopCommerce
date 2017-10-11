@@ -85,7 +85,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    if (Int32.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -113,7 +113,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    if (Int32.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -142,7 +142,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("si", "").Trim();
-                    if (Int32.TryParse(id, out int privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
                         PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)

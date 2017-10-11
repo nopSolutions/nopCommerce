@@ -155,7 +155,7 @@ namespace Nop.Core.Html.CodeFormatter
         /// <returns>Formatted text</returns>
         public static string FormatTextSimple(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             if (text.Contains("[/code]"))

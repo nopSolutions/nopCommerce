@@ -251,15 +251,15 @@ namespace Nop.Services.Messages
             foreach (var lang in languages)
             {
                 var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(bccEmailAddresses))
+                if (!string.IsNullOrEmpty(bccEmailAddresses))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
 
                 var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(subject))
+                if (!string.IsNullOrEmpty(subject))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
 
                 var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(body))
+                if (!string.IsNullOrEmpty(body))
                     _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
 
                 var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);

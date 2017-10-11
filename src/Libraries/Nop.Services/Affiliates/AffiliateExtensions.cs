@@ -22,14 +22,14 @@ namespace Nop.Services.Affiliates
             var lastName = affiliate.Address.LastName;
 
             string fullName = "";
-            if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
             {
-                if (!String.IsNullOrWhiteSpace(firstName))
+                if (!string.IsNullOrWhiteSpace(firstName))
                     fullName = firstName;
 
-                if (!String.IsNullOrWhiteSpace(lastName))
+                if (!string.IsNullOrWhiteSpace(lastName))
                     fullName = lastName;
             }
             return fullName;
@@ -51,7 +51,7 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException(nameof(webHelper));
 
             var storeUrl = webHelper.GetStoreLocation(false);
-            var url = !String.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
+            var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
                 webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null) :
                 //use ID
@@ -84,7 +84,7 @@ namespace Nop.Services.Affiliates
 
             //ensure this name is not reserved yet
             //empty? nothing to check
-            if (String.IsNullOrEmpty(friendlyUrlName))
+            if (string.IsNullOrEmpty(friendlyUrlName))
                 return friendlyUrlName;
             //check whether such friendly URL name already exists (and that is not the current affiliate)
             int i = 2;

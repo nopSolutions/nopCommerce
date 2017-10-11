@@ -122,7 +122,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic</returns>
         public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 return null;
 
             var query = _topicRepository.Table;

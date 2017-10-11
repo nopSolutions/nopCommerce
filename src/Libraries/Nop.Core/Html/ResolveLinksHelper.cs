@@ -87,7 +87,7 @@ namespace Nop.Core.Html
         /// <returns>Formatted text</returns>
         public static string FormatText(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             var info = CultureInfo.InvariantCulture;

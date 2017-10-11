@@ -1,5 +1,5 @@
 ﻿@model ProductDetailsModel
-@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
+@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery">
         <script type="text/javascript">
@@ -15,7 +15,7 @@
         {
             <div class="free-shipping">@T("Products.FreeShipping")</div>
         }
-        @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
+        @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
             <div class="delivery-date">
                 <span class="label">@T("Products.DeliveryDate"):</span>

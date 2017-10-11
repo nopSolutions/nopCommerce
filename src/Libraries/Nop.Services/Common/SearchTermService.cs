@@ -68,7 +68,7 @@ namespace Nop.Services.Common
         /// <returns>Search term</returns>
         public virtual SearchTerm GetSearchTermByKeyword(string keyword, int storeId)
         {
-            if (String.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword))
                 return null;
 
             var query = from st in _searchTermRepository.Table

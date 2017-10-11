@@ -79,7 +79,7 @@ namespace Nop.Web.Factories
         /// <returns>Poll model</returns>
         public virtual PollModel PreparePollModelBySystemName(string systemKeyword)
         {
-            if (String.IsNullOrWhiteSpace(systemKeyword))
+            if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
             var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME_MODEL_KEY, systemKeyword, _workContext.WorkingLanguage.Id);

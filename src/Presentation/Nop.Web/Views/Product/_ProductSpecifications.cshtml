@@ -20,7 +20,7 @@
                                 @item.SpecificationAttributeName
                             </td>
                             <td class="spec-value">
-                                @if (String.IsNullOrEmpty(item.ColorSquaresRgb))
+                                @if (string.IsNullOrEmpty(item.ColorSquaresRgb))
                                 {
                                     @Html.Raw(item.ValueRaw)
                                 }

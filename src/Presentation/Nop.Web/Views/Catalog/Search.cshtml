@@ -99,7 +99,7 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
         <div class="search-results">
-            @if (!String.IsNullOrEmpty(Model.Warning))
+            @if (!string.IsNullOrEmpty(Model.Warning))
             {
                 <div class="warning">
                     @Model.Warning

@@ -41,8 +41,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 
-            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
-            string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
+            string fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+            string contentType = !string.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
                 : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType)
@@ -90,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
@@ -98,7 +98,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
 

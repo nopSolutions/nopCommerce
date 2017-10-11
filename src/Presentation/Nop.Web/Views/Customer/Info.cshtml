@@ -115,7 +115,7 @@
                         <nop-required />
                         <span asp-validation-for="Email"></span>
                     </div>
-                    @if (!String.IsNullOrEmpty(Model.EmailToRevalidate))
+                    @if (!string.IsNullOrEmpty(Model.EmailToRevalidate))
                     {
                         <div class="inputs">
                             <label asp-for="EmailToRevalidate"></label>

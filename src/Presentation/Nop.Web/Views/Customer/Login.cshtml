@@ -12,7 +12,7 @@
 
     //register URL with return URL (if specified)
     var registerUrl = Url.RouteUrl("Register");
-    if (!String.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
+    if (!string.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
     {
         registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]), null);
     }

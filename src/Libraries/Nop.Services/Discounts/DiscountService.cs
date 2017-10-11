@@ -233,11 +233,11 @@ namespace Nop.Services.Discounts
                     (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
                     && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc));
             }
-            if (!String.IsNullOrEmpty(couponCode))
+            if (!string.IsNullOrEmpty(couponCode))
             {
                 query = query.Where(d => d.CouponCode == couponCode);
             }
-            if (!String.IsNullOrEmpty(discountName))
+            if (!string.IsNullOrEmpty(discountName))
             {
                 query = query.Where(d => d.Name.Contains(discountName));
             }
@@ -528,7 +528,7 @@ namespace Nop.Services.Discounts
             //check coupon code
             if (discount.RequiresCouponCode)
             {
-                if (String.IsNullOrEmpty(discount.CouponCode))
+                if (string.IsNullOrEmpty(discount.CouponCode))
                     return result;
 
                 if (couponCodesToValidate == null)

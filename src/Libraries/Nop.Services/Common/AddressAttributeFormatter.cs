@@ -90,7 +90,7 @@ namespace Nop.Services.Common
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
+                    if (!string.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(separator);

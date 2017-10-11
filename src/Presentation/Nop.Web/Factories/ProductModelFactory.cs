@@ -306,7 +306,7 @@ namespace Nop.Web.Factories
                     if (displayFromMessage)
                     {
                         priceModel.OldPrice = null;
-                        priceModel.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"),
+                        priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"),
                             _priceFormatter.FormatPrice(finalPrice));
                         priceModel.PriceValue = finalPrice;
                     }
@@ -418,7 +418,7 @@ namespace Nop.Web.Factories
                     decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     priceModel.OldPrice = null;
-                    priceModel.Price = String.Format(
+                    priceModel.Price = string.Format(
                         _localizationService.GetResource("Products.PriceRangeFrom"),
                         _priceFormatter.FormatPrice(finalPrice));
                     priceModel.PriceValue = finalPrice;
@@ -766,9 +766,9 @@ namespace Nop.Web.Factories
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
-                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
+                    HasCondition = !string.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
-                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -844,7 +844,7 @@ namespace Nop.Web.Factories
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     //clear default selection
                                     foreach (var item in attributeModel.Values)
@@ -885,7 +885,7 @@ namespace Nop.Web.Factories
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                                     if (enteredText.Any())
@@ -912,7 +912,7 @@ namespace Nop.Web.Factories
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
                                     Guid.TryParse(downloadGuidStr, out Guid downloadGuid);
@@ -1196,7 +1196,7 @@ namespace Nop.Web.Factories
             };
 
             //automatically generate product description?
-            if (_seoSettings.GenerateProductMetaDescription && String.IsNullOrEmpty(model.MetaDescription))
+            if (_seoSettings.GenerateProductMetaDescription && string.IsNullOrEmpty(model.MetaDescription))
             {
                 //based on short description
                 model.MetaDescription = model.ShortDescription;
@@ -1240,7 +1240,7 @@ namespace Nop.Web.Factories
             }
 
             //page sharing
-            if (_catalogSettings.ShowShareButton && !String.IsNullOrEmpty(_catalogSettings.PageShareCode))
+            if (_catalogSettings.ShowShareButton && !string.IsNullOrEmpty(_catalogSettings.PageShareCode))
             {
                 var shareCode = _catalogSettings.PageShareCode;
                 if (_webHelper.IsCurrentConnectionSecured())

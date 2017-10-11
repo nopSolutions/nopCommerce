@@ -30,7 +30,7 @@
                             <div class="name">
                                 <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                             </div>
-                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                             {
                                 <div class="attributes">
                                     @Html.Raw(item.AttributeInfo)

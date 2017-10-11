@@ -608,7 +608,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute combination</returns>
         public virtual ProductAttributeCombination GetProductAttributeCombinationBySku(string sku)
         {
-            if (String.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
                 return null;
 
             sku = sku.Trim();

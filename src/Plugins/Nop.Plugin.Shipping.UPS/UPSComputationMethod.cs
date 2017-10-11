@@ -729,7 +729,7 @@ namespace Nop.Plugin.Shipping.UPS
                         string serviceId = $"[{serviceCode}]";
 
                         // Go to the next rate if the service ID is not in the list of services to offer
-                        if (!saturdayDelivery && !String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
+                        if (!saturdayDelivery && !string.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
                         {
                             continue;
                         }
@@ -801,7 +801,7 @@ namespace Nop.Plugin.Shipping.UPS
 
                 string error = "";
                 var shippingOptions = ParseResponse(responseXml, false, ref error);
-                if (String.IsNullOrEmpty(error))
+                if (string.IsNullOrEmpty(error))
                 {
                     foreach (var shippingOption in shippingOptions)
                     {

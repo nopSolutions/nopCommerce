@@ -34,7 +34,7 @@ namespace Nop.Core.Tests
         [Test]
         public void When_the_text_is_empty_then_the_validator_should_fail()
         {
-            string email = String.Empty;
+            string email = string.Empty;
             var result = CommonHelper.IsValidEmail(email);
             result.ShouldEqual(false);
         }

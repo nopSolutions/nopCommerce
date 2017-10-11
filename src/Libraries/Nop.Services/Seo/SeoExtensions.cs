@@ -168,7 +168,7 @@ namespace Nop.Services.Seo
                 }
             }
             //set default value if required
-            if (String.IsNullOrEmpty(result) && returnDefaultValue)
+            if (string.IsNullOrEmpty(result) && returnDefaultValue)
             {
                 result = urlRecordService.GetActiveSlug(entityId, entityName, 0);
             }
@@ -205,7 +205,7 @@ namespace Nop.Services.Seo
         public static string ValidateSeName(int entityId, string entityName, string seName, string name, bool ensureNotEmpty)
         {
             //use name if sename is not specified
-            if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(seName) && !string.IsNullOrWhiteSpace(name))
                 seName = name;
             
             //validation
@@ -217,7 +217,7 @@ namespace Nop.Services.Seo
             //that's why we limit it to 200 here (consider a store URL + probably added {0}-{1} below)
             seName = CommonHelper.EnsureMaximumLength(seName, 200);
 
-            if (String.IsNullOrWhiteSpace(seName))
+            if (string.IsNullOrWhiteSpace(seName))
             {
                 if (ensureNotEmpty)
                 {
@@ -278,7 +278,7 @@ namespace Nop.Services.Seo
         /// <returns>Result</returns>
         public static string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 return name;
             string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();

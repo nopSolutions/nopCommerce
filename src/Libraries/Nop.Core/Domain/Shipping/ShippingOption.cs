@@ -53,7 +53,7 @@ namespace Nop.Core.Domain.Shipping
             {
                 ShippingOption shippingOption = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
@@ -116,7 +116,7 @@ namespace Nop.Core.Domain.Shipping
             {
                 List<ShippingOption> shippingOptions = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {

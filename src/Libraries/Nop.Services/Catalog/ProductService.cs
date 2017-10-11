@@ -234,7 +234,7 @@ namespace Nop.Services.Catalog
             }
 
             //searching by keyword
-            if (!String.IsNullOrWhiteSpace(keywords))
+            if (!string.IsNullOrWhiteSpace(keywords))
             {
                 query = from p in query
                         join lp in _localizedPropertyRepository.Table on p.Id equals lp.EntityId into p_lp
@@ -1087,7 +1087,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product</returns>
         public virtual Product GetProductBySku(string sku)
         {
-            if (String.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
                 return null;
 
             sku = sku.Trim();
@@ -1883,7 +1883,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(pr => fromUtc.Value <= pr.CreatedOnUtc);
             if (toUtc.HasValue)
                 query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(message))
+            if (!string.IsNullOrEmpty(message))
                 query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
             if (storeId > 0)
                 query = query.Where(pr => pr.StoreId == storeId);

@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.UI
         {
             string result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
-            if (!String.IsNullOrEmpty(specificTitle))
+            if (!string.IsNullOrEmpty(specificTitle))
             {
                 if (addDefaultTitle)
                 {
@@ -177,7 +177,7 @@ namespace Nop.Web.Framework.UI
         public virtual string GenerateMetaDescription()
         {
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
-            var result = !String.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
+            var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
             return result;
         }
 
@@ -199,7 +199,7 @@ namespace Nop.Web.Framework.UI
         public virtual string GenerateMetaKeywords()
         {
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
-            var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
+            var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
     
@@ -212,7 +212,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _scriptParts[location].Add(new ScriptReferenceMeta
@@ -231,7 +231,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
@@ -356,7 +356,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _cssParts[location].Add(new CssReferenceMeta
@@ -374,7 +374,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _cssParts[location].Insert(0, new CssReferenceMeta

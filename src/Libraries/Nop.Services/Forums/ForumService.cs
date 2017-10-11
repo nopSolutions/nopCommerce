@@ -577,8 +577,8 @@ namespace Nop.Services.Forums
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
             //we need to cast it to int, otherwise it won't work in SQLCE4
-            //we cannot use String.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
-            bool searchKeywords = !String.IsNullOrEmpty(keywords);
+            //we cannot use string.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
+            bool searchKeywords = !string.IsNullOrEmpty(keywords);
             bool searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             bool searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
             var query1 = from ft in _forumTopicRepository.Table
@@ -665,7 +665,7 @@ namespace Nop.Services.Forums
                         continue;
                     }
 
-                    if (!String.IsNullOrEmpty(subscription.Customer.Email))
+                    if (!string.IsNullOrEmpty(subscription.Customer.Email))
                     {
                         _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
                             forum, languageId);
@@ -831,7 +831,7 @@ namespace Nop.Services.Forums
             {
                 query = query.Where(fp => customerId == fp.CustomerId);
             }
-            if (!String.IsNullOrEmpty(keywords))
+            if (!string.IsNullOrEmpty(keywords))
             {
                 query = query.Where(fp => fp.Text.Contains(keywords));
             }
@@ -892,7 +892,7 @@ namespace Nop.Services.Forums
                         continue;
                     }
 
-                    if (!String.IsNullOrEmpty(subscription.Customer.Email))
+                    if (!string.IsNullOrEmpty(subscription.Customer.Email))
                     {
                         _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
                             forumTopic, forum, friendlyTopicPageIndex, languageId);
@@ -982,7 +982,7 @@ namespace Nop.Services.Forums
                 query = query.Where(pm => isDeletedByAuthor.Value == pm.IsDeletedByAuthor);
             if (isDeletedByRecipient.HasValue)
                 query = query.Where(pm => isDeletedByRecipient.Value == pm.IsDeletedByRecipient);
-            if (!String.IsNullOrEmpty(keywords))
+            if (!string.IsNullOrEmpty(keywords))
             {
                 query = query.Where(pm => pm.Subject.Contains(keywords));
                 query = query.Where(pm => pm.Text.Contains(keywords));

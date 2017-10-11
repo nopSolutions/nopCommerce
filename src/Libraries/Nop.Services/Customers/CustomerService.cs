@@ -287,11 +287,11 @@ namespace Nop.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
-            if (!String.IsNullOrWhiteSpace(email))
+            if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
-            if (!String.IsNullOrWhiteSpace(username))
+            if (!string.IsNullOrWhiteSpace(username))
                 query = query.Where(c => c.Username.Contains(username));
-            if (!String.IsNullOrWhiteSpace(firstName))
+            if (!string.IsNullOrWhiteSpace(firstName))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
@@ -300,7 +300,7 @@ namespace Nop.Services.Customers
                         z.Attribute.Value.Contains(firstName)))
                     .Select(z => z.Customer);
             }
-            if (!String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(lastName))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
@@ -358,7 +358,7 @@ namespace Nop.Services.Customers
                     .Select(z => z.Customer);
             }
             //search by company
-            if (!String.IsNullOrWhiteSpace(company))
+            if (!string.IsNullOrWhiteSpace(company))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
@@ -368,7 +368,7 @@ namespace Nop.Services.Customers
                     .Select(z => z.Customer);
             }
             //search by phone
-            if (!String.IsNullOrWhiteSpace(phone))
+            if (!string.IsNullOrWhiteSpace(phone))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
@@ -378,7 +378,7 @@ namespace Nop.Services.Customers
                     .Select(z => z.Customer);
             }
             //search by zip
-            if (!String.IsNullOrWhiteSpace(zipPostalCode))
+            if (!string.IsNullOrWhiteSpace(zipPostalCode))
             {
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
@@ -389,7 +389,7 @@ namespace Nop.Services.Customers
             }
 
             //search by IpAddress
-            if (!String.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
+            if (!string.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
             {
                     query = query.Where(w => w.LastIpAddress == ipAddress);
             }
@@ -449,9 +449,9 @@ namespace Nop.Services.Customers
 
             if (_customerSettings.SuffixDeletedCustomers)
             {
-                if (!String.IsNullOrEmpty(customer.Email))
+                if (!string.IsNullOrEmpty(customer.Email))
                     customer.Email += "-DELETED";
-                if (!String.IsNullOrEmpty(customer.Username))
+                if (!string.IsNullOrEmpty(customer.Username))
                     customer.Username += "-DELETED";
             }
 
@@ -744,7 +744,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer role</returns>
         public virtual CustomerRole GetCustomerRoleBySystemName(string systemName)
         {
-            if (String.IsNullOrWhiteSpace(systemName))
+            if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
             string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);

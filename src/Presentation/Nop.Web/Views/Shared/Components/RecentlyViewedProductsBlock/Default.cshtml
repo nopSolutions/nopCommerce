@@ -11,7 +11,7 @@
                 {
                     var product = Model[i];
                     <li @(i == Model.Count - 1 ? @Html.Raw(" class=\"last\"") : null)>
-                        @if (!String.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
+                        @if (!string.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
                         {
                             <a class="product-picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
                                 <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />

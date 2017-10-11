@@ -11,13 +11,13 @@ namespace Nop.Core.Domain.Blogs
                 throw new ArgumentNullException(nameof(blogPost));
 
             var parsedTags = new List<string>();
-            if (!String.IsNullOrEmpty(blogPost.Tags))
+            if (!string.IsNullOrEmpty(blogPost.Tags))
             {
                 string[] tags2 = blogPost.Tags.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string tag2 in tags2)
                 {
                     var tmp = tag2.Trim();
-                    if (!String.IsNullOrEmpty(tmp))
+                    if (!string.IsNullOrEmpty(tmp))
                         parsedTags.Add(tmp);
                 }
             }

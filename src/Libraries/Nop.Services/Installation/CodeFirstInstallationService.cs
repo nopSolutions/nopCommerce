@@ -5850,7 +5850,7 @@ namespace Nop.Services.Installation
                     EntityName = "Topic",
                     LanguageId = 0,
                     IsActive = true,
-                    Slug = topic.ValidateSeName("", !String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
+                    Slug = topic.ValidateSeName("", !string.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
                 });
             }
 

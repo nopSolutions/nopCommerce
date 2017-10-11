@@ -197,33 +197,33 @@ namespace Nop.Services.Common
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
-            if (String.IsNullOrWhiteSpace(address.FirstName))
+            if (string.IsNullOrWhiteSpace(address.FirstName))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.LastName))
+            if (string.IsNullOrWhiteSpace(address.LastName))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.Email))
+            if (string.IsNullOrWhiteSpace(address.Email))
                 return false;
 
             if (_addressSettings.CompanyEnabled &&
                 _addressSettings.CompanyRequired &&
-                String.IsNullOrWhiteSpace(address.Company))
+                string.IsNullOrWhiteSpace(address.Company))
                 return false;
 
             if (_addressSettings.StreetAddressEnabled &&
                 _addressSettings.StreetAddressRequired &&
-                String.IsNullOrWhiteSpace(address.Address1))
+                string.IsNullOrWhiteSpace(address.Address1))
                 return false;
 
             if (_addressSettings.StreetAddress2Enabled &&
                 _addressSettings.StreetAddress2Required &&
-                String.IsNullOrWhiteSpace(address.Address2))
+                string.IsNullOrWhiteSpace(address.Address2))
                 return false;
 
             if (_addressSettings.ZipPostalCodeEnabled &&
                 _addressSettings.ZipPostalCodeRequired &&
-                String.IsNullOrWhiteSpace(address.ZipPostalCode))
+                string.IsNullOrWhiteSpace(address.ZipPostalCode))
                 return false;
 
 
@@ -253,17 +253,17 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CityEnabled &&
                 _addressSettings.CityRequired &&
-                String.IsNullOrWhiteSpace(address.City))
+                string.IsNullOrWhiteSpace(address.City))
                 return false;
 
             if (_addressSettings.PhoneEnabled &&
                 _addressSettings.PhoneRequired &&
-                String.IsNullOrWhiteSpace(address.PhoneNumber))
+                string.IsNullOrWhiteSpace(address.PhoneNumber))
                 return false;
 
             if (_addressSettings.FaxEnabled &&
                 _addressSettings.FaxRequired &&
-                String.IsNullOrWhiteSpace(address.FaxNumber))
+                string.IsNullOrWhiteSpace(address.FaxNumber))
                 return false;
 
             var attributes = _addressAttributeService.GetAllAddressAttributes();

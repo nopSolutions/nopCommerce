@@ -102,13 +102,13 @@ namespace Nop.Services.Localization
                 {
                     var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
                     resultStr = leService.GetLocalizedValue(languageId, entity.Id, localeKeyGroup, localeKey);
-                    if (!String.IsNullOrEmpty(resultStr))
+                    if (!string.IsNullOrEmpty(resultStr))
                         result = CommonHelper.To<TPropType>(resultStr);
                 }
             }
 
             //set default value if required
-            if (String.IsNullOrEmpty(resultStr) && returnDefaultValue)
+            if (string.IsNullOrEmpty(resultStr) && returnDefaultValue)
             {
                 var localizer = keySelector.Compile();
                 result = localizer(entity);
@@ -211,7 +211,7 @@ namespace Nop.Services.Localization
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
                 result = CommonHelper.ConvertEnum(enumValue.ToString());
 
             return result;
@@ -256,7 +256,7 @@ namespace Nop.Services.Localization
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
                 result = permissionRecord.Name;
 
             return result;
@@ -404,7 +404,7 @@ namespace Nop.Services.Localization
             
             foreach (var lang in languageService.GetAllLanguages(true))
             {
-                if (!String.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
+                if (!string.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
                     continue;
 
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -456,7 +456,7 @@ namespace Nop.Services.Localization
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
-            if (String.IsNullOrEmpty(result) && returnDefaultValue)
+            if (string.IsNullOrEmpty(result) && returnDefaultValue)
                 result = plugin.PluginDescriptor.FriendlyName;
 
             return result;

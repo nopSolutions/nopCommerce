@@ -33,7 +33,7 @@ namespace Nop.Services.Directory
 
         protected virtual CountryResponse GetInformation(string ipAddress)
         {
-            if (String.IsNullOrEmpty(ipAddress))
+            if (string.IsNullOrEmpty(ipAddress))
                 return null;
 
             try

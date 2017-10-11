@@ -148,7 +148,7 @@ namespace Nop.Services.Catalog
             var query = _manufacturerRepository.Table;
             if (!showHidden)
                 query = query.Where(m => m.Published);
-            if (!String.IsNullOrWhiteSpace(manufacturerName))
+            if (!string.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);

@@ -68,14 +68,14 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(targetCurrency));
 
             string result;
-            if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
+            if (!string.IsNullOrEmpty(targetCurrency.CustomFormatting))
             {
                 //custom formatting specified by a store owner
                 result = amount.ToString(targetCurrency.CustomFormatting);
             }
             else
             {
-                if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
+                if (!string.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
                     //default behavior
                     result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
@@ -217,13 +217,13 @@ namespace Nop.Services.Catalog
                 if (priceIncludesTax)
                 {
                     formatStr = _localizationService.GetResource("Products.InclTaxSuffix", language.Id, false);
-                    if (String.IsNullOrEmpty(formatStr))
+                    if (string.IsNullOrEmpty(formatStr))
                         formatStr = "{0} incl tax";
                 }
                 else
                 {
                     formatStr = _localizationService.GetResource("Products.ExclTaxSuffix", language.Id, false);
-                    if (String.IsNullOrEmpty(formatStr))
+                    if (string.IsNullOrEmpty(formatStr))
                         formatStr = "{0} excl tax";
                 }
                 return string.Format(formatStr, currencyString);
@@ -246,7 +246,7 @@ namespace Nop.Services.Catalog
             if (!product.IsRental)
                 return price;
 
-            if (String.IsNullOrWhiteSpace(price))
+            if (string.IsNullOrWhiteSpace(price))
                 return price;
 
             string result;

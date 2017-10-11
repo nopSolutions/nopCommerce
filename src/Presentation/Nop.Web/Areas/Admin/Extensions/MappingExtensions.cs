@@ -651,7 +651,7 @@ namespace Nop.Web.Areas.Admin.Extensions
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -675,7 +675,7 @@ namespace Nop.Web.Areas.Admin.Extensions
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
                                 if (enteredText.Any())

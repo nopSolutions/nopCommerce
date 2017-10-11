@@ -54,7 +54,7 @@ namespace Nop.Core.Domain.Messages
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(this.DisplayName))
+                if (!string.IsNullOrWhiteSpace(this.DisplayName))
                     return this.Email + " (" + this.DisplayName + ")";
                 return this.Email;
             }

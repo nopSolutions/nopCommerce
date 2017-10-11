@@ -13,7 +13,7 @@
         {
             <a href="@Url.Content("~/Admin")" class="administration">@T("Account.Administration")</a>
         }
-        @if (!String.IsNullOrEmpty(Model.EditPageUrl))
+        @if (!string.IsNullOrEmpty(Model.EditPageUrl))
         {
             <a href="@Model.EditPageUrl" class="manage-page">@T("Common.ManagePage")</a>
         }

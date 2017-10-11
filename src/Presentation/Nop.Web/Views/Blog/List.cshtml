@@ -18,11 +18,11 @@
     <div class="page-title">
         <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         <h1>
-            @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            @if (string.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
             {
                 if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
                 {
-                @String.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
                 }
                 else
                 {
@@ -31,7 +31,7 @@
             }
             else
             {
-                @String.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)
+                @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)
             }
         </h1>
     </div>
@@ -48,7 +48,7 @@
                     </div>
                     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
                     <div class="post-body">
-                        @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+                        @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
                     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
                     <div class="blog-details">

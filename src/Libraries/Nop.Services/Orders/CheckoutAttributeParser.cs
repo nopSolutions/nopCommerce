@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         protected virtual IList<int> ParseCheckoutAttributeIds(string attributesXml)
         {
             var ids = new List<int>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return ids;
 
             try
@@ -83,7 +83,7 @@ namespace Nop.Services.Orders
         public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml)
         {
             var result = new List<CheckoutAttribute>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return result;
 
             var ids = ParseCheckoutAttributeIds(attributesXml);
@@ -106,7 +106,7 @@ namespace Nop.Services.Orders
         public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
         {
             var values = new List<CheckoutAttributeValue>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return values;
 
             var attributes = ParseCheckoutAttributes(attributesXml);
@@ -118,7 +118,7 @@ namespace Nop.Services.Orders
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
                 foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(valueStr))
+                    if (!string.IsNullOrEmpty(valueStr))
                     {
                         if (int.TryParse(valueStr, out int id))
                         {
@@ -141,7 +141,7 @@ namespace Nop.Services.Orders
         public virtual IList<string> ParseValues(string attributesXml, int checkoutAttributeId)
         {
             var selectedCheckoutAttributeValues = new List<string>();
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return selectedCheckoutAttributeValues;
 
             try
@@ -190,7 +190,7 @@ namespace Nop.Services.Orders
             try
             {
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
+                if (string.IsNullOrEmpty(attributesXml))
                 {
                     var element1 = xmlDoc.CreateElement("Attributes");
                     xmlDoc.AppendChild(element1);
@@ -252,7 +252,7 @@ namespace Nop.Services.Orders
         /// <returns>Updated attributes in XML format</returns>
         public virtual string EnsureOnlyActiveAttributes(string attributesXml, IList<ShoppingCartItem> cart)
         {
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return attributesXml;
 
             var result = attributesXml;
@@ -313,7 +313,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(attribute));
 
             var conditionAttributeXml = attribute.ConditionAttributeXml;
-            if (String.IsNullOrEmpty(conditionAttributeXml))
+            if (string.IsNullOrEmpty(conditionAttributeXml))
                 //no condition
                 return null;
 
@@ -327,7 +327,7 @@ namespace Nop.Services.Orders
                 //ConditionAttributeXml can contain "empty" values (nothing is selected)
                 //but in other cases (like below) we do not store empty values
                 //that's why we remove empty values here
-                .Where(x => !String.IsNullOrEmpty(x))
+                .Where(x => !string.IsNullOrEmpty(x))
                 .ToList();
             var selectedValues = ParseValues(selectedAttributesXml, dependOnAttribute.Id);
             if (valuesThatShouldBeSelected.Count != selectedValues.Count)
@@ -360,7 +360,7 @@ namespace Nop.Services.Orders
             try
             {
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributesXml))
+                if (string.IsNullOrEmpty(attributesXml))
                 {
                     var element1 = xmlDoc.CreateElement("Attributes");
                     xmlDoc.AppendChild(element1);

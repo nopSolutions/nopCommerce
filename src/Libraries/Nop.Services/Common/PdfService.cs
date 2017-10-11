@@ -512,7 +512,7 @@ namespace Nop.Services.Common
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id),
+                    string taxRate = string.Format(_localizationService.GetResource("PDFInvoice.TaxRate", lang.Id),
                         _priceFormatter.FormatTaxRate(item.Key));
                     string taxValue = _priceFormatter.FormatPrice(
                         _currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode,
@@ -584,7 +584,7 @@ namespace Nop.Services.Common
         protected virtual void PrintCheckoutAttributes(int vendorId, Order order, Document doc, Language lang, Font font)
         {
             //vendors cannot see checkout attributes
-            if (vendorId != 0 || String.IsNullOrEmpty(order.CheckoutAttributeDescription))
+            if (vendorId != 0 || string.IsNullOrEmpty(order.CheckoutAttributeDescription))
                 return;
 
             doc.Add(new Paragraph(" "));
@@ -684,7 +684,7 @@ namespace Nop.Services.Common
                 pAttribTable.AddCell(new Paragraph(name, font));
                 cellProductItem.AddElement(new Paragraph(name, font));
                 //attributes
-                if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
+                if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
                 {
                     var attributesParagraph =
                         new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true),
@@ -712,7 +712,7 @@ namespace Nop.Services.Common
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
                     var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
-                    cellProductItem = GetPdfCell(sku ?? String.Empty, font);
+                    cellProductItem = GetPdfCell(sku ?? string.Empty, font);
                     cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cellProductItem);
                 }
@@ -806,16 +806,16 @@ namespace Nop.Services.Common
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
                     
                     shippingAddress.AddCell(GetParagraph("PDFInvoice.ShippingInformation", lang, titleFont));
-                    if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
+                    if (!string.IsNullOrEmpty(order.ShippingAddress.Company))
                         shippingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.ShippingAddress.Company));
                     shippingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
                     if (_addressSettings.PhoneEnabled)
                         shippingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.ShippingAddress.PhoneNumber));
-                    if (_addressSettings.FaxEnabled && !String.IsNullOrEmpty(order.ShippingAddress.FaxNumber))
+                    if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.ShippingAddress.FaxNumber))
                         shippingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.ShippingAddress.FaxNumber));
                     if (_addressSettings.StreetAddressEnabled)
                         shippingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.ShippingAddress.Address1));
-                    if (_addressSettings.StreetAddress2Enabled && !String.IsNullOrEmpty(order.ShippingAddress.Address2))
+                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShippingAddress.Address2))
                         shippingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.ShippingAddress.Address2));
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                         _addressSettings.ZipPostalCodeEnabled)
@@ -828,7 +828,7 @@ namespace Nop.Services.Common
                     //custom attributes
                     var customShippingAddressAttributes =
                         _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
-                    if (!String.IsNullOrEmpty(customShippingAddressAttributes))
+                    if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         //TODO: we should add padding to each line (in case if we have several custom address attributes)
                         shippingAddress.AddCell(new Paragraph(
@@ -872,17 +872,17 @@ namespace Nop.Services.Common
 
             billingAddress.AddCell(GetParagraph("PDFInvoice.BillingInformation", lang, titleFont));
 
-            if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(order.BillingAddress.Company))
+            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.BillingAddress.Company))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.BillingAddress.Company));
 
             billingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.BillingAddress.FirstName + " " + order.BillingAddress.LastName));
             if (_addressSettings.PhoneEnabled)
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.BillingAddress.PhoneNumber));
-            if (_addressSettings.FaxEnabled && !String.IsNullOrEmpty(order.BillingAddress.FaxNumber))
+            if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.BillingAddress.FaxNumber))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.BillingAddress.FaxNumber));
             if (_addressSettings.StreetAddressEnabled)
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.BillingAddress.Address1));
-            if (_addressSettings.StreetAddress2Enabled && !String.IsNullOrEmpty(order.BillingAddress.Address2))
+            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.BillingAddress.Address2))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.BillingAddress.Address2));
             if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                 billingAddress.AddCell(new Paragraph(
@@ -893,13 +893,13 @@ namespace Nop.Services.Common
                     font));
 
             //VAT number
-            if (!String.IsNullOrEmpty(order.VatNumber))
+            if (!string.IsNullOrEmpty(order.VatNumber))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
 
             //custom attributes
             var customBillingAddressAttributes =
                 _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
-            if (!String.IsNullOrEmpty(customBillingAddressAttributes))
+            if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 //TODO: we should add padding to each line (in case if we have several custom address attributes)
                 billingAddress.AddCell(
@@ -914,7 +914,7 @@ namespace Nop.Services.Common
                 string paymentMethodStr = paymentMethod != null
                     ? paymentMethod.GetLocalizedFriendlyName(_localizationService, lang.Id)
                     : order.PaymentMethodSystemName;
-                if (!String.IsNullOrEmpty(paymentMethodStr))
+                if (!string.IsNullOrEmpty(paymentMethodStr))
                 {
                     billingAddress.AddCell(new Paragraph(" "));
                     billingAddress.AddCell(GetParagraph("PDFInvoice.PaymentMethod", indent, lang, font, paymentMethodStr));
@@ -1149,7 +1149,7 @@ namespace Nop.Services.Common
                     if (order.ShippingAddress == null)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
-                    if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(order.ShippingAddress.Company))
+                    if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.ShippingAddress.Company))
                         addressTable.AddCell(GetParagraph("PDFPackagingSlip.Company", lang, font, order.ShippingAddress.Company));
 
                     addressTable.AddCell(GetParagraph("PDFPackagingSlip.Name", lang, font, order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
@@ -1158,7 +1158,7 @@ namespace Nop.Services.Common
                     if (_addressSettings.StreetAddressEnabled)
                         addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address", lang, font, order.ShippingAddress.Address1));
 
-                    if (_addressSettings.StreetAddress2Enabled && !String.IsNullOrEmpty(order.ShippingAddress.Address2))
+                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShippingAddress.Address2))
                         addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address2", lang, font, order.ShippingAddress.Address2));
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
@@ -1169,7 +1169,7 @@ namespace Nop.Services.Common
 
                     //custom attributes
                     var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
-                    if (!String.IsNullOrEmpty(customShippingAddressAttributes))
+                    if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                     }
@@ -1240,7 +1240,7 @@ namespace Nop.Services.Common
                     string name = p.GetLocalized(x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes
-                    if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
+                    if (!string.IsNullOrEmpty(orderItem.AttributeDescription))
                     {
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
@@ -1260,7 +1260,7 @@ namespace Nop.Services.Common
 
                     //SKU
                     var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
-                    cell = GetPdfCell(sku ?? String.Empty, font);
+                    cell = GetPdfCell(sku ?? string.Empty, font);
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
 
@@ -1344,7 +1344,7 @@ namespace Nop.Services.Common
                     productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.Price", lang.Id)}: {priceStr}", font));
                     productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.SKU", lang.Id)}: {product.Sku}", font));
 
-                    if (product.IsShipEnabled && product.Weight > Decimal.Zero)
+                    if (product.IsShipEnabled && product.Weight > decimal.Zero)
                         productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {product.Weight:0.00} {_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name}", font));
 
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
@@ -1401,7 +1401,7 @@ namespace Nop.Services.Common
 
                         //uncomment to render associated product description
                         //string apDescription = associatedProduct.GetLocalized(x => x.ShortDescription, lang.Id);
-                        //if (!String.IsNullOrEmpty(apDescription))
+                        //if (!string.IsNullOrEmpty(apDescription))
                         //{
                         //    productTable.AddCell(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(apDescription)), font));
                         //    productTable.AddCell(new Paragraph(" "));
@@ -1422,7 +1422,7 @@ namespace Nop.Services.Common
                         productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.Price", lang.Id)}: {associatedProduct.Price:0.00} {_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode}", font));
                         productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.SKU", lang.Id)}: {associatedProduct.Sku}", font));
 
-                        if (associatedProduct.IsShipEnabled && associatedProduct.Weight > Decimal.Zero)
+                        if (associatedProduct.IsShipEnabled && associatedProduct.Weight > decimal.Zero)
                             productTable.AddCell(new Paragraph($"{_localizationService.GetResource("PDFProductCatalog.Weight", lang.Id)}: {associatedProduct.Weight:0.00} {_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name}", font));
 
                         if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)

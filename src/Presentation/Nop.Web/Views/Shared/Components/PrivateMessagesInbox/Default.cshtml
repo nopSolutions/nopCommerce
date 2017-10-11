@@ -72,7 +72,7 @@
             @{
                 var pager = Html.Pager(Model.PagerModel);
             }
-            @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
             <div class="pager">
                 @pager

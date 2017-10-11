@@ -54,7 +54,7 @@
                     @if (Model.DisplayColorSquaresRgb)
                     {
                         //ensure "ColorSquaresRgb" has some default value. Otherwise farbtastic won't set a selected value
-                        if (String.IsNullOrEmpty(Model.ColorSquaresRgb))
+                        if (string.IsNullOrEmpty(Model.ColorSquaresRgb))
                         {
                             Model.ColorSquaresRgb = "#000000";
                         }

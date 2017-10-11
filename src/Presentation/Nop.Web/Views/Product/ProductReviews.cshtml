@@ -115,7 +115,7 @@
                             </div>
                             @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
-                            @if (!String.IsNullOrEmpty(review.ReplyText))
+                            @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
                                 <div class="reply">
                                     <div class="reply-header">

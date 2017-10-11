@@ -12,7 +12,7 @@
         <h1>@Html.Raw(string.Format(T("ReturnRequests.Title").Text, Url.RouteUrl("OrderDetails", new { orderId = Model.OrderId }), Model.CustomOrderNumber))</h1>
     </div>
     <div class="page-body">
-        @if (!String.IsNullOrEmpty(Model.Result))
+        @if (!string.IsNullOrEmpty(Model.Result))
         {
             <div class="result">
                 @Model.Result
@@ -51,7 +51,7 @@
                                     <tr>
                                         <td class="product">
                                             <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <div class="attributes">
                                                     @Html.Raw(item.AttributeInfo)

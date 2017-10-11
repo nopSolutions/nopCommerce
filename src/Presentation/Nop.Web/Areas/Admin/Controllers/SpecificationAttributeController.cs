@@ -315,7 +315,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var model = sao.ToModel();
             //"Color" value
-            model.EnableColorSquaresRgb = !String.IsNullOrEmpty(sao.ColorSquaresRgb);
+            model.EnableColorSquaresRgb = !string.IsNullOrEmpty(sao.ColorSquaresRgb);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -382,7 +382,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //    return AccessDeniedView();
 
             // This action method gets called via an ajax request
-            if (String.IsNullOrEmpty(attributeId))
+            if (string.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException(nameof(attributeId));
 
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(Convert.ToInt32(attributeId));

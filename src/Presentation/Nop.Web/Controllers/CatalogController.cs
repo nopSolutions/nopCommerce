@@ -269,7 +269,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult SearchTermAutoComplete(string term)
         {
-            if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
             //products

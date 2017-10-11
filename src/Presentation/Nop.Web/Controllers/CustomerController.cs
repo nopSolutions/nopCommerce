@@ -295,7 +295,7 @@ namespace Nop.Web.Controllers
                             //activity log
                             _customerActivityService.InsertActivity(customer, "PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"));
 
-                            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+                            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                                 return RedirectToRoute("HomePage");
 
                             return Redirect(returnUrl);
@@ -608,7 +608,7 @@ namespace Nop.Web.Controllers
     out string vatAddress);
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int)vatNumberStatus);
                         //send VAT number admin notification
-                        if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                        if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                             _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
 
                     }
@@ -750,7 +750,7 @@ namespace Nop.Web.Controllers
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
-                                if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                                     redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
                                 return Redirect(redirectUrl);
                             }
@@ -784,7 +784,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult RegisterResult(string returnUrl)
         {
-            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                 return RedirectToRoute("HomePage");
 
             return Redirect(returnUrl);
@@ -799,7 +799,7 @@ namespace Nop.Web.Controllers
             var usernameAvailable = false;
             var statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.NotAvailable");
 
-            if (_customerSettings.UsernamesEnabled && !String.IsNullOrWhiteSpace(username))
+            if (_customerSettings.UsernamesEnabled && !string.IsNullOrWhiteSpace(username))
             {
                 if (_workContext.CurrentCustomer != null &&
                     _workContext.CurrentCustomer.Username != null &&
@@ -938,7 +938,7 @@ namespace Nop.Web.Controllers
                             var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
                             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int)vatNumberStatus);
                             //send VAT number admin notification
-                            if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                            if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                                 _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer,
                                     model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
                         }
@@ -1071,7 +1071,7 @@ namespace Nop.Web.Controllers
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToRoute("HomePage");
 
-            if (String.IsNullOrEmpty(customer.EmailToRevalidate))
+            if (string.IsNullOrEmpty(customer.EmailToRevalidate))
                 return RedirectToRoute("HomePage");
 
             if (_customerSettings.UserRegistrationType != UserRegistrationType.EmailValidation)
@@ -1387,7 +1387,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
-                    if (uploadedFile != null && !String.IsNullOrEmpty(uploadedFile.FileName))
+                    if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
                         if (uploadedFile.Length > avatarMaxSize)

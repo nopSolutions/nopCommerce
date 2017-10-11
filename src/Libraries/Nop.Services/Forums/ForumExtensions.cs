@@ -17,7 +17,7 @@ namespace Nop.Services.Forums
         {
             string text = forumPost.Text;
 
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             switch (EngineContext.Current.Resolve<ForumSettings>().ForumEditor)
@@ -47,7 +47,7 @@ namespace Nop.Services.Forums
         public static string StripTopicSubject(this ForumTopic forumTopic)
         {
             string subject = forumTopic.Subject;
-            if (String.IsNullOrEmpty(subject))
+            if (string.IsNullOrEmpty(subject))
             {
                 return subject;
             }
@@ -76,7 +76,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         public static string FormatForumSignatureText(this string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
@@ -92,7 +92,7 @@ namespace Nop.Services.Forums
         {
             string text = pm.Text;
 
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = HtmlHelper.FormatText(text, false, true, false, true, false, false);

@@ -162,7 +162,7 @@ namespace Nop.Services.Blogs
             foreach (var blogPost in blogPostsAll)
             {
                 var tags = blogPost.ParseTags();
-                if (!String.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
+                if (!string.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     taggedBlogPosts.Add(blogPost);
             }
 

@@ -3,7 +3,7 @@
     Layout = "_ColumnsTwo";
 
     //title
-    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
     //meta
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
@@ -59,7 +59,7 @@
                     @{
                         var result = TempData["nop.blog.addcomment.result"] as string;
                     }
-                    @if (!String.IsNullOrEmpty(result))
+                    @if (!string.IsNullOrEmpty(result))
                     {
                         <div class="result">@result</div>
                     }
@@ -105,7 +105,7 @@
                                             <span class="username">@(comment.CustomerName)</span>
                                         }
 
-                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                        @if (!string.IsNullOrEmpty(comment.CustomerAvatarUrl))
                                         {
                                             <div class="avatar">
                                                 @if (comment.AllowViewingProfiles)

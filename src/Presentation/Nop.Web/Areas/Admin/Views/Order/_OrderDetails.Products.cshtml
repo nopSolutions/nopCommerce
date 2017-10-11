@@ -100,32 +100,32 @@
                                 </td>
                                 <td style="text-align: left; width: 15%;">
                                     <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
-                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <p>
                                             @Html.Raw(item.AttributeInfo)
                                         </p>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                    @if (!string.IsNullOrEmpty(item.RecurringInfo))
                                     {
                                         <p>
                                             @Html.Raw(item.RecurringInfo)
                                         </p>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    @if (!string.IsNullOrEmpty(item.RentalInfo))
                                     {
                                         <p>
                                             @Html.Raw(item.RentalInfo)
                                         </p>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.Sku))
+                                    @if (!string.IsNullOrEmpty(item.Sku))
                                     {
                                         <p>
                                             <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
                                             @item.Sku
                                         </p>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.VendorName))
+                                    @if (!string.IsNullOrEmpty(item.VendorName))
                                     {
                                         <p>
                                             <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
@@ -373,7 +373,7 @@
                     </table>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
+            @if (!string.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
                     <div class="col-md-12">

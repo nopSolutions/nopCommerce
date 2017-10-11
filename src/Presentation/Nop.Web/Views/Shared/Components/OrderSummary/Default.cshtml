@@ -108,19 +108,19 @@
                                 }
                                 <td class="product">
                                     <a href="@Url.RouteUrl("Product", new {SeName = item.ProductSeName})" class="product-name">@item.ProductName</a>
-                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                     {
                                         <div class="attributes">
                                             @Html.Raw(item.AttributeInfo)
                                         </div>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                    @if (!string.IsNullOrEmpty(item.RecurringInfo))
                                     {
                                         <div class="recurring-info">
                                             @Html.Raw(item.RecurringInfo)
                                         </div>
                                     }
-                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    @if (!string.IsNullOrEmpty(item.RentalInfo))
                                     {
                                         <div class="rental-info">
                                             @Html.Raw(item.RentalInfo)
@@ -177,7 +177,7 @@
                                 <td class="subtotal">
                                     <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>
                                     <span class="product-subtotal">@item.SubTotal</span>
-                                    @if (!String.IsNullOrEmpty(item.Discount))
+                                    @if (!string.IsNullOrEmpty(item.Discount))
                                     {
                                         <div class="discount">
                                             @T("ShoppingCart.ItemYouSave", item.Discount)
@@ -235,7 +235,7 @@
                     @await Component.InvokeAsync("OrderTotals", new { isEditable = Model.IsEditable })
                     @if (Model.IsEditable)
                     {
-                        if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                        if (!string.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                         {
                             <div class="min-amount-warning">
                                 @Model.MinOrderSubtotalWarning
@@ -274,7 +274,7 @@
                             </div>
                         }
                         <div class="checkout-buttons">
-                            @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
+                            @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                             {
                                 <script type="text/javascript">
                                     $(document).ready(function () {

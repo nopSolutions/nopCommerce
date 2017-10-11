@@ -55,7 +55,7 @@ namespace Nop.Web.Framework.Extensions
 
                 //default tab
                 var standardTabName = $"{name}-standard-tab";
-                var standardTabSelected = String.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
+                var standardTabSelected = string.IsNullOrEmpty(tabNameToSelect) || standardTabName == tabNameToSelect;
                 tabStrip.AppendLine(string.Format("<li{0}>", standardTabSelected ? " class=\"active\"" : null));
                 tabStrip.AppendLine($"<a data-tab-name=\"{standardTabName}\" href=\"#{standardTabName}\" data-toggle=\"tab\">{EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.Standard")}</a>");
                 tabStrip.AppendLine("</li>");
@@ -125,7 +125,7 @@ namespace Nop.Web.Framework.Extensions
             //"SaveSelectedTab" method of \Area\Admin\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
             string dataKey = "nop.selected-tab-name";
-            if (!String.IsNullOrEmpty(dataKeyPrefix))
+            if (!string.IsNullOrEmpty(dataKeyPrefix))
                 dataKey += $"-{dataKeyPrefix}";
 
             if (helper.ViewData.ContainsKey(dataKey))

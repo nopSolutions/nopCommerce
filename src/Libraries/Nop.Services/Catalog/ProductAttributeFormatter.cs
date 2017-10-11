@@ -218,7 +218,7 @@ namespace Nop.Services.Catalog
                         giftCardFor = WebUtility.HtmlEncode(giftCardFor);
                     }
 
-                    if (!String.IsNullOrEmpty(result.ToString()))
+                    if (!string.IsNullOrEmpty(result.ToString()))
                     {
                         result.Append(separator);
                     }

@@ -115,7 +115,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                 {
                     carrierServicesDomesticSelectedCount++;
                     string serviceId = FedexServices.GetServiceId(cs);
-                    if (!String.IsNullOrEmpty(serviceId))
+                    if (!string.IsNullOrEmpty(serviceId))
                         carrierServicesOfferedDomestic.AppendFormat("{0}:", serviceId);
                 }
             }

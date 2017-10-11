@@ -167,7 +167,7 @@ namespace Nop.Web.Factories
             DateTime? dateTo = command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
-            if (String.IsNullOrEmpty(command.Tag))
+            if (string.IsNullOrEmpty(command.Tag))
             {
                 blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id,

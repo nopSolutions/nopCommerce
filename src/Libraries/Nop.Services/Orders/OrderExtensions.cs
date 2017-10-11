@@ -19,7 +19,7 @@ namespace Nop.Services.Orders
 
             string text = orderNote.Note;
 
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = HtmlHelper.FormatText(text, false, true, false, false, false, false);

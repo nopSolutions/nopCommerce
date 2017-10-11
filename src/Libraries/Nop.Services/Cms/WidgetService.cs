@@ -58,7 +58,7 @@ namespace Nop.Services.Cms
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, Customer customer = null, int storeId = 0)
         {
-            if (String.IsNullOrWhiteSpace(widgetZone))
+            if (string.IsNullOrWhiteSpace(widgetZone))
                 return new List<IWidgetPlugin>();
 
             return LoadActiveWidgets(customer, storeId)

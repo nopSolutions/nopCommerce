@@ -124,12 +124,12 @@ namespace Nop.Web.Extensions
                             links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
                             {
-                                var link = html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
+                                var link = html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
                                 links.Append(link.ToHtmlString());
                             }
                             else
                             {
-                                var link = html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
+                                var link = html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) });
                                 links.Append(link.ToHtmlString());
                             }
                             links.Append("</li>");
@@ -180,7 +180,7 @@ namespace Nop.Web.Extensions
                 }
             }
             var result = links.ToString();
-            if (!String.IsNullOrEmpty(result))
+            if (!string.IsNullOrEmpty(result))
             {
                 result = "<ul>" + result + "</ul>";
             }
@@ -202,7 +202,7 @@ namespace Nop.Web.Extensions
                 {
                     for (int x = 1; x <= totalPages; x++)
                     {
-                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        var link = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link.ToHtmlString());
                         if (x < totalPages)
                         {
@@ -212,13 +212,13 @@ namespace Nop.Web.Extensions
                 }
                 else
                 {
-                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) });
+                    var link1 = html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) });
                     links.Append(link1.ToHtmlString());
                     links.Append(" ... ");
 
                     for (int x = (totalPages - 2); x <= totalPages; x++)
                     {
-                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
+                        var link2 = html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = string.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) });
                         links.Append(link2.ToHtmlString());
 
                         if (x < totalPages)
@@ -229,7 +229,7 @@ namespace Nop.Web.Extensions
                 }
 
                 // Inserts the topic page links into the localized string ([Go to page: {0}])
-                return new HtmlString(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
+                return new HtmlString(string.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links));
             }
             return new HtmlString(string.Empty);
         }

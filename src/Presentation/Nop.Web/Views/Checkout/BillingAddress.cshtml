@@ -58,7 +58,7 @@
                                                 <span>@item.FaxNumber</span>
                                             </li>
                                         }
-                                        @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
+                                        @if (item.CompanyEnabled && !string.IsNullOrEmpty(item.Company))
                                         {
                                             <li class="company">
                                                 @item.Company
@@ -70,7 +70,7 @@
                                                 @item.Address1
                                             </li>
                                         }
-                                        @if (item.StreetAddress2Enabled && !String.IsNullOrEmpty(item.Address2))
+                                        @if (item.StreetAddress2Enabled && !string.IsNullOrEmpty(item.Address2))
                                         {
                                             <li class="address2">
                                                 @item.Address2
@@ -97,13 +97,13 @@
                                                 }
                                             </li>
                                         }
-                                        @if (item.CountryEnabled && !String.IsNullOrEmpty(item.CountryName))
+                                        @if (item.CountryEnabled && !string.IsNullOrEmpty(item.CountryName))
                                         {
                                             <li class="country">
                                                 @item.CountryName
                                             </li>
                                         }
-                                        @if (!String.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
+                                        @if (!string.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
                                         {
                                             <li class="custom-attributes-view">
                                                 @Html.Raw(item.FormattedCustomAddressAttributes)

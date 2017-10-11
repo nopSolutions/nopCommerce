@@ -161,7 +161,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true)
         {
-            if (String.IsNullOrEmpty(currencyCode))
+            if (string.IsNullOrEmpty(currencyCode))
                 return null;
             return GetAllCurrencies(true, loadCacheableCopy: loadCacheableCopy)
                 .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());

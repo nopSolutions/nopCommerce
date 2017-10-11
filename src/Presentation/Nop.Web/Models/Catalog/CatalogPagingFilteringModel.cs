@@ -130,11 +130,11 @@ namespace Nop.Web.Models.Catalog
                     string[] fromTo = str1.Trim().Split(new [] { '-' });
 
                     decimal? from = null;
-                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[0]) && !string.IsNullOrEmpty(fromTo[0].Trim()))
                         from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
 
                     decimal? to = null;
-                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[1]) && !string.IsNullOrEmpty(fromTo[1].Trim()))
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
                     priceRanges.Add(new PriceRange { From = from, To = to });
@@ -171,16 +171,16 @@ namespace Nop.Web.Models.Catalog
             public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
             {
                 var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
-                if (String.IsNullOrEmpty(range))
+                if (string.IsNullOrEmpty(range))
                     return null;
                 string[] fromTo = range.Trim().Split(new [] { '-' });
                 if (fromTo.Length == 2)
                 {
                     decimal? from = null;
-                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[0]) && !string.IsNullOrEmpty(fromTo[0].Trim()))
                         from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
                     decimal? to = null;
-                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                    if (!string.IsNullOrEmpty(fromTo[1]) && !string.IsNullOrEmpty(fromTo[1].Trim()))
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
                     var priceRangeList = GetPriceRangeList(priceRangesStr);
@@ -365,7 +365,7 @@ namespace Nop.Web.Models.Catalog
                 var result = new List<int>();
 
                 var alreadyFilteredSpecsStr = webHelper.QueryString<string>(QUERYSTRINGPARAM);
-                if (String.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
+                if (string.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
                     return result;
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))

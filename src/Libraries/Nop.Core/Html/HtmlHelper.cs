@@ -21,7 +21,7 @@ namespace Nop.Core.Html
 
         private static string EnsureOnlyAllowedHtml(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             const string allowedTags = "br,hr,b,i,u,a,div,ol,ul,li,blockquote,img,span,p,em,strong,font,pre,h1,h2,h3,h4,h5,h6,address,cite";
@@ -79,7 +79,7 @@ namespace Nop.Core.Html
             bool allowBBCode, bool resolveLinks, bool addNoFollowTag)
         {
 
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             try
@@ -127,7 +127,7 @@ namespace Nop.Core.Html
         /// <returns>Formatted text</returns>
         public static string StripTags(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = Regex.Replace(text, @"(>)(\r|\n)*(<)", "><");
@@ -144,7 +144,7 @@ namespace Nop.Core.Html
         /// <returns>Text</returns>
         public static string ReplaceAnchorTags(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = Regex.Replace(text, @"<a\b[^>]+>([^<]*(?:(?!</a)<[^<]*)*)</a>", "$1", RegexOptions.IgnoreCase);
@@ -158,7 +158,7 @@ namespace Nop.Core.Html
         /// <returns>Formatted text</returns>
         public static string ConvertPlainTextToHtml(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = text.Replace("\r\n", "<br />");
@@ -180,7 +180,7 @@ namespace Nop.Core.Html
         public static string ConvertHtmlToPlainText(string text,
             bool decode = false, bool replaceAnchorTags = false)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
             
             if (decode)
@@ -205,7 +205,7 @@ namespace Nop.Core.Html
         /// <returns>Formatted text</returns>
         public static string ConvertPlainTextToParagraph(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             text = paragraphStartRegex.Replace(text, string.Empty);

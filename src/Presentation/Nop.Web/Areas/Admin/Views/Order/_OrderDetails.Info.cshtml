@@ -198,7 +198,7 @@
                         </div>
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.VatNumber))
+                @if (!string.IsNullOrEmpty(Model.VatNumber))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -250,8 +250,8 @@
                         </div>
                     </div>
                 </div>
-                @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax)) ||
-                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax)))
+                @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax)) ||
+                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax)))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -264,7 +264,7 @@
                         </div>
                         <div class="col-md-7">
                             <div class="row">
-                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
+                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
                                 {
                                     <div class="col-md-2">
                                         <div class="form-text-row">
@@ -272,7 +272,7 @@
                                         </div>
                                     </div>
                                 }
-                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
+                                @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
                                 {
                                     <div class="col-md-10">
                                         <div class="form-text-row">
@@ -314,8 +314,8 @@
                         </div>
                     </div>
                 </div>
-                @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax)) ||
-                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax)))
+                @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax)) ||
+                    ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax)))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -373,7 +373,7 @@
                         </div>
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
+                @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -415,7 +415,7 @@
                         <div class="form-text-row">@Model.OrderTotal</div>
                     </div>
                 </div>
-                @if (!String.IsNullOrEmpty(Model.RefundedAmount))
+                @if (!string.IsNullOrEmpty(Model.RefundedAmount))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -591,7 +591,7 @@
                         </div>
                     </div>
                 }
-                @if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
+                @if (Model.AllowStoringCreditCardNumber || !string.IsNullOrEmpty(Model.CardNumber))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -666,7 +666,7 @@
                         </div>
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
+                @if (!string.IsNullOrEmpty(Model.AuthorizationTransactionId))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -677,7 +677,7 @@
                         </div>
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
+                @if (!string.IsNullOrEmpty(Model.CaptureTransactionId))
                 {
                     <div class="form-group">
                         <div class="col-md-3">
@@ -688,7 +688,7 @@
                         </div>
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
+                @if (!string.IsNullOrEmpty(Model.SubscriptionTransactionId))
                 {
                     <div class="form-group">
                         <div class="col-md-3">

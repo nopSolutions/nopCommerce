@@ -19,7 +19,7 @@ namespace Nop.Core.Domain.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            if (String.IsNullOrEmpty(product.RequiredProductIds))
+            if (string.IsNullOrEmpty(product.RequiredProductIds))
                 return new int[0];
 
             var ids = new List<int>();

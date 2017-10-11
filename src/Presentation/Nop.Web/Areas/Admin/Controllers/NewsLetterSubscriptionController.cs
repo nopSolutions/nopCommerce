@@ -210,7 +210,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
                     int count = _importManager.ImportNewsletterSubscribersFromTxt(importcsvfile.OpenReadStream());
-                    SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
+                    SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
                     return RedirectToAction("List");
                 }
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));

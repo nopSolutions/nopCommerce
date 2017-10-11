@@ -263,7 +263,7 @@ namespace Nop.Services.Logging
             int pageIndex = 0, int pageSize = int.MaxValue, string ipAddress = null)
         {
             var query = _activityLogRepository.Table;
-            if(!String.IsNullOrEmpty(ipAddress))
+            if(!string.IsNullOrEmpty(ipAddress))
                 query = query.Where(al => al.IpAddress.Contains(ipAddress));
             if (createdOnFrom.HasValue)
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
