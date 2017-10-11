@@ -455,7 +455,7 @@ namespace Nop.Plugin.Payments.Square
             //successfully refunded
             return new RefundPaymentResult
             {
-                NewPaymentStatus = PaymentStatus.PartiallyRefunded
+                NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
             };
         }
 
@@ -647,6 +647,7 @@ namespace Nop.Plugin.Payments.Square
                     7. Choose the business location. Location is a required parameter for payment requests<br />
                     8. Fill in the remaining fields and save to complete the configuration<br />
                     <br />
+                    <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
                 </p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken", "Obtain access token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error", "An error occurred while obtaining an access token");

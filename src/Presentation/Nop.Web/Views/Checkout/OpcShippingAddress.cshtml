@@ -194,23 +194,23 @@
                                 var addressLine = "";
                                 addressLine += address.FirstName;
                                 addressLine += " " + address.LastName;
-                                if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                                if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
                                 {
                                     addressLine += ", " + address.Address1;
                                 }
-                                if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                                if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
                                 {
                                     addressLine += ", " + address.City;
                                 }
-                                if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                                if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                                 {
                                     addressLine += ", " + address.StateProvinceName;
                                 }
-                                if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                                if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                                 {
                                     addressLine += " " + address.ZipPostalCode;
                                 }
-                                if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                                if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
                                 {
                                     addressLine += ", " + address.CountryName;
                                 }

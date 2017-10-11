@@ -37,7 +37,7 @@ namespace Nop.Core.Data
         /// <returns></returns>
         public bool IsValid()
         {
-            return !String.IsNullOrEmpty(this.DataProvider) && !String.IsNullOrEmpty(this.DataConnectionString);
+            return !string.IsNullOrEmpty(this.DataProvider) && !string.IsNullOrEmpty(this.DataConnectionString);
         }
     }
 }

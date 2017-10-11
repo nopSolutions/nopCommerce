@@ -70,7 +70,7 @@
                             <div class="col-md-9">
                                 @if (Model.CustomerId.HasValue)
                                 {
-                                    <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text)</a>
+                                    <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@(!string.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text)</a>
                                 }
                             </div>
                         </div>

@@ -120,7 +120,7 @@ namespace Nop.Web.Controllers
                 language = _workContext.WorkingLanguage;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -152,7 +152,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingCurrency = currency;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -170,7 +170,7 @@ namespace Nop.Web.Controllers
             _workContext.TaxDisplayType = taxDisplayType;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -306,7 +306,7 @@ namespace Nop.Web.Controllers
             _themeContext.WorkingThemeName = themeName;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -369,7 +369,7 @@ namespace Nop.Web.Controllers
             }
 
             //home page
-            if (String.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
             {
                 url = Url.RouteUrl("HomePage");
                 permanentRedirect = false;

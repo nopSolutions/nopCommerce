@@ -548,7 +548,7 @@ namespace Nop.Core.Plugins
                         }
 
                         //some validation
-                        if (String.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
+                        if (string.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
                             throw new Exception($"A plugin '{descriptionFile.FullName}' has no system name. Try assigning the plugin a unique name and recompiling.");
                         if (referencedPlugins.Contains(pluginDescriptor))
                             throw new Exception($"A plugin with '{pluginDescriptor.SystemName}' system name is already defined");

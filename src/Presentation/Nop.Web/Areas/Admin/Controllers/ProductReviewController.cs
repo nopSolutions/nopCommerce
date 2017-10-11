@@ -371,7 +371,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return Content("");
 
             const int searchTermMinimumLength = 3;
-            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
                 return Content("");
 
             //a vendor should have access only to his products

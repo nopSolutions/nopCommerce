@@ -458,7 +458,7 @@ namespace Nop.Web.Factories
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
             
             //tracking number and shipment information
-            if (!String.IsNullOrEmpty(shipment.TrackingNumber))
+            if (!string.IsNullOrEmpty(shipment.TrackingNumber))
             {
                 model.TrackingNumber = shipment.TrackingNumber;
                 var shipmentTracker = shipment.GetShipmentTracker(_shippingService, _shippingSettings);

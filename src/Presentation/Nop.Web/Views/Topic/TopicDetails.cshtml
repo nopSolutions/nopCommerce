@@ -11,7 +11,7 @@
     if (!Model.IsPasswordProtected)
     {
         //title
-        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
         //meta
         Html.AddMetaDescriptionParts(Model.MetaDescription);
         Html.AddMetaKeywordParts(Model.MetaKeywords);

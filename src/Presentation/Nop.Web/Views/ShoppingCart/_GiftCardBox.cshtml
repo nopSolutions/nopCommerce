@@ -11,7 +11,7 @@
             <input type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode" 
                    value="@T("ShoppingCart.GiftCardCouponCode.Button")" class="button-2 apply-gift-card-coupon-code-button" />
         </div>
-        @if (!String.IsNullOrEmpty(Model.Message))
+        @if (!string.IsNullOrEmpty(Model.Message))
         {
             <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
                 @Model.Message

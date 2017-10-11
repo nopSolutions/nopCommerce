@@ -73,7 +73,7 @@
                             function validateWarehouseAvailability() {
                                 @{
                                     var sb = new StringBuilder();
-                                    for (int i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
+                                    for (var i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
                                     {
                                         var item = itemsFromMultipleWarehouses[i];
                                         sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);
@@ -143,7 +143,7 @@
                                     <tr>
                                         <td style="width: 25%;text-align: left">
                                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                             {
                                                 <p>
                                                     @Html.Raw(item.AttributeInfo)

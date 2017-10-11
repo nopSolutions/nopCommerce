@@ -38,7 +38,7 @@ namespace Nop.Core.Html
         public static string FormatText(string text, bool replaceBold, bool replaceItalic,
             bool replaceUnderline, bool replaceUrl, bool replaceCode, bool replaceQuote, bool replaceImg)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             if (replaceBold)
@@ -101,8 +101,8 @@ namespace Nop.Core.Html
         /// <returns>string</returns>
         public static string RemoveQuotes(string str)
         {
-            str = Regex.Replace(str, @"\[quote=(.+?)\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            str = Regex.Replace(str, @"\[/quote\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            str = Regex.Replace(str, @"\[quote=(.+?)\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            str = Regex.Replace(str, @"\[/quote\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return str;
         }
 

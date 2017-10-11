@@ -126,7 +126,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure dimension</returns>
         public virtual MeasureDimension GetMeasureDimensionBySystemKeyword(string systemKeyword)
         {
-            if (String.IsNullOrEmpty(systemKeyword))
+            if (string.IsNullOrEmpty(systemKeyword))
                 return null;
 
             var measureDimensions = GetAllMeasureDimensions();
@@ -306,7 +306,7 @@ namespace Nop.Services.Directory
         /// <returns>Measure weight</returns>
         public virtual MeasureWeight GetMeasureWeightBySystemKeyword(string systemKeyword)
         {
-            if (String.IsNullOrEmpty(systemKeyword))
+            if (string.IsNullOrEmpty(systemKeyword))
                 return null;
 
             var measureWeights = GetAllMeasureWeights();

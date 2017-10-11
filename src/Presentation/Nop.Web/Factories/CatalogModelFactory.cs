@@ -299,7 +299,7 @@ namespace Nop.Web.Factories
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
+                            Value = string.Format(sortUrl, pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
                         });
                     }
@@ -1334,7 +1334,7 @@ namespace Nop.Web.Factories
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
             // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-            //we don't use "!String.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
+            //we don't use "!string.IsNullOrEmpty(searchTerms)" in cases of "ProductSearchTermMinimumLength" set to 0 but searching by other parameters (e.g. category or price filter)
             var isSearchTermSpecified = _httpContextAccessor.HttpContext.Request.Query.ContainsKey("q");
             if (isSearchTermSpecified)
             {
@@ -1409,7 +1409,7 @@ namespace Nop.Web.Factories
                     model.NoResults = !model.Products.Any();
 
                     //search term statistics
-                    if (!String.IsNullOrEmpty(searchTerms))
+                    if (!string.IsNullOrEmpty(searchTerms))
                     {
                         var searchTerm = _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
                         if (searchTerm != null)

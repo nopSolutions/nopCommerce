@@ -97,9 +97,9 @@ namespace Nop.Services.Orders
                 query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
             if (isGiftCardActivated.HasValue)
                 query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!String.IsNullOrEmpty(giftCardCouponCode))
+            if (!string.IsNullOrEmpty(giftCardCouponCode))
                 query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            if (!String.IsNullOrWhiteSpace(recipientName))
+            if (!string.IsNullOrWhiteSpace(recipientName))
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 

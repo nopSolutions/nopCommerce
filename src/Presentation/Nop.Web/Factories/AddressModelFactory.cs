@@ -86,7 +86,7 @@ namespace Nop.Web.Factories
                 }
 
                 //set already selected attributes
-                var selectedAddressAttributes = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                var selectedAddressAttributes = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
                     (address != null ? address.CustomAttributes : null);
                 switch (attribute.AttributeControlType)
@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            if (!string.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 var enteredText = _addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
                                 if (enteredText.Any())

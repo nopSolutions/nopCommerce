@@ -26,7 +26,7 @@
                             @T("Order.Fax"): @Model.BillingAddress.FaxNumber
                         </li>
                     }
-                    @if (Model.BillingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.BillingAddress.Company))
+                    @if (Model.BillingAddress.CompanyEnabled && !string.IsNullOrEmpty(Model.BillingAddress.Company))
                     {
                         <li class="company">
                             @Model.BillingAddress.Company
@@ -38,7 +38,7 @@
                             @Model.BillingAddress.Address1
                         </li>
                     }
-                    @if (Model.BillingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.BillingAddress.Address2))
+                    @if (Model.BillingAddress.StreetAddress2Enabled && !string.IsNullOrEmpty(Model.BillingAddress.Address2))
                     {
                         <li class="address2">
                             @Model.BillingAddress.Address2
@@ -67,13 +67,13 @@
                             }
                         </li>
                     }
-                    @if (Model.BillingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.BillingAddress.CountryName))
+                    @if (Model.BillingAddress.CountryEnabled && !string.IsNullOrEmpty(Model.BillingAddress.CountryName))
                     {
                         <li class="country">
                             @Model.BillingAddress.CountryName
                         </li>
                     }
-                    @if (!String.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                    @if (!string.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
                     {
                         <li class="custom-attributes-view">
                             @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
@@ -95,7 +95,7 @@
                     }
                 </ul>
             </div>
-            @if (!String.IsNullOrEmpty(Model.PaymentMethod))
+            @if (!string.IsNullOrEmpty(Model.PaymentMethod))
             {
                 <div class="payment-method-info">
                     <div class="title">
@@ -143,7 +143,7 @@
                                     @T("Order.Fax"): @Model.ShippingAddress.FaxNumber
                                 </li>
                             }
-                            if (Model.ShippingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.ShippingAddress.Company))
+                            if (Model.ShippingAddress.CompanyEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.Company))
                             {
                                 <li class="company">
                                     @Model.ShippingAddress.Company
@@ -155,7 +155,7 @@
                                     @Model.ShippingAddress.Address1
                                 </li>
                             }
-                            if (Model.ShippingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.ShippingAddress.Address2))
+                            if (Model.ShippingAddress.StreetAddress2Enabled && !string.IsNullOrEmpty(Model.ShippingAddress.Address2))
                             {
                                 <li class="address2">
                                     @Model.ShippingAddress.Address2
@@ -184,13 +184,13 @@
                                     }
                                 </li>
                             }
-                            if (Model.ShippingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.ShippingAddress.CountryName))
+                            if (Model.ShippingAddress.CountryEnabled && !string.IsNullOrEmpty(Model.ShippingAddress.CountryName))
                             {
                                 <li class="country">
                                     @Model.ShippingAddress.CountryName
                                 </li>
                             }
-                            if (!String.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
+                            if (!string.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
                             {
                                 <li class="custom-attributes-view">
                                     @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)

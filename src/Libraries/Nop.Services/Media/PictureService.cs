@@ -267,7 +267,7 @@ namespace Nop.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            storeLocation = !String.IsNullOrEmpty(storeLocation)
+            storeLocation = !string.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
                                     : _webHelper.GetStoreLocation();
             var url = storeLocation + "images/thumbs/";
@@ -398,7 +398,7 @@ namespace Nop.Services.Media
 
             if (targetSize == 0)
             {
-                var url = (!String.IsNullOrEmpty(storeLocation)
+                var url = (!string.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
                                  + "images/" + defaultImageFileName;
@@ -501,13 +501,13 @@ namespace Nop.Services.Media
             string thumbFileName;
             if (targetSize == 0)
             {
-                thumbFileName = !String.IsNullOrEmpty(seoFileName)
+                thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id.ToString("0000000")}_{seoFileName}.{lastPart}"
                     : $"{picture.Id.ToString("0000000")}.{lastPart}";
             }
             else
             {
-                thumbFileName = !String.IsNullOrEmpty(seoFileName)
+                thumbFileName = !string.IsNullOrEmpty(seoFileName)
                     ? $"{picture.Id.ToString("0000000")}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id.ToString("0000000")}_{targetSize}.{lastPart}";
             }
@@ -572,8 +572,8 @@ namespace Nop.Services.Media
         public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
             var url = GetPictureUrl(picture, targetSize, showDefaultPicture);
-            if (String.IsNullOrEmpty(url))
-                return String.Empty;
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
 
             return GetThumbLocalPath(Path.GetFileName(url));
         }
@@ -849,7 +849,7 @@ namespace Nop.Services.Media
                 return new Dictionary<int, string>();
 
             const string strCommand = "SELECT [Id] as [PictureId], HASHBYTES('sha1', substring([PictureBinary], 0, {0})) as [Hash] FROM [Picture] where id in ({1})";
-            return _dbContext.SqlQuery<HashItem>(String.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+            return _dbContext.SqlQuery<HashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", ""));
         }
 

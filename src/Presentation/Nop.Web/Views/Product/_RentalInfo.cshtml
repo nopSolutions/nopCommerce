@@ -8,14 +8,14 @@
 {
     <div class="attributes rental-attributes">
         @{
-            string startDateControlId = $"rental_start_date_{Model.Id}";
-            string endDateControlId = $"rental_end_date_{Model.Id}";
+            var startDateControlId = $"rental_start_date_{Model.Id}";
+            var endDateControlId = $"rental_end_date_{Model.Id}";
             //currenly we support only this format
             //java-script format
             const string datePickerFormat = "mm/dd/yy";
             //C# format for ToString method
             const string datePickerFormat2 = "MM/dd/yyyy";
-            bool isMobileDevice = userAgentHelper.IsMobileDevice();
+            var isMobileDevice = userAgentHelper.IsMobileDevice();
             <div class="attribute-item">
                 <div class="attribute-label">
                     <label class="text-prompt">

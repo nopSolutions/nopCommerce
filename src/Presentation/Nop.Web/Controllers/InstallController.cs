@@ -131,7 +131,7 @@ namespace Nop.Web.Controllers
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
                 var query = $"CREATE DATABASE [{databaseName}]";
-                if (!String.IsNullOrWhiteSpace(collation))
+                if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
@@ -455,7 +455,7 @@ namespace Nop.Web.Controllers
                                 //create database
                                 var collation = model.UseCustomCollation ? model.Collation : "";
                                 var errorCreatingDatabase = CreateDatabase(connectionString, collation);
-                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
+                                if (!string.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
                             }
                         }

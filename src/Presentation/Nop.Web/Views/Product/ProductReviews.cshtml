@@ -78,7 +78,7 @@
                 </div>
                 @foreach (var review in Model.Items)
                 {
-                    int ratingPercent = review.Rating * 20;
+                    var ratingPercent = review.Rating * 20;
                     <div class="product-review-item">
                         <div class="review-item-head">
                             <div class="review-title">
@@ -115,7 +115,7 @@
                             </div>
                             @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
-                            @if (!String.IsNullOrEmpty(review.ReplyText))
+                            @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
                                 <div class="reply">
                                     <div class="reply-header">

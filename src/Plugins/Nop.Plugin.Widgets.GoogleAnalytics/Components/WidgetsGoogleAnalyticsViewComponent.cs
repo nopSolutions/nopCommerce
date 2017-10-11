@@ -122,7 +122,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private string FixIllegalJavaScriptChars(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return text;
 
             //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)

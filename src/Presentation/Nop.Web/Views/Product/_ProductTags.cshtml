@@ -7,7 +7,7 @@
         </div>
         <div class="product-tags-list">
             <ul>
-                @for (int i = 0; i < Model.Count; i++)
+                @for (var i = 0; i < Model.Count; i++)
                 {
                     <li class="tag">
                         <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].SeName })" class="producttag">

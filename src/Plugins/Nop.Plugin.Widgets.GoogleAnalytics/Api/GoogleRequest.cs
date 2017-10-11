@@ -112,14 +112,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                 var timeStampCurrent = (int)span.TotalSeconds;
 
                 //fake the utma
-                var utma = String.Format("{0}.{1}.{2}.{3}.{4}.{5}",
+                var utma = string.Format("{0}.{1}.{2}.{3}.{4}.{5}",
                                             DomainHash,
                                             CommonHelper.GenerateRandomInteger(),
                                             timeStampCurrent,
                                             timeStampCurrent,
                                             timeStampCurrent,
                                             "2");
-                var utmz = String.Format("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",
+                var utmz = string.Format("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",
                                                 DomainHash,
                                                 timeStampCurrent,
                                                 "1",
@@ -129,7 +129,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
                                                "(none)");
 
 
-                _UtmcCookieString = Uri.EscapeDataString(String.Format("__utma={0};+__utmz={1};", utma, utmz));
+                _UtmcCookieString = Uri.EscapeDataString(string.Format("__utma={0};+__utmz={1};", utma, utmz));
             }
 
             return _UtmcCookieString;

@@ -15,7 +15,7 @@
             {
                 <span class="username">@Model.CustomerName</span>
             }
-            @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+            @if (!string.IsNullOrEmpty(Model.CustomerAvatarUrl))
             {
                 <div class="avatar">
                     @if (Model.AllowViewingProfiles)
@@ -53,7 +53,7 @@
                     <span>@Model.CustomerJoinDate.ToString("d")</span>
                 </li>
             }
-            @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
+            @if (Model.ShowCustomersLocation && !string.IsNullOrEmpty(Model.CustomerLocation))
             {
                 <li class="location">
                     <label>@T("Forum.Location"):</label>
@@ -144,7 +144,7 @@
                 </div>
             }
         </div>
-        @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+        @if (Model.SignaturesEnabled & !string.IsNullOrEmpty(Model.FormattedSignature))
         {
             <div class="signature">
                 @Html.Raw(Model.FormattedSignature)

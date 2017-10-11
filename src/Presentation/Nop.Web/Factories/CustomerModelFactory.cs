@@ -183,7 +183,7 @@ namespace Nop.Web.Factories
                 }
 
                 //set already selected attributes
-                var selectedAttributesXml = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                var selectedAttributesXml = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml : 
                     customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
@@ -192,7 +192,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -216,7 +216,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
+                            if (!string.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Any())

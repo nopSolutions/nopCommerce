@@ -27,7 +27,7 @@
     <div class="section order-summary">
         @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
     </div>
-    @if (String.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
+    @if (string.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {
         <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
             <p>@T("Checkout.TermsOfService.PleaseAccept")</p>

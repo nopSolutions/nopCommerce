@@ -14,7 +14,7 @@ namespace Nop.Data
         {
 
             var providerName = Settings.DataProvider;
-            if (String.IsNullOrWhiteSpace(providerName))
+            if (string.IsNullOrWhiteSpace(providerName))
                 throw new NopException("Data Settings doesn't contain a providerName");
 
             switch (providerName.ToLowerInvariant())

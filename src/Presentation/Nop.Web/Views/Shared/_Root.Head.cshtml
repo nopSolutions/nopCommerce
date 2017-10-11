@@ -2,8 +2,11 @@
 @using StackExchange.Profiling
 @using Nop.Core.Domain.Common
 @using Nop.Core.Domain.Seo
+@using Nop.Services.Events
 @using Nop.Services.Security
+@using Nop.Web.Framework.Events
 @inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
 @inject IPermissionService permissionService
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
@@ -15,7 +18,6 @@
     Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/lib/jquery.validate.min.js");
     Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
-
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
@@ -26,9 +28,11 @@
     {
         Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
     }
-
     var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
         && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
+    //event
+    var eventMessage = new PageRenderingEvent(this.Html);
+    eventPublisher.Publish(eventMessage);
 }
 <!DOCTYPE html>
 <html@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>

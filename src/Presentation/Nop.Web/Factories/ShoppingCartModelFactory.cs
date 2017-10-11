@@ -201,7 +201,7 @@ namespace Nop.Web.Factories
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = attribute.DefaultValue
                 };
-                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                if (!string.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
                     attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -248,7 +248,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.ImageSquares:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
@@ -272,7 +272,7 @@ namespace Nop.Web.Factories
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
                                 var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
                                 if (enteredText.Any())
@@ -299,7 +299,7 @@ namespace Nop.Web.Factories
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            if (!string.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
                                 var downloadGuidStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
                                 Guid.TryParse(downloadGuidStr, out Guid downloadGuid);
@@ -352,7 +352,7 @@ namespace Nop.Web.Factories
             //4. visible individually?
             cartItemModel.AllowItemEditing = _shoppingCartSettings.AllowCartItemEditing &&
                                              sci.Product.ProductType == ProductType.SimpleProduct &&
-                                             (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) ||
+                                             (!string.IsNullOrEmpty(cartItemModel.AttributeInfo) ||
                                               sci.Product.IsGiftCard) &&
                                              sci.Product.VisibleIndividually;
 
@@ -489,7 +489,7 @@ namespace Nop.Web.Factories
             //4. visible individually?
             cartItemModel.AllowItemEditing = _shoppingCartSettings.AllowCartItemEditing &&
                                              sci.Product.ProductType == ProductType.SimpleProduct &&
-                                             (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) ||
+                                             (!string.IsNullOrEmpty(cartItemModel.AttributeInfo) ||
                                               sci.Product.IsGiftCard) &&
                                              sci.Product.VisibleIndividually;
 

@@ -1210,7 +1210,7 @@ namespace Nop.Services.Orders
 
             //payment method additional fee without tax
             var paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
-            if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
+            if (usePaymentMethodAdditionalFee && !string.IsNullOrEmpty(paymentMethodSystemName))
             {
                 var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart,
                     paymentMethodSystemName);

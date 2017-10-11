@@ -63,7 +63,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -108,7 +108,7 @@
                         @foreach (var topic in @Model.ForumTopics)
                         {
                             var topicType = "post";
-                            var topicText = String.Empty;
+                            var topicText = string.Empty;
                             switch (topic.ForumTopicType)
                             {
                                 case ForumTopicType.Normal:
@@ -133,7 +133,7 @@
                                 <td class="topic-details">
                                     <div class="topic-title">
                                         @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                        @if (!String.IsNullOrEmpty(topicText))
+                                        @if (!string.IsNullOrEmpty(topicText))
                                         {
                                             <span class="topic-type">@topicText</span>
                                         }
@@ -181,7 +181,7 @@
             </div>
         }
     </div>
-    @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager

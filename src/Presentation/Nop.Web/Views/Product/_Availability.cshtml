@@ -1,8 +1,8 @@
 ﻿@model ProductDetailsModel
-@if (!String.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
+@if (!string.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
 {
     <div class="availability">
-        @if (!String.IsNullOrWhiteSpace(Model.StockAvailability))
+        @if (!string.IsNullOrWhiteSpace(Model.StockAvailability))
         {
             <div class="stock">
                 <span class="label">@T("Products.Availability"):</span>

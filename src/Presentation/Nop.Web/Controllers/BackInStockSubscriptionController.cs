@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("biss", "").Trim();
-                    if (Int32.TryParse(id, out int subscriptionId))
+                    if (int.TryParse(id, out int subscriptionId))
                     {
                         var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
                         if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)

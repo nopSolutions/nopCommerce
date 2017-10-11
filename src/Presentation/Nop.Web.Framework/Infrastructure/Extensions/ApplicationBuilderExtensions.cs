@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            application.UseStatusCodePages(async context =>
+            application.UseStatusCodePages(context =>
             {
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
@@ -130,6 +130,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
+
+                return System.Threading.Tasks.Task.CompletedTask;
             });
         }
 

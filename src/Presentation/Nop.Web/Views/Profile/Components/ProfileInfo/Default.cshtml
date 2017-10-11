@@ -1,6 +1,6 @@
 ﻿@model ProfileInfoModel
 <div class="profile-info-box">
-    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+    @if (!string.IsNullOrEmpty(Model.AvatarUrl))
     {
         <div class="avatar">
             <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />

@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Menu
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            if (String.IsNullOrWhiteSpace(systemName))
+            if (string.IsNullOrWhiteSpace(systemName))
                 return false;
 
             if (systemName.Equals(node.SystemName, StringComparison.InvariantCultureIgnoreCase))

@@ -23,9 +23,9 @@
                             </li>
                             @foreach (var spec in groupList)
                             {
-                                <li class="item @(!String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
+                                <li class="item @(!string.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
                                     <a href="@spec.FilterUrl">
-                                        @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                        @if (string.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
                                         {
                                             @spec.SpecificationAttributeOptionName
                                         }

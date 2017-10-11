@@ -759,7 +759,7 @@ namespace Nop.Web.Factories
 
             try
             {
-                if (!String.IsNullOrWhiteSpace(searchterms))
+                if (!string.IsNullOrWhiteSpace(searchterms))
                 {
                     searchterms = searchterms.Trim();
                     model.SearchTerms = searchterms;

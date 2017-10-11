@@ -80,7 +80,7 @@ namespace Nop.Services.Polls
             {
                 query = query.Where(p => p.LanguageId == languageId);
             }
-            if (!String.IsNullOrEmpty(systemKeyword))
+            if (!string.IsNullOrEmpty(systemKeyword))
             {
                 query = query.Where(p => p.SystemKeyword == systemKeyword);
             }

@@ -160,13 +160,13 @@ namespace Nop.Services.Messages
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            fromEmail = (fromEmail ?? String.Empty).Trim();
-            toEmail = (toEmail ?? String.Empty).Trim();
+            fromEmail = (fromEmail ?? string.Empty).Trim();
+            toEmail = (toEmail ?? string.Empty).Trim();
             
             var query = _queuedEmailRepository.Table;
-            if (!String.IsNullOrEmpty(fromEmail))
+            if (!string.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.Contains(fromEmail));
-            if (!String.IsNullOrEmpty(toEmail))
+            if (!string.IsNullOrEmpty(toEmail))
                 query = query.Where(qe => qe.To.Contains(toEmail));
             if (createdFromUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);

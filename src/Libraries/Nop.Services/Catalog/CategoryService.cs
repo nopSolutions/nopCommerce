@@ -219,7 +219,7 @@ namespace Nop.Services.Catalog
             var query = _categoryRepository.Table;
             if (!showHidden)
                 query = query.Where(c => c.Published);
-            if (!String.IsNullOrWhiteSpace(categoryName))
+            if (!string.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);

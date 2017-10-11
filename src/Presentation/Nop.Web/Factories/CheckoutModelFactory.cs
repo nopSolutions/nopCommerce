@@ -321,9 +321,9 @@ namespace Nop.Web.Factories
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
                         .Find( so =>
-                            !String.IsNullOrEmpty(so.Name) &&
+                            !string.IsNullOrEmpty(so.Name) &&
                             so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                            !String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
+                            !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
                             so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
                     if (shippingOptionToSelect != null)
                     {
@@ -415,7 +415,7 @@ namespace Nop.Web.Factories
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
                 _genericAttributeService, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(selectedPaymentMethodSystemName))
+            if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()
                     .Find(pm => pm.PaymentMethodSystemName.Equals(selectedPaymentMethodSystemName, StringComparison.InvariantCultureIgnoreCase));

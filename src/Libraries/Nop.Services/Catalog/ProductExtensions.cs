@@ -243,7 +243,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             var result = new List<int>();
-            if (!String.IsNullOrWhiteSpace(product.AllowedQuantities))
+            if (!string.IsNullOrWhiteSpace(product.AllowedQuantities))
             {
                 product.AllowedQuantities
                     .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
@@ -384,7 +384,7 @@ namespace Nop.Services.Catalog
             manufacturerPartNumber = null;
             gtin = null;
 
-            if (!String.IsNullOrEmpty(attributesXml) && 
+            if (!string.IsNullOrEmpty(attributesXml) && 
                 product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 //manage stock by attribute combinations
@@ -401,11 +401,11 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            if (String.IsNullOrEmpty(sku))
+            if (string.IsNullOrEmpty(sku))
                 sku = product.Sku;
-            if (String.IsNullOrEmpty(manufacturerPartNumber))
+            if (string.IsNullOrEmpty(manufacturerPartNumber))
                 manufacturerPartNumber = product.ManufacturerPartNumber;
-            if (String.IsNullOrEmpty(gtin))
+            if (string.IsNullOrEmpty(gtin))
                 gtin = product.Gtin;
         }
 

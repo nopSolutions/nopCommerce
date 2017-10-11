@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.Infrastructure
                 //TODO duplicated code (below)
                 OnPrepareResponse = ctx =>
                 {
-                    if (!String.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
+                    if (!string.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
                 }
             });
@@ -86,7 +86,7 @@ namespace Nop.Web.Framework.Infrastructure
                 RequestPath = new PathString("/Themes"),
                 OnPrepareResponse = ctx =>
                 {
-                    if (!String.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
+                    if (!string.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
                 }
             });
@@ -97,7 +97,7 @@ namespace Nop.Web.Framework.Infrastructure
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
                 {
-                    if (!String.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
+                    if (!string.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
                 }
             });

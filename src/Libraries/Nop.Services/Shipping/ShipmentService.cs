@@ -88,13 +88,13 @@ namespace Nop.Services.Shipping
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _shipmentRepository.Table;
-            if (!String.IsNullOrEmpty(trackingNumber))
+            if (!string.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
             if (shippingCountryId > 0)
                 query = query.Where(s => s.Order.ShippingAddress.CountryId == shippingCountryId);
             if (shippingStateId > 0)
                 query = query.Where(s => s.Order.ShippingAddress.StateProvinceId == shippingStateId);
-            if (!String.IsNullOrWhiteSpace(shippingCity))
+            if (!string.IsNullOrWhiteSpace(shippingCity))
                 query = query.Where(s => s.Order.ShippingAddress.City.Contains(shippingCity));
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);

@@ -194,7 +194,7 @@ namespace Nop.Web.Factories
                 {
                     logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
                 }
-                if (String.IsNullOrEmpty(logo))
+                if (string.IsNullOrEmpty(logo))
                 {
                     //use default logo
                     logo = $"{_webHelper.GetStoreLocation()}Themes/{_themeContext.WorkingThemeName}/Content/images/logo.png";

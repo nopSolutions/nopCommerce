@@ -204,7 +204,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //store URL
             var currentStoreUrl = _storeContext.CurrentStore.Url;
-            if (!String.IsNullOrEmpty(currentStoreUrl) &&
+            if (!string.IsNullOrEmpty(currentStoreUrl) &&
                 (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
                 ||
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
@@ -594,7 +594,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home", new { area = AreaNames.Admin });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -611,7 +611,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _cacheManager.Clear();
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -629,7 +629,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _webHelper.RestartAppDomain();
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = AreaNames.Admin });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
