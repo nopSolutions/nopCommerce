@@ -2,6 +2,7 @@
 @inject IWorkContext workContext
 @inject IDateTimeHelper dateTimeHelper
 @inject IPermissionService permissionService
+@inject IEventPublisher eventPublisher
 @inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
@@ -82,6 +83,10 @@
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
+
+    //event
+    var eventMessage = new PageRenderingEvent(this.Html);
+    eventPublisher.Publish(eventMessage);
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }

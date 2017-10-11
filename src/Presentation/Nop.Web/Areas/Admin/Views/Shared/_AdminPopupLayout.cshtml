@@ -1,6 +1,7 @@
 ﻿@inject IWorkContext workContext
 @inject LocalizationSettings localizationSettings
 @inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
@@ -51,6 +52,10 @@
     {
         Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
+
+    //event
+    var eventMessage = new PageRenderingEvent(this.Html);
+    eventPublisher.Publish(eventMessage);
 }
 <!DOCTYPE html>
 <html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
