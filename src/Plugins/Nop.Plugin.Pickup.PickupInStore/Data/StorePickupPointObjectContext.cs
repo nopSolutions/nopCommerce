@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
@@ -15,7 +16,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
     {
         #region Ctor
 
-        public StorePickupPointObjectContext(string nameOrConnectionString) : base(nameOrConnectionString)
+        public StorePickupPointObjectContext(DbContextOptions<DbContext> options)
+            : base(options)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
@@ -29,8 +31,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// </summary>
         public virtual bool ProxyCreationEnabled
         {
-            get { return this.Configuration.ProxyCreationEnabled; }
-            set { this.Configuration.ProxyCreationEnabled = value; }
+            get { return false; }
+            set {  }
         }
 
         /// <summary>
@@ -38,8 +40,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// </summary>
         public virtual bool AutoDetectChangesEnabled
         {
-            get { return this.Configuration.AutoDetectChangesEnabled; }
-            set { this.Configuration.AutoDetectChangesEnabled = value; }
+            get { return true; }
+            set { }
         }
 
         #endregion
@@ -50,9 +52,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// Add entity to the configuration of the model for a derived context before it is locked down
         /// </summary>
         /// <param name="modelBuilder">The builder that defines the model for the context being created</param>
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new StorePickupPointMap());
+            modelBuilder.ApplyConfiguration(new StorePickupPointMap());
 
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
@@ -69,7 +71,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <returns>A DDL script</returns>
         public string CreateDatabaseScript()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
+            return "";
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// </summary>
         /// <typeparam name="TEntity">The type entity for which a set should be returned</typeparam>
         /// <returns>A set for the given entity type</returns>
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -88,8 +90,15 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         public void Install()
         {
             //create the table
-            Database.ExecuteSqlCommand(CreateDatabaseScript());
-            SaveChanges();
+            RelationalDatabaseCreator creator = (RelationalDatabaseCreator)Database.GetService<IDatabaseCreator>();
+            try
+            {
+                creator.CreateTables();
+            }
+            catch (Exception e)
+            {
+                //table probably already created
+            }
         }
 
         /// <summary>
@@ -120,7 +129,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <param name="sql">The SQL query string.</param>
         /// <param name="parameters">The parameters to apply to the SQL query string.</param>
         /// <returns>Result</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters) where TElement : new()
         {
             throw new NotImplementedException();
         }
@@ -147,7 +156,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+            ((DbContext)this).Remove(entity);
         }
 
         #endregion

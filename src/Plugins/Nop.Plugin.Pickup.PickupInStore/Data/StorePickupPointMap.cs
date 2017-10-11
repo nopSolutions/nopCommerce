@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Data.Mapping;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 
@@ -5,11 +7,11 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
 {
     public partial class StorePickupPointMap : NopEntityTypeConfiguration<StorePickupPoint>
     {
-        public StorePickupPointMap()
+        public override void Configure(EntityTypeBuilder<StorePickupPoint> builder)
         {
-            this.ToTable("StorePickupPoint");
-            this.HasKey(point => point.Id);
-            this.Property(point => point.PickupFee).HasPrecision(18, 4);
+            builder.ToTable("StorePickupPoint");
+            builder.HasKey(point => point.Id);
+            builder.Property(point => point.PickupFee);
         }
     }
 }

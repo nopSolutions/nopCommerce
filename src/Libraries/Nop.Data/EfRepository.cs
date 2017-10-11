@@ -54,13 +54,6 @@ namespace Nop.Data
         protected string GetFullErrorTextAndRollbackEntityChanges(Exception dbEx)
         {
             var fullErrorText = GetFullErrorText(dbEx);
-            System.Console.WriteLine(fullErrorText);
-            foreach (var a in ((DbContext) _context).ChangeTracker.Entries())
-            {
-                a.State = EntityState.Unchanged;
-            }
-            
-            this._context.SaveChanges();
             return fullErrorText;
         }
 
