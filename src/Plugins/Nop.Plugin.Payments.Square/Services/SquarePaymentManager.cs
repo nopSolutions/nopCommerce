@@ -47,17 +47,23 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Get the OAuth Square service base URL
         /// </summary>
         /// <returns>URL</returns>
-        private string GetOAuthServiceUrl() => "https://connect.squareup.com/oauth2";
+        private string GetOAuthServiceUrl()
+        {
+            return "https://connect.squareup.com/oauth2";
+        }
 
         /// <summary>
         /// Create the API configuration
         /// </summary>
         /// <returns>The API Configuration</returns>
-        private Configuration CreateApiConfiguration() => new Configuration
+        private Configuration CreateApiConfiguration()
         {
-            AccessToken = _squarePaymentSettings.AccessToken,
-            UserAgent = SquarePaymentDefaults.UserAgent
-        };
+            return new Configuration
+            {
+                AccessToken = _squarePaymentSettings.AccessToken,
+                UserAgent = SquarePaymentDefaults.UserAgent
+            };
+        }
 
         #endregion
 
