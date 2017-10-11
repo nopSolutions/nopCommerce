@@ -249,7 +249,7 @@ namespace Nop.Services.Catalog
                               //SKU (exact match)
                               (searchSku && p.Sku == keywords) ||
                               //product tags (exact match)
-                              (searchProductTags && pt.Name == keywords) ||
+                              (searchProductTags && pt.ProductTag.Name == keywords) ||
                               //localized values
                               (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" &&
                                lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
@@ -339,7 +339,7 @@ namespace Nop.Services.Catalog
             if (productTagId > 0)
             {
                 query = from p in query
-                        from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
+                        from pt in p.ProductTags.Where(pt => pt.ProductTagId == productTagId)
                         select p;
             }
 

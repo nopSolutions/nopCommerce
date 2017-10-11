@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Core.Extensions
 {

@@ -16,6 +16,8 @@
   <ItemGroup>
     <PackageReference Include="BundlerMinifier.Core" Version="2.5.357" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="2.0.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
