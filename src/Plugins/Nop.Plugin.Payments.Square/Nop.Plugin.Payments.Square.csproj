@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Square.Connect" Version="2.3.1.213" />
+    <PackageReference Include="Square.Connect" Version="2.4.0.222" />
   </ItemGroup>
 
   <ItemGroup>
