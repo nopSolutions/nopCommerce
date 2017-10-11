@@ -42,7 +42,7 @@ namespace Nop.Core
         /// <returns></returns>
         public static string EnsureSubscriberEmailOrThrow(string email)
         {
-            string output = EnsureNotNull(email);
+            var output = EnsureNotNull(email);
             output = output.Trim();
             output = EnsureMaximumLength(output, 255);
 
@@ -87,8 +87,8 @@ namespace Nop.Core
         public static string GenerateRandomDigitCode(int length)
         {
             var random = new Random();
-            string str = String.Empty;
-            for (int i = 0; i < length; i++)
+            var str = String.Empty;
+            for (var i = 0; i < length; i++)
                 str = String.Concat(str, random.Next(10).ToString());
             return str;
         }
@@ -183,7 +183,7 @@ namespace Nop.Core
                 return false;
 
             var comparer = EqualityComparer<T>.Default;
-            for (int i = 0; i < a1.Length; i++)
+            for (var i = 0; i < a1.Length; i++)
             {
                 if (!comparer.Equals(a1[i], a2[i])) return false;
             }
@@ -202,8 +202,8 @@ namespace Nop.Core
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 
-            Type instanceType = instance.GetType();
-            PropertyInfo pi = instanceType.GetProperty(propertyName);
+            var instanceType = instance.GetType();
+            var pi = instanceType.GetProperty(propertyName);
             if (pi == null)
                 throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
             if (!pi.CanWrite)
@@ -274,7 +274,7 @@ namespace Nop.Core
         public static string ConvertEnum(string str)
         {
             if (String.IsNullOrEmpty(str)) return String.Empty;
-            string result = String.Empty;
+            var result = String.Empty;
             foreach (var c in str)
                 if (c.ToString() != c.ToString().ToLower())
                     result += " " + c.ToString();
@@ -308,7 +308,7 @@ namespace Nop.Core
         {
             //source: http://stackoverflow.com/questions/9/how-do-i-calculate-someones-age-in-c
             //this assumes you are looking for the western idea of age and not using East Asian reckoning.
-            int age = endDate.Year - startDate.Year;
+            var age = endDate.Year - startDate.Year;
             if (startDate > endDate.AddYears(-age))
                 age--;
             return age;
@@ -343,7 +343,7 @@ namespace Nop.Core
                 throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
             }
 
-            Type t = target.GetType();
+            var t = target.GetType();
             FieldInfo fi = null;
 
             while (t != null)
@@ -375,7 +375,7 @@ namespace Nop.Core
             //find more info about directory deletion
             //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
 
-            foreach (string directory in Directory.GetDirectories(path))
+            foreach (var directory in Directory.GetDirectories(path))
             {
                 DeleteDirectory(directory);
             }

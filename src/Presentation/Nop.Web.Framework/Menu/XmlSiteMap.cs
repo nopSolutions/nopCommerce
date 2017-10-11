@@ -23,8 +23,8 @@ namespace Nop.Web.Framework.Menu
 
         public virtual void LoadFrom(string physicalPath)
         {
-            string filePath = CommonHelper.MapPath(physicalPath);
-            string content = File.ReadAllText(filePath);
+            var filePath = CommonHelper.MapPath(physicalPath);
+            var content = File.ReadAllText(filePath);
 
             if (!string.IsNullOrEmpty(content))
             {
@@ -44,7 +44,7 @@ namespace Nop.Web.Framework.Menu
 
                         if ((doc.DocumentElement != null) && doc.HasChildNodes)
                         {
-                            XmlNode xmlRootNode = doc.DocumentElement.FirstChild;
+                            var xmlRootNode = doc.DocumentElement.FirstChild;
                             Iterate(RootNode, xmlRootNode);
                         }
                     }
@@ -79,9 +79,9 @@ namespace Nop.Web.Framework.Menu
             siteMapNode.Title = localizationService.GetResource(nopResource);
 
             //routes, url
-            string controllerName = GetStringValueFromAttribute(xmlNode, "controller");
-            string actionName = GetStringValueFromAttribute(xmlNode, "action");
-            string url = GetStringValueFromAttribute(xmlNode, "url");
+            var controllerName = GetStringValueFromAttribute(xmlNode, "controller");
+            var actionName = GetStringValueFromAttribute(xmlNode, "action");
+            var url = GetStringValueFromAttribute(xmlNode, "url");
             if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
             {
                 siteMapNode.ControllerName = controllerName;
@@ -125,7 +125,7 @@ namespace Nop.Web.Framework.Menu
 
             if (node.Attributes != null && node.Attributes.Count > 0)
             {
-                XmlAttribute attribute = node.Attributes[attributeName];
+                var attribute = node.Attributes[attributeName];
 
                 if (attribute != null)
                 {

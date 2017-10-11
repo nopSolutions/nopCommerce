@@ -307,8 +307,8 @@ namespace Nop.Web.Factories
                     //adjust rate
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out List<DiscountForCaching> _);
 
-                    decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                    var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                    var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
 
                     model.ShippingMethods.Add(soModel);
@@ -368,9 +368,9 @@ namespace Nop.Web.Factories
             //reward points
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
-                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+                var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+                var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
@@ -402,9 +402,9 @@ namespace Nop.Web.Factories
                     LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
                 };
                 //payment method additional fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
+                var rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
+                var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                 if (rate > decimal.Zero)
                     pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
 
@@ -463,10 +463,10 @@ namespace Nop.Web.Factories
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             //min order amount validation
-            bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
+            var minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)
             {
-                decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                var minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
                 model.MinOrderTotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
             }
             return model;

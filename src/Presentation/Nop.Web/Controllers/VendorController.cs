@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            int pictureId = 0;
+            var pictureId = 0;
 
             if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
             {

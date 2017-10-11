@@ -334,10 +334,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var orderStatusIds = model.OrderStatusId > 0 ? new List<int>() { model.OrderStatusId } : null;

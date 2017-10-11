@@ -26,7 +26,7 @@ namespace Nop.Web.Areas.Admin.Components
             //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
 
             //default setting
-            bool enabled = _catalogSettings.IgnoreAcl;
+            var enabled = _catalogSettings.IgnoreAcl;
             if (!enabled)
             {
                 //overridden settings

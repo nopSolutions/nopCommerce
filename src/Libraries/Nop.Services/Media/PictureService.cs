@@ -151,8 +151,8 @@ namespace Nop.Services.Media
 
             //TODO use FileExtensionContentTypeProvider to get file extension
 
-            string[] parts = mimeType.Split('/');
-            string lastPart = parts[parts.Length - 1];
+            var parts = mimeType.Split('/');
+            var lastPart = parts[parts.Length - 1];
             switch (lastPart)
             {
                 case "pjpeg":
@@ -176,8 +176,8 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
-            string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
+            var lastPart = GetFileExtensionFromMimeType(mimeType);
+            var fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             var filePath = GetPictureLocalPath(fileName);
             if (!File.Exists(filePath))
                 return new byte[0];
@@ -192,8 +192,8 @@ namespace Nop.Services.Media
         /// <param name="mimeType">MIME type</param>
         protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
-            string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
+            var lastPart = GetFileExtensionFromMimeType(mimeType);
+            var fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
             File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
@@ -206,9 +206,9 @@ namespace Nop.Services.Media
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
 
-            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string fileName = $"{picture.Id.ToString("0000000")}_0.{lastPart}";
-            string filePath = GetPictureLocalPath(fileName);
+            var lastPart = GetFileExtensionFromMimeType(picture.MimeType);
+            var fileName = $"{picture.Id.ToString("0000000")}_0.{lastPart}";
+            var filePath = GetPictureLocalPath(fileName);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -221,10 +221,10 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual void DeletePictureThumbs(Picture picture)
         {
-            string filter = $"{picture.Id.ToString("0000000")}*.*";
+            var filter = $"{picture.Id.ToString("0000000")}*.*";
             var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
-            string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
-            foreach (string currentFileName in currentFiles)
+            var currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
+            foreach (var currentFileName in currentFiles)
             {
                 var thumbFilePath = GetThumbLocalPath(currentFileName);
                 File.Delete(thumbFilePath);
@@ -387,7 +387,7 @@ namespace Nop.Services.Media
                     defaultImageFileName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.png");
                     break;
             }
-            string filePath = GetPictureLocalPath(defaultImageFileName);
+            var filePath = GetPictureLocalPath(defaultImageFileName);
             if (!File.Exists(filePath))
             {
                 return "";
@@ -396,7 +396,7 @@ namespace Nop.Services.Media
 
             if (targetSize == 0)
             {
-                string url = (!String.IsNullOrEmpty(storeLocation)
+                var url = (!String.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
                                  + "images/" + defaultImageFileName;
@@ -404,8 +404,8 @@ namespace Nop.Services.Media
             }
             else
             {
-                string fileExtension = Path.GetExtension(filePath);
-                string thumbFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
+                var fileExtension = Path.GetExtension(filePath);
+                var thumbFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_{targetSize}{fileExtension}";
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
@@ -465,7 +465,7 @@ namespace Nop.Services.Media
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
-            string url = string.Empty;
+            var url = string.Empty;
             byte[] pictureBinary = null;
             if (picture != null)
                 pictureBinary = LoadPictureBinary(picture);
@@ -495,7 +495,7 @@ namespace Nop.Services.Media
 
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
             
-            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
+            var lastPart = GetFileExtensionFromMimeType(picture.MimeType);
             string thumbFileName;
             if (targetSize == 0)
             {
@@ -509,7 +509,7 @@ namespace Nop.Services.Media
                     ? $"{picture.Id.ToString("0000000")}_{seoFileName}_{targetSize}.{lastPart}"
                     : $"{picture.Id.ToString("0000000")}_{targetSize}.{lastPart}";
             }
-            string thumbFilePath = GetThumbLocalPath(thumbFileName);
+            var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
@@ -588,7 +588,7 @@ namespace Nop.Services.Media
         /// <returns></returns>
         public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
-            string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
+            var url = GetPictureUrl(picture, targetSize, showDefaultPicture);
             if (String.IsNullOrEmpty(url))
                 return String.Empty;
 
@@ -873,7 +873,7 @@ namespace Nop.Services.Media
                 //save the new setting value
                 _settingService.SetSetting("Media.Images.StoreInDB", value);
 
-                int pageIndex = 0;
+                var pageIndex = 0;
                 const int pageSize = 400;
                 var originalProxyCreationEnabled = _dbContext.ProxyCreationEnabled;
                 try

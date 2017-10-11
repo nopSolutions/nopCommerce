@@ -200,7 +200,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < customerRoles.Count; i++)
+            for (var i = 0; i < customerRoles.Count; i++)
             {
                 sb.Append(customerRoles[i].Name);
                 if (i != customerRoles.Count - 1)
@@ -289,8 +289,8 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
-            bool isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
-            bool isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
+            var isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
+            var isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
             if (isInGuestsRole && isInRegisteredRole)
                 return _localizationService.GetResource("Admin.Customers.Customers.GuestsAndRegisteredRolesError");
             if (!isInGuestsRole && !isInRegisteredRole)
@@ -406,11 +406,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (form == null)
                 throw new ArgumentNullException(nameof(form));
 
-            string attributesXml = "";
+            var attributesXml = "";
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                string controlId = $"customer_attribute_{attribute.Id}";
+                var controlId = $"customer_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -419,7 +419,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -433,7 +433,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             {
                                 foreach (var item in cblAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
@@ -461,7 +461,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.ToString().Trim();
+                                var enteredText = ctrlAttributes.ToString().Trim();
                                 attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -608,7 +608,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
                         model.AvailableStates.Add(new SelectListItem
                         {
@@ -798,7 +798,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedKendoGridJson();
 
             var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
+            var searchMonthOfBirth = 0;
             if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
                 searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
             if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
@@ -1937,15 +1937,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
@@ -1979,15 +1979,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedKendoGridJson();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
@@ -2052,7 +2052,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var searchYearDateUser = new DateTime(yearAgoDt.Year, yearAgoDt.Month, 1);
                     if (!timeZone.IsInvalidTime(searchYearDateUser))
                     {
-                        for (int i = 0; i <= 12; i++)
+                        for (var i = 0; i <= 12; i++)
                         {
                             result.Add(new
                             {
@@ -2076,7 +2076,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var searchMonthDateUser = new DateTime(monthAgoDt.Year, monthAgoDt.Month, monthAgoDt.Day);
                     if (!timeZone.IsInvalidTime(searchMonthDateUser))
                     {
-                        for (int i = 0; i <= 30; i++)
+                        for (var i = 0; i <= 30; i++)
                         {
                             result.Add(new
                             {
@@ -2101,7 +2101,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     var searchWeekDateUser = new DateTime(weekAgoDt.Year, weekAgoDt.Month, weekAgoDt.Day);
                     if (!timeZone.IsInvalidTime(searchWeekDateUser))
                     {
-                        for (int i = 0; i <= 7; i++)
+                        for (var i = 0; i <= 7; i++)
                         {
                             result.Add(new
                             {
@@ -2240,7 +2240,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
+            var searchMonthOfBirth = 0;
             if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
                 searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
             if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
@@ -2261,7 +2261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
+                var bytes = _exportManager.ExportCustomersToXlsx(customers);
                 return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
@@ -2289,7 +2289,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
+                var bytes = _exportManager.ExportCustomersToXlsx(customers);
                 return File(bytes, MimeTypes.TextXlsx, "customers.xlsx");
             }
             catch (Exception exc)
@@ -2307,7 +2307,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
+            var searchMonthOfBirth = 0;
             if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
                 searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
             if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))

@@ -246,7 +246,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        var anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),

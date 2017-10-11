@@ -100,7 +100,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
+            var key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -193,7 +193,7 @@ namespace Nop.Services.Directory
             var countries = query.ToList();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
-            foreach (int id in countryIds)
+            foreach (var id in countryIds)
             {
                 var country = countries.Find(x => x.Id == id);
                 if (country != null)

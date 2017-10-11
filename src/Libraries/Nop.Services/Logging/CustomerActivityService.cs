@@ -97,7 +97,7 @@ namespace Nop.Services.Logging
         protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
         {
             //cache
-            string key = string.Format(ACTIVITYTYPE_ALL_KEY);
+            var key = string.Format(ACTIVITYTYPE_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var result = new List<ActivityLogTypeForCaching>();
@@ -305,7 +305,7 @@ namespace Nop.Services.Logging
 
 
                 //do all databases support "Truncate command"?
-                string activityLogTableName = _dbContext.GetTableName<ActivityLog>();
+                var activityLogTableName = _dbContext.GetTableName<ActivityLog>();
                 _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{activityLogTableName}]");
             }
             else

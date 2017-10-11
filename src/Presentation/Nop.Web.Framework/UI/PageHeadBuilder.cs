@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.UI
                     hashInput += ",";
                 }
 
-                byte[] input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+                var input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
@@ -122,7 +122,7 @@ namespace Nop.Web.Framework.UI
         }
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
-            string result = "";
+            var result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             if (!String.IsNullOrEmpty(specificTitle))
             {
@@ -300,7 +300,7 @@ namespace Nop.Web.Framework.UI
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
@@ -444,7 +444,7 @@ namespace Nop.Web.Framework.UI
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
@@ -565,7 +565,7 @@ namespace Nop.Web.Framework.UI
         }
         public virtual string GeneratePageCssClasses()
         {
-            string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
+            var result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
 

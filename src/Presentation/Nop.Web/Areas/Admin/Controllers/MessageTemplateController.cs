@@ -177,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             .GetAllStores()
                             .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
                             .ToList();
-                    for (int i = 0; i < stores.Count; i++)
+                    for (var i = 0; i < stores.Count; i++)
                     {
                         templateModel.ListOfStores += stores[i].Name;
                         if (i != stores.Count - 1)

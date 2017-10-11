@@ -183,12 +183,12 @@ namespace Nop.Web.Framework.TagHelpers.Shared
             }
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
-            for (int i = 1; i <= 31; i++)
+            for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (SelectedDay.HasValue && SelectedDay.Value == i) ? " selected=\"selected\"" : null);
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                     i,

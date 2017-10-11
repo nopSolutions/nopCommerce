@@ -17,7 +17,7 @@ namespace Nop.Services.Orders
             if (orderNote == null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            string text = orderNote.Note;
+            var text = orderNote.Note;
 
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -39,7 +39,7 @@ namespace Nop.Services.Orders
 
             var totalInShipments = 0;
             var shipments = orderItem.Order.Shipments.ToList();
-            for (int i = 0; i < shipments.Count; i++)
+            for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
                 var si = shipment.ShipmentItems
@@ -84,7 +84,7 @@ namespace Nop.Services.Orders
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
-            for (int i = 0; i < shipments.Count; i++)
+            for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
                 if (shipment.ShippedDateUtc.HasValue)
@@ -114,7 +114,7 @@ namespace Nop.Services.Orders
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
-            for (int i = 0; i < shipments.Count; i++)
+            for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
                 if (!shipment.ShippedDateUtc.HasValue)
@@ -144,7 +144,7 @@ namespace Nop.Services.Orders
 
             var result = 0;
             var shipments = orderItem.Order.Shipments.ToList();
-            for (int i = 0; i < shipments.Count; i++)
+            for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
                 if (!shipment.DeliveryDateUtc.HasValue)

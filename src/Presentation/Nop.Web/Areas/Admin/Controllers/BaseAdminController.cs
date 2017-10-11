@@ -54,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             
             if (!string.IsNullOrEmpty(tabName))
             {
-                string dataKey = "nop.selected-tab-name";
+                var dataKey = "nop.selected-tab-name";
                 if (!String.IsNullOrEmpty(dataKeyPrefix))
                     dataKey += $"-{dataKeyPrefix}";
 

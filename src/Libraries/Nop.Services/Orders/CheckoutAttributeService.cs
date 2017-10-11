@@ -120,7 +120,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
+            var key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
@@ -151,7 +151,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeId == 0)
                 return null;
             
-            string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
+            var key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
         }
 
@@ -220,7 +220,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
-            string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
+            var key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _checkoutAttributeValueRepository.Table
@@ -242,7 +242,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeValueId == 0)
                 return null;
             
-            string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
+            var key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
             return _cacheManager.Get(key, () => _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId));
         }
 

@@ -263,7 +263,7 @@ namespace Nop.Web.Factories
                 AllowPostVoting = _forumSettings.AllowPostVoting
             };
 
-            int pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize : 50;
+            var pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize : 50;
 
             var topics = _forumService.GetActiveTopics(forumId, (page - 1), pageSize);
             model.TopicPageSize = topics.PageSize;
@@ -295,7 +295,7 @@ namespace Nop.Web.Factories
             model.SeName = forum.GetSeName();
             model.Description = forum.Description;
 
-            int pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize : 10;
+            var pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize : 10;
 
             model.AllowPostVoting = _forumSettings.AllowPostVoting;
 
@@ -556,7 +556,7 @@ namespace Nop.Web.Factories
                 }
 
                 // Insert the quoted text
-                string text = string.Empty;
+                var text = string.Empty;
                 if (quote.HasValue)
                 {
                     var quotePost = _forumService.GetPostById(quote.Value);
@@ -641,7 +641,7 @@ namespace Nop.Web.Factories
         {
             var model = new SearchModel();
 
-            int pageSize = 10;
+            var pageSize = 10;
             
             // Create the values for the "Limit results to previous" select list
             var limitList = new List<SelectListItem>
@@ -748,7 +748,7 @@ namespace Nop.Web.Factories
             int.TryParse(limitDays, out int limitDaysSelected);
             model.LimitDaysSelected = limitDaysSelected;
 
-            int searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;
+            var searchTermMinimumLength = _forumSettings.ForumSearchTermMinimumLength;
 
             model.ShowAdvancedSearch = adv.GetValueOrDefault();
             model.SearchResultsVisible = false;
@@ -771,7 +771,7 @@ namespace Nop.Web.Factories
                     }
 
                     ForumSearchType searchWithin = 0;
-                    int limitResultsToPrevious = 0;
+                    var limitResultsToPrevious = 0;
                     if (adv.GetValueOrDefault())
                     {
                         searchWithin = (ForumSearchType)withinSelected;
@@ -868,7 +868,7 @@ namespace Nop.Web.Factories
                 }
             }
 
-            Forum forum = _forumService.GetForumById(forumTopic != null ? forumTopic.ForumId : (forumId.HasValue ? forumId.Value : 0));
+            var forum = _forumService.GetForumById(forumTopic != null ? forumTopic.ForumId : (forumId.HasValue ? forumId.Value : 0));
             if (forum != null)
             {
                 model.ForumId = forum.Id;
@@ -894,7 +894,7 @@ namespace Nop.Web.Factories
         /// <returns>customer forum subscriptions model</returns>
         public virtual CustomerForumSubscriptionsModel PrepareCustomerForumSubscriptionsModel(int? page)
         {
-            int pageIndex = 0;
+            var pageIndex = 0;
             if (page > 0)
             {
                 pageIndex = page.Value - 1;
@@ -912,7 +912,7 @@ namespace Nop.Web.Factories
             {
                 var forumTopicId = forumSubscription.TopicId;
                 var forumId = forumSubscription.ForumId;
-                bool topicSubscription = false;
+                var topicSubscription = false;
                 var title = string.Empty;
                 var slug = string.Empty;
 

@@ -107,10 +107,10 @@ namespace Nop.Web.Framework
             {
                 foreach (string key in _inputValues.Keys)
                 {
-                    string[] values = _inputValues.GetValues(key);
+                    var values = _inputValues.GetValues(key);
                     if (values != null)
                     {
-                        foreach (string value in values)
+                        foreach (var value in values)
                         {
                             sb.Append(
                                 $"<input name=\"{WebUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(value)}\">");
@@ -120,7 +120,7 @@ namespace Nop.Web.Framework
             }
             else
             {
-                for (int i = 0; i < _inputValues.Keys.Count; i++)
+                for (var i = 0; i < _inputValues.Keys.Count; i++)
                     sb.Append(
                         $"<input name=\"{WebUtility.HtmlEncode(_inputValues.Keys[i])}\" type=\"hidden\" value=\"{WebUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])}\">");
             }
@@ -132,7 +132,7 @@ namespace Nop.Web.Framework
             var httpContext = _httpContextAccessor.HttpContext;
             var response = httpContext.Response;
             response.Clear();
-            byte[] data = Encoding.UTF8.GetBytes(sb.ToString());
+            var data = Encoding.UTF8.GetBytes(sb.ToString());
             response.ContentType = "text/html; charset=utf-8";
             response.ContentLength = data.Length;
 

@@ -41,8 +41,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (download.DownloadBinary == null)
                 return Content($"Download data is not available any more. Download GD={download.Id}");
 
-            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
-            string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
+            var fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+            var contentType = !String.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
                 : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType)
