@@ -31,8 +31,7 @@
     var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
         && (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel));
     //event
-    var eventMessage = new PageRenderingEvent(this.Html);
-    eventPublisher.Publish(eventMessage);
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
 <html@(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
