@@ -7,11 +7,6 @@ namespace Nop.Plugin.Payments.Square
     public static class SquarePaymentDefaults
     {
         /// <summary>
-        /// Square payment method system name
-        /// </summary>
-        public const string SystemName = "Payments.Square";
-
-        /// <summary>
         /// User agent used for requesting Square services
         /// </summary>
         public const string UserAgent = "Square-connect-nopCommerce-1.0";
@@ -34,6 +29,6 @@ namespace Nop.Plugin.Payments.Square
         /// <summary>
         /// Name of the renew access token schedule task
         /// </summary>
-        public const string RenewAccessTokenTaskName = "Renew access token";
+        public const string RenewAccessTokenTaskName = "Renew access token (Square payment)";
     }
 }
