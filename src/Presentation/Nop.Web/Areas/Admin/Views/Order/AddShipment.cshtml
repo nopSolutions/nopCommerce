@@ -73,7 +73,7 @@
                             function validateWarehouseAvailability() {
                                 @{
                                     var sb = new StringBuilder();
-                                    for (int i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
+                                    for (var i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
                                     {
                                         var item = itemsFromMultipleWarehouses[i];
                                         sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);

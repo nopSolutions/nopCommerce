@@ -8,7 +8,7 @@
     Html.AppendPageCssClassParts("html-compare-products-page");
 }
 @{
-    string columnWidth = "";
+    var columnWidth = "";
     if (Model.Products.Count > 0)
     {
         columnWidth = Math.Round((decimal)(90M / Model.Products.Count), 0).ToString() + "%";

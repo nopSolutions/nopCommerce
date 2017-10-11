@@ -17,12 +17,12 @@
 }
 @{
     //step numbers
-    int billingAddressStepNumber = 1;
-    int shippingAddressStepNumber = 2;
-    int shippingMethodStepNumber = 3;
-    int paymentMethodStepNumber = 4;
-    int paymentInfoStepNumber = 5;
-    int confirmOrderStepNumber = 6;
+    var billingAddressStepNumber = 1;
+    var shippingAddressStepNumber = 2;
+    var shippingMethodStepNumber = 3;
+    var paymentMethodStepNumber = 4;
+    var paymentInfoStepNumber = 5;
+    var confirmOrderStepNumber = 6;
     if (!Model.ShippingRequired)
     {
         paymentMethodStepNumber = paymentMethodStepNumber - 2;

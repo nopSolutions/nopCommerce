@@ -108,18 +108,18 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
             if (_UtmcCookieString == null)
             {
                 //create the unix timestamp
-                TimeSpan span = (DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
-                int timeStampCurrent = (int)span.TotalSeconds;
+                var span = (DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+                var timeStampCurrent = (int)span.TotalSeconds;
 
                 //fake the utma
-                string utma = string.Format("{0}.{1}.{2}.{3}.{4}.{5}",
+                var utma = string.Format("{0}.{1}.{2}.{3}.{4}.{5}",
                                             DomainHash,
                                             CommonHelper.GenerateRandomInteger(),
                                             timeStampCurrent,
                                             timeStampCurrent,
                                             timeStampCurrent,
                                             "2");
-                string utmz = string.Format("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",
+                var utmz = string.Format("{0}.{1}.{2}.{3}.utmcsr={4}|utmccn={5}|utmcmd={6}",
                                                 DomainHash,
                                                 timeStampCurrent,
                                                 "1",
@@ -145,7 +145,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Api
         /// <param name="transaction">A corresponding transaction</param>
         public void SendRequest(Transaction transaction)
         {
-            string requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();
+            var requestUrl = BASE_URL + CreateParameterString() + "&" + transaction.CreateParameterString();
             FireRequest(requestUrl);
 
                 foreach (var transItem in transaction.Items)

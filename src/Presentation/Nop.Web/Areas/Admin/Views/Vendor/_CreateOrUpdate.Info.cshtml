@@ -66,7 +66,7 @@
                     <div class="col-md-9">
                         @if (Model.AssociatedCustomers.Count > 0)
                         {
-                            for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                            for (var i = 0; i < Model.AssociatedCustomers.Count; i++)
                             {
                                 <a asp-action="Edit" asp-controller="Customer" asp-route-id="@Model.AssociatedCustomers[i].Id">
                                     @Model.AssociatedCustomers[i].Email

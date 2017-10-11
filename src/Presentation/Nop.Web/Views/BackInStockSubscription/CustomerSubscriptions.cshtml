@@ -56,7 +56,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @for (int i = 0; i < Model.Subscriptions.Count; i++)
+                            @for (var i = 0; i < Model.Subscriptions.Count; i++)
                             {
                                 var item = Model.Subscriptions[i];
                                 <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>

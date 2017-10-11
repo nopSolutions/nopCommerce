@@ -15,7 +15,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         public static string FormatPostText(this ForumPost forumPost)
         {
-            string text = forumPost.Text;
+            var text = forumPost.Text;
 
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
@@ -46,18 +46,18 @@ namespace Nop.Services.Forums
         /// <returns>Formatted subject</returns>
         public static string StripTopicSubject(this ForumTopic forumTopic)
         {
-            string subject = forumTopic.Subject;
+            var subject = forumTopic.Subject;
             if (string.IsNullOrEmpty(subject))
             {
                 return subject;
             }
 
-            int strippedTopicMaxLength = EngineContext.Current.Resolve<ForumSettings>().StrippedTopicMaxLength;
+            var strippedTopicMaxLength = EngineContext.Current.Resolve<ForumSettings>().StrippedTopicMaxLength;
             if (strippedTopicMaxLength > 0)
             {
                 if (subject.Length > strippedTopicMaxLength)
                 {
-                    int index = subject.IndexOf(" ", strippedTopicMaxLength);
+                    var index = subject.IndexOf(" ", strippedTopicMaxLength);
                     if (index > 0)
                     {
                         subject = subject.Substring(0, index);
@@ -90,7 +90,7 @@ namespace Nop.Services.Forums
         /// <returns>Formatted text</returns>
         public static string FormatPrivateMessageText(this PrivateMessage pm)
         {
-            string text = pm.Text;
+            var text = pm.Text;
 
             if (string.IsNullOrEmpty(text))
                 return string.Empty;

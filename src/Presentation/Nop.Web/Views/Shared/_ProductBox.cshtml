@@ -7,7 +7,7 @@
 @inject IWorkContext workContext
 @{
     //prepare "Add to cart" AJAX link
-    string addtocartlink = "";
+    var addtocartlink = "";
     var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
     var quantity = 1;
     if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
@@ -40,7 +40,7 @@
         }
         @if (Model.ReviewOverviewModel.AllowCustomerReviews)
         {
-            int ratingPercent = 0;
+            var ratingPercent = 0;
             if (Model.ReviewOverviewModel.TotalReviews != 0)
             {
                 ratingPercent = ((Model.ReviewOverviewModel.RatingSum*100)/Model.ReviewOverviewModel.TotalReviews)/5;

@@ -63,7 +63,7 @@
                                         </td>
                                         <td class="quantity">
                                             <select name="quantity@(item.Id)">
-                                                @for (int i = 0; i <= item.Quantity; i++)
+                                                @for (var i = 0; i <= item.Quantity; i++)
                                                 {
                                                     <option value="@(i)">@(i)</option>
                                                 }

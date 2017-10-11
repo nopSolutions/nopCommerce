@@ -55,7 +55,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                        @for (var i = 0; i < Model.RewardPoints.Count; i++)
                         {
                             var item = Model.RewardPoints[i];
                             <tr @(i%2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>

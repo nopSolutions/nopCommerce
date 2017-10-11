@@ -93,14 +93,14 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
 
             // Load Domestic service names
-            string carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
-            foreach (string service in UPSServices.Services)
+            var carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
+            foreach (var service in UPSServices.Services)
                 model.AvailableCarrierServices.Add(service);
 
             if (!string.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in UPSServices.Services)
+                foreach (var service in UPSServices.Services)
                 {
-                    string serviceId = UPSServices.GetServiceId(service);
+                    var serviceId = UPSServices.GetServiceId(service);
                     if (!string.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
@@ -141,13 +141,13 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             // Save selected services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServices != null)
             {
                 foreach (var cs in model.CheckedCarrierServices)
                 {
                     carrierServicesDomesticSelectedCount++;
-                    string serviceId = UPSServices.GetServiceId(cs);
+                    var serviceId = UPSServices.GetServiceId(cs);
                     if (!string.IsNullOrEmpty(serviceId))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs

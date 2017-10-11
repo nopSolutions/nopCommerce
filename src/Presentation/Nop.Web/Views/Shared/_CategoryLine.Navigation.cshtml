@@ -21,9 +21,9 @@
     }
 }
 @{
-    bool active = Model.Category.Id == Model.CurrentCategoryId || Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
-    bool last = Model.Category.Id == Model.CurrentCategoryId;
-    string liClass = active ? "active" : "inactive";
+    var active = Model.Category.Id == Model.CurrentCategoryId || Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    var last = Model.Category.Id == Model.CurrentCategoryId;
+    var liClass = active ? "active" : "inactive";
     if (last)
     {
         liClass += " last";

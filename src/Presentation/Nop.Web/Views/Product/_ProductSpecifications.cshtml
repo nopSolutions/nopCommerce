@@ -12,7 +12,7 @@
                     <col />
                 </colgroup>
                 <tbody>
-                    @for (int i = 0; i < Model.Count; i++)
+                    @for (var i = 0; i < Model.Count; i++)
                     {
                         var item = Model[i];
                         <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>

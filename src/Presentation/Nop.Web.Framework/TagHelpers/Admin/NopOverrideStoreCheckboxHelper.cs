@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                     dataInputIds.Add(_htmlHelper.Id(Input2.Name));
 
                 const string cssClass = "multi-store-override-option";
-                string dataInputSelector = "";
+                var dataInputSelector = "";
                 if (!string.IsNullOrEmpty(ParentContainer))
                 {
                     dataInputSelector = "#" + ParentContainer + " input, #" + ParentContainer + " textarea, #" + ParentContainer + " select";

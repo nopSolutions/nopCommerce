@@ -108,13 +108,13 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
             // Save selected services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServices != null)
             {
                 foreach (var cs in model.CheckedCarrierServices)
                 {
                     carrierServicesDomesticSelectedCount++;
-                    string serviceId = FedexServices.GetServiceId(cs);
+                    var serviceId = FedexServices.GetServiceId(cs);
                     if (!string.IsNullOrEmpty(serviceId))
                         carrierServicesOfferedDomestic.AppendFormat("{0}:", serviceId);
                 }

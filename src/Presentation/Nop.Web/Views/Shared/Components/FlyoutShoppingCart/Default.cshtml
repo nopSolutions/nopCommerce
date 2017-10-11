@@ -14,7 +14,7 @@
         @if (Model.TotalProducts > 0)
         {
             <div class="items">
-                @for (int i = 0; i < Model.Items.Count; i++)
+                @for (var i = 0; i < Model.Items.Count; i++)
                 {
                     var item = Model.Items[i];
                     <div class="item @(i == 0 ? "first" : null)">

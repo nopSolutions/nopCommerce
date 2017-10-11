@@ -136,7 +136,7 @@
                                     {
                                         <p>
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
-                                            @for (int i = 0; i < item.ReturnRequests.Count; i++)
+                                            @for (var i = 0; i < item.ReturnRequests.Count; i++)
                                             {
                                                 <a asp-controller="ReturnRequest" asp-action="Edit" asp-route-id="@item.ReturnRequests[i].Id">@item.ReturnRequests[i].CustomNumber</a>
                                                 if (i != item.ReturnRequests.Count - 1)
@@ -150,7 +150,7 @@
                                     {
                                         <p>
                                             @T("Admin.Orders.Products.GiftCards")<text>:</text>
-                                            @for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
+                                            @for (var i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
                                                 <a asp-controller="GiftCard" asp-action="Edit" asp-route-id="@item.PurchasedGiftCardIds[i]">@item.PurchasedGiftCardIds[i]</a>
                                                 if (i != item.PurchasedGiftCardIds.Count - 1)

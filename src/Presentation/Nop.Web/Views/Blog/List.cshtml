@@ -57,7 +57,7 @@
                             <div class="tags">
                                 <label>@T("Blog.Tags"):</label>
                                 <ul>
-                                    @for (int i = 0; i < item.Tags.Count; i++)
+                                    @for (var i = 0; i < item.Tags.Count; i++)
                                     {
                                         var tag = item.Tags[i];
                                         <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>

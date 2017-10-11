@@ -561,10 +561,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            string fileName = $"states_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
+            var fileName = $"states_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
 
             var states = _stateProvinceService.GetStateProvinces(true);
-            string result = _exportManager.ExportStatesToTxt(states);
+            var result = _exportManager.ExportStatesToTxt(states);
 
             return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
         }
@@ -579,7 +579,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
                 {
-                    int count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
+                    var count = _importManager.ImportStatesFromTxt(importcsvfile.OpenReadStream());
                     SuccessNotification(string.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
                     return RedirectToAction("List");
                 }

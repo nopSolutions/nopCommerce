@@ -21,7 +21,7 @@ namespace Nop.Services.Affiliates
             var firstName = affiliate.Address.FirstName;
             var lastName = affiliate.Address.LastName;
 
-            string fullName = "";
+            var fullName = "";
             if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
@@ -87,14 +87,14 @@ namespace Nop.Services.Affiliates
             if (string.IsNullOrEmpty(friendlyUrlName))
                 return friendlyUrlName;
             //check whether such friendly URL name already exists (and that is not the current affiliate)
-            int i = 2;
+            var i = 2;
             var tempName = friendlyUrlName;
             while (true)
             {
                 var affiliateService = EngineContext.Current.Resolve<IAffiliateService>();
                 var affiliateByFriendlyUrlName = affiliateService.GetAffiliateByFriendlyUrlName(tempName);
 
-                bool reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
+                var reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
                 if (!reserved)
                     break;
 
