@@ -16,7 +16,7 @@ namespace Nop.Services.Vendors
             if (vendorNote == null)
                 throw new ArgumentNullException(nameof(vendorNote));
 
-            string text = vendorNote.Note;
+            var text = vendorNote.Note;
 
             if (string.IsNullOrEmpty(text))
                 return string.Empty;

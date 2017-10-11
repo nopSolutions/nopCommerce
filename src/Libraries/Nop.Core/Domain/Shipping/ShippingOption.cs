@@ -85,7 +85,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(ShippingOption));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }
@@ -148,7 +148,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(List<ShippingOption>));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }

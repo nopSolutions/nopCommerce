@@ -42,7 +42,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     [return: System.Xml.Serialization.XmlElementAttribute("TrackNotificationReply", Namespace = "http://fedex.com/ws/track/v5")]
     public TrackNotificationReply getTrackNotification([System.Xml.Serialization.XmlElementAttribute(Namespace = "http://fedex.com/ws/track/v5")] TrackNotificationRequest TrackNotificationRequest)
     {
-        object[] results = this.Invoke("getTrackNotification", new object[] {
+        var results = this.Invoke("getTrackNotification", new object[] {
                     TrackNotificationRequest});
         return ((TrackNotificationReply)(results[0]));
     }
@@ -57,7 +57,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     /// <remarks/>
     public TrackNotificationReply EndgetTrackNotification(System.IAsyncResult asyncResult)
     {
-        object[] results = this.EndInvoke(asyncResult);
+        var results = this.EndInvoke(asyncResult);
         return ((TrackNotificationReply)(results[0]));
     }
 
@@ -82,7 +82,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     {
         if ((this.getTrackNotificationCompleted != null))
         {
-            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
             this.getTrackNotificationCompleted(this, new getTrackNotificationCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
@@ -92,7 +92,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     [return: System.Xml.Serialization.XmlElementAttribute("SignatureProofOfDeliveryLetterReply", Namespace = "http://fedex.com/ws/track/v5")]
     public SignatureProofOfDeliveryLetterReply retrieveSignatureProofOfDeliveryLetter([System.Xml.Serialization.XmlElementAttribute(Namespace = "http://fedex.com/ws/track/v5")] SignatureProofOfDeliveryLetterRequest SignatureProofOfDeliveryLetterRequest)
     {
-        object[] results = this.Invoke("retrieveSignatureProofOfDeliveryLetter", new object[] {
+        var results = this.Invoke("retrieveSignatureProofOfDeliveryLetter", new object[] {
                     SignatureProofOfDeliveryLetterRequest});
         return ((SignatureProofOfDeliveryLetterReply)(results[0]));
     }
@@ -107,7 +107,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     /// <remarks/>
     public SignatureProofOfDeliveryLetterReply EndretrieveSignatureProofOfDeliveryLetter(System.IAsyncResult asyncResult)
     {
-        object[] results = this.EndInvoke(asyncResult);
+        var results = this.EndInvoke(asyncResult);
         return ((SignatureProofOfDeliveryLetterReply)(results[0]));
     }
 
@@ -132,7 +132,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     {
         if ((this.retrieveSignatureProofOfDeliveryLetterCompleted != null))
         {
-            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
             this.retrieveSignatureProofOfDeliveryLetterCompleted(this, new retrieveSignatureProofOfDeliveryLetterCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
@@ -142,7 +142,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     [return: System.Xml.Serialization.XmlElementAttribute("TrackReply", Namespace = "http://fedex.com/ws/track/v5")]
     public TrackReply track([System.Xml.Serialization.XmlElementAttribute(Namespace = "http://fedex.com/ws/track/v5")] TrackRequest TrackRequest)
     {
-        object[] results = this.Invoke("track", new object[] {
+        var results = this.Invoke("track", new object[] {
                     TrackRequest});
         return ((TrackReply)(results[0]));
     }
@@ -157,7 +157,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     /// <remarks/>
     public TrackReply Endtrack(System.IAsyncResult asyncResult)
     {
-        object[] results = this.EndInvoke(asyncResult);
+        var results = this.EndInvoke(asyncResult);
         return ((TrackReply)(results[0]));
     }
 
@@ -182,7 +182,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     {
         if ((this.trackCompleted != null))
         {
-            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
             this.trackCompleted(this, new trackCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }
@@ -192,7 +192,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     [return: System.Xml.Serialization.XmlElementAttribute("SignatureProofOfDeliveryFaxReply", Namespace = "http://fedex.com/ws/track/v5")]
     public SignatureProofOfDeliveryFaxReply sendSignatureProofOfDeliveryFax([System.Xml.Serialization.XmlElementAttribute(Namespace = "http://fedex.com/ws/track/v5")] SignatureProofOfDeliveryFaxRequest SignatureProofOfDeliveryFaxRequest)
     {
-        object[] results = this.Invoke("sendSignatureProofOfDeliveryFax", new object[] {
+        var results = this.Invoke("sendSignatureProofOfDeliveryFax", new object[] {
                     SignatureProofOfDeliveryFaxRequest});
         return ((SignatureProofOfDeliveryFaxReply)(results[0]));
     }
@@ -207,7 +207,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     /// <remarks/>
     public SignatureProofOfDeliveryFaxReply EndsendSignatureProofOfDeliveryFax(System.IAsyncResult asyncResult)
     {
-        object[] results = this.EndInvoke(asyncResult);
+        var results = this.EndInvoke(asyncResult);
         return ((SignatureProofOfDeliveryFaxReply)(results[0]));
     }
 
@@ -232,7 +232,7 @@ public partial class TrackService : System.Web.Services.Protocols.SoapHttpClient
     {
         if ((this.sendSignatureProofOfDeliveryFaxCompleted != null))
         {
-            System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+            var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
             this.sendSignatureProofOfDeliveryFaxCompleted(this, new sendSignatureProofOfDeliveryFaxCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
         }
     }

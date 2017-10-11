@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Controllers
             if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
                 return false;
 
-            foreach (string buttonName in _submitButtonNames)
+            foreach (var buttonName in _submitButtonNames)
             {
                 try
                 {

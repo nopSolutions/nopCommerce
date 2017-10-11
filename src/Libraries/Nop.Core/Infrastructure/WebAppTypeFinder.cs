@@ -46,7 +46,7 @@ namespace Nop.Core.Infrastructure
             if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
                 _binFolderAssembliesLoaded = true;
-                string binPath = GetBinDirectory();
+                var binPath = GetBinDirectory();
                 //binPath = _webHelper.MapPath("~/bin");
                 LoadMatchingAssemblies(binPath);
             }

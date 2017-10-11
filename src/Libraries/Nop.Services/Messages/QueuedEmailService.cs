@@ -132,7 +132,7 @@ namespace Nop.Services.Messages
             var queuedEmails = query.ToList();
             //sort by passed identifiers
             var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (int id in queuedEmailIds)
+            foreach (var id in queuedEmailIds)
             {
                 var queuedEmail = queuedEmails.Find(x => x.Id == id);
                 if (queuedEmail != null)
@@ -202,7 +202,7 @@ namespace Nop.Services.Messages
 
 
                 //do all databases support "Truncate command"?
-                string queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
+                var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
                 _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
             }
             else

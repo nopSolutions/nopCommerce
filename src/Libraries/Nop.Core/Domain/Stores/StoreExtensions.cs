@@ -19,8 +19,8 @@ namespace Nop.Core.Domain.Stores
             var parsedValues = new List<string>();
             if (!string.IsNullOrEmpty(store.Hosts))
             {
-                string[] hosts = store.Hosts.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string host in hosts)
+                var hosts = store.Hosts.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var host in hosts)
                 {
                     var tmp = host.Trim();
                     if (!string.IsNullOrEmpty(tmp))

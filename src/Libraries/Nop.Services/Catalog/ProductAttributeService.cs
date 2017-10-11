@@ -161,7 +161,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attributes</returns>
         public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
+            var key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pa in _productAttributeRepository.Table
@@ -182,7 +182,7 @@ namespace Nop.Services.Catalog
             if (productAttributeId == 0)
                 return null;
 
-            string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
+            var key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
             return _cacheManager.Get(key, () => _productAttributeRepository.GetById(productAttributeId));
         }
 
@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
         {
-            string key = string.Format(PRODUCTATTRIBUTEMAPPINGS_ALL_KEY, productId);
+            var key = string.Format(PRODUCTATTRIBUTEMAPPINGS_ALL_KEY, productId);
 
             return _cacheManager.Get(key, () =>
             {
@@ -299,7 +299,7 @@ namespace Nop.Services.Catalog
             if (productAttributeMappingId == 0)
                 return null;
 
-            string key = string.Format(PRODUCTATTRIBUTEMAPPINGS_BY_ID_KEY, productAttributeMappingId);
+            var key = string.Format(PRODUCTATTRIBUTEMAPPINGS_BY_ID_KEY, productAttributeMappingId);
             return _cacheManager.Get(key, () => _productAttributeMappingRepository.GetById(productAttributeMappingId));
         }
 
@@ -377,7 +377,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeValue> GetProductAttributeValues(int productAttributeMappingId)
         {
-            string key = string.Format(PRODUCTATTRIBUTEVALUES_ALL_KEY, productAttributeMappingId);
+            var key = string.Format(PRODUCTATTRIBUTEVALUES_ALL_KEY, productAttributeMappingId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pav in _productAttributeValueRepository.Table
@@ -399,7 +399,7 @@ namespace Nop.Services.Catalog
             if (productAttributeValueId == 0)
                 return null;
             
-           string key = string.Format(PRODUCTATTRIBUTEVALUES_BY_ID_KEY, productAttributeValueId);
+           var key = string.Format(PRODUCTATTRIBUTEVALUES_BY_ID_KEY, productAttributeValueId);
            return _cacheManager.Get(key, () => _productAttributeValueRepository.GetById(productAttributeValueId));
         }
 
@@ -575,7 +575,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductAttributeCombination>();
 
-            string key = string.Format(PRODUCTATTRIBUTECOMBINATIONS_ALL_KEY, productId);
+            var key = string.Format(PRODUCTATTRIBUTECOMBINATIONS_ALL_KEY, productId);
 
             return _cacheManager.Get(key, () =>
             {

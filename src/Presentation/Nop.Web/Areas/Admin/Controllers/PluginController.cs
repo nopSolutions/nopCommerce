@@ -207,7 +207,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             breadCrumb.Reverse();
 
             var result = "";
-            for (int i = 0; i <= breadCrumb.Count - 1; i++)
+            for (var i = 0; i <= breadCrumb.Count - 1; i++)
             {
                 result += breadCrumb[i].Name;
                 if (i != breadCrumb.Count - 1)

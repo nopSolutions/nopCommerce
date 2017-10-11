@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Components
         {
             try
             {
-                string feedUrl = string
+                var feedUrl = string
                     .Format(
                         "http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
                         NopVersion.CurrentVersion,
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Components
                     HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
                 };
 
-                for (int i = 0; i < rssData.Items.Count; i++)
+                for (var i = 0; i < rssData.Items.Count; i++)
                 {
                     var item = rssData.Items.ElementAt(i);
                     var newsItem = new NopCommerceNewsModel.NewsDetailsModel

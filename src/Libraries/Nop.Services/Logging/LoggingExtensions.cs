@@ -35,7 +35,7 @@ namespace Nop.Services.Logging
 
             if (logger.IsEnabled(level))
             {
-                string fullMessage = exception == null ? string.Empty : exception.ToString();
+                var fullMessage = exception == null ? string.Empty : exception.ToString();
                 logger.InsertLog(level, message, fullMessage, customer);
             }
         }

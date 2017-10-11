@@ -195,7 +195,7 @@ namespace Nop.Services.Customers
             query = query.OrderBy(c => c.Id);
             var customers = query.ToList();
 
-            int totalRecordsDeleted = 0;
+            var totalRecordsDeleted = 0;
             foreach (var c in customers)
             {
                 try
@@ -233,7 +233,7 @@ namespace Nop.Services.Customers
                 pCreatedToUtc,
                 pTotalRecordsDeleted);
 
-            int totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
+            var totalRecordsDeleted = pTotalRecordsDeleted.Value != DBNull.Value ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
             return totalRecordsDeleted;
         }
         
@@ -315,7 +315,7 @@ namespace Nop.Services.Customers
             if (dayOfBirth > 0 && monthOfBirth > 0)
             {
                 //both are specified
-                string dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
+                var dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
                 //EndsWith is not supported by SQL Server Compact
                 //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
                 
@@ -332,7 +332,7 @@ namespace Nop.Services.Customers
             else if (dayOfBirth > 0)
             {
                 //only day is specified
-                string dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
+                var dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
                 //EndsWith is not supported by SQL Server Compact
                 //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
                 
@@ -349,7 +349,7 @@ namespace Nop.Services.Customers
             else if (monthOfBirth > 0)
             {
                 //only month is specified
-                string dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
+                var dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
                 query = query
                     .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
                     .Where((z => z.Attribute.KeyGroup == "Customer" &&
@@ -490,7 +490,7 @@ namespace Nop.Services.Customers
             var customers = query.ToList();
             //sort by passed identifiers
             var sortedCustomers = new List<Customer>();
-            foreach (int id in customerIds)
+            foreach (var id in customerIds)
             {
                 var customer = customers.Find(x => x.Id == id);
                 if (customer != null)
@@ -747,7 +747,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
+            var key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
@@ -766,7 +766,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer roles</returns>
         public virtual IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
         {
-            string key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
+            var key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table

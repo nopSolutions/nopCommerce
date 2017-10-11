@@ -444,13 +444,13 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy, bool showHidden, bool? overridePublished)
         {
             //pass category identifiers as comma-delimited string
-            string commaSeparatedCategoryIds = categoryIds == null ? "" : string.Join(",", categoryIds);
+            var commaSeparatedCategoryIds = categoryIds == null ? "" : string.Join(",", categoryIds);
 
             //pass customer role identifiers as comma-delimited string
-            string commaSeparatedAllowedCustomerRoleIds = string.Join(",", allowedCustomerRolesIds);
+            var commaSeparatedAllowedCustomerRoleIds = string.Join(",", allowedCustomerRolesIds);
 
             //pass specification identifiers as comma-delimited string
-            string commaSeparatedSpecIds = "";
+            var commaSeparatedSpecIds = "";
             if (filteredSpecs != null)
             {
                 ((List<int>)filteredSpecs).Sort();
@@ -530,7 +530,7 @@ namespace Nop.Services.Catalog
                 pFilterableSpecificationAttributeOptionIds,
                 pTotalRecords);
             //get filterable specification attribute option identifier
-            string filterableSpecificationAttributeOptionIdsStr =
+            var filterableSpecificationAttributeOptionIdsStr =
                 pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value
                     ? (string) pFilterableSpecificationAttributeOptionIds.Value
                     : "";
@@ -544,7 +544,7 @@ namespace Nop.Services.Catalog
                     .ToList();
             }
             //return products
-            int totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
+            var totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
             return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
         }
 
@@ -621,7 +621,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return null;
             
-            string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
+            var key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () => _productRepository.GetById(productId));
         }
 
@@ -641,7 +641,7 @@ namespace Nop.Services.Catalog
             var products = query.ToList();
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
-            foreach (int id in productIds)
+            foreach (var id in productIds)
             {
                 var product = products.Find(x => x.Id == id);
                 if (product != null)
@@ -889,7 +889,7 @@ namespace Nop.Services.Catalog
             filterableSpecificationAttributeOptionIds = new List<int>();
 
             //search by keyword
-            bool searchLocalizedValue = false;
+            var searchLocalizedValue = false;
             if (languageId > 0)
             {
                 if (showHidden)
@@ -1005,10 +1005,10 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            int approvedRatingSum = 0;
-            int notApprovedRatingSum = 0; 
-            int approvedTotalReviews = 0;
-            int notApprovedTotalReviews = 0;
+            var approvedRatingSum = 0;
+            var notApprovedRatingSum = 0; 
+            var approvedTotalReviews = 0;
+            var notApprovedTotalReviews = 0;
             var reviews = product.ProductReviews;
             foreach (var pr in reviews)
             {
@@ -1668,7 +1668,7 @@ namespace Nop.Services.Catalog
             var cartProductIds = new List<int>();
             foreach (var sci in cart)
             {
-                int prodId = sci.ProductId;
+                var prodId = sci.ProductId;
                 if (!cartProductIds.Contains(prodId))
                     cartProductIds.Add(prodId);
             }
@@ -1928,7 +1928,7 @@ namespace Nop.Services.Catalog
             var productReviews = query.ToList();
             //sort by passed identifiers
             var sortedProductReviews = new List<ProductReview>();
-            foreach (int id in productReviewIds)
+            foreach (var id in productReviewIds)
             {
                 var productReview = productReviews.Find(x => x.Id == id);
                 if (productReview != null)

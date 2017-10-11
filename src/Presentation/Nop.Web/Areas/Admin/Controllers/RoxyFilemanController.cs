@@ -574,7 +574,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var uniqueFileName = fileName;
 
-            int i = 0;
+            var i = 0;
             while (System.IO.File.Exists(Path.Combine(directoryPath, uniqueFileName)))
             {
                 uniqueFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{Path.GetExtension(fileName)}";

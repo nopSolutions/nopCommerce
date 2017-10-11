@@ -67,7 +67,7 @@ namespace Nop.Web.Framework.Kendoui
         {
             if (Filters != null && Filters.Any())
             {
-                foreach (Filter filter in Filters)
+                foreach (var filter in Filters)
                 {
                     filters.Add(filter);
 
@@ -91,9 +91,9 @@ namespace Nop.Web.Framework.Kendoui
                 return "(" + string.Join(" " + Logic + " ", Filters.Select(filter => filter.ToExpression(filters)).ToArray()) + ")";
             }
 
-            int index = filters.IndexOf(this);
+            var index = filters.IndexOf(this);
 
-            string comparison = operators[Operator];
+            var comparison = operators[Operator];
 
             //original code below (case sensitive) commented
             //if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")

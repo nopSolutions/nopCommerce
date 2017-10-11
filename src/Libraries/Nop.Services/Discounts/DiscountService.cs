@@ -243,7 +243,7 @@ namespace Nop.Services.Discounts
             }
             if (discountType.HasValue)
             {
-                int discountTypeId = (int) discountType.Value;
+                var discountTypeId = (int) discountType.Value;
                 query = query.Where(d => d.DiscountTypeId == discountTypeId);
             }
 
@@ -305,7 +305,7 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            string key = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, showHidden, couponCode, discountName);
+            var key = string.Format(DiscountEventConsumer.DISCOUNT_ALL_KEY, showHidden, couponCode, discountName);
             var result = _cacheManager.Get(key, () =>
             {
                 var discounts = GetAllDiscounts(null, couponCode, discountName, showHidden);
@@ -503,7 +503,7 @@ namespace Nop.Services.Discounts
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            string[] couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
+            var couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
             return ValidateDiscount(discount, customer, couponCodesToValidate);
         }
 
@@ -557,10 +557,10 @@ namespace Nop.Services.Discounts
             }
 
             //check date range
-            DateTime now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
             if (discount.StartDateUtc.HasValue)
             {
-                DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
+                var startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
                 {
                     result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet") };
@@ -569,7 +569,7 @@ namespace Nop.Services.Discounts
             }
             if (discount.EndDateUtc.HasValue)
             {
-                DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
+                var endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
                 {
                     result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.Expired") };
@@ -606,7 +606,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            string key = string.Format(DiscountEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
+            var key = string.Format(DiscountEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             var requirementsForCaching = _cacheManager.Get(key, () =>
             {
                 var requirements = GetAllDiscountRequirements(discount.Id, true);

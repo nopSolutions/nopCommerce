@@ -35,8 +35,8 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public static int GetTotalProducts(this IList<ShoppingCartItem> shoppingCart)
         {
-            int result = 0;
-            foreach (ShoppingCartItem sci in shoppingCart)
+            var result = 0;
+            foreach (var sci in shoppingCart)
             {
                 result += sci.Quantity;
             }
@@ -50,7 +50,7 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public static bool IsRecurring(this IList<ShoppingCartItem> shoppingCart)
         {
-            foreach (ShoppingCartItem sci in shoppingCart)
+            foreach (var sci in shoppingCart)
             {
                 var product = sci.Product;
                 if (product != null && product.IsRecurring)
@@ -90,7 +90,7 @@ namespace Nop.Services.Orders
 
                 if (product.IsRecurring)
                 {
-                    string conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
+                    var conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
 
                     //cycle length
                     if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)

@@ -224,7 +224,7 @@ namespace Nop.Web.Models.Common
                 {
                     return 0;
                 }
-                int num = this.TotalRecords / this.PageSize;
+                var num = this.TotalRecords / this.PageSize;
                 if ((this.TotalRecords % this.PageSize) > 0)
                 {
                     num++;
@@ -367,7 +367,7 @@ namespace Nop.Web.Models.Common
         /// <returns>Page index</returns>
         public int GetLastIndividualPageIndex()
         {
-            int num = this.IndividualPagesDisplayedCount / 2;
+            var num = this.IndividualPagesDisplayedCount / 2;
             if ((this.IndividualPagesDisplayedCount % 2) == 0)
             {
                 num--;

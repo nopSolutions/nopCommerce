@@ -21,16 +21,16 @@ namespace Nop.Web.Framework.Validators
             ccValue = ccValue.Replace(" ", "");
             ccValue = ccValue.Replace("-", "");
 
-            int checksum = 0;
-            bool evenDigit = false;
+            var checksum = 0;
+            var evenDigit = false;
 
             //http://www.beachnet.com/~hstiles/cardtype.html
-            foreach (char digit in ccValue.Reverse())
+            foreach (var digit in ccValue.Reverse())
             {
                 if (!char.IsDigit(digit))
                     return false;
 
-                int digitValue = (digit - '0') * (evenDigit ? 2 : 1);
+                var digitValue = (digit - '0') * (evenDigit ? 2 : 1);
                 evenDigit = !evenDigit;
 
                 while (digitValue > 0)

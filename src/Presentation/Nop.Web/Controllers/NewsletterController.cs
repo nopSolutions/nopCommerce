@@ -40,7 +40,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
-            bool success = false;
+            var success = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {

@@ -1193,7 +1193,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            string toEmail = returnRequest.Customer.IsGuest() ? 
+            var toEmail = returnRequest.Customer.IsGuest() ? 
                 orderItem.Order.BillingAddress.Email :
                 returnRequest.Customer.Email;
             var toName = returnRequest.Customer.IsGuest() ? 

@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
                 var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
                 foreach (var productAttributeValue in productAttributeValues)
                 {
-                    int attributeValuePictureId = 0;
+                    var attributeValuePictureId = 0;
                     if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
                     {
                         attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
@@ -254,7 +254,7 @@ namespace Nop.Services.Catalog
             foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
             {
                 //generate new AttributesXml according to new value IDs
-                string newAttributesXml = "";
+                var newAttributesXml = "";
                 var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
                 foreach (var oldAttribute in parsedProductAttributes)
                 {
@@ -271,7 +271,7 @@ namespace Nop.Services.Catalog
                                 if (newAttribute.ShouldHaveValues())
                                 {
                                     //attribute values
-                                    int oldAttributeValue = int.Parse(oldAttributeValueStr);
+                                    var oldAttributeValue = int.Parse(oldAttributeValueStr);
                                     if (associatedAttributeValues.ContainsKey(oldAttributeValue))
                                     {
                                         var newAttributeValue =
@@ -479,8 +479,8 @@ namespace Nop.Services.Catalog
         protected virtual Product CopyBaseProductData(Product product, string newName, bool isPublished)
         {
             //product download & sample download
-            int downloadId = product.DownloadId;
-            int sampleDownloadId = product.SampleDownloadId;
+            var downloadId = product.DownloadId;
+            var sampleDownloadId = product.SampleDownloadId;
             if (product.IsDownload)
             {
                 var download = _downloadService.GetDownloadById(product.DownloadId);

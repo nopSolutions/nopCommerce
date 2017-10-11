@@ -162,7 +162,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException("messageTemplateName");
 
-            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
+            var key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
@@ -190,7 +190,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
+            var key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;

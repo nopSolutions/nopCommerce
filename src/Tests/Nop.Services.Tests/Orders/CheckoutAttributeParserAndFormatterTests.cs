@@ -173,7 +173,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_add_and_parse_checkoutAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -198,7 +198,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_add_render_attributes_withoutPrices()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2
@@ -209,14 +209,14 @@ namespace Nop.Services.Tests.Orders
 
 
             var customer = new Customer();
-            string formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+            var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
             formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
         }
 
         [Test]
         public void Can_add_and_remove_checkoutAttributes()
         {
-            string attributes = "";
+            var attributes = "";
             //color: green
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca1, cav1_1.Id.ToString());
             //custom option: option 1, option 2

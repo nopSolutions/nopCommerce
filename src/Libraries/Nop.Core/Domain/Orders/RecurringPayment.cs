@@ -167,7 +167,7 @@ namespace Nop.Core.Domain.Orders
             {
                 //result
                 var historyCollection = this.RecurringPaymentHistory;
-                int result = this.TotalCycles - historyCollection.Count;
+                var result = this.TotalCycles - historyCollection.Count;
                 if (result < 0)
                     result = 0;
 

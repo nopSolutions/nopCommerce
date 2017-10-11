@@ -126,7 +126,7 @@ namespace Nop.Services.Customers
         /// <returns>Number of registered customers</returns>
         public virtual int GetRegisteredCustomersReport(int days)
         {
-            DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+            var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
             var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredCustomerRole == null)
@@ -139,7 +139,7 @@ namespace Nop.Services.Customers
                         c.CreatedOnUtc >= date 
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
-            int count = query.Count();
+            var count = query.Count();
             return count;
         }
 

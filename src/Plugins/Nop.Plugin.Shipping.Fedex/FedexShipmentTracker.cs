@@ -86,12 +86,12 @@ namespace Nop.Plugin.Shipping.Fedex
                 //initialize the service
                 var service = new TrackService(_fedexSettings.Url);
                 //this is the call to the web service passing in a TrackRequest and returning a TrackReply
-                TrackReply reply = service.track(request);
+                var reply = service.track(request);
                 //parse response
                 if (reply.HighestSeverity == NotificationSeverityType.SUCCESS || reply.HighestSeverity == NotificationSeverityType.NOTE || reply.HighestSeverity == NotificationSeverityType.WARNING) // check if the call was successful
                 {
 
-                    foreach (TrackDetail trackDetail in reply.TrackDetails)
+                    foreach (var trackDetail in reply.TrackDetails)
                     {
 
                         if (trackDetail.Events != null)
@@ -126,7 +126,7 @@ namespace Nop.Plugin.Shipping.Fedex
                             //var deliveryDate = trackDetail.ActualDeliveryTimestamp;
 
                             //Set the TrackingActivity
-                            foreach (TrackEvent trackevent in trackDetail.Events)
+                            foreach (var trackevent in trackDetail.Events)
                             {
                                 var sse = new ShipmentStatusEvent();
 

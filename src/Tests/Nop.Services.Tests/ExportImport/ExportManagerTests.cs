@@ -187,7 +187,7 @@ namespace Nop.Services.Tests.ExportImport
                 CreatedOnUtc = new DateTime(2010, 01, 04)
             }
             };
-            string fileName = Path.GetTempFileName();
+            var fileName = Path.GetTempFileName();
             //TODO uncomment
             //_exportManager.ExportOrdersToXlsx(fileName, orders);
         }

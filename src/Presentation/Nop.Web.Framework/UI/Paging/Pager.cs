@@ -148,9 +148,9 @@ namespace Nop.Web.Framework.UI.Paging
                 if (showIndividualPages)
                 {
                     //individual pages
-                    int firstIndividualPageIndex = GetFirstIndividualPageIndex();
-                    int lastIndividualPageIndex = GetLastIndividualPageIndex();
-                    for (int i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
+                    var firstIndividualPageIndex = GetFirstIndividualPageIndex();
+                    var lastIndividualPageIndex = GetLastIndividualPageIndex();
+                    for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
                         if (model.PageIndex == i)
                         {
@@ -208,7 +208,7 @@ namespace Nop.Web.Framework.UI.Paging
         }
         protected virtual int GetLastIndividualPageIndex()
         {
-            int num = individualPagesDisplayedCount / 2;
+            var num = individualPagesDisplayedCount / 2;
             if ((individualPagesDisplayedCount % 2) == 0)
             {
                 num--;

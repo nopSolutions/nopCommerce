@@ -48,7 +48,7 @@ namespace Nop.Data.Initializers
             {
                 data = string.Empty;
             }
-            int length = "|DataDirectory|".Length;
+            var length = "|DataDirectory|".Length;
             if ((inputString.Length > "|DataDirectory|".Length) && ('\\' == inputString["|DataDirectory|".Length]))
             {
                 length++;
