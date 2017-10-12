@@ -13,6 +13,10 @@
     <RepositoryType>Git</RepositoryType>    
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;0108</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BundlerMinifier.Core" Version="2.5.357" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.2.0" />
