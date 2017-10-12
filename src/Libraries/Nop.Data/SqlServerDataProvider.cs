@@ -26,7 +26,6 @@ namespace Nop.Data
                 return new string[0];
             }
 
-
             var statements = new List<string>();
             using (var stream = File.OpenRead(filePath))
             using (var reader = new StreamReader(stream))

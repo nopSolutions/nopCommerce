@@ -58,5 +58,4 @@ namespace Nop.Data.Initializers
 
         #endregion
     }
-
 }

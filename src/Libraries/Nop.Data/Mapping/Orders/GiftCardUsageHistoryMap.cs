@@ -1,4 +1,3 @@
-
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders

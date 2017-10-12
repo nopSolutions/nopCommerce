@@ -13,8 +13,6 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(rp => rp.CyclesRemaining);
             this.Ignore(rp => rp.CyclePeriod);
 
-
-
             //this.HasRequired(rp => rp.InitialOrder).WithOptional().Map(x => x.MapKey("InitialOrderId")).WillCascadeOnDelete(false);
             this.HasRequired(rp => rp.InitialOrder)
                 .WithMany()
