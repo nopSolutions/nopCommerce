@@ -135,6 +135,7 @@ namespace Nop.Core.Domain.Customers
 
             return (TaxDisplayType)roleWithOVerriddenTaxType.DefaultTaxDisplayTypeId;
         }
+
         #endregion
 
         #region Addresses

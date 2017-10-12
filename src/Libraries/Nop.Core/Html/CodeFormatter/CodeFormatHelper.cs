@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -43,7 +42,6 @@ namespace Nop.Core.Html.CodeFormatter
             result = result.Replace(match.Groups["end"].Value, "");
             result = Highlight(options, result);
             return result;
-
         }
 
         /// <summary>
@@ -67,7 +65,6 @@ namespace Nop.Core.Html.CodeFormatter
             var result = match.Value;
             result = Highlight(options, result);
             return result;
-
         }
 
         /// <summary>
@@ -160,7 +157,7 @@ namespace Nop.Core.Html.CodeFormatter
 
             if (text.Contains("[/code]"))
             {
-                text = regexCode2.Replace(text, new MatchEvaluator(CodeEvaluatorSimple));
+                text = regexCode2.Replace(text, CodeEvaluatorSimple);
                 text = regexCode2.Replace(text, "$1");
             }
             return text;

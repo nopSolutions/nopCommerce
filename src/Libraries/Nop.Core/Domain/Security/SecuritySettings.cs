@@ -24,6 +24,7 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether XSRF protection for admin area should be enabled
         /// </summary>
         public bool EnableXsrfProtectionForAdminArea { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether XSRF protection for public store should be enabled
         /// </summary>

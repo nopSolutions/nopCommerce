@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
 {
@@ -18,6 +17,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'Street address' is enabled
         /// </summary>
         public bool StreetAddressEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Street address' is required
         /// </summary>
@@ -36,6 +36,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'Zip / postal code' is enabled
         /// </summary>
         public bool ZipPostalCodeEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Zip / postal code' is required
         /// </summary>
@@ -45,6 +46,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'City' is enabled
         /// </summary>
         public bool CityEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'City' is required
         /// </summary>
@@ -64,6 +66,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'Phone number' is enabled
         /// </summary>
         public bool PhoneEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone number' is required
         /// </summary>
@@ -73,6 +76,7 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a value indicating whether 'Fax number' is enabled
         /// </summary>
         public bool FaxEnabled { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether 'Fax number' is required
         /// </summary>

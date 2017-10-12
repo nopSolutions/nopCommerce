@@ -393,6 +393,7 @@ namespace Nop.Core
                 Directory.Delete(path, true);
             }
         }
+
         #endregion
 
         #region Properties

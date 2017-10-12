@@ -57,8 +57,6 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public bool LimitedToStores { get; set; }
 
-
-
         //validation fields
 
         /// <summary>
@@ -98,13 +96,14 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                return (AttributeControlType)this.AttributeControlTypeId;
+                return (AttributeControlType)AttributeControlTypeId;
             }
             set
             {
-                this.AttributeControlTypeId = (int)value;
+                AttributeControlTypeId = (int)value;
             }
         }
+
         /// <summary>
         /// Gets the checkout attribute values
         /// </summary>
@@ -114,5 +113,4 @@ namespace Nop.Core.Domain.Orders
             protected set { _checkoutAttributeValues = value; }
         }
     }
-
 }

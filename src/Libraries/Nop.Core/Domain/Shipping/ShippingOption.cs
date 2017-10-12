@@ -34,7 +34,6 @@ namespace Nop.Core.Domain.Shipping
         public string Description { get; set; }
     }
 
-
     public class ShippingOptionTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -96,7 +95,6 @@ namespace Nop.Core.Domain.Shipping
             return base.ConvertTo(context, culture, value, destinationType);
         }
     }
-
 
     public class ShippingOptionListTypeConverter : TypeConverter
     {

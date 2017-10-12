@@ -68,5 +68,4 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public CustomerPassword Password { get; private set; }
     }
-
 }

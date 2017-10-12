@@ -13,7 +13,6 @@ namespace Nop.Core.Domain.Directory
         private ICollection<StateProvince> _stateProvinces;
         private ICollection<ShippingMethod> _restrictedShippingMethods;
 
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -63,7 +62,7 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-       
+
         /// <summary>
         /// Gets or sets the state/provinces
         /// </summary>

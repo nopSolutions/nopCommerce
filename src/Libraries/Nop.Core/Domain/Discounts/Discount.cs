@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the discount type identifier
         /// </summary>
         public int DiscountTypeId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether to use percentage
         /// </summary>
@@ -78,7 +78,7 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")
         /// </summary>
         public int LimitationTimes { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the maximum product quantity which could be discounted
         /// Used with "Assigned to products" or "Assigned to categories" type
@@ -98,11 +98,11 @@ namespace Nop.Core.Domain.Discounts
         {
             get
             {
-                return (DiscountType)this.DiscountTypeId;
+                return (DiscountType)DiscountTypeId;
             }
             set
             {
-                this.DiscountTypeId = (int)value;
+                DiscountTypeId = (int)value;
             }
         }
 
@@ -113,11 +113,11 @@ namespace Nop.Core.Domain.Discounts
         {
             get
             {
-                return (DiscountLimitationType)this.DiscountLimitationId;
+                return (DiscountLimitationType)DiscountLimitationId;
             }
             set
             {
-                this.DiscountLimitationId = (int)value;
+                DiscountLimitationId = (int)value;
             }
         }
 
@@ -129,6 +129,7 @@ namespace Nop.Core.Domain.Discounts
             get { return _discountRequirements ?? (_discountRequirements = new List<DiscountRequirement>()); }
             protected set { _discountRequirements = value; }
         }
+
         /// <summary>
         /// Gets or sets the categories
         /// </summary>
@@ -137,6 +138,7 @@ namespace Nop.Core.Domain.Discounts
             get { return _appliedToCategories ?? (_appliedToCategories = new List<Category>()); }
             protected set { _appliedToCategories = value; }
         }
+
         /// <summary>
         /// Gets or sets the categories
         /// </summary>
@@ -145,6 +147,7 @@ namespace Nop.Core.Domain.Discounts
             get { return _appliedToManufacturers ?? (_appliedToManufacturers = new List<Manufacturer>()); }
             protected set { _appliedToManufacturers = value; }
         }
+
         /// <summary>
         /// Gets or sets the products 
         /// </summary>

@@ -67,7 +67,7 @@ namespace Nop.Core.Caching
             var matchesKeys = keys.Where(key => regex.IsMatch(key)).ToList();
 
             //remove matching values
-            matchesKeys.ForEach(key => cacheManager.Remove(key));
+            matchesKeys.ForEach(cacheManager.Remove);
         }
     }
 }

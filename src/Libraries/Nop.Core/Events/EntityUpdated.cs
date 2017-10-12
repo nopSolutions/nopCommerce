@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Events
+﻿namespace Nop.Core.Events
 {
     /// <summary>
     /// A container for entities that are updated.
@@ -9,9 +8,9 @@ namespace Nop.Core.Events
     {
         public EntityUpdated(T entity)
         {
-            this.Entity = entity;
+            Entity = entity;
         }
 
-        public T Entity { get; private set; }
+        public T Entity { get; }
     }
 }

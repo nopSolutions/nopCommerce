@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -10,12 +9,14 @@ namespace Nop.Core.Html
     public partial class ResolveLinksHelper
     {
         #region Fields
+
         /// <summary>
         /// The regular expression used to parse links.
         /// </summary>
         private static readonly Regex regex = new Regex("((http://|https://|www\\.)([A-Z0-9.\\-]{1,})\\.[0-9A-Z?;~&\\(\\)#,=\\-_\\./\\+]{2,})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private const string link = "<a href=\"{0}{1}\" rel=\"nofollow\">{2}</a>";
         private const int MAX_LENGTH = 50;
+
         #endregion
 
         #region Utilities
@@ -77,9 +78,11 @@ namespace Nop.Core.Html
 
             return url;
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Formats the text
         /// </summary>
@@ -105,6 +108,7 @@ namespace Nop.Core.Html
 
             return text;
         }
+
         #endregion
     }
 }

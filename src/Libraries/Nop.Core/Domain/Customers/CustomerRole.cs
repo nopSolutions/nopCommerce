@@ -69,5 +69,4 @@ namespace Nop.Core.Domain.Customers
             protected set { _permissionRecords = value; }
         }
     }
-
 }
