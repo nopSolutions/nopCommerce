@@ -54,8 +54,7 @@
     }
 
     //event
-    var eventMessage = new PageRenderingEvent(this.Html);
-    eventPublisher.Publish(eventMessage);
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
 <html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>

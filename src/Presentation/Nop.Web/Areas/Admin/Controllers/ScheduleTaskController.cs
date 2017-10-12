@@ -41,7 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 		#endregion 
 
-        #region Utility
+        #region Utilities
 
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
