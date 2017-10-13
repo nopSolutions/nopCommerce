@@ -40,10 +40,9 @@
                     <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                         @if (isLastCategory)
                         {
-                            <span itemprop="item">
-                                <span itemprop="name">
-                                    <strong class="current-item">@cat.Name</strong>
-                                </span>
+                            <strong class="current-item" itemprop="name">@cat.Name</strong>
+                            <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
+                                <link itemprop="url" href="@Url.RouteUrl("Category", new {SeName = cat.SeName})" />
                             </span>
                         }
                         else
