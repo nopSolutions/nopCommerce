@@ -236,8 +236,6 @@ namespace Nop.Web.Factories
                     }
                 }
 
-
-
                 //set already selected attributes
                 var selectedCheckoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 switch (attribute.AttributeControlType)
@@ -504,7 +502,6 @@ namespace Nop.Web.Factories
                     Selected = sci.Quantity == qty
                 });
             }
-
 
             //recurring info
             if (sci.Product.IsRecurring)

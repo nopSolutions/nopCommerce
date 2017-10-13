@@ -103,8 +103,8 @@ namespace Nop.Web.Controllers
                     customer: _workContext.CurrentCustomer);
             }
 
-            this.Response.StatusCode = 404;
-            this.Response.ContentType = "text/html";
+            Response.StatusCode = 404;
+            Response.ContentType = "text/html";
 
             return View();
         }
@@ -180,7 +180,6 @@ namespace Nop.Web.Controllers
             return Redirect(returnUrl);
         }
 
-
         //contact us page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
@@ -191,6 +190,7 @@ namespace Nop.Web.Controllers
             model = _commonModelFactory.PrepareContactUsModel(model, false);
             return View(model);
         }
+
         [HttpPost, ActionName("ContactUs")]
         [PublicAntiForgery]
         [ValidateCaptcha]
@@ -225,6 +225,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
+
         //contact vendor page
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ContactVendor(int vendorId)
@@ -240,6 +241,7 @@ namespace Nop.Web.Controllers
             model = _commonModelFactory.PrepareContactVendorModel(model, vendor, false);
             return View(model);
         }
+
         [HttpPost, ActionName("ContactVendor")]
         [PublicAntiForgery]
         [ValidateCaptcha]
@@ -384,8 +386,8 @@ namespace Nop.Web.Controllers
 
             if (permanentRedirect)
                 return RedirectPermanent(url);
-            else
-                return Redirect(url);
+
+            return Redirect(url);
         }
 
         #endregion

@@ -139,6 +139,7 @@ namespace Nop.Web.Factories
                 model.CustomAddressAttributes.Add(attributeModel);
             }
         }
+
         #endregion
 
         #region Methods

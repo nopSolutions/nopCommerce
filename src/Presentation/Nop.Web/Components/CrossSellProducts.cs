@@ -55,7 +55,6 @@ namespace Nop.Web.Components
             if (!products.Any())
                 return Content("");
 
-
             //Cross-sell products are displayed on the shopping cart page.
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.

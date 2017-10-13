@@ -74,7 +74,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public virtual IActionResult AsyncUpload()
         {
-
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {
@@ -100,7 +99,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var fileExtension = Path.GetExtension(fileName);
             if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
-
 
             var download = new Download
             {

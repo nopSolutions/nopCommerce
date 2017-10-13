@@ -18,7 +18,6 @@ using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -518,7 +517,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = language.Id });
             }
-
         }
 
         #endregion

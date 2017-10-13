@@ -45,7 +45,6 @@ namespace Nop.Web.Areas.Admin.Components
             if (!enabled)
                 return Content("");
 
-
             return View();
         }
     }

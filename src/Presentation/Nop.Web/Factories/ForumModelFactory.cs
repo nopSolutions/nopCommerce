@@ -490,7 +490,6 @@ namespace Nop.Web.Factories
             var forum = forumTopic.Forum;
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
-            
 
             model.IsEdit = true;
             model.Id = forumTopic.Id;
@@ -961,7 +960,6 @@ namespace Nop.Web.Factories
             return model;
         }
 
-
-#endregion
+        #endregion
     }
 }

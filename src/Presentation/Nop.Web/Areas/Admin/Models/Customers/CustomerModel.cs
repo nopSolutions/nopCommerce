@@ -115,8 +115,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.RegisteredInStore")]
         public string RegisteredInStore { get; set; }
 
-
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         public string AdminComment { get; set; }
         
@@ -131,9 +129,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
 
-
-
-
         //time zone
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
         public string TimeZoneId { get; set; }
@@ -142,10 +137,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
-
-
-
-
         //EU VAT
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.VatNumber")]
         public string VatNumber { get; set; }
@@ -153,10 +144,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public string VatNumberStatusNote { get; set; }
 
         public bool DisplayVatNumber { get; set; }
-
-
-
-
 
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
@@ -168,10 +155,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IPAddress")]
         public string LastIpAddress { get; set; }
 
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastVisitedPage")]
         public string LastVisitedPage { get; set; }
-
 
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
@@ -180,14 +165,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
 
-
         //newsletter subscriptions (per store)
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public List<StoreModel> AvailableNewsletterSubscriptionStores { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public int[] SelectedNewsletterSubscriptionStoreIds { get; set; }
-
-
 
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
@@ -200,8 +182,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
 
-
-
         //send email model
         public SendEmailModel SendEmail { get; set; }
         //send PM model
@@ -213,7 +193,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
-
 
         #region Nested classes
 
@@ -347,7 +326,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             public AttributeControlType AttributeControlType { get; set; }
 
             public IList<CustomerAttributeValueModel> Values { get; set; }
-
         }
 
         public partial class CustomerAttributeValueModel : BaseNopEntityModel

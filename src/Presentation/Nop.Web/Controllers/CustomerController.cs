@@ -429,7 +429,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -604,13 +603,11 @@ namespace Nop.Web.Controllers
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
 
-                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _,
-    out string vatAddress);
+                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumberStatusId, (int)vatNumberStatus);
                         //send VAT number admin notification
                         if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                             _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
-
                     }
 
                     //form fields
@@ -852,6 +849,7 @@ namespace Nop.Web.Controllers
             model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
             return View(model);
         }
+
         #endregion
 
         #region My account / Info
@@ -1019,7 +1017,6 @@ namespace Nop.Web.Controllers
             {
                 ModelState.AddModelError("", exc.Message);
             }
-
 
             //If we got this far, something failed, redisplay form
             model = _customerModelFactory.PrepareCustomerInfoModel(model, customer, true, customerAttributesXml);
@@ -1346,7 +1343,6 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", error);
             }
 
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -1417,7 +1413,6 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", exc.Message);
                 }
             }
-
 
             //If we got this far, something failed, redisplay form
             model = _customerModelFactory.PrepareCustomerAvatarModel(model);

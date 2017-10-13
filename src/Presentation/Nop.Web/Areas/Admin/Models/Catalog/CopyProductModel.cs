@@ -14,6 +14,5 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Copy.Published")]
         public bool Published { get; set; }
-
     }
 }

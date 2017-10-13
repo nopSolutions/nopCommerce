@@ -68,7 +68,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View();
             }
 
-
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 uploadFile.CopyTo(fileStream);

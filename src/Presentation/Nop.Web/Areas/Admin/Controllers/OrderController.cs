@@ -1331,12 +1331,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 showHidden: true);
 
             var result = (from p in products
-                          select new
-                          {
-                              label = p.Name,
-                              productid = p.Id
-                          })
-                          .ToList();
+                select new
+                {
+                    label = p.Name,
+                    productid = p.Id
+                }).ToList();
             return Json(result);
         }
 
@@ -2256,7 +2255,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-
             if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out decimal unitPriceInclTax))
                 unitPriceInclTax = orderItem.UnitPriceInclTax;
             if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out decimal unitPriceExclTax))
@@ -2397,8 +2395,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     UpdatedOrderItem = orderItem
                 };
                 _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
-
-
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
@@ -2769,7 +2765,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //weight
                 var itemWeight = _shippingService.GetShoppingCartItemWeight(product, attributesXml);
 
-
                 //save item
                 var orderItem = new OrderItem
                 {
@@ -3113,8 +3108,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Data = shipmentModels,
                 Total = shipmentModels.Count
             };
-
-
+            
             return Json(gridModel);
         }
 
@@ -3926,6 +3920,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
         [HttpPost]
         public virtual IActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
@@ -4074,7 +4069,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
             foreach (var v in vendors)
                 model.AvailableVendors.Add(v);
-
 
             return View(model);
         }

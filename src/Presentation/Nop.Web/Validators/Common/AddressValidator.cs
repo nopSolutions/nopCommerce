@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

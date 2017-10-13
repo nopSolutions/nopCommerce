@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.ModelBinding;
@@ -87,7 +86,6 @@ namespace Nop.Web.Areas.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
-
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal

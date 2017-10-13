@@ -238,7 +238,6 @@ namespace Nop.Web.Factories
                     Selected = viewMode == "list"
                 });
             }
-
         }
 
         /// <summary>
@@ -379,7 +378,6 @@ namespace Nop.Web.Factories
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
             }
 
-
             //category breadcrumb
             if (_catalogSettings.CategoryBreadcrumbEnabled)
             {
@@ -403,8 +401,6 @@ namespace Nop.Web.Factories
                 );
             }
 
-
-            
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
@@ -447,9 +443,6 @@ namespace Nop.Web.Factories
                 .ToList()
             );
 
-
-
-
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
@@ -485,7 +478,6 @@ namespace Nop.Web.Factories
                     model.FeaturedProducts = _productModelFactory.PrepareProductOverviewModels(featuredProducts).ToList();
                 }
             }
-
 
             var categoryIds = new List<int>();
             categoryIds.Add(category.Id);
@@ -789,7 +781,6 @@ namespace Nop.Web.Factories
                 manufacturer.PageSizeOptions,
                 manufacturer.PageSize);
 
-
             //price ranges
             model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(manufacturer.PriceRanges, _webHelper, _priceFormatter);
             var selectedPriceRange = model.PagingFilteringContext.PriceRangeFilter.GetSelectedPriceRange(_webHelper, manufacturer.PriceRanges);
@@ -803,8 +794,6 @@ namespace Nop.Web.Factories
                 if (selectedPriceRange.To.HasValue)
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
             }
-
-
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
@@ -844,8 +833,6 @@ namespace Nop.Web.Factories
                     model.FeaturedProducts = _productModelFactory.PrepareProductOverviewModels(featuredProducts).ToList();
                 }
             }
-
-
 
             //products
             var products = _productService.SearchProducts(out IList<int> _, true,
@@ -965,7 +952,6 @@ namespace Nop.Web.Factories
                 return model;
             });
             
-            
             return cachedModel;
         }
         
@@ -995,8 +981,6 @@ namespace Nop.Web.Factories
                 SeName = vendor.GetSeName(),
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
-
-
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -1160,8 +1144,7 @@ namespace Nop.Web.Factories
                 TagName = productTag.GetLocalized(y => y.Name),
                 TagSeName = productTag.GetSeName()
             };
-
-
+            
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
@@ -1171,7 +1154,6 @@ namespace Nop.Web.Factories
                 _catalogSettings.ProductsByTagAllowCustomersToSelectPageSize,
                 _catalogSettings.ProductsByTagPageSizeOptions,
                 _catalogSettings.ProductsByTagPageSize);
-
 
             //products
             var products = _productService.SearchProducts(
@@ -1244,7 +1226,6 @@ namespace Nop.Web.Factories
                 _catalogSettings.SearchPageAllowCustomersToSelectPageSize,
                 _catalogSettings.SearchPagePageSizeOptions,
                 _catalogSettings.SearchPageProductsPerPage);
-
 
             var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,

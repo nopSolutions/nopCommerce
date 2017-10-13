@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Directory;
@@ -19,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         public string Name { get; set; }
 
@@ -46,14 +46,10 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-
-
-
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
         public int NumberOfStates { get; set; }
 
         public IList<CountryLocalizedModel> Locales { get; set; }
-
 
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]

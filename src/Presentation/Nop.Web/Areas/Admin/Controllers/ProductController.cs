@@ -204,29 +204,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.ShortDescription,
-                                                               localized.ShortDescription,
-                                                               localized.LanguageId);
+                    x => x.ShortDescription,
+                    localized.ShortDescription,
+                    localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.FullDescription,
-                                                               localized.FullDescription,
-                                                               localized.LanguageId);
+                    x => x.FullDescription,
+                    localized.FullDescription,
+                    localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaKeywords,
-                                                               localized.MetaKeywords,
-                                                               localized.LanguageId);
+                    x => x.MetaKeywords,
+                    localized.MetaKeywords,
+                    localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaDescription,
-                                                               localized.MetaDescription,
-                                                               localized.LanguageId);
+                    x => x.MetaDescription,
+                    localized.MetaDescription,
+                    localized.LanguageId);
                 _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.MetaTitle,
-                                                               localized.MetaTitle,
-                                                               localized.LanguageId);
+                    x => x.MetaTitle,
+                    localized.MetaTitle,
+                    localized.LanguageId);
 
                 //search engine name
                 var seName = product.ValidateSeName(localized.SeName, localized.Name, false);
@@ -239,9 +239,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(productTag,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 
@@ -261,9 +261,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(pav,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 
@@ -915,60 +915,61 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Value = productAttribute.Id.ToString()
                 });
             }
-            if (pam != null)
-            {
-                model.Id = pam.Id;
-                model.ProductAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId).Name;
-                model.AttributeControlType = pam.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                if (!excludeProperties)
-                {
-                    model.ProductAttributeId = pam.ProductAttributeId;
-                    model.TextPrompt = pam.TextPrompt;
-                    model.IsRequired = pam.IsRequired;
-                    model.AttributeControlTypeId = pam.AttributeControlTypeId;
-                    model.DisplayOrder = pam.DisplayOrder;
-                    model.ValidationMinLength = pam.ValidationMinLength;
-                    model.ValidationMaxLength = pam.ValidationMaxLength;
-                    model.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
-                    model.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
-                    model.DefaultValue = pam.DefaultValue;
-                }
-                
-                if (pam.ValidationRulesAllowed())
-                {
-                    var validationRules = new StringBuilder(string.Empty);
-                    if (pam.ValidationMinLength != null)
-                        validationRules.AppendFormat("{0}: {1}<br />",
-                            _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
-                            pam.ValidationMinLength);
-                    if (pam.ValidationMaxLength != null)
-                        validationRules.AppendFormat("{0}: {1}<br />",
-                            _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
-                            pam.ValidationMaxLength);
-                    if (!string.IsNullOrEmpty(pam.ValidationFileAllowedExtensions))
-                        validationRules.AppendFormat("{0}: {1}<br />",
-                            _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
-                            WebUtility.HtmlEncode(pam.ValidationFileAllowedExtensions));
-                    if (pam.ValidationFileMaximumSize != null)
-                        validationRules.AppendFormat("{0}: {1}<br />",
-                            _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
-                            pam.ValidationFileMaximumSize);
-                    if (!string.IsNullOrEmpty(pam.DefaultValue))
-                        validationRules.AppendFormat("{0}: {1}<br />",
-                            _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
-                            WebUtility.HtmlEncode(pam.DefaultValue));
-                    model.ValidationRulesString = validationRules.ToString();
-                }
 
-                //currently any attribute can have condition. why not?
-                model.ConditionAllowed = true;
-                var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(pam.ConditionAttributeXml).FirstOrDefault();
-                var conditionValue = _productAttributeParser.ParseProductAttributeValues(pam.ConditionAttributeXml).FirstOrDefault();
-                if (conditionAttribute != null && conditionValue != null)
-                    model.ConditionString = $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
-                else
-                    model.ConditionString = string.Empty;
+            if (pam == null)
+                return;
+
+            model.Id = pam.Id;
+            model.ProductAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId).Name;
+            model.AttributeControlType = pam.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+            if (!excludeProperties)
+            {
+                model.ProductAttributeId = pam.ProductAttributeId;
+                model.TextPrompt = pam.TextPrompt;
+                model.IsRequired = pam.IsRequired;
+                model.AttributeControlTypeId = pam.AttributeControlTypeId;
+                model.DisplayOrder = pam.DisplayOrder;
+                model.ValidationMinLength = pam.ValidationMinLength;
+                model.ValidationMaxLength = pam.ValidationMaxLength;
+                model.ValidationFileAllowedExtensions = pam.ValidationFileAllowedExtensions;
+                model.ValidationFileMaximumSize = pam.ValidationFileMaximumSize;
+                model.DefaultValue = pam.DefaultValue;
             }
+                
+            if (pam.ValidationRulesAllowed())
+            {
+                var validationRules = new StringBuilder(string.Empty);
+                if (pam.ValidationMinLength != null)
+                    validationRules.AppendFormat("{0}: {1}<br />",
+                        _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
+                        pam.ValidationMinLength);
+                if (pam.ValidationMaxLength != null)
+                    validationRules.AppendFormat("{0}: {1}<br />",
+                        _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
+                        pam.ValidationMaxLength);
+                if (!string.IsNullOrEmpty(pam.ValidationFileAllowedExtensions))
+                    validationRules.AppendFormat("{0}: {1}<br />",
+                        _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
+                        WebUtility.HtmlEncode(pam.ValidationFileAllowedExtensions));
+                if (pam.ValidationFileMaximumSize != null)
+                    validationRules.AppendFormat("{0}: {1}<br />",
+                        _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
+                        pam.ValidationFileMaximumSize);
+                if (!string.IsNullOrEmpty(pam.DefaultValue))
+                    validationRules.AppendFormat("{0}: {1}<br />",
+                        _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
+                        WebUtility.HtmlEncode(pam.DefaultValue));
+                model.ValidationRulesString = validationRules.ToString();
+            }
+
+            //currently any attribute can have condition. why not?
+            model.ConditionAllowed = true;
+            var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(pam.ConditionAttributeXml).FirstOrDefault();
+            var conditionValue = _productAttributeParser.ParseProductAttributeValues(pam.ConditionAttributeXml).FirstOrDefault();
+            if (conditionAttribute != null && conditionValue != null)
+                model.ConditionString = $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
+            else
+                model.ConditionString = string.Empty;
         }
 
         protected virtual void PrepareConditionAttributes(ProductModel.ProductAttributeMappingModel model,
@@ -3609,7 +3610,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
         public virtual IActionResult ProductAttributeMappingCreate(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -3634,6 +3634,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ProductAttributeMappingCreate(ProductModel.ProductAttributeMappingModel model, bool continueEditing)
         {
@@ -3723,7 +3724,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Edit", new {id = product.Id});
         }
 
-
         public virtual IActionResult ProductAttributeMappingEdit(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -3756,6 +3756,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult ProductAttributeMappingEdit(ProductModel.ProductAttributeMappingModel model, bool continueEditing)
         {
@@ -3901,7 +3902,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         PictureThumbnailUrl = pictureThumbnailUrl
                     };
                 }),
-                Total = values.Count()
+                Total = values.Count
             };
 
             return Json(gridModel);

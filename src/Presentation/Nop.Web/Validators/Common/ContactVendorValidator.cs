@@ -18,5 +18,6 @@ namespace Nop.Web.Validators.Common
                 RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.Subject.Required"));
             }
             RuleFor(x => x.Enquiry).NotEmpty().WithMessage(localizationService.GetResource("ContactVendor.Enquiry.Required"));
-        }}
+        }
+    }
 }

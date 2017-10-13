@@ -40,6 +40,5 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
-
     }
 }

@@ -12,6 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             this.ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
             this.Items = new List<ShipmentItemModel>();
         }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
         public override int Id { get; set; }
         public int OrderId { get; set; }
@@ -76,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
             public List<WarehouseInfo> AvailableWarehouses { get; set; }
 
             #region Nested Classes
+
             public class WarehouseInfo : BaseNopModel
             {
                 public int WarehouseId { get; set; }
@@ -84,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
                 public int ReservedQuantity { get; set; }
                 public int PlannedQuantity { get; set; }
             }
+
             #endregion
         }
 

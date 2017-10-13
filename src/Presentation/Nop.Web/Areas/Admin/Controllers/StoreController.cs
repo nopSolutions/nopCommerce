@@ -253,7 +253,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         _settingService.DeleteSettings(settingsToDelete);
                 }
 
-
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Deleted"));
                 return RedirectToAction("List");
             }

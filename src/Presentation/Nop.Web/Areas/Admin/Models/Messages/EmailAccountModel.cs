@@ -39,9 +39,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")]
         public bool IsDefaultEmailAccount { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo")]
         public string SendTestEmailTo { get; set; }
-
     }
 }

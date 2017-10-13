@@ -236,7 +236,6 @@ namespace Nop.Web.Factories
                 result.Add(attributeModel);
             }
 
-
             return result;
         }
 

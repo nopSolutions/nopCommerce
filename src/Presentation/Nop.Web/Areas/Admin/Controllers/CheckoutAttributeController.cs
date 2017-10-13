@@ -87,14 +87,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(checkoutAttribute,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(checkoutAttribute,
-                                                               x => x.TextPrompt,
-                                                               localized.TextPrompt,
-                                                               localized.LanguageId);
+                    x => x.TextPrompt,
+                    localized.TextPrompt,
+                    localized.LanguageId);
             }
         }
         
@@ -103,9 +103,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(checkoutAttributeValue,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
         
@@ -642,7 +642,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
 
         #endregion
     }
