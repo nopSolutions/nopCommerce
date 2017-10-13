@@ -15,6 +15,7 @@ namespace Nop.Services.Stores
         {
             
         }
+
         public StoreForCaching(Store s)
         {
             Id = s.Id;

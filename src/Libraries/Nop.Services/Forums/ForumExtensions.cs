@@ -53,17 +53,17 @@ namespace Nop.Services.Forums
             }
 
             var strippedTopicMaxLength = EngineContext.Current.Resolve<ForumSettings>().StrippedTopicMaxLength;
-            if (strippedTopicMaxLength > 0)
+            if (strippedTopicMaxLength <= 0)
+                return subject;
+
+            if (subject.Length <= strippedTopicMaxLength)
+                return subject;
+
+            var index = subject.IndexOf(" ", strippedTopicMaxLength);
+            if (index > 0)
             {
-                if (subject.Length > strippedTopicMaxLength)
-                {
-                    var index = subject.IndexOf(" ", strippedTopicMaxLength);
-                    if (index > 0)
-                    {
-                        subject = subject.Substring(0, index);
-                        subject += "...";
-                    }
-                }
+                subject = subject.Substring(0, index);
+                subject += "...";
             }
 
             return subject;

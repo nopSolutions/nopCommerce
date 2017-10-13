@@ -28,6 +28,7 @@ namespace Nop.Services.Localization
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -45,6 +46,7 @@ namespace Nop.Services.Localization
         {
             return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
+
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -67,17 +69,13 @@ namespace Nop.Services.Localization
             var member = keySelector.Body as MemberExpression;
             if (member == null)
             {
-                throw new ArgumentException(string.Format(
-                    "Expression '{0}' refers to a method, not a property.",
-                    keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a method, not a property.");
             }
 
             var propInfo = member.Member as PropertyInfo;
             if (propInfo == null)
             {
-                throw new ArgumentException(string.Format(
-                       "Expression '{0}' refers to a field, not a property.",
-                       keySelector));
+                throw new ArgumentException($"Expression '{keySelector}' refers to a field, not a property.");
             }
 
             var result = default(TPropType);
@@ -116,8 +114,6 @@ namespace Nop.Services.Localization
             
             return result;
         }
-
-
 
         /// <summary>
         /// Get localized property of setting
@@ -173,7 +169,6 @@ namespace Nop.Services.Localization
             localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId);
         }
 
-
         /// <summary>
         /// Get localized value of enum
         /// </summary>
@@ -190,6 +185,7 @@ namespace Nop.Services.Localization
 
             return GetLocalizedEnum(enumValue, localizationService, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized value of enum
         /// </summary>
@@ -207,7 +203,7 @@ namespace Nop.Services.Localization
             if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            var resourceName = $"Enums.{typeof(T).ToString()}.{enumValue.ToString()}";
+            var resourceName = $"Enums.{typeof(T)}.{enumValue}";
             var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
@@ -216,7 +212,6 @@ namespace Nop.Services.Localization
 
             return result;
         }
-
 
         /// <summary>
         /// Get localized value of permission
@@ -234,6 +229,7 @@ namespace Nop.Services.Localization
 
             return GetLocalizedPermissionName(permissionRecord, localizationService, workContext.WorkingLanguage.Id);
         }
+
         /// <summary>
         /// Get localized value of enum
         /// We don't have UI to manage permission localizable name. That's why we're using this extension method
@@ -261,6 +257,7 @@ namespace Nop.Services.Localization
 
             return result;
         }
+
         /// <summary>
         /// Save localized name of a permission
         /// </summary>
@@ -300,6 +297,7 @@ namespace Nop.Services.Localization
                 }
             }
         }
+
         /// <summary>
         /// Delete a localized name of a permission
         /// </summary>
@@ -325,8 +323,6 @@ namespace Nop.Services.Localization
             }
         }
 
-
-
         /// <summary>
         /// Delete a locale resource
         /// </summary>
@@ -340,6 +336,7 @@ namespace Nop.Services.Localization
             DeletePluginLocaleResource(plugin, localizationService,
                 languageService, resourceName);
         }
+
         /// <summary>
         /// Delete a locale resource
         /// </summary>
@@ -366,6 +363,7 @@ namespace Nop.Services.Localization
                     localizationService.DeleteLocaleStringResource(lsr);
             }
         }
+
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
@@ -381,6 +379,7 @@ namespace Nop.Services.Localization
              AddOrUpdatePluginLocaleResource(plugin, localizationService,
                  languageService, resourceName, resourceValue, languageCulture);
         }
+
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
@@ -426,8 +425,6 @@ namespace Nop.Services.Localization
             }
         }
 
-
-
         /// <summary>
         /// Get localized friendly name of a plugin
         /// </summary>
@@ -461,6 +458,7 @@ namespace Nop.Services.Localization
 
             return result;
         }
+
         /// <summary>
         /// Save localized friendly name of a plugin
         /// </summary>
@@ -507,17 +505,17 @@ namespace Nop.Services.Localization
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(localizedFriendlyName))
+                if (string.IsNullOrWhiteSpace(localizedFriendlyName))
+                    return;
+
+                //insert
+                resource = new LocaleStringResource
                 {
-                    //insert
-                    resource = new LocaleStringResource
-                    {
-                        LanguageId = languageId,
-                        ResourceName = resourceName,
-                        ResourceValue = localizedFriendlyName,
-                    };
-                    localizationService.InsertLocaleStringResource(resource);
-                }
+                    LanguageId = languageId,
+                    ResourceName = resourceName,
+                    ResourceValue = localizedFriendlyName,
+                };
+                localizationService.InsertLocaleStringResource(resource);
             }
         }
     }

@@ -137,6 +137,5 @@ namespace Nop.Services.Messages
                 smtpClient.Send(message);
             }
         }
-
     }
 }

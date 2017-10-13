@@ -48,8 +48,8 @@ namespace Nop.Services.Tasks
             if (Seconds <= 0)
                 return;
 
-            this.StartedUtc = DateTime.UtcNow;
-            this.IsRunning = true;
+            StartedUtc = DateTime.UtcNow;
+            IsRunning = true;
             foreach (var taskType in _tasks.Values)
             {
                 //create and send post data
@@ -72,20 +72,20 @@ namespace Nop.Services.Tasks
                 }
                
             }
-            this.IsRunning = false;
+            IsRunning = false;
         }
 
         private void TimerHandler(object state)
         {
-            this._timer.Change(-1, -1);
-            this.Run();
-            if (this.RunOnlyOnce)
+            _timer.Change(-1, -1);
+            Run();
+            if (RunOnlyOnce)
             {
-                this.Dispose();
+                Dispose();
             }
             else
             {
-                this._timer.Change(this.Interval, this.Interval);
+                _timer.Change(Interval, Interval);
             }
         }
 
@@ -98,13 +98,13 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if ((this._timer != null) && !this._disposed)
+            if (_timer != null && !_disposed)
             {
                 lock (this)
                 {
-                    this._timer.Dispose();
-                    this._timer = null;
-                    this._disposed = true;
+                    _timer.Dispose();
+                    _timer = null;
+                    _disposed = true;
                 }
             }
         }
@@ -114,9 +114,9 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void InitTimer()
         {
-            if (this._timer == null)
+            if (_timer == null)
             {
-                this._timer = new Timer(this.TimerHandler, null, this.Interval, this.Interval);
+                _timer = new Timer(TimerHandler, null, Interval, Interval);
             }
         }
 
@@ -126,9 +126,9 @@ namespace Nop.Services.Tasks
         /// <param name="task">The task to be added</param>
         public void AddTask(ScheduleTask task)
         {
-            if (!this._tasks.ContainsKey(task.Name))
+            if (!_tasks.ContainsKey(task.Name))
             {
-                this._tasks.Add(task.Name, task.Type);
+                _tasks.Add(task.Name, task.Type);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Nop.Services.Tasks
             get
             {
                 //if somebody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
-                var interval = this.Seconds * 1000;
+                var interval = Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
                 return interval;

@@ -17,6 +17,7 @@ namespace Nop.Services.Security
     public partial class PermissionService : IPermissionService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -29,6 +30,7 @@ namespace Nop.Services.Security
         /// Key pattern to clear cache
         /// </summary>
         private const string PERMISSIONS_PATTERN_KEY = "Nop.permission.";
+
         #endregion
 
         #region Fields
@@ -263,7 +265,6 @@ namespace Nop.Services.Security
                     permission1.DeleteLocalizedPermissionName(_localizationService, _languageService);
                 }
             }
-
         }
         
         /// <summary>

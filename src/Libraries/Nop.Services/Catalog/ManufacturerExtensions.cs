@@ -24,6 +24,5 @@ namespace Nop.Services.Catalog
 
             return null;
         }
-
     }
 }

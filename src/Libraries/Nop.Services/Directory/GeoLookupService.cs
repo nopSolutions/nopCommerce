@@ -74,6 +74,7 @@ namespace Nop.Services.Directory
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Get country name
         /// </summary>
@@ -82,7 +83,7 @@ namespace Nop.Services.Directory
         public virtual string LookupCountryIsoCode(string ipAddress)
         {
             var response = GetInformation(ipAddress);
-            if (response != null && response.Country != null)
+            if (response?.Country != null)
                 return response.Country.IsoCode;
 
             return "";
@@ -96,7 +97,7 @@ namespace Nop.Services.Directory
         public virtual string LookupCountryName(string ipAddress)
         {
             var response = GetInformation(ipAddress);
-            if (response != null && response.Country != null)
+            if (response?.Country != null)
                 return response.Country.Name;
 
             return "";

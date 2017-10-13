@@ -98,25 +98,24 @@ namespace Nop.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
-            
-            var report = (from oq in query
-                        group oq by oq.BillingAddress.CountryId into result
-                        select new
-                        {
-                            CountryId = result.Key,
-                            TotalOrders = result.Count(),
-                            SumOrders = result.Sum(o => o.OrderTotal)
-                        }
-                       )
-                       .OrderByDescending(x => x.SumOrders)
-                       .Select(r => new OrderByCountryReportLine
-                       {
-                           CountryId = r.CountryId,
-                           TotalOrders = r.TotalOrders,
-                           SumOrders = r.SumOrders
-                       })
 
-                       .ToList();
+            var report = (from oq in query
+                    group oq by oq.BillingAddress.CountryId
+                    into result
+                    select new
+                    {
+                        CountryId = result.Key,
+                        TotalOrders = result.Count(),
+                        SumOrders = result.Sum(o => o.OrderTotal)
+                    }
+                )
+                .OrderByDescending(x => x.SumOrders)
+                .Select(r => new OrderByCountryReportLine
+                {
+                    CountryId = r.CountryId,
+                    TotalOrders = r.TotalOrders,
+                    SumOrders = r.SumOrders
+                }).ToList();
 
             return report;
         }
@@ -177,32 +176,32 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
             if (!string.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
-            
-			var item = (from oq in query
-						group oq by 1 into result
-						select new
-						           {
-                                       OrderCount = result.Count(),
-                                       OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
-                                       OrderTaxSum = result.Sum(o => o.OrderTax), 
-                                       OrderTotalSum = result.Sum(o => o.OrderTotal)
-						           }
-					   ).Select(r => new OrderAverageReportLine
-                       {
-                           CountOrders = r.OrderCount,
-                           SumShippingExclTax = r.OrderShippingExclTaxSum, 
-                           SumTax = r.OrderTaxSum, 
-                           SumOrders = r.OrderTotalSum
-                       })
-                       .FirstOrDefault();
 
-			item = item ?? new OrderAverageReportLine
-			                   {
-                                   CountOrders = 0,
-                                   SumShippingExclTax = decimal.Zero,
-                                   SumTax = decimal.Zero,
-                                   SumOrders = decimal.Zero, 
-			                   };
+            var item = (from oq in query
+                group oq by 1
+                into result
+                select new
+                {
+                    OrderCount = result.Count(),
+                    OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                    OrderTaxSum = result.Sum(o => o.OrderTax),
+                    OrderTotalSum = result.Sum(o => o.OrderTotal)
+                }
+            ).Select(r => new OrderAverageReportLine
+            {
+                CountOrders = r.OrderCount,
+                SumShippingExclTax = r.OrderShippingExclTaxSum,
+                SumTax = r.OrderTaxSum,
+                SumOrders = r.OrderTotalSum
+            }).FirstOrDefault();
+
+            item = item ?? new OrderAverageReportLine
+            {
+                CountOrders = 0,
+                SumShippingExclTax = decimal.Zero,
+                SumTax = decimal.Zero,
+                SumOrders = decimal.Zero,
+            };
             return item;
         }
 
@@ -316,26 +315,27 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
 
             var query1 = from orderItem in _orderItemRepository.Table
-                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
-                         //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
-                         where (storeId == 0 || storeId == o.StoreId) &&
-                         (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                         (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                         (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                         (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                         (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                         (!o.Deleted) &&
-                         (!p.Deleted) &&
-                         (vendorId == 0 || p.VendorId == vendorId) &&
-                         //(categoryId == 0 || pc.CategoryId == categoryId) &&
-                         //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                         (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                         (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
-                         (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
-                         (showHidden || p.Published)
-                         select orderItem;
+                join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
+                //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                where (storeId == 0 || storeId == o.StoreId) &&
+                      (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                      (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                      (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                      (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                      (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                      (!o.Deleted) &&
+                      (!p.Deleted) &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      //(categoryId == 0 || pc.CategoryId == categoryId) &&
+                      //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                      (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                      (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
+                       0) &&
+                      (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
+                      (showHidden || p.Published)
+                select orderItem;
 
             var query2 = 
                 //group by products
@@ -459,7 +459,6 @@ namespace Nop.Services.Orders
                       (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
                       (showHidden || p.Published)
                 select p;
-
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {

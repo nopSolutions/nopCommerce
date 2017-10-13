@@ -274,6 +274,5 @@ namespace Nop.Services.Customers
 
             return warnings;
         }
-
     }
 }

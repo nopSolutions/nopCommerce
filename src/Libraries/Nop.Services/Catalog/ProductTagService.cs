@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
                 //stored procedures aren't supported. Use LINQ
                 var query = _productTagRepository.Table.Select(pt => new
                 {
-                    Id = pt.Id,
+                    pt.Id,
                     ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
                         pt.Products.Count(p => !p.Deleted && p.Published)
                         : (from p in pt.Products
@@ -310,6 +310,7 @@ namespace Nop.Services.Catalog
                 }
             }
         }
+
         #endregion
     }
 }

@@ -48,7 +48,7 @@ namespace Nop.Services.Messages
             //or do some routine work here
             var count = 0;
             var position0 = 0;
-            var position1 = 0;
+            int position1;
 
             var inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
             var chars = new char[original.Length + Math.Max(0, inc)];

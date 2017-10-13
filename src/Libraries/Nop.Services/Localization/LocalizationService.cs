@@ -422,7 +422,6 @@ namespace Nop.Services.Localization
             xmlWriter.WriteAttributeString("Name", language.Name);
             xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
 
-
             var resources = GetAllResources(language.Id);
             foreach (var resource in resources)
             {

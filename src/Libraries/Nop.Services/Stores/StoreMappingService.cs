@@ -122,8 +122,7 @@ namespace Nop.Services.Stores
             var storeMappings = query.ToList();
             return storeMappings;
         }
-
-
+        
         /// <summary>
         /// Inserts a store mapping record
         /// </summary>

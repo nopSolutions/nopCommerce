@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
@@ -110,6 +109,6 @@ namespace Nop.Services.Customers
             return result.ToString();
         }
 
-#endregion
+        #endregion
     }
 }

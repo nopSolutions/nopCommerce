@@ -28,6 +28,7 @@ namespace Nop.Services.Catalog
     public partial class ProductService : IProductService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -39,6 +40,7 @@ namespace Nop.Services.Catalog
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+
         #endregion
 
         #region Fields
@@ -815,7 +817,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            return SearchProducts(out IList<int> filterableSpecificationAttributeOptionIds, false,
+            return SearchProducts(out IList<int> _, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
@@ -1147,7 +1149,6 @@ namespace Nop.Services.Catalog
             UpdateProduct(product);
         }
 
-
         /// <summary>
         /// Gets number of products by vendor identifier
         /// </summary>
@@ -1271,7 +1272,6 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
-
 
             //bundled products
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
@@ -1695,6 +1695,7 @@ namespace Nop.Services.Catalog
             }
             return result;
         }
+
         #endregion
         
         #region Tier prices

@@ -29,7 +29,6 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <returns>Store mapping records</returns>
         IList<StoreMapping> GetStoreMappings<T>(T entity) where T : BaseEntity, IStoreMappingSupported;
-        
 
         /// <summary>
         /// Inserts a store mapping record

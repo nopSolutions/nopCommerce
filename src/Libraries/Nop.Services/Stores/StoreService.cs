@@ -112,10 +112,8 @@ namespace Nop.Services.Stores
                     return result;
                 });
             }
-            else
-            {
-                return loadStoresFunc();
-            }
+
+            return loadStoresFunc();
         }
 
         /// <summary>
@@ -146,10 +144,8 @@ namespace Nop.Services.Stores
                     return new StoreForCaching(store);
                 });
             }
-            else
-            {
-                return loadStoreFunc();
-            }
+
+            return loadStoreFunc();
         } 
 
         /// <summary>

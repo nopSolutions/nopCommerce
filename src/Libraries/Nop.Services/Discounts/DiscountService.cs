@@ -33,7 +33,6 @@ namespace Nop.Services.Discounts
         private readonly ICategoryService _categoryService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -51,7 +50,6 @@ namespace Nop.Services.Discounts
         /// <param name="categoryService">Category service</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
-        /// <param name="workContext">work context</param>
         public DiscountService(IStaticCacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
@@ -60,8 +58,7 @@ namespace Nop.Services.Discounts
             ILocalizationService localizationService,
             ICategoryService categoryService,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher,
-            IWorkContext workContext)
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._discountRepository = discountRepository;
@@ -72,7 +69,6 @@ namespace Nop.Services.Discounts
             this._categoryService = categoryService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
-            this._workContext = workContext;
         }
 
         #endregion

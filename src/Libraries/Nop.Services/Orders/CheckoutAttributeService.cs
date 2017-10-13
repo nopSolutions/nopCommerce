@@ -53,6 +53,7 @@ namespace Nop.Services.Orders
         /// Key pattern to clear cache
         /// </summary>
         private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
+
         #endregion
         
         #region Fields

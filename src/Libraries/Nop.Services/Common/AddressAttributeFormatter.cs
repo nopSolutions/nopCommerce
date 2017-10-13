@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
