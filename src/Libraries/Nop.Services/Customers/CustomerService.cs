@@ -785,7 +785,7 @@ namespace Nop.Services.Customers
             if (customerRoleId == 0)
                 return null;
 
-            return _customerRoleRepository.Table.Include("PermissionRecords").Single(r => r.Id == customerRoleId);
+            return _customerRoleRepository.Table.Include("PermissionRecords.PermissionRecord").Single(r => r.Id == customerRoleId);
         }
 
         /// <summary>
@@ -801,7 +801,7 @@ namespace Nop.Services.Customers
             var key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords")
+                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords.PermissionRecord")
                             orderby cr.Id
                             where cr.SystemName == systemName
                             select cr;
@@ -820,7 +820,7 @@ namespace Nop.Services.Customers
             var key = string.Format(CUSTOMERROLES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords")
+                var query = from cr in _customerRoleRepository.Table.Include("PermissionRecords.PermissionRecord")
                             orderby cr.Name
                             where showHidden || cr.Active
                             select cr;
