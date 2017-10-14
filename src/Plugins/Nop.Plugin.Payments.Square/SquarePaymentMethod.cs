@@ -382,8 +382,8 @@ namespace Nop.Plugin.Payments.Square
 
             //capture transaction
             var transactionId = capturePaymentRequest.Order.AuthorizationTransactionId;
-            var successfully—aptured = _squarePaymentManager.CaptureTransaction(transactionId);
-            if (!successfully—aptured)
+            var successfullyCaptured = _squarePaymentManager.CaptureTransaction(transactionId);
+            if (!successfullyCaptured)
                 throw new NopException("An error occurred while processing. Error details in the log");
 
             //successfully captured
