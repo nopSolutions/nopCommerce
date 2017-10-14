@@ -24,7 +24,7 @@
                         <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
                         @if (Model.RewardPointsEnoughToPayForOrder)
                         {
-                            <script type="text/javascript" asp-location="Foot">
+                            <script type="text/javascript" asp-location="Footer">
                                 $(document).ready(function() {
                                     $("#@Html.IdFor(model => model.UseRewardPoints)")
                                         .change(toggleUseRewardPoints);

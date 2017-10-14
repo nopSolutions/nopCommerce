@@ -1,6 +1,6 @@
 ﻿@model ProductDetailsModel
 @{
-    Html.AddScriptParts(ResourceLocation.Foot, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
     Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
 }
 <div class="gallery">
@@ -10,7 +10,7 @@
             <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
             </a>
-            <script type="text/javascript" asp-location="Foot">
+            <script type="text/javascript" asp-location="Footer">
                 $(document).ready(function () {
                     $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup(
                         {
@@ -43,7 +43,7 @@
                 </div>
             }
         </div>
-        <script type="text/javascript" asp-location="Foot">
+        <script type="text/javascript" asp-location="Footer">
             $(document).ready(function () {
                 $('.thumb-item img').on('click', function () {
                     $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));

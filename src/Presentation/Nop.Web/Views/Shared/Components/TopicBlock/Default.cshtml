@@ -1,7 +1,7 @@
 ﻿@model TopicModel
 @if (Model.IsPasswordProtected)
 {
-    <script type="text/javascript" asp-location="Foot">
+    <script type="text/javascript" asp-location="Footer">
         $(document).ready(function () {
             $('#button-password-@Model.Id').click(function() {
                 var postData = {

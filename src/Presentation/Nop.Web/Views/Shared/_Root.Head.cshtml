@@ -11,12 +11,12 @@
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
 @{
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/js/public.ajaxcart.js");
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/js/public.common.js");
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts(ResourceLocation.Foot, "~/lib/jquery.validate.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.ajaxcart.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/js/public.common.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery.validate.min.js");
     //jQuery is the only js file in the head. if we decide to move it to the footer, then ensure that all inline scripts (with jQuery usage) with are also moved to the footer
     //the issue that it's not possible in some cases (e.g. "Edit address", when Ajax request is made on one-page checkout)
     Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery-1.10.2.min.js");
@@ -64,8 +64,8 @@
     </head>
     <body>
         @RenderBody()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-        @Html.NopScripts(this.Url, ResourceLocation.Foot)
-        @Html.NopInlineScripts(this.Url, ResourceLocation.Foot)
+        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        @Html.NopInlineScripts(this.Url, ResourceLocation.Footer)
     </body>
 </html>

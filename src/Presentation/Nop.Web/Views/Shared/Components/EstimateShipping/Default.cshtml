@@ -1,6 +1,6 @@
 ﻿@model EstimateShippingModel
 <div class="shipping">
-    <script type="text/javascript" asp-location="Foot">
+    <script type="text/javascript" asp-location="Footer">
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();

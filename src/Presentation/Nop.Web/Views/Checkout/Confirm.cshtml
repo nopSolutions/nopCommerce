@@ -17,7 +17,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
-                <script type="text/javascript" asp-location="Foot">
+                <script type="text/javascript" asp-location="Footer">
                     $(document).ready(function () {
                         $('.confirm-order-next-step-button').click(function () {
                             //terms of service
@@ -58,7 +58,7 @@
                             @if (Model.TermsOfServicePopup)
                             {
                                 <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                                <script type="text/javascript" asp-location="Foot">
+                                <script type="text/javascript" asp-location="Footer">
                                     $(document).ready(function() {
                                         $('#read-terms').on('click',
                                             function(e) {
@@ -77,7 +77,7 @@
                     <div class="buttons">
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
                     </div>
-                    <script type="text/javascript" asp-location="Foot">
+                    <script type="text/javascript" asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
                                 var button = $(this).find('input[type="submit"][name="nextstep"]');

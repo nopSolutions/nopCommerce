@@ -30,7 +30,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
-                <script type="text/javascript" asp-location="Foot">
+                <script type="text/javascript" asp-location="Footer">
                     $(document).ready(function() {
                         $('#watch-forum').click(function() {
                             $.ajax({

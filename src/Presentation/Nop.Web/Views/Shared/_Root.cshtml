@@ -8,7 +8,7 @@
 <div class="master-wrapper-page">
     @await Component.InvokeAsync("AdminHeaderLinks")
     @await Html.PartialAsync("_Header")
-    <script type="text/javascript" asp-location="Foot" >
+    <script type="text/javascript" asp-location="Footer" >
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
     </script>
     <div class="header-menu">

@@ -7,7 +7,7 @@
     //page class
     Html.AppendPageCssClassParts("html-search-page");
 }
-<script type="text/javascript" asp-location="Foot">
+<script type="text/javascript" asp-location="Footer">
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
         toggleAdvancedSearch();

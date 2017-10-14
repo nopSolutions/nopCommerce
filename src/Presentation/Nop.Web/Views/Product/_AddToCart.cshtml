@@ -35,7 +35,7 @@
                 else
                 {
                     <input asp-for="EnteredQuantity" class="qty-input" type="text"/>
-                    <script type="text/javascript" asp-location="Foot">
+                    <script type="text/javascript" asp-location="Footer">
                         //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                         $(document).ready(function() {
                             $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function(event) {
