@@ -107,7 +107,7 @@
                     <div class="panel-body">
                         <div id="plugins-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#plugins-grid").kendoGrid({
                                     dataSource: {
@@ -212,7 +212,7 @@
                                     </div>                                    
                             </div>
                         </div>
-                        <script>
+                        <script type="text/javascript">
                             function onDataBound(e) {
                                 $('button[name^="delete-plugin-link-"]')
                                     .attr("data-toggle", "modal")

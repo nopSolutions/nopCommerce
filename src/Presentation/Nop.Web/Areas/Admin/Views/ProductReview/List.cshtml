@@ -105,7 +105,7 @@
                                     <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
                                     <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
 
-                                    <script>
+                                    <script type="text/javascript">
                                     //remove button
                                     $('#search-product-clear').click(function() {
                                         $('#@Html.IdFor(model => model.SearchProductId)').val('0');
@@ -141,7 +141,7 @@
                 <div class="panel-body">
                     <div id="productreviews-grid"></div>
 
-                    <script>
+                    <script type="text/javascript">
                         $(document).ready(function() {
                             $("#productreviews-grid").kendoGrid({
                                 dataSource: {

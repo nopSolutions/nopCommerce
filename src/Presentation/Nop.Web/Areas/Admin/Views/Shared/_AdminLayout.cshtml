@@ -209,7 +209,7 @@
                                 <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
                             </div>
                         </div>
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function () {
                                 Admin.Search.init();
                             });
@@ -245,7 +245,7 @@
                 </div>
             </div>
         </div>
-        <script>
+        <script type="text/javascript">
             var AdminLTEOptions = {
                 boxWidgetOptions: {
                     boxWidgetIcons: {
@@ -258,7 +258,7 @@
         @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
         @Html.NopScripts(this.Url, ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function () {
                 $('#backTop').backTop();
 

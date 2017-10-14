@@ -187,7 +187,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <nop-select asp-for="SearchCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                                        <script>
+                                        <script type="text/javascript">
                                             $(document).ready(function() {
                                                 var rolesIdsInput =
                                                     $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
@@ -230,7 +230,7 @@
                     <div class="panel-body">
                         <div id="customers-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
     $(document).ready(function() {
         $("#customers-grid").kendoGrid({
             dataSource: {

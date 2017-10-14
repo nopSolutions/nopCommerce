@@ -1112,7 +1112,7 @@
                         </div>
                         <div class="col-md-9">
 							<nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true"/>
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
                                     discountsIdsInput.setOptions({
@@ -1176,7 +1176,7 @@
                         </p>
                         <div id="tierprices-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function() {
                                 $("#tierprices-grid").kendoGrid({
                                     dataSource: {
@@ -1328,7 +1328,7 @@
 
                         <div id="associatedproducts-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function() {
                                 $("#associatedproducts-grid").kendoGrid({
                                     dataSource: {
@@ -1794,7 +1794,7 @@
                         </div>
                         <div class="@rightColumnClass">
 							<nop-select asp-for="SelectedCategoryIds" asp-items="Model.AvailableCategories" asp-multiple="true" />
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedCategoryIds)').data("kendoMultiSelect");
                                     categoryIdsInput.setOptions({
@@ -1823,7 +1823,7 @@
                         </div>
                         <div class="@rightColumnClass">
 							<nop-select asp-for="SelectedManufacturerIds" asp-items="Model.AvailableManufacturers" asp-multiple="true" />
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var manufacturersIdsInput = $('#@Html.IdFor(model => model.SelectedManufacturerIds)').data("kendoMultiSelect");
                                     manufacturersIdsInput.setOptions({
@@ -1852,7 +1852,7 @@
                         </div>
                         <div class="@rightColumnClass">
 							<nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                     storesIdsInput.setOptions({
@@ -1897,7 +1897,7 @@
                         </div>
                         <div class="@rightColumnClass">
 							<nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
@@ -1993,7 +1993,7 @@
                         </p>
                         <div id="relatedproducts-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function() {
                                 $("#relatedproducts-grid").kendoGrid({
                                     dataSource: {
@@ -2128,7 +2128,7 @@
                         </p>
                         <div id="crosssellproducts-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function() {
                                 $("#crosssellproducts-grid").kendoGrid({
                                     dataSource: {
