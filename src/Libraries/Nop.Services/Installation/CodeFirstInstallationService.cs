@@ -9851,7 +9851,7 @@ namespace Nop.Services.Installation
                     new ProductCategory
                     {
                         Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                        DisplayOrder =m 1,
+                        DisplayOrder = 1,
                     }
                 }
             };

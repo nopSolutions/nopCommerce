@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -25,12 +24,10 @@ namespace Nop.Services.Tests.Discounts
         private IRepository<DiscountRequirement> _discountRequirementRepo;
         private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
         private IEventPublisher _eventPublisher;
-        private IGenericAttributeService _genericAttributeService;
         private ILocalizationService _localizationService;
         private ICategoryService _categoryService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
-        private IWorkContext _workContext;
 
         [SetUp]
         public new void SetUp()
@@ -67,7 +64,6 @@ namespace Nop.Services.Tests.Discounts
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
-            _workContext = null;
 
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
@@ -75,12 +71,11 @@ namespace Nop.Services.Tests.Discounts
 
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder();
-            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
                 _discountUsageHistoryRepo, _storeContext,
-                _localizationService, _categoryService, pluginFinder, _eventPublisher, _workContext);
+                _localizationService, _categoryService, pluginFinder, _eventPublisher);
         }
 
         [Test]
