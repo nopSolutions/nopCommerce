@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  nop.web:
+    image: nop.web
+    build:
+      context: ./Presentation/Nop.Web
+      dockerfile: Dockerfile

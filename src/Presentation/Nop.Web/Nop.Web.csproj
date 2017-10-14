@@ -11,6 +11,7 @@
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +31,7 @@
   <ItemGroup>
     <!-- We copy the entire \App_Data directory. But we ignore JSON files  -->
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\*.json" />
-    <Content Update="App_Data\*.json" CopyToPublishDirectory="Never"/>
+    <Content Update="App_Data\*.json" CopyToPublishDirectory="Never" />
 
     <Compile Remove="Plugins\**" />
     <EmbeddedResource Remove="Plugins\**" />

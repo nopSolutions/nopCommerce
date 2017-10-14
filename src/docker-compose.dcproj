@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+  <PropertyGroup Label="Globals">
+    <ProjectVersion>2.0</ProjectVersion>
+    <DockerTargetOS>Windows</DockerTargetOS>
+    <ProjectGuid>54ab8313-6ef1-4bbf-979f-9b6bb727d14c</ProjectGuid>
+    <DockerLaunchBrowser>True</DockerLaunchBrowser>
+    <DockerServiceUrl>http://{ServiceIPAddress}</DockerServiceUrl>
+    <DockerServiceName>nop.web</DockerServiceName>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="docker-compose.ci.build.yml" />
+    <None Include="docker-compose.override.yml">
+      <DependentUpon>docker-compose.yml</DependentUpon>
+    </None>
+    <None Include="docker-compose.yml" />
+  </ItemGroup>
+</Project>
