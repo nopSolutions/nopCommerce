@@ -2,7 +2,7 @@
 @{
     Layout = "";
 
-    Html.AddScriptParts("~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
+    Html.AddScriptParts(ResourceLocation.Foot, "~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
     Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css");
     Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/custom/custom.css");
 }
@@ -66,8 +66,7 @@
         }
     </div>
 </div>
-
-<script type="text/javascript">
+<script type="text/javascript" asp-location="Foot">
     $(window).load(function () {
         $('#nivo-slider').nivoSlider();
     });

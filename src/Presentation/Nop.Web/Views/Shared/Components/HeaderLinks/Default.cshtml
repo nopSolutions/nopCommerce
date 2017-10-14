@@ -45,7 +45,7 @@
     @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
     {
         //new private message notification
-        <script type="text/javascript">
+        <script type="text/javascript" asp-location="Foot">
             $(document).ready(function () {
                 displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
             });
@@ -53,7 +53,7 @@
     }
     @if (Model.ShoppingCartEnabled)
     {
-        <script type="text/javascript">
+        <script type="text/javascript" asp-location="Foot">
             $(document).ready(function () {
                 $('.header').on('mouseenter', '#topcartlink', function () {
                     $('#flyout-cart').addClass('active');

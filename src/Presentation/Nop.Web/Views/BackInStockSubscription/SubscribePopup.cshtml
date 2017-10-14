@@ -40,7 +40,7 @@
             <button type="submit" id="back-in-stock-notify-me" class="button-1 notify-me-button">
                 @(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)
             </button>
-            <script type="text/javascript">
+            <script type="text/javascript" asp-location="Foot">
                 $(document).ready(function () {
                     $("#back-in-stock-notify-me").on('click', function () {
                         var subscribeButton = this;

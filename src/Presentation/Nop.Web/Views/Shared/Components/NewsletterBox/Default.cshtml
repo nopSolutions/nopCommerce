@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="newsletter-result" id="newsletter-result-block"></div>
-    <script type="text/javascript">
+    <script type="text/javascript" asp-location="Foot">
         function newsletter_subscribe(subscribe) {
             var subscribeProgress = $("#subscribe-loading-progress");
             subscribeProgress.show();
@@ -62,10 +62,10 @@
                 @if (Model.AllowToUnsubscribe)
                 {
                     <text>if ($('#newsletter_subscribe').is(':checked')) {
-                        newsletter_subscribe('true');
-                    } else {
-                        newsletter_subscribe('false');
-                    }</text>
+                    newsletter_subscribe('true');
+                } else {
+                    newsletter_subscribe('false');
+                }</text>
                 }
                 else
                 {

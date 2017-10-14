@@ -10,7 +10,7 @@
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript">
+    <script type="text/javascript" asp-location="Foot">
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
@@ -352,20 +352,20 @@
                 </div>
                 @if (Model.AcceptPrivacyPolicyEnabled)
                 {
-                    <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#register-button').click(function() {
-                            if ($('#accept-privacy-policy').is(':checked')) {
-                                //do some stuff
-                                return true;
-                            } else {
-                                //just show validation errors, dont post
-                                alert(
-                                    '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
-                                return false;
-                            }
+                    <script type="text/javascript" asp-location="Foot">
+                        $(document).ready(function() {
+                            $('#register-button').click(function() {
+                                if ($('#accept-privacy-policy').is(':checked')) {
+                                    //do some stuff
+                                    return true;
+                                } else {
+                                    //just show validation errors, dont post
+                                    alert(
+                                        '@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                                    return false;
+                                }
+                            });
                         });
-                    });
                     </script>
                     <div class="accept-privacy-policy">
                         <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
@@ -373,7 +373,7 @@
                         @if (Model.AcceptPrivacyPolicyPopup)
                         {
                             <span class="read" id="read-privacyinfo">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                            <script>
+                            <script type="text/javascript" asp-location="Foot">
                                 $(document).ready(function() {
                                     $('#read-privacyinfo').on('click',
                                         function(e) {

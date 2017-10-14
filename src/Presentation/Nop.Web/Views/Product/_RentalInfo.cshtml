@@ -25,7 +25,7 @@
                 </div>
                 <div class="attribute-data">
                     <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
-                    <script>
+                    <script type="text/javascript" asp-location="Foot">
                         $(document).ready(function () {
                             $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
                         });
@@ -41,7 +41,7 @@
                 </div>
                 <div class="attribute-data">
                     <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" @if(isMobileDevice){<text>readonly</text>}/>
-                    <script>
+                    <script type="text/javascript" asp-location="Foot">
                         $(document).ready(function () {
                             $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
                         });
@@ -50,7 +50,7 @@
             </div>
         }
 
-        <script>
+        <script type="text/javascript" asp-location="Foot">
             function onRentalDatePickerSelect() {
                 @{
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
