@@ -43,6 +43,7 @@ namespace Nop.Services.Forums
         #endregion
 
         #region Fields
+
         private readonly IRepository<ForumGroup> _forumGroupRepository;
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
@@ -71,6 +72,7 @@ namespace Nop.Services.Forums
         /// <param name="forumRepository">Forum repository</param>
         /// <param name="forumTopicRepository">Forum topic repository</param>
         /// <param name="forumPostRepository">Forum post repository</param>
+        /// <param name="forumPostVoteRepository">Forum post vote repository</param>
         /// <param name="forumPrivateMessageRepository">Private message repository</param>
         /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
         /// <param name="forumSettings">Forum settings</param>
@@ -113,6 +115,7 @@ namespace Nop.Services.Forums
             this._workflowMessageService = workflowMessageService;
             _eventPublisher = eventPublisher;
         }
+
         #endregion
 
         #region Utilities
@@ -706,25 +709,25 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 return null;
 
-            if (this.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
-            {
-                var previousForumId = forumTopic.ForumId;
-                var newForum = GetForumById(newForumId);
+            if (!IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
+                return forumTopic;
 
-                if (newForum != null)
-                {
-                    if (previousForumId != newForumId)
-                    {
-                        forumTopic.ForumId = newForum.Id;
-                        forumTopic.UpdatedOnUtc = DateTime.UtcNow;
-                        UpdateTopic(forumTopic);
+            var previousForumId = forumTopic.ForumId;
+            var newForum = GetForumById(newForumId);
 
-                        //update forum stats
-                        UpdateForumStats(previousForumId);
-                        UpdateForumStats(newForumId);
-                    }
-                }
-            }
+            if (newForum == null)
+                return forumTopic;
+
+            if (previousForumId == newForumId)
+                return forumTopic;
+
+            forumTopic.ForumId = newForum.Id;
+            forumTopic.UpdatedOnUtc = DateTime.UtcNow;
+            UpdateTopic(forumTopic);
+
+            //update forum stats
+            UpdateForumStats(previousForumId);
+            UpdateForumStats(newForumId);
             return forumTopic;
         }
 
@@ -741,7 +744,7 @@ namespace Nop.Services.Forums
 
             var forumTopicId = forumPost.TopicId;
             var customerId = forumPost.CustomerId;
-            var forumTopic = this.GetTopicById(forumTopicId);
+            var forumTopic = GetTopicById(forumTopicId);
             var forumId = forumTopic.ForumId;
 
             //delete topic if it was the first post
@@ -860,7 +863,7 @@ namespace Nop.Services.Forums
 
             //update stats
             var customerId = forumPost.CustomerId;
-            var forumTopic = this.GetTopicById(forumPost.TopicId);
+            var forumTopic = GetTopicById(forumPost.TopicId);
             var forumId = forumTopic.ForumId;
             UpdateForumTopicStats(forumPost.TopicId);
             UpdateForumStats(forumId);
@@ -1490,9 +1493,9 @@ namespace Nop.Services.Forums
             _forumPostVoteRepository.Insert(postVote);
 
             //update post
-            var post = this.GetPostById(postVote.ForumPostId);
+            var post = GetPostById(postVote.ForumPostId);
             post.VoteCount = postVote.IsUp ? ++post.VoteCount : --post.VoteCount;
-            this.UpdatePost(post);
+            UpdatePost(post);
 
             //event notification
             _eventPublisher.EntityInserted(postVote);
@@ -1525,9 +1528,9 @@ namespace Nop.Services.Forums
             _forumPostVoteRepository.Delete(postVote);
 
             // update post
-            var post = this.GetPostById(postVote.ForumPostId);
+            var post = GetPostById(postVote.ForumPostId);
             post.VoteCount = postVote.IsUp ? --post.VoteCount : ++post.VoteCount;
-            this.UpdatePost(post);
+            UpdatePost(post);
 
             //event notification
             _eventPublisher.EntityDeleted(postVote);

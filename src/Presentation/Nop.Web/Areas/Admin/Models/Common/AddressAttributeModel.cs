@@ -29,9 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-
         public IList<AddressAttributeLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class AddressAttributeLocalizedModel : ILocalizedModelLocal
@@ -40,6 +38,5 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
         public string Name { get; set; }
-
     }
 }

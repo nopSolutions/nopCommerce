@@ -73,7 +73,6 @@ namespace Nop.Web.Controllers
             return PartialView(templateViewPath, model);
         }
 
-
         [HttpPost]
         [PublicAntiForgery]
         public virtual IActionResult Authenticate(int id, string password)

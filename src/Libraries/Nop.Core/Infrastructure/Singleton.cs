@@ -14,7 +14,9 @@ namespace Nop.Core.Infrastructure
     {
         static T instance;
 
-        /// <summary>The singleton instance for the specified type T. Only one instance (at the time) of this object for each type of T.</summary>
+        /// <summary>
+        /// The singleton instance for the specified type T. Only one instance (at the time) of this object for each type of T.
+        /// </summary>
         public static T Instance
         {
             get { return instance; }
@@ -37,7 +39,9 @@ namespace Nop.Core.Infrastructure
             Singleton<IList<T>>.Instance = new List<T>();
         }
 
-        /// <summary>The singleton instance for the specified type T. Only one instance (at the time) of this list for each type of T.</summary>
+        /// <summary>
+        /// The singleton instance for the specified type T. Only one instance (at the time) of this list for each type of T.
+        /// </summary>
         public new static IList<T> Instance
         {
             get { return Singleton<IList<T>>.Instance; }
@@ -56,7 +60,9 @@ namespace Nop.Core.Infrastructure
             Singleton<Dictionary<TKey, TValue>>.Instance = new Dictionary<TKey, TValue>();
         }
 
-        /// <summary>The singleton instance for the specified type T. Only one instance (at the time) of this dictionary for each type of T.</summary>
+        /// <summary>
+        /// The singleton instance for the specified type T. Only one instance (at the time) of this dictionary for each type of T.
+        /// </summary>
         public new static IDictionary<TKey, TValue> Instance
         {
             get { return Singleton<Dictionary<TKey, TValue>>.Instance; }
@@ -75,7 +81,9 @@ namespace Nop.Core.Infrastructure
 
         static readonly IDictionary<Type, object> allSingletons;
 
-        /// <summary>Dictionary of type to singleton instances.</summary>
+        /// <summary>
+        /// Dictionary of type to singleton instances.
+        /// </summary>
         public static IDictionary<Type, object> AllSingletons
         {
             get { return allSingletons; }

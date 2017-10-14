@@ -250,7 +250,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
-
 		}
 
         public virtual IActionResult AssociateProductToCustomerRolePopup()

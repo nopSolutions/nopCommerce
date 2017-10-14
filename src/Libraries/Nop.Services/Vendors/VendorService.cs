@@ -123,8 +123,6 @@ namespace Nop.Services.Vendors
             _eventPublisher.EntityUpdated(vendor);
         }
 
-
-
         /// <summary>
         /// Gets a vendor note note
         /// </summary>

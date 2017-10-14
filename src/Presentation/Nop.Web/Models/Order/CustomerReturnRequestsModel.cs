@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Order
         public IList<ReturnRequestModel> Items { get; set; }
 
         #region Nested classes
+
         public partial class ReturnRequestModel : BaseNopEntityModel
         {
             public string CustomNumber { get; set; }
@@ -30,6 +31,7 @@ namespace Nop.Web.Models.Order
 
             public DateTime CreatedOn { get; set; }
         }
+
         #endregion
     }
 }

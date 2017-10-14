@@ -48,6 +48,7 @@ namespace Nop.Services.Common
         /// Key pattern to clear cache
         /// </summary>
         private const string ADDRESSATTRIBUTEVALUES_PATTERN_KEY = "Nop.addressattributevalue.";
+
         #endregion
         
         #region Fields

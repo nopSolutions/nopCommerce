@@ -14,6 +14,7 @@ namespace Nop.Services.Shipping
         {
             eventPublisher.Publish(new ShipmentSentEvent(shipment));
         }
+
         /// <summary>
         /// Publishes the shipment delivered event.
         /// </summary>

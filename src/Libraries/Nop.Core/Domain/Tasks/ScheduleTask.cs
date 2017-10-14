@@ -32,7 +32,6 @@ namespace Nop.Core.Domain.Tasks
         /// </summary>
         public bool StopOnError { get; set; }
 
-
         /// <summary>
         /// Gets or sets the datetime when it was started last time
         /// </summary>

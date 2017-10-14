@@ -46,16 +46,16 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
             var model = new ScheduleTaskModel
-                            {
-                                Id = task.Id,
-                                Name = task.Name,
-                                Seconds = task.Seconds,
-                                Enabled = task.Enabled,
-                                StopOnError = task.StopOnError,
-                                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                                LastEndUtc = task.LastEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastEndUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                            };
+            {
+                Id = task.Id,
+                Name = task.Name,
+                Seconds = task.Seconds,
+                Enabled = task.Enabled,
+                StopOnError = task.StopOnError,
+                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc).ToString("G") : "",
+                LastEndUtc = task.LastEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastEndUtc.Value, DateTimeKind.Utc).ToString("G") : "",
+                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc).ToString("G") : ""
+            };
             return model;
         }
 
@@ -144,6 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("List");
         }
+
         #endregion
     }
 }

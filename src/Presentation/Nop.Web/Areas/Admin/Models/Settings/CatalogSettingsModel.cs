@@ -6,7 +6,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     public partial class CatalogSettingsModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
-
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }

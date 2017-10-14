@@ -22,6 +22,7 @@ namespace Nop.Data.Initializers
             this._tablesToValidate = tablesToValidate;
             this._customCommands = customCommands;
         }
+
         public void InitializeDatabase(TContext context)
         {
             bool dbExists;

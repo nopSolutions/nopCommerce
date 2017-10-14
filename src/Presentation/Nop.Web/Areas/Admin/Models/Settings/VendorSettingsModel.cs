@@ -7,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
         public int VendorsBlockItemsToDisplay { get; set; }
         public bool VendorsBlockItemsToDisplay_OverrideForStore { get; set; }

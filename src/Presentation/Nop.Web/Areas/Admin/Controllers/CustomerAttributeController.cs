@@ -51,26 +51,26 @@ namespace Nop.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-        
+
         protected virtual void UpdateAttributeLocales(CustomerAttribute customerAttribute, CustomerAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(customerAttribute,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
-        
-        protected  virtual void UpdateValueLocales(CustomerAttributeValue customerAttributeValue, CustomerAttributeValueModel model)
+
+        protected virtual void UpdateValueLocales(CustomerAttributeValue customerAttributeValue, CustomerAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(customerAttributeValue,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 

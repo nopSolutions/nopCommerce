@@ -111,59 +111,59 @@ namespace Nop.Services.ExportImport
         protected virtual void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
-            if (categories != null && categories.Any())
+            if (categories == null || !categories.Any())
+                return;
+
+            foreach (var category in categories)
             {
-                foreach (var category in categories)
+                xmlWriter.WriteStartElement("Category");
+
+                xmlWriter.WriteString("Id", category.Id);
+
+                xmlWriter.WriteString("Name", category.Name);
+                xmlWriter.WriteString("Description", category.Description);
+                xmlWriter.WriteString("CategoryTemplateId", category.CategoryTemplateId);
+                xmlWriter.WriteString("MetaKeywords", category.MetaKeywords, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("MetaDescription", category.MetaDescription, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("MetaTitle", category.MetaTitle, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("SeName", category.GetSeName(0), IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("ParentCategoryId", category.ParentCategoryId);
+                xmlWriter.WriteString("PictureId", category.PictureId);
+                xmlWriter.WriteString("PageSize", category.PageSize, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("AllowCustomersToSelectPageSize", category.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("PageSizeOptions", category.PageSizeOptions, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("PriceRanges", category.PriceRanges, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("ShowOnHomePage", category.ShowOnHomePage, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("IncludeInTopMenu", category.IncludeInTopMenu, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("Published", category.Published, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("Deleted", category.Deleted, true);
+                xmlWriter.WriteString("DisplayOrder", category.DisplayOrder);
+                xmlWriter.WriteString("CreatedOnUtc", category.CreatedOnUtc, IgnoreExportCategoryProperty());
+                xmlWriter.WriteString("UpdatedOnUtc", category.UpdatedOnUtc, IgnoreExportCategoryProperty());
+
+                xmlWriter.WriteStartElement("Products");
+                var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
+                foreach (var productCategory in productCategories)
                 {
-                    xmlWriter.WriteStartElement("Category");
+                    var product = productCategory.Product;
+                    if (product == null || product.Deleted)
+                        continue;
 
-                    xmlWriter.WriteString("Id", category.Id);
-
-                    xmlWriter.WriteString("Name", category.Name);
-                    xmlWriter.WriteString("Description", category.Description);
-                    xmlWriter.WriteString("CategoryTemplateId", category.CategoryTemplateId);
-                    xmlWriter.WriteString("MetaKeywords", category.MetaKeywords, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("MetaDescription", category.MetaDescription, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("MetaTitle", category.MetaTitle, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("SeName", category.GetSeName(0), IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("ParentCategoryId", category.ParentCategoryId);
-                    xmlWriter.WriteString("PictureId", category.PictureId);
-                    xmlWriter.WriteString("PageSize", category.PageSize, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("AllowCustomersToSelectPageSize", category.AllowCustomersToSelectPageSize, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("PageSizeOptions", category.PageSizeOptions, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("PriceRanges", category.PriceRanges, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("ShowOnHomePage", category.ShowOnHomePage, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("IncludeInTopMenu", category.IncludeInTopMenu, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("Published", category.Published, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("Deleted", category.Deleted, true);
-                    xmlWriter.WriteString("DisplayOrder", category.DisplayOrder);
-                    xmlWriter.WriteString("CreatedOnUtc", category.CreatedOnUtc, IgnoreExportCategoryProperty());
-                    xmlWriter.WriteString("UpdatedOnUtc", category.UpdatedOnUtc, IgnoreExportCategoryProperty());
-
-                    xmlWriter.WriteStartElement("Products");
-                    var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
-                    foreach (var productCategory in productCategories)
-                    {
-                        var product = productCategory.Product;
-                        if (product != null && !product.Deleted)
-                        {
-                            xmlWriter.WriteStartElement("ProductCategory");
-                            xmlWriter.WriteString("ProductCategoryId", productCategory.Id);
-                            xmlWriter.WriteString("ProductId", productCategory.ProductId);
-                            xmlWriter.WriteString("ProductName", product.Name);
-                            xmlWriter.WriteString("IsFeaturedProduct", productCategory.IsFeaturedProduct);
-                            xmlWriter.WriteString("DisplayOrder", productCategory.DisplayOrder);
-                            xmlWriter.WriteEndElement();
-                        }
-                    }
-
-                    xmlWriter.WriteEndElement();
-
-                    xmlWriter.WriteStartElement("SubCategories");
-                    WriteCategories(xmlWriter, category.Id);
-                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteStartElement("ProductCategory");
+                    xmlWriter.WriteString("ProductCategoryId", productCategory.Id);
+                    xmlWriter.WriteString("ProductId", productCategory.ProductId);
+                    xmlWriter.WriteString("ProductName", product.Name);
+                    xmlWriter.WriteString("IsFeaturedProduct", productCategory.IsFeaturedProduct);
+                    xmlWriter.WriteString("DisplayOrder", productCategory.DisplayOrder);
                     xmlWriter.WriteEndElement();
                 }
+
+                xmlWriter.WriteEndElement();
+
+                xmlWriter.WriteStartElement("SubCategories");
+                WriteCategories(xmlWriter, category.Id);
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();
             }
         }
 
@@ -1639,6 +1639,6 @@ namespace Nop.Services.ExportImport
             return sb.ToString();
         }
 
-    #endregion
+        #endregion
     }
 }

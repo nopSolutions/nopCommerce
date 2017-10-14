@@ -608,7 +608,7 @@ namespace Nop.Web.Controllers
                                 .GetTotalProducts());
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
+                            ? RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -827,6 +827,7 @@ namespace Nop.Web.Controllers
                     }
             }
         }
+
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]

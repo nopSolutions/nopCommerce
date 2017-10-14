@@ -18,7 +18,6 @@ namespace Nop.Web.Models.Order
         public IList<RecurringOrderModel> RecurringOrders { get; set; }
         public IList<string> RecurringPaymentErrors { get; set; }
 
-
         #region Nested classes
 
         public partial class OrderDetailsModel : BaseNopEntityModel

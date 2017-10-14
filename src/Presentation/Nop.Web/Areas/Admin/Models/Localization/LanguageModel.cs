@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Localization;
@@ -31,7 +30,6 @@ namespace Nop.Web.Areas.Admin.Models.Localization
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
         public string FlagImageFileName { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Rtl")]
         public bool Rtl { get; set; }
 
@@ -45,8 +43,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-
-
+        
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }

@@ -14,6 +14,7 @@ namespace Nop.Services.Common
     public partial class AddressService : IAddressService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -225,7 +226,6 @@ namespace Nop.Services.Common
                 _addressSettings.ZipPostalCodeRequired &&
                 string.IsNullOrWhiteSpace(address.ZipPostalCode))
                 return false;
-
 
             if (_addressSettings.CountryEnabled)
             {

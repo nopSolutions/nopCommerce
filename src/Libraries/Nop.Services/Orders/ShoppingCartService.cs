@@ -1199,40 +1199,40 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             var shoppingCartItem = customer.ShoppingCartItems.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
-            if (shoppingCartItem != null)
-            {
-                if (resetCheckoutData)
-                {
-                    //reset checkout data
-                    _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
-                }
-                if (quantity > 0)
-                {
-                    //check warnings
-                    warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                        shoppingCartItem.Product, shoppingCartItem.StoreId,
-                        attributesXml, customerEnteredPrice, 
-                        rentalStartDate, rentalEndDate, quantity, false));
-                    if (!warnings.Any())
-                    {
-                        //if everything is OK, then update a shopping cart item
-                        shoppingCartItem.Quantity = quantity;
-                        shoppingCartItem.AttributesXml = attributesXml;
-                        shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-                        shoppingCartItem.RentalStartDateUtc = rentalStartDate;
-                        shoppingCartItem.RentalEndDateUtc = rentalEndDate;
-                        shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                        _customerService.UpdateCustomer(customer);
+            if (shoppingCartItem == null)
+                return warnings;
 
-                        //event notification
-                        _eventPublisher.EntityUpdated(shoppingCartItem);
-                    }
-                }
-                else
-                {
-                    //delete a shopping cart item
-                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
-                }
+            if (resetCheckoutData)
+            {
+                //reset checkout data
+                _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
+            }
+            if (quantity > 0)
+            {
+                //check warnings
+                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
+                    shoppingCartItem.Product, shoppingCartItem.StoreId,
+                    attributesXml, customerEnteredPrice, 
+                    rentalStartDate, rentalEndDate, quantity, false));
+                if (warnings.Any())
+                    return warnings;
+
+                //if everything is OK, then update a shopping cart item
+                shoppingCartItem.Quantity = quantity;
+                shoppingCartItem.AttributesXml = attributesXml;
+                shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
+                shoppingCartItem.RentalStartDateUtc = rentalStartDate;
+                shoppingCartItem.RentalEndDateUtc = rentalEndDate;
+                shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                _customerService.UpdateCustomer(customer);
+
+                //event notification
+                _eventPublisher.EntityUpdated(shoppingCartItem);
+            }
+            else
+            {
+                //delete a shopping cart item
+                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
             }
 
             return warnings;

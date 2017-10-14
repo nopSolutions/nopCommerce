@@ -35,7 +35,6 @@ namespace Nop.Services.Affiliates
             return fullName;
         }
 
-
         /// <summary>
         /// Generate affiliate URL
         /// </summary>
@@ -74,13 +73,11 @@ namespace Nop.Services.Affiliates
             //ensure we have only valid chars
             friendlyUrlName = SeoExtensions.GetSeName(friendlyUrlName);
 
-
             //max length
             //For long URLs we can get the following error:
             //"the specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters"
             //that's why we limit it to 200 here (consider a store URL + probably added {0}-{1} below)
             friendlyUrlName = CommonHelper.EnsureMaximumLength(friendlyUrlName, 200);
-
 
             //ensure this name is not reserved yet
             //empty? nothing to check
@@ -102,7 +99,6 @@ namespace Nop.Services.Affiliates
                 i++;
             }
             friendlyUrlName = tempName;
-
 
             return friendlyUrlName;
         }

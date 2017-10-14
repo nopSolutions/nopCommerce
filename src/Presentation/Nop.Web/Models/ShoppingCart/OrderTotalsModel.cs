@@ -28,7 +28,6 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTax { get; set; }
         public bool DisplayTaxRates { get; set; }
 
-
         public IList<GiftCard> GiftCards { get; set; }
 
         public string OrderTotalDiscount { get; set; }
@@ -53,6 +52,7 @@ namespace Nop.Web.Models.ShoppingCart
             public string Amount { get; set; }
             public string Remaining { get; set; }
         }
+
         #endregion
     }
 }

@@ -26,6 +26,7 @@ namespace Nop.Web.Controllers
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
         private readonly IWebHelper _webHelper;
+
         #endregion
 
         #region Ctor
@@ -55,13 +56,11 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult GeneralRedirect()
         {
-            
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
             var rawUrl = _webHelper.GetRawUrl(this.HttpContext.Request);
             var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
-
 
             switch (aspxfileName)
             {

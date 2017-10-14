@@ -188,10 +188,8 @@ namespace Nop.Services.Localization
                     return new LanguageForCaching(language);
                 });
             }
-            else
-            {
-                return loadLanguageFunc();
-            }
+
+            return loadLanguageFunc();
         }
 
         /// <summary>

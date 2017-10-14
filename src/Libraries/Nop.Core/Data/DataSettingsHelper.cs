@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Data
+﻿namespace Nop.Core.Data
 {
     /// <summary>
     /// Data settings helper

@@ -74,7 +74,7 @@ namespace Nop.Services.Helpers
         public virtual DateTime ConvertToUserTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
-            var currentUserTimeZoneInfo = this.CurrentTimeZone;
+            var currentUserTimeZoneInfo = CurrentTimeZone;
             return TimeZoneInfo.ConvertTime(dt, currentUserTimeZoneInfo);
         }
 
@@ -86,7 +86,7 @@ namespace Nop.Services.Helpers
         /// <returns>A DateTime value that represents time that corresponds to the dateTime parameter in customer time zone.</returns>
         public virtual DateTime ConvertToUserTime(DateTime dt, TimeZoneInfo sourceTimeZone)
         {
-            var currentUserTimeZoneInfo = this.CurrentTimeZone;
+            var currentUserTimeZoneInfo = CurrentTimeZone;
             return ConvertToUserTime(dt, sourceTimeZone, currentUserTimeZoneInfo);
         }
 
@@ -169,7 +169,7 @@ namespace Nop.Services.Helpers
 
             //default timezone
             if (timeZoneInfo == null)
-                timeZoneInfo = this.DefaultStoreTimeZone;
+                timeZoneInfo = DefaultStoreTimeZone;
 
             return timeZoneInfo;
         }

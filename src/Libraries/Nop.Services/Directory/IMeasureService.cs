@@ -74,7 +74,6 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         decimal ConvertFromPrimaryMeasureDimension(decimal value,
             MeasureDimension targetMeasureDimension);
-        
 
         /// <summary>
         /// Deletes measure weight

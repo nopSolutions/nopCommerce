@@ -12,4 +12,3 @@ namespace Nop.Core.Html.CodeFormatter
         public bool AlternateLineNumbers { get; set; }
     }
 }
-

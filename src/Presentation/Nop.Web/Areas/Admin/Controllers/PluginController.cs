@@ -187,7 +187,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     pluginModel.CanChangeEnabled = true;
                     pluginModel.IsEnabled = ((IWidgetPlugin)pluginInstance).IsWidgetActive(_widgetSettings);
                 }
-
             }
             return pluginModel;
         }
@@ -215,6 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             return result;
         }
+
         #endregion
 
         #region Methods

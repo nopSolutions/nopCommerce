@@ -95,7 +95,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-
         }
 
         #endregion

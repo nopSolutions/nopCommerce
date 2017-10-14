@@ -152,6 +152,5 @@ namespace Nop.Services.Discounts.Cache
         {
             _cacheManager.RemoveByPattern(DISCOUNT_MANUFACTURER_IDS_PATTERN_KEY);
         }
-
     }
 }

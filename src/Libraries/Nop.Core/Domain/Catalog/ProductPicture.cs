@@ -1,4 +1,3 @@
-
 using Nop.Core.Domain.Media;
 
 namespace Nop.Core.Domain.Catalog
@@ -33,5 +32,4 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual Product Product { get; set; }
     }
-
 }

@@ -13,6 +13,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
         {
             ActivityLogType = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }

@@ -122,6 +122,7 @@ namespace Nop.Web.Models.Order
             public DateTime? ShippedDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
         }
+
 		#endregion
     }
 }

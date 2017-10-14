@@ -40,6 +40,7 @@ namespace Nop.Services.Customers
             }
             return fullName;
         }
+
         /// <summary>
         /// Formats the customer name
         /// </summary>
@@ -123,6 +124,7 @@ namespace Nop.Services.Customers
             }
             return couponCodes.ToArray();
         }
+
         /// <summary>
         /// Adds a coupon code
         /// </summary>
@@ -189,6 +191,7 @@ namespace Nop.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
         }
+
         /// <summary>
         /// Removes a coupon code
         /// </summary>
@@ -212,7 +215,6 @@ namespace Nop.Services.Customers
                 if (!existingCouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
                     customer.ApplyDiscountCouponCode(existingCouponCode);
         }
-
 
         /// <summary>
         /// Gets coupon codes
@@ -253,6 +255,7 @@ namespace Nop.Services.Customers
             }
             return couponCodes.ToArray();
         }
+
         /// <summary>
         /// Adds a coupon code
         /// </summary>
@@ -319,6 +322,7 @@ namespace Nop.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
         }
+
         /// <summary>
         /// Removes a coupon code
         /// </summary>
@@ -363,6 +367,7 @@ namespace Nop.Services.Customers
 
             return true;
         }
+
         /// <summary>
         /// Check whether password recovery link is expired
         /// </summary>

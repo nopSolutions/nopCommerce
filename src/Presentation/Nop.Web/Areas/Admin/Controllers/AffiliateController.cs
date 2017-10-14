@@ -131,22 +131,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
 
-            if (prepareOrderListModel)
-            {
-                model.AffiliatedOrderList.AffliateId = model.Id;
+            if (!prepareOrderListModel)
+                return;
 
-                //order statuses
-                model.AffiliatedOrderList.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AffiliatedOrderList.AffliateId = model.Id;
 
-                //payment statuses
-                model.AffiliatedOrderList.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //order statuses
+            model.AffiliatedOrderList.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
-                //shipping statuses
-                model.AffiliatedOrderList.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            }
+            //payment statuses
+            model.AffiliatedOrderList.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //shipping statuses
+            model.AffiliatedOrderList.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
         }
         
         #endregion
@@ -238,7 +238,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareAffiliateModel(model, null, true, true, false);
             return View(model);
-
         }
 
 

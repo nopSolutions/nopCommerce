@@ -16,11 +16,11 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Gets or sets customer
         /// </summary>
-        public Customer Customer { get; private set; }
+        public Customer Customer { get; }
 
         /// <summary>
         /// Gets or sets external authentication parameters
         /// </summary>
-        public ExternalAuthenticationParameters AuthenticationParameters { get; private set; }
+        public ExternalAuthenticationParameters AuthenticationParameters { get; }
     }
 }

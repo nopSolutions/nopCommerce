@@ -274,6 +274,5 @@ namespace Nop.Services.Common
 
             return warnings;
         }
-
     }
 }

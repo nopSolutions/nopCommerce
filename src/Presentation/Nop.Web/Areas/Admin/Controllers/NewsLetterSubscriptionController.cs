@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
 		    var result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 
-            var fileName = $"newsletter_emails_{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
+            var fileName = $"newsletter_emails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
 			return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
 		}
 

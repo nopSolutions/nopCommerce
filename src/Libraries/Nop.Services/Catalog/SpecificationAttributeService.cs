@@ -169,7 +169,6 @@ namespace Nop.Services.Catalog
             return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
         }
 
-
         /// <summary>
         /// Get specification attribute options by identifiers
         /// </summary>

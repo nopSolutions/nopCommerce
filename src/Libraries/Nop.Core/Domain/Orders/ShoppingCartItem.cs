@@ -63,14 +63,14 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets the log type
         /// </summary>
         public ShoppingCartType ShoppingCartType
         {
-            get { return (ShoppingCartType)this.ShoppingCartTypeId; }
-            set { this.ShoppingCartTypeId = (int)value; }
+            get { return (ShoppingCartType)ShoppingCartTypeId; }
+            set { ShoppingCartTypeId = (int)value; }
         }
 
         /// <summary>

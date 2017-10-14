@@ -80,24 +80,20 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         
         public IList<ManufacturerLocalizedModel> Locales { get; set; }
 
-
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
         public IList<int> SelectedCustomerRoleIds { get; set; }
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
-
         
         //store mapping
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
-
         //discounts
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Discounts")]
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }
-
 
         #region Nested classes
 

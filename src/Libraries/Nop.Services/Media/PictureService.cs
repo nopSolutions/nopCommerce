@@ -177,7 +177,7 @@ namespace Nop.Services.Media
         protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
             var lastPart = GetFileExtensionFromMimeType(mimeType);
-            var fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
+            var fileName = $"{pictureId:0000000}_0.{lastPart}";
             var filePath = GetPictureLocalPath(fileName);
             if (!File.Exists(filePath))
                 return new byte[0];
@@ -193,7 +193,7 @@ namespace Nop.Services.Media
         protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
             var lastPart = GetFileExtensionFromMimeType(mimeType);
-            var fileName = $"{pictureId.ToString("0000000")}_0.{lastPart}";
+            var fileName = $"{pictureId:0000000}_0.{lastPart}";
             File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
@@ -207,7 +207,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             var lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            var fileName = $"{picture.Id.ToString("0000000")}_0.{lastPart}";
+            var fileName = $"{picture.Id:0000000}_0.{lastPart}";
             var filePath = GetPictureLocalPath(fileName);
             if (File.Exists(filePath))
             {
@@ -221,7 +221,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual void DeletePictureThumbs(Picture picture)
         {
-            var filter = $"{picture.Id.ToString("0000000")}*.*";
+            var filter = $"{picture.Id:0000000}*.*";
             var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "images\\thumbs");
             var currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (var currentFileName in currentFiles)
@@ -352,7 +352,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         public virtual byte[] LoadPictureBinary(Picture picture)
         {
-            return LoadPictureBinary(picture, this.StoreInDb);
+            return LoadPictureBinary(picture, StoreInDb);
         }
 
         /// <summary>
@@ -500,14 +500,14 @@ namespace Nop.Services.Media
             if (targetSize == 0)
             {
                 thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}.{lastPart}"
-                    : $"{picture.Id.ToString("0000000")}.{lastPart}";
+                    ? $"{picture.Id:0000000}_{seoFileName}.{lastPart}"
+                    : $"{picture.Id:0000000}.{lastPart}";
             }
             else
             {
                 thumbFileName = !string.IsNullOrEmpty(seoFileName)
-                    ? $"{picture.Id.ToString("0000000")}_{seoFileName}_{targetSize}.{lastPart}"
-                    : $"{picture.Id.ToString("0000000")}_{targetSize}.{lastPart}";
+                    ? $"{picture.Id:0000000}_{seoFileName}_{targetSize}.{lastPart}"
+                    : $"{picture.Id:0000000}_{targetSize}.{lastPart}";
             }
             var thumbFilePath = GetThumbLocalPath(thumbFileName);
 
@@ -625,7 +625,7 @@ namespace Nop.Services.Media
             DeletePictureThumbs(picture);
 
             //delete from file system
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 DeletePictureOnFileSystem(picture);
 
             //delete from database
@@ -700,7 +700,7 @@ namespace Nop.Services.Media
 
             var picture = new Picture
             {
-                PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
+                PictureBinary = StoreInDb ? pictureBinary : new byte[0],
                 MimeType = mimeType,
                 SeoFilename = seoFilename,
                 AltAttribute = altAttribute,
@@ -709,7 +709,7 @@ namespace Nop.Services.Media
             };
             _pictureRepository.Insert(picture);
 
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -750,7 +750,7 @@ namespace Nop.Services.Media
             if (seoFilename != picture.SeoFilename)
                 DeletePictureThumbs(picture);
 
-            picture.PictureBinary = this.StoreInDb ? pictureBinary : new byte[0];
+            picture.PictureBinary = StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
             picture.AltAttribute = altAttribute;
@@ -759,7 +759,7 @@ namespace Nop.Services.Media
 
             _pictureRepository.Update(picture);
 
-            if (!this.StoreInDb)
+            if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -884,7 +884,7 @@ namespace Nop.Services.Media
 
                     while (true)
                     {
-                        var pictures = this.GetPictures(pageIndex, pageSize);
+                        var pictures = GetPictures(pageIndex, pageSize);
                         pageIndex++;
 
                         //all pictures converted?

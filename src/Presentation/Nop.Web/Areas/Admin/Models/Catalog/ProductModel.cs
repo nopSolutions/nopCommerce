@@ -64,7 +64,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
 
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public int AssociatedToProductId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
@@ -111,9 +110,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
         public string ProductTags { get; set; }
-
-
-
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         public string Sku { get; set; }
@@ -324,7 +320,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int BasepriceBaseUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceBaseUnits { get; set; }
 
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
         public bool MarkAsNew { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc")]
@@ -333,7 +328,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
-
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
         public decimal Weight { get; set; }
@@ -366,14 +360,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
         public DateTime? UpdatedOn { get; set; }
 
-
         public string PrimaryStoreCurrencyCode { get; set; }
         public string BaseDimensionIn { get; set; }
         public string BaseWeightIn { get; set; }
 
         public IList<ProductLocalizedModel> Locales { get; set; }
-
-
 
         //ACL (customer roles)
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
@@ -531,6 +522,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
+
         public partial class AddRelatedProductModel : BaseNopModel
         {
             public AddRelatedProductModel()
@@ -576,6 +568,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
+
         public partial class AddAssociatedProductModel : BaseNopModel
         {
             public AddAssociatedProductModel()
@@ -621,6 +614,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
         }
+
         public partial class AddCrossSellProductModel : BaseNopModel
         {
             public AddCrossSellProductModel()
@@ -714,7 +708,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             public int PlannedQuantity { get; set; }
         }
 
-
         public partial class ProductAttributeMappingModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeMappingLocalizedModel>
         {
             public ProductAttributeMappingModel()
@@ -730,7 +723,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
             public IList<SelectListItem> AvailableProductAttributes { get; set; }
-
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             public string TextPrompt { get; set; }
@@ -769,8 +761,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             public ProductAttributeConditionModel ConditionModel { get; set; }
 
             public IList<ProductAttributeMappingLocalizedModel> Locales { get; set; }
-
         }
+
         public partial class ProductAttributeMappingLocalizedModel : ILocalizedModelLocal
         {
             public int LanguageId { get; set; }
@@ -778,6 +770,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             public string TextPrompt { get; set; }
         }
+
         [Validator(typeof(ProductAttributeValueModelValidator))]
         public partial class ProductAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductAttributeValueLocalizedModel>
         {
@@ -881,11 +874,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
                 //vendor
                 public bool IsLoggedInAsVendor { get; set; }
 
-
                 public int AssociatedToProductId { get; set; }
             }
+
             #endregion
         }
+
         public partial class ProductAttributeValueLocalizedModel : ILocalizedModelLocal
         {
             public int LanguageId { get; set; }
@@ -893,6 +887,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             public string Name { get; set; }
         }
+
         public partial class ProductAttributeCombinationModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
@@ -923,7 +918,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
             public int NotifyAdminForQuantityBelow { get; set; }
-
         }
 
         #region Stock quantity history

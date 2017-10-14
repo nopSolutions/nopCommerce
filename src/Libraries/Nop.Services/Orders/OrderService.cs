@@ -480,22 +480,23 @@ namespace Nop.Services.Orders
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
             var query1 = from rp in _recurringPaymentRepository.Table
-                         join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
-                         where
-                         (!rp.Deleted) &&
-                         (showHidden || !rp.InitialOrder.Deleted) &&
-                         (showHidden || !c.Deleted) &&
-                         (showHidden || rp.IsActive) &&
-                         (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
-                         (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
-                         (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
-                         (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 || rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
-                         select rp.Id;
+                join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
+                where
+                (!rp.Deleted) &&
+                (showHidden || !rp.InitialOrder.Deleted) &&
+                (showHidden || !c.Deleted) &&
+                (showHidden || rp.IsActive) &&
+                (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
+                (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
+                (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
+                (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
+                 rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                select rp.Id;
 
             var query2 = from rp in _recurringPaymentRepository.Table
-                         where query1.Contains(rp.Id)
-                         orderby rp.StartDateUtc, rp.Id
-                         select rp;
+                where query1.Contains(rp.Id)
+                orderby rp.StartDateUtc, rp.Id
+                select rp;
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
             return recurringPayments;

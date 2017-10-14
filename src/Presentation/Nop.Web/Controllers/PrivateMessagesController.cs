@@ -72,7 +72,6 @@ namespace Nop.Web.Controllers
             var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(pageNumber, tab);
             return View(model);
         }
-
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
@@ -155,7 +154,6 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
-
             }
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
@@ -197,7 +195,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
             }
 
-            Customer toCustomer = null;
+            Customer toCustomer;
             var replyToPM = _forumService.GetPrivateMessageById(model.ReplyToMessageId);
             if (replyToPM != null)
             {

@@ -198,7 +198,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         //checkout attributes
         public string CheckoutAttributeInfo { get; set; }
 
-
         //order notes
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
         public bool AddOrderNoteDisplayToCustomer { get; set; }
@@ -444,7 +443,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
                 public int Quantity { get; set; }
             }
 
-
             public partial class GiftCardModel : BaseNopModel
             {
                 public bool IsGiftCard { get; set; }
@@ -464,6 +462,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
                 public GiftCardType GiftCardType { get; set; }
             }
+
             #endregion
         }
 
@@ -475,7 +474,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #endregion
     }
-
 
     public partial class OrderAggreratorModel : BaseNopModel
     {

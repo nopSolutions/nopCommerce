@@ -34,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
         #region Nested classes
 
         public partial class StoreInformationSettingsModel : BaseNopModel
@@ -61,7 +60,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.Logo")]
             public int LogoPictureId { get; set; }
             public bool LogoPictureId_OverrideForStore { get; set; }
-            
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
@@ -296,7 +294,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
             public string InvoiceFooterTextColumn2 { get; set; }
             public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
-
         }
 
         public partial class LocalizationSettingsModel : BaseNopModel
@@ -362,6 +359,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public bool UseRichEditorInMessageTemplates { get; set; }
             public bool UseRichEditorInMessageTemplates_OverrideForStore { get; set; }
         }
+
         #endregion
     }
 }

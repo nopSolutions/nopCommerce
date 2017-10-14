@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Extensions;
@@ -72,24 +71,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.BccEmailAddresses,
-                                                           localized.BccEmailAddresses,
-                                                           localized.LanguageId);
+                    x => x.BccEmailAddresses,
+                    localized.BccEmailAddresses,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.Subject,
-                                                           localized.Subject,
-                                                           localized.LanguageId);
+                    x => x.Subject,
+                    localized.Subject,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(mt,
-                                                           x => x.Body,
-                                                           localized.Body,
-                                                           localized.LanguageId);
+                    x => x.Body,
+                    localized.Body,
+                    localized.LanguageId);
 
-               _localizedEntityService.SaveLocalizedValue(mt,
-                                                            x => x.EmailAccountId,
-                                                            localized.EmailAccountId,
-                                                            localized.LanguageId);
+                _localizedEntityService.SaveLocalizedValue(mt,
+                    x => x.EmailAccountId,
+                    localized.EmailAccountId,
+                    localized.LanguageId);
             }
         }
         

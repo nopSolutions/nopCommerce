@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Events
+﻿namespace Nop.Services.Events
 {
     public interface IConsumer<T>
     {

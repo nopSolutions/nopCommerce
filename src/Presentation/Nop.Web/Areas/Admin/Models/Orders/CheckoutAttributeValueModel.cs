@@ -39,7 +39,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public int DisplayOrder {get;set;}
 
         public IList<CheckoutAttributeValueLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class CheckoutAttributeValueLocalizedModel : ILocalizedModelLocal

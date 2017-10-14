@@ -198,7 +198,6 @@ namespace Nop.Services.Logging
             return InsertActivity(_workContext.CurrentCustomer, systemKeyword, comment, commentParams);
         }
 
-
         /// <summary>
         /// Inserts an activity log item
         /// </summary>
@@ -220,8 +219,6 @@ namespace Nop.Services.Logging
             comment = CommonHelper.EnsureNotNull(comment);
             comment = string.Format(comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
-
-            
 
             var activity = new ActivityLog();
             activity.ActivityLogTypeId = activityType.Id;
@@ -315,7 +312,7 @@ namespace Nop.Services.Logging
                     _activityLogRepository.Delete(activityLogItem);
             }
         }
-        #endregion
 
+        #endregion
     }
 }

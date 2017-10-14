@@ -34,12 +34,12 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Feature property access
         /// </summary>
-        public Func<T, object> GetProperty { get; private set; }
+        public Func<T, object> GetProperty { get; }
 
         /// <summary>
         /// Property name
         /// </summary>
-        public string PropertyName { get; private set; }
+        public string PropertyName { get; }
 
         /// <summary>
         /// Property value

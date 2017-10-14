@@ -81,7 +81,6 @@ namespace Nop.Services.Discounts
 
         #endregion
 
-
         #region Discount requirements
 
         /// <summary>

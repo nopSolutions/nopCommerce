@@ -11,6 +11,7 @@ namespace Nop.Core.Html
     public partial class HtmlHelper
     {
         #region Fields
+
         private readonly static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
         private readonly static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
         //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -60,9 +61,11 @@ namespace Nop.Core.Html
 
             return false;
         }
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Formats the text
         /// </summary>
@@ -78,7 +81,6 @@ namespace Nop.Core.Html
             bool convertPlainTextToHtml, bool allowHtml, 
             bool allowBBCode, bool resolveLinks, bool addNoFollowTag)
         {
-
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
@@ -224,6 +226,7 @@ namespace Nop.Core.Html
             }
             return builder.ToString();
         }
-#endregion
+
+        #endregion
     }
 }

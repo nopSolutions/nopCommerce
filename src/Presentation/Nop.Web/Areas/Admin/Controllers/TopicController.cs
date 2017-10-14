@@ -90,29 +90,29 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(topic,
-                                                               x => x.Title,
-                                                               localized.Title,
-                                                               localized.LanguageId);
+                    x => x.Title,
+                    localized.Title,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(topic,
-                                                           x => x.Body,
-                                                           localized.Body,
-                                                           localized.LanguageId);
+                    x => x.Body,
+                    localized.Body,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(topic,
-                                                           x => x.MetaKeywords,
-                                                           localized.MetaKeywords,
-                                                           localized.LanguageId);
+                    x => x.MetaKeywords,
+                    localized.MetaKeywords,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(topic,
-                                                           x => x.MetaDescription,
-                                                           localized.MetaDescription,
-                                                           localized.LanguageId);
+                    x => x.MetaDescription,
+                    localized.MetaDescription,
+                    localized.LanguageId);
 
                 _localizedEntityService.SaveLocalizedValue(topic,
-                                                           x => x.MetaTitle,
-                                                           localized.MetaTitle,
-                                                           localized.LanguageId);
+                    x => x.MetaTitle,
+                    localized.MetaTitle,
+                    localized.LanguageId);
 
                 //search engine name
                 var seName = topic.ValidateSeName(localized.SeName, localized.Title, false);
@@ -408,7 +408,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction("List");
             }
-
 
             //If we got this far, something failed, redisplay form
 

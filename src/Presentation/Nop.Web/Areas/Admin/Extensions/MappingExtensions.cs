@@ -196,6 +196,7 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
         #endregion
 
         #region Checkout attributes
@@ -417,6 +418,7 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
         #endregion
 
         #region Measure weights
@@ -753,6 +755,7 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
         //forums
         public static ForumModel ToModel(this Forum entity)
         {
@@ -768,6 +771,7 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
         #endregion
 
         #region Blog
@@ -901,7 +905,6 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
         #endregion
 
         #region Settings
@@ -915,101 +918,101 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
         public static ShippingSettingsModel ToModel(this ShippingSettings entity)
         {
             return entity.MapTo<ShippingSettings, ShippingSettingsModel>();
         }
+
         public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static ForumSettingsModel ToModel(this ForumSettings entity)
         {
             return entity.MapTo<ForumSettings, ForumSettingsModel>();
         }
+
         public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static BlogSettingsModel ToModel(this BlogSettings entity)
         {
             return entity.MapTo<BlogSettings, BlogSettingsModel>();
         }
+
         public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static VendorSettingsModel ToModel(this VendorSettings entity)
         {
             return entity.MapTo<VendorSettings, VendorSettingsModel>();
         }
+
         public static VendorSettings ToEntity(this VendorSettingsModel model, VendorSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static NewsSettingsModel ToModel(this NewsSettings entity)
         {
             return entity.MapTo<NewsSettings, NewsSettingsModel>();
         }
+
         public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static CatalogSettingsModel ToModel(this CatalogSettings entity)
         {
             return entity.MapTo<CatalogSettings, CatalogSettingsModel>();
         }
+
         public static CatalogSettings ToEntity(this CatalogSettingsModel model, CatalogSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static RewardPointsSettingsModel ToModel(this RewardPointsSettings entity)
         {
             return entity.MapTo<RewardPointsSettings, RewardPointsSettingsModel>();
         }
+
         public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model, RewardPointsSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static OrderSettingsModel ToModel(this OrderSettings entity)
         {
             return entity.MapTo<OrderSettings, OrderSettingsModel>();
         }
+
         public static OrderSettings ToEntity(this OrderSettingsModel model, OrderSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static ShoppingCartSettingsModel ToModel(this ShoppingCartSettings entity)
         {
             return entity.MapTo<ShoppingCartSettings, ShoppingCartSettingsModel>();
         }
+
         public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model, ShoppingCartSettings destination)
         {
             return model.MapTo(destination);
         }
 
-
         public static MediaSettingsModel ToModel(this MediaSettings entity)
         {
             return entity.MapTo<MediaSettings, MediaSettingsModel>();
         }
+
         public static MediaSettings ToEntity(this MediaSettingsModel model, MediaSettings destination)
         {
             return model.MapTo(destination);
@@ -1033,8 +1036,6 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
-
         //general (captcha) settings
         public static GeneralCommonSettingsModel.CaptchaSettingsModel ToModel(this CaptchaSettings entity)
         {
@@ -1045,8 +1046,6 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
-
         //product editor settings
         public static ProductEditorSettingsModel ToModel(this ProductEditorSettings entity)
         {
@@ -1056,6 +1055,7 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
         #endregion
 
         #region Plugins
@@ -1103,7 +1103,6 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
         public static ManufacturerTemplateModel ToModel(this ManufacturerTemplate entity)
         {
             return entity.MapTo<ManufacturerTemplate, ManufacturerTemplateModel>();
@@ -1119,7 +1118,6 @@ namespace Nop.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-
         public static ProductTemplateModel ToModel(this ProductTemplate entity)
         {
             return entity.MapTo<ProductTemplate, ProductTemplateModel>();
@@ -1134,8 +1132,6 @@ namespace Nop.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
-
-
 
         public static TopicTemplateModel ToModel(this TopicTemplate entity)
         {

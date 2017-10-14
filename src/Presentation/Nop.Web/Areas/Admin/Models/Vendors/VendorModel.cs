@@ -77,22 +77,16 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
         public IList<AssociatedCustomerInfo> AssociatedCustomers { get; set; }
 
-
-
         //vendor notes
         [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
         public string AddVendorNoteMessage { get; set; }
-
-
-
-
+        
         #region Nested classes
 
         public class AssociatedCustomerInfo : BaseNopEntityModel
         {
             public string Email { get; set; }
         }
-
 
         public partial class VendorNote : BaseNopEntityModel
         {
@@ -102,8 +96,8 @@ namespace Nop.Web.Areas.Admin.Models.Vendors
             [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }
-        #endregion
 
+        #endregion
     }
 
     public partial class VendorLocalizedModel : ILocalizedModelLocal

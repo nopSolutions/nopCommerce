@@ -72,7 +72,6 @@ namespace Nop.Core
             return address != null && address.ToString() != NullIpAddress;
         }
 
-
         protected virtual bool TryWriteWebConfig()
         {
             try

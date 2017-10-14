@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Infrastructure.Cache;
@@ -68,7 +67,6 @@ namespace Nop.Web.Factories
                         id = state.Id,
                         name = state.GetLocalized(x => x.Name)
                     });
-
 
                 if (country == null)
                 {

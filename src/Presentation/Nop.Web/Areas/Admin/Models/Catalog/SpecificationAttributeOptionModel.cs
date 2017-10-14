@@ -32,7 +32,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int NumberOfAssociatedProducts { get; set; }
         
         public IList<SpecificationAttributeOptionLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class SpecificationAttributeOptionLocalizedModel : ILocalizedModelLocal

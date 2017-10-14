@@ -42,6 +42,7 @@ namespace Nop.Web.Models.Catalog
         /// Price range filter model
         /// </summary>
         public PriceRangeFilterModel PriceRangeFilter { get; set; }
+
         /// <summary>
         /// Specification filter model
         /// </summary>
@@ -233,7 +234,6 @@ namespace Nop.Web.Models.Catalog
                         var url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + fromQuery + "-" + toQuery, null);
                         url = ExcludeQueryStringParams(url, webHelper);
                         item.FilterUrl = url;
-
 
                         return item;
                     }).ToList();
@@ -454,6 +454,7 @@ namespace Nop.Web.Models.Catalog
             #endregion
 
             #region Properties
+
             /// <summary>
             /// Gets or sets a value indicating whether filtering is enabled
             /// </summary>

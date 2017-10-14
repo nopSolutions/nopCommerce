@@ -43,7 +43,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductName { get; set; }
 
-
         #region Nested classes
 
         public partial class AssociateProductToCustomerRoleModel : BaseNopModel
@@ -79,9 +78,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
 
-
             public int AssociatedToProductId { get; set; }
         }
+
         #endregion
     }
 }

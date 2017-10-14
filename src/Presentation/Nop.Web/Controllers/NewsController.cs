@@ -95,7 +95,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-
         public virtual IActionResult ListRss(int languageId)
         {
             var feed = new RssFeed(
@@ -117,7 +116,6 @@ namespace Nop.Web.Controllers
             feed.Items = items;
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
-
 
         public virtual IActionResult NewsItem(int newsItemId)
         {
@@ -201,7 +199,6 @@ namespace Nop.Web.Controllers
 
                 return RedirectToRoute("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
             }
-
 
             //If we got this far, something failed, redisplay form
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);

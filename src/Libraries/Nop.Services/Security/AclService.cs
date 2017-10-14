@@ -254,6 +254,7 @@ namespace Nop.Services.Security
             //no permission found
             return false;
         }
+
         #endregion
     }
 }

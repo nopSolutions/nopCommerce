@@ -13,7 +13,6 @@ namespace Nop.Web.Controllers
         {
             this._scheduleTaskService = scheduleTaskService;
         }
-        
 
         [HttpPost]
         public virtual IActionResult RunTask(string taskType)

@@ -13,6 +13,6 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// News comment
         /// </summary>
-        public NewsComment NewsComment { get; private set; }
+        public NewsComment NewsComment { get; }
     }
 }

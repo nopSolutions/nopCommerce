@@ -1,4 +1,3 @@
-
 namespace Nop.Services.Customers
 {
     /// <summary>

@@ -50,7 +50,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         #region Nested classes
 
-
         public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
         {
             public int OrderId { get; set; }

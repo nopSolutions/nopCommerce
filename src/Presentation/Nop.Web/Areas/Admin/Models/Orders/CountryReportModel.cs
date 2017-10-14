@@ -23,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-
         [NopResourceDisplayName("Admin.SalesReport.Country.OrderStatus")]
         public int OrderStatusId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Country.PaymentStatus")]

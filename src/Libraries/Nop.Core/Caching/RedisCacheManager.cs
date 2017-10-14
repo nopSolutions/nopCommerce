@@ -17,7 +17,6 @@ namespace Nop.Core.Caching
 
         private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
-
         private readonly IDatabase _db;
 
         #endregion

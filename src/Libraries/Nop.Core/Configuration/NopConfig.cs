@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Configuration
 {
     /// <summary>
@@ -85,6 +84,5 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether to clear /Plugins/bin directory on application startup
         /// </summary>
         public bool ClearPluginShadowDirectoryOnStartup { get; set; }
-
     }
 }

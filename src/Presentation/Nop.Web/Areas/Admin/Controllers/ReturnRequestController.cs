@@ -215,7 +215,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
             }
 
-
             //If we got this far, something failed, redisplay form
             PrepareReturnRequestModel(model, returnRequest, true);
             return View(model);

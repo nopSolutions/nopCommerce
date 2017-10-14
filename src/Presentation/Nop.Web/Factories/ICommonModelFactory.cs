@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Nop.Core.Domain.Vendors;
+﻿using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Factories

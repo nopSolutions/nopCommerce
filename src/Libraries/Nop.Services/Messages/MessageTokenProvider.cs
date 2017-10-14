@@ -74,6 +74,8 @@ namespace Nop.Services.Messages
         private readonly IEventPublisher _eventPublisher;
         private readonly StoreInformationSettings _storeInformationSettings;
 
+        private Dictionary<string, IEnumerable<string>> _allowedTokens;
+
         #endregion
 
         #region Ctor
@@ -134,7 +136,6 @@ namespace Nop.Services.Messages
 
         #region Allowed tokens
 
-        private Dictionary<string, IEnumerable<string>> _allowedTokens;
         /// <summary>
         /// Get all available tokens by token groups
         /// </summary>
@@ -631,8 +632,8 @@ namespace Nop.Services.Messages
             var displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
 
             //tax
-            var displayTax = true;
-            var displayTaxRates = true;
+            bool displayTax;
+            bool displayTaxRates;
             if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 displayTax = false;
@@ -886,7 +887,6 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.CustomerFullName", $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}"));
             tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));
 
-
             tokens.Add(new Token("Order.BillingFirstName", order.BillingAddress.FirstName));
             tokens.Add(new Token("Order.BillingLastName", order.BillingAddress.LastName));
             tokens.Add(new Token("Order.BillingPhoneNumber", order.BillingAddress.PhoneNumber));
@@ -932,8 +932,6 @@ namespace Nop.Services.Messages
                 }
             }
             tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
-            
-
 
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId, vendorId), true));
 
@@ -1223,8 +1221,6 @@ namespace Nop.Services.Messages
                 combination.AttributesXml, 
                 _workContext.CurrentCustomer, 
                 renderPrices: false);
-
-            
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
             tokens.Add(new Token("AttributeCombination.SKU", combination.Product.FormatSku(combination.AttributesXml, _productAttributeParser)));

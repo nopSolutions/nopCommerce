@@ -15,5 +15,4 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ProductId2 { get; set; }
     }
-
 }

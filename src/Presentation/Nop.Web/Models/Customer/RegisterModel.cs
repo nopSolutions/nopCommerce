@@ -59,7 +59,6 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
 
-
         public bool DateOfBirthEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]
         public int? DateOfBirthDay { get; set; }
