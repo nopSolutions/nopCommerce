@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
+using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -136,6 +139,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             {
                 options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
             });
+        }
+
+        /// <summary>
+        /// Adds data protection services
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddNopDataProtection(this IServiceCollection services)
+        {
+            //check whether to persist data protection in Redis
+            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
+            if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
+                return;
+
+            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+
+            //configure the data protection system to persist keys to the specified directory
+            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
         }
 
         /// <summary>
