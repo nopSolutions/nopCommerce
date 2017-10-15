@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -150,13 +151,23 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //check whether to persist data protection in Redis
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
             if (nopConfig.RedisCachingEnabled && nopConfig.PersistDataProtectionKeysToRedis)
-                return;
+            {
+                //store keys in Redis
+                services.AddDataProtection().PersistKeysToRedis(
+                    () =>
+                    {
+                        var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
+                        return redisConnectionWrapper.GetDatabase();
+                    }, RedisConfiguration.DataProtectionKeysName);
+            }
+            else
+            {
+                var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
 
-            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
-            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
-
-            //configure the data protection system to persist keys to the specified directory
-            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+                //configure the data protection system to persist keys to the specified directory
+                services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            }
         }
 
         /// <summary>

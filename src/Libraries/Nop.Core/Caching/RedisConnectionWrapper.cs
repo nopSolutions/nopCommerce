@@ -34,15 +34,6 @@ namespace Nop.Core.Caching
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Get the key used to store the protection key list (used with the PersistDataProtectionKeysToRedis option enabled)
-        /// </summary>
-        public string DataProtectionKeysName => "Nop.DataProtectionKeys";
-
-        #endregion
-
         #region Utilities
 
         /// <summary>

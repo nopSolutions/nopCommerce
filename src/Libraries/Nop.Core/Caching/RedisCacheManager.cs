@@ -116,7 +116,7 @@ namespace Nop.Core.Caching
         protected virtual async Task RemoveAsync(string key)
         {
             //we should always persist the data protection key list
-            if (key.Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase))
+            if (key.Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase))
                 return;
 
             //remove item from caches
@@ -138,7 +138,7 @@ namespace Nop.Core.Caching
                 var keys = server.Keys(database: _db.Database, pattern: $"*{pattern}*");
 
                 //we should always persist the data protection key list
-                keys = keys.Where(key => !key.ToString().Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+                keys = keys.Where(key => !key.ToString().Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
 
                 await _db.KeyDeleteAsync(keys.ToArray());
             }
@@ -162,7 +162,7 @@ namespace Nop.Core.Caching
                 var keys = server.Keys(database: _db.Database);
 
                 //we should always persist the data protection key list
-                keys = keys.Where(key => !key.ToString().Equals(_connectionWrapper.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
+                keys = keys.Where(key => !key.ToString().Equals(RedisConfiguration.DataProtectionKeysName, StringComparison.OrdinalIgnoreCase));
 
                 await _db.KeyDeleteAsync(keys.ToArray());
             }
