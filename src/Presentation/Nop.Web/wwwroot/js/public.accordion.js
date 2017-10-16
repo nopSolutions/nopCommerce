@@ -31,13 +31,15 @@ var Accordion = {
             return;
         }
         if (section.attr('id') != this.currentSectionId) {
+            var previousSectionId = this.currentSectionId;
             this.closeExistingSection();
             this.currentSectionId = section.attr('id');
             $('#' + this.currentSectionId).addClass('active');
             var contents = section.children('.a-item');
             $(contents[0]).show();
 
-
+            $.event.trigger({ type: "accordion_section_opened", previousSectionId: previousSectionId, currentSectionId: this.currentSectionId });
+            
             if (this.disallowAccessToNextSections) {
                 var pastCurrentSection = false;
                 for (var i = 0; i < this.sections.length; i++) {
@@ -57,16 +59,22 @@ var Accordion = {
         section.removeClass('active');
         var contents = section.children('.a-item');
         $(contents[0]).hide();
+
+        $.event.trigger({ type: "accordion_section_closed", sectionId: section.attr('id') });
     },
 
     hideSection: function (section) {
         var section = $(section);
         section.hide();
+
+        $.event.trigger({ type: "accordion_section_hidden", sectionId: section.attr('id') });
     },
 
     showSection: function (section) {
         var section = $(section);
         section.show();
+
+        $.event.trigger({ type: "accordion_section_shown", sectionId: section.attr('id') });  
     },
 
     openNextSection: function (setAllow) {
