@@ -7,6 +7,11 @@ namespace Nop.Plugin.Payments.Square
     public static class SquarePaymentDefaults
     {
         /// <summary>
+        /// Square payment method system name
+        /// </summary>
+        public const string SystemName = "Payments.Square";
+
+        /// <summary>
         /// User agent used for requesting Square services
         /// </summary>
         public const string UserAgent = "Square-connect-nopCommerce-1.0";
