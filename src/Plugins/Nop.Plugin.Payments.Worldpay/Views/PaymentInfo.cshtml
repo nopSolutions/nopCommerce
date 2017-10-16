@@ -1,6 +1,7 @@
 ﻿@model Nop.Plugin.Payments.Worldpay.Models.PaymentInfoModel
 @{
     Layout = "";
+    Html.AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js");
 }
 @inject Nop.Core.IWorkContext workContext
 @inject WorldpayPaymentSettings worldpayPaymentSettings
@@ -13,74 +14,79 @@
 
         var submitForm = false;
         var errorsExist = false;
+        var stepBack = false;
         var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
         $('.payment-info-next-step-button').attr('onclick', null);
-
-        $.getScript('https://gwapi.demo.securenet.com/v1/PayOS.js', function (data, textStatus, jqxhr) {
-            function tokenize() {
-                var token = tokenizeCard({
-                    'publicKey': '@worldpayPaymentSettings.PublicKey',
-                    'card':
-                    {
-                        'number': $('#@Html.IdFor(model => model.CardNumber)').val(),
-                        'cvv': $('#@Html.IdFor(model => model.CardCode)').val(),
-                        'expirationDate': ('0' + $('#@Html.IdFor(model => model.ExpireMonth)').val()).slice(-2) + '/' + $('#@Html.IdFor(model => model.ExpireYear)').val(),
-                        'emailReceipt': @((!string.IsNullOrEmpty(workContext.CurrentCustomer.BillingAddress?.Email)).ToString().ToLower()),
-                        'email': '@workContext.CurrentCustomer.BillingAddress?.Email',
-                        'firstName': '@workContext.CurrentCustomer.BillingAddress?.FirstName',
-                        'lastName': '@workContext.CurrentCustomer.BillingAddress?.LastName',
-                @if (worldpayPaymentSettings.ValidateAddress)
+        
+        function tokenize() {
+            var token = tokenizeCard({
+                'publicKey': '@worldpayPaymentSettings.PublicKey',
+                'card':
                 {
-                    <text>
-                        'address':
-                        {
-                            'line1': '@workContext.CurrentCustomer.BillingAddress?.Address1',
-                            'city': '@workContext.CurrentCustomer.BillingAddress?.City',
-                            'state': '@workContext.CurrentCustomer.BillingAddress?.StateProvince?.Abbreviation',
-                            'country': '@workContext.CurrentCustomer.BillingAddress?.Country?.TwoLetterIsoCode',
-                            'zip': '@workContext.CurrentCustomer.BillingAddress?.ZipPostalCode',
-                            'company': '@workContext.CurrentCustomer.BillingAddress?.Company',
-                            'phone': '@workContext.CurrentCustomer.BillingAddress?.PhoneNumber'
-                        }
-                    </text>
-                }
-                    },
-                    'developerApplication':
+                    'number': $('#@Html.IdFor(model => model.CardNumber)').val(),
+                    'cvv': $('#@Html.IdFor(model => model.CardCode)').val(),
+                    'expirationDate': ('0' + $('#@Html.IdFor(model => model.ExpireMonth)').val()).slice(-2) + '/' + $('#@Html.IdFor(model => model.ExpireYear)').val(),
+                    'emailReceipt': @((!string.IsNullOrEmpty(workContext.CurrentCustomer.BillingAddress?.Email)).ToString().ToLower()),
+                    'email': '@workContext.CurrentCustomer.BillingAddress?.Email',
+                    'firstName': '@workContext.CurrentCustomer.BillingAddress?.FirstName',
+                    'lastName': '@workContext.CurrentCustomer.BillingAddress?.LastName',
+            @if (worldpayPaymentSettings.ValidateAddress)
+            {
+                <text>
+                    'address':
                     {
-                        'developerId': '@worldpayPaymentSettings.DeveloperId',
-                        'version': '@worldpayPaymentSettings.DeveloperVersion'
+                        'line1': '@workContext.CurrentCustomer.BillingAddress?.Address1',
+                        'city': '@workContext.CurrentCustomer.BillingAddress?.City',
+                        'state': '@workContext.CurrentCustomer.BillingAddress?.StateProvince?.Abbreviation',
+                        'country': '@workContext.CurrentCustomer.BillingAddress?.Country?.TwoLetterIsoCode',
+                        'zip': '@workContext.CurrentCustomer.BillingAddress?.ZipPostalCode',
+                        'company': '@workContext.CurrentCustomer.BillingAddress?.Company',
+                        'phone': '@workContext.CurrentCustomer.BillingAddress?.PhoneNumber'
                     }
-                }).done(function (result) {
-                    var response = $.parseJSON(JSON.stringify(result));
-                    if (response.success) {
-                        $('#@Html.IdFor(model => model.Token)').val(response.token);
-                    } else {
-                        $('#@Html.IdFor(model => model.Errors)').val(response.message);
-                        errorsExist = true;
-                    }
-                    submitForm = true;
-                    $('input.payment-info-next-step-button').click();
-                }).fail(function () {
-                    $('#@Html.IdFor(model => model.Errors)').val('Failed to get payment token');
-                    errorsExist = true;
-                    submitForm = true;
-                    $('input.payment-info-next-step-button').click();
-                });
+                </text>
             }
-
-            $('input.payment-info-next-step-button').on('click', function (data) {
-                var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
-                if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@Guid.Empty.ToString()')) {
-                    if (!errorsExist) {
-                        tokenize();
-                    }
-                    return false;
+                },
+                'developerApplication':
+                {
+                    'developerId': '@worldpayPaymentSettings.DeveloperId',
+                    'version': '@worldpayPaymentSettings.DeveloperVersion'
                 }
-                else if (onePageCheckout) {
-                    submitForm = false;
-                    PaymentInfo.save();
+            }).done(function (result) {
+                var response = $.parseJSON(JSON.stringify(result));
+                if (response.success) {
+                    $('#@Html.IdFor(model => model.Token)').val(response.token);
+                } else {
+                    $('#@Html.IdFor(model => model.Errors)').val(response.message);
+                    errorsExist = true;
                 }
+                submitForm = true;
+                $('input.payment-info-next-step-button').click();
+            }).fail(function () {
+                $('#@Html.IdFor(model => model.Errors)').val('Failed to get payment token');
+                errorsExist = true;
+                submitForm = true;
+                $('input.payment-info-next-step-button').click();
             });
+        }
+
+        $('input.payment-info-next-step-button').on('click', function (data) {
+            var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
+            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@Guid.Empty.ToString()')) {
+                if (!errorsExist && !stepBack) {
+                    tokenize();
+                }
+                return false;
+            }
+            else if (onePageCheckout) {
+                submitForm = false;
+                PaymentInfo.save();
+            }
+        });
+
+        $(document).on('accordion_section_opened', function (data) {
+            if (data && (data.currentSectionId == 'opc-billing' || data.currentSectionId == 'opc-shipping' || data.currentSectionId == 'opc-shipping_method' || data.currentSectionId == 'opc-payment_method')) {
+                stepBack = true;
+            }
         });
     });
 

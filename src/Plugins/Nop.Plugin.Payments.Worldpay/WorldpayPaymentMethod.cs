@@ -346,7 +346,7 @@ namespace Nop.Plugin.Payments.Worldpay
             //sucessfully refunded
             return new RefundPaymentResult
             {
-                NewPaymentStatus = PaymentStatus.PartiallyRefunded
+                NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
             };
         }
 
