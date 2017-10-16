@@ -6,24 +6,14 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="affiliate-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Affiliates.Info")</nop-tab-header-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-header-item asp-name="tab-customers">@T("Admin.Affiliates.Customers")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-orders">@T("Admin.Affiliates.Orders")</nop-tab-header-item>
-                }
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-content-item asp-name="tab-customers">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-orders">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model.AffiliatedOrderList)</nop-tab-content-item>
-                }
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="affiliate-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Affiliates.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-customers" asp-title="@T("Admin.Affiliates.Customers")">@await Html.PartialAsync("_CreateOrUpdate.Customers", Model)</nop-tab>
+                <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Affiliates.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model.AffiliatedOrderList)</nop-tab>
+            }
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

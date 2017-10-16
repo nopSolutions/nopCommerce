@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="country-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Countries.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-states">@T("Admin.Configuration.Countries.States")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-states">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="country-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Configuration.Countries.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-states" asp-title="@T("Admin.Configuration.Countries.States")">@await Html.PartialAsync("_CreateOrUpdate.States", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

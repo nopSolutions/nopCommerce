@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="blog-post-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.ContentManagement.Blog.BlogPosts.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-seo">@T("Admin.Common.SEO")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="blog-post-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.ContentManagement.Blog.BlogPosts.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

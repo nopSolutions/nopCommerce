@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="poll-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.ContentManagement.Polls.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-answers">@T("Admin.ContentManagement.Polls.Answers")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-answers">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="poll-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.ContentManagement.Polls.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-answers" asp-title="@T("Admin.ContentManagement.Polls.Answers")">@await Html.PartialAsync("_CreateOrUpdate.Answers", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

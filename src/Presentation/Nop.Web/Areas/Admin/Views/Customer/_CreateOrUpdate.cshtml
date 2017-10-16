@@ -6,42 +6,23 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="customer-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Customers.Customers.Info")</nop-tab-header-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-header-item asp-name="tab-orders">@T("Admin.Customers.Customers.Orders")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-address">@T("Admin.Customers.Customers.Addresses")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-cart">@T("Admin.Customers.Customers.CurrentShoppingCart")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-wishlist">@T("Admin.Customers.Customers.CurrentWishlist")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-activitylog">@T("Admin.Customers.Customers.ActivityLog")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-impersonate">@T("Admin.Customers.Customers.Impersonate")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-backinstock">@T("Admin.Customers.Customers.BackInStockSubscriptions")</nop-tab-header-item>
-                }
-                @if (Model.DisplayRewardPointsHistory)
-                {
-                    <nop-tab-header-item asp-name="tab-rewardpoints">@T("Admin.Customers.Customers.RewardPoints")</nop-tab-header-item>
-                }
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-content-item asp-name="tab-orders">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-address">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-cart">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-wishlist">@await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-activitylog">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-impersonate">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-backinstock">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-tab-content-item>
-                }
-                @if (Model.DisplayRewardPointsHistory)
-                {
-                    <nop-tab-content-item asp-name="tab-rewardpoints">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-tab-content-item>
-                }
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="customer-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Customers.Customers.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Customers.Customers.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab>
+                <nop-tab asp-name="tab-address" asp-title="@T("Admin.Customers.Customers.Addresses")">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-tab>
+                <nop-tab asp-name="tab-cart" asp-title="@T("Admin.Customers.Customers.CurrentShoppingCart")">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab>
+                <nop-tab asp-name="tab-wishlist" asp-title="@T("Admin.Customers.Customers.CurrentWishlist")">@await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model)</nop-tab>
+                <nop-tab asp-name="tab-activitylog" asp-title="@T("Admin.Customers.Customers.ActivityLog")">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-tab>
+                <nop-tab asp-name="tab-impersonate" asp-title="@T("Admin.Customers.Customers.Impersonate")">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-tab>
+                <nop-tab asp-name="tab-backinstock" asp-title="@T("Admin.Customers.Customers.BackInStockSubscriptions")">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-tab>
+            }
+            @if (Model.DisplayRewardPointsHistory)
+            {
+                <nop-tab asp-name="tab-rewardpoints" asp-title="@T("Admin.Customers.Customers.RewardPoints")">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-tab>
+            }
+        </nop-bootstrap-tabs>
     </div>
 </div>
 
