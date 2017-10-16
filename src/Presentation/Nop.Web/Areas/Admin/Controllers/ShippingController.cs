@@ -290,7 +290,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
         public virtual IActionResult CreateMethod()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -419,7 +418,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
         public virtual IActionResult CreateDeliveryDate()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -523,7 +521,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-#endregion
+        #endregion
         
         #region Product availability ranges
 
@@ -646,7 +644,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("DatesAndRanges");
         }
 
-#endregion
+        #endregion
         
         #region Warehouses
 
@@ -666,15 +664,15 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var warehousesModel = _shippingService.GetAllWarehouses()
                 .Select(x =>
-                            {
-                                var warehouseModel = new WarehouseModel
-                                {
-                                    Id = x.Id,
-                                    Name = x.Name
-                                    //ignore address for list view (performance optimization)
-                                };
-                                return warehouseModel;
-                            })
+                {
+                    var warehouseModel = new WarehouseModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                        //ignore address for list view (performance optimization)
+                    };
+                    return warehouseModel;
+                })
                 .ToList();
             var gridModel = new DataSourceResult
             {
@@ -822,7 +820,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 else
                     _addressService.InsertAddress(address);
 
-
                 warehouse.Name = model.Name;
                 warehouse.AdminComment = model.AdminComment;
                 warehouse.AddressId = address.Id;
@@ -835,7 +832,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Updated"));
                 return continueEditing ? RedirectToAction("EditWarehouse", warehouse.Id) : RedirectToAction("Warehouses");
             }
-
 
             //If we got this far, something failed, redisplay form
 
@@ -876,7 +872,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("Warehouses");
         }
 
-#endregion
+        #endregion
         
         #region Restrictions
 

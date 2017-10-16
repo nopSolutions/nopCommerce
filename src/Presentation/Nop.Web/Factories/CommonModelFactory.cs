@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
@@ -720,7 +719,6 @@ namespace Nop.Web.Factories
                     "/uploadfilereturnrequest",
                     "/wishlist",
                 };
-
 
                 const string newLine = "\r\n"; //Environment.NewLine
                 sb.Append("User-agent: *");

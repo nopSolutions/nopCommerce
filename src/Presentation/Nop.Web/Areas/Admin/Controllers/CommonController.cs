@@ -221,7 +221,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), currentStoreUrl, _webHelper.GetStoreLocation(false))
                 });
 
-
             //primary exchange rate currency
             var perCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (perCurrency != null)
@@ -268,7 +267,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 });
             }
 
-
             //base measure weight
             var bWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (bWeight != null)
@@ -296,7 +294,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.NotSet")
                 });
             }
-
 
             //base dimension weight
             var bDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
@@ -537,7 +534,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 _maintenanceService.BackupDatabase();
-                this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
+                SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)
             {
@@ -554,9 +551,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var action = this.Request.Form["action"];
+            var action = Request.Form["action"];
 
-            var fileName = this.Request.Form["backupFileName"];
+            var fileName = Request.Form["backupFileName"];
             var backupPath = _maintenanceService.GetBackupPath(fileName);
 
             try
@@ -566,13 +563,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     case "delete-backup":
                     {
                         System.IO.File.Delete(backupPath);
-                        this.SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
+                        SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
                     }
                         break;
                     case "restore-backup":
                     {
                         _maintenanceService.RestoreDatabase(backupPath);
-                        this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
+                        SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                     }
                         break;
                 }
@@ -637,7 +634,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
 
-
         public virtual IActionResult SeNames()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -646,6 +642,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = new UrlRecordListModel();
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
@@ -671,7 +668,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //details URL
                     var detailsUrl = "";
-                    var entityName = x.EntityName != null ? x.EntityName.ToLowerInvariant() : "";
+                    var entityName = x.EntityName?.ToLowerInvariant() ?? "";
                     switch (entityName)
                     {
                         case "blogpost":
@@ -714,6 +711,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
+
         [HttpPost]
         public virtual IActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
         {
@@ -727,7 +725,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
-        
 
         [HttpPost]
         public virtual IActionResult PopularSearchTermsReport(DataSourceRequest command)

@@ -58,7 +58,6 @@ namespace Nop.Services.Installation
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 localizationService.ImportResourcesFromXml(language, localesXml);
             }
-
         }
 
         protected virtual void UpdateDefaultCustomer(string defaultUserEmail, string defaultUserPassword)

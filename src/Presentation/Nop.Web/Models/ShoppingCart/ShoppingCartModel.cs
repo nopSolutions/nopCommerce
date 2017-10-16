@@ -54,6 +54,7 @@ namespace Nop.Web.Models.ShoppingCart
                 AllowedQuantities = new List<SelectListItem>();
                 Warnings = new List<string>();
             }
+
             public string Sku { get; set; }
 
             public PictureModel Picture {get;set;}
@@ -85,7 +86,6 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
-
         }
 
         public partial class CheckoutAttributeModel : BaseNopEntityModel
@@ -187,6 +187,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public Dictionary<string, object> CustomValues { get; set; }
         }
+
         #endregion
     }
 }

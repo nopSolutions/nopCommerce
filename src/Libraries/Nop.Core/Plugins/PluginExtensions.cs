@@ -7,7 +7,6 @@ namespace Nop.Core.Plugins
 {
     public static class PluginExtensions
     {
-
         private static readonly List<string> SupportedLogoImageExtensions = new List<string>
         {
             "jpg",
@@ -37,6 +36,5 @@ namespace Nop.Core.Plugins
             var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{pluginDirectory.Name}/logo.{logoExtension}";
             return logoUrl;
         }
-
     }
 }

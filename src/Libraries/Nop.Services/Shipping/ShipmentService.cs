@@ -106,18 +106,18 @@ namespace Nop.Services.Shipping
             if (vendorId > 0)
             {
                 var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                                             where orderItem.Product.VendorId == vendorId
-                                             select orderItem.Id;
+                    where orderItem.Product.VendorId == vendorId
+                    select orderItem.Id;
 
                 query = from s in query
-                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
-                        select s;
+                    where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
+                    select s;
             }
             if (warehouseId > 0)
             {
                 query = from s in query
-                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
-                        select s;
+                    where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
+                    select s;
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
@@ -192,8 +192,6 @@ namespace Nop.Services.Shipping
             //event notification
             _eventPublisher.EntityUpdated(shipment);
         }
-
-
         
         /// <summary>
         /// Deletes a shipment item
@@ -253,9 +251,6 @@ namespace Nop.Services.Shipping
             _eventPublisher.EntityUpdated(shipmentItem);
         }
 
-
-
-
         /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped
         /// </summary>
@@ -278,7 +273,6 @@ namespace Nop.Services.Shipping
 
             const int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
 
-
             var query = _siRepository.Table;
             query = query.Where(si => !si.Shipment.Order.Deleted);
             query = query.Where(si => si.Shipment.Order.OrderStatusId != cancelledOrderStatusId);
@@ -300,7 +294,6 @@ namespace Nop.Services.Shipping
             var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));
             return result;
         }
-
 
         #endregion
     }

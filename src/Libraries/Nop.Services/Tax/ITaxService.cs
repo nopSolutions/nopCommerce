@@ -210,6 +210,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         VatNumberStatus GetVatNumberStatus(string fullVatNumber,
             out string name, out string address);
+
         /// <summary>
         /// Gets VAT Number status
         /// </summary>

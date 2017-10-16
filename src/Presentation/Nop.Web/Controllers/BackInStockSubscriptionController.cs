@@ -138,7 +138,6 @@ namespace Nop.Web.Controllers
             return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
         }
 
-
         // My account / Back in stock subscriptions
         public virtual IActionResult CustomerSubscriptions(int? pageNumber)
         {
@@ -190,6 +189,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
+
         [HttpPost, ActionName("CustomerSubscriptions")]
         public virtual IActionResult CustomerSubscriptionsPOST(IFormCollection formCollection)
         {

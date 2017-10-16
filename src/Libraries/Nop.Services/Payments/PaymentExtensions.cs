@@ -62,7 +62,7 @@ namespace Nop.Services.Payments
             {
                 //percentage
                 var orderTotalWithoutPaymentFee = orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
-                result = (decimal)((((float)orderTotalWithoutPaymentFee) * ((float)fee)) / 100f);
+                result = (decimal)((float)orderTotalWithoutPaymentFee * (float)fee / 100f);
             }
             else
             {
@@ -104,6 +104,7 @@ namespace Nop.Services.Payments
                 return result;
             }
         }
+
         /// <summary>
         /// Deserialize CustomValues of Order
         /// </summary>
@@ -117,6 +118,7 @@ namespace Nop.Services.Payments
             var request = new ProcessPaymentRequest();
             return request.DeserializeCustomValues(order.CustomValuesXml);
         }
+
         /// <summary>
         /// Deserialize CustomValues of ProcessPaymentRequest
         /// </summary>
@@ -143,6 +145,7 @@ namespace Nop.Services.Payments
                 }
             }
         }
+
         /// <summary>
         /// Dictionary serializer
         /// </summary>
@@ -152,12 +155,12 @@ namespace Nop.Services.Payments
 
             public DictionarySerializer()
             {
-                this.Dictionary = new Dictionary<string, object>();
+                Dictionary = new Dictionary<string, object>();
             }
 
             public DictionarySerializer(Dictionary<string, object> dictionary)
             {
-                this.Dictionary = dictionary;
+                Dictionary = dictionary;
             }
 
             public void WriteXml(XmlWriter writer)
@@ -165,18 +168,18 @@ namespace Nop.Services.Payments
                 if (!Dictionary.Any())
                     return;
 
-                foreach (var key in this.Dictionary.Keys)
+                foreach (var key in Dictionary.Keys)
                 {
                     writer.WriteStartElement("item");
                     writer.WriteElementString("key", key);
-                    var value = this.Dictionary[key];
+                    var value = Dictionary[key];
                     //please note that we use ToString() for objects here
                     //of course, we can Serialize them
                     //but let's keep it simple and leave it for developers to handle it
                     //just put required serialization into ToString method of your object(s)
                     //because some objects don't implement ISerializable
                     //the question is how should we deserialize null values?
-                    writer.WriteElementString("value", value != null ? value.ToString() : null);
+                    writer.WriteElementString("value", value?.ToString());
                     writer.WriteEndElement();
                 }
             }
@@ -192,7 +195,7 @@ namespace Nop.Services.Payments
                     reader.ReadStartElement("item");
                     var key = reader.ReadElementString("key");
                     var value = reader.ReadElementString("value");
-                    this.Dictionary.Add(key, value);
+                    Dictionary.Add(key, value);
                     reader.ReadEndElement();
                     reader.MoveToContent();
                 }

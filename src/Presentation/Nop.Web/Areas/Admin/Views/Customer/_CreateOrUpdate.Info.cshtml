@@ -85,7 +85,7 @@
                     <div class="col-md-9">
                         <div id="externalauthrecords-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
 
                             //local datasource
                             var externalauthrecords = [
@@ -166,7 +166,7 @@
                         <nop-required />
                     </div>
                 </div>
-                <script>
+                <script type="text/javascript">
                     $(document).ready(function() {
                         var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                         customerRolesIdsInput.setOptions({

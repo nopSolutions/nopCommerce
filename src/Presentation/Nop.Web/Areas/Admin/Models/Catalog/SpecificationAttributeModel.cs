@@ -23,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
 
         public IList<SpecificationAttributeLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class SpecificationAttributeLocalizedModel : ILocalizedModelLocal

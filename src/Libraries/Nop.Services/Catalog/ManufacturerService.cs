@@ -19,6 +19,7 @@ namespace Nop.Services.Catalog
     public partial class ManufacturerService : IManufacturerService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -111,6 +112,7 @@ namespace Nop.Services.Catalog
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
+
         #endregion
 
         #region Methods
@@ -240,7 +242,6 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(manufacturer);
         }
-        
 
         /// <summary>
         /// Deletes a product manufacturer mapping
@@ -458,7 +459,6 @@ namespace Nop.Services.Catalog
                 .GroupBy(a => a.ProductId)
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
-
 
         /// <summary>
         /// Returns a list of names of not existing manufacturers

@@ -18,7 +18,6 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
 
-
         public NewsletterController(INewsletterModelFactory newsletterModelFactory,
             ILocalizationService localizationService,
             IWorkContext workContext,

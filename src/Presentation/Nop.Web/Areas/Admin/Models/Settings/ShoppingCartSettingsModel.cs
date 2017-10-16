@@ -7,8 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct")]
         public bool DisplayCartAfterAddingProduct { get; set; }
         public bool DisplayCartAfterAddingProduct_OverrideForStore { get; set; }

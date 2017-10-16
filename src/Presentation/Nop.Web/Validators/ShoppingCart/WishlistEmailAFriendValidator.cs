@@ -14,5 +14,6 @@ namespace Nop.Web.Validators.ShoppingCart
 
             RuleFor(x => x.YourEmailAddress).NotEmpty().WithMessage(localizationService.GetResource("Wishlist.EmailAFriend.YourEmailAddress.Required"));
             RuleFor(x => x.YourEmailAddress).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
-        }}
+        }
+    }
 }

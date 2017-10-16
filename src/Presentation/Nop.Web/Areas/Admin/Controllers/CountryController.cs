@@ -79,24 +79,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(country,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
-        
-        protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(stateProvince,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
-            }
-        }
-        
-        protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
+
+	    protected virtual void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
+	    {
+	        foreach (var localized in model.Locales)
+	        {
+	            _localizedEntityService.SaveLocalizedValue(stateProvince,
+	                x => x.Name,
+	                localized.Name,
+	                localized.LanguageId);
+	        }
+	    }
+
+	    protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -341,6 +341,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
+
         [HttpPost]
         public virtual IActionResult UnpublishSelected(ICollection<int> selectedIds)
         {

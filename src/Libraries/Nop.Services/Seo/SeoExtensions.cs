@@ -257,7 +257,6 @@ namespace Nop.Services.Seo
             return seName;
         }
 
-
         /// <summary>
         /// Get SE name
         /// </summary>
@@ -1365,7 +1364,6 @@ namespace Nop.Services.Seo
                     _seoCharacterTable.Add(ToUnichar("045E"), "u");  // Byelorussian SMALL LETTER ў
                 }
             }
-
         }
 
         /// <summary>

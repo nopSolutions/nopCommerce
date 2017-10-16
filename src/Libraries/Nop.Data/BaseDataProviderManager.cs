@@ -22,7 +22,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets or sets settings
         /// </summary>
-        protected DataSettings Settings { get; private set; }
+        protected DataSettings Settings { get; }
 
         /// <summary>
         /// Load data provider

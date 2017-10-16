@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Events
+﻿namespace Nop.Core.Events
 {
     /// <summary>
     /// A container for passing entities that have been deleted. This is not used for entities that are deleted logicaly via a bit column.
@@ -12,6 +11,6 @@ namespace Nop.Core.Events
             this.Entity = entity;
         }
 
-        public T Entity { get; private set; }
+        public T Entity { get; }
     }
 }

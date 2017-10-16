@@ -51,7 +51,6 @@ namespace Nop.Services.Common
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingContext;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
@@ -1278,7 +1277,6 @@ namespace Nop.Services.Common
                 }
             }
 
-
             doc.Close();
         }
 
@@ -1388,7 +1386,6 @@ namespace Nop.Services.Common
                     productTable.AddCell(table);
                     productTable.AddCell(new Paragraph(" "));
                 }
-
 
                 if (product.ProductType == ProductType.GroupedProduct)
                 {

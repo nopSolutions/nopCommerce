@@ -8,7 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ForumsEnabled")]
         public bool ForumsEnabled { get; set; }
         public bool ForumsEnabled_OverrideForStore { get; set; }
@@ -101,6 +100,5 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize")]
         public int ActiveDiscussionsPageSize { get; set; }
         public bool ActiveDiscussionsPageSize_OverrideForStore { get; set; }
-
     }
 }

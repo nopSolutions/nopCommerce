@@ -1,32 +1,33 @@
 ﻿@model AddressModel
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
+    //we don't move this script to the footer as it's used in Ajax requests where footer is not available
     <script type="text/javascript">
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-                var statesProgress = $("#states-loading-progress");
-                statesProgress.show();
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+            var statesProgress = $("#states-loading-progress");
+            statesProgress.show();
                 $.ajax({
-                    cache: false,
+                cache: false,
                     type: "GET",
                     url: "@(Url.RouteUrl("GetStatesByCountryId"))",
                     data: { "countryId": selectedItem, "addSelectStateItem": "true" },
                     success: function (data) {
-                        ddlStates.html('');
+                    ddlStates.html('');
                         $.each(data, function (id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        statesProgress.hide();
-                    },
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                    statesProgress.hide();
+                },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        statesProgress.hide();
-                    }
-                });
+                    alert('Failed to retrieve states.');
+                    statesProgress.hide();
+                }
             });
         });
+    });
     </script>
 }
 <input asp-for="Id" type="hidden"/>

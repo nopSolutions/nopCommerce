@@ -10,6 +10,6 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Footer
         /// </summary>
-        Foot,
+        Footer,
     }
 }

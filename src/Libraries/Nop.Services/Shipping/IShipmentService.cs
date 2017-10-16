@@ -67,8 +67,6 @@ namespace Nop.Services.Shipping
         /// <param name="shipment">Shipment</param>
         void UpdateShipment(Shipment shipment);
 
-
-
         /// <summary>
         /// Deletes a shipment item
         /// </summary>
@@ -93,8 +91,6 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
         void UpdateShipmentItem(ShipmentItem shipmentItem);
-
-
 
         /// <summary>
         /// Get quantity in shipments. For example, get planned quantity to be shipped

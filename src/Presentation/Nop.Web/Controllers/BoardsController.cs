@@ -97,10 +97,10 @@ namespace Nop.Web.Controllers
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
             var feed = new RssFeed(
-                                    string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
-                                    feedDescription,
-                                    new Uri(url),
-                                    DateTime.UtcNow);
+                string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                feedDescription,
+                new Uri(url),
+                DateTime.UtcNow);
 
             var items = new List<RssItem>();
 
@@ -179,10 +179,10 @@ namespace Nop.Web.Controllers
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
                 var feed = new RssFeed(
-                                        string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
-                                        feedDescription,
-                                        new Uri(url),
-                                        DateTime.UtcNow);
+                    string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
+                    feedDescription,
+                    new Uri(url),
+                    DateTime.UtcNow);
 
                 var items = new List<RssItem>();
 
@@ -751,7 +751,6 @@ namespace Nop.Web.Controllers
                 return Challenge();
             }
 
-
             var model = _forumModelFactory.PreparePostCreateModel(forumTopic, quote, false);
             return View(model);
         }
@@ -997,6 +996,7 @@ namespace Nop.Web.Controllers
             var model = _forumModelFactory.PrepareCustomerForumSubscriptionsModel(pageNumber);
             return View(model);
         }
+
         [HttpPost, ActionName("CustomerForumSubscriptions")]
         public virtual IActionResult CustomerForumSubscriptionsPOST(IFormCollection formCollection)
         {
@@ -1054,11 +1054,9 @@ namespace Nop.Web.Controllers
                             Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
                             VoteCount = forumPost.VoteCount
                         });
-                else
-                {
-                    _forumService.DeletePostVote(forumPostVote);
-                    return Json(new { VoteCount = forumPost.VoteCount });
-                }
+
+                _forumService.DeletePostVote(forumPostVote);
+                return Json(new { VoteCount = forumPost.VoteCount });
             }
 
             if (_forumService.GetNumberOfPostVotes(_workContext.CurrentCustomer, DateTime.UtcNow.AddDays(-1)) >= _forumSettings.MaxVotesPerDay)
@@ -1067,7 +1065,6 @@ namespace Nop.Web.Controllers
                     Error = string.Format(_localizationService.GetResource("Forum.Votes.MaxVotesReached"), _forumSettings.MaxVotesPerDay),
                     VoteCount = forumPost.VoteCount
                 });
-
 
             _forumService.InsertPostVote(new ForumPostVote
             {
@@ -1079,6 +1076,6 @@ namespace Nop.Web.Controllers
             return Json(new { VoteCount = forumPost.VoteCount, IsUp = isUp });
         }
 
-#endregion
+        #endregion
     }
 }

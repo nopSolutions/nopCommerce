@@ -938,8 +938,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //custom customer attributes
                 _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
-
-
+                
                 //newsletter subscriptions
                 if (!string.IsNullOrEmpty(customer.Email))
                 {
@@ -1228,7 +1227,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
 
-
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
                     {
@@ -1259,7 +1257,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
                     _customerService.UpdateCustomer(customer);
-                    
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
@@ -1282,7 +1279,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
-
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
 
@@ -1301,7 +1297,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     ErrorNotification(exc.Message, false);
                 }
             }
-
 
             //If we got this far, something failed, redisplay form
             PrepareCustomerModel(model, customer, true);
@@ -1896,7 +1891,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Total = orders.Count
             };
 
-
             return Json(gridModel);
         }
         
@@ -1988,7 +1982,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
-
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 2, command.Page - 1, command.PageSize);
@@ -2093,7 +2086,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
                     break;
-
                 case "week":
                 default:
                     //week statistics

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -48,6 +47,5 @@ namespace Nop.Services.Common
                 //bu we simplify this process and simply compare their values in XML
                 ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
         }
-
     }
 }

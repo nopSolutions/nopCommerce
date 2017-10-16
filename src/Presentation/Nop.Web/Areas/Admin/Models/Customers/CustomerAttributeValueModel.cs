@@ -27,7 +27,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public int DisplayOrder {get;set;}
 
         public IList<CustomerAttributeValueLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class CustomerAttributeValueLocalizedModel : ILocalizedModelLocal

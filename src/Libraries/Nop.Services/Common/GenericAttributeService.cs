@@ -29,6 +29,7 @@ namespace Nop.Services.Common
         /// Key pattern to clear cache
         /// </summary>
         private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
+
         #endregion
 
         #region Fields

@@ -64,11 +64,11 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                if (!this.IsActive)
+                if (!IsActive)
                     return null;
 
-                var historyCollection = this.RecurringPaymentHistory;
-                if (historyCollection.Count >= this.TotalCycles)
+                var historyCollection = RecurringPaymentHistory;
+                if (historyCollection.Count >= TotalCycles)
                 {
                     return null;
                 }
@@ -129,19 +129,19 @@ namespace Nop.Core.Domain.Orders
                 //{
                     if (historyCollection.Any())
                     {
-                        switch (this.CyclePeriod)
+                        switch (CyclePeriod)
                         {
                             case RecurringProductCyclePeriod.Days:
-                                result = this.StartDateUtc.AddDays((double)this.CycleLength * historyCollection.Count);
+                                result = StartDateUtc.AddDays((double)CycleLength * historyCollection.Count);
                                 break;
                             case RecurringProductCyclePeriod.Weeks:
-                                result = this.StartDateUtc.AddDays((double)(7 * this.CycleLength) * historyCollection.Count);
+                                result = StartDateUtc.AddDays((double)(7 * CycleLength) * historyCollection.Count);
                                 break;
                             case RecurringProductCyclePeriod.Months:
-                                result = this.StartDateUtc.AddMonths(this.CycleLength * historyCollection.Count);
+                                result = StartDateUtc.AddMonths(CycleLength * historyCollection.Count);
                                 break;
                             case RecurringProductCyclePeriod.Years:
-                                result = this.StartDateUtc.AddYears(this.CycleLength * historyCollection.Count);
+                                result = StartDateUtc.AddYears(CycleLength * historyCollection.Count);
                                 break;
                             default:
                                 throw new NopException("Not supported cycle period");
@@ -149,8 +149,8 @@ namespace Nop.Core.Domain.Orders
                     }
                     else
                     {
-                        if (this.TotalCycles > 0)
-                            result = this.StartDateUtc;
+                        if (TotalCycles > 0)
+                            result = StartDateUtc;
                     }
                 //}
 
@@ -166,8 +166,8 @@ namespace Nop.Core.Domain.Orders
             get
             {
                 //result
-                var historyCollection = this.RecurringPaymentHistory;
-                var result = this.TotalCycles - historyCollection.Count;
+                var historyCollection = RecurringPaymentHistory;
+                var result = TotalCycles - historyCollection.Count;
                 if (result < 0)
                     result = 0;
 
@@ -182,16 +182,13 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                return (RecurringProductCyclePeriod)this.CyclePeriodId;
+                return (RecurringProductCyclePeriod)CyclePeriodId;
             }
             set
             {
-                this.CyclePeriodId = (int)value;
+                CyclePeriodId = (int)value;
             }
         }
-        
-
-
 
         /// <summary>
         /// Gets or sets the recurring payment history

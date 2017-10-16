@@ -56,7 +56,7 @@
                                                 <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                             </div>
                                         }
-                                        <script>
+                                        <script type="text/javascript">
                         $(document).ready(function() {
                             showHideDropdownQuantity("@controlId");
                         });
@@ -84,7 +84,7 @@
                                                     </div>
                                                 }
                                             </div>
-                                            <script>
+                                            <script type="text/javascript">
                             $(document).ready(function() {
                                 showHideRadioQuantity("@controlId");
                             });
@@ -109,7 +109,7 @@
                                                     <div id="@(controlId)_@(attributeValue.Id)_qty_box" style="display: none">
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
-                                                        <script>
+                                                        <script type="text/javascript">
                                         $(document).ready(function() {
                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                         })
@@ -316,7 +316,7 @@
             </script>
         </div>
 
-        <script>
+        <script type="text/javascript">
             function showHideDropdownQuantity(id) {
                 $('select[name=' + id + '] > option').each(function () {
                     $('#' + id + '_' + this.value + '_qty_box').hide();

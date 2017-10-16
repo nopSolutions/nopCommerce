@@ -55,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
-
             return View();
         }
 
@@ -105,7 +104,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var permissionRecords = _permissionService.GetAllPermissionRecords();
             var customerRoles = _customerService.GetAllCustomerRoles(true);
-
 
             foreach (var cr in customerRoles)
             {

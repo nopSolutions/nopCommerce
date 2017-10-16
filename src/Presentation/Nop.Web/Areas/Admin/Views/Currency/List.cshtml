@@ -65,7 +65,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="currencies-grid"></div>
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#currencies-grid").kendoGrid({
                                     dataSource: {
@@ -165,7 +165,7 @@
                             });
                         </script>
 
-                        <script>
+                        <script type="text/javascript">
                             function markAsPrimaryExchangeRateCurrency(id) {
                                 if (confirm('@T("Admin.Common.AreYouSure")')) {
                                     var postData = {
@@ -220,7 +220,7 @@
                         <div class="panel-body">
                             <div id="rate-grid" style="max-width: 350px;"></div>
 
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function () {
                                     $("#rate-grid").kendoGrid({
                                         dataSource: {

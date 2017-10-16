@@ -124,7 +124,6 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("VendorList", "vendor/all/",
 				new { controller = "Catalog", action = "VendorAll" });
 
-
             //add product to cart (without any attributes and options). used on catalog pages.
             routeBuilder.MapLocalizedRoute("AddProductToCart-Catalog", "addproducttocart/catalog/{productId:min(0)}/{shoppingCartTypeId:min(0)}/{quantity:min(0)}",
 				new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" });

@@ -70,7 +70,7 @@ namespace Nop.Data
         {
             //see some suggested performance optimization (not tested)
             //http://stackoverflow.com/questions/11686225/dbset-find-method-ridiculously-slow-compared-to-singleordefault-on-id/11688189#comment34876113_11688189
-            return this.Entities.Find(id);
+            return Entities.Find(id);
         }
 
         /// <summary>
@@ -84,9 +84,9 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException(nameof(entity));
 
-                this.Entities.Add(entity);
+                Entities.Add(entity);
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -107,9 +107,9 @@ namespace Nop.Data
                     throw new ArgumentNullException(nameof(entities));
 
                 foreach (var entity in entities)
-                    this.Entities.Add(entity);
+                    Entities.Add(entity);
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -129,7 +129,7 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException(nameof(entity));
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -149,7 +149,7 @@ namespace Nop.Data
                 if (entities == null)
                     throw new ArgumentNullException(nameof(entities));
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -169,9 +169,9 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException(nameof(entity));
 
-                this.Entities.Remove(entity);
+                Entities.Remove(entity);
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -192,9 +192,9 @@ namespace Nop.Data
                     throw new ArgumentNullException(nameof(entities));
 
                 foreach (var entity in entities)
-                    this.Entities.Remove(entity);
+                    Entities.Remove(entity);
 
-                this._context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception dbEx)
             {
@@ -214,7 +214,7 @@ namespace Nop.Data
         {
             get
             {
-                return this.Entities;
+                return Entities;
             }
         }
 
@@ -225,7 +225,7 @@ namespace Nop.Data
         {
             get
             {
-                return this.Entities.AsNoTracking();
+                return Entities.AsNoTracking();
             }
         }
 

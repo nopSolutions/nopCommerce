@@ -240,6 +240,5 @@ namespace Nop.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
             return RedirectToAction("List");
         }
-
 	}
 }

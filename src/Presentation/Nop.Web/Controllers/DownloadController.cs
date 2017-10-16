@@ -87,8 +87,7 @@ namespace Nop.Web.Controllers
 
             if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)
                 return Content(string.Format(_localizationService.GetResource("DownloadableProducts.ReachedMaximumNumber"), product.MaxNumberOfDownloads));
-            
-
+           
             if (download.UseDownloadUrl)
             {
                 //increase download

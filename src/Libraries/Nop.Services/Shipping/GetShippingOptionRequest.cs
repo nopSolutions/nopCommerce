@@ -89,6 +89,7 @@ namespace Nop.Services.Shipping
             /// Shopping cart item
             /// </summary>
             public ShoppingCartItem ShoppingCartItem { get; set; }
+
             /// <summary>
             /// If specified, override "Quantity" property of "ShoppingCartItem
             /// </summary>

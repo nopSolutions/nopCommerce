@@ -23,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
         public int SearchPriceId { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
         public IList<SelectListItem> AvailableVersions { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]

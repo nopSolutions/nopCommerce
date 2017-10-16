@@ -1,5 +1,3 @@
-
-
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Orders

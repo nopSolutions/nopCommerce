@@ -12,6 +12,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
             AvailableCountries = new List<CountryModel>();
             Resticted = new Dictionary<string, IDictionary<int, bool>>();
         }
+
         public IList<PaymentMethodModel> AvailablePaymentMethods { get; set; }
         public IList<CountryModel> AvailableCountries { get; set; }
 

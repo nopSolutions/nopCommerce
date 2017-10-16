@@ -29,6 +29,7 @@ namespace Nop.Web.Models.Checkout
             public bool Selected { get; set; }
             public string LogoUrl { get; set; }
         }
+
         #endregion
     }
 }

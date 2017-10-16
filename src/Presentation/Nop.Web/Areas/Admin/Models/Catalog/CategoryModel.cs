@@ -101,15 +101,12 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
-
         public IList<SelectListItem> AvailableCategories { get; set; }
-
 
         //discounts
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Discounts")]
         public IList<int> SelectedDiscountIds { get; set; }
         public IList<SelectListItem> AvailableDiscounts { get; set; }
-
 
         #region Nested classes
 

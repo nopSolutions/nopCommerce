@@ -271,7 +271,6 @@ namespace Nop.Services.Catalog
             return result;
         }
 
-
         /// <summary>
         /// Formats the shipping price
         /// </summary>
@@ -335,8 +334,6 @@ namespace Nop.Services.Catalog
                    };
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
-
-
 
         /// <summary>
         /// Formats the payment method additional fee
@@ -404,8 +401,6 @@ namespace Nop.Services.Catalog
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
         }
-
-
 
         /// <summary>
         /// Formats a tax rate

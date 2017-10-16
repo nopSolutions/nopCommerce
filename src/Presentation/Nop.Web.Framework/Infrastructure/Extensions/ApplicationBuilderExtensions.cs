@@ -159,6 +159,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             application.UseMiddleware<AuthenticationMiddleware>();
         }
 

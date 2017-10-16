@@ -16,6 +16,7 @@ namespace Nop.Services.Catalog
     public partial class ProductAttributeService : IProductAttributeService
     {
         #region Constants
+
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -94,7 +95,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
-
 
         #endregion
 

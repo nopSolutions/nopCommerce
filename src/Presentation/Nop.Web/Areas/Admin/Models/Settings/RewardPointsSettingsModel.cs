@@ -7,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.Enabled")]
         public bool Enabled { get; set; }
         public bool Enabled_OverrideForStore { get; set; }

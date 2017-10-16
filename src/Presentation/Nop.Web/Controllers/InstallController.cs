@@ -398,7 +398,6 @@ namespace Nop.Web.Controllers
                 }
             }
 
-
             //Consider granting access rights to the resource to the ASP.NET request identity. 
             //ASP.NET has a base process identity 
             //(typically {MACHINE}\ASPNET on IIS 5 or Network Service on IIS 6 and IIS 7, 

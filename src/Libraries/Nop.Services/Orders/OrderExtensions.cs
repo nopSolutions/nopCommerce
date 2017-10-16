@@ -162,8 +162,6 @@ namespace Nop.Services.Orders
             return result;
         }
 
-
-
         /// <summary>
         /// Gets a value indicating whether an order has items to be added to a shipment
         /// </summary>
@@ -189,6 +187,7 @@ namespace Nop.Services.Orders
             }
             return false;
         }
+
         /// <summary>
         /// Gets a value indicating whether an order has items to ship
         /// </summary>
@@ -214,6 +213,7 @@ namespace Nop.Services.Orders
             }
             return false;
         }
+
         /// <summary>
         /// Gets a value indicating whether an order has items to deliver
         /// </summary>

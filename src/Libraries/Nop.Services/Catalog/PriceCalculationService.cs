@@ -75,6 +75,7 @@ namespace Nop.Services.Catalog
             public decimal AppliedDiscountAmount { get; set; }
             public List<DiscountForCaching> AppliedDiscounts { get; set; }
         }
+
         #endregion
 
         #region Utilities
@@ -315,6 +316,7 @@ namespace Nop.Services.Catalog
                 null, null,
                 out discountAmount, out appliedDiscounts);
         }
+
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -341,6 +343,7 @@ namespace Nop.Services.Catalog
             return GetFinalPrice(product, customer, null, additionalCharge, includeDiscounts, quantity,
                 rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscounts);
         }
+
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -437,8 +440,6 @@ namespace Nop.Services.Catalog
             return cachedPrice.Price;
         }
 
-
-
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -453,6 +454,7 @@ namespace Nop.Services.Catalog
             return GetUnitPrice(shoppingCartItem, includeDiscounts,
                 out discountAmount, out appliedDiscounts);
         }
+
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -481,6 +483,7 @@ namespace Nop.Services.Catalog
                 out discountAmount,
                 out appliedDiscounts);
         }
+
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -586,6 +589,7 @@ namespace Nop.Services.Catalog
 
             return finalPrice;
         }
+
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
@@ -597,6 +601,7 @@ namespace Nop.Services.Catalog
         {
             return GetSubTotal(shoppingCartItem, includeDiscounts, out decimal _, out List<DiscountForCaching> _, out int? _);
         }
+
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
@@ -662,7 +667,6 @@ namespace Nop.Services.Catalog
             return subTotal;
         }
 
-
         /// <summary>
         /// Gets the product cost (one item)
         /// </summary>
@@ -701,8 +705,6 @@ namespace Nop.Services.Catalog
 
             return cost;
         }
-
-
 
         /// <summary>
         /// Get a price adjustment of a product attribute value

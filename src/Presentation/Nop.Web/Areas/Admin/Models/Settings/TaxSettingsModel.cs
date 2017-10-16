@@ -18,7 +18,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PricesIncludeTax")]
         public bool PricesIncludeTax { get; set; }
         public bool PricesIncludeTax_OverrideForStore { get; set; }

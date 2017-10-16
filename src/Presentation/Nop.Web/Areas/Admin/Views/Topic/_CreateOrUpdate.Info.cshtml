@@ -150,7 +150,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
-                            <script>
+                            <script type="text/javascript">
                                 $(document).ready(function() {
                                     var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
@@ -186,7 +186,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                            <script>
+                            <script type="text/javascript">
                     $(document).ready(function() {
                         var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                         storesIdsInput.setOptions({

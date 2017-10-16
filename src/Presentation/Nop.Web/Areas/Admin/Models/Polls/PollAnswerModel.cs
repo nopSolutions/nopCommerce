@@ -18,6 +18,5 @@ namespace Nop.Web.Areas.Admin.Models.Polls
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-
     }
 }

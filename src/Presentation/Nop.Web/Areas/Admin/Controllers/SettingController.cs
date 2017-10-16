@@ -143,9 +143,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(rrr,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 
@@ -154,9 +154,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var localized in model.Locales)
             {
                 _localizedEntityService.SaveLocalizedValue(rra,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
             }
         }
 
@@ -498,6 +498,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             else
                 model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+
             model.ShippingOriginAddress.CountryEnabled = true;
             model.ShippingOriginAddress.StateProvinceEnabled = true;
             model.ShippingOriginAddress.CityEnabled = true;
@@ -2216,27 +2217,28 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var settings = query.ToList()
                 .Select(x =>
-                            {
-                                string storeName;
-                                if (x.StoreId == 0)
-                                {
-                                    storeName = _localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
-                                }
-                                else
-                                {
-                                    var store = _storeService.GetStoreById(x.StoreId);
-                                    storeName = store != null ? store.Name : "Unknown";
-                                }
-                                var settingModel = new SettingModel
-                                {
-                                    Id = x.Id,
-                                    Name = x.Name,
-                                    Value = x.Value,
-                                    Store = storeName,
-                                    StoreId = x.StoreId
-                                };
-                                return settingModel;
-                            })
+                {
+                    string storeName;
+                    if (x.StoreId == 0)
+                    {
+                        storeName = _localizationService.GetResource(
+                            "Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
+                    }
+                    else
+                    {
+                        var store = _storeService.GetStoreById(x.StoreId);
+                        storeName = store != null ? store.Name : "Unknown";
+                    }
+                    var settingModel = new SettingModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Value = x.Value,
+                        Store = storeName,
+                        StoreId = x.StoreId
+                    };
+                    return settingModel;
+                })
                 .AsQueryable();
 
             var gridModel = new DataSourceResult

@@ -444,7 +444,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
-                var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(p => p.BlogPostId).Distinct().ToArray());
 
                 _blogService.DeleteBlogComments(comments);
                 //activity log

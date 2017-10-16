@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Caching
+﻿namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a manager for caching between HTTP requests (long term caching)

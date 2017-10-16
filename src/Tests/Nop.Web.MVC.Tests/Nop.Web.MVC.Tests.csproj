@@ -11,6 +11,9 @@
     				<RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     				<RepositoryType>Git</RepositoryType>
   			</PropertyGroup>
+            <PropertyGroup>
+                <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+            </PropertyGroup>
   			<ItemGroup>
   			  <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
   			  <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj" />

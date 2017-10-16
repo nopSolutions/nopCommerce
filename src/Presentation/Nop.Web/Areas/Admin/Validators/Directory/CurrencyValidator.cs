@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using FluentValidation;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Services.Localization;
@@ -30,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
                             return true;
                         //let's try to create a CultureInfo object
                         //if "DisplayLocale" is wrong, then exception will be thrown
-                        var culture = new CultureInfo(x);
+                        var unused = new CultureInfo(x);
                         return true;
                     }
                     catch

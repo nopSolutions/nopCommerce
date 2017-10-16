@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -186,6 +184,7 @@ namespace Nop.Web.Extensions
             }
             return new HtmlString(result);
         }
+
         public static IHtmlContent ForumTopicSmallPager<TModel>(this IHtmlHelper<TModel> html, ForumTopicRowModel model)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -233,6 +232,7 @@ namespace Nop.Web.Extensions
             }
             return new HtmlString(string.Empty);
         }
+
         public static Pager Pager(this IHtmlHelper helper, IPageableModel pagination)
         {
             return new Pager(pagination, helper.ViewContext);

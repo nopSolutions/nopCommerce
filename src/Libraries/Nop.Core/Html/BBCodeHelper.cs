@@ -1,4 +1,3 @@
-using System;
 using System.Text.RegularExpressions;
 using Nop.Core.Domain.Common;
 using Nop.Core.Html.CodeFormatter;
@@ -12,6 +11,7 @@ namespace Nop.Core.Html
     public partial class BBCodeHelper
     {
         #region Fields
+
         private static readonly Regex regexBold = new Regex(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexItalic = new Regex(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexUnderLine = new Regex(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -23,6 +23,7 @@ namespace Nop.Core.Html
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Formats the text
         /// </summary>

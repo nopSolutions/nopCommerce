@@ -422,7 +422,6 @@ namespace Nop.Services.Tax
                 return taxRate;
             }
 
-
             GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out bool isTaxable);
 
             if (priceIncludesTax)
@@ -457,7 +456,6 @@ namespace Nop.Services.Tax
                     }
                 }
             }
-
 
             if (!isTaxable)
             {
@@ -783,7 +781,6 @@ namespace Nop.Services.Tax
                 if (address == null)
                     address = string.Empty;
             }
-
         }
 
         #endregion

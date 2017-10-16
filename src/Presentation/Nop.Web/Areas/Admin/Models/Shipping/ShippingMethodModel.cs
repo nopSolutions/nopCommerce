@@ -14,6 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         {
             Locales = new List<ShippingMethodLocalizedModel>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
         public string Name { get; set; }
 
@@ -35,6 +36,5 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
         public string Description { get; set; }
-
     }
 }

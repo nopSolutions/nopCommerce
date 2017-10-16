@@ -465,8 +465,7 @@ namespace Nop.Core.Plugins
         /// <returns></returns>
         private static bool IsPackagePluginFolder(DirectoryInfo folder)
         {
-            if (folder == null) return false;
-            if (folder.Parent == null) return false;
+            if (folder?.Parent == null) return false;
             if (!folder.Parent.Name.Equals(PluginsPathName, StringComparison.InvariantCultureIgnoreCase)) return false;
 
             return true;
@@ -488,7 +487,6 @@ namespace Nop.Core.Plugins
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-
 
             using (new WriteLockDisposable(Locker))
             {
@@ -532,7 +530,6 @@ namespace Nop.Core.Plugins
                             }
                         }
                     }
-
                    
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
@@ -632,7 +629,6 @@ namespace Nop.Core.Plugins
                     var fail = new Exception(msg, ex);
                     throw fail;
                 }
-
 
                 ReferencedPlugins = referencedPlugins;
                 IncompatiblePlugins = incompatiblePlugins;
@@ -847,6 +843,5 @@ namespace Nop.Core.Plugins
         public static IEnumerable<string> IncompatiblePlugins { get; set; }
 
         #endregion
-
     }
 }

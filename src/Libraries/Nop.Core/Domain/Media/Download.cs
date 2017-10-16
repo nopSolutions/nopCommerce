@@ -47,5 +47,4 @@ namespace Nop.Core.Domain.Media
         /// </summary>
         public bool IsNew { get; set; }
     }
-
 }

@@ -102,10 +102,8 @@ namespace Nop.Web.Controllers
 
                 return View(model);
             }
-            else
-            {
-                return RedirectToRoute("CustomerOrders");
-            }
+
+            return RedirectToRoute("CustomerOrders");
         }
 
         //My account / Orders / Retry last recurring order

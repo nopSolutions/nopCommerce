@@ -14,6 +14,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
         {
             Locales = new List<DeliveryDateLocalizedModel>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
         public string Name { get; set; }
 
@@ -29,6 +30,5 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
         public string Name { get; set; }
-
     }
 }

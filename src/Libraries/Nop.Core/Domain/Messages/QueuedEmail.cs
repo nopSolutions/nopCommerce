@@ -107,7 +107,6 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public virtual EmailAccount EmailAccount { get; set; }
 
-
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
@@ -122,6 +121,5 @@ namespace Nop.Core.Domain.Messages
                 this.PriorityId = (int)value;
             }
         }
-
     }
 }

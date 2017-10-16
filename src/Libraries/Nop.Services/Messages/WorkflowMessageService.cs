@@ -98,7 +98,6 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
             return emailAccount;
-
         }
 
         protected virtual int EnsureLanguageIsActive(int languageId, int storeId)
@@ -260,7 +259,6 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
@@ -296,7 +294,6 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);

@@ -358,7 +358,6 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendGiftCardNotification(GiftCard giftCard, int languageId);
 
-
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
         /// </summary>

@@ -17,7 +17,6 @@ namespace Nop.Services.Authentication
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         private Customer _cachedCustomer;
 
         #endregion

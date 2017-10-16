@@ -143,6 +143,7 @@ namespace Nop.Services.Tax
             //event notification
             _eventPublisher.EntityUpdated(taxCategory);
         }
+
         #endregion
     }
 }

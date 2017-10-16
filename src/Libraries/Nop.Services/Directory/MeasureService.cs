@@ -79,7 +79,7 @@ namespace Nop.Services.Directory
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
             _measureSettings = measureSettings;
-           _eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Nop.Services.Directory
             //event notification
             _eventPublisher.EntityDeleted(measureDimension);
         }
-        
+
         /// <summary>
         /// Gets a measure dimension by identifier
         /// </summary>
@@ -114,7 +114,7 @@ namespace Nop.Services.Directory
         {
             if (measureDimensionId == 0)
                 return null;
-            
+
             var key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
             return _cacheManager.Get(key, () => _measureDimensionRepository.GetById(measureDimensionId));
         }
@@ -146,8 +146,8 @@ namespace Nop.Services.Directory
             return _cacheManager.Get(key, () =>
             {
                 var query = from md in _measureDimensionRepository.Table
-                            orderby md.DisplayOrder, md.Id
-                            select md;
+                    orderby md.DisplayOrder, md.Id
+                    select md;
                 var measureDimensions = query.ToList();
                 return measureDimensions;
 
@@ -196,7 +196,7 @@ namespace Nop.Services.Directory
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertDimension(decimal value, 
+        public virtual decimal ConvertDimension(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
             if (sourceMeasureDimension == null)
@@ -294,7 +294,7 @@ namespace Nop.Services.Directory
         {
             if (measureWeightId == 0)
                 return null;
-            
+
             var key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
             return _cacheManager.Get(key, () => _measureWeightRepository.GetById(measureWeightId));
         }
@@ -326,8 +326,8 @@ namespace Nop.Services.Directory
             return _cacheManager.Get(key, () =>
             {
                 var query = from mw in _measureWeightRepository.Table
-                            orderby mw.DisplayOrder, mw.Id
-                            select mw;
+                    orderby mw.DisplayOrder, mw.Id
+                    select mw;
                 var measureWeights = query.ToList();
                 return measureWeights;
             });
@@ -360,7 +360,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(measure));
 
             _measureWeightRepository.Update(measure);
-            
+
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
 
             //event notification

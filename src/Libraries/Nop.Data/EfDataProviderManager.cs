@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Data;
 
 namespace Nop.Data
@@ -31,6 +30,5 @@ namespace Nop.Data
                     throw new NopException($"Not supported dataprovider name: {providerName}");
             }
         }
-
     }
 }

@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Seo
 {
     /// <summary>

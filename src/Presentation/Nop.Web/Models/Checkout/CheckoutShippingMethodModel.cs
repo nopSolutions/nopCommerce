@@ -30,6 +30,7 @@ namespace Nop.Web.Models.Checkout
 
             public ShippingOption ShippingOption { get; set; } 
         }
+
         #endregion
     }
 }

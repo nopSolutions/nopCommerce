@@ -191,7 +191,6 @@ namespace Nop.Services.Orders
             return lastRph != null && lastRph.PointsBalance.HasValue ? lastRph.PointsBalance.Value : 0;
         }
 
-
         /// <summary>
         /// Gets a reward point history entry
         /// </summary>

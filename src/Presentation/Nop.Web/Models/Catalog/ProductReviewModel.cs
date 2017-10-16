@@ -56,7 +56,6 @@ namespace Nop.Web.Models.Catalog
         public string WrittenOnStr { get; set; }
     }
 
-
     public partial class ProductReviewHelpfulnessModel : BaseNopModel
     {
         public int ProductReviewId { get; set; }

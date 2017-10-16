@@ -54,6 +54,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Product", new { SeName = product.GetSeName() });
         }
+
         //in versions 2.00-2.65 we had ID in category URLs
         public virtual IActionResult RedirectCategoryById(int categoryId)
         {
@@ -63,6 +64,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Category", new { SeName = category.GetSeName() });
         }
+
         //in versions 2.00-2.65 we had ID in manufacturer URLs
         public virtual IActionResult RedirectManufacturerById(int manufacturerId)
         {
@@ -72,6 +74,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
         }
+
         //in versions 2.00-2.70 we had ID in news URLs
         public virtual IActionResult RedirectNewsItemById(int newsItemId)
         {
@@ -81,6 +84,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
+
         //in versions 2.00-2.70 we had ID in blog URLs
         public virtual IActionResult RedirectBlogPostById(int blogPostId)
         {
@@ -90,6 +94,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
+
         //in versions 2.00-3.20 we had SystemName in topic URLs
         public virtual IActionResult RedirectTopicBySystemName(string systemName)
         {
@@ -99,6 +104,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
+
         //in versions 3.00-3.20 we had ID in vendor URLs
         public virtual IActionResult RedirectVendorById(int vendorId)
         {
@@ -108,6 +114,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Vendor", new { SeName = vendor.GetSeName() });
         }
+
         #endregion
     }
 }

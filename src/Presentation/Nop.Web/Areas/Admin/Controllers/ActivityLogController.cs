@@ -96,7 +96,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 Text = "All"
             });
 
-
             foreach (var at in _customerActivityService.GetAllActivityTypes())
             {
                 activityLogSearchModel.ActivityLogType.Add(new SelectListItem

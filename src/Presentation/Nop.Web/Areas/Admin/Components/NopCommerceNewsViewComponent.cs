@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Xml;
 using Microsoft.AspNetCore.Mvc;
@@ -39,14 +38,8 @@ namespace Nop.Web.Areas.Admin.Components
         {
             try
             {
-                var feedUrl = string
-                    .Format(
-                        "http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
-                        NopVersion.CurrentVersion,
-                        _webHelper.IsLocalRequest(Request),
-                        _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                        _storeContext.CurrentStore.Url)
-                    .ToLowerInvariant();
+                var feedUrl = $"http://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_storeContext.CurrentStore.Url}"
+                        .ToLowerInvariant();
 
                 var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
                 {

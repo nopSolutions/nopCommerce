@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Directory;
@@ -20,6 +19,7 @@ namespace Nop.Web.Areas.Admin.Models.Directory
             SelectedStoreIds = new List<int>();
             AvailableStores = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         public string Name { get; set; }
 

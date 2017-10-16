@@ -232,7 +232,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     return RedirectToAction("Edit", new { id = newsItem.Id });
                 }
                 return RedirectToAction("List");
-
             }
 
             //If we got this far, something failed, redisplay form

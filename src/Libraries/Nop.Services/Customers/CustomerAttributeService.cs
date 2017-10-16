@@ -48,6 +48,7 @@ namespace Nop.Services.Customers
         /// Key pattern to clear cache
         /// </summary>
         private const string CUSTOMERATTRIBUTEVALUES_PATTERN_KEY = "Nop.customerattributevalue.";
+
         #endregion
         
         #region Fields

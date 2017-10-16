@@ -47,8 +47,6 @@ namespace Nop.Data
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
 
-
-
             base.OnModelCreating(modelBuilder);
         }
 

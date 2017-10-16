@@ -30,6 +30,5 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
         public string Name { get; set; }
-
     }
 }

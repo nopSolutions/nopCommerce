@@ -1,4 +1,3 @@
-
 namespace Nop.Services.Installation
 {
     public partial interface IInstallationService

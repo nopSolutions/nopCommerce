@@ -206,7 +206,6 @@ namespace Nop.Web.Factories
                             ZipPostalCode = order.PickupAddress.ZipPostalCode
                         };
                 model.ShippingMethod = order.ShippingMethod;
-   
 
                 //shipments (only already shipped)
                 var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
@@ -224,7 +223,6 @@ namespace Nop.Web.Factories
                     model.Shipments.Add(shipmentModel);
                 }
             }
-
 
             //billing info
             _addressModelFactory.PrepareAddressModel(model.BillingAddress,
@@ -339,7 +337,6 @@ namespace Nop.Web.Factories
             if (orderDiscountInCustomerCurrency > decimal.Zero)
                 model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
-
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
             {
@@ -378,7 +375,6 @@ namespace Nop.Web.Factories
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
-
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;

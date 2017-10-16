@@ -42,6 +42,7 @@ namespace Nop.Services.Shipping
             return false;
 
         }
+
         public static bool CountryRestrictionExists(this ShippingMethod shippingMethod,
             int countryId)
         {

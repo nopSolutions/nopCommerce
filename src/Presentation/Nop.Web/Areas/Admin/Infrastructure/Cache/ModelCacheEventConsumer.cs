@@ -69,7 +69,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         public const string VENDORS_LIST_KEY = "Nop.pres.admin.vendors.list-{0}";
         public const string VENDORS_LIST_PATTERN_KEY = "Nop.pres.admin.vendors.list";
 
-
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer(IStaticCacheManager cacheManager)

@@ -39,7 +39,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Initialize()
         {
-            this._taskThreads.Clear();
+            _taskThreads.Clear();
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
             var scheduleTasks = taskService
@@ -59,7 +59,7 @@ namespace Nop.Services.Tasks
                 {
                     taskThread.AddTask(scheduleTask);
                 }
-                this._taskThreads.Add(taskThread);
+                _taskThreads.Add(taskThread);
             }
 
             //sometimes a task period could be set to several hours (or even days).
@@ -82,7 +82,7 @@ namespace Nop.Services.Tasks
                 {
                     taskThread.AddTask(scheduleTask);
                 }
-                this._taskThreads.Add(taskThread);
+                _taskThreads.Add(taskThread);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Start()
         {
-            foreach (var taskThread in this._taskThreads)
+            foreach (var taskThread in _taskThreads)
             {
                 taskThread.InitTimer();
             }
@@ -102,7 +102,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Stop()
         {
-            foreach (var taskThread in this._taskThreads)
+            foreach (var taskThread in _taskThreads)
             {
                 taskThread.Dispose();
             }

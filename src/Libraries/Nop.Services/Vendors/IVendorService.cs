@@ -44,8 +44,6 @@ namespace Nop.Services.Vendors
         /// <param name="vendor">Vendor</param>
         void UpdateVendor(Vendor vendor);
 
-
-
         /// <summary>
         /// Gets a vendor note note
         /// </summary>

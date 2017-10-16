@@ -1014,7 +1014,7 @@ namespace Nop.Services.Orders
                 {
                     if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                     {
-                       purchasedProductIds.Add(attributeValue.AssociatedProductId);
+                        purchasedProductIds.Add(attributeValue.AssociatedProductId);
                     }
                 }
             }
@@ -1025,32 +1025,32 @@ namespace Nop.Services.Orders
                 .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
                 .ToList();
 
-            if (customerRoles.Any())
+            if (!customerRoles.Any())
+                return;
+
+            var customer = order.Customer;
+            foreach (var customerRole in customerRoles)
             {
-                var customer = order.Customer;
-                foreach (var customerRole in customerRoles)
+                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
                 {
-                    if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
+                    //not in the list yet
+                    if (add)
                     {
-                        //not in the list yet
-                        if (add)
-                        {
-                            //add
-                            customer.CustomerRoles.Add(customerRole);
-                        }
-                    }
-                    else
-                    {
-                        //already in the list
-                        if (!add)
-                        {
-                            //remove
-                            customer.CustomerRoles.Remove(customerRole);
-                        }
+                        //add
+                        customer.CustomerRoles.Add(customerRole);
                     }
                 }
-                _customerService.UpdateCustomer(customer);
+                else
+                {
+                    //already in the list
+                    if (!add)
+                    {
+                        //remove
+                        customer.CustomerRoles.Remove(customerRole);
+                    }
+                }
             }
+            _customerService.UpdateCustomer(customer);
         }
 
         /// <summary>
