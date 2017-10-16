@@ -9,16 +9,10 @@
     {
         if (Model.ProductAttributesExist)
         {
-            <nop-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
-                <nop-tab-header>
-                    <nop-tab-header-item asp-name="tab-attributes" asp-default="true">@T("Admin.Catalog.Products.ProductAttributes.Attributes")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-attribute-combinations">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")</nop-tab-header-item>
-                </nop-tab-header>
-                <nop-tab-content>
-                    <nop-tab-content-item asp-name="tab-attributes" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-attribute-combinations">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab-content-item>
-                </nop-tab-content>
-            </nop-tabs>
+            <nop-bootstrap-tabs id="productattribute-edit" asp-tab-name-to-select="tab-attributes" asp-render-selected-tab-input="false">
+                <nop-tab asp-name="tab-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes.Attributes")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Info", Model)</nop-tab>
+                <nop-tab asp-name="tab-attribute-combinations" asp-title="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes.Combinations", Model)</nop-tab>
+            </nop-bootstrap-tabs>
         }
         else
         {
