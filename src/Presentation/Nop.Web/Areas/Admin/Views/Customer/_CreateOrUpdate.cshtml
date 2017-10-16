@@ -6,7 +6,7 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-bootstrap-tabs id="customer-edit">
+        <nop-tabs id="customer-edit">
             <nop-tab asp-name="tab-info" asp-title="@T("Admin.Customers.Customers.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             @if (Model.Id > 0)
             {
@@ -22,7 +22,7 @@
             {
                 <nop-tab asp-name="tab-rewardpoints" asp-title="@T("Admin.Customers.Customers.RewardPoints")">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-tab>
             }
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 

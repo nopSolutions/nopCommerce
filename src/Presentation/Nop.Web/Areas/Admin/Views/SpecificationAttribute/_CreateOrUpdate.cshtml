@@ -6,10 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-bootstrap-tabs id="specificationattribute-edit">
+        <nop-tabs id="specificationattribute-edit">
             <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             <nop-tab asp-name="tab-options" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-tab>
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 

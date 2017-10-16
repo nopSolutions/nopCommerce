@@ -13,11 +13,11 @@
                 </div>
             </div>
         </div>
-        <nop-bootstrap-tabs id="category-edit">
+        <nop-tabs id="category-edit">
             <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Categories.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")" class="advanced-setting">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
             <nop-tab asp-name="tab-products" asp-title="@T("Admin.Catalog.Categories.Products")">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-tab>
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 

@@ -27,11 +27,11 @@
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
 
-            <nop-bootstrap-tabs id="customersettings-edit">
+            <nop-tabs id="customersettings-edit">
                 <nop-tab asp-name="tab-customer" asp-default="true" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab>
                 <nop-tab asp-name="tab-customerformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab>
                 <nop-tab asp-name="tab-addressformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab>
-            </nop-bootstrap-tabs>
+            </nop-tabs>
         </div>
     </div>
 
