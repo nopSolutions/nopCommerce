@@ -19,34 +19,20 @@
                     </button>
                 }
             </div>
-        </div>        
+        </div>
 
-        <nop-tabs id="product-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Products.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-seo" class="@(Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")">@T("Admin.Common.SEO")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-pictures">@T("Admin.Catalog.Products.Pictures")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-product-attributes" class="@(Model.ProductEditorSettingsModel.ProductAttributes ? "" : "advanced-setting")">@T("Admin.Catalog.Products.ProductAttributes")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-specification-attributes" class="@(Model.ProductEditorSettingsModel.SpecificationAttributes ? "" : "advanced-setting")">@T("Admin.Catalog.Attributes.SpecificationAttributes")</nop-tab-header-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-header-item asp-name="tab-purchased-with-orders" class="@(Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")">@T("Admin.Catalog.Products.PurchasedWithOrders")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-stock-quantity-history" class="@(Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")">@T("Admin.Catalog.Products.StockQuantityHistory")</nop-tab-header-item>
-                }
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-pictures">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-product-attributes">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-specification-attributes">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-tab-content-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-content-item asp-name="tab-purchased-with-orders">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-stock-quantity-history">@await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model)</nop-tab-content-item>
-                }
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="product-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Products.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")" class="@(Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
+            <nop-tab asp-name="tab-pictures" asp-title="@T("Admin.Catalog.Products.Pictures")">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-tab>
+            <nop-tab asp-name="tab-product-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes")" class="@(Model.ProductEditorSettingsModel.ProductAttributes ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-tab>
+            <nop-tab asp-name="tab-specification-attributes" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes")" class="@(Model.ProductEditorSettingsModel.SpecificationAttributes ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-purchased-with-orders" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" class="@(Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-tab>
+                <nop-tab asp-name="tab-stock-quantity-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" class="@(Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model)</nop-tab>
+            }
+        </nop-bootstrap-tabs>
     </div>
 </div>
 
