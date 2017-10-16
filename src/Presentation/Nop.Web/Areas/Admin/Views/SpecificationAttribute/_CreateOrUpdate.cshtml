@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="specificationattribute-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-options">@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-options">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="specificationattribute-edit">
+            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-options" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

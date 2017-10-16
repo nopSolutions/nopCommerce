@@ -13,24 +13,14 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="vendor-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Vendors.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-seo" class="advanced-setting">@T("Admin.Common.SEO")</nop-tab-header-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-header-item asp-name="tab-vendor-notes" class="advanced-setting">@T("Admin.Vendors.VendorNotes")</nop-tab-header-item>
-                }
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
-                @if (Model.Id > 0)
-                {
-                    <nop-tab-content-item asp-name="tab-vendor-notes">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-tab-content-item>
-                }
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="vendor-edit">
+            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Vendors.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-seo" class="advanced-setting" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-vendor-notes" class="advanced-setting" asp-title="@T("Admin.Vendors.VendorNotes")">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-tab>
+            }
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

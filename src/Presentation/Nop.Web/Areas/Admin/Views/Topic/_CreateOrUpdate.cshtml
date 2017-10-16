@@ -13,16 +13,10 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="topic-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.ContentManagement.Topics.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-seo" class="advanced-setting">@T("Admin.Common.SEO")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-seo">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="topic-edit">
+            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.ContentManagement.Topics.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-seo" class="advanced-setting" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 
