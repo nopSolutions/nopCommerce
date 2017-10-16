@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="recurringpayment-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.RecurringPayments.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-history">@T("Admin.RecurringPayments.History")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-history">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="recurringpayment-edit">
+            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.RecurringPayments.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-history" asp-title="@T("Admin.RecurringPayments.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

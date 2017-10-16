@@ -29,16 +29,10 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <nop-tabs id="ordersettings-edit">
-                <nop-tab-header>
-                    <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Settings.Order.OrderSettings")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-returnrequest">@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")</nop-tab-header-item>
-                </nop-tab-header>
-                <nop-tab-content>
-                    <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-returnrequest">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-tab-content-item>
-                </nop-tab-content>
-            </nop-tabs>
+            <nop-bootstrap-tabs id="ordersettings-edit">
+                <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Configuration.Settings.Order.OrderSettings")">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab>
+                <nop-tab asp-name="tab-returnrequest" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-tab>
+            </nop-bootstrap-tabs>
         </div>
     </div>
 

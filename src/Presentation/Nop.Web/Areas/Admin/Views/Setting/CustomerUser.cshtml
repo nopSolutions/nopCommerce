@@ -26,19 +26,12 @@
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
-            
-            <nop-tabs id="customersettings-edit">
-                <nop-tab-header>
-                    <nop-tab-header-item asp-name="tab-customer" asp-default="true">@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-customerformfields">@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-addressformfields">@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")</nop-tab-header-item>
-                </nop-tab-header>
-                <nop-tab-content>
-                    <nop-tab-content-item asp-name="tab-customer" asp-default="true">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-customerformfields">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-addressformfields">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab-content-item>
-                </nop-tab-content>
-            </nop-tabs>
+
+            <nop-bootstrap-tabs id="customersettings-edit">
+                <nop-tab asp-name="tab-customer" asp-default="true" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab>
+                <nop-tab asp-name="tab-customerformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab>
+                <nop-tab asp-name="tab-addressformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab>
+            </nop-bootstrap-tabs>
         </div>
     </div>
 
