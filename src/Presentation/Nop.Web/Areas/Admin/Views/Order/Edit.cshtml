@@ -46,28 +46,16 @@
 
     <div class="content">
         <div class="form-horizontal">
-            <nop-tabs id="order-edit">
-                <nop-tab-header>
-                    <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Orders.Info")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-billing-info">@T("Admin.Orders.BillingInfo")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-shipping-info">@T("Admin.Orders.ShippingInfo")</nop-tab-header-item>
-                    <nop-tab-header-item asp-name="tab-products">@T("Admin.Orders.Products")</nop-tab-header-item>
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        <nop-tab-header-item asp-name="tab-order-notes">@T("Admin.Orders.OrderNotes")</nop-tab-header-item>
-                    }
-                </nop-tab-header>
-                <nop-tab-content>
-                    <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-billing-info">@await Html.PartialAsync("_OrderDetails.Billing", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-shipping-info">@await Html.PartialAsync("_OrderDetails.Shipping", Model)</nop-tab-content-item>
-                    <nop-tab-content-item asp-name="tab-products">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-tab-content-item>
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        <nop-tab-content-item asp-name="tab-order-notes">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-tab-content-item>
-                    }
-                </nop-tab-content>
-            </nop-tabs>
+            <nop-bootstrap-tabs id="order-edit">
+                <nop-tab asp-name="tab-info" asp-title="@T("Admin.Orders.Info")" asp-default="true">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-tab>
+                <nop-tab asp-name="tab-billing-info" asp-title="@T("Admin.Orders.BillingInfo")">@await Html.PartialAsync("_OrderDetails.Billing", Model)</nop-tab>
+                <nop-tab asp-name="tab-shipping-info" asp-title="@T("Admin.Orders.ShippingInfo")">@await Html.PartialAsync("_OrderDetails.Shipping", Model)</nop-tab>
+                <nop-tab asp-name="tab-products" asp-title="@T("Admin.Orders.Products")">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-tab>
+                @if (!Model.IsLoggedInAsVendor)
+                {
+                    <nop-tab asp-name="tab-order-notes" asp-title="@T("Admin.Orders.OrderNotes")">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-tab>
+                }
+            </nop-bootstrap-tabs>
         </div>
     </div>
 

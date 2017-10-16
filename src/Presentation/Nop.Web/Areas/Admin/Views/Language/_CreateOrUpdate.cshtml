@@ -6,16 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="language-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Configuration.Languages.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-resources">@T("Admin.Configuration.Languages.Resources")</nop-tab-header-item>
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-resources">@await Html.PartialAsync("_CreateOrUpdate.Resources", Model)</nop-tab-content-item>
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="language-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Configuration.Languages.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-resources" asp-title="@T("Admin.Configuration.Languages.Resources")">@await Html.PartialAsync("_CreateOrUpdate.Resources", Model)</nop-tab>
+        </nop-bootstrap-tabs>
     </div>
 </div>
 

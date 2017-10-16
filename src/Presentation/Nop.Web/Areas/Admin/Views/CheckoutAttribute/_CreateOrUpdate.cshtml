@@ -14,24 +14,14 @@
             </div>
         </div>
         
-        <nop-tabs id="checkoutattribute-edit">
-            <nop-tab-header>
-                <nop-tab-header-item asp-name="tab-info" asp-default="true">@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")</nop-tab-header-item>
-                <nop-tab-header-item asp-name="tab-values">@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")</nop-tab-header-item>
-                @if (Model.ConditionAllowed)
-                {
-                    <nop-tab-header-item asp-name="tab-condition">@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")</nop-tab-header-item>
-                }
-            </nop-tab-header>
-            <nop-tab-content>
-                <nop-tab-content-item asp-name="tab-info" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab-content-item>
-                <nop-tab-content-item asp-name="tab-values">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab-content-item>
-                @if (Model.ConditionAllowed)
-                {
-                    <nop-tab-content-item asp-name="tab-condition">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-tab-content-item>
-                }
-            </nop-tab-content>
-        </nop-tabs>
+        <nop-bootstrap-tabs id="checkoutattribute-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-values" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values")">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab>
+            @if (Model.ConditionAllowed)
+            {
+                <nop-tab asp-name="tab-condition" asp-title="@T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")">@await Html.PartialAsync("_CreateOrUpdate.Condition", Model)</nop-tab>
+            }
+        </nop-bootstrap-tabs>
     </div>
 </div>
 
