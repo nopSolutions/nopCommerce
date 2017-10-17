@@ -6,10 +6,10 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-bootstrap-tabs id="recurringpayment-edit">
+        <nop-tabs id="recurringpayment-edit">
             <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.RecurringPayments.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             <nop-tab asp-name="tab-history" asp-title="@T("Admin.RecurringPayments.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 

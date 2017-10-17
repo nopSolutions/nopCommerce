@@ -29,10 +29,10 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <nop-bootstrap-tabs id="ordersettings-edit">
+            <nop-tabs id="ordersettings-edit">
                 <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Configuration.Settings.Order.OrderSettings")">@await Html.PartialAsync("_Order.Settings", Model)</nop-tab>
                 <nop-tab asp-name="tab-returnrequest" asp-title="@T("Admin.Configuration.Settings.Order.ReturnRequestSettings")">@await Html.PartialAsync("_Order.ReturnRequestSettings", Model)</nop-tab>
-            </nop-bootstrap-tabs>
+            </nop-tabs>
         </div>
     </div>
 

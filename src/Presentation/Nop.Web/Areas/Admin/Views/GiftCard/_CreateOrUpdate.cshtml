@@ -6,13 +6,13 @@
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-bootstrap-tabs id="giftcard-edit">
+        <nop-tabs id="giftcard-edit">
             <nop-tab asp-name="tab-info" asp-title="@T("Admin.GiftCards.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             @if (Model.Id > 0)
             {
                 <nop-tab asp-name="tab-history" asp-title="@T("Admin.GiftCards.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
             }
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 

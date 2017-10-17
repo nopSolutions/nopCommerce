@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <nop-bootstrap-tabs id="product-edit">
+        <nop-tabs id="product-edit">
             <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Products.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
             <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")" class="@(Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
             <nop-tab asp-name="tab-pictures" asp-title="@T("Admin.Catalog.Products.Pictures")">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-tab>
@@ -32,7 +32,7 @@
                 <nop-tab asp-name="tab-purchased-with-orders" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" class="@(Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-tab>
                 <nop-tab asp-name="tab-stock-quantity-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" class="@(Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model)</nop-tab>
             }
-        </nop-bootstrap-tabs>
+        </nop-tabs>
     </div>
 </div>
 
