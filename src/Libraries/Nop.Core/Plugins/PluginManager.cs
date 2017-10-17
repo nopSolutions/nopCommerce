@@ -751,6 +751,7 @@ namespace Nop.Core.Plugins
                     archivefile.CopyTo(fileStream);
 
                 //check whether there is a descriptive JSON file in the root of the archive
+                //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
                 var jsonFileExists = false;
                 using (var archive = ZipFile.OpenRead(zipFilePath))
                 {
