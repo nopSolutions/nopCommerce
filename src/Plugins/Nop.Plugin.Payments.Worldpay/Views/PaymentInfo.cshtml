@@ -17,7 +17,7 @@
         var stepBack = false;
         var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
         $('.payment-info-next-step-button').attr('onclick', null);
-        
+
         function tokenize() {
             var token = tokenizeCard({
                 'publicKey': '@worldpayPaymentSettings.PublicKey',
@@ -25,6 +25,7 @@
                 {
                     'number': $('#@Html.IdFor(model => model.CardNumber)').val(),
                     'cvv': $('#@Html.IdFor(model => model.CardCode)').val(),
+                    'creditCardType': $('#@Html.IdFor(model => model.CardType)').val(),
                     'expirationDate': ('0' + $('#@Html.IdFor(model => model.ExpireMonth)').val()).slice(-2) + '/' + $('#@Html.IdFor(model => model.ExpireYear)').val(),
                     'emailReceipt': @((!string.IsNullOrEmpty(workContext.CurrentCustomer.BillingAddress?.Email)).ToString().ToLower()),
                     'email': '@workContext.CurrentCustomer.BillingAddress?.Email',
@@ -118,6 +119,14 @@
 }
 
 <table width="100%" cellspacing="2" cellpadding="1" border="0" id="worldpay-card-details">
+    <tr>
+        <td>
+            <label asp-for="CardType">@T("Payment.SelectCreditCard"):</label>
+        </td>
+        <td>
+            <select asp-for="CardType" asp-items="Model.CardTypes" class="dropdownlists"></select>
+        </td>
+    </tr>
     <tr>
         <td>
             <label asp-for="CardNumber">@T("Payment.CardNumber"):</label>

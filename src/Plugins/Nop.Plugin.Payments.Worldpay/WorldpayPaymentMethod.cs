@@ -34,6 +34,7 @@ namespace Nop.Plugin.Payments.Worldpay
 
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Payments.Worldpay
 
         public WorldpayPaymentMethod(ICurrencyService currencyService,
             ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ILogger logger,
             IOrderTotalCalculationService orderTotalCalculationService,
@@ -60,6 +62,7 @@ namespace Nop.Plugin.Payments.Worldpay
         {
             this._currencyService = currencyService;
             this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
             this._logger = logger;
             this._orderTotalCalculationService = orderTotalCalculationService;
@@ -146,10 +149,6 @@ namespace Nop.Plugin.Payments.Worldpay
                 {
                     InvoiceNumber = paymentRequest.OrderGuid.ToString(),
                     InvoiceDescription = $"Order from the '{_storeService.GetStoreById(paymentRequest.StoreId)?.Name}'"
-                },
-                PaymentVaultToken = new VaultToken
-                {
-                    PublicKey = _worldpayPaymentSettings.PublicKey
                 }
             };
 
@@ -171,12 +170,15 @@ namespace Nop.Plugin.Payments.Worldpay
             if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out object storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
                 //check whether customer exists in Vault
-                var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.CustomerGuid.ToString()) 
+                var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute)) 
                     ?? throw new NopException("Failed to retrieve customer");
 
                 //use previously stored card to charge
-                request.PaymentVaultToken.CustomerId = vaultCustomer.CustomerId;
-                request.PaymentVaultToken.PaymentMethodId = storedCardId.ToString();
+                request.PaymentVaultToken = new VaultToken
+                {
+                    CustomerId = vaultCustomer.CustomerId,
+                    PaymentMethodId = storedCardId.ToString()
+                };
 
                 return request;
             }
@@ -189,6 +191,12 @@ namespace Nop.Plugin.Payments.Worldpay
             //remove the card token from payment custom values, since it is no longer needed
             paymentRequest.CustomValues.Remove(cardTokenKey);
 
+            //public key is required to pay with card token
+            request.PaymentVaultToken = new VaultToken
+            {
+                PublicKey = _worldpayPaymentSettings.PublicKey
+            };
+
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Worldpay.Fields.SaveCard.Key");
             if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out object saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
@@ -199,10 +207,10 @@ namespace Nop.Plugin.Payments.Worldpay
                 try
                 {
                     //check whether customer exists and try to create the new one, if not exists
-                    var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.CustomerGuid.ToString())
+                    var vaultCustomer = _worldpayPaymentManager.GetCustomer(customer.GetAttribute<string>(WorldpayPaymentDefaults.CustomerIdAttribute))
                         ?? _worldpayPaymentManager.CreateCustomer(new CreateCustomerRequest
                         {
-                            CustomerId = customer.CustomerGuid.ToString(),
+                            CustomerId = customer.Id.ToString(),
                             CustomerDuplicateCheckType = CustomerDuplicateCheckType.Ignore,
                             EmailReceiptEnabled = !string.IsNullOrEmpty(customer.Email),
                             Email = customer.Email,
@@ -221,6 +229,9 @@ namespace Nop.Plugin.Payments.Worldpay
                                 Phone = customer.BillingAddress?.PhoneNumber
                             }
                         }) ?? throw new NopException("Failed to create customer. Error details in the log");
+
+                    //save Vault customer identifier as a generic attribute
+                    _genericAttributeService.SaveAttribute(customer, WorldpayPaymentDefaults.CustomerIdAttribute, vaultCustomer.CustomerId);
 
                     //add card to the Vault after charge
                     request.AddToVault = true;
@@ -303,10 +314,19 @@ namespace Nop.Plugin.Payments.Worldpay
             if (capturePaymentRequest == null)
                 throw new ArgumentException(nameof(capturePaymentRequest));
 
+            //set amount in USD
+            var amount = _currencyService.ConvertCurrency(capturePaymentRequest.Order.OrderTotal, capturePaymentRequest.Order.CurrencyRate);
+
             //capture transaction
             var transaction = _worldpayPaymentManager.CaptureTransaction(new CaptureRequest
             {
-                TransactionId = capturePaymentRequest.Order.AuthorizationTransactionId
+                TransactionId = capturePaymentRequest.Order.AuthorizationTransactionId,
+                Amount = Math.Round(amount, 2),
+                ExtendedInformation = new ExtendedInformation
+                {
+                    InvoiceNumber = capturePaymentRequest.Order.CustomOrderNumber,
+                    InvoiceDescription = $"Order from the '{_storeService.GetStoreById(capturePaymentRequest.Order.StoreId)?.Name}'"
+                }
             }) ?? throw new NopException("An error occurred while processing. Error details in the log");
             
             //sucessfully captured
@@ -492,16 +512,26 @@ namespace Nop.Plugin.Payments.Worldpay
             });
 
             //locales
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX", "AMEX");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover", "DISCOVER");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard", "MasterCard");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet", "MasterCard Fleet");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa", "VISA");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet", "VISA Fleet");
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize", "Authorize only");
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId", "Card ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType", "Card type");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId", "Developer ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId.Hint", "Specify developer ID of integrator as assigned by Worldpay (available after certification).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion", "Application version");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion.Hint", "Specify version number of the integrator's application (available after certification).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate", "Expiration date");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber", "Masked number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey", "Public key");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint", "Specify the Public key. It will be sent to the email address that you signed up with during the sandbox sign-up process.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard", "Save the card data for future purchasing");
@@ -511,7 +541,7 @@ namespace Nop.Plugin.Payments.Worldpay
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId", "SecureNet ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SecureNetId.Hint", "Specify the SecureNet ID. You will get this in an email shortly after signing up for your account.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard", "Use a previously saved card");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key", "Pay using stored card token");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.Key", "Pay using stored card identifier");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.StoredCard.SelectCard", "Select a card");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.Token.Key", "Pay using card token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.TransactionMode", "Transaction mode");
@@ -520,6 +550,8 @@ namespace Nop.Plugin.Payments.Worldpay
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint", "Determine whether to enable sandbox (testing environment).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress", "Validate address");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint", "Determine whether to validate customers' billing addresses on processing payments.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId", "Worldpay Vault customer ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint", "Displays Worldpay Vault customer ID. If the customer is not yet stored in the Worldpay Vault, specify the customer ID and click the button 'Store customer to the Worldpay Vault'");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Instructions", @"
                 <p>
                     For plugin configuration follow these steps:<br />
@@ -542,6 +574,9 @@ namespace Nop.Plugin.Payments.Worldpay
                     <br />
                 </p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription", "Pay by credit card using Worldpay");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer", "Worldpay Vault");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create", "Store customer to the Worldpay Vault");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists", "This customer is not yet stored in the Worldpay Vault");
 
             base.Install();
         }
@@ -555,16 +590,26 @@ namespace Nop.Plugin.Payments.Worldpay
             _settingService.DeleteSetting<WorldpayPaymentSettings>();
 
             //locales
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.AMEX");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Discover");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCard");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.MasterCardFleet");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.Visa");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.Enums.CreditCardType.VisaFleet");
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Authorize");
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Worldpay.Domain.TransactionMode.Charge");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.SaveCard");
@@ -583,8 +628,13 @@ namespace Nop.Plugin.Payments.Worldpay
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.UseSandbox.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ValidateAddress.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Instructions");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.Create");
+            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists");
 
             base.Uninstall();
         }
