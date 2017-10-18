@@ -170,6 +170,10 @@ namespace Nop.Plugin.Payments.Square.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
+            //warn admin that the location is a required parameter
+            if (string.IsNullOrEmpty(_squarePaymentSettings.LocationId) || _squarePaymentSettings.LocationId.Equals("0"))
+                WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.Fields.Location.Hint"));
+
             return Configure();
         }
 
