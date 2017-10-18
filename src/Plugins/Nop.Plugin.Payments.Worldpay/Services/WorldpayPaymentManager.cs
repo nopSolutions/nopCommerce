@@ -189,7 +189,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             else
             {
                 //log errors
-                _logger.Error($"The request was {response.Code} for a reason '{response.Result}'. {response.Message}", customer: _workContext.CurrentCustomer);
+                _logger.Error($"The request was {response?.Code} for a reason '{response?.Result}'. {response?.Message}", customer: _workContext.CurrentCustomer);
             }
 
             return null;
@@ -211,7 +211,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return response.Customer;
 
             //log errors
-            _logger.Error($"The request was {response.Code} for a reason '{response.Result}'. {response.Message}", customer: _workContext.CurrentCustomer);
+            _logger.Error($"The request was {response?.Code} for a reason '{response?.Result}'. {response?.Message}", customer: _workContext.CurrentCustomer);
 
             return null;
         }
