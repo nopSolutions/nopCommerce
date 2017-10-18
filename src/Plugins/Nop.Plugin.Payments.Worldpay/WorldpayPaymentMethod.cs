@@ -524,7 +524,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 <p>
                     For plugin configuration follow these steps:<br />
                     <br />
-                    1. Sign up for a <a href=""http://www.worldpay.com/us/developers/developer-resources/developer-sandbox-signup"" target=""_blank"">sandbox account</a><br />
+                    1. Sign up for a <a href=""https://www.worldpay.us/Partner/nopcommerce"" target=""_blank"">merchant</a> or <a href=""http://www.worldpay.com/us/developers/developer-resources/developer-sandbox-signup"" target=""_blank"">sandbox</a> account<br />
                     2. The SecureNet ID can be obtained from the email that you received during the sign-up process.<br />
                     3. You can obtain the Secure Key by signing into the Virtual Terminal with the login credentials that you were also emailed to you. 
                        You will then need to navigate to Settings and click on the Key Management link.<br /> 
@@ -535,6 +535,8 @@ namespace Nop.Plugin.Payments.Worldpay
                        This process is needed to ensure that you are using the Worldpay Total platform correctly and obtaining valid results.<br />
                        <em>Note: For testing purposes, use the sandbox and set your Developer Id to '12345678' and Application version to '1.2'</em><br />
                     6. Fill in the remaining fields and save to complete the configuration<br />
+                    <br />
+                    <em>Note: This plugin supports US merchants only.</em>
                     <br />
                     <em>Note: The Worldpay Total platform supports only USD currency, ensure that you have correctly configured exchange rate from your primary store currency to the USD currency.</em>
                     <br />

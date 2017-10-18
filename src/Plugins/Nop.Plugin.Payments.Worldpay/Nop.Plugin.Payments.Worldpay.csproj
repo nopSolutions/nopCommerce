@@ -14,7 +14,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Remove="logo.png" />
+    <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
@@ -32,7 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="logo.png">
+    <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="plugin.json">
