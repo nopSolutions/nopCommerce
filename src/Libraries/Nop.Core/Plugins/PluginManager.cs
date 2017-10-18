@@ -818,7 +818,7 @@ namespace Nop.Core.Plugins
                 return false;
 
             if (pluginDescriptor.OriginalAssemblyFile.Directory.Exists)
-                CommonHelper.DeleteDirectory(pluginDescriptor.OriginalAssemblyFile.FullName);
+                CommonHelper.DeleteDirectory(pluginDescriptor.OriginalAssemblyFile.DirectoryName);
 
             return true;
         }
