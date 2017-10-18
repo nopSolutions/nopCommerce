@@ -668,12 +668,19 @@ BEGIN
 END
 GO
 
-UPDATE [StorePickupPoint]
-SET [DisplayOrder] = 0
-WHERE [DisplayOrder] IS NULL
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	UPDATE [StorePickupPoint]
+	SET [DisplayOrder] = 0
+	WHERE [DisplayOrder] IS NULL
+END
 GO
 
-ALTER TABLE [StorePickupPoint] ALTER COLUMN [DisplayOrder] INT NOT NULL
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	ALTER TABLE [StorePickupPoint] ALTER COLUMN [DisplayOrder] INT NOT NULL
+END
 GO
 
 --new index
