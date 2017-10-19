@@ -47,24 +47,25 @@ namespace Nop.Web.Areas.Admin.Components
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
-            var model = new CommonStatisticsModel();
-
-            model.NumberOfOrders = _orderService.SearchOrders(
+            var model = new CommonStatisticsModel
+            {
+                NumberOfOrders = _orderService.SearchOrders(
                 pageIndex: 0,
-                pageSize: 1).TotalCount;
+                pageSize: 1).TotalCount,
 
-            model.NumberOfCustomers = _customerService.GetAllCustomers(
+                NumberOfCustomers = _customerService.GetAllCustomers(
                 customerRoleIds: new[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id },
                 pageIndex: 0,
-                pageSize: 1).TotalCount;
+                pageSize: 1).TotalCount,
 
-            model.NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
+                NumberOfPendingReturnRequests = _returnRequestService.SearchReturnRequests(
                 rs: ReturnRequestStatus.Pending,
                 pageIndex: 0,
-                pageSize: 1).TotalCount;
+                pageSize: 1).TotalCount,
 
-            model.NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
-                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount;
+                NumberOfLowStockProducts = _productService.GetLowStockProducts(0, 0, 1).TotalCount +
+                                             _productService.GetLowStockProductCombinations(0, 0, 1).TotalCount
+            };
 
             return View(model);
         }

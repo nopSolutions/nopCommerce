@@ -102,8 +102,10 @@ namespace Nop.Services.Tests.Orders
             _webHelper = MockRepository.GenerateMock<IWebHelper>();
 
             //shipping
-            _shippingSettings = new ShippingSettings();
-            _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            _shippingSettings = new ShippingSettings
+            {
+                ActiveShippingRateComputationMethodSystemNames = new List<string>()
+            };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
@@ -140,10 +142,12 @@ namespace Nop.Services.Tests.Orders
             _addressSettings = new AddressSettings();
 
             //tax
-            _taxSettings = new TaxSettings();
-            _taxSettings.ShippingIsTaxable = true;
-            _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _taxSettings.DefaultTaxAddressId = 10;
+            _taxSettings = new TaxSettings
+            {
+                ShippingIsTaxable = true,
+                PaymentMethodAdditionalFeeIsTaxable = true,
+                DefaultTaxAddressId = 10
+            };
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,

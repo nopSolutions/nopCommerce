@@ -145,10 +145,12 @@ namespace Nop.Web.Controllers
             string serverName, string databaseName,
             string userName, string password, int timeout = 0)
         {
-            var builder = new SqlConnectionStringBuilder();
-            builder.IntegratedSecurity = trustedConnection;
-            builder.DataSource = serverName;
-            builder.InitialCatalog = databaseName;
+            var builder = new SqlConnectionStringBuilder
+            {
+                IntegratedSecurity = trustedConnection,
+                DataSource = serverName,
+                InitialCatalog = databaseName
+            };
             if (!trustedConnection)
             {
                 builder.UserID = userName;

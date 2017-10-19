@@ -150,8 +150,10 @@ namespace Nop.Services.Catalog
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
+                currency = new Currency
+                {
+                    CurrencyCode = currencyCode
+                };
             }
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, currency, language, priceIncludesTax, showTax);

@@ -31,15 +31,19 @@ namespace Nop.Web.Framework.Security.Captcha
 
             if (_version == ReCaptchaVersion.Version1)
             {
-                var scriptCaptchaOptionsTag = new TagBuilder("script");
-                scriptCaptchaOptionsTag.TagRenderMode = TagRenderMode.Normal;
+                var scriptCaptchaOptionsTag = new TagBuilder("script")
+                {
+                    TagRenderMode = TagRenderMode.Normal
+                };
                 scriptCaptchaOptionsTag.Attributes.Add("type", MimeTypes.TextJavascript);
                 scriptCaptchaOptionsTag.InnerHtml.AppendHtml(
                     $"var RecaptchaOptions = {{ theme: '{Theme}', tabindex: 0 }}; ");
                 
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var scriptLoadApiTag = new TagBuilder("script");
-                scriptLoadApiTag.TagRenderMode = TagRenderMode.Normal;
+                var scriptLoadApiTag = new TagBuilder("script")
+                {
+                    TagRenderMode = TagRenderMode.Normal
+                };
                 var scriptSrc = webHelper.IsCurrentConnectionSecured() ? 
                     string.Format(RECAPTCHA_API_URL_HTTPS_VERSION1, PublicKey) :
                     string.Format(RECAPTCHA_API_URL_HTTP_VERSION1, PublicKey);
@@ -49,18 +53,24 @@ namespace Nop.Web.Framework.Security.Captcha
             }
             else if (_version == ReCaptchaVersion.Version2)
             {
-                var scriptCallbackTag = new TagBuilder("script");
-                scriptCallbackTag.TagRenderMode = TagRenderMode.Normal;
+                var scriptCallbackTag = new TagBuilder("script")
+                {
+                    TagRenderMode = TagRenderMode.Normal
+                };
                 scriptCallbackTag.Attributes.Add("type", MimeTypes.TextJavascript);
                 scriptCallbackTag.InnerHtml.AppendHtml(
                     $"var onloadCallback = function() {{grecaptcha.render('{Id}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}' }});}};");
-               
-                var captchaTag = new TagBuilder("div");
-                captchaTag.TagRenderMode = TagRenderMode.Normal;
+
+                var captchaTag = new TagBuilder("div")
+                {
+                    TagRenderMode = TagRenderMode.Normal
+                };
                 captchaTag.Attributes.Add("id", Id);
-               
-                var scriptLoadApiTag = new TagBuilder("script");
-                scriptLoadApiTag.TagRenderMode = TagRenderMode.Normal;
+
+                var scriptLoadApiTag = new TagBuilder("script")
+                {
+                    TagRenderMode = TagRenderMode.Normal
+                };
                 scriptLoadApiTag.Attributes.Add("src", RECAPTCHA_API_URL_VERSION2 + (string.IsNullOrEmpty(Language) ? "" : $"&hl={Language}"
                                                        ));
                 scriptLoadApiTag.Attributes.Add("async", null);

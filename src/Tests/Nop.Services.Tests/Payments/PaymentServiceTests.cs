@@ -22,8 +22,10 @@ namespace Nop.Services.Tests.Payments
         [SetUp]
         public new void SetUp()
         {
-            _paymentSettings = new PaymentSettings();
-            _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
+            _paymentSettings = new PaymentSettings
+            {
+                ActivePaymentMethodSystemNames = new List<string>()
+            };
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
             var pluginFinder = new PluginFinder();

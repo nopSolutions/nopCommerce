@@ -101,10 +101,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
-            var model = new EmailAccountModel();
-            //default values
-            model.Port = 25;
-			return View(model);
+            var model = new EmailAccountModel
+            {
+                //default values
+                Port = 25
+            };
+            return View(model);
 		}
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]

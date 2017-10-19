@@ -79,10 +79,12 @@ namespace Nop.Services.Tests.Directory
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
             var cacheManager = new NopNullCache();
-            
-            _currencySettings = new CurrencySettings();
-            _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
-            _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
+
+            _currencySettings = new CurrencySettings
+            {
+                PrimaryStoreCurrencyId = currencyUSD.Id,
+                PrimaryExchangeRateCurrencyId = currencyEUR.Id
+            };
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

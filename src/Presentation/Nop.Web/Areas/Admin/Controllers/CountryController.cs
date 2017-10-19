@@ -386,10 +386,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var model = new StateProvinceModel();
-            model.CountryId = countryId;
-            //default value
-            model.Published = true;
+            var model = new StateProvinceModel
+            {
+                CountryId = countryId,
+                //default value
+                Published = true
+            };
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);

@@ -56,15 +56,17 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = new BackInStockSubscribeModel();
-            model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
-            model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
-            model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
+            var model = new BackInStockSubscribeModel
+            {
+                ProductId = product.Id,
+                ProductName = product.GetLocalized(x => x.Name),
+                ProductSeName = product.GetSeName(),
+                IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
+                MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
+                CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
                 .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                .TotalCount;
+                .TotalCount
+            };
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&

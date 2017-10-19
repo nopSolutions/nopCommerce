@@ -372,11 +372,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = comments.PagedForCommand(command).Select(blogComment =>
                 {
-                    var commentModel = new BlogCommentModel();
-                    commentModel.Id = blogComment.Id;
-                    commentModel.BlogPostId = blogComment.BlogPostId;
-                    commentModel.BlogPostTitle = blogComment.BlogPost.Title;
-                    commentModel.CustomerId = blogComment.CustomerId;
+                    var commentModel = new BlogCommentModel
+                    {
+                        Id = blogComment.Id,
+                        BlogPostId = blogComment.BlogPostId,
+                        BlogPostTitle = blogComment.BlogPost.Title,
+                        CustomerId = blogComment.CustomerId
+                    };
                     var customer = blogComment.Customer;
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);

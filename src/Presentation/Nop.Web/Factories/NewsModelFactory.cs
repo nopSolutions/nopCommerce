@@ -188,8 +188,10 @@ namespace Nop.Web.Factories
         /// <returns>News item list model</returns>
         public virtual NewsItemListModel PrepareNewsItemListModel(NewsPagingFilteringModel command)
         {
-            var model = new NewsItemListModel();
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+            var model = new NewsItemListModel
+            {
+                WorkingLanguageId = _workContext.WorkingLanguage.Id
+            };
 
             if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;

@@ -30,13 +30,14 @@ namespace Nop.Core.Html.CodeFormatter
             if (!match.Success)
                 return match.Value;
 
-            var options = new HighlightOptions();
-
-            options.Language = match.Groups["lang"].Value;
-            options.Code = match.Groups["code"].Value;
-            options.DisplayLineNumbers = match.Groups["linenumbers"].Value == "on";
-            options.Title = match.Groups["title"].Value;
-            options.AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on";
+            var options = new HighlightOptions
+            {
+                Language = match.Groups["lang"].Value,
+                Code = match.Groups["code"].Value,
+                DisplayLineNumbers = match.Groups["linenumbers"].Value == "on",
+                Title = match.Groups["title"].Value,
+                AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on"
+            };
 
             var result = match.Value.Replace(match.Groups["begin"].Value, "");
             result = result.Replace(match.Groups["end"].Value, "");
@@ -54,13 +55,14 @@ namespace Nop.Core.Html.CodeFormatter
             if (!match.Success)
                 return match.Value;
 
-            var options = new HighlightOptions();
-
-            options.Language = "c#";
-            options.Code = match.Groups["inner"].Value;
-            options.DisplayLineNumbers = false;
-            options.Title = string.Empty;
-            options.AlternateLineNumbers = false;
+            var options = new HighlightOptions
+            {
+                Language = "c#",
+                Code = match.Groups["inner"].Value,
+                DisplayLineNumbers = false,
+                Title = string.Empty,
+                AlternateLineNumbers = false
+            };
 
             var result = match.Value;
             result = Highlight(options, result);
@@ -91,50 +93,64 @@ namespace Nop.Core.Html.CodeFormatter
             switch (options.Language)
             {
                 case "c#":
-                    var csf = new CSharpFormat();
-                    csf.LineNumbers = options.DisplayLineNumbers;
-                    csf.Alternate = options.AlternateLineNumbers;
+                    var csf = new CSharpFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(csf.FormatCode(text));
 
                 case "vb":
-                    var vbf = new VisualBasicFormat();
-                    vbf.LineNumbers = options.DisplayLineNumbers;
-                    vbf.Alternate = options.AlternateLineNumbers;
+                    var vbf = new VisualBasicFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return vbf.FormatCode(text);
 
                 case "js":
-                    var jsf = new JavaScriptFormat();
-                    jsf.LineNumbers = options.DisplayLineNumbers;
-                    jsf.Alternate = options.AlternateLineNumbers;
+                    var jsf = new JavaScriptFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(jsf.FormatCode(text));
 
                 case "html":
-                    var htmlf = new HtmlFormat();
-                    htmlf.LineNumbers = options.DisplayLineNumbers;
-                    htmlf.Alternate = options.AlternateLineNumbers;
+                    var htmlf = new HtmlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     text = StripHtml(text).Trim();
                     var code = htmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
                     return code.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "xml":
-                    var xmlf = new HtmlFormat();
-                    xmlf.LineNumbers = options.DisplayLineNumbers;
-                    xmlf.Alternate = options.AlternateLineNumbers;
+                    var xmlf = new HtmlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     text = text.Replace("<br />", "\r\n");
                     text = StripHtml(text).Trim();
                     var xml = xmlf.FormatCode(WebUtility.HtmlDecode(text)).Trim();
                     return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");
 
                 case "tsql":
-                    var tsqlf = new TsqlFormat();
-                    tsqlf.LineNumbers = options.DisplayLineNumbers;
-                    tsqlf.Alternate = options.AlternateLineNumbers;
+                    var tsqlf = new TsqlFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(tsqlf.FormatCode(text));
 
                 case "msh":
-                    var mshf = new MshFormat();
-                    mshf.LineNumbers = options.DisplayLineNumbers;
-                    mshf.Alternate = options.AlternateLineNumbers;
+                    var mshf = new MshFormat
+                    {
+                        LineNumbers = options.DisplayLineNumbers,
+                        Alternate = options.AlternateLineNumbers
+                    };
                     return WebUtility.HtmlDecode(mshf.FormatCode(text));
             }
 

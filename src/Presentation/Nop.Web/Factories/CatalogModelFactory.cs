@@ -1175,8 +1175,9 @@ namespace Nop.Web.Factories
         /// <returns>Popular product tags model</returns>
         public virtual PopularProductTagsModel PrepareProductTagsAllModel()
         {
-            var model = new PopularProductTagsModel();
-            model.Tags = _productTagService
+            var model = new PopularProductTagsModel
+            {
+                Tags = _productTagService
                 .GetAllProductTags()
                 //filter by current store
                 .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
@@ -1193,7 +1194,8 @@ namespace Nop.Web.Factories
                     };
                     return ptModel;
                 })
-                .ToList();
+                .ToList()
+            };
             return model;
         }
         

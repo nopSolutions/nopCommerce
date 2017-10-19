@@ -139,8 +139,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var model = new SystemInfoModel();
-            model.NopVersion = NopVersion.CurrentVersion;
+            var model = new SystemInfoModel
+            {
+                NopVersion = NopVersion.CurrentVersion
+            };
             try
             {
                 model.OperatingSystem = Environment.OSVersion.VersionString;

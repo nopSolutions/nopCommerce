@@ -61,8 +61,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
-            var model = new LogListModel();
-            model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
+            var model = new LogListModel
+            {
+                AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList()
+            };
             model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);

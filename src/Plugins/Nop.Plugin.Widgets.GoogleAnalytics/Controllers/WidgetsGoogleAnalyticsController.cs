@@ -44,12 +44,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
-            var model = new ConfigurationModel();
-            model.GoogleId = googleAnalyticsSettings.GoogleId;
-            model.TrackingScript = googleAnalyticsSettings.TrackingScript;
-            model.EnableEcommerce = googleAnalyticsSettings.EnableEcommerce;
-            model.IncludingTax = googleAnalyticsSettings.IncludingTax;
-            model.ZoneId = googleAnalyticsSettings.WidgetZone;
+            var model = new ConfigurationModel
+            {
+                GoogleId = googleAnalyticsSettings.GoogleId,
+                TrackingScript = googleAnalyticsSettings.TrackingScript,
+                EnableEcommerce = googleAnalyticsSettings.EnableEcommerce,
+                IncludingTax = googleAnalyticsSettings.IncludingTax,
+                ZoneId = googleAnalyticsSettings.WidgetZone
+            };
             model.AvailableZones.Add(new SelectListItem() { Text = "Before body end html tag", Value = "body_end_html_tag_before" });
             model.AvailableZones.Add(new SelectListItem() { Text = "Head html tag", Value = "head_html_tag" });
 

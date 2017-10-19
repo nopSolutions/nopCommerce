@@ -277,8 +277,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //No address attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = new AddressAttributeValueModel();
-            model.AddressAttributeId = addressAttributeId;
+            var model = new AddressAttributeValueModel
+            {
+                AddressAttributeId = addressAttributeId
+            };
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);

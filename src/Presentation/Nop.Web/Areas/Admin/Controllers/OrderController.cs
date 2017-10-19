@@ -1109,8 +1109,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             //order statuses
-            var model = new OrderListModel();
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            var model = new OrderListModel
+            {
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+            };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem
             { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
             if (orderStatusIds != null && orderStatusIds.Any())
@@ -2601,8 +2603,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var model = new OrderModel.AddOrderProductModel();
-            model.OrderId = orderId;
+            var model = new OrderModel.AddOrderProductModel
+            {
+                OrderId = orderId
+            };
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
@@ -2879,9 +2883,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (address == null)
                 throw new ArgumentException("No address found with the specified id", "addressId");
 
-            var model = new OrderAddressModel();
-            model.OrderId = orderId;
-            model.Address = address.ToModel();
+            var model = new OrderAddressModel
+            {
+                OrderId = orderId,
+                Address = address.ToModel()
+            };
             model.Address.FirstNameEnabled = true;
             model.Address.FirstNameRequired = true;
             model.Address.LastNameEnabled = true;
@@ -3938,9 +3944,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var model = new BestsellersReportModel();
-            //vendor
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new BestsellersReportModel
+            {
+                //vendor
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -4042,10 +4050,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var model = new NeverSoldReportModel();
+            var model = new NeverSoldReportModel
+            {
 
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -4209,10 +4219,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return AccessDeniedView();
 
-            var model = new CountryReportModel();
+            var model = new CountryReportModel
+            {
 
-            //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+                //order statuses
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+            };
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //payment statuses

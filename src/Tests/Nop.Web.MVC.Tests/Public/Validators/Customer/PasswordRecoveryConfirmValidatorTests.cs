@@ -22,8 +22,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_newPassword_is_null_or_empty()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.NewPassword = null;
+            var model = new PasswordRecoveryConfirmModel
+            {
+                NewPassword = null
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);
@@ -36,8 +38,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_newPassword_is_specified()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.NewPassword = "new password";
+            var model = new PasswordRecoveryConfirmModel
+            {
+                NewPassword = "new password"
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
@@ -46,8 +50,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_confirmNewPassword_is_null_or_empty()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.ConfirmNewPassword = null;
+            var model = new PasswordRecoveryConfirmModel
+            {
+                ConfirmNewPassword = null
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
             model.ConfirmNewPassword = "";
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
@@ -56,8 +62,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_confirmNewPassword_is_specified()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.ConfirmNewPassword = "some password";
+            var model = new PasswordRecoveryConfirmModel
+            {
+                ConfirmNewPassword = "some password"
+            };
             //we know that new password should equal confirmation password
             model.NewPassword = model.ConfirmNewPassword;
             _validator.ShouldNotHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
@@ -66,18 +74,22 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_newPassword_doesnot_equal_confirmationPassword()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.NewPassword = "some password";
-            model.ConfirmNewPassword = "another password";
+            var model = new PasswordRecoveryConfirmModel
+            {
+                NewPassword = "some password",
+                ConfirmNewPassword = "another password"
+            };
             _validator.ShouldHaveValidationErrorFor(x => x.ConfirmNewPassword, model);
         }
 
         [Test]
         public void Should_not_have_error_when_newPassword_equals_confirmationPassword()
         {
-            var model = new PasswordRecoveryConfirmModel();
-            model.NewPassword = "some password";
-            model.ConfirmNewPassword = "some password";
+            var model = new PasswordRecoveryConfirmModel
+            {
+                NewPassword = "some password",
+                ConfirmNewPassword = "some password"
+            };
             _validator.ShouldNotHaveValidationErrorFor(x => x.NewPassword, model);
         }
 
@@ -87,8 +99,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             _customerSettings.PasswordMinLength = 5;
             _validator = new PasswordRecoveryConfirmValidator(_localizationService, _customerSettings);
 
-            var model = new PasswordRecoveryConfirmModel();
-            model.NewPassword = "1234";
+            var model = new PasswordRecoveryConfirmModel
+            {
+                NewPassword = "1234"
+            };
             //we know that new password should equal confirmation password
             model.ConfirmNewPassword = model.NewPassword;
             _validator.ShouldHaveValidationErrorFor(x => x.NewPassword, model);

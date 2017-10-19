@@ -71,12 +71,16 @@ namespace Nop.Plugin.Shipping.UPS
                 var track = new TrackService();
                 var tr = new TrackRequest();
                 var upss = new UPSSecurity();
-                var upssSvcAccessToken = new UPSSecurityServiceAccessToken();
-                upssSvcAccessToken.AccessLicenseNumber = _upsSettings.AccessKey;
+                var upssSvcAccessToken = new UPSSecurityServiceAccessToken
+                {
+                    AccessLicenseNumber = _upsSettings.AccessKey
+                };
                 upss.ServiceAccessToken = upssSvcAccessToken;
-                var upssUsrNameToken = new UPSSecurityUsernameToken();
-                upssUsrNameToken.Username = _upsSettings.Username;
-                upssUsrNameToken.Password = _upsSettings.Password;
+                var upssUsrNameToken = new UPSSecurityUsernameToken
+                {
+                    Username = _upsSettings.Username,
+                    Password = _upsSettings.Password
+                };
                 upss.UsernameToken = upssUsrNameToken;
                 track.UPSSecurityValue = upss;
                 var request = new RequestType();

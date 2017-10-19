@@ -1592,9 +1592,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
 
             //merge settings
-            var model = new CustomerUserSettingsModel();
-            model.CustomerSettings = customerSettings.ToModel();
-            model.AddressSettings = addressSettings.ToModel();
+            var model = new CustomerUserSettingsModel
+            {
+                CustomerSettings = customerSettings.ToModel(),
+                AddressSettings = addressSettings.ToModel()
+            };
 
             model.DateTimeSettings.AllowCustomersToSetTimeZone = dateTimeSettings.AllowCustomersToSetTimeZone;
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;

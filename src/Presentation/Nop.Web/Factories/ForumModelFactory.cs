@@ -289,11 +289,13 @@ namespace Nop.Web.Factories
             if (forum == null)
                 throw new ArgumentNullException(nameof(forum));
 
-            var model = new ForumPageModel();
-            model.Id = forum.Id;
-            model.Name = forum.Name;
-            model.SeName = forum.GetSeName();
-            model.Description = forum.Description;
+            var model = new ForumPageModel
+            {
+                Id = forum.Id,
+                Name = forum.Name,
+                SeName = forum.GetSeName(),
+                Description = forum.Description
+            };
 
             var pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize : 10;
 
@@ -340,17 +342,19 @@ namespace Nop.Web.Factories
             //load posts
             var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
                 page - 1, _forumSettings.PostsPageSize);
-            
-            //prepare model
-            var model = new ForumTopicPageModel();
-            model.Id = forumTopic.Id;
-            model.Subject = forumTopic.Subject;
-            model.SeName = forumTopic.GetSeName();
 
-            model.IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToDeleteTopic = _forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToMoveTopic = _forumService.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
+            //prepare model
+            var model = new ForumTopicPageModel
+            {
+                Id = forumTopic.Id,
+                Subject = forumTopic.Subject,
+                SeName = forumTopic.GetSeName(),
+
+                IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic),
+                IsCustomerAllowedToDeleteTopic = _forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic),
+                IsCustomerAllowedToMoveTopic = _forumService.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic),
+                IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer)
+            };
 
             if (model.IsCustomerAllowedToSubscribe)
             {
@@ -821,8 +825,10 @@ namespace Nop.Web.Factories
         /// <returns>Last post model</returns>
         public virtual LastPostModel PrepareLastPostModel(ForumPost forumPost, bool showTopic)
         {
-            var model = new LastPostModel();
-            model.ShowTopic = showTopic;
+            var model = new LastPostModel
+            {
+                ShowTopic = showTopic
+            };
 
             //do not throw an exception here
             if (forumPost == null)

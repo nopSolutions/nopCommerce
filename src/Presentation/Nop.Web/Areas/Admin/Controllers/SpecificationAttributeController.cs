@@ -266,8 +266,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var model = new SpecificationAttributeOptionModel();
-            model.SpecificationAttributeId = specificationAttributeId;
+            var model = new SpecificationAttributeOptionModel
+            {
+                SpecificationAttributeId = specificationAttributeId
+            };
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);

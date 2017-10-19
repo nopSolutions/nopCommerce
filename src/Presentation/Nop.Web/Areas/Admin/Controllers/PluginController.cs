@@ -229,9 +229,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var model = new PluginListModel();
-            //load modes
-            model.AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList();
+            var model = new PluginListModel
+            {
+                //load modes
+                AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList()
+            };
             //groups
             model.AvailableGroups.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var g in _pluginFinder.GetPluginGroups())
@@ -670,17 +672,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
 
-            var gridModel = new DataSourceResult();
-            gridModel.Data = plugins.Select(x => new OfficialFeedListModel.ItemOverview
+            var gridModel = new DataSourceResult
             {
-                Url = x.Url,
-                Name = x.Name,
-                CategoryName = x.Category,
-                SupportedVersions = x.SupportedVersions,
-                PictureUrl = x.PictureUrl,
-                Price = x.Price
-            });
-            gridModel.Total = plugins.TotalCount;
+                Data = plugins.Select(x => new OfficialFeedListModel.ItemOverview
+                {
+                    Url = x.Url,
+                    Name = x.Name,
+                    CategoryName = x.Category,
+                    SupportedVersions = x.SupportedVersions,
+                    PictureUrl = x.PictureUrl,
+                    Price = x.Price
+                }),
+                Total = plugins.TotalCount
+            };
 
             return Json(gridModel);
         }
