@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
@@ -19,11 +20,20 @@ namespace Nop.Web.Framework.Components
             if (model is BaseNopModel)
             {
                 var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+
                 //we publish the ModelPrepared event for all models as the BaseNopModel, 
                 //so you need to implement IConsumer<ModelPrepared<BaseNopModel>> interface to handle this event
                 eventPublisher.ModelPrepared(model as BaseNopModel);
             }
 
+            if (model is IEnumerable<BaseNopModel> modelCollection)
+            {
+                var eventPublisher = EngineContext.Current.Resolve<IEventPublisher>();
+
+                //we publish the ModelPrepared event for collection as the IEnumerable<BaseNopModel>, 
+                //so you need to implement IConsumer<ModelPrepared<IEnumerable<BaseNopModel>>> interface to handle this event
+                eventPublisher.ModelPrepared(modelCollection);
+            }
         }
         /// <summary>
         /// Returns a result which will render the partial view with name <paramref name="viewName"/>.

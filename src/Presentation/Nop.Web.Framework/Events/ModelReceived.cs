@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Events
 {
     /// <summary>
-    /// Represents an event that occurs after the model is receved from the view
+    /// Represents an event that occurs after the model is received from the view
     /// </summary>
     /// <typeparam name="T">Type of the model</typeparam>
-    public class ModelReceived<T> where T : BaseNopModel
+    public class ModelReceived<T>
     {
         #region Ctor
 

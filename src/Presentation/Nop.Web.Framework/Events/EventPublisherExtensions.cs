@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Nop.Services.Events;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Framework.Events
 {
@@ -15,7 +14,7 @@ namespace Nop.Web.Framework.Events
         /// <typeparam name="T">Type of the model</typeparam>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
-        public static void ModelPrepared<T>(this IEventPublisher eventPublisher, T model) where T : BaseNopModel
+        public static void ModelPrepared<T>(this IEventPublisher eventPublisher, T model)
         {
             eventPublisher.Publish(new ModelPrepared<T>(model));
         }
@@ -27,7 +26,7 @@ namespace Nop.Web.Framework.Events
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="model">Model</param>
         /// <param name="modelState">Model state</param>
-        public static void ModelReceived<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState) where T : BaseNopModel
+        public static void ModelReceived<T>(this IEventPublisher eventPublisher, T model, ModelStateDictionary modelState)
         {
             eventPublisher.Publish(new ModelReceived<T>(model, modelState));
         }
