@@ -641,7 +641,7 @@ namespace Nop.Web.Framework.UI
         
         #region Nested classes
 
-        private class ScriptReferenceMeta
+        private class ScriptReferenceMeta : IEquatable<ScriptReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
@@ -650,15 +650,37 @@ namespace Nop.Web.Framework.UI
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(ScriptReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
 
-        private class CssReferenceMeta
+        private class CssReferenceMeta : IEquatable<CssReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(CssReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
         #endregion
     }
