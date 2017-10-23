@@ -151,7 +151,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                     task.Seconds = taskPeriodInSeconds;
                     _scheduleTaskService.UpdateTask(task);
 
-                    SuccessNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
+                    WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
                 }
             }
             else
@@ -165,14 +165,14 @@ namespace Nop.Plugin.Payments.Square.Controllers
                     Type = SquarePaymentDefaults.RenewAccessTokenTask,
                 });
 
-                SuccessNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
+                WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
             }
-
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             //warn admin that the location is a required parameter
             if (string.IsNullOrEmpty(_squarePaymentSettings.LocationId) || _squarePaymentSettings.LocationId.Equals("0"))
                 WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.Fields.Location.Hint"));
+            else
+                SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
@@ -188,8 +188,12 @@ namespace Nop.Plugin.Payments.Square.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
+            //create new verification string
+            _squarePaymentSettings.AccessTokenVerificationString = Guid.NewGuid().ToString();
+            _settingService.SaveSetting(_squarePaymentSettings);
+
             //get the URL to directs a Square merchant's web browser
-            var redirectUrl = _squarePaymentManager.GenerateAuthorizeUrl();
+            var redirectUrl = _squarePaymentManager.GenerateAuthorizeUrl(_squarePaymentSettings.AccessTokenVerificationString);
 
             return Redirect(redirectUrl);
         }
@@ -208,6 +212,10 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 {
                     throw new NopException($"{error} - {errorDescription}");
                 }
+
+                //validate verification string
+                if (!this.Request.Query.TryGetValue("state", out StringValues verificationString) || !verificationString.Equals(_squarePaymentSettings.AccessTokenVerificationString))
+                    throw new NopException("The verification string did not pass the validation");
 
                 //check whether there is an authorization code in the request
                 if (!this.Request.Query.TryGetValue("code", out StringValues authorizationCode))
@@ -234,10 +242,50 @@ namespace Nop.Plugin.Payments.Square.Controllers
             {
                 //display errors
                 ErrorNotification(_localizationService.GetResource("Plugins.Payments.Square.ObtainAccessToken.Error"));
-                ErrorNotification(exception.Message);
+                if (!string.IsNullOrEmpty(exception.Message))
+                    ErrorNotification(exception.Message);
             }
 
             return RedirectToAction("Configure", "PaymentSquare", new { area = AreaNames.Admin });
+        }
+
+        [HttpPost, ActionName("Configure")]
+        [FormValueRequired("revokeAccessTokens")]
+        [AuthorizeAdmin]
+        [AdminAntiForgery]
+        [Area(AreaNames.Admin)]
+        public IActionResult RevokeAccessTokens(ConfigurationModel model)
+        {
+            //whether user has the authority
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
+            try
+            {
+                //try to revoke all access tokens
+                var successfullyRevoked = _squarePaymentManager.RevokeAccessTokens(new RevokeAccessTokenRequest
+                {
+                    ApplicationId = _squarePaymentSettings.ApplicationId,
+                    ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
+                    AccessToken = _squarePaymentSettings.AccessToken
+                });
+                if (!successfullyRevoked)
+                    throw new NopException("Tokens were not revoked");
+
+                //if access token successfully revoked, delete it from the settings
+                _squarePaymentSettings.AccessToken = string.Empty;
+                _settingService.SaveSetting(_squarePaymentSettings);
+
+                SuccessNotification(_localizationService.GetResource("Plugins.Payments.Square.RevokeAccessTokens.Success"));
+            }
+            catch (Exception exception)
+            {
+                ErrorNotification(_localizationService.GetResource("Plugins.Payments.Square.RevokeAccessTokens.Error"));
+                if (!string.IsNullOrEmpty(exception.Message))
+                    ErrorNotification(exception.Message);
+            }
+
+            return Configure();
         }
 
         #endregion

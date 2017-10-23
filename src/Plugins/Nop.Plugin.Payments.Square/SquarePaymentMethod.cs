@@ -612,6 +612,7 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint", "Specify the personal access token, available from the application dashboard. You can also use the automatically renewed OAuth access tokens, that you can get by pressing button 'Obtain access token'");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod", "Access token renewal period (days)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint", "Access tokens besides your personal access token expire after thirty days, so it is recommended that you specify 30 days for the period. Specify 0 if you use the personal access token.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max", "Token renewal limit to 45 days max");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -638,14 +639,16 @@ namespace Nop.Plugin.Payments.Square
                 <p>
                     For plugin configuration follow these steps:<br />
                     <br />
-                    1. Create a <a href=""https://connect.squareup.com/apps"" target=""_blank"">Square application</a><br />
-                    2. Copy your Application ID from the 'Credentials' tab and your Application secret from the 'OAuth' tab<br />
-                    3. Save<br /> 
-                    4. Copy this '<em>{0}</em>' URL into the 'Redirect URL' field on the 'OAuth' tab<br />
-                    5. Click the 'Obtain access token' button to get the access token (recommended), or copy your Personal Access Token from the 'Credentials' tab<br />
-                    6. Save<br />
-                    7. Choose the business location. Location is a required parameter for payment requests<br />
-                    8. Fill in the remaining fields and save to complete the configuration<br />
+                    1. You will need a Square Merchant account. If you don't already have one, you can sign up here: <a href=""https://squareup.com/signup/"" target=""_blank"">https://squareup.com/signup/</a><br />
+                    <em>Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
+                    2. Sign in to your Square Developer Portal at <a href=""https://connect.squareup.com/apps"" target=""_blank"">https://connect.squareup.com/apps</a>; use the same sign in credentials as your merchant account.<br />
+                    3. Click on '+New Application' and fill in the Application Name. This name is for you to recognize the application in the developer portal and is not used by the extension. Click 'Create Application' at the bottom of the page.<br />
+                    4. In the Square Developer admin go to 'Credentials' tab. Copy the Application ID and paste it into Application ID below.<br />
+                    5. In the Square Developer admin go to 'OAuth' tab. Click 'Show Secret'. Copy the Application Secret and paste it into Application Secret below. Click 'Save' on this page.<br />
+                    6. Copy this URL: <em>{0}</em>. Go to the Square Developer admin, go to 'OAuth' tab, and paste this URL into Redirect URL. Click 'Save'.<br />
+                    7. On this page click 'Obtain access token' below; the Access token field should populate. Click 'Save' below.<br />
+                    8. Choose the business location. Location is a required parameter for payment requests.<br />
+                    9. Fill in the remaining fields and save to complete the configuration.<br />
                     <br />
                     <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
                 </p>");
@@ -655,7 +658,10 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.PaymentMethodDescription", "Pay by credit card using Square");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Error", "Square payment error. An error occurred while renewing an access token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Success", "Square payment info. The access token was successfully renewed");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.TaskChanged", "Task parameters has been changed, please restart the application");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens", "Revoke access tokens");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error", "An error occurred while revoking access tokens");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success", "All access tokens were successfully revoked");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.TaskChanged", "Task parameters has been changed, do not forget to restart the application");
             
             base.Install();
         }
@@ -678,6 +684,7 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Max");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee");
@@ -709,6 +716,9 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.PaymentMethodDescription");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Error");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Success");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.TaskChanged");
 
             base.Uninstall();

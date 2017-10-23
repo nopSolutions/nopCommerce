@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Plugin.Payments.Square.Validators;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Payments.Square.Models
 {
+    [Validator(typeof(ConfigurationValidator))]
     public class ConfigurationModel : BaseNopModel
     {
         #region Ctor
