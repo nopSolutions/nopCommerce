@@ -166,6 +166,9 @@ src/Presentation/Nop.Web/App_Data/TempUploads/*
 src/Presentation/Nop.Web/App_Data/DataProtectionKeys/*
 !src/Presentation/Nop.Web/App_Data/DataProtectionKeys/Index.htm
 src/Presentation/Nop.Web/Plugins/*
+!src/Presentation/Nop.Web/Plugins/bin
+src/Presentation/Nop.Web/Plugins/bin/*
+!src/Presentation/Nop.Web/Plugins/bin/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/bundles/*
 !src/Presentation/Nop.Web/wwwroot/bundles/Index.htm
 src/Presentation/Nop.Web/wwwroot/db_backups/*.bak

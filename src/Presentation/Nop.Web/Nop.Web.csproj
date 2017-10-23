@@ -58,7 +58,7 @@
       <!-- Get all the libraries from the shadow copy folder to remove them,
         because depending on the settings, this may not happen when the application is starting,
         but this can lead to unpredictable results during debugging of the project. -->
-      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" />
+      <ShadowCopiesLibraries Include="$(MSBuildProjectDirectory)\Plugins\bin\*.*" Exclude="$(MSBuildProjectDirectory)\Plugins\bin\placeholder.txt" />
     </ItemGroup>
     <!-- Delete libraries from the shadow copy folder -->
     <Delete Files="@(ShadowCopiesLibraries)" />
