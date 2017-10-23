@@ -26,28 +26,28 @@ namespace Nop.Web.Areas.Admin.Helpers
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
-            var path = Path.Combine(hostingEnvironment.WebRootPath, "lib\\tinymce\\langs");
-            var fileExists = File.Exists($"{path}{langFile}");
+            var directoryPath = Path.Combine(hostingEnvironment.WebRootPath, "lib\\tinymce\\langs");
+            var fileExists = File.Exists($"{directoryPath}\\{langFile}");
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Replace('-', '_');
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = File.Exists($"{directoryPath}\\{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Replace('-', '_');
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = File.Exists($"{directoryPath}\\{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Split('_', '-')[0];
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = File.Exists($"{directoryPath}\\{langFile}");
             }
 
             return fileExists ? languageCulture : string.Empty;
