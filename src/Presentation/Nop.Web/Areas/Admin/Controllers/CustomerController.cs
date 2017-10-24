@@ -647,7 +647,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
                 model.AddRewardPointsValue = 0;
-                model.AddRewardPointsMessage = "Some comment here...";
+                model.AddRewardPointsMessage = _localizationService.GetResource("Admin.Customers.Customers.SomeComment");
 
                 //stores
                 foreach (var store in allStores)

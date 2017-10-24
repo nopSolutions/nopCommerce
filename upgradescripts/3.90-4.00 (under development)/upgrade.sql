@@ -395,18 +395,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore">
     <Value><![CDATA[You can get more themes in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
- <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.DownloadMorePlugins">
     <Value><![CDATA[You can download more nopCommerce plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
- </LocaleResource>
- <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=2&utm_source=admin-panel&utm_medium=payment-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
- </LocaleResource>
- <LocaleResource Name="Admin.Configuration.Shipping.Providers.DownloadMorePlugins">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=3&utm_source=admin-panel&utm_medium=shipping-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
- </LocaleResource>
- <LocaleResource Name="Admin.Configuration.Tax.Providers.DownloadMorePlugins">
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Providers.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/marketplace.aspx?category=11&utm_source=admin-panel&utm_medium=tax-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
- </LocaleResource>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SomeComment">
+    <Value>Some comment here...</Value>
+  </LocaleResource> 
 </Language>
 '
 
