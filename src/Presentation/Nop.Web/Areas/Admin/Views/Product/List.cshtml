@@ -251,6 +251,7 @@
                                         {
                                             field: "Name",
                                             title: "@T("Admin.Catalog.Products.Fields.Name")",
+                                            template : '<a href="@(new WebHelper(Context).GetStoreLocation())#=kendo.toString(Name).replace(/ /g , "-")#" target="_blank">#=Name#</a>',
                                             width: 300
                                         }, {
                                             field: "Sku",
