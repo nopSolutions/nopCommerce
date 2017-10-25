@@ -2,6 +2,7 @@
 {
     /// <summary>
     /// Base plugin
+    /// 所有插件的基类，它实现了接口IPlugin，功能主要是插件的安装和卸载。
     /// </summary>
     public abstract class BasePlugin : IPlugin
     {

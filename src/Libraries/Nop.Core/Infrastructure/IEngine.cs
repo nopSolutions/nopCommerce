@@ -9,6 +9,7 @@ namespace Nop.Core.Infrastructure
     /// various services composing the Nop engine. Edit functionality, modules
     /// and implementations access most Nop functionality through this 
     /// interface.
+    /// 引擎接口
     /// </summary>
     public interface IEngine
     {

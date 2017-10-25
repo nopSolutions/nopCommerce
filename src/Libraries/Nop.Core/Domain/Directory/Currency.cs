@@ -5,6 +5,7 @@ using Nop.Core.Domain.Stores;
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
+    /// ªı±“–≈œ¢
     /// Represents a currency
     /// </summary>
     public partial class Currency : BaseEntity, ILocalizedEntity, IStoreMappingSupported

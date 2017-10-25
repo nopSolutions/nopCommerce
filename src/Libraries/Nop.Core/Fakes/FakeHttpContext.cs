@@ -7,6 +7,9 @@ using System.Web.SessionState;
 
 namespace Nop.Core.Fakes
 {
+    /// <summary>
+    /// 模拟的Http上下文
+    /// </summary>
     public class FakeHttpContext : HttpContextBase
     {
         private readonly HttpCookieCollection _cookies;
@@ -37,17 +40,35 @@ namespace Nop.Core.Fakes
         }
 
         public FakeHttpContext(string relativeUrl,
-            IPrincipal principal, NameValueCollection formParams,
-            NameValueCollection queryStringParams, HttpCookieCollection cookies,
-            SessionStateItemCollection sessionItems, NameValueCollection serverVariables)
+            IPrincipal principal, 
+            NameValueCollection formParams,
+            NameValueCollection queryStringParams, 
+            HttpCookieCollection cookies,
+            SessionStateItemCollection sessionItems, 
+            NameValueCollection serverVariables)
             : this(relativeUrl, null, principal, formParams, queryStringParams, cookies, sessionItems, serverVariables)
         {
         }
 
-        public FakeHttpContext(string relativeUrl, string method,
-            IPrincipal principal, NameValueCollection formParams,
-            NameValueCollection queryStringParams, HttpCookieCollection cookies,
-            SessionStateItemCollection sessionItems, NameValueCollection serverVariables)
+        /// <summary>
+        /// 构造模拟的Http上下文对象
+        /// </summary>
+        /// <param name="relativeUrl">相对地址</param>
+        /// <param name="method"></param>
+        /// <param name="principal"></param>
+        /// <param name="formParams">form窗体变量集合</param>
+        /// <param name="queryStringParams">当前请求的 URL 中由客户端发送的查询字符串变量集合</param>
+        /// <param name="cookies"></param>
+        /// <param name="sessionItems"></param>
+        /// <param name="serverVariables"></param>
+        public FakeHttpContext(string relativeUrl, 
+            string method,
+            IPrincipal principal, 
+            NameValueCollection formParams,
+            NameValueCollection queryStringParams, 
+            HttpCookieCollection cookies,
+            SessionStateItemCollection sessionItems, 
+            NameValueCollection serverVariables)
         {
             _relativeUrl = relativeUrl;
             _method = method;

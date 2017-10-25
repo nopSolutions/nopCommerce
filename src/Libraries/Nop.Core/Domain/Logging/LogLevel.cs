@@ -1,6 +1,7 @@
 namespace Nop.Core.Domain.Logging
 {
     /// <summary>
+    /// 日志级别
     /// Represents a log level
     /// </summary>
     public enum LogLevel

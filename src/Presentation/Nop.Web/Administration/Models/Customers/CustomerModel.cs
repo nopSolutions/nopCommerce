@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Customers;
 using Nop.Core.Domain.Catalog;
@@ -10,6 +11,9 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
+    /// <summary>
+    /// 用户视图模型
+    /// </summary>
     [Validator(typeof(CustomerValidator))]
     public partial class CustomerModel : BaseNopEntityModel
     {

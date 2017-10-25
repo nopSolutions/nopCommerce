@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -7,6 +8,7 @@ using Nop.Core.Domain.Orders;
 namespace Nop.Services.Customers
 {
     /// <summary>
+    /// 用户服务接口
     /// Customer service interface
     /// </summary>
     public partial interface ICustomerService
@@ -171,6 +173,7 @@ namespace Nop.Services.Customers
         CustomerRole GetCustomerRoleBySystemName(string systemName);
 
         /// <summary>
+        /// 获得所有的用户角色
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>

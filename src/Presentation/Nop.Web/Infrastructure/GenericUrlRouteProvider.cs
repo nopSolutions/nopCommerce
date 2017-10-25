@@ -5,6 +5,9 @@ using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Infrastructure
 {
+    /// <summary>
+    /// 定义一般公用的Url规则
+    /// </summary>
     public partial class GenericUrlRouteProvider : IRouteProvider
     {
         public void RegisterRoutes(RouteCollection routes)

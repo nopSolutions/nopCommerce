@@ -1,12 +1,21 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web.Infrastructure
 {
+    /// <summary>
+    /// 具体的路由提供者。
+    /// 通过反射机制被调用。
+    /// </summary>
     public partial class RouteProvider : IRouteProvider
     {
+        /// <summary>
+        /// 真正自定义路由规则的地方。
+        /// </summary>
+        /// <param name="routes"></param>
         public void RegisterRoutes(RouteCollection routes)
         {
             //We reordered our routes so the most used ones are on top. It can improve performance.

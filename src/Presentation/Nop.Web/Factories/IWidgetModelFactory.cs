@@ -4,6 +4,7 @@ using Nop.Web.Models.Cms;
 namespace Nop.Web.Factories
 {
     /// <summary>
+    /// 约定一个部件模型工厂类应该实现的接口
     /// Represents the interface of the widget model factory
     /// </summary>
     public partial interface IWidgetModelFactory

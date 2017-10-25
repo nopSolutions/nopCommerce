@@ -5,14 +5,19 @@ using Nop.Core.Domain.Security;
 namespace Nop.Services.Security
 {
     /// <summary>
+    /// 标准的权限提供者
     /// Standard permission provider
     /// </summary>
     public partial class StandardPermissionProvider : IPermissionProvider
     {
+        //后台管理权限
         //admin area permissions
         public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
         public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
         public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
+        /// <summary>
+        /// 管理商品类别
+        /// </summary>
         public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
         public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
         public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
@@ -56,7 +61,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
         
-
+        //公共商店权限
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
         public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
@@ -64,7 +69,10 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
 
-
+        /// <summary>
+        /// 获得所有权限
+        /// </summary>
+        /// <returns></returns>
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
             return new[] 
@@ -122,6 +130,10 @@ namespace Nop.Services.Security
             };
         }
 
+        /// <summary>
+        /// 获得默认权限
+        /// </summary>
+        /// <returns></returns>
         public virtual IEnumerable<DefaultPermissionRecord> GetDefaultPermissions()
         {
             return new[] 

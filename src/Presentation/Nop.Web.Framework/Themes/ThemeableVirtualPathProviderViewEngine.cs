@@ -12,6 +12,7 @@ namespace Nop.Web.Framework.Themes
 {
     /// <summary>
     /// Themable view engine
+    /// 重写了FindView和CreateView方法，置入了主题Theme的概念。
     /// </summary>
     public abstract class ThemeableVirtualPathProviderViewEngine : VirtualPathProviderViewEngine
     {
@@ -56,6 +57,7 @@ namespace Nop.Web.Framework.Themes
             return null;
         }
 
+
         protected virtual string GetCurrentTheme()
         {
             var themeContext = EngineContext.Current.Resolve<IThemeContext>();
@@ -97,6 +99,14 @@ namespace Nop.Web.Framework.Themes
             return new ViewEngineResult(CreatePartialView(controllerContext, partialPath), this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerContext"></param>
+        /// <param name="viewName"></param>
+        /// <param name="masterName"></param>
+        /// <param name="useCache"></param>
+        /// <returns></returns>
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             if (controllerContext == null)
@@ -111,6 +121,7 @@ namespace Nop.Web.Framework.Themes
             string[] viewLocationsSearched;
             string[] masterLocationsSearched;
 
+            //主题
             var theme = GetCurrentTheme();
             string controllerName = controllerContext.RouteData.GetRequiredString("controller");
             string viewPath = GetPath(controllerContext, ViewLocationFormats, AreaViewLocationFormats, "ViewLocationFormats", viewName, controllerName, theme, CacheKeyPrefixView, useCache, out viewLocationsSearched);
@@ -121,9 +132,24 @@ namespace Nop.Web.Framework.Themes
                 return new ViewEngineResult(viewLocationsSearched.Union(masterLocationsSearched));
             }
 
+            //表示定位视图引擎的结果。
             return new ViewEngineResult(CreateView(controllerContext, viewPath, masterPath), this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerContext"></param>
+        /// <param name="locations"></param>
+        /// <param name="areaLocations"></param>
+        /// <param name="locationsPropertyName"></param>
+        /// <param name="name"></param>
+        /// <param name="controllerName"></param>
+        /// <param name="theme"></param>
+        /// <param name="cacheKeyPrefix"></param>
+        /// <param name="useCache"></param>
+        /// <param name="searchedLocations"></param>
+        /// <returns></returns>
         protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {
             searchedLocations = _emptyLocations;
@@ -193,6 +219,18 @@ namespace Nop.Web.Framework.Themes
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controllerContext"></param>
+        /// <param name="locations"></param>
+        /// <param name="name"></param>
+        /// <param name="controllerName"></param>
+        /// <param name="areaName"></param>
+        /// <param name="theme"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="searchedLocations"></param>
+        /// <returns></returns>
         protected virtual string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
         {
             string result = String.Empty;

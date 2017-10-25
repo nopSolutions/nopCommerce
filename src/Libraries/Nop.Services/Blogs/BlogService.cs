@@ -12,6 +12,7 @@ namespace Nop.Services.Blogs
 {
     /// <summary>
     /// Blog service
+    /// 博客服务实现
     /// </summary>
     public partial class BlogService : IBlogService
     {
@@ -25,7 +26,7 @@ namespace Nop.Services.Blogs
 
         #endregion
 
-        #region Ctor
+        #region Ctor 构造函数
 
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,

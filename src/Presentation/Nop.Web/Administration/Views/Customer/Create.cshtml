@@ -3,6 +3,7 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.AddNew").Text;
+
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers list");
 }
@@ -10,6 +11,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    <!--content-header begin-->
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Customers.Customers.AddNew")
@@ -26,5 +28,7 @@
             </button>
         </div>
     </div>
+    <!--content-header end-->
+
     @Html.Partial("_CreateOrUpdate", Model)
 }

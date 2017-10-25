@@ -4,6 +4,7 @@
 @using Nop.Web.Framework.UI
 @{  
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    //从IoC容器（Autofac）中获取对应组件（IThemeContext具体实现）并调用其属性WorkingThemeName。
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
 
     //add browser specific CSS files

@@ -6,6 +6,7 @@ namespace Nop.Core.Data
 {
     /// <summary>
     /// Manager of data settings (connection string)
+    /// 管理数据库连接设置（加载，解析，存盘）
     /// </summary>
     public partial class DataSettingsManager
     {
@@ -14,6 +15,7 @@ namespace Nop.Core.Data
                
         /// <summary>
         /// Parse settings
+        /// 解析数据库连接字符串
         /// </summary>
         /// <param name="text">Text of settings file</param>
         /// <returns>Parsed data settings</returns>
@@ -62,6 +64,7 @@ namespace Nop.Core.Data
 
         /// <summary>
         /// Convert data settings to string representation
+        /// 把数据库连接设置转化为字符串表现形式
         /// </summary>
         /// <param name="settings">Settings</param>
         /// <returns>Text</returns>
@@ -79,6 +82,7 @@ namespace Nop.Core.Data
 
         /// <summary>
         /// Load settings
+        /// 加载数据库连接设置
         /// </summary>
         /// <param name="filePath">File path; pass null to use default settings file path</param>
         /// <returns></returns>
@@ -99,6 +103,7 @@ namespace Nop.Core.Data
 
         /// <summary>
         /// Save settings to a file
+        /// 保存数据库连接设置到物理磁盘文件中
         /// </summary>
         /// <param name="settings"></param>
         public virtual void SaveSettings(DataSettings settings)

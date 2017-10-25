@@ -13,6 +13,7 @@ namespace Nop.Data
 {
     /// <summary>
     /// Object context
+    /// NopObjectContext是EfRepository类中引用的接口IDbContext真正实现。
     /// </summary>
     public class NopObjectContext : DbContext, IDbContext
     {
@@ -53,6 +54,7 @@ namespace Nop.Data
 
         /// <summary>
         /// Attach an entity to the context or return an already attached entity (if it was already attached)
+        /// 将一个实体附加到数据库上下文，如果已经存在就直接返回这个实体。
         /// </summary>
         /// <typeparam name="TEntity">TEntity</typeparam>
         /// <param name="entity">Entity</param>
@@ -79,6 +81,7 @@ namespace Nop.Data
 
         /// <summary>
         /// Create database script
+        /// 创建数据库sql脚本
         /// </summary>
         /// <returns>SQL to generate database</returns>
         public string CreateDatabaseScript()
@@ -98,6 +101,7 @@ namespace Nop.Data
         
         /// <summary>
         /// Execute stores procedure and load a list of entities at the end
+        /// 执行存储过程并返回实体的List
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="commandText">Command text</param>
@@ -146,6 +150,7 @@ namespace Nop.Data
 
         /// <summary>
         /// Creates a raw SQL query that will return elements of the given generic type.  The type can be any type that has properties that match the names of the columns returned from the query, or can be a simple primitive type. The type does not have to be an entity type. The results of this query are never tracked by the context even if the type of object returned is an entity type.
+        /// 执行sql语句并返回一个指定类型实体的集合。
         /// </summary>
         /// <typeparam name="TElement">The type of object returned by the query.</typeparam>
         /// <param name="sql">The SQL query string.</param>
@@ -158,6 +163,7 @@ namespace Nop.Data
     
         /// <summary>
         /// Executes the given DDL/DML command against the database.
+        /// 执行一个指定DDL/DML命令
         /// </summary>
         /// <param name="sql">The command string</param>
         /// <param name="doNotEnsureTransaction">false - the transaction creation is not ensured; true - the transaction creation is ensured.</param>

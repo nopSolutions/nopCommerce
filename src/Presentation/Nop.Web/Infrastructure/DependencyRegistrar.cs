@@ -12,6 +12,7 @@ namespace Nop.Web.Infrastructure
 {
     /// <summary>
     /// Dependency registrar
+    /// ÒÀÀµ×¢²á
     /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {

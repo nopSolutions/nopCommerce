@@ -5,6 +5,9 @@ using System.Web.SessionState;
 
 namespace Nop.Core.Fakes
 {
+    /// <summary>
+    /// 模拟的Http会话
+    /// </summary>
     public class FakeHttpSessionState : HttpSessionStateBase
     {
         private readonly SessionStateItemCollection _sessionItems;

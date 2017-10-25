@@ -5,6 +5,7 @@ namespace Nop.Core
 {
     /// <summary>
     /// Paged list interface
+    /// 分页列表接口
     /// </summary>
     public interface IPagedList<T> : IList<T>
     {

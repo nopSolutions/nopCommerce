@@ -499,6 +499,7 @@ namespace Nop.Web.Factories
         }
 
         /// <summary>
+        /// 准备登录视图模型
         /// Prepare the login model
         /// </summary>
         /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>

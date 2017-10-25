@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Mvc;
+
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -10,6 +11,7 @@ using Nop.Web.Framework.Themes;
 namespace Nop.Web.Framework.ViewEngines.Razor
 {
     /// <summary>
+    /// 定义使用Asp.Net Razor语法的视图所需的属性和方法。
     /// Web view page
     /// </summary>
     /// <typeparam name="TModel">Model</typeparam>
@@ -19,6 +21,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         private Localizer _localizer;
 
         /// <summary>
+        /// 获得一个本地化字符串资源。这是一个委托，支持的参数可以是资源名称，或是模板字符串。
         /// Get a localized resources
         /// </summary>
         public Localizer T
@@ -38,15 +41,21 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                                          {
                                              return new LocalizedString(format);
                                          }
-                                         return
-                                             new LocalizedString((args == null || args.Length == 0)
+                                         else
+                                         {
+                                             return new LocalizedString((args == null || args.Length == 0)
                                                                      ? resFormat
                                                                      : string.Format(resFormat, args));
+                                         }                                         
                                      };
                 }
                 return _localizer;
             }
         }
+
+        /// <summary>
+        /// 初始化AjaxHelper，HtmlHelper和UrlHelper类。
+        /// </summary>
         public override void InitHelpers()
         {
             base.InitHelpers();
@@ -57,6 +66,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
+        /// <summary>
+        /// 获取或设置布局页的路径。
+        /// </summary>
         public override string Layout
         {
             get
@@ -83,6 +95,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         }
 
         /// <summary>
+        /// 返回一个值指示是否工作语言和主题支持RTL(从右到左)
         /// Return a value indicating whether the working language and theme support RTL (right-to-left)
         /// </summary>
         /// <returns></returns>

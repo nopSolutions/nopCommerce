@@ -9,7 +9,11 @@ using Nop.Core.Data;
 namespace Nop.Data
 {
     /// <summary>
+    /// EF资源库实现类
     /// Entity Framework repository
+    /// EfRepository类就是Nop实现Repository最核心的部分了，它真正的实现了接口IRepository里面定义的所有方法，
+    /// 并且里面引用了接口IDbContext，而不是IDbContext的实现，这样面向接口编程大大的降低了系统模块的耦合性，
+    /// 其实细心的同学可以随处看到Nop中这种面向接口编程的思路。
     /// </summary>
     public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
     {

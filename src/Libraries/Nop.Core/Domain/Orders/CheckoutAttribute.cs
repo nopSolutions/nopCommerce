@@ -6,6 +6,7 @@ using Nop.Core.Domain.Stores;
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
+    /// 账单信息
     /// Represents a checkout attribute
     /// </summary>
     public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported
@@ -13,41 +14,49 @@ namespace Nop.Core.Domain.Orders
         private ICollection<CheckoutAttributeValue> _checkoutAttributeValues;
 
         /// <summary>
+        /// 名称
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
+        /// 提示内容
         /// Gets or sets the text prompt
         /// </summary>
         public string TextPrompt { get; set; }
 
         /// <summary>
+        /// 是否必需
         /// Gets or sets a value indicating whether the entity is required
         /// </summary>
         public bool IsRequired { get; set; }
 
         /// <summary>
+        /// 是否可运输
         /// Gets or sets a value indicating whether shippable products are required in order to display this attribute
         /// </summary>
         public bool ShippableProductRequired { get; set; }
 
         /// <summary>
+        /// 是否免税
         /// Gets or sets a value indicating whether the attribute is marked as tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }
 
         /// <summary>
+        /// 税类编号
         /// Gets or sets the tax category identifier
         /// </summary>
         public int TaxCategoryId { get; set; }
 
         /// <summary>
+        /// 控制属性类型编号
         /// Gets or sets the attribute control type identifier
         /// </summary>
         public int AttributeControlTypeId { get; set; }
 
         /// <summary>
+        /// 排序次序
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }

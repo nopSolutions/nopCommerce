@@ -7,6 +7,7 @@ namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Plugin finder
+    /// 插件查找类，包含插件可能性检测、获取Nop的全部或指定插件相关信息等。
     /// </summary>
     public class PluginFinder : IPluginFinder
     {
@@ -21,6 +22,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Ensure plugins are loaded
+        /// 确保插件被加载
         /// </summary>
         protected virtual void EnsurePluginsAreLoaded()
         {
@@ -82,6 +84,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Check whether the plugin is available in a certain store
+        /// 检查插件是否在在指定店铺中可用
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="storeId">Store identifier to check</param>
@@ -131,6 +134,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Gets plugins
+        /// 获取指定类型的插件集合
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
@@ -146,6 +150,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Get plugin descriptors
+        /// 获取插件描述descriptors--泛型方法
         /// </summary>
         /// <param name="loadMode">Load plugins mode</param>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
@@ -163,6 +168,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Get plugin descriptors
+        /// 获取指定类型的插件描述descriptors--泛型方法
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
@@ -180,6 +186,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Get a plugin descriptor by its system name
+        /// 通过插件的系统名字获取插件
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
         /// <param name="loadMode">Load plugins mode</param>
@@ -192,6 +199,7 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Get a plugin descriptor by its system name
+        /// 通过插件的系统名字获取插件--泛型方法
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="systemName">Plugin system name</param>
@@ -206,6 +214,7 @@ namespace Nop.Core.Plugins
         
         /// <summary>
         /// Reload plugins
+        /// 重新加载插件
         /// </summary>
         public virtual void ReloadPlugins()
         {

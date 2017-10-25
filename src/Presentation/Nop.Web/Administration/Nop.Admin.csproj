@@ -1060,6 +1060,7 @@
     <Content Include="Content\images\warnings-ajax-loader.gif" />
     <Content Include="Content\styles.css" />
     <Content Include="Content\fontAwesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="readme.txt" />
     <Content Include="Scripts\admin.common.js" />
     <Content Include="Scripts\admin.navigation.js" />
     <Content Include="Scripts\admin.search.js" />

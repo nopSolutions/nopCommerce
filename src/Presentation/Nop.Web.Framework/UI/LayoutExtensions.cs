@@ -4,6 +4,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Web.Framework.UI
 {
     /// <summary>
+    /// HtmlHelper类的静态扩展方法
     /// Layout extensions
     /// </summary>
     public static class LayoutExtensions
@@ -19,6 +20,7 @@ namespace Nop.Web.Framework.UI
             pageHeadBuilder.AddTitleParts(part);
         }
         /// <summary>
+        /// 附加标题片断
         /// Append title element to the <![CDATA[<head>]]>
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -29,6 +31,7 @@ namespace Nop.Web.Framework.UI
             pageHeadBuilder.AppendTitleParts(part);
         }
         /// <summary>
+        /// 输出页面标题
         /// Generate all title parts
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -53,7 +56,9 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaDescriptionParts(part);
         }
+
         /// <summary>
+        /// 附加页面描述片断
         /// Append meta description element to the <![CDATA[<head>]]>
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -63,7 +68,9 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaDescriptionParts(part);
         }
+
         /// <summary>
+        /// 输出页面描述
         /// Generate all description parts
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -87,7 +94,9 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddMetaKeywordParts(part);
         }
+
         /// <summary>
+        /// 附加页面关键词
         /// Append meta keyword element to the <![CDATA[<head>]]>
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -97,7 +106,9 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaKeywordParts(part);
         }
+
         /// <summary>
+        /// 输出页面关键词
         /// Generate all keyword parts
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -289,7 +300,9 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendHeadCustomParts(part);
         }
+
         /// <summary>
+        /// 输出头部自定内容
         /// Generate all custom elements
         /// </summary>
         /// <param name="html">HTML helper</param>
@@ -322,11 +335,12 @@ namespace Nop.Web.Framework.UI
             pageHeadBuilder.AppendPageCssClassParts(part);
         }
         /// <summary>
+        /// html页面css，插入html标签内
         /// Generate all title parts
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">CSS class</param>
-        /// <param name="includeClassElement">A value indicating whether to include "class" attributes</param>
+        /// <param name="includeClassElement">是否要包含class属性键。A value indicating whether to include "class" attributes</param>
         /// <returns>Generated string</returns>
         public static MvcHtmlString NopPageCssClasses(this HtmlHelper html, string part = "", bool includeClassElement = true)
         {
@@ -343,6 +357,7 @@ namespace Nop.Web.Framework.UI
 
 
         /// <summary>
+        /// 控制当前菜单展开
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
         /// <param name="html">HTML helper</param>

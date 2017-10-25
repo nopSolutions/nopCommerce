@@ -6,6 +6,9 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
+    /// <summary>
+    /// 登录验证器
+    /// </summary>
     public partial class LoginValidator : BaseNopValidator<LoginModel>
     {
         public LoginValidator(ILocalizationService localizationService, CustomerSettings customerSettings)

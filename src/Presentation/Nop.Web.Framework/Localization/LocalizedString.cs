@@ -3,6 +3,9 @@ using System.Web;
 
 namespace Nop.Web.Framework.Localization
 {
+    /// <summary>
+    /// 本地化字符串类
+    /// </summary>
     public class LocalizedString : MarshalByRefObject, IHtmlString
     {
         private readonly string _localized;
@@ -10,6 +13,10 @@ namespace Nop.Web.Framework.Localization
         private readonly string _textHint;
         private readonly object[] _args;
 
+        /// <summary>
+        /// 构造本地化字符串
+        /// </summary>
+        /// <param name="localized"></param>
         public LocalizedString(string localized)
         {
             _localized = localized;
@@ -45,6 +52,9 @@ namespace Nop.Web.Framework.Localization
             get { return _args; }
         }
 
+        /// <summary>
+        /// 本地化资源字符串值
+        /// </summary>
         public string Text
         {
             get { return _localized; }
@@ -55,6 +65,10 @@ namespace Nop.Web.Framework.Localization
             return _localized;
         }
 
+        /// <summary>
+        /// 返回 HTML 编码的字符串。
+        /// </summary>
+        /// <returns></returns>
         public string ToHtmlString()
         {
             return _localized;

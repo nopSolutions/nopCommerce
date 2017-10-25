@@ -1,0 +1,3 @@
+﻿真正的处理数据的业务层，都是通过面向接口编程，减少对具体实现的依赖。
+Nop中对业务的操作都是抽象为某个服务（XXService），也就是对Repository架构用Service对其进行了进一步的隔离。
+在Nop的Controller中引用都是引用的Service的接口。

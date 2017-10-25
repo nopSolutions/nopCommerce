@@ -12,11 +12,12 @@ using Nop.Services.Localization;
 namespace Nop.Services.Security
 {
     /// <summary>
+    /// 权限服务
     /// Permission service
     /// </summary>
     public partial class PermissionService : IPermissionService
     {
-        #region Constants
+        #region Constants 常量
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -35,6 +36,9 @@ namespace Nop.Services.Security
 
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly ICustomerService _customerService;
+        /// <summary>
+        /// 当前工作上下文
+        /// </summary>
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
@@ -268,6 +272,7 @@ namespace Nop.Services.Security
         }
         
         /// <summary>
+        /// 验证权限
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
@@ -278,10 +283,11 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// 验证权限
         /// Authorize permission
         /// </summary>
-        /// <param name="permission">Permission record</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="permission">Permission record，权限实体（包含了功能及可以操作的角色列表）</param>
+        /// <param name="customer">Customer 当前用户（具有明确的角色）</param>
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize(PermissionRecord permission, Customer customer)
         {
@@ -314,6 +320,7 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// 验证权限
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>

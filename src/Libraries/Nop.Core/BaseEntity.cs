@@ -3,6 +3,7 @@ using System;
 namespace Nop.Core
 {
     /// <summary>
+    /// 实体基类
     /// Base class for entities
     /// </summary>
     public abstract partial class BaseEntity

@@ -6,6 +6,7 @@ namespace Nop.Services.Catalog
 {
     /// <summary>
     /// Category service interface
+    /// 商品分类服务接口
     /// </summary>
     public partial interface ICategoryService
     {

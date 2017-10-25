@@ -12,6 +12,8 @@ namespace Nop.Core.Infrastructure
     /// currently executing AppDomain. Only assemblies whose names matches
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
+    /// 
+    /// 在当前运行中的AppDomain中查找相关类型的集合。
     /// </summary>
     public class AppDomainTypeFinder : ITypeFinder
     {
@@ -19,6 +21,7 @@ namespace Nop.Core.Infrastructure
 
         private bool ignoreReflectionErrors = true;
         private bool loadAppDomainAssemblies = true;
+        //忽略一些系统程序集及其它特殊程序集。
         private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();
@@ -33,7 +36,11 @@ namespace Nop.Core.Infrastructure
             get { return AppDomain.CurrentDomain; }
         }
 
-        /// <summary>Gets or sets whether Nop should iterate assemblies in the app domain when loading Nop types. Loading patterns are applied when loading these assemblies.</summary>
+        /// <summary>
+        /// Gets or sets whether Nop should iterate assemblies in the app domain when loading Nop types. 
+        /// Loading patterns are applied when loading these assemblies.
+        /// 是否加载程序集
+        /// </summary>
         public bool LoadAppDomainAssemblies
         {
             get { return loadAppDomainAssemblies; }
@@ -140,7 +147,10 @@ namespace Nop.Core.Infrastructure
             return result;
         }
 
-        /// <summary>Gets the assemblies related to the current implementation.</summary>
+        /// <summary>
+        /// Gets the assemblies related to the current implementation.
+        /// 获取指定类型的所有实现类。
+        /// </summary>
         /// <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
@@ -148,7 +158,10 @@ namespace Nop.Core.Infrastructure
             var assemblies = new List<Assembly>();
 
             if (LoadAppDomainAssemblies)
+            {
                 AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
+            }                
+
             AddConfiguredAssemblies(addedAssemblyNames, assemblies);
 
             return assemblies;
@@ -160,6 +173,7 @@ namespace Nop.Core.Infrastructure
 
         /// <summary>
         /// Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.
+        /// 遍历AppDomain下的所有程序集并与指定类型进行比较，如果匹配就加入要返回的List中。
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
@@ -180,6 +194,7 @@ namespace Nop.Core.Infrastructure
 
         /// <summary>
         /// Adds specifically configured assemblies.
+        /// 添加特定程序集到集合中。
         /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
@@ -247,6 +262,7 @@ namespace Nop.Core.Infrastructure
                 return;
             }
 
+            //获取指定目录下以.dll为结尾的文件。
             foreach (string dllPath in Directory.GetFiles(directoryPath, "*.dll"))
             {
                 try
@@ -254,7 +270,7 @@ namespace Nop.Core.Infrastructure
                     var an = AssemblyName.GetAssemblyName(dllPath);
                     if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName))
                     {
-                        App.Load(an);
+                        App.Load(an);//加载程序集到当前AppDomain中。
                     }
 
                     //old loading stuff

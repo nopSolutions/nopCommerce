@@ -4,11 +4,13 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Services.Cms
 {
     /// <summary>
+    /// 定义部件服务应该实现的接口。
     /// Widget service interface
     /// </summary>
     public partial interface IWidgetService
     {
         /// <summary>
+        /// 加载部件
         /// Load active widgets
         /// </summary>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
@@ -33,6 +35,7 @@ namespace Nop.Services.Cms
         IWidgetPlugin LoadWidgetBySystemName(string systemName);
 
         /// <summary>
+        /// 加载所有部件 
         /// Load all widgets
         /// </summary>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>

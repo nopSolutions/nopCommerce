@@ -13,6 +13,7 @@ namespace Nop.Core.Infrastructure
 {
     /// <summary>
     /// Engine
+    /// 具体的Nop引擎
     /// </summary>
     public class NopEngine : IEngine
     {
@@ -42,32 +43,44 @@ namespace Nop.Core.Infrastructure
 
         /// <summary>
         /// Register dependencies
+        /// 注册依赖
         /// </summary>
         /// <param name="config">Config</param>
         protected virtual void RegisterDependencies(NopConfig config)
         {
+            //容器生成器
             var builder = new ContainerBuilder();
             
             //dependencies
             var typeFinder = new WebAppTypeFinder();
-            builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
-            builder.RegisterInstance(this).As<IEngine>().SingleInstance();
-            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+            builder.RegisterInstance(config).As<NopConfig>().SingleInstance(); //Nop配置
+            builder.RegisterInstance(this).As<IEngine>().SingleInstance(); //引擎
+            //ITypeFinder接口用WebAppTypeFinder的单例对象注册绑定。
+            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance(); //类型发现器
 
             //register dependencies provided by other assemblies
+            //查找所有实现了接口IDependencyRegistrar的类。
             var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
             var drInstances = new List<IDependencyRegistrar>();
             foreach (var drType in drTypes)
-                drInstances.Add((IDependencyRegistrar) Activator.CreateInstance(drType));
+            {
+                drInstances.Add((IDependencyRegistrar)Activator.CreateInstance(drType));
+            }                
+
             //sort
+            //排序
             drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
             foreach (var dependencyRegistrar in drInstances)
+            {
+                //依次调用实现IDependencyRegistrar接口的类的方法Register
                 dependencyRegistrar.Register(builder, typeFinder, config);
+            }
 
             var container = builder.Build();
             this._containerManager = new ContainerManager(container);
 
             //set dependency resolver
+            // ???
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
 
@@ -101,17 +114,21 @@ namespace Nop.Core.Infrastructure
 
         /// <summary>
         /// Initialize components and plugins in the nop environment.
+        /// 在nop环境中初始化组件和插件。
         /// </summary>
         /// <param name="config">Config</param>
         public void Initialize(NopConfig config)
         {
             //register dependencies
+            //注册依赖
             RegisterDependencies(config);
 
             //register mapper configurations
+            //注册映射配置
             RegisterMapperConfiguration(config);
 
             //startup tasks
+            //启动任务
             if (!config.IgnoreStartupTasks)
             {
                 RunStartupTasks();

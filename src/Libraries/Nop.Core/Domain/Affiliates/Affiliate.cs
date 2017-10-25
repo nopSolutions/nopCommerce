@@ -3,11 +3,13 @@ using Nop.Core.Domain.Common;
 namespace Nop.Core.Domain.Affiliates
 {
     /// <summary>
+    /// 隶属机构
     /// Represents an affiliate
     /// </summary>
     public partial class Affiliate : BaseEntity
     {
         /// <summary>
+        /// 地址编号
         /// Gets or sets the address identifier
         /// </summary>
         public int AddressId { get; set; }
@@ -23,11 +25,13 @@ namespace Nop.Core.Domain.Affiliates
         public string FriendlyUrlName { get; set; }
 
         /// <summary>
+        /// 是否删除
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }
 
         /// <summary>
+        /// 是否有效
         /// Gets or sets a value indicating whether the entity is active
         /// </summary>
         public bool Active { get; set; }

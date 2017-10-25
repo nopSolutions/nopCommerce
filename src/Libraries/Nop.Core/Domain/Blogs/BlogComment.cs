@@ -5,16 +5,19 @@ using Nop.Core.Domain.Stores;
 namespace Nop.Core.Domain.Blogs
 {
     /// <summary>
+    /// 博客评论
     /// Represents a blog comment
     /// </summary>
     public partial class BlogComment : BaseEntity
     {
         /// <summary>
+        /// 客户编号
         /// Gets or sets the customer identifier
         /// </summary>
         public int CustomerId { get; set; }
 
         /// <summary>
+        /// 评论内容
         /// Gets or sets the comment text
         /// </summary>
         public string CommentText { get; set; }
@@ -30,11 +33,13 @@ namespace Nop.Core.Domain.Blogs
         public int StoreId { get; set; }
 
         /// <summary>
+        /// 发帖编号
         /// Gets or sets the blog post identifier
         /// </summary>
         public int BlogPostId { get; set; }
 
         /// <summary>
+        /// 创建日期时间
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

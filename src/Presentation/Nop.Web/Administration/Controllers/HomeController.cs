@@ -4,6 +4,7 @@ using System.Net;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using System.Xml;
+
 using Nop.Admin.Infrastructure.Cache;
 using Nop.Admin.Models.Home;
 using Nop.Core;
@@ -64,6 +65,10 @@ namespace Nop.Admin.Controllers
 
         #region Methods
 
+        /// <summary>
+        /// 后台管理首页（仪表盘页）
+        /// </summary>
+        /// <returns></returns>
         public virtual ActionResult Index()
         {
             var model = new DashboardModel();

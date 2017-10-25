@@ -4,6 +4,7 @@ namespace Nop.Core.Data
 {
     /// <summary>
     /// Base data provider manager
+    /// 数据提供者管理器抽象类
     /// </summary>
     public abstract class BaseDataProviderManager
     {

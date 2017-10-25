@@ -21,12 +21,16 @@ using Nop.Web.Framework.Localization;
 namespace Nop.Web.Framework
 {
     /// <summary>
+    /// Web程序的工作上下文
     /// Work context for web application
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
         #region Const
 
+        /// <summary>
+        /// 用户cookie名称
+        /// </summary>
         private const string CustomerCookieName = "Nop.customer";
 
         #endregion

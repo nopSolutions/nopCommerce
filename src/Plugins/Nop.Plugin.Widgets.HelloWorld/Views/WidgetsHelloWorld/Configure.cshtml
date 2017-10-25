@@ -1,0 +1,24 @@
+﻿@using Nop.Web.Framework;
+
+@model Nop.Plugin.Widgets.HelloWorld.Models.ConfigurationModel
+
+@{
+    Layout = "";
+}
+
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td>key</td>
+            <td>value</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+}

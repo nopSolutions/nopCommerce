@@ -3,13 +3,18 @@ using System.Web;
 
 namespace Nop.Core.Fakes
 {
+    /// <summary>
+    /// 模拟的Http响应
+    /// </summary>
     public class FakeHttpResponse : HttpResponseBase
     {
         private readonly HttpCookieCollection _cookies;
+
         public FakeHttpResponse()
         {
             this._cookies = new HttpCookieCollection();
         }
+
         private readonly StringBuilder _outputString = new StringBuilder();
 
         public string ResponseOutput

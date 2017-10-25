@@ -10,6 +10,8 @@ namespace Nop.Web.Framework.Mvc
     /// This MetadataProvider adds some functionality on top of the default DataAnnotationsModelMetadataProvider.
     /// It adds custom attributes (implementing IModelAttribute) to the AdditionalValues property of the model's metadata
     /// so that it can be retrieved later.
+    /// 
+    /// 
     /// </summary>
     public class NopMetadataProvider : DataAnnotationsModelMetadataProvider
     {

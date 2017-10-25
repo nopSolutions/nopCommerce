@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Core.Domain.Logging
 {
     /// <summary>
+    /// ÈÕÖ¾¼ÇÂ¼
     /// Represents a log record
     /// </summary>
     public partial class Log : BaseEntity

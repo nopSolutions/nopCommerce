@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -23,6 +24,7 @@ using Nop.Services.Events;
 namespace Nop.Services.Customers
 {
     /// <summary>
+    /// 用户服务具体实现
     /// Customer service
     /// </summary>
     public partial class CustomerService : ICustomerService
@@ -774,6 +776,7 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// 获得所有用户角色。
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>

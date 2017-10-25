@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
+    /// 定义一个顾客用户
     /// Represents a customer
     /// </summary>
     public partial class Customer : BaseEntity
@@ -17,6 +19,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<Address> _addresses;
 
         /// <summary>
+        /// 领域模型中的用户模型
         /// Ctor
         /// </summary>
         public Customer()
@@ -25,39 +28,49 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
+        /// 唯一编号
         /// Gets or sets the customer Guid
         /// </summary>
         public Guid CustomerGuid { get; set; }
 
         /// <summary>
+        /// 用户名
         /// Gets or sets the username
         /// </summary>
         public string Username { get; set; }
+
         /// <summary>
+        /// 电子邮件地址
         /// Gets or sets the email
         /// </summary>
         public string Email { get; set; }
+
         /// <summary>
+        /// Email重新生效？
         /// Gets or sets the email that should be re-validated. Used in scenarios when a customer is already registered and wants to change an email address.
         /// </summary>
         public string EmailToRevalidate { get; set; }
 
         /// <summary>
+        /// 管理评论？
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
 
         /// <summary>
+        /// 是否免税
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }
 
         /// <summary>
+        /// 附属？
         /// Gets or sets the affiliate identifier
         /// </summary>
         public int AffiliateId { get; set; }
 
         /// <summary>
+        /// 供应商？
         /// Gets or sets the vendor identifier with which this customer is associated (maganer)
         /// </summary>
         public int VendorId { get; set; }

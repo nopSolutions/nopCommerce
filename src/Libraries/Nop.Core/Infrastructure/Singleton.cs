@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace Nop.Core.Infrastructure
 {
+    //核心.基础.单例包装器
+
     /// <summary>
     /// A statically compiled "singleton" used to store objects throughout the 
     /// lifetime of the app domain. Not so much singleton in the pattern's 
@@ -73,6 +75,9 @@ namespace Nop.Core.Infrastructure
             allSingletons = new Dictionary<Type, object>();
         }
 
+        /// <summary>
+        /// 用来存储所有的单例对象。
+        /// </summary>
         static readonly IDictionary<Type, object> allSingletons;
 
         /// <summary>Dictionary of type to singleton instances.</summary>

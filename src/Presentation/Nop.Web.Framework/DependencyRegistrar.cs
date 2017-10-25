@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Integration.Mvc;
+
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
@@ -58,6 +60,8 @@ namespace Nop.Web.Framework
 {
     /// <summary>
     /// Dependency registrar
+    /// 依赖注入/登记
+    /// 通过调用Autofac相关的API进行依赖注入。
     /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
@@ -77,15 +81,19 @@ namespace Nop.Web.Framework
                 (new FakeHttpContext("~/") as HttpContextBase))
                 .As<HttpContextBase>()
                 .InstancePerLifetimeScope();
+
             builder.Register(c => c.Resolve<HttpContextBase>().Request)
                 .As<HttpRequestBase>()
                 .InstancePerLifetimeScope();
+
             builder.Register(c => c.Resolve<HttpContextBase>().Response)
                 .As<HttpResponseBase>()
                 .InstancePerLifetimeScope();
+
             builder.Register(c => c.Resolve<HttpContextBase>().Server)
                 .As<HttpServerUtilityBase>()
                 .InstancePerLifetimeScope();
+
             builder.Register(c => c.Resolve<HttpContextBase>().Session)
                 .As<HttpSessionStateBase>()
                 .InstancePerLifetimeScope();
@@ -128,17 +136,21 @@ namespace Nop.Web.Framework
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
 
-            //cache managers
+            #region cache managers
             if (config.RedisCachingEnabled)
             {
+                //redis缓存
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").InstancePerLifetimeScope();
             }
             else
             {
+                //内存缓存
                 builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
             }
+            //http缓存
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerLifetimeScope();
+            #endregion
 
             if (config.RunOnAzureWebApps)
             {

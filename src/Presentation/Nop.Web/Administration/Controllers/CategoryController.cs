@@ -27,6 +27,9 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
+    /// <summary>
+    /// 商品分类管理
+    /// </summary>
     public partial class CategoryController : BaseAdminController
     {
         #region Fields
@@ -42,6 +45,9 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IDiscountService _discountService;
+        /// <summary>
+        /// 权限许可服务
+        /// </summary>
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
         private readonly IStoreService _storeService;
@@ -298,10 +304,11 @@ namespace Nop.Admin.Controllers
 
         #endregion
         
-        #region List
+        #region List 列表
 
         public virtual ActionResult Index()
         {
+            //默认跳转到列表
             return RedirectToAction("List");
         }
 

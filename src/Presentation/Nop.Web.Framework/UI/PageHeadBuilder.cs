@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
+
 using Nop.Core;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Seo;
@@ -13,6 +14,7 @@ using Nop.Services.Seo;
 namespace Nop.Web.Framework.UI
 {
     /// <summary>
+    /// 页面头部生成器具体实现
     /// Page head builder
     /// </summary>
     public partial class PageHeadBuilder : IPageHeadBuilder
@@ -29,7 +31,7 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
-        private readonly List<string> _pageCssClassParts;
+        private readonly List<string> _pageCssClassParts; //页面样式class列表
         private string _editPageUrl;
         private string _activeAdminMenuSystemName;
 
@@ -98,6 +100,10 @@ namespace Nop.Web.Framework.UI
 
         #region Methods
 
+        /// <summary>
+        /// 添加标题到现有标题前（标题列表最终输出时会反转）
+        /// </summary>
+        /// <param name="part"></param>
         public virtual void AddTitleParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -105,6 +111,11 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Add(part);
         }
+
+        /// <summary>
+        /// 添加标题到现有标题后（标题列表最终输出时会反转）
+        /// </summary>
+        /// <param name="part"></param>
         public virtual void AppendTitleParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -112,9 +123,17 @@ namespace Nop.Web.Framework.UI
             
             _titleParts.Insert(0, part);
         }
+
+        #region GenerateTitle 生成标题
+        /// <summary>
+        /// 生成标题
+        /// </summary>
+        /// <param name="addDefaultTitle">是否附加默认标题</param>
+        /// <returns></returns>
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
             string result = "";
+            //标题
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             if (!String.IsNullOrEmpty(specificTitle))
             {
@@ -150,7 +169,7 @@ namespace Nop.Web.Framework.UI
             }
             return result;
         }
-
+        #endregion
 
         public virtual void AddMetaDescriptionParts(string part)
         {
@@ -159,6 +178,11 @@ namespace Nop.Web.Framework.UI
             
             _metaDescriptionParts.Add(part);
         }
+
+        /// <summary>
+        /// 附加页面描述片断
+        /// </summary>
+        /// <param name="part"></param>
         public virtual void AppendMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -181,6 +205,11 @@ namespace Nop.Web.Framework.UI
             
             _metaKeywordParts.Add(part);
         }
+
+        /// <summary>
+        /// 附加页面关键词
+        /// </summary>
+        /// <param name="part"></param>
         public virtual void AppendMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -188,6 +217,11 @@ namespace Nop.Web.Framework.UI
 
             _metaKeywordParts.Insert(0, part);
         }
+
+        /// <summary>
+        /// 生成页面关键词
+        /// </summary>
+        /// <returns></returns>
         public virtual string GenerateMetaKeywords()
         {
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
@@ -452,6 +486,11 @@ namespace Nop.Web.Framework.UI
 
             _headCustomParts.Insert(0, part);
         }
+
+        /// <summary>
+        /// 生成头部自定义内容
+        /// </summary>
+        /// <returns></returns>
         public virtual string GenerateHeadCustom()
         {
             //use only distinct rows
@@ -509,6 +548,7 @@ namespace Nop.Web.Framework.UI
 
 
         /// <summary>
+        /// 设置活动菜单
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
         /// <param name="systemName">System name</param>
