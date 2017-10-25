@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+
 using Nop.Admin.Extensions;
 using Nop.Admin.Helpers;
 using Nop.Admin.Models.Common;
@@ -46,6 +47,9 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
+    /// <summary>
+    /// 客户管理
+    /// </summary>
     public partial class CustomerController : BaseAdminController
     {
         #region Fields
@@ -764,6 +768,12 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        #region 客户管理列表
+
+        /// <summary>
+        /// 列表页
+        /// </summary>
+        /// <returns></returns>
         public virtual ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -794,6 +804,13 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// 客户查询结果
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="model"></param>
+        /// <param name="searchCustomerRoleIds"></param>
+        /// <returns></returns>
         [HttpPost]
         public virtual ActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
             [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
@@ -832,7 +849,11 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+        #endregion
+
+        #region 新增用户
+
         public virtual ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -850,9 +871,13 @@ namespace Nop.Admin.Controllers
         [ValidateInput(false)]
         public virtual ActionResult Create(CustomerModel model, bool continueEditing, FormCollection form)
         {
+            //权限验证
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            {
                 return AccessDeniedView();
+            }                
 
+            #region 输入校验
             if (!String.IsNullOrWhiteSpace(model.Email))
             {
                 var cust2 = _customerService.GetCustomerByEmail(model.Email);
@@ -865,13 +890,20 @@ namespace Nop.Admin.Controllers
                 if (cust2 != null)
                     ModelState.AddModelError("", "Username is already registered");
             }
+            #endregion
 
+            //验证用户所选角色
             //validate customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
             var newCustomerRoles = new List<CustomerRole>();
             foreach (var customerRole in allCustomerRoles)
+            {
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
                     newCustomerRoles.Add(customerRole);
+                }
+            }                
+
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
             {
@@ -1046,6 +1078,10 @@ namespace Nop.Admin.Controllers
             PrepareCustomerModel(model, null, true);
             return View(model);
         }
+
+        #endregion
+
+        #region 编辑用户
 
         public virtual ActionResult Edit(int id)
         {
@@ -1315,6 +1351,14 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        #endregion
+
+        #region 修改密码
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
         public virtual ActionResult ChangePassword(CustomerModel model)
@@ -1348,7 +1392,8 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("Edit",  new {id = customer.Id});
         }
-        
+        #endregion
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markVatNumberAsValid")]
         public virtual ActionResult MarkVatNumberAsValid(CustomerModel model)

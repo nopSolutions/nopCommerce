@@ -7,19 +7,22 @@ namespace Nop.Services.Blogs
 {
     /// <summary>
     /// Blog service interface
+    /// 博客服务接口
     /// </summary>
     public partial interface IBlogService
     {
-        #region Blog posts
+        #region Blog posts, 博文操作
 
         /// <summary>
         /// Deletes a blog post
+        /// 删除博文
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         void DeleteBlogPost(BlogPost blogPost);
 
         /// <summary>
         /// Gets a blog post
+        /// 根据博文id获得一条博文实体
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
@@ -27,6 +30,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Gets blog posts
+        /// 根据博文id集合，获得多条博文实体集合
         /// </summary>
         /// <param name="blogPostIds">Blog post identifiers</param>
         /// <returns>Blog posts</returns>
@@ -34,6 +38,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Gets all blog posts
+        /// 获得所有博文，支持简单查询，支持分页
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
@@ -49,6 +54,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Gets all blog posts
+        /// 根据标签获得博文
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
@@ -63,6 +69,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Gets all blog post tags
+        /// 获得所有博文标签
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all blog posts</param>
@@ -72,22 +79,25 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Inserts an blog post
+        /// 新增博文
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         void InsertBlogPost(BlogPost blogPost);
 
         /// <summary>
         /// Updates the blog post
+        /// 更新博文
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         void UpdateBlogPost(BlogPost blogPost);
 
         #endregion
 
-        #region Blog comments
+        #region Blog comments, 博文评论操作
 
         /// <summary>
         /// Gets all comments
+        /// 获得所有评论
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
@@ -102,6 +112,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Gets a blog comment
+        /// 获得一条评论
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>Blog comment</returns>
@@ -116,6 +127,7 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Get the count of blog comments
+        /// 获得指定博文的评论的数量
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
@@ -125,12 +137,14 @@ namespace Nop.Services.Blogs
 
         /// <summary>
         /// Deletes a blog comment
+        /// 删除一条博文评论
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         void DeleteBlogComment(BlogComment blogComment);
 
         /// <summary>
         /// Deletes blog comments
+        /// 批量删除博文评论
         /// </summary>
         /// <param name="blogComments">Blog comments</param>
         void DeleteBlogComments(IList<BlogComment> blogComments);

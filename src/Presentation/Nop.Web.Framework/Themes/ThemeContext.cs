@@ -9,6 +9,7 @@ namespace Nop.Web.Framework.Themes
 {
     /// <summary>
     /// Theme context
+    /// 主题上下文，用于调用其它主题相关类，它是主题的入口，也是中心。
     /// </summary>
     public partial class ThemeContext : IThemeContext
     {
@@ -36,6 +37,7 @@ namespace Nop.Web.Framework.Themes
 
         /// <summary>
         /// Get or set current theme system name
+        /// 读取或设置系统主题名称
         /// </summary>
         public string WorkingThemeName
         {
@@ -52,10 +54,12 @@ namespace Nop.Web.Framework.Themes
                 }
 
                 //default store theme
+                //默认商店主题
                 if (string.IsNullOrEmpty(theme))
                     theme = _storeInformationSettings.DefaultStoreTheme;
 
                 //ensure that theme exists
+                //如果不存在默认主题就加载主题集合中的第一个主题
                 if (!_themeProvider.ThemeConfigurationExists(theme))
                 {
                     var themeInstance = _themeProvider.GetThemeConfigurations()

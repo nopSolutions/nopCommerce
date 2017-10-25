@@ -4,11 +4,15 @@ using System.Web.Mvc;
 namespace Nop.Web.Framework.Mvc
 {
     /// <summary>
+    /// 视图模型基类
     /// Base nopCommerce model
     /// </summary>
     [ModelBinder(typeof(NopModelBinder))]
     public partial class BaseNopModel
     {
+        /// <summary>
+        /// 构造视图模型基类
+        /// </summary>
         public BaseNopModel()
         {
             this.CustomProperties = new Dictionary<string, object>();

@@ -391,7 +391,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Caching\readme.txt" />
+    <Content Include="Domain\readme.txt" />
+    <Content Include="Fakes\readme.txt" />
+    <Content Include="Infrastructure\readme.txt" />
+    <Content Include="readme.txt" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

@@ -6,6 +6,9 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
 {
+    /// <summary>
+    /// 插件描述类，包含插件名字、作者、类型、所属分组及引用的程序集等信息和一些操作，比如获取插件的实例，比较插件等等。
+    /// </summary>
     public class PluginDescriptor : IComparable<PluginDescriptor>
     {
         public PluginDescriptor()
@@ -26,11 +29,13 @@ namespace Nop.Core.Plugins
         }
         /// <summary>
         /// Plugin type
+        /// 插件的文件名
         /// </summary>
         public virtual string PluginFileName { get; set; }
 
         /// <summary>
         /// Plugin type
+        /// 插件的type类型
         /// </summary>
         public virtual Type PluginType { get; set; }
 
@@ -61,16 +66,19 @@ namespace Nop.Core.Plugins
 
         /// <summary>
         /// Gets or sets the version
+        /// 插件版本
         /// </summary>
         public virtual string Version { get; set; }
 
         /// <summary>
         /// Gets or sets the supported versions of nopCommerce
+        /// 插件所支持版本列表
         /// </summary>
         public virtual IList<string> SupportedVersions { get; set; }
 
         /// <summary>
         /// Gets or sets the author
+        /// 作者
         /// </summary>
         public virtual string Author { get; set; }
 
@@ -99,9 +107,16 @@ namespace Nop.Core.Plugins
         /// </summary>
         public virtual bool Installed { get; set; }
 
+
+        /// <summary>
+        /// 获取插件实例对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public virtual T Instance<T>() where T : class, IPlugin
         {
             object instance;
+            //通过Ioc容器获取插件类型的实例对象
             if (!EngineContext.Current.ContainerManager.TryResolve(PluginType, null, out instance))
             {
                 //not resolved
@@ -120,6 +135,7 @@ namespace Nop.Core.Plugins
 
         public int CompareTo(PluginDescriptor other)
         {
+            //实现CompareTo方法是为了以后插件排序
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
             

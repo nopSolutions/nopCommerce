@@ -7,6 +7,8 @@ namespace Nop.Core.Infrastructure
     /// <summary>
     /// Classes implementing this interface provide information about types 
     /// to various services in the Nop engine.
+    /// 
+    /// 类型查找抽象接口
     /// </summary>
     public interface ITypeFinder
     {

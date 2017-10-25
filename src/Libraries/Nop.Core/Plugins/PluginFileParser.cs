@@ -8,6 +8,8 @@ namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Plugin files parser
+    /// Nop的每一个插件的相关信息是通过文本文件的形式记录的，它自己规定了一定的格式。
+    /// 为了让Nop能够正常的解析、查找到插件，每一个插件都要按照这个格式写它自己的信息。
     /// </summary>
     public static class PluginFileParser
     {

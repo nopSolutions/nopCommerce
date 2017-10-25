@@ -3,6 +3,9 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers
 {
+    /// <summary>
+    /// 用户设置
+    /// </summary>
     public class CustomerSettings : ISettings
     {
         /// <summary>

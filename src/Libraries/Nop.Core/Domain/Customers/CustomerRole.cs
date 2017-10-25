@@ -4,6 +4,7 @@ using Nop.Core.Domain.Security;
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
+    /// 定义一个用户角色
     /// Represents a customer role
     /// </summary>
     public partial class CustomerRole : BaseEntity
@@ -11,11 +12,13 @@ namespace Nop.Core.Domain.Customers
         private ICollection<PermissionRecord> _permissionRecords;
 
         /// <summary>
+        /// 角色名
         /// Gets or sets the customer role name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
+        /// 
         /// Gets or sets a value indicating whether the customer role is marked as free shiping
         /// </summary>
         public bool FreeShipping { get; set; }
@@ -52,6 +55,7 @@ namespace Nop.Core.Domain.Customers
         public int PurchasedWithProductId { get; set; }
         
         /// <summary>
+        /// 权限列表
         /// Gets or sets the permission records
         /// </summary>
         public virtual ICollection<PermissionRecord> PermissionRecords

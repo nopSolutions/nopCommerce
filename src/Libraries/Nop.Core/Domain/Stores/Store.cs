@@ -4,6 +4,7 @@ namespace Nop.Core.Domain.Stores
 {
     /// <summary>
     /// Represents a store
+    /// 表示一个商店
     /// </summary>
     public partial class Store : BaseEntity, ILocalizedEntity
     {

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -17,6 +18,7 @@ using Nop.Services.Logging;
 namespace Nop.Services.Localization
 {
     /// <summary>
+    /// 本地化字符串资源服务类
     /// Provides information about localization
     /// </summary>
     public partial class LocalizationService : ILocalizationService

@@ -6,11 +6,13 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a manager for caching between HTTP requests (long term caching)
+    /// 使用.net内存级缓存框架实现数据缓存。
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {
         /// <summary>
         /// Cache object
+        /// 缓存对象
         /// </summary>
         protected ObjectCache Cache
         {
@@ -43,7 +45,7 @@ namespace Nop.Core.Caching
                 return;
 
             var policy = new CacheItemPolicy();
-            policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime);
+            policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime); //绝对过期策略
             Cache.Add(new CacheItem(key, data), policy);
         }
 

@@ -7,6 +7,7 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Extensions
+    /// 扩展方法对ICacheManager进行扩展。
     /// </summary>
     public static class CacheExtensions
     {

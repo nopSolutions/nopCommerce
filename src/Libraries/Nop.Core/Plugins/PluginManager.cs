@@ -14,17 +14,27 @@ using Nop.Core.Plugins;
 //Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
 //SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
+    //Application开始运行前就运行这个类PluginManager的方法Initialize
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
 namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Sets the application up for the plugin referencing
+    /// Nop插件机制最核心类。插件管理，能获取全部插件信息，能标示插件的安装状态及操作插件的信息。
+    /// 
+    /// 在程序运行的时候最开始就要执行初始化Initialize方法，获取插件目录所有的插件及描述信息及其它初始化操作。
+    /// 可以把PluginFinder理解成主要用来管理插件的，就像windows任务管理器一样。
     /// </summary>
     public class PluginManager
     {
         #region Const
-
+        /// <summary>
+        /// 已安装插件列表记录文件位置
+        /// </summary>
         private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        /// <summary>
+        /// 插件目录位录
+        /// </summary>
         private const string PluginsPath = "~/Plugins";
         private const string ShadowCopyPath = "~/Plugins/bin";
 

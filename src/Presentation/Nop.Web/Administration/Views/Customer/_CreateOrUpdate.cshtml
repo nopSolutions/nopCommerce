@@ -1,4 +1,5 @@
-﻿@using Nop.Core.Domain.Orders;
+﻿@*用户新增与修改公用视图*@
+@using Nop.Core.Domain.Orders;
 @using Nop.Services.Stores
 @model CustomerModel
 
@@ -7,13 +8,16 @@
 
 <script>
     $(document).ready(function() {
+        //设置tab
         bindBootstrapTabSelectEvent('customer-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
+        <!--tab begin-->
         <div id="customer-edit" class="nav-tabs-custom">
+            <!--tab-nav begin-->
             <ul class="nav nav-tabs">
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Customers.Customers.Info"), true)
                 @if (Model.Id > 0)
@@ -31,6 +35,9 @@
                     @Html.RenderBootstrapTabHeader("tab-rewardpoints", @T("Admin.Customers.Customers.RewardPoints"))
                 }
             </ul>
+            <!--tab-nav end-->
+
+            <!--tab-content begin-->
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @if (Model.Id > 0)
@@ -48,7 +55,9 @@
                     @Html.RenderBootstrapTabContent("tab-rewardpoints", @TabRewardPoints())
                 }
             </div>
+            <!--tab-content end-->
         </div>
+        <!--tab end-->
     </div>
 </div>
 

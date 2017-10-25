@@ -2,6 +2,7 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a NopNullCache (caches nothing)
+    /// 空的数据缓存类实现。
     /// </summary>
     public partial class NopNullCache : ICacheManager
     {

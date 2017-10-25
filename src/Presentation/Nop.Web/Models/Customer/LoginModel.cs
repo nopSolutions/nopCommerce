@@ -1,12 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+
 using FluentValidation.Attributes;
+
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
+    /// <summary>
+    /// 登录视图模型（含验证规则）
+    /// </summary>
     [Validator(typeof(LoginValidator))]
     public partial class LoginModel : BaseNopModel
     {
@@ -17,6 +22,7 @@ namespace Nop.Web.Models.Customer
         public string Email { get; set; }
 
         public bool UsernamesEnabled { get; set; }
+
         [NopResourceDisplayName("Account.Login.Fields.UserName")]
         [AllowHtml]
         public string Username { get; set; }

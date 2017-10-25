@@ -1,0 +1,8 @@
+﻿Group: Widgets
+FriendlyName: HelloWorld
+SystemName: Widgets.HelloWorld
+Version: 1.00
+SupportedVersions: 3.90
+Author: www.feiboy.com
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.HelloWorld.dll

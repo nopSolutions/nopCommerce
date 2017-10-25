@@ -6,6 +6,7 @@ namespace Nop.Core.Configuration
 {
     /// <summary>
     /// Represents a NopConfig
+    /// 表示一个Nop配置
     /// </summary>
     public partial class NopConfig : IConfigurationSectionHandler
     {
@@ -61,6 +62,14 @@ namespace Nop.Core.Configuration
             return SetByXElement<bool>(node, attrName, Convert.ToBoolean);
         }
 
+        /// <summary>
+        /// 数据类型转换的泛型方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <param name="attrName"></param>
+        /// <param name="converter">类型转换器</param>
+        /// <returns></returns>
         private T SetByXElement<T>(XmlNode node, string attrName, Func<string, T> converter)
         {
             if (node == null || node.Attributes == null) return default(T);

@@ -244,7 +244,8 @@ namespace Nop.Web.Framework
             }
             return MvcHtmlString.Create(result.ToString());
         }
-        
+
+        #region Tab Content
         /// <summary>
         /// Render CSS styles of selected index 
         /// </summary>
@@ -278,14 +279,17 @@ namespace Nop.Web.Framework
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
+        #endregion
 
+        #region Tab Header
         /// <summary>
+        /// 输出BootstrapTab头部html字符串
         /// Render CSS styles of selected index 
         /// </summary>
         /// <param name="helper">HTML helper</param>
-        /// <param name="currentTabName">Current tab name (where appropriate CSS style should be rendred)</param>
-        /// <param name="title">Tab title</param>
-        /// <param name="isDefaultTab">Indicates that the tab is default</param>
+        /// <param name="currentTabName">当前Tab名称。Current tab name (where appropriate CSS style should be rendred)</param>
+        /// <param name="title">Tab标题。Tab title</param>
+        /// <param name="isDefaultTab">是否是默认Tab。Indicates that the tab is default</param>
         /// <param name="tabNameToSelect">Tab name to select</param>
         /// <param name="customCssClass">Tab name to select</param>
         /// <returns>MvcHtmlString</returns>
@@ -301,6 +305,8 @@ namespace Nop.Web.Framework
             if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
                 tabNameToSelect = currentTabName;
 
+            #region Tab标签
+            //a链接html标签，作为Tab标签。放置在li容器内。
             var a = new TagBuilder("a")
             {
                 Attributes =
@@ -309,8 +315,11 @@ namespace Nop.Web.Framework
                     new KeyValuePair<string, string>("href", string.Format("#{0}", currentTabName)),
                     new KeyValuePair<string, string>("data-toggle", "tab"),
                 },
-                InnerHtml = title.Text
+                InnerHtml = title.Text //Tab标签名称
             };
+            #endregion
+
+            #region Tab标签容器
             var liClassValue = "";
             if (tabNameToSelect == currentTabName)
             {
@@ -323,6 +332,7 @@ namespace Nop.Web.Framework
                 liClassValue += customCssClass;
             }
 
+            //li作为Tab标签的容器
             var li = new TagBuilder("li")
             {
                 Attributes =
@@ -331,11 +341,14 @@ namespace Nop.Web.Framework
                 },
                 InnerHtml = a.ToString(TagRenderMode.Normal)
             };
+            #endregion
 
             return MvcHtmlString.Create(li.ToString(TagRenderMode.Normal));
         }
+        #endregion
 
         /// <summary>
+        /// 获得选中的Tab名称。
         /// Gets a selected tab name (used in admin area to store selected tab name)
         /// </summary>
         /// <returns>Name</returns>
@@ -655,6 +668,15 @@ namespace Nop.Web.Framework
 
         }
 
+        /// <summary>
+        /// 输出部件（可视化的组件）
+        /// HtmlHelper扩展方法：
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="widgetZone"></param>
+        /// <param name="additionalData"></param>
+        /// <param name="area"></param>
+        /// <returns></returns>
         public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
         {
             return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });

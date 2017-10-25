@@ -6,6 +6,7 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Redis connection wrapper interface
+    /// redis连接封装接口。
     /// </summary>
     public interface IRedisConnectionWrapper : IDisposable
     {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -37,6 +38,9 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
+    /// <summary>
+    /// 顾客用户控制器
+    /// </summary>
     public partial class CustomerController : BasePublicController
     {
         #region Fields
@@ -257,6 +261,11 @@ namespace Nop.Web.Controllers
 
         #region Login / logout
 
+        /// <summary>
+        /// 用户登录
+        /// </summary>
+        /// <param name="checkoutAsGuest"></param>
+        /// <returns></returns>
         [NopHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [StoreClosed(true)]

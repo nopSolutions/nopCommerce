@@ -3,21 +3,25 @@
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>
+    /// 活动信息
     /// Represents a campaign
     /// </summary>
     public partial class Campaign : BaseEntity
     {
         /// <summary>
+        /// 名称
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
+        /// 主题
         /// Gets or sets the subject
         /// </summary>
         public string Subject { get; set; }
 
         /// <summary>
+        /// 内容
         /// Gets or sets the body
         /// </summary>
         public string Body { get; set; }

@@ -3,6 +3,9 @@ using System.Security.Principal;
 
 namespace Nop.Core.Fakes
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class FakeIdentity : IIdentity
     {
         private readonly string _name;

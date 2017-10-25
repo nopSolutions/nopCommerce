@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Localization;
 using Nop.Core;
@@ -20,6 +21,9 @@ using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
+    /// <summary>
+    /// 语言管理
+    /// </summary>
     public partial class LanguageController : BaseAdminController
     {
         #region Fields

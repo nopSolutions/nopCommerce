@@ -5,6 +5,9 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Framework
 {
+    /// <summary>
+    /// 基于本地化字符串资源访问的DisplayName特性。
+    /// </summary>
     public class NopResourceDisplayName : System.ComponentModel.DisplayNameAttribute, IModelAttribute
     {
         private string _resourceValue = string.Empty;

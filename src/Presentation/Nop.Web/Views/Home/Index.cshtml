@@ -6,18 +6,46 @@
 }
 <div class="page home-page">
     <div class="page-body">
+        <!--home_page_top-->
         @Html.Widget("home_page_top")
+
+        <!--TopicBlock-->
         @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+
+        <!--home_page_before_categories-->
         @Html.Widget("home_page_before_categories")
+
+        <!--HomepageCategories-->
         @Html.Action("HomepageCategories", "Catalog")
+
+        <!--home_page_before_products-->
         @Html.Widget("home_page_before_products")
+
+        <!--HomepageProducts-->
         @Html.Action("HomepageProducts", "Product")
+
+        <!--home_page_before_best_sellers-->
         @Html.Widget("home_page_before_best_sellers")
+
+        <!--HomepageBestSellers-->
         @Html.Action("HomepageBestSellers", "Product")
+
+        <!--home_page_before_news-->
         @Html.Widget("home_page_before_news")
+
+        <!--HomePageNews-->
         @Html.Action("HomePageNews", "News")
+
+        <!--home_page_before_poll-->
         @Html.Widget("home_page_before_poll")
+
+        <!--HomePagePolls-->
         @Html.Action("HomePagePolls", "Poll")
+
+        <!--home_page_bottom-->
         @Html.Widget("home_page_bottom")
+
+        <!--home_page_helloworld-->
+        @Html.Widget("home_page_helloworld")
     </div>
 </div>

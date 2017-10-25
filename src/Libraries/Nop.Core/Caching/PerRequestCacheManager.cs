@@ -6,6 +6,7 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Represents a manager for caching during an HTTP request (short term caching)
+    /// 实现页面请求级的数据缓存。（缓存时间短，只在每一次的Http请求期间有效）
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {

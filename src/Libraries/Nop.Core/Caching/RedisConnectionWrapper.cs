@@ -9,6 +9,7 @@ namespace Nop.Core.Caching
 {
     /// <summary>
     /// Redis connection wrapper implementation
+    /// redis连接实现。
     /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper
     {

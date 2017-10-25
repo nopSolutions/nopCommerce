@@ -5,6 +5,9 @@ using System.Web.Mvc;
 
 namespace Nop.Core.Fakes
 {
+    /// <summary>
+    /// 模拟的Http请求
+    /// </summary>
     public class FakeHttpRequest : HttpRequestBase
     {
         private readonly HttpCookieCollection _cookies;

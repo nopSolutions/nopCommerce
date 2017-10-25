@@ -12,6 +12,9 @@ using Nop.Data.Initializers;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// MsSqlServer数据提供者
+    /// </summary>
     public class SqlServerDataProvider : IDataProvider
     {
         #region Utilities

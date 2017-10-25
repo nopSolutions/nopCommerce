@@ -2,6 +2,9 @@
 
 namespace Nop.Web.Framework.Themes
 {
+    /// <summary>
+    /// 配置信息theme.config对应的封装类
+    /// </summary>
     public class ThemeConfiguration
     {
         public ThemeConfiguration(string themeName, string path, XmlDocument doc)

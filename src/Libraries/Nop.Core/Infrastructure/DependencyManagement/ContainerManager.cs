@@ -10,6 +10,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 {
     /// <summary>
     /// Container manager
+    /// 容器管理器
     /// </summary>
     public class ContainerManager
     {

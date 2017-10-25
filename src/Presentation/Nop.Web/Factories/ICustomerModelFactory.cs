@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -7,6 +8,7 @@ using Nop.Web.Models.Customer;
 namespace Nop.Web.Factories
 {
     /// <summary>
+    /// 用户模型工厂接口。
     /// Represents the interface of the customer model factory
     /// </summary>
     public partial interface ICustomerModelFactory
@@ -42,6 +44,7 @@ namespace Nop.Web.Factories
             string overrideCustomCustomerAttributesXml = "", bool setDefaultValues = false);
 
         /// <summary>
+        /// 准备一个登录视图模型
         /// Prepare the login model
         /// </summary>
         /// <param name="checkoutAsGuest">Whether to checkout as guest is enabled</param>

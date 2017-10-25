@@ -5,7 +5,9 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+
 using FluentValidation.Mvc;
+
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
@@ -31,7 +33,9 @@ namespace Nop.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             
             //register custom routes (plugins, etc)
-            var routePublisher = EngineContext.Current.Resolve<IRoutePublisher>();
+            //注册自定义的路由规则及插件相关路由
+            var routePublisher = EngineContext.Current.Resolve<IRoutePublisher>();//从Ioc容器Autofac中获取接口IRoutePublisher所依赖的具体实现类。
+            //自定义路由规则。
             routePublisher.RegisterRoutes(routes);
             
             routes.MapRoute(
@@ -42,6 +46,9 @@ namespace Nop.Web
             );
         }
 
+        /// <summary>
+        /// 程序启动
+        /// </summary>
         protected void Application_Start()
         {
             //most of API providers require TLS 1.2 nowadays
@@ -51,6 +58,7 @@ namespace Nop.Web
             MvcHandler.DisableMvcResponseHeader = true;
 
             //initialize engine context
+            //初始化引擎上下文
             EngineContext.Initialize(false);
 
             bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();

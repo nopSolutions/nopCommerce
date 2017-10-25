@@ -4,19 +4,46 @@ namespace Nop.Web.Framework.UI
 {
     /// <summary>
     /// Page head builder
+    /// 页面头部生成器接口
     /// </summary>
     public partial interface IPageHeadBuilder
     {
+        /// <summary>
+        /// 添加标题到现有标题前（标题列表最终输出时会反转）
+        /// </summary>
+        /// <param name="part"></param>
         void AddTitleParts(string part);
+        /// <summary>
+        /// 添加标题到现有标题后（标题列表最终输出时会反转）
+        /// </summary>
+        /// <param name="part"></param>
         void AppendTitleParts(string part);
+        /// <summary>
+        /// 生成标题
+        /// </summary>
+        /// <param name="addDefaultTitle">是否附加默认标题</param>
+        /// <returns></returns>
         string GenerateTitle(bool addDefaultTitle);
 
         void AddMetaDescriptionParts(string part);
+        /// <summary>
+        /// 附加页面描述片断
+        /// </summary>
+        /// <param name="part"></param>
         void AppendMetaDescriptionParts(string part);
         string GenerateMetaDescription();
 
         void AddMetaKeywordParts(string part);
+        /// <summary>
+        /// 附加页面关键词
+        /// </summary>
+        /// <param name="part"></param>
         void AppendMetaKeywordParts(string part);
+
+        /// <summary>
+        /// 生成页面关键词
+        /// </summary>
+        /// <returns></returns>
         string GenerateMetaKeywords();
 
         void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle, bool isAync);
@@ -33,6 +60,10 @@ namespace Nop.Web.Framework.UI
 
         void AddHeadCustomParts(string part);
         void AppendHeadCustomParts(string part);
+        /// <summary>
+        /// 生成头部自定内容
+        /// </summary>
+        /// <returns></returns>
         string GenerateHeadCustom();
         
         void AddPageCssClassParts(string part);

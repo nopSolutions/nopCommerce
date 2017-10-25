@@ -4,38 +4,52 @@ using Nop.Core.Configuration;
 namespace Nop.Core.Domain.Seo
 {
     /// <summary>
+    /// 搜索引擎优化设置
     /// SEO settings
     /// </summary>
     public class SeoSettings : ISettings
     {
         /// <summary>
+        /// 页面标题分隔符
         /// Page title separator
         /// </summary>
         public string PageTitleSeparator { get; set; }
+
         /// <summary>
+        /// 页面标题SEO策略
         /// Page itle SEO adjustment
         /// </summary>
         public PageTitleSeoAdjustment PageTitleSeoAdjustment { get; set; }
+
         /// <summary>
+        /// 默认标题
         /// Default title
         /// </summary>
         public string DefaultTitle { get; set; }
+
         /// <summary>
+        /// 默认的关键词
         /// Default META keywords
         /// </summary>
         public string DefaultMetaKeywords { get; set; }
+
         /// <summary>
+        /// 默认的描述
         /// Default META description
         /// </summary>
         public string DefaultMetaDescription { get; set; }
+
         /// <summary>
+        /// 是否生成产品描述
         /// A value indicating whether product META descriptions will be generated automatically (if not entered)
         /// </summary>
         public bool GenerateProductMetaDescription { get; set; }
+
         /// <summary>
         /// A value indicating whether we should conver non-wetern chars to western ones
         /// </summary>
         public bool ConvertNonWesternChars { get; set; }
+
         /// <summary>
         /// A value indicating whether unicode chars are allowed
         /// </summary>

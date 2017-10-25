@@ -5,6 +5,7 @@ using Nop.Core.Domain.Security;
 namespace Nop.Services.Security
 {
     /// <summary>
+    /// 权限服务接口
     /// Permission service interface
     /// </summary>
     public partial interface IPermissionService
@@ -60,6 +61,7 @@ namespace Nop.Services.Security
         void UninstallPermissions(IPermissionProvider permissionProvider);
 
         /// <summary>
+        /// 授权许可（验证是否有操作权限）
         /// Authorize permission
         /// </summary>
         /// <param name="permission">Permission record</param>
