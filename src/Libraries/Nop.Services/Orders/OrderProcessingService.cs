@@ -2857,7 +2857,7 @@ namespace Nop.Services.Orders
             if (order == null || order.Deleted)
                 return false;
 
-            //status should be compelte
+            //status should be complete
             if (order.OrderStatus != OrderStatus.Complete)
                 return false;
 

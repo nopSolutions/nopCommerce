@@ -304,8 +304,8 @@ namespace Nop.Web.Framework.UI
                     lock (s_lock)
                     {
                         //performance optimization. do not bundle and minify for each HTTP request
-                        //we re-check already bundles file each two minutes
-                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        //we periodically re-check already bundles file
+                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
                         var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
                         if (shouldRebuild)
@@ -485,8 +485,8 @@ namespace Nop.Web.Framework.UI
                     lock (s_lock)
                     {
                         //performance optimization. do not bundle and minify for each HTTP request
-                        //we re-check already bundles file each two minutes
-                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        //we periodically re-check already bundles file
+                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
                         var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
                         if (shouldRebuild)
@@ -641,7 +641,7 @@ namespace Nop.Web.Framework.UI
         
         #region Nested classes
 
-        private class ScriptReferenceMeta
+        private class ScriptReferenceMeta : IEquatable<ScriptReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
@@ -650,15 +650,37 @@ namespace Nop.Web.Framework.UI
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(ScriptReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
 
-        private class CssReferenceMeta
+        private class CssReferenceMeta : IEquatable<CssReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(CssReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
         #endregion
     }

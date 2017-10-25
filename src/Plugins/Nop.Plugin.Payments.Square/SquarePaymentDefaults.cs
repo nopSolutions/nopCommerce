@@ -27,13 +27,13 @@ namespace Nop.Plugin.Payments.Square
         public const string AccessTokenRoute = "Plugin.Payments.Square.AccessToken";
 
         /// <summary>
-        /// Type of the renew access token schedule task
-        /// </summary>
-        public const string RenewAccessTokenTask = "Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask, Nop.Plugin.Payments.Square, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-
-        /// <summary>
         /// Name of the renew access token schedule task
         /// </summary>
         public const string RenewAccessTokenTaskName = "Renew access token (Square payment)";
+
+        /// <summary>
+        /// Type of the renew access token schedule task
+        /// </summary>
+        public static string RenewAccessTokenTask => $"Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask, {typeof(SquarePaymentDefaults).Assembly.FullName}";
     }
 }

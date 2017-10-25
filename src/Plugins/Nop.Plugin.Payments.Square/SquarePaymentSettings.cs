@@ -29,6 +29,11 @@ namespace Nop.Plugin.Payments.Square
         public int AccessTokenRenewalPeriod { get; set; }
 
         /// <summary>
+        /// Gets or sets access token verification string
+        /// </summary>
+        public string AccessTokenVerificationString { get; set; }
+
+        /// <summary>
         /// Gets or sets the transaction mode
         /// </summary>
         public TransactionMode TransactionMode { get; set; }

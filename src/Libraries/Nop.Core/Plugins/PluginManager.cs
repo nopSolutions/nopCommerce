@@ -514,6 +514,9 @@ namespace Nop.Core.Plugins
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)
                         {
+                            if(f.Name.Equals("placeholder.txt", StringComparison.InvariantCultureIgnoreCase))
+                                continue;
+
                             Debug.WriteLine("Deleting " + f.Name);
                             try
                             {

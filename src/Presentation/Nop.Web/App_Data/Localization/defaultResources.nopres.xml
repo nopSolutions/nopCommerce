@@ -10182,6 +10182,9 @@
   <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
     <Value>Welcome email has been successfully sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SomeComment">
+    <Value>Some comment here...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>
   </LocaleResource>

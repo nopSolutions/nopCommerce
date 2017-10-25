@@ -95,8 +95,9 @@ namespace Nop.Plugin.Payments.Square.Services
                     throw new NopException($"There are errors in the service response. {errorsMessage}");
                 }
 
-                //filter active locations
-                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == Location.StatusEnum.ACTIVE).ToList();
+                //filter active locations and locations that can process credit cards
+                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == Location.StatusEnum.ACTIVE
+                    && (location.Capabilities?.Contains(Location.CapabilitiesEnum.PROCESSING) ?? false)).ToList();
                 if (!activeLocations?.Any() ?? true)
                     throw new NopException("There are no active locations for the account");
 
@@ -479,8 +480,9 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Generate URL for the authorization permissions page
         /// </summary>
+        /// <param name="verificationString">String to help protect against cross-site request forgery</param>
         /// <returns>URL</returns>
-        public string GenerateAuthorizeUrl()
+        public string GenerateAuthorizeUrl(string verificationString)
         {
             var serviceUrl = $"{GetOAuthServiceUrl()}/authorize";
 
@@ -552,10 +554,10 @@ namespace Nop.Plugin.Payments.Square.Services
                 //["locale"] = string.Empty,
 
                 //If "false", the Square merchant must log in to view the Permission Request form, even if they already have a valid user session.
-                ["session"] = "true",
+                ["session"] = "false",
 
                 //Include this parameter and verify its value to help protect against cross-site request forgery.
-                //["state"] = string.Empty,
+                ["state"] = verificationString,
 
                 //The ID of the subscription plan to direct the merchant to sign up for, if any.
                 //You can provide this parameter with no value to give a merchant the option to cancel an active subscription.
@@ -636,6 +638,44 @@ namespace Nop.Plugin.Payments.Square.Services
                 //return received access token
                 var response = JsonConvert.DeserializeObject<RenewAccessTokenResponse>(streamReader.ReadToEnd());
                 return response?.AccessToken;
+            }
+        }
+
+        /// <summary>
+        /// Revoke all access tokens
+        /// </summary>
+        /// <param name="revokeTokenRequest">Request parameters to revoke access token</param>
+        /// <returns>True if tokens were successfully revoked; otherwise false</returns>
+        public bool RevokeAccessTokens(RevokeAccessTokenRequest revokeTokenRequest)
+        {
+            //create post data
+            var postData = Encoding.Default.GetBytes(JsonConvert.SerializeObject(revokeTokenRequest));
+
+            //create web request
+            var serviceUrl = $"{GetOAuthServiceUrl()}/revoke";
+            var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
+            request.Method = WebRequestMethods.Http.Post;
+            request.Accept = "application/json";
+            request.ContentType = "application/json";
+            request.ContentLength = postData.Length;
+            request.UserAgent = SquarePaymentDefaults.UserAgent;
+
+            //add authorization header
+            request.Headers.Add(HttpRequestHeader.Authorization, $"Client {revokeTokenRequest.ApplicationSecret}");
+
+            //post request
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(postData, 0, postData.Length);
+            }
+
+            //get response
+            var httpResponse = (HttpWebResponse)request.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                //return received value
+                var response = JsonConvert.DeserializeObject<RevokeAccessTokenResponse>(streamReader.ReadToEnd());
+                return response?.SuccessfullyRevoked ?? false;
             }
         }
 

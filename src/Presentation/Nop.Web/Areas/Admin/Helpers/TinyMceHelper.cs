@@ -33,21 +33,14 @@ namespace Nop.Web.Areas.Admin.Helpers
             {
                 languageCulture = languageCulture.Replace('-', '_');
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
-            }
-
-            if (!fileExists)
-            {
-                languageCulture = languageCulture.Replace('-', '_');
-                langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = File.Exists($"{directoryPath}\\{langFile}");
             }
 
             if (!fileExists)
             {
                 languageCulture = languageCulture.Split('_', '-')[0];
                 langFile = $"{languageCulture}.js";
-                fileExists = File.Exists($"{path}{langFile}");
+                fileExists = File.Exists($"{directoryPath}\\{langFile}");
             }
 
             return fileExists ? languageCulture : string.Empty;
