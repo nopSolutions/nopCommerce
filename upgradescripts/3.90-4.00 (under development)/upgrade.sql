@@ -878,3 +878,11 @@ BEGIN
 	VALUES (N'DeletePlugin', N'Delete a plugin', N'true')
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.pluginstaticfileextensionsblacklist')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
+END
+GO
