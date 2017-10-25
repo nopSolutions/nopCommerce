@@ -410,6 +410,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.SomeComment">
     <Value>Some comment here...</Value>
   </LocaleResource> 
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions">
+    <Value>First, please create at least one specification attribute option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SelectOption">
+    <Value>Select specification attribute option</Value>
+  </LocaleResource>
 </Language>
 '
 
