@@ -25,12 +25,14 @@ namespace Nop.Web.Areas.Admin.Components
 
         public IViewComponentResult Invoke()
         {
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService
+            var model = new LanguageSelectorModel
+            {
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                AvailableLanguages = _languageService
                 .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
                 .Select(x => x.ToModel())
-                .ToList();
+                .ToList()
+            };
 
             return View(model);
         }

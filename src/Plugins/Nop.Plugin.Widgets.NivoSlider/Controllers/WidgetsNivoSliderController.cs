@@ -47,23 +47,25 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(storeScope);
-            var model = new ConfigurationModel();
-            model.Picture1Id = nivoSliderSettings.Picture1Id;
-            model.Text1 = nivoSliderSettings.Text1;
-            model.Link1 = nivoSliderSettings.Link1;
-            model.Picture2Id = nivoSliderSettings.Picture2Id;
-            model.Text2 = nivoSliderSettings.Text2;
-            model.Link2 = nivoSliderSettings.Link2;
-            model.Picture3Id = nivoSliderSettings.Picture3Id;
-            model.Text3 = nivoSliderSettings.Text3;
-            model.Link3 = nivoSliderSettings.Link3;
-            model.Picture4Id = nivoSliderSettings.Picture4Id;
-            model.Text4 = nivoSliderSettings.Text4;
-            model.Link4 = nivoSliderSettings.Link4;
-            model.Picture5Id = nivoSliderSettings.Picture5Id;
-            model.Text5 = nivoSliderSettings.Text5;
-            model.Link5 = nivoSliderSettings.Link5;
-            model.ActiveStoreScopeConfiguration = storeScope;
+            var model = new ConfigurationModel
+            {
+                Picture1Id = nivoSliderSettings.Picture1Id,
+                Text1 = nivoSliderSettings.Text1,
+                Link1 = nivoSliderSettings.Link1,
+                Picture2Id = nivoSliderSettings.Picture2Id,
+                Text2 = nivoSliderSettings.Text2,
+                Link2 = nivoSliderSettings.Link2,
+                Picture3Id = nivoSliderSettings.Picture3Id,
+                Text3 = nivoSliderSettings.Text3,
+                Link3 = nivoSliderSettings.Link3,
+                Picture4Id = nivoSliderSettings.Picture4Id,
+                Text4 = nivoSliderSettings.Text4,
+                Link4 = nivoSliderSettings.Link4,
+                Picture5Id = nivoSliderSettings.Picture5Id,
+                Text5 = nivoSliderSettings.Text5,
+                Link5 = nivoSliderSettings.Link5,
+                ActiveStoreScopeConfiguration = storeScope
+            };
 
             if (storeScope > 0)
             {

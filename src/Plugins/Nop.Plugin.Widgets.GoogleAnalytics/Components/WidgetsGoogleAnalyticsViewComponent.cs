@@ -35,41 +35,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
-            var globalScript = "";
-            var routeData = Url.ActionContext.RouteData;
-
-            try
-            {
-                var controller = routeData.Values["controller"];
-                var action = routeData.Values["action"];
-
-                if (controller == null || action == null)
-                    return Content("");
-
-                //Special case, if we are in last step of checkout, we can use order total for conversion value
-                if (controller.ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
-                    action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var lastOrder = GetLastOrder();
-                    globalScript += GetEcommerceScript(lastOrder);
-                }
-                else
-                {
-                    globalScript += GetEcommerceScript(null);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for Google ecommerce tracking", ex.ToString());
-            }
+            var globalScript = GetEcommerceScript();
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", globalScript);
-        }
-
-        private Order GetLastOrder()
-        {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
-            return order;
         }
 
         //<script type="text/javascript"> 
@@ -109,7 +76,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         //</script>
 
-        private string GetEcommerceScript(Order order)
+        private string GetEcommerceScript()
         {
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
@@ -118,16 +85,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
 
             return analyticsTrackingScript;
-        }
-
-        private string FixIllegalJavaScriptChars(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
-
-            //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
-            text = text.Replace("'", "\\'");
-            return text;
         }
     }
 }

@@ -20,8 +20,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.Email = null;
+            var model = new CustomerInfoModel
+            {
+                Email = null
+            };
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
             model.Email = "";
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
@@ -32,8 +34,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.Email = "adminexample.com";
+            var model = new CustomerInfoModel
+            {
+                Email = "adminexample.com"
+            };
             validator.ShouldHaveValidationErrorFor(x => x.Email, model);
         }
         [Test]
@@ -42,8 +46,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.Email = "admin@example.com";
+            var model = new CustomerInfoModel
+            {
+                Email = "admin@example.com"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.Email, model);
         }
 
@@ -53,8 +59,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.FirstName = null;
+            var model = new CustomerInfoModel
+            {
+                FirstName = null
+            };
             validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
             model.FirstName = "";
             validator.ShouldHaveValidationErrorFor(x => x.FirstName, model);
@@ -65,8 +73,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.FirstName = "John";
+            var model = new CustomerInfoModel
+            {
+                FirstName = "John"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.FirstName, model);
         }
 
@@ -76,8 +86,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.LastName = null;
+            var model = new CustomerInfoModel
+            {
+                LastName = null
+            };
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
             model.LastName = "";
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
@@ -88,8 +100,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
                 new CustomerSettings());
 
-            var model = new CustomerInfoModel();
-            model.LastName = "Smith";
+            var model = new CustomerInfoModel
+            {
+                LastName = "Smith"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
         }
 
@@ -132,8 +146,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     CompanyEnabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.Company = "Company";
+            var model = new CustomerInfoModel
+            {
+                Company = "Company"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.Company, model);
         }
 
@@ -175,8 +191,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     StreetAddressEnabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.StreetAddress = "Street address";
+            var model = new CustomerInfoModel
+            {
+                StreetAddress = "Street address"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress, model);
         }
 
@@ -218,8 +236,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     StreetAddress2Enabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.StreetAddress2 = "Street address 2";
+            var model = new CustomerInfoModel
+            {
+                StreetAddress2 = "Street address 2"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.StreetAddress2, model);
         }
 
@@ -262,8 +282,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     StreetAddress2Enabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.ZipPostalCode = "zip";
+            var model = new CustomerInfoModel
+            {
+                ZipPostalCode = "zip"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.ZipPostalCode, model);
         }
 
@@ -306,8 +328,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     CityEnabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.City = "City";
+            var model = new CustomerInfoModel
+            {
+                City = "City"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.City, model);
         }
 
@@ -349,8 +373,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     PhoneEnabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.Phone = "Phone";
+            var model = new CustomerInfoModel
+            {
+                Phone = "Phone"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.Phone, model);
         }
 
@@ -393,8 +419,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
                     FaxEnabled = true
                 });
 
-            var model = new CustomerInfoModel();
-            model.Fax = "Fax";
+            var model = new CustomerInfoModel
+            {
+                Fax = "Fax"
+            };
             validator.ShouldNotHaveValidationErrorFor(x => x.Fax, model);
         }
     }

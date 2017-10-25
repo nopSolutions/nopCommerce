@@ -39,8 +39,10 @@ namespace Nop.Services.Tests.Tax
         [SetUp]
         public new void SetUp()
         {
-            _taxSettings = new TaxSettings();
-            _taxSettings.DefaultTaxAddressId = 10;
+            _taxSettings = new TaxSettings
+            {
+                DefaultTaxAddressId = 10
+            };
 
             _workContext = null;
             _storeContext = null;
@@ -94,8 +96,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_product()
         {
-            var product = new Product();
-            product.IsTaxExempt = true;
+            var product = new Product
+            {
+                IsTaxExempt = true
+            };
             _taxService.IsTaxExempt(product, null).ShouldEqual(true);
             product.IsTaxExempt = false;
             _taxService.IsTaxExempt(product, null).ShouldEqual(false);
@@ -104,8 +108,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_customer()
         {
-            var customer = new Customer();
-            customer.IsTaxExempt = true;
+            var customer = new Customer
+            {
+                IsTaxExempt = true
+            };
             _taxService.IsTaxExempt(null, customer).ShouldEqual(true);
             customer.IsTaxExempt = false;
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
@@ -114,8 +120,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_customer_in_taxExemptCustomerRole()
         {
-            var customer = new Customer();
-            customer.IsTaxExempt = false;
+            var customer = new Customer
+            {
+                IsTaxExempt = false
+            };
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
 
             var customerRole = new CustomerRole

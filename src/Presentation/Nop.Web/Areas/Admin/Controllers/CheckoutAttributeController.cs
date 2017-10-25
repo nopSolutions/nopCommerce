@@ -477,13 +477,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
-            var model = new CheckoutAttributeValueModel();
-            model.CheckoutAttributeId = checkoutAttributeId;
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            var model = new CheckoutAttributeValueModel
+            {
+                CheckoutAttributeId = checkoutAttributeId,
+                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
+                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name,
 
-            //color squares
-            model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
+                //color squares
+                DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares
+            };
 
             //locales
             AddLocales(_languageService, model.Locales);

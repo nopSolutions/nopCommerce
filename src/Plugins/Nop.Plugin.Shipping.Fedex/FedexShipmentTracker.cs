@@ -58,30 +58,42 @@ namespace Nop.Plugin.Shipping.Fedex
                 //use try-catch to ensure exception won't be thrown is web service is not available
 
                 //build the TrackRequest
-                var request = new TrackRequest();
+                var request = new TrackRequest
+                {
 
-                //
-                request.WebAuthenticationDetail = new WebAuthenticationDetail();
-                request.WebAuthenticationDetail.UserCredential = new WebAuthenticationCredential();
-                request.WebAuthenticationDetail.UserCredential.Key = _fedexSettings.Key; // Replace "XXX" with the Key
-                request.WebAuthenticationDetail.UserCredential.Password = _fedexSettings.Password; // Replace "XXX" with the Password
-                //
-                request.ClientDetail = new ClientDetail();
-                request.ClientDetail.AccountNumber = _fedexSettings.AccountNumber; // Replace "XXX" with client's account number
-                request.ClientDetail.MeterNumber = _fedexSettings.MeterNumber; // Replace "XXX" with client's meter number
-                //
-                request.TransactionDetail = new TransactionDetail();
-                request.TransactionDetail.CustomerTransactionId = "***nopCommerce v16 Request using VC#***";
+                    //
+                    WebAuthenticationDetail = new WebAuthenticationDetail
+                    {
+                        UserCredential = new WebAuthenticationCredential
+                        {
+                            Key = _fedexSettings.Key, // Replace "XXX" with the Key
+                            Password = _fedexSettings.Password // Replace "XXX" with the Password
+                        }
+                    },
+                    //
+                    ClientDetail = new ClientDetail
+                    {
+                        AccountNumber = _fedexSettings.AccountNumber, // Replace "XXX" with client's account number
+                        MeterNumber = _fedexSettings.MeterNumber // Replace "XXX" with client's meter number
+                    },
+                    //
+                    TransactionDetail = new TransactionDetail
+                    {
+                        CustomerTransactionId = "***nopCommerce v16 Request using VC#***"
+                    },
 
-                //creates the Version element with all child elements populated from the wsdl
-                request.Version = new VersionId();
-                //tracking information
-                request.PackageIdentifier = new TrackPackageIdentifier();
-                request.PackageIdentifier.Value = trackingNumber;
-                request.PackageIdentifier.Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG;
+                    //creates the Version element with all child elements populated from the wsdl
+                    Version = new VersionId(),
+                    //tracking information
+                    PackageIdentifier = new TrackPackageIdentifier
+                    {
+                        Value = trackingNumber,
+                        Type = TrackIdentifierType.TRACKING_NUMBER_OR_DOORTAG
+                    },
 
-                request.IncludeDetailedScans = true;
-                request.IncludeDetailedScansSpecified = true;
+                    IncludeDetailedScans = true,
+                    IncludeDetailedScansSpecified = true
+                };
 
                 //initialize the service
                 var service = new TrackService(_fedexSettings.Url);

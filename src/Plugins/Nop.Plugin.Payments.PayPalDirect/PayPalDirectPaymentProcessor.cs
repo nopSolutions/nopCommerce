@@ -208,10 +208,12 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 if (shoppingCartItem.Product == null)
                     return null;
 
-                var item = new Item();
+                var item = new Item
+                {
 
-                //name
-                item.name = shoppingCartItem.Product.Name;
+                    //name
+                    name = shoppingCartItem.Product.Name
+                };
 
                 //SKU
                 if (!string.IsNullOrEmpty(shoppingCartItem.AttributesXml))

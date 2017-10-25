@@ -1189,10 +1189,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductListModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts;
+            var model = new ProductListModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null,
+                AllowVendorsToImportProducts = _vendorSettings.AllowVendorsToImportProducts
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -1276,25 +1278,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                 showHidden: true,
                 overridePublished: overridePublished
             );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x =>
+            var gridModel = new DataSourceResult
             {
-                var productModel = x.ToModel();
+                Data = products.Select(x =>
+                {
+                    var productModel = x.ToModel();
                 //little performance optimization: ensure that "FullDescription" is not returned
                 productModel.FullDescription = "";
 
                 //picture
                 var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
-                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
+                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
                 //product type
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 //friendly stock qantity
                 //if a simple product AND "manage inventory" is "Track inventory", then display
                 if (x.ProductType == ProductType.SimpleProduct && x.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                    productModel.StockQuantityStr = x.GetTotalStockQuantity().ToString();
-                return productModel;
-            });
-            gridModel.Total = products.TotalCount;
+                        productModel.StockQuantityStr = x.GetTotalStockQuantity().ToString();
+                    return productModel;
+                }),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -1741,9 +1745,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.AddRequiredProductModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new ProductModel.AddRequiredProductModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -1798,9 +1804,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -1904,9 +1912,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.AddRelatedProductModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new ProductModel.AddRelatedProductModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -1961,9 +1971,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -2079,9 +2091,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.AddCrossSellProductModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new ProductModel.AddCrossSellProductModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -2136,9 +2150,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -2276,9 +2292,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.AddAssociatedProductModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new ProductModel.AddAssociatedProductModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -2333,20 +2351,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x =>
+            var gridModel = new DataSourceResult
             {
-                var productModel = x.ToModel();
+                Data = products.Select(x =>
+                {
+                    var productModel = x.ToModel();
                 //display already associated products
                 var parentGroupedProduct = _productService.GetProductById(x.ParentGroupedProductId);
-                if (parentGroupedProduct != null)
-                {
-                    productModel.AssociatedToProductId = x.ParentGroupedProductId;
-                    productModel.AssociatedToProductName = parentGroupedProduct.Name;
-                }
-                return productModel;
-            });
-            gridModel.Total = products.TotalCount;
+                    if (parentGroupedProduct != null)
+                    {
+                        productModel.AssociatedToProductId = x.ParentGroupedProductId;
+                        productModel.AssociatedToProductName = parentGroupedProduct.Name;
+                    }
+                    return productModel;
+                }),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -3225,33 +3245,34 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true);
 
-            var gridModel = new DataSourceResult();
-
-            gridModel.Data = products.Select(x =>
+            var gridModel = new DataSourceResult
             {
-                var productModel = new BulkEditProductModel
+                Data = products.Select(x =>
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Sku = x.Sku,
-                    OldPrice = x.OldPrice,
-                    Price = x.Price,
-                    ManageInventoryMethod = x.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = x.StockQuantity,
-                    Published = x.Published
-                };
+                    var productModel = new BulkEditProductModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Sku = x.Sku,
+                        OldPrice = x.OldPrice,
+                        Price = x.Price,
+                        ManageInventoryMethod = x.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                        StockQuantity = x.StockQuantity,
+                        Published = x.Published
+                    };
 
-                if (x.ManageInventoryMethod == ManageInventoryMethod.ManageStock && x.UseMultipleWarehouses)
-                {
+                    if (x.ManageInventoryMethod == ManageInventoryMethod.ManageStock && x.UseMultipleWarehouses)
+                    {
                     //multi-warehouse supported
                     //TODO localize
                     productModel.ManageInventoryMethod += " (multi-warehouse)";
-                }
+                    }
 
-                return productModel;
-            });
+                    return productModel;
+                }),
 
-            gridModel.Total = products.TotalCount;
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }
@@ -3925,16 +3946,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductAttributeValueModel();
-            model.ProductAttributeMappingId = productAttributeMappingId;
+            var model = new ProductModel.ProductAttributeValueModel
+            {
+                ProductAttributeMappingId = productAttributeMappingId,
 
-            //color squares
-            model.DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares;
-            //image squares
-            model.DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares;
+                //color squares
+                DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
+                //image squares
+                DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
 
-            //default qantity for associated product
-            model.Quantity = 1;
+                //default qantity for associated product
+                Quantity = 1
+            };
 
             //locales
             AddLocales(_languageService, model.Locales);
@@ -4213,9 +4236,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel
+            {
+                //a vendor should have access only to his products
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
 
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -4271,9 +4296,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }

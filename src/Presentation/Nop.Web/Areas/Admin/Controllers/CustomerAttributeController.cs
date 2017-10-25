@@ -272,8 +272,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
 
-            var model = new CustomerAttributeValueModel();
-            model.CustomerAttributeId = customerAttributeId;
+            var model = new CustomerAttributeValueModel
+            {
+                CustomerAttributeId = customerAttributeId
+            };
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);

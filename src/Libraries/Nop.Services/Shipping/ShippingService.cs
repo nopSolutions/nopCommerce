@@ -766,9 +766,11 @@ namespace Nop.Services.Shipping
                 else
                 {
                     //create a new request
-                    var request = new GetShippingOptionRequest();
-                    //store
-                    request.StoreId = storeId;
+                    var request = new GetShippingOptionRequest
+                    {
+                        //store
+                        StoreId = storeId
+                    };
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //customer

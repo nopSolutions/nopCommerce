@@ -184,10 +184,12 @@ namespace Nop.Web.Factories
             if (customerTo == null)
                 throw new ArgumentNullException(nameof(customerTo));
 
-            var model = new SendPrivateMessageModel();
-            model.ToCustomerId = customerTo.Id;
-            model.CustomerToName = customerTo.FormatUserName();
-            model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest();
+            var model = new SendPrivateMessageModel
+            {
+                ToCustomerId = customerTo.Id,
+                CustomerToName = customerTo.FormatUserName(),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
+            };
 
             if (replyToPM == null)
                 return model;

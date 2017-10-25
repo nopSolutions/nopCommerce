@@ -598,8 +598,10 @@ namespace Nop.Web.Factories
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            var model = new ShoppingCartModel.OrderReviewDataModel();
-            model.Display = true;
+            var model = new ShoppingCartModel.OrderReviewDataModel
+            {
+                Display = true
+            };
 
             //billing info
             var billingAddress = _workContext.CurrentCustomer.BillingAddress;
@@ -679,9 +681,10 @@ namespace Nop.Web.Factories
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            var model = new EstimateShippingModel();
-
-            model.Enabled = cart.Any() && cart.RequiresShipping(_productService, _productAttributeParser) && _shippingSettings.EstimateShippingEnabled;
+            var model = new EstimateShippingModel
+            {
+                Enabled = cart.Any() && cart.RequiresShipping(_productService, _productAttributeParser) && _shippingSettings.EstimateShippingEnabled
+            };
             if (model.Enabled)
             {
                 //countries
@@ -1037,8 +1040,10 @@ namespace Nop.Web.Factories
         /// <returns>Order totals model</returns>
         public virtual OrderTotalsModel PrepareOrderTotalsModel(IList<ShoppingCartItem> cart, bool isEditable)
         {
-            var model = new OrderTotalsModel();
-            model.IsEditable = isEditable;
+            var model = new OrderTotalsModel
+            {
+                IsEditable = isEditable
+            };
 
             if (cart.Any())
             {

@@ -213,8 +213,10 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os)
         {
-            var item = new OrderAverageReportLineSummary();
-            item.OrderStatus = os;
+            var item = new OrderAverageReportLineSummary
+            {
+                OrderStatus = os
+            };
             var orderStatuses = new List<int>() { (int)os };
 
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);

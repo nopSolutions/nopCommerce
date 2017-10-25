@@ -510,10 +510,12 @@ namespace Nop.Web.Factories
         /// <returns>Login model</returns>
         public virtual LoginModel PrepareLoginModel(bool? checkoutAsGuest)
         {
-            var model = new LoginModel();
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+            var model = new LoginModel
+            {
+                UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
+            };
             return model;
         }
 
@@ -775,9 +777,11 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = new UserAgreementModel();
-            model.UserAgreementText = product.UserAgreementText;
-            model.OrderItemGuid = orderItem.OrderItemGuid;
+            var model = new UserAgreementModel
+            {
+                UserAgreementText = product.UserAgreementText,
+                OrderItemGuid = orderItem.OrderItemGuid
+            };
 
             return model;
         }

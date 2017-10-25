@@ -56,9 +56,10 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-
-            result.AllowStoringCreditCardNumber = true;
+            var result = new ProcessPaymentResult
+            {
+                AllowStoringCreditCardNumber = true
+            };
             switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:
@@ -147,9 +148,10 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessRecurringPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-
-            result.AllowStoringCreditCardNumber = true;
+            var result = new ProcessPaymentResult
+            {
+                AllowStoringCreditCardNumber = true
+            };
             switch (_manualPaymentSettings.TransactMode)
             {
                 case TransactMode.Pending:

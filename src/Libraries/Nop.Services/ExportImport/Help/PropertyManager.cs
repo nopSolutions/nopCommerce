@@ -69,6 +69,15 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
+        /// Remove object by property name
+        /// </summary>
+        /// <param name="propertyName">Property name</param>
+        public void Remove(string propertyName)
+        {
+            _properties.Remove(propertyName);
+        }
+
+        /// <summary>
         /// Write object data to XLSX worksheet
         /// </summary>
         /// <param name="worksheet">Data worksheet</param>

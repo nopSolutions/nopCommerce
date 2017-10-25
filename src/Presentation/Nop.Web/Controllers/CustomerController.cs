@@ -845,8 +845,10 @@ namespace Nop.Web.Controllers
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-            var model = new AccountActivationModel();
-            model.Result = _localizationService.GetResource("Account.AccountActivation.Activated");
+            var model = new AccountActivationModel
+            {
+                Result = _localizationService.GetResource("Account.AccountActivation.Activated")
+            };
             return View(model);
         }
 

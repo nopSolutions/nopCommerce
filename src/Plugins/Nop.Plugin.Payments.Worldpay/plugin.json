@@ -1,8 +1,8 @@
 ﻿{
   "Group": "Payment methods",
-  "FriendlyName": "Worldpay",
-  "SystemName": "Payments.Worldpay",
-  "Version": "3.0",
+  "FriendlyName": "Credit Card",
+  "SystemName": "Payments.WorldpayUS",
+  "Version": "3.03",
   "SupportedVersions": [ "4.00" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

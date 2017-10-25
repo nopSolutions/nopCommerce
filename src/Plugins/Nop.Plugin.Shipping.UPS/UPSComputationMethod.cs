@@ -737,9 +737,11 @@ namespace Nop.Plugin.Shipping.UPS
                         //Weed out unwanted or unknown service rates
                         if (service.ToUpper() != "UNKNOWN")
                         {
-                            var shippingOption = new ShippingOption();
-                            shippingOption.Rate = Convert.ToDecimal(monetaryValue, new CultureInfo("en-US"));
-                            shippingOption.Name = service;
+                            var shippingOption = new ShippingOption
+                            {
+                                Rate = Convert.ToDecimal(monetaryValue, new CultureInfo("en-US")),
+                                Name = service
+                            };
                             shippingOptions.Add(shippingOption);
                         }
 

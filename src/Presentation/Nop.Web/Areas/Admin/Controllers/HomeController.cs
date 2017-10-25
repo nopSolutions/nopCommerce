@@ -34,8 +34,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual IActionResult Index()
         {
-            var model = new DashboardModel();
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            var model = new DashboardModel
+            {
+                IsLoggedInAsVendor = _workContext.CurrentVendor != null
+            };
             return View(model);
         }
 

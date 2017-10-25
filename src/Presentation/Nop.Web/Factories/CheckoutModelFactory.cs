@@ -129,10 +129,12 @@ namespace Nop.Web.Factories
             bool prePopulateNewAddressWithCustomerFields = false,
             string overrideAttributesXml = "")
         {
-            var model = new CheckoutBillingAddressModel();
-            model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser);
-            //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
-            model.ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep;
+            var model = new CheckoutBillingAddressModel
+            {
+                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping(_productService, _productAttributeParser),
+                //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
+                ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
+            };
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
@@ -177,10 +179,12 @@ namespace Nop.Web.Factories
         public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
-            var model = new CheckoutShippingAddressModel();
+            var model = new CheckoutShippingAddressModel
+            {
 
-            //allow pickup in store?
-            model.AllowPickUpInStore = _shippingSettings.AllowPickUpInStore;
+                //allow pickup in store?
+                AllowPickUpInStore = _shippingSettings.AllowPickUpInStore
+            };
             if (model.AllowPickUpInStore)
             {
                 model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
@@ -458,10 +462,12 @@ namespace Nop.Web.Factories
         /// <returns>Confirm order model</returns>
         public virtual CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
         {
-            var model = new CheckoutConfirmModel();
-            //terms of service
-            model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
-            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
+            var model = new CheckoutConfirmModel
+            {
+                //terms of service
+                TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage,
+                TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks
+            };
             //min order amount validation
             var minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)

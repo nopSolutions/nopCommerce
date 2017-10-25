@@ -301,10 +301,12 @@ namespace Nop.Services.Orders
         /// <returns>Details</returns>
         protected virtual PlaceOrderContainer PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
-            var details = new PlaceOrderContainer();
+            var details = new PlaceOrderContainer
+            {
 
-            //customer
-            details.Customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+                //customer
+                Customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId)
+            };
             if (details.Customer == null)
                 throw new ArgumentException("Customer is not set");
 
@@ -522,11 +524,13 @@ namespace Nop.Services.Orders
         /// <returns>Details</returns>
         protected virtual PlaceOrderContainer PrepareRecurringOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
-            var details = new PlaceOrderContainer();
-            details.IsRecurringShoppingCart = true;
+            var details = new PlaceOrderContainer
+            {
+                IsRecurringShoppingCart = true,
 
-            //Load initial order
-            details.InitialOrder = _orderService.GetOrderById(processPaymentRequest.InitialOrderId);
+                //Load initial order
+                InitialOrder = _orderService.GetOrderById(processPaymentRequest.InitialOrderId)
+            };
             if (details.InitialOrder == null)
                 throw new ArgumentException("Initial order is not set for recurring payment");
 

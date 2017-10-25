@@ -199,8 +199,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
-            var model = new CampaignModel();
-            model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
+            var model = new CampaignModel
+            {
+                AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens())
+            };
             //stores
             PrepareStoresModel(model);
             //customer roles

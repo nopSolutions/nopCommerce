@@ -14,7 +14,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -62,7 +61,7 @@ namespace Nop.Services.ExportImport
         #endregion
 
         #region Ctor
-
+        
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ICustomerService customerService,
@@ -309,6 +308,44 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        protected virtual bool IgnoreExportPoductProperty(Func<ProductEditorSettings, bool> func)
+        {
+            var productAdvancedMode = true;
+            try
+            {
+                productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
+            }
+            catch (ArgumentNullException)
+            {
+            }
+
+            return !productAdvancedMode && !func(_productEditorSettings);
+        }
+
+        protected virtual bool IgnoreExportCategoryProperty()
+        {
+            try
+            {
+                return !_workContext.CurrentCustomer.GetAttribute<bool>("category-advanced-mode");
+            }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool IgnoreExportManufacturerProperty()
+        {
+            try
+            {
+                return !_workContext.CurrentCustomer.GetAttribute<bool>("manufacturer-advanced-mode");
+            }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
+        }
+
         private PropertyManager<ExportProductAttribute> GetProductAttributeManager()
         {
             var attributeProperties = new[]
@@ -364,22 +401,6 @@ namespace Nop.Services.ExportImport
             };
 
             return new PropertyManager<ExportSpecificationAttribute>(attributeProperties);
-        }
-
-        private bool IgnoreExportPoductProperty(Func<ProductEditorSettings, bool> func)
-        {
-            var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
-            return !productAdvancedMode && !func(_productEditorSettings);
-        }
-
-        private bool IgnoreExportCategoryProperty()
-        {
-            return !_workContext.CurrentCustomer.GetAttribute<bool>("category-advanced-mode");
-        }
-
-        private bool IgnoreExportManufacturerProperty()
-        {
-            return !_workContext.CurrentCustomer.GetAttribute<bool>("manufacturer-advanced-mode");
         }
         
         private byte[] ExportProductsToXlsxWithAttributes(PropertyByName<Product>[] properties, IEnumerable<Product> itemsToExport)
@@ -1237,7 +1258,15 @@ namespace Nop.Services.ExportImport
             };
 
             var productList = products.ToList();
-            var productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
+
+            var productAdvancedMode=true;
+            try
+            {
+                productAdvancedMode = _workContext.CurrentCustomer.GetAttribute<bool>("product-advanced-mode");
+            }
+            catch(ArgumentNullException)
+            {
+            }
 
             if (_catalogSettings.ExportImportProductAttributes || _catalogSettings.ExportImportProductSpecificationAttributes)
             {

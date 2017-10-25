@@ -271,20 +271,6 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        [Ignore("Ignoring until a solution to the IDbContext methods are found. -SRS")]
-        public void Can_add_and_parse_productAttributeValues_with_quantity()
-        {
-            var attributes = string.Empty;
-
-            //value with customer's entered quantity
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pam4_1, pav4_1.Id.ToString(), 2);
-
-            var parsedValueWithQuantity = _productAttributeParser.ParseProductAttributeValues(attributes, pam4_1.Id).FirstOrDefault();
-            parsedValueWithQuantity.ShouldNotBeNull();
-            parsedValueWithQuantity.Quantity.ShouldEqual(2);
-        }
-
-        [Test]
         public void Can_add_and_remove_productAttributes()
         {
             var attributes = "";

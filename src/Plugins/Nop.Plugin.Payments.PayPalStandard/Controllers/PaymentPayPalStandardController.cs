@@ -401,8 +401,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 else
                                                 {
                                                     //next payments
-                                                    var processPaymentResult = new ProcessPaymentResult();
-                                                    processPaymentResult.NewPaymentStatus = newPaymentStatus;
+                                                    var processPaymentResult = new ProcessPaymentResult
+                                                    {
+                                                        NewPaymentStatus = newPaymentStatus
+                                                    };
                                                     if (newPaymentStatus == PaymentStatus.Authorized)
                                                         processPaymentResult.AuthorizationTransactionId = txn_id;
                                                     else

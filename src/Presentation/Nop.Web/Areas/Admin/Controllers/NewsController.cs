@@ -373,11 +373,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = comments.PagedForCommand(command).Select(newsComment =>
                 {
-                    var commentModel = new NewsCommentModel();
-                    commentModel.Id = newsComment.Id;
-                    commentModel.NewsItemId = newsComment.NewsItemId;
-                    commentModel.NewsItemTitle = newsComment.NewsItem.Title;
-                    commentModel.CustomerId = newsComment.CustomerId;
+                    var commentModel = new NewsCommentModel
+                    {
+                        Id = newsComment.Id,
+                        NewsItemId = newsComment.NewsItemId,
+                        NewsItemTitle = newsComment.NewsItem.Title,
+                        CustomerId = newsComment.CustomerId
+                    };
                     var customer = newsComment.Customer;
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
