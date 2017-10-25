@@ -61,6 +61,11 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             if (eventMessage?.Helper?.ViewContext?.ActionDescriptor == null)
                 return;
 
+            //check whether the payment plugin is installed and is active
+            var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
+            if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !worldpayPaymentMethod.IsPaymentMethodActive(_paymentSettings))
+                return;
+
             //add js sсript to one page checkout
             if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
                 actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
@@ -83,7 +88,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             if (!eventMessage.TabStripName.Equals(tabsElementId))
                 return;
 
-            //check whether Worldpay payment plugin is installed and is active
+            //check whether the payment plugin is installed and is active
             var worldpayPaymentMethod = _paymentService.LoadPaymentMethodBySystemName(WorldpayPaymentDefaults.SystemName);
             if (!(worldpayPaymentMethod?.PluginDescriptor?.Installed ?? false) || !worldpayPaymentMethod.IsPaymentMethodActive(_paymentSettings))
                 return;
