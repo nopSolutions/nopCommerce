@@ -234,7 +234,11 @@ namespace Nop.Core.Plugins
                         var entryPath = Path.Combine(pluginPath, entry.FullName.Substring(plugin.PluginPath.Length));
                         var directoryPath = Path.GetDirectoryName(entryPath);
                         if (!Directory.Exists(directoryPath))
+                        {
                             Directory.CreateDirectory(directoryPath);
+                            if (directoryPath.Equals(pluginPath, StringComparison.InvariantCultureIgnoreCase))
+                                entry.ExtractToFile(entryPath);
+                        }
                         else
                             entry.ExtractToFile(entryPath);
                     }
