@@ -5017,13 +5017,16 @@
     <Value>Upload plugin</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
-    <Value>The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.</Value>
+    <Value>The archive should contain only one root plugin directory (already compiled). For example, Payments.PayPalDirect.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
-    <Value>The archive should contain only already compiled plugin version.</Value>
+    <Value>Or it should has the uploadedPlugins.json file with the archive structure (in case if the archive has many subdirectories or plugins).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
-    <Value>Please note that you can also manually upload a plugin using FTP if this method doesn't work for you.</Value>
+    <Value>Please note that if the plugin directory already exists, it will be overwritten.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
+    <Value>You can also manually upload a plugin using FTP if this method doesn't work for you.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
     <Value>Uploading plugin...</Value>

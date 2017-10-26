@@ -416,6 +416,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SelectOption">
     <Value>Select specification attribute option</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
+    <Value>The archive should contain only one root plugin directory (already compiled). For example, Payments.PayPalDirect.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
+    <Value>Or it should has the uploadedPlugins.json file with the archive structure (in case if the archive has many subdirectories or plugins).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
+    <Value>Please note that if the plugin directory already exists, it will be overwritten.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
+    <Value>You can also manually upload a plugin using FTP if this method doesn''t work for you.</Value>
+  </LocaleResource>
 </Language>
 '
 
