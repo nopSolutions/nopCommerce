@@ -1003,7 +1003,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(order));
 
             var fileName = $"order_{order.OrderGuid}_{CommonHelper.GenerateRandomDigitCode(4)}.pdf";
-            var filePath = Path.Combine(CommonHelper.MapPath("~/files/exportimport"), fileName);
+            var filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/files/exportimport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order> {order};
