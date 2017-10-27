@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
@@ -279,20 +280,14 @@ namespace Nop.Web.Framework.UI
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
                     {
-                        var src = debugModel ? item.DebugSrc : item.Src;
-                        src = urlHelper.Content(src);
-                        //check whether this file exists. 
-                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
-                        if (File.Exists(srcPath))
-                        {
-                            //remove starting /
-                            src = src.Remove(0, 1);
-                        }
-                        else
-                        {
-                            //if not, it should be stored into /wwwroot directory
-                            src = "wwwroot/" + src;
-                        }
+                        new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                        var src = path.Value.TrimStart('/');
+
+                        //check whether this file exists, if not it should be stored into /wwwroot directory
+                        if (!File.Exists(Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\"))))
+                            src = $"wwwroot/{src}";
+
                         bundle.InputFiles.Add(src);
                     }
                     //output file
@@ -436,6 +431,10 @@ namespace Nop.Web.Framework.UI
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableCssBundling;
             }
+
+            //CSS bundling is not allowed in virtual directories
+            if (urlHelper.ActionContext.HttpContext.Request.PathBase.HasValue)
+                bundleFiles = false;
 
             if (bundleFiles.Value)
             {

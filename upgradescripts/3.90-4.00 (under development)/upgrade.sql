@@ -428,6 +428,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
     <Value>You can also manually upload a plugin using FTP if this method doesn''t work for you.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
+    <Value>CSS bundling is not allowed in virtual directories</Value>
+  </LocaleResource>
 </Language>
 '
 
