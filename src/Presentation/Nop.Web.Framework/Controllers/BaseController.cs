@@ -147,10 +147,16 @@ namespace Nop.Web.Framework.Controllers
 
             //set model
             ViewData.Model = model;
+
+            //try to get a view by the name
             var viewResult = razorViewEngine.FindView(actionContext, viewName, false);
             if (viewResult.View == null)
-                throw new ArgumentNullException($"{viewName} view was not found");
-
+            {
+                //or try to get a view by the path
+                viewResult = razorViewEngine.GetView(null, viewName, false);
+                if (viewResult.View == null)
+                    throw new ArgumentNullException($"{viewName} view was not found");
+            }
             using (var stringWriter = new StringWriter())
             {
                 var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
