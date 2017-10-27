@@ -140,9 +140,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? "1000",
                 MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? "1000",
                 DEFAULTVIEW = existingConfiguration?.DEFAULTVIEW ?? "list",
-                FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? @"zip js jsp jsb mhtml mht xhtml xht php phtml 
-                    php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh 
-                    ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess",
+                FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? "zip js jsp jsb mhtml mht xhtml xht php phtml " +
+                    "php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh " +
+                    "ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess",
                 ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
                 FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
                 DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
