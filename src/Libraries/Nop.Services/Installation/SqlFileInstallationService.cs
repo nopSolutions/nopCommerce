@@ -58,7 +58,6 @@ namespace Nop.Services.Installation
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 localizationService.ImportResourcesFromXml(language, localesXml);
             }
-
         }
 
         protected virtual void UpdateDefaultCustomer(string defaultUserEmail, string defaultUserPassword)
@@ -99,7 +98,7 @@ namespace Nop.Services.Installation
                     statements.Add(statement);
             }
 
-            foreach (string stmt in statements)
+            foreach (var stmt in statements)
                 _dbContext.ExecuteSqlCommand(stmt);
         }
 

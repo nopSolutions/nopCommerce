@@ -1,10 +1,10 @@
 ﻿@model ProductDetailsModel
-@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
+@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery">
-        <script type="text/javascript">
+        <script type="text/javascript" asp-location="Footer">
             $(document).on("product_attributes_changed", function (data) {
-                if (data.changedData.isFreeShipping){
+                if (data.changedData.isFreeShipping) {
                     $(".free-shipping").addClass("visible");
                 } else {
                     $(".free-shipping").removeClass("visible");
@@ -15,7 +15,7 @@
         {
             <div class="free-shipping">@T("Products.FreeShipping")</div>
         }
-        @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
+        @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
             <div class="delivery-date">
                 <span class="label">@T("Products.DeliveryDate"):</span>

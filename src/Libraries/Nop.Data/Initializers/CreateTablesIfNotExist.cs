@@ -22,6 +22,7 @@ namespace Nop.Data.Initializers
             this._tablesToValidate = tablesToValidate;
             this._customCommands = customCommands;
         }
+
         public void InitializeDatabase(TContext context)
         {
             bool dbExists;
@@ -41,7 +42,7 @@ namespace Nop.Data.Initializers
                 else
                 {
                     //check whether tables are already created
-                    int numberOfTables = 0;
+                    var numberOfTables = 0;
                     foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' "))
                         numberOfTables = t1;
 

@@ -39,8 +39,10 @@ namespace Nop.Services.Tests.Tax
         [SetUp]
         public new void SetUp()
         {
-            _taxSettings = new TaxSettings();
-            _taxSettings.DefaultTaxAddressId = 10;
+            _taxSettings = new TaxSettings
+            {
+                DefaultTaxAddressId = 10
+            };
 
             _workContext = null;
             _storeContext = null;
@@ -94,8 +96,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_product()
         {
-            var product = new Product();
-            product.IsTaxExempt = true;
+            var product = new Product
+            {
+                IsTaxExempt = true
+            };
             _taxService.IsTaxExempt(product, null).ShouldEqual(true);
             product.IsTaxExempt = false;
             _taxService.IsTaxExempt(product, null).ShouldEqual(false);
@@ -104,8 +108,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_customer()
         {
-            var customer = new Customer();
-            customer.IsTaxExempt = true;
+            var customer = new Customer
+            {
+                IsTaxExempt = true
+            };
             _taxService.IsTaxExempt(null, customer).ShouldEqual(true);
             customer.IsTaxExempt = false;
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
@@ -114,8 +120,10 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_check_taxExempt_customer_in_taxExemptCustomerRole()
         {
-            var customer = new Customer();
-            customer.IsTaxExempt = false;
+            var customer = new Customer
+            {
+                IsTaxExempt = false
+            };
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
 
             var customerRole = new CustomerRole
@@ -171,12 +179,12 @@ namespace Nop.Services.Tests.Tax
         {
             //remove? this method requires Internet access
             
-            VatNumberStatus vatNumberStatus1 = _taxService.DoVatCheck("GB", "523 2392 69",
+            var vatNumberStatus1 = _taxService.DoVatCheck("GB", "523 2392 69",
                 out string name, out string address, out Exception exception);
             vatNumberStatus1.ShouldEqual(VatNumberStatus.Valid);
             exception.ShouldBeNull();
 
-            VatNumberStatus vatNumberStatus2 = _taxService.DoVatCheck("GB", "000 0000 00",
+            var vatNumberStatus2 = _taxService.DoVatCheck("GB", "000 0000 00",
                 out name, out address, out exception);
             vatNumberStatus2.ShouldEqual(VatNumberStatus.Invalid);
             exception.ShouldBeNull();
@@ -187,7 +195,7 @@ namespace Nop.Services.Tests.Tax
         {
             _taxSettings.EuVatAssumeValid = true;
 
-            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00", out string _, out string _);
+            var vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00", out string _, out string _);
             vatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
         }
     }

@@ -13,6 +13,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Product review
         /// </summary>
-        public ProductReview ProductReview { get; private set; }
+        public ProductReview ProductReview { get; }
     }
 }

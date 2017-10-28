@@ -163,7 +163,7 @@ namespace Nop.Web.Controllers
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, excludeShippableAttributes);
             foreach (var attribute in checkoutAttributes)
             {
-                string controlId = $"checkout_attribute_{attribute.Id}";
+                var controlId = $"checkout_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -188,7 +188,7 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in cblAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
@@ -216,7 +216,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.ToString().Trim();
+                                var enteredText = ctrlAttributes.ToString().Trim();
                                 attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -230,7 +230,7 @@ namespace Nop.Web.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
                             }
                             catch { }
                             if (selectedDate.HasValue)
@@ -299,8 +299,8 @@ namespace Nop.Web.Controllers
             startDate = null;
             endDate = null;
 
-            string startControlId = $"rental_start_date_{product.Id}";
-            string endControlId = $"rental_end_date_{product.Id}";
+            var startControlId = $"rental_start_date_{product.Id}";
+            var endControlId = $"rental_end_date_{product.Id}";
             var ctrlStartDate = form[startControlId];
             var ctrlEndDate = form[endControlId];
             try
@@ -319,12 +319,12 @@ namespace Nop.Web.Controllers
         {
             if (!product.IsGiftCard) return;
 
-            string recipientName = "";
-            string recipientEmail = "";
-            string senderName = "";
-            string senderEmail = "";
-            string giftCardMessage = "";
-            foreach (string formKey in form.Keys)
+            var recipientName = "";
+            var recipientEmail = "";
+            var senderName = "";
+            var senderEmail = "";
+            var giftCardMessage = "";
+            foreach (var formKey in form.Keys)
             {
                 if (formKey.Equals($"giftcard_{product.Id}.RecipientName", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -361,7 +361,7 @@ namespace Nop.Web.Controllers
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                string controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"product_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -372,7 +372,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                 {
                                     //get quantity entered by customer
@@ -396,7 +396,7 @@ namespace Nop.Web.Controllers
                                 foreach (var item in ctrlAttributes.ToString()
                                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                     {
                                         //get quantity entered by customer
@@ -440,7 +440,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!StringValues.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.ToString().Trim();
+                                var enteredText = ctrlAttributes.ToString().Trim();
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -454,7 +454,7 @@ namespace Nop.Web.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                             }
                             catch
                             {
@@ -608,7 +608,7 @@ namespace Nop.Web.Controllers
                                 .GetTotalProducts());
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
+                            ? RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -827,6 +827,7 @@ namespace Nop.Web.Controllers
                     }
             }
         }
+
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
@@ -852,8 +853,8 @@ namespace Nop.Web.Controllers
             }
             
             //update existing shopping cart item
-            int updatecartitemid = 0;
-            foreach (string formKey in form.Keys)
+            var updatecartitemid = 0;
+            foreach (var formKey in form.Keys)
                 if (formKey.Equals($"addtocart_{productId}.UpdatedShoppingCartItemId", StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out updatecartitemid);
@@ -889,10 +890,10 @@ namespace Nop.Web.Controllers
             }
             
             //customer entered price
-            decimal customerEnteredPriceConverted = decimal.Zero;
+            var customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
             {
-                foreach (string formKey in form.Keys)
+                foreach (var formKey in form.Keys)
                 {
                     if (formKey.Equals($"addtocart_{productId}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -904,8 +905,8 @@ namespace Nop.Web.Controllers
             }
 
             //quantity
-            int quantity = 1;
-            foreach (string formKey in form.Keys)
+            var quantity = 1;
+            foreach (var formKey in form.Keys)
                 if (formKey.Equals($"addtocart_{productId}.EnteredQuantity", StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out quantity);
@@ -915,7 +916,7 @@ namespace Nop.Web.Controllers
             var addToCartWarnings = new List<string>();
 
             //product and gift card attributes
-            string attributes = ParseProductAttributes(product, form, addToCartWarnings);
+            var attributes = ParseProductAttributes(product, form, addToCartWarnings);
             
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -946,7 +947,7 @@ namespace Nop.Web.Controllers
                 return new NullJsonResult();
 
                 var errors = new List<string>();
-            string attributeXml = ParseProductAttributes(product, form, errors);
+            var attributeXml = ParseProductAttributes(product, form, errors);
 
             //rental attributes
             DateTime? rentalStartDate = null;
@@ -957,24 +958,24 @@ namespace Nop.Web.Controllers
             }
 
             //sku, mpn, gtin
-            string sku = product.FormatSku(attributeXml, _productAttributeParser);
-            string mpn = product.FormatMpn(attributeXml, _productAttributeParser);
-            string gtin = product.FormatGtin(attributeXml, _productAttributeParser);
+            var sku = product.FormatSku(attributeXml, _productAttributeParser);
+            var mpn = product.FormatMpn(attributeXml, _productAttributeParser);
+            var gtin = product.FormatGtin(attributeXml, _productAttributeParser);
 
             //price
-            string price = "";
+            var price = "";
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 List<DiscountForCaching> scDiscounts;
-                decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
+                var finalPrice = _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
                     true, out decimal _, out scDiscounts);
-                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
-                decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
+                var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
 
@@ -1130,7 +1131,7 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
@@ -1138,7 +1139,7 @@ namespace Nop.Web.Controllers
             var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
             if (attribute.ValidationFileMaximumSize.HasValue)
@@ -1211,7 +1212,7 @@ namespace Nop.Web.Controllers
 
             var qqFileNameParameter = "qqfilename";
             var fileName = httpPostedFile.FileName;
-            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+            if (string.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
                 fileName = Request.Form[qqFileNameParameter].ToString();
             //remove path (passed in IE)
             fileName = Path.GetFileName(fileName);
@@ -1219,7 +1220,7 @@ namespace Nop.Web.Controllers
             var contentType = httpPostedFile.ContentType;
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
             if (attribute.ValidationFileMaximumSize.HasValue)
@@ -1299,12 +1300,12 @@ namespace Nop.Web.Controllers
             var innerWarnings = new Dictionary<int, IList<string>>();
             foreach (var sci in cart)
             {
-                bool remove = allIdsToRemove.Contains(sci.Id);
+                var remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
                     _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
                 else
                 {
-                    foreach (string formKey in form.Keys)
+                    foreach (var formKey in form.Keys)
                         if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
                             int newQuantity;
@@ -1352,7 +1353,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
             }
@@ -1385,7 +1386,7 @@ namespace Nop.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                bool downloadableProductsRequireRegistration =
+                var downloadableProductsRequireRegistration =
                     _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
 
                 if (!_orderSettings.AnonymousCheckoutAllowed 
@@ -1416,7 +1417,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
             
             var model = new ShoppingCartModel();
-            if (!String.IsNullOrWhiteSpace(discountcouponcode))
+            if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
                 var discounts = _discountService.GetAllDiscountsForCaching(couponCode: discountcouponcode, showHidden: true)
@@ -1483,10 +1484,10 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
             {
-                if (!String.IsNullOrWhiteSpace(giftcardcouponcode))
+                if (!string.IsNullOrWhiteSpace(giftcardcouponcode))
                 {
                     var giftCard = _giftCardService.GetAllGiftCards(giftCardCouponCode: giftcardcouponcode).FirstOrDefault();
-                    bool isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
+                    var isGiftCardValid = giftCard != null && giftCard.IsGiftCardValid();
                     if (isGiftCardValid)
                     {
                         _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
@@ -1558,7 +1559,7 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
 
             //get discount identifier
-            int discountId = 0;
+            var discountId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
                     discountId = Convert.ToInt32(formValue.Substring("removediscount-".Length));
@@ -1582,7 +1583,7 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
 
             //get gift card identifier
-            int giftCardId = 0;
+            var giftCardId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
                     giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
@@ -1608,7 +1609,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
-            Customer customer = customerGuid.HasValue ? 
+            var customer = customerGuid.HasValue ? 
                 _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
@@ -1644,12 +1645,12 @@ namespace Nop.Web.Controllers
             var innerWarnings = new Dictionary<int, IList<string>>();
             foreach (var sci in cart)
             {
-                bool remove = allIdsToRemove.Contains(sci.Id);
+                var remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
                     _shoppingCartService.DeleteShoppingCartItem(sci);
                 else
                 {
-                    foreach (string formKey in form.Keys)
+                    foreach (var formKey in form.Keys)
                         if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
                             int newQuantity;

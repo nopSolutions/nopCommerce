@@ -131,22 +131,22 @@ namespace Nop.Web.Areas.Admin.Controllers
                     model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
 
-            if (prepareOrderListModel)
-            {
-                model.AffiliatedOrderList.AffliateId = model.Id;
+            if (!prepareOrderListModel)
+                return;
 
-                //order statuses
-                model.AffiliatedOrderList.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AffiliatedOrderList.AffliateId = model.Id;
 
-                //payment statuses
-                model.AffiliatedOrderList.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //order statuses
+            model.AffiliatedOrderList.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
-                //shipping statuses
-                model.AffiliatedOrderList.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-                model.AffiliatedOrderList.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            }
+            //payment statuses
+            model.AffiliatedOrderList.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //shipping statuses
+            model.AffiliatedOrderList.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AffiliatedOrderList.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
         }
         
         #endregion
@@ -212,10 +212,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var affiliate = new Affiliate();
-
-                affiliate.Active = model.Active;
-                affiliate.AdminComment = model.AdminComment;
+                var affiliate = new Affiliate
+                {
+                    Active = model.Active,
+                    AdminComment = model.AdminComment
+                };
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
@@ -238,7 +239,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareAffiliateModel(model, null, true, true, false);
             return View(model);
-
         }
 
 
@@ -334,10 +334,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var orderStatusIds = model.OrderStatusId > 0 ? new List<int>() { model.OrderStatusId } : null;
@@ -357,15 +357,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = orders.Select(order =>
                     {
-                        var orderModel = new AffiliateModel.AffiliatedOrderModel();
-                        orderModel.Id = order.Id;
-                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.OrderStatusId = order.OrderStatusId;
-                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-                        orderModel.CustomOrderNumber = order.CustomOrderNumber;
+                        var orderModel = new AffiliateModel.AffiliatedOrderModel
+                        {
+                            Id = order.Id,
+                            OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderStatusId = order.OrderStatusId,
+                            PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                            CustomOrderNumber = order.CustomOrderNumber
+                        };
 
                         return orderModel;
                     }),
@@ -394,9 +396,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 Data = customers.Select(customer =>
                     {
-                        var customerModel = new AffiliateModel.AffiliatedCustomerModel();
-                        customerModel.Id = customer.Id;
-                        customerModel.Name = customer.Email;
+                        var customerModel = new AffiliateModel.AffiliatedCustomerModel
+                        {
+                            Id = customer.Id,
+                            Name = customer.Email
+                        };
                         return customerModel;
                     }),
                 Total = customers.TotalCount

@@ -33,10 +33,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the username
         /// </summary>
         public string Username { get; set; }
+
         /// <summary>
         /// Gets or sets the email
         /// </summary>
         public string Email { get; set; }
+
         /// <summary>
         /// Gets or sets the email that should be re-validated. Used in scenarios when a customer is already registered and wants to change an email address.
         /// </summary>
@@ -81,6 +83,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating number of failed login attempts (wrong password)
         /// </summary>
         public int FailedLoginAttempts { get; set; }
+
         /// <summary>
         /// Gets or sets the date and time until which a customer cannot login (locked out)
         /// </summary>
@@ -130,7 +133,7 @@ namespace Nop.Core.Domain.Customers
         ///  Gets or sets the store identifier in which customer registered
         /// </summary>
         public int RegisteredInStoreId { get; set; }
-        
+
         #region Navigation properties
 
         /// <summary>
@@ -157,7 +160,7 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<ShoppingCartItem> ShoppingCartItems
         {
             get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
-            protected set { _shoppingCartItems = value; }            
+            protected set { _shoppingCartItems = value; }
         }
 
         /// <summary>
@@ -166,9 +169,9 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<ReturnRequest> ReturnRequests
         {
             get { return _returnRequests ?? (_returnRequests = new List<ReturnRequest>()); }
-            protected set { _returnRequests = value; }            
+            protected set { _returnRequests = value; }
         }
-        
+
         /// <summary>
         /// Default billing address
         /// </summary>
@@ -185,9 +188,9 @@ namespace Nop.Core.Domain.Customers
         public virtual ICollection<Address> Addresses
         {
             get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }            
+            protected set { _addresses = value; }
         }
-        
+
         #endregion
     }
 }

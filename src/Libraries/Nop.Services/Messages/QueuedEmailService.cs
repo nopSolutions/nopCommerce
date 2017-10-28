@@ -132,7 +132,7 @@ namespace Nop.Services.Messages
             var queuedEmails = query.ToList();
             //sort by passed identifiers
             var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (int id in queuedEmailIds)
+            foreach (var id in queuedEmailIds)
             {
                 var queuedEmail = queuedEmails.Find(x => x.Id == id);
                 if (queuedEmail != null)
@@ -160,13 +160,13 @@ namespace Nop.Services.Messages
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            fromEmail = (fromEmail ?? String.Empty).Trim();
-            toEmail = (toEmail ?? String.Empty).Trim();
+            fromEmail = (fromEmail ?? string.Empty).Trim();
+            toEmail = (toEmail ?? string.Empty).Trim();
             
             var query = _queuedEmailRepository.Table;
-            if (!String.IsNullOrEmpty(fromEmail))
+            if (!string.IsNullOrEmpty(fromEmail))
                 query = query.Where(qe => qe.From.Contains(fromEmail));
-            if (!String.IsNullOrEmpty(toEmail))
+            if (!string.IsNullOrEmpty(toEmail))
                 query = query.Where(qe => qe.To.Contains(toEmail));
             if (createdFromUtc.HasValue)
                 query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
@@ -202,7 +202,7 @@ namespace Nop.Services.Messages
 
 
                 //do all databases support "Truncate command"?
-                string queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
+                var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
                 _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
             }
             else

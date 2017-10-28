@@ -61,6 +61,7 @@ namespace Nop.Web.Models.Order
         {
             public string Name { get; set; }
         }
+
         public partial class ReturnRequestActionModel : BaseNopEntityModel
         {
             public string Name { get; set; }

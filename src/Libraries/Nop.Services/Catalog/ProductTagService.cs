@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId)
         {
-            string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
+            var key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
             {
                 //stored procedures are enabled and supported by the database. 
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
                 //stored procedures aren't supported. Use LINQ
                 var query = _productTagRepository.Table.Select(pt => new
                 {
-                    Id = pt.Id,
+                    pt.Id,
                     ProductCount = (storeId == 0 || _catalogSettings.IgnoreStoreLimitations) ?
                         pt.Products.Count(p => !p.Deleted && p.Published)
                         : (from p in pt.Products
@@ -310,6 +310,7 @@ namespace Nop.Services.Catalog
                 }
             }
         }
+
         #endregion
     }
 }

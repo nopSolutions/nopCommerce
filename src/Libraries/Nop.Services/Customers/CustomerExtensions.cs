@@ -27,19 +27,20 @@ namespace Nop.Services.Customers
             var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
             var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
 
-            string fullName = "";
-            if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
+            var fullName = "";
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
                 fullName = $"{firstName} {lastName}";
             else
             {
-                if (!String.IsNullOrWhiteSpace(firstName))
+                if (!string.IsNullOrWhiteSpace(firstName))
                     fullName = firstName;
 
-                if (!String.IsNullOrWhiteSpace(lastName))
+                if (!string.IsNullOrWhiteSpace(lastName))
                     fullName = lastName;
             }
             return fullName;
         }
+
         /// <summary>
         /// Formats the customer name
         /// </summary>
@@ -57,7 +58,7 @@ namespace Nop.Services.Customers
                 return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
             }
 
-            string result = string.Empty;
+            var result = string.Empty;
             switch (EngineContext.Current.Resolve<CustomerSettings>().CustomerNameFormat)
             {
                 case CustomerNameFormat.ShowEmails:
@@ -99,7 +100,7 @@ namespace Nop.Services.Customers
                 genericAttributeService);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingCouponCodes))
+            if (string.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
             try
@@ -112,7 +113,7 @@ namespace Nop.Services.Customers
                 {
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
-                        string code = node1.Attributes["Code"].InnerText.Trim();
+                        var code = node1.Attributes["Code"].InnerText.Trim();
                         couponCodes.Add(code);
                     }
                 }
@@ -123,6 +124,7 @@ namespace Nop.Services.Customers
             }
             return couponCodes.ToArray();
         }
+
         /// <summary>
         /// Adds a coupon code
         /// </summary>
@@ -135,7 +137,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
                 var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode,
@@ -144,7 +146,7 @@ namespace Nop.Services.Customers
                 couponCode = couponCode.Trim().ToLower();
 
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingCouponCodes))
+                if (string.IsNullOrEmpty(existingCouponCodes))
                 {
                     var element1 = xmlDoc.CreateElement("DiscountCouponCodes");
                     xmlDoc.AppendChild(element1);
@@ -162,7 +164,7 @@ namespace Nop.Services.Customers
                 {
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
-                        string couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
                         if (couponCodeAttribute.ToLower() == couponCode.ToLower())
                         {
                             gcElement = (XmlElement)node1;
@@ -189,6 +191,7 @@ namespace Nop.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
         }
+
         /// <summary>
         /// Removes a coupon code
         /// </summary>
@@ -213,7 +216,6 @@ namespace Nop.Services.Customers
                     customer.ApplyDiscountCouponCode(existingCouponCode);
         }
 
-
         /// <summary>
         /// Gets coupon codes
         /// </summary>
@@ -229,7 +231,7 @@ namespace Nop.Services.Customers
                 genericAttributeService);
 
             var couponCodes = new List<string>();
-            if (String.IsNullOrEmpty(existingCouponCodes))
+            if (string.IsNullOrEmpty(existingCouponCodes))
                 return couponCodes.ToArray();
 
             try
@@ -242,7 +244,7 @@ namespace Nop.Services.Customers
                 {
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
-                        string code = node1.Attributes["Code"].InnerText.Trim();
+                        var code = node1.Attributes["Code"].InnerText.Trim();
                         couponCodes.Add(code);
                     }
                 }
@@ -253,6 +255,7 @@ namespace Nop.Services.Customers
             }
             return couponCodes.ToArray();
         }
+
         /// <summary>
         /// Adds a coupon code
         /// </summary>
@@ -265,7 +268,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            string result = string.Empty;
+            var result = string.Empty;
             try
             {
                 var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
@@ -274,7 +277,7 @@ namespace Nop.Services.Customers
                 couponCode = couponCode.Trim().ToLower();
 
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(existingCouponCodes))
+                if (string.IsNullOrEmpty(existingCouponCodes))
                 {
                     var element1 = xmlDoc.CreateElement("GiftCardCouponCodes");
                     xmlDoc.AppendChild(element1);
@@ -292,7 +295,7 @@ namespace Nop.Services.Customers
                 {
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
-                        string couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        var couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
                         if (couponCodeAttribute.ToLower() == couponCode.ToLower())
                         {
                             gcElement = (XmlElement)node1;
@@ -319,6 +322,7 @@ namespace Nop.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
         }
+
         /// <summary>
         /// Removes a coupon code
         /// </summary>
@@ -355,7 +359,7 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
+            if (string.IsNullOrEmpty(cPrt))
                 return false;
 
             if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
@@ -363,6 +367,7 @@ namespace Nop.Services.Customers
 
             return true;
         }
+
         /// <summary>
         /// Check whether password recovery link is expired
         /// </summary>

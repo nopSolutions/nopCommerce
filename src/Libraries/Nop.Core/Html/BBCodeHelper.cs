@@ -1,4 +1,3 @@
-using System;
 using System.Text.RegularExpressions;
 using Nop.Core.Domain.Common;
 using Nop.Core.Html.CodeFormatter;
@@ -12,6 +11,7 @@ namespace Nop.Core.Html
     public partial class BBCodeHelper
     {
         #region Fields
+
         private static readonly Regex regexBold = new Regex(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexItalic = new Regex(@"\[i\](.+?)\[/i\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexUnderLine = new Regex(@"\[u\](.+?)\[/u\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -23,6 +23,7 @@ namespace Nop.Core.Html
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Formats the text
         /// </summary>
@@ -38,7 +39,7 @@ namespace Nop.Core.Html
         public static string FormatText(string text, bool replaceBold, bool replaceItalic,
             bool replaceUnderline, bool replaceUrl, bool replaceCode, bool replaceQuote, bool replaceImg)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
             if (replaceBold)
@@ -101,8 +102,8 @@ namespace Nop.Core.Html
         /// <returns>string</returns>
         public static string RemoveQuotes(string str)
         {
-            str = Regex.Replace(str, @"\[quote=(.+?)\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            str = Regex.Replace(str, @"\[/quote\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            str = Regex.Replace(str, @"\[quote=(.+?)\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            str = Regex.Replace(str, @"\[/quote\]", string.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return str;
         }
 

@@ -3789,8 +3789,14 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.Value">
     <Value>Value</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions">
+    <Value>First, please create at least one specification attribute option</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributes">
     <Value>No specification attributes defined.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SelectOption">
+    <Value>Select specification attribute option</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
@@ -5011,13 +5017,16 @@
     <Value>Upload plugin</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
-    <Value>The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.</Value>
+    <Value>The archive should contain only one root plugin directory (already compiled). For example, Payments.PayPalDirect.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
-    <Value>The archive should contain only already compiled plugin version.</Value>
+    <Value>Or it should has the uploadedPlugins.json file with the archive structure (in case if the archive has many subdirectories or plugins).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
-    <Value>Please note that you can also manually upload a plugin using FTP if this method doesn't work for you.</Value>
+    <Value>Please note that if the plugin directory already exists, it will be overwritten.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
+    <Value>You can also manually upload a plugin using FTP if this method doesn't work for you.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
     <Value>Uploading plugin...</Value>
@@ -6380,6 +6389,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
     <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you're running nopCommerce in IIS virtual directory. Currently it doesn't support web farms. And please note it could take up to two minutes for changes to existing files to be applied (when enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
+    <Value>CSS bundling is not allowed in virtual directories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling">
     <Value>JavaScript bundling and minification</Value>
@@ -10181,6 +10193,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
     <Value>Welcome email has been successfully sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SomeComment">
+    <Value>Some comment here...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>

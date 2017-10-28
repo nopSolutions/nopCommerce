@@ -110,7 +110,7 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            string key = string.Format(TOPICS_BY_ID_KEY, topicId);
+            var key = string.Format(TOPICS_BY_ID_KEY, topicId);
             return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
         }
 
@@ -122,7 +122,7 @@ namespace Nop.Services.Topics
         /// <returns>Topic</returns>
         public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
                 return null;
 
             var query = _topicRepository.Table;
@@ -145,7 +145,7 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false)
         {
-            string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl, showHidden);
+            var key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
@@ -162,29 +162,29 @@ namespace Nop.Services.Topics
                         //ACL (access control list)
                         var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from c in query
-                                join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
-                                from acl in c_acl.DefaultIfEmpty()
-                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                                select c;
+                            join acl in _aclRepository.Table
+                            on new {c1 = c.Id, c2 = "Topic"} equals new {c1 = acl.EntityId, c2 = acl.EntityName} into cAcl
+                            from acl in cAcl.DefaultIfEmpty()
+                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select c;
                     }
                     if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
                     {
                         //Store mapping
                         query = from c in query
-                                join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                                from sm in c_sm.DefaultIfEmpty()
-                                where !c.LimitedToStores || storeId == sm.StoreId
-                                select c;
+                            join sm in _storeMappingRepository.Table
+                            on new {c1 = c.Id, c2 = "Topic"} equals new {c1 = sm.EntityId, c2 = sm.EntityName} into cSm
+                            from sm in cSm.DefaultIfEmpty()
+                            where !c.LimitedToStores || storeId == sm.StoreId
+                            select c;
                     }
 
                     //only distinct topics (group by ID)
                     query = from t in query
-                            group t by t.Id
-                            into tGroup
-                            orderby tGroup.Key
-                            select tGroup.FirstOrDefault();
+                        group t by t.Id
+                        into tGroup
+                        orderby tGroup.Key
+                        select tGroup.FirstOrDefault();
                     query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
                 }
 

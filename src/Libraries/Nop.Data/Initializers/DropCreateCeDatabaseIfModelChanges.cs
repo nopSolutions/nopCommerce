@@ -4,7 +4,6 @@ using System.Transactions;
 
 namespace Nop.Data.Initializers
 {
-
     /// <summary>
     /// An implementation of IDatabaseInitializer that will <b>DELETE</b>, recreate, and optionally re-seed the
     /// database only if the model has changed since the database was created.  This is achieved by writing a

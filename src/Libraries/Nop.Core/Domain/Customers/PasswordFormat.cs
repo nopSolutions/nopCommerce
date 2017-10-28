@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Domain.Customers 
+﻿namespace Nop.Core.Domain.Customers 
 { 
     public enum PasswordFormat
     {

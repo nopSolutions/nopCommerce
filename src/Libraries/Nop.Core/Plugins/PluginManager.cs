@@ -128,7 +128,7 @@ namespace Nop.Core.Plugins
                         {
                             using (var reader = new StreamReader(unzippedEntryStream))
                             {
-                                string text = reader.ReadToEnd();
+                                var text = reader.ReadToEnd();
                                 pluginDescriptor = GetPluginDescriptor(text);
                                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
                                     StringComparer.InvariantCultureIgnoreCase))
@@ -234,7 +234,11 @@ namespace Nop.Core.Plugins
                         var entryPath = Path.Combine(pluginPath, entry.FullName.Substring(plugin.PluginPath.Length));
                         var directoryPath = Path.GetDirectoryName(entryPath);
                         if (!Directory.Exists(directoryPath))
+                        {
                             Directory.CreateDirectory(directoryPath);
+                            if (directoryPath.Equals(pluginPath, StringComparison.InvariantCultureIgnoreCase))
+                                entry.ExtractToFile(entryPath);
+                        }
                         else
                             entry.ExtractToFile(entryPath);
                     }
@@ -465,8 +469,7 @@ namespace Nop.Core.Plugins
         /// <returns></returns>
         private static bool IsPackagePluginFolder(DirectoryInfo folder)
         {
-            if (folder == null) return false;
-            if (folder.Parent == null) return false;
+            if (folder?.Parent == null) return false;
             if (!folder.Parent.Name.Equals(PluginsPathName, StringComparison.InvariantCultureIgnoreCase)) return false;
 
             return true;
@@ -488,7 +491,6 @@ namespace Nop.Core.Plugins
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-
 
             using (new WriteLockDisposable(Locker))
             {
@@ -516,6 +518,9 @@ namespace Nop.Core.Plugins
                         //clear out shadow copied plugins
                         foreach (var f in binFiles)
                         {
+                            if(f.Name.Equals("placeholder.txt", StringComparison.InvariantCultureIgnoreCase))
+                                continue;
+
                             Debug.WriteLine("Deleting " + f.Name);
                             try
                             {
@@ -532,7 +537,6 @@ namespace Nop.Core.Plugins
                             }
                         }
                     }
-
                    
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
@@ -548,7 +552,7 @@ namespace Nop.Core.Plugins
                         }
 
                         //some validation
-                        if (String.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
+                        if (string.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
                             throw new Exception($"A plugin '{descriptionFile.FullName}' has no system name. Try assigning the plugin a unique name and recompiling.");
                         if (referencedPlugins.Contains(pluginDescriptor))
                             throw new Exception($"A plugin with '{pluginDescriptor.SystemName}' system name is already defined");
@@ -632,7 +636,6 @@ namespace Nop.Core.Plugins
                     var fail = new Exception(msg, ex);
                     throw fail;
                 }
-
 
                 ReferencedPlugins = referencedPlugins;
                 IncompatiblePlugins = incompatiblePlugins;
@@ -755,6 +758,7 @@ namespace Nop.Core.Plugins
                     archivefile.CopyTo(fileStream);
 
                 //check whether there is a descriptive JSON file in the root of the archive
+                //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
                 var jsonFileExists = false;
                 using (var archive = ZipFile.OpenRead(zipFilePath))
                 {
@@ -822,7 +826,7 @@ namespace Nop.Core.Plugins
                 return false;
 
             if (pluginDescriptor.OriginalAssemblyFile.Directory.Exists)
-                CommonHelper.DeleteDirectory(pluginDescriptor.OriginalAssemblyFile.FullName);
+                CommonHelper.DeleteDirectory(pluginDescriptor.OriginalAssemblyFile.DirectoryName);
 
             return true;
         }
@@ -847,6 +851,5 @@ namespace Nop.Core.Plugins
         public static IEnumerable<string> IncompatiblePlugins { get; set; }
 
         #endregion
-
     }
 }

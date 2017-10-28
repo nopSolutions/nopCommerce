@@ -27,7 +27,6 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public int DisplayOrder {get;set;}
 
         public IList<AddressAttributeValueLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class AddressAttributeValueLocalizedModel : ILocalizedModelLocal

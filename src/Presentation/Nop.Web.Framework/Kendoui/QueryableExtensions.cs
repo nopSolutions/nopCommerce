@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Kendoui
                 var values = filters.Select(f => f.Value).ToArray();
 
                 // Create a predicate expression e.g. Field1 = @0 And Field2 > @1
-                string predicate = filter.ToExpression(filters);
+                var predicate = filter.ToExpression(filters);
 
                 // Use the Where method of Dynamic Linq to filter the data
                 queryable = queryable.Where(predicate, values);

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -138,7 +137,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+                var key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
                 return _cacheManager.Get(key, () =>
                 {
                     var currency = loadCurrencyFunc();
@@ -147,10 +146,7 @@ namespace Nop.Services.Directory
                     return new CurrencyForCaching(currency);
                 });
             }
-            else
-            {
-                return loadCurrencyFunc();
-            }
+            return loadCurrencyFunc();
         }
 
         /// <summary>
@@ -161,7 +157,7 @@ namespace Nop.Services.Directory
         /// <returns>Currency</returns>
         public virtual Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true)
         {
-            if (String.IsNullOrEmpty(currencyCode))
+            if (string.IsNullOrEmpty(currencyCode))
                 return null;
             return GetAllCurrencies(true, loadCacheableCopy: loadCacheableCopy)
                 .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
@@ -189,7 +185,7 @@ namespace Nop.Services.Directory
             if (loadCacheableCopy)
             {
                 //cacheable copy
-                string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+                var key = string.Format(CURRENCIES_ALL_KEY, showHidden);
                 currencies = _cacheManager.Get(key, () =>
                 {
                     var result = new List<Currency>();
@@ -285,7 +281,7 @@ namespace Nop.Services.Directory
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
-            decimal result = amount;
+            var result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
             if (result != decimal.Zero && sourceCurrencyCode.Id != targetCurrencyCode.Id)
@@ -311,10 +307,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount; 
+            var result = amount; 
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
+                var exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException($"Exchange rate not found for currency [{sourceCurrencyCode.Name}]");
                 result = result / exchangeRate;
@@ -337,10 +333,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount;
+            var result = amount;
             if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = targetCurrencyCode.Rate;
+                var exchangeRate = targetCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException($"Exchange rate not found for currency [{targetCurrencyCode.Name}]");
                 result = result * exchangeRate;

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
@@ -50,22 +51,133 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(IHostingEnvironment hostingEnvironment,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IWorkContext workContext)
         {
             this._hostingEnvironment = hostingEnvironment;
             this._permissionService = permissionService;
+            this._workContext = workContext;
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Create configuration file for RoxyFileman
+        /// </summary>
+        public virtual void CreateConfiguration()
+        {
+            var filePath = GetFullPath(CONFIGURATION_FILE);
+            
+            //create file if not exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                //we use 'using' to close the file after it's created
+                using (System.IO.File.Create(filePath)) { }
+            }
+
+            //try to read existing configuration
+            var existingText = System.IO.File.ReadAllText(filePath);
+            var existingConfiguration = JsonConvert.DeserializeAnonymousType(existingText, new
+            {
+                FILES_ROOT = string.Empty,
+                SESSION_PATH_KEY = string.Empty,
+                THUMBS_VIEW_WIDTH = string.Empty,
+                THUMBS_VIEW_HEIGHT = string.Empty,
+                PREVIEW_THUMB_WIDTH = string.Empty,
+                PREVIEW_THUMB_HEIGHT = string.Empty,
+                MAX_IMAGE_WIDTH = string.Empty,
+                MAX_IMAGE_HEIGHT = string.Empty,
+                DEFAULTVIEW = string.Empty,
+                FORBIDDEN_UPLOADS = string.Empty,
+                ALLOWED_UPLOADS = string.Empty,
+                FILEPERMISSIONS = string.Empty,
+                DIRPERMISSIONS = string.Empty,
+                LANG = string.Empty,
+                DATEFORMAT = string.Empty,
+                OPEN_LAST_DIR = string.Empty,
+                INTEGRATION = string.Empty,
+                RETURN_URL_PREFIX = string.Empty,
+                DIRLIST = string.Empty,
+                CREATEDIR = string.Empty,
+                DELETEDIR = string.Empty,
+                MOVEDIR = string.Empty,
+                COPYDIR = string.Empty,
+                RENAMEDIR = string.Empty,
+                FILESLIST = string.Empty,
+                UPLOAD = string.Empty,
+                DOWNLOAD = string.Empty,
+                DOWNLOADDIR = string.Empty,
+                DELETEFILE = string.Empty,
+                MOVEFILE = string.Empty,
+                COPYFILE = string.Empty,
+                RENAMEFILE = string.Empty,
+                GENERATETHUMB = string.Empty,
+            });
+
+            //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
+            var currentPathBase = this.HttpContext.Request.PathBase.ToString();
+            if (existingConfiguration?.RETURN_URL_PREFIX?.Equals(currentPathBase) ?? false)
+                return;
+
+            //create configuration
+            var configuration = new
+            {
+                FILES_ROOT = existingConfiguration?.FILES_ROOT ?? "/images/uploaded",
+                SESSION_PATH_KEY = existingConfiguration?.SESSION_PATH_KEY ?? string.Empty,
+                THUMBS_VIEW_WIDTH = existingConfiguration?.THUMBS_VIEW_WIDTH ?? "140",
+                THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",
+                PREVIEW_THUMB_WIDTH = existingConfiguration?.PREVIEW_THUMB_WIDTH ?? "300",
+                PREVIEW_THUMB_HEIGHT = existingConfiguration?.PREVIEW_THUMB_HEIGHT ?? "200",
+                MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? "1000",
+                MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? "1000",
+                DEFAULTVIEW = existingConfiguration?.DEFAULTVIEW ?? "list",
+                FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? "zip js jsp jsb mhtml mht xhtml xht php phtml " +
+                    "php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh " +
+                    "ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess",
+                ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
+                FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
+                DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
+                LANG = existingConfiguration?.LANG ?? _workContext.WorkingLanguage.UniqueSeoCode,
+                DATEFORMAT = existingConfiguration?.DATEFORMAT ?? "dd/MM/yyyy HH:mm",
+                OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
+
+                //no need user to configure
+                INTEGRATION = "tinymce4",
+                RETURN_URL_PREFIX = currentPathBase,
+                DIRLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
+                CREATEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
+                DELETEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEDIR",
+                MOVEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEDIR",
+                COPYDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYDIR",
+                RENAMEDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEDIR",
+                FILESLIST = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=FILESLIST",
+                UPLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=UPLOAD",
+                DOWNLOAD = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOAD",
+                DOWNLOADDIR = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOADDIR",
+                DELETEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEFILE",
+                MOVEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEFILE",
+                COPYFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYFILE",
+                RENAMEFILE = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEFILE",
+                GENERATETHUMB = $"{this.HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB",
+            };
+
+            //save the file
+            var text = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+            System.IO.File.WriteAllText(filePath, text);
+        }
+
+        /// <summary>
+        /// Process request
+        /// </summary>
         public virtual void ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
@@ -88,70 +200,69 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                     throw new Exception("You don't have required permission");
 
-                if (!StringValues.IsNullOrEmpty(this.HttpContext.Request.Query["a"]))
-                    action = this.HttpContext.Request.Query["a"];
+                if (!StringValues.IsNullOrEmpty(HttpContext.Request.Query["a"]))
+                    action = HttpContext.Request.Query["a"];
 
                 switch (action.ToUpper())
                 {
                     case "DIRLIST":
-                        await GetDirectoriesAsync(this.HttpContext.Request.Query["type"]);
+                        await GetDirectoriesAsync(HttpContext.Request.Query["type"]);
                         break;
                     case "FILESLIST":
-                        await GetFilesAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["type"]);
+                        await GetFilesAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["type"]);
                         break;
                     case "COPYDIR":
-                        await CopyDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CopyDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "COPYFILE":
-                        await CopyFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await CopyFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "CREATEDIR":
-                        await CreateDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await CreateDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "DELETEDIR":
-                        await DeleteDirectoryAsync(this.HttpContext.Request.Query["d"]);
+                        await DeleteDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "DELETEFILE":
-                        await DeleteFileAsync(this.HttpContext.Request.Query["f"]);
+                        await DeleteFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOAD":
-                        await DownloadFileAsync(this.HttpContext.Request.Query["f"]);
+                        await DownloadFileAsync(HttpContext.Request.Query["f"]);
                         break;
                     case "DOWNLOADDIR":
-                        await DownloadDirectoryAsync(this.HttpContext.Request.Query["d"]);
+                        await DownloadDirectoryAsync(HttpContext.Request.Query["d"]);
                         break;
                     case "MOVEDIR":
-                        await MoveDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await MoveDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "MOVEFILE":
-                        await MoveFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await MoveFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEDIR":
-                        await RenameDirectoryAsync(this.HttpContext.Request.Query["d"], this.HttpContext.Request.Query["n"]);
+                        await RenameDirectoryAsync(HttpContext.Request.Query["d"], HttpContext.Request.Query["n"]);
                         break;
                     case "RENAMEFILE":
-                        await RenameFileAsync(this.HttpContext.Request.Query["f"], this.HttpContext.Request.Query["n"]);
+                        await RenameFileAsync(HttpContext.Request.Query["f"], HttpContext.Request.Query["n"]);
                         break;
                     case "GENERATETHUMB":
-                        int.TryParse(this.HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
-                        int.TryParse(this.HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
-                        CreateThumbnail(this.HttpContext.Request.Query["f"], w, h);
+                        int.TryParse(HttpContext.Request.Query["width"].ToString().Replace("px", ""), out int w);
+                        int.TryParse(HttpContext.Request.Query["height"].ToString().Replace("px", ""), out int h);
+                        CreateThumbnail(HttpContext.Request.Query["f"], w, h);
                         break;
                     case "UPLOAD":
-                        await UploadFilesAsync(this.HttpContext.Request.Form["d"]);
+                        await UploadFilesAsync(HttpContext.Request.Form["d"]);
                         break;
                     default:
-                        await this.HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
+                        await HttpContext.Response.WriteAsync(GetErrorResponse("This action is not implemented."));
                         break;
                 }
-
             }
             catch (Exception ex)
             {
                 if (action == "UPLOAD" && !IsAjaxRequest())
-                    await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
+                    await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({GetErrorResponse(GetLanguageResource("E_UploadNoFiles"))});</script>");
                 else
-                    await this.HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
+                    await HttpContext.Response.WriteAsync(GetErrorResponse(ex.Message));
             }
         }
 
@@ -165,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var sessionPathKey = GetSetting("SESSION_PATH_KEY");
             if (!string.IsNullOrEmpty(sessionPathKey))
-                filesRoot = this.HttpContext.Session.GetString(sessionPathKey);
+                filesRoot = HttpContext.Session.GetString(sessionPathKey);
 
             if (string.IsNullOrEmpty(filesRoot))
                 filesRoot = DEFAULT_ROOT_DIRECTORY;
@@ -384,15 +495,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             allDirectories.Insert(0, rootDirectory.FullName);
 
             var localPath = GetFullPath(null);
-            await this.HttpContext.Response.WriteAsync("[");
+            await HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < allDirectories.Count; i++)
             {
                 var directoryPath = (string)allDirectories[i];
-                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(localPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{Directory.GetDirectories(directoryPath).Length}\"}}");
+                await HttpContext.Response.WriteAsync($"{{\"p\":\"/{directoryPath.Replace(localPath, string.Empty).Replace("\\", "/").TrimStart('/')}\",\"f\":\"{GetFiles(directoryPath, type).Count}\",\"d\":\"{Directory.GetDirectories(directoryPath).Length}\"}}");
                 if (i < allDirectories.Count - 1)
-                    await this.HttpContext.Response.WriteAsync(",");
+                    await HttpContext.Response.WriteAsync(",");
             }
-            await this.HttpContext.Response.WriteAsync("]");
+            await HttpContext.Response.WriteAsync("]");
         }
 
         /// <summary>
@@ -425,7 +536,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             directoryPath = GetVirtualPath(directoryPath);
             var files = GetFiles(GetFullPath(directoryPath), type);
 
-            await this.HttpContext.Response.WriteAsync("[");
+            await HttpContext.Response.WriteAsync("[");
             for (var i = 0; i < files.Count; i++)
             {
                 var width = 0;
@@ -449,12 +560,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                         throw ex;
                     }
                 }
-                await this.HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
+                await HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
 
                 if (i < files.Count - 1)
-                    await this.HttpContext.Response.WriteAsync(",");
+                    await HttpContext.Response.WriteAsync(",");
             }
-            await this.HttpContext.Response.WriteAsync("]");
+            await HttpContext.Response.WriteAsync("]");
         }
 
         /// <summary>
@@ -508,7 +619,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             CopyDirectory(directory.FullName, newDirectory.FullName);
 
-            await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+            await HttpContext.Response.WriteAsync(GetSuccessResponse());
         }
 
         /// <summary>
@@ -556,7 +667,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 System.IO.File.Copy(file.FullName, Path.Combine(destinationPath, newFileName));
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -574,7 +685,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             var uniqueFileName = fileName;
 
-            int i = 0;
+            var i = 0;
             while (System.IO.File.Exists(Path.Combine(directoryPath, uniqueFileName)))
             {
                 uniqueFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-Copy-{++i}{Path.GetExtension(fileName)}";
@@ -601,7 +712,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -630,7 +741,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 Directory.Delete(path);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -652,7 +763,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 System.IO.File.Delete(path);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -683,10 +794,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             ZipFile.CreateFromDirectory(fullPath, zipPath, CompressionLevel.Fastest, true);
 
-            this.HttpContext.Response.Clear();
-            this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{zipName}\"");
-            this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-            await this.HttpContext.Response.SendFileAsync(zipPath);
+            HttpContext.Response.Clear();
+            HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{zipName}\"");
+            HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
+            await HttpContext.Response.SendFileAsync(zipPath);
 
             System.IO.File.Delete(zipPath);
         }
@@ -702,10 +813,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             var file = new FileInfo(filePath);
             if (file.Exists)
             {
-                this.HttpContext.Response.Clear();
-                this.HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{file.Name}\"");
-                this.HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
-                await this.HttpContext.Response.SendFileAsync(file.FullName);
+                HttpContext.Response.Clear();
+                HttpContext.Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{file.Name}\"");
+                HttpContext.Response.ContentType = MimeTypes.ApplicationForceDownload;
+                await HttpContext.Response.SendFileAsync(file.FullName);
             }
         }
 
@@ -733,7 +844,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceDirectory.MoveTo(destinationDirectory.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -765,7 +876,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceFile.MoveTo(destinationFile.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -796,7 +907,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 sourceDirectory.MoveTo(destinationDirectory.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -825,7 +936,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var destinationPath = Path.Combine(sourceFile.Directory.FullName, newName);
                 var destinationFile = new FileInfo(destinationPath);
                 sourceFile.MoveTo(destinationFile.FullName);
-                await this.HttpContext.Response.WriteAsync(GetSuccessResponse());
+                await HttpContext.Response.WriteAsync(GetSuccessResponse());
             }
             catch
             {
@@ -844,10 +955,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             path = GetFullPath(GetVirtualPath(path));
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                using (var image = new Bitmap(Bitmap.FromStream(stream)))
+                using (var image = new Bitmap(Image.FromStream(stream)))
                 {
-                    var cropWidth = image.Width;
-                    var cropHeight = image.Height;
                     var cropX = 0;
                     var cropY = 0;
 
@@ -862,8 +971,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         height = image.Height;
 
                     var cropRatio = (double)width / (double)height;
-                    cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                    cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                    var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
+                    var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
 
                     if (cropWidth > image.Width)
                     {
@@ -884,9 +993,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
                     {
-                        this.HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
-                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(this.HttpContext.Response.Body, ImageFormat.Png);
-                        this.HttpContext.Response.Body.Close();
+                        HttpContext.Response.Headers.Add("Content-Type", MimeTypes.ImagePng);
+                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
+                        HttpContext.Response.Body.Close();
                     }
                 }
             }
@@ -956,9 +1065,9 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <returns>True or false</returns>
         protected virtual bool IsAjaxRequest()
         {
-            return this.HttpContext.Request.Form != null &&
-                !StringValues.IsNullOrEmpty(this.HttpContext.Request.Form["method"]) &&
-                this.HttpContext.Request.Form["method"] == "ajax";
+            return HttpContext.Request.Form != null &&
+                !StringValues.IsNullOrEmpty(HttpContext.Request.Form["method"]) &&
+                HttpContext.Request.Form["method"] == "ajax";
         }
 
         /// <summary>
@@ -973,9 +1082,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 directoryPath = GetFullPath(GetVirtualPath(directoryPath));
-                for (var i = 0; i < this.HttpContext.Request.Form.Files.Count; i++)
+                for (var i = 0; i < HttpContext.Request.Form.Files.Count; i++)
                 {
-                    var fileName = this.HttpContext.Request.Form.Files[i].FileName;
+                    var fileName = HttpContext.Request.Form.Files[i].FileName;
                     if (CanHandleFile(fileName))
                     {
                         var file = new FileInfo(fileName);
@@ -983,7 +1092,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         var destinationFile = Path.Combine(directoryPath, uniqueFileName);
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
-                            this.HttpContext.Request.Form.Files[i].CopyTo(stream);
+                            HttpContext.Request.Form.Files[i].CopyTo(stream);
                         }
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) == "image")
                         {
@@ -1008,10 +1117,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (hasErrors)
                     result = GetErrorResponse(GetLanguageResource("E_UploadNotAll"));
 
-                await this.HttpContext.Response.WriteAsync(result);
+                await HttpContext.Response.WriteAsync(result);
             }
             else
-                await this.HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
+                await HttpContext.Response.WriteAsync($"<script>parent.fileUploaded({result});</script>");
         }
 
         #endregion

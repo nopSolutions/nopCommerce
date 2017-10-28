@@ -50,7 +50,7 @@ namespace Nop.Web.Framework.Controllers
             //we customized it to allow running from controllers
 
             //TODO add support for parameters (pass ViewComponent as input parameter)
-            if (String.IsNullOrEmpty(componentName))
+            if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
             var actionContextAccessor = HttpContext.RequestServices.GetService(typeof(IActionContextAccessor)) as IActionContextAccessor;
@@ -89,7 +89,7 @@ namespace Nop.Web.Framework.Controllers
                 var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
                 (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-                Task<IHtmlContent> result = viewComponentResult.ViewComponentType == null ? 
+                var result = viewComponentResult.ViewComponentType == null ? 
                     viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
                     viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
@@ -147,10 +147,16 @@ namespace Nop.Web.Framework.Controllers
 
             //set model
             ViewData.Model = model;
+
+            //try to get a view by the name
             var viewResult = razorViewEngine.FindView(actionContext, viewName, false);
             if (viewResult.View == null)
-                throw new ArgumentNullException($"{viewName} view was not found");
-
+            {
+                //or try to get a view by the path
+                viewResult = razorViewEngine.GetView(null, viewName, false);
+                if (viewResult.View == null)
+                    throw new ArgumentNullException($"{viewName} view was not found");
+            }
             using (var stringWriter = new StringWriter())
             {
                 var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());

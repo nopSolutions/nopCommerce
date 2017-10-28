@@ -85,7 +85,6 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public virtual StateProvince StateProvince { get; set; }
 
-
         public object Clone()
         {
             var addr = new Address

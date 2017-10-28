@@ -18,12 +18,14 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="dependencyRegistrar">Dependency registrar</param>
         /// <param name="builder">Builder</param>
         /// <param name="contextName">Context name</param>
+        /// <param name="filePath">File path to load settings (connection string); pass null to use default settings file path</param>
+        /// <param name="reloadSettings">Indicates whether to reload data, if they already loaded (connection string)</param>
         public static void RegisterPluginDataContext<T>(this IDependencyRegistrar dependencyRegistrar,
-            ContainerBuilder builder, string contextName) where T : IDbContext
+            ContainerBuilder builder, string contextName, string filePath = null, bool reloadSettings = false) where T : IDbContext
         {
             //data layer
             var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings();
+            var dataProviderSettings = dataSettingsManager.LoadSettings(filePath, reloadSettings);
 
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {

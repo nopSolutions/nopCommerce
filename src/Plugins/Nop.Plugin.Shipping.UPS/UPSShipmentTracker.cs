@@ -48,7 +48,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
+            var url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
             url = string.Format(url, trackingNumber);
             return url;
         }
@@ -71,12 +71,16 @@ namespace Nop.Plugin.Shipping.UPS
                 var track = new TrackService();
                 var tr = new TrackRequest();
                 var upss = new UPSSecurity();
-                var upssSvcAccessToken = new UPSSecurityServiceAccessToken();
-                upssSvcAccessToken.AccessLicenseNumber = _upsSettings.AccessKey;
+                var upssSvcAccessToken = new UPSSecurityServiceAccessToken
+                {
+                    AccessLicenseNumber = _upsSettings.AccessKey
+                };
                 upss.ServiceAccessToken = upssSvcAccessToken;
-                var upssUsrNameToken = new UPSSecurityUsernameToken();
-                upssUsrNameToken.Username = _upsSettings.Username;
-                upssUsrNameToken.Password = _upsSettings.Password;
+                var upssUsrNameToken = new UPSSecurityUsernameToken
+                {
+                    Username = _upsSettings.Username,
+                    Password = _upsSettings.Password
+                };
                 upss.UsernameToken = upssUsrNameToken;
                 track.UPSSecurityValue = upss;
                 var request = new RequestType();
@@ -128,7 +132,7 @@ namespace Nop.Plugin.Shipping.UPS
                     ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Delivered");
                     break;
             }
-            string dateString = string.Concat(activity.Date, " ", activity.Time);
+            var dateString = string.Concat(activity.Date, " ", activity.Time);
             ev.Date = DateTime.ParseExact(dateString, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
             ev.CountryCode = activity.ActivityLocation.Address.CountryCode;
             ev.Location = activity.ActivityLocation.Address.City;

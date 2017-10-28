@@ -25,6 +25,5 @@ namespace Nop.Web.Models.Customer
         public string ConfirmNewPassword { get; set; }
 
         public string Result { get; set; }
-
     }
 }

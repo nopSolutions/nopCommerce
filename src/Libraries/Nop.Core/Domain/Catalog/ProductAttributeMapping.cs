@@ -67,8 +67,6 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public string DefaultValue { get; set; }
 
-
-
         /// <summary>
         /// Gets or sets a condition (depending on other attribute) when this attribute should be enabled (visible).
         /// Leave empty (or null) to enable this attribute.
@@ -77,8 +75,6 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public string ConditionAttributeXml { get; set; }
 
-
-
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
@@ -86,11 +82,11 @@ namespace Nop.Core.Domain.Catalog
         {
             get
             {
-                return (AttributeControlType)this.AttributeControlTypeId;
+                return (AttributeControlType)AttributeControlTypeId;
             }
             set
             {
-                this.AttributeControlTypeId = (int)value; 
+                AttributeControlTypeId = (int)value;
             }
         }
 
@@ -103,7 +99,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets the product
         /// </summary>
         public virtual Product Product { get; set; }
-        
+
         /// <summary>
         /// Gets the product attribute values
         /// </summary>

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
@@ -33,6 +34,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
+        private readonly Dictionary<ResourceLocation, List<string>> _inlineScriptParts;
         private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
@@ -66,6 +68,7 @@ namespace Nop.Web.Framework.UI
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
             this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
             this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
@@ -93,7 +96,7 @@ namespace Nop.Web.Framework.UI
                     hashInput += ",";
                 }
 
-                byte[] input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+                var input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
                 hash = WebEncoders.Base64UrlEncode(input);
             }
             //ensure only valid chars
@@ -122,9 +125,9 @@ namespace Nop.Web.Framework.UI
         }
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
-            string result = "";
+            var result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
-            if (!String.IsNullOrEmpty(specificTitle))
+            if (!string.IsNullOrEmpty(specificTitle))
             {
                 if (addDefaultTitle)
                 {
@@ -158,8 +161,7 @@ namespace Nop.Web.Framework.UI
             }
             return result;
         }
-
-
+        
         public virtual void AddMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -177,11 +179,10 @@ namespace Nop.Web.Framework.UI
         public virtual string GenerateMetaDescription()
         {
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
-            var result = !String.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
+            var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
             return result;
         }
-
-
+        
         public virtual void AddMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -199,11 +200,10 @@ namespace Nop.Web.Framework.UI
         public virtual string GenerateMetaKeywords()
         {
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
-            var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
+            var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
     
-
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
@@ -212,7 +212,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _scriptParts[location].Add(new ScriptReferenceMeta
@@ -231,7 +231,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _scriptParts[location].Insert(0, new ScriptReferenceMeta
@@ -280,33 +280,27 @@ namespace Nop.Web.Framework.UI
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
                     {
-                        var src = debugModel ? item.DebugSrc : item.Src;
-                        src = urlHelper.Content(src);
-                        //check whether this file exists. 
-                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
-                        if (File.Exists(srcPath))
-                        {
-                            //remove starting /
-                            src = src.Remove(0, 1);
-                        }
-                        else
-                        {
-                            //if not, it should be stored into /wwwroot directory
-                            src = "wwwroot/" + src;
-                        }
+                        new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                        var src = path.Value.TrimStart('/');
+
+                        //check whether this file exists, if not it should be stored into /wwwroot directory
+                        if (!File.Exists(Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\"))))
+                            src = $"wwwroot/{src}";
+
                         bundle.InputFiles.Add(src);
                     }
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
                         //performance optimization. do not bundle and minify for each HTTP request
-                        //we re-check already bundles file each two minutes
-                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        //we periodically re-check already bundles file
+                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
                         var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
                         if (shouldRebuild)
@@ -347,7 +341,44 @@ namespace Nop.Web.Framework.UI
                 return result.ToString();
             }
         }
-        
+
+        public virtual void AddInlineScriptParts(ResourceLocation location, string script)
+        {
+            if (!_inlineScriptParts.ContainsKey(location))
+                _inlineScriptParts.Add(location, new List<string>());
+
+            if (string.IsNullOrEmpty(script))
+                return;
+
+            _inlineScriptParts[location].Add(script);
+        }
+        public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
+        {
+            if (!_inlineScriptParts.ContainsKey(location))
+                _inlineScriptParts.Add(location, new List<string>());
+
+            if (string.IsNullOrEmpty(script))
+                return;
+
+            _inlineScriptParts[location].Insert(0, script);
+        }
+        public virtual string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location)
+        {
+            if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
+                return "";
+
+            if (!_inlineScriptParts.Any())
+                return "";
+
+            var result = new StringBuilder();
+            foreach (var item in _inlineScriptParts[location])
+            {
+                result.Append(item);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
+        }
+
         public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -356,7 +387,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _cssParts[location].Add(new CssReferenceMeta
@@ -374,7 +405,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(src))
                 return;
 
-            if (String.IsNullOrEmpty(debugSrc))
+            if (string.IsNullOrEmpty(debugSrc))
                 debugSrc = src;
 
             _cssParts[location].Insert(0, new CssReferenceMeta
@@ -400,6 +431,10 @@ namespace Nop.Web.Framework.UI
                 //use setting if no value is specified
                 bundleFiles = _seoSettings.EnableCssBundling;
             }
+
+            //CSS bundling is not allowed in virtual directories
+            if (urlHelper.ActionContext.HttpContext.Request.PathBase.HasValue)
+                bundleFiles = false;
 
             if (bundleFiles.Value)
             {
@@ -444,13 +479,13 @@ namespace Nop.Web.Framework.UI
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
                     lock (s_lock)
                     {
                         //performance optimization. do not bundle and minify for each HTTP request
-                        //we re-check already bundles file each two minutes
-                        //so if we have minification enabled, it could take up to two minutes to see changes in updated resource files
+                        //we periodically re-check already bundles file
+                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
                         var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
                         var shouldRebuild = _cacheManager.Get<bool>(cacheKey, RecheckBundledFilesPeriod, () => true);
                         if (shouldRebuild)
@@ -516,8 +551,7 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-
-
+        
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -547,7 +581,6 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-
         
         public virtual void AddPageCssClassParts(string part)
         {
@@ -565,11 +598,10 @@ namespace Nop.Web.Framework.UI
         }
         public virtual string GeneratePageCssClasses()
         {
-            string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
+            var result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
-
-
+        
         /// <summary>
         /// Specify "edit page" URL
         /// </summary>
@@ -586,8 +618,7 @@ namespace Nop.Web.Framework.UI
         {
             return _editPageUrl;
         }
-
-
+        
         /// <summary>
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
@@ -609,7 +640,7 @@ namespace Nop.Web.Framework.UI
         
         #region Nested classes
 
-        private class ScriptReferenceMeta
+        private class ScriptReferenceMeta : IEquatable<ScriptReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
@@ -618,15 +649,37 @@ namespace Nop.Web.Framework.UI
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(ScriptReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
 
-        private class CssReferenceMeta
+        private class CssReferenceMeta : IEquatable<CssReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public bool Equals(CssReferenceMeta item)
+            {
+                if (item == null)
+                    return false;
+                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+            }
+            public override int GetHashCode()
+            {
+                return Src == null ? 0 : Src.GetHashCode();
+            }
         }
         #endregion
     }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Nop.Core.Infrastructure
 {
@@ -38,7 +37,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string GetBinDirectory()
         {
-            return PlatformServices.Default.Application.ApplicationBasePath;
+            return System.AppContext.BaseDirectory;
         }
 
         public override IList<Assembly> GetAssemblies()
@@ -46,7 +45,7 @@ namespace Nop.Core.Infrastructure
             if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
                 _binFolderAssembliesLoaded = true;
-                string binPath = GetBinDirectory();
+                var binPath = GetBinDirectory();
                 //binPath = _webHelper.MapPath("~/bin");
                 LoadMatchingAssemblies(binPath);
             }

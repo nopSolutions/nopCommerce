@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Core.Data
+﻿namespace Nop.Core.Data
 {
     /// <summary>
     /// Data settings helper
@@ -19,7 +17,7 @@ namespace Nop.Core.Data
             {
                 var manager = new DataSettingsManager();
                 var settings = manager.LoadSettings(reloadSettings:true);
-                _databaseIsInstalled = settings != null && !String.IsNullOrEmpty(settings.DataConnectionString);
+                _databaseIsInstalled = settings != null && !string.IsNullOrEmpty(settings.DataConnectionString);
             }
             return _databaseIsInstalled.Value;
         }

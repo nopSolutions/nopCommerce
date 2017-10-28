@@ -34,7 +34,6 @@ namespace Nop.Core.Domain.Shipping
         public string Description { get; set; }
     }
 
-
     public class ShippingOptionTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -53,7 +52,7 @@ namespace Nop.Core.Domain.Shipping
             {
                 ShippingOption shippingOption = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
@@ -85,7 +84,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(ShippingOption));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }
@@ -96,7 +95,6 @@ namespace Nop.Core.Domain.Shipping
             return base.ConvertTo(context, culture, value, destinationType);
         }
     }
-
 
     public class ShippingOptionListTypeConverter : TypeConverter
     {
@@ -116,7 +114,7 @@ namespace Nop.Core.Domain.Shipping
             {
                 List<ShippingOption> shippingOptions = null;
                 var valueStr = value as string;
-                if (!String.IsNullOrEmpty(valueStr))
+                if (!string.IsNullOrEmpty(valueStr))
                 {
                     try
                     {
@@ -148,7 +146,7 @@ namespace Nop.Core.Domain.Shipping
                     {
                         var xmlS = new XmlSerializer(typeof(List<ShippingOption>));
                         xmlS.Serialize(tw, value);
-                        string serialized = sb.ToString();
+                        var serialized = sb.ToString();
                         return serialized;
                     }
                 }

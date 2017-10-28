@@ -19,7 +19,7 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            int total = source.Count();
+            var total = source.Count();
             this.TotalCount = total;
             this.TotalPages = total / pageSize;
 
@@ -70,10 +70,10 @@ namespace Nop.Core
             this.AddRange(source);
         }
 
-        public int PageIndex { get; private set; }
-        public int PageSize { get; private set; }
-        public int TotalCount { get; private set; }
-        public int TotalPages { get; private set; }
+        public int PageIndex { get; }
+        public int PageSize { get; }
+        public int TotalCount { get; }
+        public int TotalPages { get; }
 
         public bool HasPreviousPage
         {

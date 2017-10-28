@@ -41,8 +41,7 @@ namespace Nop.Services.Media
 
         #region Fields
 
-        private static CloudBlobContainer _container = null;
-
+        private static CloudBlobContainer _container;
         private readonly IStaticCacheManager _cacheManager;
         private readonly MediaSettings _mediaSettings;
         private readonly NopConfig _config;
@@ -173,7 +172,7 @@ namespace Nop.Services.Media
         protected virtual async Task DeletePictureThumbsAsync(Picture picture)
         {
             //create a string containing the blob name prefix
-            var prefix = $"{picture.Id.ToString("0000000")}";
+            var prefix = $"{picture.Id:0000000}";
 
             BlobContinuationToken continuationToken = null;
             do

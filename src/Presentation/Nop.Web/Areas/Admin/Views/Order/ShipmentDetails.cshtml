@@ -250,13 +250,13 @@
                                     <td style="width: 40%; text-align: left;">
                                         <div>
                                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                                 {
                                                 <p>
                                                     @Html.Raw(item.AttributeInfo)
                                                 </p>
                                                 }
-                                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                            @if (!string.IsNullOrEmpty(item.RentalInfo))
                                                 {
                                                 <p>
                                                     @Html.Raw(item.RentalInfo)

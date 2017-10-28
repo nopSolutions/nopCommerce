@@ -19,8 +19,10 @@ namespace Nop.Services.Tests.Payments
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
-            var result = new ProcessPaymentResult();
-            result.NewPaymentStatus = PaymentStatus.Paid;
+            var result = new ProcessPaymentResult
+            {
+                NewPaymentStatus = PaymentStatus.Paid
+            };
             return result;
         }
 

@@ -98,7 +98,6 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
             return emailAccount;
-
         }
 
         protected virtual int EnsureLanguageIsActive(int languageId, int storeId)
@@ -260,7 +259,6 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
@@ -296,7 +294,6 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1193,7 +1190,7 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            string toEmail = returnRequest.Customer.IsGuest() ? 
+            var toEmail = returnRequest.Customer.IsGuest() ? 
                 orderItem.Order.BillingAddress.Email :
                 returnRequest.Customer.Email;
             var toName = returnRequest.Customer.IsGuest() ? 
@@ -1869,7 +1866,7 @@ namespace Nop.Services.Messages
 
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
-            if (String.IsNullOrEmpty(subject))
+            if (string.IsNullOrEmpty(subject))
                 subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
 

@@ -117,8 +117,6 @@ namespace Nop.Services.Orders
             var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
             return returnRequests;
         }
-
-
         
         /// <summary>
         /// Delete a return request action
@@ -189,9 +187,6 @@ namespace Nop.Services.Orders
             //event notification
             _eventPublisher.EntityUpdated(returnRequestAction);
         }
-
-
-        
 
         /// <summary>
         /// Delete a return request reason

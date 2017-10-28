@@ -29,9 +29,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-
         public IList<CustomerAttributeLocalizedModel> Locales { get; set; }
-
     }
 
     public partial class CustomerAttributeLocalizedModel : ILocalizedModelLocal
@@ -40,6 +38,5 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
         public string Name { get; set; }
-
     }
 }

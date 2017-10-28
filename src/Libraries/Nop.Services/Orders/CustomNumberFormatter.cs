@@ -9,7 +9,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
-        private OrderSettings _orderSettings;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace Nop.Services.Orders
 
         public virtual string GenerateReturnRequestCustomNumber(ReturnRequest returnRequest)
         {
-            var customNumber = string.Empty;
+            string customNumber;
 
             if (string.IsNullOrEmpty(_orderSettings.ReturnRequestNumberMask))
             {
@@ -86,7 +86,6 @@ namespace Nop.Services.Orders
             //    customNumber = customNumber.Replace(maskForReplase, order.Id.ToString(formatValue));
             //else
             //    customNumber = customNumber.Insert(0, $"{order.Id}-");
-
 
             return customNumber;
         }

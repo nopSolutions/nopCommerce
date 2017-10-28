@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
 
@@ -17,7 +16,7 @@ namespace Nop.Web.Components
         public IViewComponentResult Invoke()
         {
             var model = _commonModelFactory.PrepareFaviconModel();
-            if (String.IsNullOrEmpty(model.FaviconUrl))
+            if (string.IsNullOrEmpty(model.FaviconUrl))
                 return Content("");
             return View(model);
         }

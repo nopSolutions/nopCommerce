@@ -107,7 +107,7 @@
                     <div class="panel-body">
                         <div id="plugins-grid"></div>
 
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function () {
                                 $("#plugins-grid").kendoGrid({
                                     dataSource: {
@@ -207,12 +207,12 @@
                                         </div>
                                         <div class="modal-footer">
                                             <span class="btn btn-default" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
-                                            <button type="submit" class="btn btn-primary pull-right">@T("Delete")</button>
+                                            <button type="submit" class="btn btn-primary pull-right">@T("Admin.Common.Delete")</button>
                                         </div>
                                     </div>                                    
                             </div>
                         </div>
-                        <script>
+                        <script type="text/javascript">
                             function onDataBound(e) {
                                 $('button[name^="delete-plugin-link-"]')
                                     .attr("data-toggle", "modal")
@@ -289,13 +289,16 @@
                     <div class="modal-body">
                         <ul class="common-list">
                             <li>
-                                <em>@T("Admin.Configuration.Plugins.Upload.Hint1")</em>
+                                @T("Admin.Configuration.Plugins.Upload.Hint1")
                             </li>
                             <li>
-                                <em>@T("Admin.Configuration.Plugins.Upload.Hint2")</em>
+                                @T("Admin.Configuration.Plugins.Upload.Hint2")
                             </li>
                             <li>
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Configuration.Plugins.Upload.Hint4")</em>
                             </li>
                         </ul>
                         <div class="form-group">

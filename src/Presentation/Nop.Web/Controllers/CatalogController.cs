@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -224,7 +222,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-
         #endregion
 
         #region Product tags
@@ -269,7 +266,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult SearchTermAutoComplete(string term)
         {
-            if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
             //products
@@ -285,13 +282,13 @@ namespace Nop.Web.Controllers
 
             var models =  _productModelFactory.PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
-                          select new
-                          {
-                              label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl
-                          })
-                          .ToList();
+                    select new
+                    {
+                        label = p.Name,
+                        producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
+                        productpictureurl = p.DefaultPictureModel.ImageUrl
+                    })
+                .ToList();
             return Json(result);
         }
         

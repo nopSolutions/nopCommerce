@@ -45,7 +45,7 @@ namespace Nop.Services.Tasks
 
             var type = Type.GetType(ScheduleTask.Type);
             if (type == null)
-                return;
+                throw new Exception($"Schedule task ({ScheduleTask.Type}) cannot by instantiated");
 
             object instance = null;
             try

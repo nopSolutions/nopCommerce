@@ -25,14 +25,14 @@ namespace Nop.Services.Discounts
 
         public DiscountType DiscountType
         {
-            get { return (DiscountType) this.DiscountTypeId; }
-            set { this.DiscountTypeId = (int) value; }
+            get { return (DiscountType) DiscountTypeId; }
+            set { DiscountTypeId = (int) value; }
         }
 
         public DiscountLimitationType DiscountLimitation
         {
-            get { return (DiscountLimitationType) this.DiscountLimitationId; }
-            set { this.DiscountLimitationId = (int) value; }
+            get { return (DiscountLimitationType) DiscountLimitationId; }
+            set { DiscountLimitationId = (int) value; }
         }
     }
 }

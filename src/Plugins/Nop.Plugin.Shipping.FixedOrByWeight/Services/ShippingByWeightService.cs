@@ -54,7 +54,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Services
         /// <returns>List of the shipping by weight record</returns>
         public virtual IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
+            var key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sbw in _sbwRepository.Table

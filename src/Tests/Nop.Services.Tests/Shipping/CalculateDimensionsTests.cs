@@ -43,9 +43,11 @@ namespace Nop.Services.Tests.Shipping
         [SetUp]
         public new void SetUp()
         {
-            _shippingSettings = new ShippingSettings();
-            _shippingSettings.UseCubeRootMethod = true;
-            _shippingSettings.ConsiderAssociatedProductsDimensions = true;
+            _shippingSettings = new ShippingSettings
+            {
+                UseCubeRootMethod = true,
+                ConsiderAssociatedProductsDimensions = true
+            };
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
@@ -236,7 +238,7 @@ namespace Nop.Services.Tests.Shipping
         {
             //take 8 cubes of 1x1x1 which is "packed" as 2x2x2 
             var items = new List<GetShippingOptionRequest.PackageItem>();
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
                 items.Add(new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                         {
                             Quantity = 1,

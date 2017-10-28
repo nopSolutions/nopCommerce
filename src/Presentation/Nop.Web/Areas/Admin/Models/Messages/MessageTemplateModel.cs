@@ -21,7 +21,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
             AvailableStores = new List<SelectListItem>();
         }
 
-
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")]
         public string AllowedTokens { get; set; }
 
@@ -65,8 +64,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
         public string ListOfStores { get; set; }
 
-
-
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
     }
 
@@ -76,6 +73,7 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         {
             AvailableEmailAccounts = new List<SelectListItem>();
         }
+
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses")]

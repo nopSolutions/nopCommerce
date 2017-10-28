@@ -68,14 +68,14 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(targetCurrency));
 
             string result;
-            if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
+            if (!string.IsNullOrEmpty(targetCurrency.CustomFormatting))
             {
                 //custom formatting specified by a store owner
                 result = amount.ToString(targetCurrency.CustomFormatting);
             }
             else
             {
-                if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
+                if (!string.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
                     //default behavior
                     result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
@@ -118,7 +118,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency, Currency targetCurrency)
         {
-            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, targetCurrency, _workContext.WorkingLanguage, priceIncludesTax);
         }
 
@@ -131,7 +131,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency, bool showTax)
         {
-            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax, showTax);
         }
 
@@ -150,10 +150,12 @@ namespace Nop.Services.Catalog
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency == null)
             {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
+                currency = new Currency
+                {
+                    CurrencyCode = currencyCode
+                };
             }
-            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, currency, language, priceIncludesTax, showTax);
         }
 
@@ -209,7 +211,7 @@ namespace Nop.Services.Catalog
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
             price = RoundingHelper.RoundPrice(price);
             
-            string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
+            var currencyString = GetCurrencyString(price, showCurrency, targetCurrency);
             if (showTax)
             {
                 //show tax suffix
@@ -217,13 +219,13 @@ namespace Nop.Services.Catalog
                 if (priceIncludesTax)
                 {
                     formatStr = _localizationService.GetResource("Products.InclTaxSuffix", language.Id, false);
-                    if (String.IsNullOrEmpty(formatStr))
+                    if (string.IsNullOrEmpty(formatStr))
                         formatStr = "{0} incl tax";
                 }
                 else
                 {
                     formatStr = _localizationService.GetResource("Products.ExclTaxSuffix", language.Id, false);
-                    if (String.IsNullOrEmpty(formatStr))
+                    if (string.IsNullOrEmpty(formatStr))
                         formatStr = "{0} excl tax";
                 }
                 return string.Format(formatStr, currencyString);
@@ -246,7 +248,7 @@ namespace Nop.Services.Catalog
             if (!product.IsRental)
                 return price;
 
-            if (String.IsNullOrWhiteSpace(price))
+            if (string.IsNullOrWhiteSpace(price))
                 return price;
 
             string result;
@@ -271,7 +273,6 @@ namespace Nop.Services.Catalog
             return result;
         }
 
-
         /// <summary>
         /// Formats the shipping price
         /// </summary>
@@ -280,7 +281,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public virtual string FormatShippingPrice(decimal price, bool showCurrency)
         {
-            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatShippingPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax);
         }
 
@@ -296,7 +297,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatShippingPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix;
+            var showTax = _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix;
             return FormatShippingPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
 
@@ -336,8 +337,6 @@ namespace Nop.Services.Catalog
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
-
-
         /// <summary>
         /// Formats the payment method additional fee
         /// </summary>
@@ -346,7 +345,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency)
         {
-            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPaymentMethodAdditionalFee(price, showCurrency, _workContext.WorkingCurrency, 
                 _workContext.WorkingLanguage, priceIncludesTax);
         }
@@ -363,7 +362,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix;
+            var showTax = _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix;
             return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
 
@@ -404,8 +403,6 @@ namespace Nop.Services.Catalog
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
         }
-
-
 
         /// <summary>
         /// Formats a tax rate

@@ -82,7 +82,7 @@ namespace Nop.Services.Vendors
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _vendorRepository.Table;
-            if (!String.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(v => v.Name.Contains(name));
             if (!showHidden)
                 query = query.Where(v => v.Active);
@@ -122,8 +122,6 @@ namespace Nop.Services.Vendors
             //event notification
             _eventPublisher.EntityUpdated(vendor);
         }
-
-
 
         /// <summary>
         /// Gets a vendor note note

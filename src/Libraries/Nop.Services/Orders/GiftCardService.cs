@@ -97,9 +97,9 @@ namespace Nop.Services.Orders
                 query = query.Where(gc => createdToUtc.Value >= gc.CreatedOnUtc);
             if (isGiftCardActivated.HasValue)
                 query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
-            if (!String.IsNullOrEmpty(giftCardCouponCode))
+            if (!string.IsNullOrEmpty(giftCardCouponCode))
                 query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
-            if (!String.IsNullOrWhiteSpace(recipientName))
+            if (!string.IsNullOrWhiteSpace(recipientName))
                 query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
@@ -166,7 +166,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -186,8 +186,8 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual string GenerateGiftCardCode()
         {
-            int length = 13;
-            string result = Guid.NewGuid().ToString();
+            var length = 13;
+            var result = Guid.NewGuid().ToString();
             if (result.Length > length)
                 result = result.Substring(0, length);
             return result;

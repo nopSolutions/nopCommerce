@@ -15,6 +15,7 @@ namespace Nop.Plugin.Payments.Worldpay.Models
         {
             ExpireMonths = new List<SelectListItem>();
             ExpireYears = new List<SelectListItem>();
+            CardTypes = new List<SelectListItem>();
             StoredCards = new List<SelectListItem>();
         }
 
@@ -33,6 +34,9 @@ namespace Nop.Plugin.Payments.Worldpay.Models
 
         public string ExpireYear { get; set; }
         public IList<SelectListItem> ExpireYears { get; set; }
+
+        public string CardType { get; set; }
+        public IList<SelectListItem> CardTypes { get; set; }
 
         public string Errors { get; set; }
 

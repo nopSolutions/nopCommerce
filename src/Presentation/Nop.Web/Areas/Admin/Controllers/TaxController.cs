@@ -79,7 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         public virtual IActionResult MarkAsPrimaryProvider(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
             {
                 return RedirectToAction("Providers");
             }

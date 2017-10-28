@@ -55,7 +55,6 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping method</returns>
         ShippingMethod GetShippingMethodById(int shippingMethodId);
 
-
         /// <summary>
         /// Gets all shipping methods
         /// </summary>

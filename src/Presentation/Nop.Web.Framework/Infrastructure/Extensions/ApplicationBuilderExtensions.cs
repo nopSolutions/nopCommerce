@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            application.UseStatusCodePages(async context =>
+            application.UseStatusCodePages(context =>
             {
                 //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
@@ -130,6 +130,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
+
+                return System.Threading.Tasks.Task.CompletedTask;
             });
         }
 
@@ -157,6 +159,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopAuthentication(this IApplicationBuilder application)
         {
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             application.UseMiddleware<AuthenticationMiddleware>();
         }
 

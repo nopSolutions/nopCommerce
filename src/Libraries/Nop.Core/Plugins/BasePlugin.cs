@@ -33,6 +33,5 @@
         {
             PluginManager.MarkPluginAsUninstalled(this.PluginDescriptor.SystemName);
         }
-
     }
 }

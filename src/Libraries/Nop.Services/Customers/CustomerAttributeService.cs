@@ -48,6 +48,7 @@ namespace Nop.Services.Customers
         /// Key pattern to clear cache
         /// </summary>
         private const string CUSTOMERATTRIBUTEVALUES_PATTERN_KEY = "Nop.customerattributevalue.";
+
         #endregion
         
         #region Fields
@@ -107,7 +108,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attributes</returns>
         public virtual IList<CustomerAttribute> GetAllCustomerAttributes()
         {
-            string key = CUSTOMERATTRIBUTES_ALL_KEY;
+            var key = CUSTOMERATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _customerAttributeRepository.Table
@@ -127,7 +128,7 @@ namespace Nop.Services.Customers
             if (customerAttributeId == 0)
                 return null;
 
-            string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
+            var key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
             return _cacheManager.Get(key, () => _customerAttributeRepository.GetById(customerAttributeId));
         }
 
@@ -192,7 +193,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            string key = string.Format(CUSTOMERATTRIBUTEVALUES_ALL_KEY, customerAttributeId);
+            var key = string.Format(CUSTOMERATTRIBUTEVALUES_ALL_KEY, customerAttributeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from cav in _customerAttributeValueRepository.Table
@@ -214,7 +215,7 @@ namespace Nop.Services.Customers
             if (customerAttributeValueId == 0)
                 return null;
 
-            string key = string.Format(CUSTOMERATTRIBUTEVALUES_BY_ID_KEY, customerAttributeValueId);
+            var key = string.Format(CUSTOMERATTRIBUTEVALUES_BY_ID_KEY, customerAttributeValueId);
             return _cacheManager.Get(key, () => _customerAttributeValueRepository.GetById(customerAttributeValueId));
         }
 

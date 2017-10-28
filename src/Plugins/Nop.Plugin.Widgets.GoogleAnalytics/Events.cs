@@ -49,7 +49,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         private string FixIllegalJavaScriptChars(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return text;
 
             //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
@@ -104,7 +104,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 foreach (var item in order.OrderItems)
                 {
                     //get category
-                    string category = "";
+                    var category = "";
                     var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
                     if (defaultProductCategory != null)
                         category = defaultProductCategory.Category.Name;

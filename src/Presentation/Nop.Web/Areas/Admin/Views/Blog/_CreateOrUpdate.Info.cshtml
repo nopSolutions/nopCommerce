@@ -16,7 +16,7 @@
         var blogTags = blogService.GetAllBlogPostTags(0, 0, true);
         var blogTagsSb = new StringBuilder();
         blogTagsSb.Append("var initialBlogTags = [");
-        for (int i = 0; i < blogTags.Count; i++)
+        for (var i = 0; i < blogTags.Count; i++)
         {
             var tag = blogTags[i];
             blogTagsSb.Append("'");
@@ -130,7 +130,7 @@
                 </div>
                 <div class="col-md-9">
                     <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                    <script>
+                    <script type="text/javascript">
                             $(document).ready(function() {
                                 var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                 storesIdsInput.setOptions({

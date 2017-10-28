@@ -74,7 +74,7 @@
                             <div class="col-sm-9 col-sm-offset-3">
                                 @foreach (var attribute in Model.ConditionModel.ProductAttributes)
                             {
-                                string controlId = $"product_attribute_{attribute.Id}";
+                                var controlId = $"product_attribute_{attribute.Id}";
                                     <div id="@($"pnl_attribute_values_{attribute.Id}")">
                                         @switch (attribute.AttributeControlType)
                                     {

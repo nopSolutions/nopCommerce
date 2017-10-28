@@ -27,7 +27,7 @@ namespace Nop.Core.Tests.Domain
         [Test]
         public void Two_references_with_the_same_id_should_be_equal() {
             
-            int id = 10;
+            var id = 10;
             var p1 = new Product { Id = id };
             var p2 = new Product { Id = id };
 
@@ -54,7 +54,7 @@ namespace Nop.Core.Tests.Domain
 
         [Test]
         public void Entities_with_same_id_but_different_type_should_not_be_equal() {
-            int id = 10;
+            var id = 10;
             var p1 = new Product { Id = id };
 
             var c1 = new Category { Id = id };

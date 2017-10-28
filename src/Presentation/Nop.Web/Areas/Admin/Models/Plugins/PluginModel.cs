@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Validators.Plugins;
@@ -21,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
             SelectedCustomerRoleIds = new List<int>();
             AvailableCustomerRoles = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
         public string Group { get; set; }
 
@@ -66,6 +66,7 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
         public IList<int> SelectedStoreIds { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }
+
     public partial class PluginLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }

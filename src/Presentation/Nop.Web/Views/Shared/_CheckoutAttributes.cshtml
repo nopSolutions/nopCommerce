@@ -11,8 +11,8 @@
         <dl>
             @foreach (var attribute in Model.CheckoutAttributes)
             {
-                string controlId = $"checkout_attribute_{attribute.Id}";
-                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                var controlId = $"checkout_attribute_{attribute.Id}";
+                var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dt id="@($"checkout_attribute_label_{attribute.Id}")">
                     <label class="text-prompt">
                         @textPrompt
@@ -34,7 +34,7 @@
                             }
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
                                     T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                 <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
@@ -48,7 +48,7 @@
                         <ul class="option-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
                                     T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                 <li>
@@ -66,7 +66,7 @@
                         <ul class="option-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
                                     T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                 <li>
@@ -105,14 +105,14 @@
                         case AttributeControlType.FileUpload:
                             {
                                 Download download = null;
-                                if (!String.IsNullOrEmpty(attribute.DefaultValue))
+                                if (!string.IsNullOrEmpty(attribute.DefaultValue))
                                 {
                                     download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
                                 }
 
                                 //register CSS and JS
                                 Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                Html.AddScriptParts("~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -126,40 +126,40 @@
                                     <input id="@(controlId)" name="@(controlId)" type="hidden" />
                                 }
                        
-                        @*fine uploader container*@
-                        <div id="@(controlId)uploader"></div>
-                        @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                        <script type="text/template" id="@(controlId)-qq-template">
-                            <div class="qq-uploader-selector qq-uploader">
-                                <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                                    <span>@T("Common.FileUploader.DropFiles")</span>
-                                </div>
-                                <div class="qq-upload-button-selector qq-upload-button">
-                                    <div>@T("Common.FileUploader.Upload")</div>
-                                </div>
-                                <span class="qq-drop-processing-selector qq-drop-processing">
-                                    <span>@T("Common.FileUploader.Processing")</span>
-                                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                                </span>
-                                <ul class="qq-upload-list-selector qq-upload-list">
-                                    <li>
-                                        <div class="qq-progress-bar-container-selector">
-                                            <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                @*fine uploader container*@
+                                <div id="@(controlId)uploader"></div>
+                                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+                                <script type="text/template" asp-location="Footer" id="@(controlId)-qq-template">
+                                    <div class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                                            <span>@T("Common.FileUploader.DropFiles")</span>
                                         </div>
-                                        <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                                        <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                                        <span class="qq-upload-file-selector qq-upload-file"></span>
-                                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                                        <span class="qq-upload-size-selector qq-upload-size"></span>
-                                        <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                                        <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                                        <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                                        <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </script>
-                                <script type="text/javascript">
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>@T("Common.FileUploader.Upload")</div>
+                                        </div>
+                                        <span class="qq-drop-processing-selector qq-drop-processing">
+                                            <span>@T("Common.FileUploader.Processing")</span>
+                                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                                        </span>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li>
+                                                <div class="qq-progress-bar-container-selector">
+                                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                                </div>
+                                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                                                <span class="qq-upload-file-selector qq-upload-file"></span>
+                                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                                <span class="qq-upload-size-selector qq-upload-size"></span>
+                                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </script>
+                                <script type="text/javascript" asp-location="Footer">
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
@@ -211,7 +211,7 @@
                                 <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
@@ -227,7 +227,7 @@
                                         attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                                     }
                                 </ul>
-                                <script type="text/javascript">
+                                <script type="text/javascript" asp-location="Footer">
                                     $(document).ready(function() {
                                         $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
@@ -247,8 +247,7 @@
             }
         </dl>
     </div>
-
-    <script type="text/javascript">
+    <script type="text/javascript" asp-location="Footer">
         $(document).ready(function() {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())

@@ -15,22 +15,22 @@ namespace Nop.Web.Framework.Validators
         protected override bool IsValid(PropertyValidatorContext context)
         {
             var ccValue = context.PropertyValue as string;
-            if (String.IsNullOrWhiteSpace(ccValue))
+            if (string.IsNullOrWhiteSpace(ccValue))
                 return false;
 
             ccValue = ccValue.Replace(" ", "");
             ccValue = ccValue.Replace("-", "");
 
-            int checksum = 0;
-            bool evenDigit = false;
+            var checksum = 0;
+            var evenDigit = false;
 
             //http://www.beachnet.com/~hstiles/cardtype.html
-            foreach (char digit in ccValue.Reverse())
+            foreach (var digit in ccValue.Reverse())
             {
-                if (!Char.IsDigit(digit))
+                if (!char.IsDigit(digit))
                     return false;
 
-                int digitValue = (digit - '0') * (evenDigit ? 2 : 1);
+                var digitValue = (digit - '0') * (evenDigit ? 2 : 1);
                 evenDigit = !evenDigit;
 
                 while (digitValue > 0)

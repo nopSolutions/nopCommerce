@@ -53,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
             public bool IsPreSelected { get; set; }
         }
+
         #endregion
     }
 }

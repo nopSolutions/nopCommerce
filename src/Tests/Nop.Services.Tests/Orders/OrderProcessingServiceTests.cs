@@ -132,8 +132,10 @@ namespace Nop.Services.Tests.Orders
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
 
             //shipping
-            _shippingSettings = new ShippingSettings();
-            _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            _shippingSettings = new ShippingSettings
+            {
+                ActiveShippingRateComputationMethodSystemNames = new List<string>()
+            };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
@@ -168,10 +170,12 @@ namespace Nop.Services.Tests.Orders
             _addressSettings = new AddressSettings();
 
             //tax
-            _taxSettings = new TaxSettings();
-            _taxSettings.ShippingIsTaxable = true;
-            _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _taxSettings.DefaultTaxAddressId = 10;
+            _taxSettings = new TaxSettings
+            {
+                ShippingIsTaxable = true,
+                PaymentMethodAdditionalFeeIsTaxable = true,
+                DefaultTaxAddressId = 10
+            };
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _storeContext, _taxSettings,
@@ -281,10 +285,10 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Return(true);
             _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Return(false);
-            var order = new Order();
-
-
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_capture";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_capture"
+            };
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -338,9 +342,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 1;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
+            var order = new Order
+            {
+                OrderTotal = 1,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -375,8 +381,10 @@ namespace Nop.Services.Tests.Orders
         public void Ensure_order_cannot_be_refunded_when_orderTotal_is_zero()
         {
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
-            var order = new Order();
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -434,9 +442,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 1;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
+            var order = new Order
+            {
+                OrderTotal = 1,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -471,8 +481,10 @@ namespace Nop.Services.Tests.Orders
         public void Ensure_order_cannot_be_voided_when_orderTotal_is_zero()
         {
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
-            var order = new Order();
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
+            var order = new Order
+            {
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -530,9 +542,11 @@ namespace Nop.Services.Tests.Orders
         {
             _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
             _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Return(false);
-            var order = new Order();
-            order.OrderTotal = 100;
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
+            var order = new Order
+            {
+                OrderTotal = 100,
+                PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund"
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
@@ -589,8 +603,10 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Ensure_order_can_only_be_partially_refunded_offline_when_paymentstatus_is_paid_or_partiallyRefunded()
         {
-            var order = new Order();
-            order.OrderTotal = 100;
+            var order = new Order
+            {
+                OrderTotal = 100
+            };
 
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))

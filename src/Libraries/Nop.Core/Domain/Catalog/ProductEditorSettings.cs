@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -259,7 +258,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Dimension' fields (height, length, width) are shown
         /// </summary>
         public bool Dimensions { get; set; }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Available start date' field is shown

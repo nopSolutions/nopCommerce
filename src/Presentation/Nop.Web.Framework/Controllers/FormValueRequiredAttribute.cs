@@ -39,7 +39,7 @@ namespace Nop.Web.Framework.Controllers
             if (routeContext.HttpContext.Request.Method != WebRequestMethods.Http.Post)
                 return false;
 
-            foreach (string buttonName in _submitButtonNames)
+            foreach (var buttonName in _submitButtonNames)
             {
                 try
                 {
@@ -58,7 +58,7 @@ namespace Nop.Web.Framework.Controllers
                                     //validate "value"
                                     //do not iterate because "Invalid request" exception can be thrown
                                     string value = routeContext.HttpContext.Request.Form[buttonName];
-                                    if (!String.IsNullOrEmpty(value))
+                                    if (!string.IsNullOrEmpty(value))
                                         return true;
                                 }
                             }
@@ -78,7 +78,7 @@ namespace Nop.Web.Framework.Controllers
                                         if (formValue.StartsWith(buttonName, StringComparison.InvariantCultureIgnoreCase))
                                         { 
                                             var value = routeContext.HttpContext.Request.Form[formValue];
-                                            if (!String.IsNullOrEmpty(value))
+                                            if (!string.IsNullOrEmpty(value))
                                                 return true;
                                         }
                                 }

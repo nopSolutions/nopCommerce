@@ -72,13 +72,13 @@ namespace Nop.Services.Catalog
             ICategoryService categoryService,
             string separator = ">>", int languageId = 0)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             var breadcrumb = GetCategoryBreadCrumb(category, categoryService, null, null, true);
-            for (int i = 0; i <= breadcrumb.Count - 1; i++)
+            for (var i = 0; i <= breadcrumb.Count - 1; i++)
             {
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
-                result = String.IsNullOrEmpty(result)
+                result = string.IsNullOrEmpty(result)
                     ? categoryName
                     : $"{result} {separator} {categoryName}";
             }
@@ -99,13 +99,13 @@ namespace Nop.Services.Catalog
             IList<Category> allCategories,
             string separator = ">>", int languageId = 0)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             var breadcrumb = GetCategoryBreadCrumb(category, allCategories, null, null, true);
-            for (int i = 0; i <= breadcrumb.Count - 1; i++)
+            for (var i = 0; i <= breadcrumb.Count - 1; i++)
             {
                 var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
-                result = String.IsNullOrEmpty(result)
+                result = string.IsNullOrEmpty(result)
                     ? categoryName
                     : $"{result} {separator} {categoryName}";
             }

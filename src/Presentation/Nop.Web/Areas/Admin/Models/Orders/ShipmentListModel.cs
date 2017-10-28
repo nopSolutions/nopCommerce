@@ -41,7 +41,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Shipments.List.LoadNotShipped")]
         public bool LoadNotShipped { get; set; }
 
-
         [NopResourceDisplayName("Admin.Orders.Shipments.List.Warehouse")]
         public int WarehouseId { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }

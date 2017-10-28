@@ -97,13 +97,13 @@ namespace Nop.Services.Seo
         protected virtual IList<UrlRecordForCaching> GetAllUrlRecordsCached()
         {
             //cache
-            string key = string.Format(URLRECORD_ALL_KEY);
+            var key = string.Format(URLRECORD_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
                 var query = from ur in _urlRecordRepository.TableNoTracking
-                            select ur;
+                    select ur;
                 var urlRecords = query.ToList();
                 var list = new List<UrlRecordForCaching>();
                 foreach (var ur in urlRecords)
@@ -173,7 +173,7 @@ namespace Nop.Services.Seo
         {
             var query = _urlRecordRepository.Table;
 
-            return query.Where(p=>urlRecordIds.Contains(p.Id)).ToList();
+            return query.Where(p => urlRecordIds.Contains(p.Id)).ToList();
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Nop.Services.Seo
 
             return _urlRecordRepository.GetById(urlRecordId);
         }
-        
+
         /// <summary>
         /// Inserts an URL record
         /// </summary>
@@ -226,14 +226,14 @@ namespace Nop.Services.Seo
         /// <returns>Found URL record</returns>
         public virtual UrlRecord GetBySlug(string slug)
         {
-            if (String.IsNullOrEmpty(slug))
+            if (string.IsNullOrEmpty(slug))
                 return null;
 
             var query = from ur in _urlRecordRepository.Table
-                        where ur.Slug == slug
-                        //first, try to find an active record
-                        orderby ur.IsActive descending, ur.Id
-                        select ur;
+                where ur.Slug == slug
+                //first, try to find an active record
+                orderby ur.IsActive descending, ur.Id
+                select ur;
             var urlRecord = query.FirstOrDefault();
             return urlRecord;
         }
@@ -247,7 +247,7 @@ namespace Nop.Services.Seo
         /// <returns>Found URL record</returns>
         public virtual UrlRecordForCaching GetBySlugCached(string slug)
         {
-            if (String.IsNullOrEmpty(slug))
+            if (string.IsNullOrEmpty(slug))
                 return null;
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
@@ -255,16 +255,16 @@ namespace Nop.Services.Seo
                 //load all records (we know they are cached)
                 var source = GetAllUrlRecordsCached();
                 var query = from ur in source
-                            where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
-                            //first, try to find an active record
-                            orderby ur.IsActive descending, ur.Id
-                            select ur;
+                    where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
+                    //first, try to find an active record
+                    orderby ur.IsActive descending, ur.Id
+                    select ur;
                 var urlRecordForCaching = query.FirstOrDefault();
                 return urlRecordForCaching;
             }
 
             //gradual loading
-            string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
+            var key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
             return _cacheManager.Get(key, () =>
             {
                 var urlRecord = GetBySlug(slug);
@@ -286,7 +286,7 @@ namespace Nop.Services.Seo
         public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
-            if (!String.IsNullOrWhiteSpace(slug))
+            if (!string.IsNullOrWhiteSpace(slug))
                 query = query.Where(ur => ur.Slug.Contains(slug));
             query = query.OrderBy(ur => ur.Slug);
 
@@ -305,18 +305,18 @@ namespace Nop.Services.Seo
         {
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                var key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecordsCached();
                     var query = from ur in source
-                                where ur.EntityId == entityId &&
-                                ur.EntityName == entityName &&
-                                ur.LanguageId == languageId &&
-                                ur.IsActive
-                                orderby ur.Id descending
-                                select ur.Slug;
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName &&
+                              ur.LanguageId == languageId &&
+                              ur.IsActive
+                        orderby ur.Id descending
+                        select ur.Slug;
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
@@ -327,17 +327,17 @@ namespace Nop.Services.Seo
             else
             {
                 //gradual loading
-                string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                var key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
                 return _cacheManager.Get(key, () =>
                 {
                     var source = _urlRecordRepository.Table;
                     var query = from ur in source
-                                where ur.EntityId == entityId &&
-                                ur.EntityName == entityName &&
-                                ur.LanguageId == languageId &&
-                                ur.IsActive
-                                orderby ur.Id descending
-                                select ur.Slug;
+                        where ur.EntityId == entityId &&
+                              ur.EntityName == entityName &&
+                              ur.LanguageId == languageId &&
+                              ur.IsActive
+                        orderby ur.Id descending
+                        select ur.Slug;
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
                     if (slug == null)
@@ -359,23 +359,25 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _urlRecordRepository.Table
-                        where ur.EntityId == entityId &&
-                        ur.EntityName == entityName &&
-                        ur.LanguageId == languageId
-                        orderby ur.Id descending 
-                        select ur;
+                where ur.EntityId == entityId &&
+                      ur.EntityName == entityName &&
+                      ur.LanguageId == languageId
+                orderby ur.Id descending
+                select ur;
             var allUrlRecords = query.ToList();
             var activeUrlRecord = allUrlRecords.FirstOrDefault(x => x.IsActive);
+            UrlRecord nonActiveRecordWithSpecifiedSlug;
 
             if (activeUrlRecord == null && !string.IsNullOrWhiteSpace(slug))
             {
                 //find in non-active records with the specified slug
-                var nonActiveRecordWithSpecifiedSlug = allUrlRecords
-                    .FirstOrDefault(x => x.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase) && !x.IsActive);
+                nonActiveRecordWithSpecifiedSlug = allUrlRecords
+                    .FirstOrDefault(
+                        x => x.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase) && !x.IsActive);
                 if (nonActiveRecordWithSpecifiedSlug != null)
                 {
                     //mark non-active record as active
@@ -404,45 +406,44 @@ namespace Nop.Services.Seo
                 UpdateUrlRecord(activeUrlRecord);
             }
 
-            if (activeUrlRecord != null && !string.IsNullOrWhiteSpace(slug))
+            if (activeUrlRecord == null || string.IsNullOrWhiteSpace(slug))
+                return;
+
+            //it should not be the same slug as in active URL record
+            if (activeUrlRecord.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            //find in non-active records with the specified slug
+            nonActiveRecordWithSpecifiedSlug = allUrlRecords
+                .FirstOrDefault(x => x.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase) && !x.IsActive);
+            if (nonActiveRecordWithSpecifiedSlug != null)
             {
-                //it should not be the same slug as in active URL record
-                if (!activeUrlRecord.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
+                //mark non-active record as active
+                nonActiveRecordWithSpecifiedSlug.IsActive = true;
+                UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+
+                //disable the previous active URL record
+                activeUrlRecord.IsActive = false;
+                UpdateUrlRecord(activeUrlRecord);
+            }
+            else
+            {
+                //insert new record
+                //we do not update the existing record because we should track all previously entered slugs
+                //to ensure that URLs will work fine
+                var urlRecord = new UrlRecord
                 {
-                    //find in non-active records with the specified slug
-                    var nonActiveRecordWithSpecifiedSlug = allUrlRecords
-                        .FirstOrDefault(x => x.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase) && !x.IsActive);
-                    if (nonActiveRecordWithSpecifiedSlug != null)
-                    {
-                        //mark non-active record as active
-                        nonActiveRecordWithSpecifiedSlug.IsActive = true;
-                        UpdateUrlRecord(nonActiveRecordWithSpecifiedSlug);
+                    EntityId = entityId,
+                    EntityName = entityName,
+                    Slug = slug,
+                    LanguageId = languageId,
+                    IsActive = true,
+                };
+                InsertUrlRecord(urlRecord);
 
-                        //disable the previous active URL record
-                        activeUrlRecord.IsActive = false;
-                        UpdateUrlRecord(activeUrlRecord);
-                    }
-                    else
-                    {
-                        //insert new record
-                        //we do not update the existing record because we should track all previously entered slugs
-                        //to ensure that URLs will work fine
-                        var urlRecord = new UrlRecord
-                        {
-                            EntityId = entityId,
-                            EntityName = entityName,
-                            Slug = slug,
-                            LanguageId = languageId,
-                            IsActive = true,
-                        };
-                        InsertUrlRecord(urlRecord);
-
-                        //disable the previous active URL record
-                        activeUrlRecord.IsActive = false;
-                        UpdateUrlRecord(activeUrlRecord);
-                    }
-
-                }
+                //disable the previous active URL record
+                activeUrlRecord.IsActive = false;
+                UpdateUrlRecord(activeUrlRecord);
             }
         }
 

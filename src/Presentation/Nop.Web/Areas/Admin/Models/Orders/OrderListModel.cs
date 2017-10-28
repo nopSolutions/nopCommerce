@@ -70,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         public bool IsLoggedInAsVendor { get; set; }
 
-
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
         public IList<SelectListItem> AvailableShippingStatuses { get; set; }

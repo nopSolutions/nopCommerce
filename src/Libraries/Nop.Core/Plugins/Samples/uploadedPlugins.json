@@ -1,0 +1,35 @@
+//this file should be in the root of the archive
+[
+  //assume that the archive sample contains three plugins:
+
+  //"Must be assigned to customer role" discount rule for version 3.90
+  {
+    //plugin system name (required)
+    "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
+
+    //supported nopCommerce version (required)
+    "Version": "3.90",
+
+    //path to the folder with binary files in the archive (required)
+    "DirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 3.90/DiscountRules.CustomerRoles/",
+
+    //path to the folder with source files in the archive (if exist)
+    "SourceDirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 3.90/Nop.Plugin.DiscountRules.CustomerRoles/"
+  },
+
+  //"Must be assigned to customer role" discount rule for version 4.00
+  {
+    "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
+    "Version": "4.00",
+    "DirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 4.00/DiscountRules.CustomerRoles/",
+    "SourceDirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 4.00/Nop.Plugin.DiscountRules.CustomerRoles/"
+  },
+
+  //"Has one product" discount rule for version 4.00
+  {
+    "SystemName": "DiscountRequirement.HasOneProduct",
+    "Version": "4.00",
+    "DirectoryPath": "DiscountRules.HasOneProduct/",
+    "SourceDirectoryPath": null
+  }
+]

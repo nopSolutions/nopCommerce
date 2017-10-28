@@ -148,7 +148,6 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null,
             DateTime? rentalEndDate = null);
 
-
         /// <summary>
         /// Add a product to shopping cart
         /// </summary>

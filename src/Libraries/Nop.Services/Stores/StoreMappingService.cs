@@ -112,8 +112,8 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -122,8 +122,7 @@ namespace Nop.Services.Stores
             var storeMappings = query.ToList();
             return storeMappings;
         }
-
-
+        
         /// <summary>
         /// Inserts a store mapping record
         /// </summary>
@@ -156,8 +155,8 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException("storeId");
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var storeMapping = new StoreMapping
             {
@@ -180,10 +179,10 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = entity.GetUnproxiedEntityType().Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sm in _storeMappingRepository.Table

@@ -40,12 +40,6 @@ namespace Nop.Services.Orders
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
-
-
-
-
-
-
         /// <summary>
         /// Delete a return request action
         /// </summary>
@@ -76,9 +70,6 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
         void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction);
-
-
-
 
         /// <summary>
         /// Delete a return request reason

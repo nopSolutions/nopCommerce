@@ -18,7 +18,7 @@ namespace Nop.Services.Shipping
 
             if (shippingSettings.ActiveShippingRateComputationMethodSystemNames == null)
                 return false;
-            foreach (string activeMethodSystemName in shippingSettings.ActiveShippingRateComputationMethodSystemNames)
+            foreach (var activeMethodSystemName in shippingSettings.ActiveShippingRateComputationMethodSystemNames)
                 if (srcm.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             return false;
@@ -35,20 +35,21 @@ namespace Nop.Services.Shipping
             if (shippingSettings.ActivePickupPointProviderSystemNames == null)
                 return false;
 
-            foreach (string activeProviderSystemName in shippingSettings.ActivePickupPointProviderSystemNames)
+            foreach (var activeProviderSystemName in shippingSettings.ActivePickupPointProviderSystemNames)
                 if (pickupPointProvider.PluginDescriptor.SystemName.Equals(activeProviderSystemName, StringComparison.InvariantCultureIgnoreCase))
                     return true;
 
             return false;
 
         }
+
         public static bool CountryRestrictionExists(this ShippingMethod shippingMethod,
             int countryId)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            bool result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
+            var result = shippingMethod.RestrictedCountries.ToList().Find(c => c.Id == countryId) != null;
             return result;
         }
     }

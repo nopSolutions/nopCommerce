@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Logging;
@@ -65,6 +64,5 @@ namespace Nop.Services.Events
             //publish event to subscribers
             subscribers.ForEach(subscriber => PublishToConsumer(subscriber, eventMessage));
         }
-
     }
 }

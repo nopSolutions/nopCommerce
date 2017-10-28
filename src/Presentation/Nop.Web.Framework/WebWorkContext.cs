@@ -473,7 +473,7 @@ namespace Nop.Web.Framework
                 if (_cachedTaxDisplayType.HasValue)
                     return _cachedTaxDisplayType.Value;
 
-                TaxDisplayType taxDisplayType = TaxDisplayType.IncludingTax;
+                var taxDisplayType = TaxDisplayType.IncludingTax;
 
                 //whether customers are allowed to select tax display type
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)

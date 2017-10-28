@@ -148,9 +148,9 @@ namespace Nop.Web.Framework.UI.Paging
                 if (showIndividualPages)
                 {
                     //individual pages
-                    int firstIndividualPageIndex = GetFirstIndividualPageIndex();
-                    int lastIndividualPageIndex = GetLastIndividualPageIndex();
-                    for (int i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
+                    var firstIndividualPageIndex = GetFirstIndividualPageIndex();
+                    var lastIndividualPageIndex = GetLastIndividualPageIndex();
+                    for (var i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
                         if (model.PageIndex == i)
                         {
@@ -181,7 +181,7 @@ namespace Nop.Web.Framework.UI.Paging
             }
 
             var result = links.ToString();
-            if (!String.IsNullOrEmpty(result))
+            if (!string.IsNullOrEmpty(result))
             {
                 result = "<ul>" + result + "</ul>";
             }
@@ -208,7 +208,7 @@ namespace Nop.Web.Framework.UI.Paging
         }
         protected virtual int GetLastIndividualPageIndex()
         {
-            int num = individualPagesDisplayedCount / 2;
+            var num = individualPagesDisplayedCount / 2;
             if ((individualPagesDisplayedCount % 2) == 0)
             {
                 num--;
@@ -227,7 +227,7 @@ namespace Nop.Web.Framework.UI.Paging
 		protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
 		{
             var liBuilder = new TagBuilder("li");
-            if (!String.IsNullOrWhiteSpace(cssClass))
+            if (!string.IsNullOrWhiteSpace(cssClass))
                 liBuilder.AddCssClass(cssClass);
 
             var aBuilder = new TagBuilder("a");
@@ -246,7 +246,7 @@ namespace Nop.Web.Framework.UI.Paging
 			{
 			    //TODO test new implementation (QueryString, keys). And ensure no null exception is thrown when invoking ToString(). Is "StringValues.IsNullOrEmpty" required?
                 var value = viewContext.HttpContext.Request.Query[key].ToString();
-                if (renderEmptyParameters && String.IsNullOrEmpty(value))
+                if (renderEmptyParameters && string.IsNullOrEmpty(value))
 			    {
                     //we store query string parameters with empty values separately
                     //we need to do it because they are not properly processed in the UrlHelper.GenerateUrl method (dropped for some reasons)
@@ -258,7 +258,7 @@ namespace Nop.Web.Framework.UI.Paging
                     {
                         //little hack here due to ugly MVC implementation
                         //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
-                        if (!String.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
+                        if (!string.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
                         {
                             value = "true";
                         }

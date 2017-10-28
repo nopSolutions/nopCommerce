@@ -82,7 +82,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             //get recurring payment identifier
-            int recurringPaymentId = 0;
+            var recurringPaymentId = 0;
             foreach (var formValue in form.Keys)
                 if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
                     recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
@@ -102,10 +102,8 @@ namespace Nop.Web.Controllers
 
                 return View(model);
             }
-            else
-            {
-                return RedirectToRoute("CustomerOrders");
-            }
+
+            return RedirectToRoute("CustomerOrders");
         }
 
         //My account / Orders / Retry last recurring order

@@ -10,7 +10,7 @@
                     <span class="value-summary">@Model.SubTotal</span>
                 </td>
             </tr>
-            @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
+            @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
             {
                 <tr class="order-subtotal-discount">
                     <td class="cart-total-left">
@@ -26,7 +26,7 @@
                 <tr class="shipping-cost">
                     <td class="cart-total-left">
                         <label>@T("ShoppingCart.Totals.Shipping"):</label>
-                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+                        @if (Model.RequiresShipping && !string.IsNullOrEmpty(Model.SelectedShippingMethod))
                         {
                             <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
                         }
@@ -34,7 +34,7 @@
                     <td class="cart-total-right">
                         @if (Model.RequiresShipping)
                         {
-                            if (!String.IsNullOrEmpty(Model.Shipping))
+                            if (!string.IsNullOrEmpty(Model.Shipping))
                             {
                             <span class="value-summary">@Model.Shipping</span>
                             }
@@ -50,7 +50,7 @@
                     </td>
                 </tr>
             }
-            @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
+            @if (!string.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
                 <tr class="additional-fees">
                     <td class="cart-total-left">
@@ -86,7 +86,7 @@
                     </td>
                 </tr>
             }
-            @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
+            @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
                 <tr class="discount-total">
                     <td class="cart-total-left">
@@ -134,7 +134,7 @@
                     <label>@T("ShoppingCart.Totals.OrderTotal"):</label>
                 </td>
                 <td class="cart-total-right">
-                    @if (!String.IsNullOrEmpty(Model.OrderTotal))
+                    @if (!string.IsNullOrEmpty(Model.OrderTotal))
                     {
                         <span class="value-summary"><strong>@Model.OrderTotal</strong></span>
                     }

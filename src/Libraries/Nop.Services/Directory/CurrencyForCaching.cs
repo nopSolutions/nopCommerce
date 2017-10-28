@@ -15,6 +15,7 @@ namespace Nop.Services.Directory
         {
 
         }
+
         public CurrencyForCaching(Currency c)
         {
             Id = c.Id;

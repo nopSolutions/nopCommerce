@@ -16,6 +16,7 @@ namespace Nop.Web.Areas.Admin.Models.Polls
         {
             this.AvailableLanguages = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         public int LanguageId { get; set; }
         public IList<SelectListItem> AvailableLanguages { get; set; }
@@ -48,6 +49,5 @@ namespace Nop.Web.Areas.Admin.Models.Polls
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
-
     }
 }

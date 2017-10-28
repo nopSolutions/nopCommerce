@@ -42,7 +42,7 @@
                     <div class="inputs">
                         <label asp-for="PictureUrl" asp-postfix=":"></label>
                         <input name="uploadedFile" type="file" />
-                        @if (!String.IsNullOrEmpty(Model.PictureUrl))
+                        @if (!string.IsNullOrEmpty(Model.PictureUrl))
                         {
                             <div class="vendor-picture">
                                 <img src="@(Model.PictureUrl)" alt="picture" />

@@ -1,7 +1,5 @@
-
 namespace Nop.Core.Domain.Customers
 {
-
     /// <summary>
     /// Represents a best customer report line
     /// </summary>

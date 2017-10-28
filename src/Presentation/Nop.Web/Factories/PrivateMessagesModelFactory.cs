@@ -56,9 +56,9 @@ namespace Nop.Web.Factories
         /// <returns>Private message index model</returns>
         public virtual PrivateMessageIndexModel PreparePrivateMessageIndexModel(int? page, string tab)
         {
-            int inboxPage = 0;
-            int sentItemsPage = 0;
-            bool sentItemsTabSelected = false;
+            var inboxPage = 0;
+            var sentItemsPage = 0;
+            var sentItemsTabSelected = false;
 
             switch (tab)
             {
@@ -184,10 +184,12 @@ namespace Nop.Web.Factories
             if (customerTo == null)
                 throw new ArgumentNullException(nameof(customerTo));
 
-            var model = new SendPrivateMessageModel();
-            model.ToCustomerId = customerTo.Id;
-            model.CustomerToName = customerTo.FormatUserName();
-            model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest();
+            var model = new SendPrivateMessageModel
+            {
+                ToCustomerId = customerTo.Id,
+                CustomerToName = customerTo.FormatUserName(),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
+            };
 
             if (replyToPM == null)
                 return model;

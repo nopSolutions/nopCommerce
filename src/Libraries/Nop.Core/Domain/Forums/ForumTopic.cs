@@ -70,11 +70,11 @@ namespace Nop.Core.Domain.Forums
         {
             get
             {
-                return (ForumTopicType)this.TopicTypeId;
+                return (ForumTopicType)TopicTypeId;
             }
             set
             {
-                this.TopicTypeId = (int)value;
+                TopicTypeId = (int)value;
             }
         }
 
@@ -95,7 +95,7 @@ namespace Nop.Core.Domain.Forums
         {
             get
             {
-                int result = 0;
+                var result = 0;
                 if (NumPosts > 0)
                     result = NumPosts - 1;
                 return result;

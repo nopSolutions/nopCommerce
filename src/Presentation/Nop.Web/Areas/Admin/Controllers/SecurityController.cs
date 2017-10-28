@@ -55,7 +55,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _logger.Information($"Access denied to user #{currentCustomer.Email} '{currentCustomer.Email}' on {pageUrl}");
 
-
             return View();
         }
 
@@ -88,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var pr in permissionRecords)
                 foreach (var cr in customerRoles)
                 {
-                    bool allowed = pr.CustomerRoles.Count(x => x.Id == cr.Id) > 0;
+                    var allowed = pr.CustomerRoles.Count(x => x.Id == cr.Id) > 0;
                     if (!model.Allowed.ContainsKey(pr.SystemName))
                         model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[pr.SystemName][cr.Id] = allowed;
@@ -106,10 +105,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             var permissionRecords = _permissionService.GetAllPermissionRecords();
             var customerRoles = _customerService.GetAllCustomerRoles(true);
 
-
             foreach (var cr in customerRoles)
             {
-                string formKey = "allow_" + cr.Id;
+                var formKey = "allow_" + cr.Id;
                 var permissionRecordSystemNamesToRestrict = !StringValues.IsNullOrEmpty(form[formKey])
                     ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
                     : new List<string>();
@@ -117,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var pr in permissionRecords)
                 {
 
-                    bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+                    var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
                         if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)

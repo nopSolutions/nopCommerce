@@ -17,7 +17,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Validators
             RuleFor(x => x.ExpireMonth).Must((x, context) =>
             {
                 //not specified yet
-                if (String.IsNullOrEmpty(x.ExpireYear) || String.IsNullOrEmpty(x.ExpireMonth))
+                if (string.IsNullOrEmpty(x.ExpireYear) || string.IsNullOrEmpty(x.ExpireMonth))
                     return true;
 
                 //the cards remain valid until the last calendar day of that month

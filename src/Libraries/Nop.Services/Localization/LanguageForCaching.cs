@@ -15,6 +15,7 @@ namespace Nop.Services.Localization
         {
 
         }
+
         public LanguageForCaching(Language l)
         {
             Id = l.Id;

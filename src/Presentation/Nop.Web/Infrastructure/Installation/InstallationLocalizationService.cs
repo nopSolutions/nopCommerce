@@ -63,7 +63,7 @@ namespace Nop.Web.Infrastructure.Installation
                 .Where(r => r.Name.Equals(resourceName, StringComparison.InvariantCultureIgnoreCase))
                 .Select(r => r.Value)
                 .FirstOrDefault();
-            if (String.IsNullOrEmpty(resourceValue))
+            if (string.IsNullOrEmpty(resourceValue))
                 //return name
                 return resourceName;
 

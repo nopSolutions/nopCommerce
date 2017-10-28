@@ -38,14 +38,16 @@ namespace Nop.Plugin.Payments.Square.Components
 
         public IViewComponentResult Invoke()
         {
-            var model = new PaymentInfoModel();
+            var model = new PaymentInfoModel
+            {
 
-            //whether current customer is guest
-            model.IsGuest = _workContext.CurrentCustomer.IsGuest();
+                //whether current customer is guest
+                IsGuest = _workContext.CurrentCustomer.IsGuest(),
 
-            //get postal code from the billing address or from the shipping one
-            model.PostalCode = _workContext.CurrentCustomer.BillingAddress?.ZipPostalCode 
-                ?? _workContext.CurrentCustomer.ShippingAddress?.ZipPostalCode;
+                //get postal code from the billing address or from the shipping one
+                PostalCode = _workContext.CurrentCustomer.BillingAddress?.ZipPostalCode
+                ?? _workContext.CurrentCustomer.ShippingAddress?.ZipPostalCode
+            };
 
             //whether customer already has stored cards
             var customerId = _workContext.CurrentCustomer.GetAttribute<string>(SquarePaymentDefaults.CustomerIdAttribute);

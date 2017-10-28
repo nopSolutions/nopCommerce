@@ -71,11 +71,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public string FormattedCustomAddressAttributes { get; set; }
         public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }
 
-
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-
-
 
         public bool FirstNameEnabled { get; set; }
         public bool FirstNameRequired { get; set; }
@@ -100,7 +97,6 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool PhoneRequired { get; set; }
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
-
 
         #region Nested classes
 

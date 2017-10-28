@@ -1,6 +1,7 @@
 ﻿@inject IWorkContext workContext
 @inject LocalizationSettings localizationSettings
 @inject CommonSettings commonSettings
+@inject IEventPublisher eventPublisher
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
@@ -43,7 +44,7 @@
     Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
 
     //page title
-    string adminPageTitle = !String.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //X-UA-Compatible tag
@@ -51,6 +52,9 @@
     {
         Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
     }
+
+    //event
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
 <html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
@@ -68,7 +72,7 @@
                 @RenderBody()
             </div>
         </div>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-        @Html.NopScripts(this.Url, ResourceLocation.Foot)
+        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+        @Html.NopScripts(this.Url, ResourceLocation.Footer)
     </body>
     </html>

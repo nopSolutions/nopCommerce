@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Html.CodeFormatter
 {
 	/// <summary>
@@ -47,6 +46,5 @@ namespace Nop.Core.Html.CodeFormatter
 					+ " -inotlike -ieq -ine -igt -ige -ilt -ile";
 			}
 		}
-
 	}
 }

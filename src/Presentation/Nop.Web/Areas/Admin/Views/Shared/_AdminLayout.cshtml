@@ -2,6 +2,7 @@
 @inject IWorkContext workContext
 @inject IDateTimeHelper dateTimeHelper
 @inject IPermissionService permissionService
+@inject IEventPublisher eventPublisher
 @inject IHttpContextAccessor httpContextAccessor
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
@@ -64,7 +65,7 @@
     Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
 
     //page title
-    string adminPageTitle = !String.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //has "Manage Maintenance" permission?
@@ -82,6 +83,9 @@
 
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
+
+    //event
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
 
     //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
@@ -205,7 +209,7 @@
                                 <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
                             </div>
                         </div>
-                        <script>
+                        <script type="text/javascript">
                             $(document).ready(function () {
                                 Admin.Search.init();
                             });
@@ -241,7 +245,7 @@
                 </div>
             </div>
         </div>
-        <script>
+        <script type="text/javascript">
             var AdminLTEOptions = {
                 boxWidgetOptions: {
                     boxWidgetIcons: {
@@ -251,10 +255,10 @@
                 }
             };
         </script>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-        @Html.NopScripts(this.Url, ResourceLocation.Foot)
+        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+        @Html.NopScripts(this.Url, ResourceLocation.Footer)
         <a id="backTop" class="btn btn-back-top bg-teal"></a>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function () {
                 $('#backTop').backTop();
 

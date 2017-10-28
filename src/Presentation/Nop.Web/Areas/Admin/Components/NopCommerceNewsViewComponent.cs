@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Xml;
 using Microsoft.AspNetCore.Mvc;
@@ -39,14 +38,8 @@ namespace Nop.Web.Areas.Admin.Components
         {
             try
             {
-                string feedUrl = string
-                    .Format(
-                        "http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
-                        NopVersion.CurrentVersion,
-                        _webHelper.IsLocalRequest(Request),
-                        _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                        _storeContext.CurrentStore.Url)
-                    .ToLowerInvariant();
+                var feedUrl = $"http://www.nopCommerce.com/NewsRSS.aspx?Version={NopVersion.CurrentVersion}&Localhost={_webHelper.IsLocalRequest(Request)}&HideAdvertisements={_adminAreaSettings.HideAdvertisementsOnAdminArea}&StoreURL={_storeContext.CurrentStore.Url}"
+                        .ToLowerInvariant();
 
                 var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
                 {
@@ -65,7 +58,7 @@ namespace Nop.Web.Areas.Admin.Components
                     HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
                 };
 
-                for (int i = 0; i < rssData.Items.Count; i++)
+                for (var i = 0; i < rssData.Items.Count; i++)
                 {
                     var item = rssData.Items.ElementAt(i);
                     var newsItem = new NopCommerceNewsModel.NewsDetailsModel
@@ -80,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Components
                     //has new items?
                     if (i == 0)
                     {
-                        var firstRequest = String.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                        var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
                         if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
                         {
                             _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;

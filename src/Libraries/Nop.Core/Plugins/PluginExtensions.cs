@@ -7,7 +7,6 @@ namespace Nop.Core.Plugins
 {
     public static class PluginExtensions
     {
-
         private static readonly List<string> SupportedLogoImageExtensions = new List<string>
         {
             "jpg",
@@ -34,9 +33,8 @@ namespace Nop.Core.Plugins
 
             if (string.IsNullOrWhiteSpace(logoExtension)) return null; //No logo file was found with any of the supported extensions.
 
-            string logoUrl = $"{webHelper.GetStoreLocation()}plugins/{pluginDirectory.Name}/logo.{logoExtension}";
+            var logoUrl = $"{webHelper.GetStoreLocation()}plugins/{pluginDirectory.Name}/logo.{logoExtension}";
             return logoUrl;
         }
-
     }
 }

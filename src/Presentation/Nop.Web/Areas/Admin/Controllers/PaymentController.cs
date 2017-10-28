@@ -31,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -43,7 +44,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             ICountryService countryService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IWorkContext workContext)
         {
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
@@ -53,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._localizationService = localizationService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -81,6 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
                 tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
                 tmp1.ConfigurationUrl = paymentMethod.GetConfigurationPageUrl();
+                tmp1.RecurringPaymentType = paymentMethod.RecurringPaymentType.GetLocalizedEnum(_localizationService, _workContext);
                 paymentMethodsModel.Add(tmp1);
             }
             paymentMethodsModel = paymentMethodsModel.ToList();
@@ -153,7 +157,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
                 foreach (var c in countries)
                 {
-                    bool resticted = restictedCountries.Contains(c.Id);
+                    var resticted = restictedCountries.Contains(c.Id);
                     if (!model.Resticted.ContainsKey(pm.PluginDescriptor.SystemName))
                         model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
@@ -174,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             foreach (var pm in paymentMethods)
             {
-                string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
+                var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (!StringValues.IsNullOrEmpty(form[formKey])
                         ? form[formKey].ToString().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList()
                         : new List<string>())
@@ -197,6 +201,5 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
     }
 }

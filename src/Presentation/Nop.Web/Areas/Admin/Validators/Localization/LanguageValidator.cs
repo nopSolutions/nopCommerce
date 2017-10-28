@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Validators.Localization
                               {
                                   //let's try to create a CultureInfo object
                                   //if "DisplayLocale" is wrong, then exception will be thrown
-                                  var culture = new CultureInfo(x);
+                                  var unused = new CultureInfo(x);
                                   return true;
                               }
                               catch
@@ -34,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Validators.Localization
             RuleFor(x => x.UniqueSeoCode).Length(2).WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Length"));
 
             SetDatabaseValidationRules<Language>(dbContext, "UniqueSeoCode");
-
         }
     }
 }

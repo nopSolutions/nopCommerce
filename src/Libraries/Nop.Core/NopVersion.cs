@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core
+﻿namespace Nop.Core
 {
     public static class NopVersion
     {

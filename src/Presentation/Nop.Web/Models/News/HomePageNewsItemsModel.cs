@@ -17,7 +17,7 @@ namespace Nop.Web.Models.News
         public object Clone()
         {
             //we use a shallow copy (deep clone is not required here)
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }

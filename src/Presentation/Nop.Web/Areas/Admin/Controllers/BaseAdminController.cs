@@ -30,7 +30,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             SaveSelectedTabName(tabName, "selected-tab-name", null, persistForTheNextRequest);
             //child tabs (usually used for localization)
             //Form is available for POST only
-            if (this.Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+            if (Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
                 foreach (var key in this.Request.Form.Keys)
                     if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
                         SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
@@ -49,13 +49,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             //"GetSelectedTabName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
             if (string.IsNullOrEmpty(tabName))
             {
-                tabName = this.Request.Form[formKey];
+                tabName = Request.Form[formKey];
             }
             
             if (!string.IsNullOrEmpty(tabName))
             {
-                string dataKey = "nop.selected-tab-name";
-                if (!String.IsNullOrEmpty(dataKeyPrefix))
+                var dataKey = "nop.selected-tab-name";
+                if (!string.IsNullOrEmpty(dataKeyPrefix))
                     dataKey += $"-{dataKeyPrefix}";
 
                 if (persistForTheNextRequest)

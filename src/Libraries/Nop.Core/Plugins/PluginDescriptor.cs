@@ -169,7 +169,7 @@ namespace Nop.Core.Plugins
         {
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
-            
+
             return FriendlyName.CompareTo(other.FriendlyName);
         }
 
