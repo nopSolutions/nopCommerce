@@ -431,6 +431,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning">
     <Value>CSS bundling is not allowed in virtual directories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.ApplyRate.All">
+    <Value>Apply all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled.Hint">
+    <Value>Determines whether exchange rates will be updated automatically.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.ExchangeRateProvider.Hint">
+    <Value>Select an exchange rate provider.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -4296,6 +4296,9 @@
   <LocaleResource Name="Admin.Configuration.Currencies.ApplyRate">
     <Value>Apply rate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.ApplyRate.All">
+    <Value>Apply all</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.BackToList">
     <Value>back to currency list</Value>
   </LocaleResource>
@@ -4332,6 +4335,9 @@
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled">
     <Value>Auto update enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled.Hint">
+    <Value>Determines whether exchange rates will be updated automatically.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CustomFormatting">
     <Value>Custom formatting</Value>
   </LocaleResource>
@@ -4361,6 +4367,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.ExchangeRateProvider">
     <Value>Current exchange rate provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.ExchangeRateProvider.Hint">
+    <Value>Select an exchange rate provider.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency">
     <Value>Is primary exchange rate currency</Value>
