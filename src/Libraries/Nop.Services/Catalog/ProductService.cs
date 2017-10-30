@@ -470,8 +470,8 @@ namespace Nop.Services.Catalog
             var pVendorId = _dataProvider.GetInt32Parameter("VendorId", vendorId);
             var pWarehouseId = _dataProvider.GetInt32Parameter("WarehouseId", warehouseId);
             var pProductTypeId = _dataProvider.GetInt32Parameter("ProductTypeId", (int?)productType);
-            var pVisibleIndividuallyOnly = _dataProvider.GetInt32Parameter("VisibleIndividuallyOnly", visibleIndividuallyOnly);
-            var pMarkedAsNewOnly = _dataProvider.GetInt32Parameter("MarkedAsNewOnly", markedAsNewOnly);
+            var pVisibleIndividuallyOnly = _dataProvider.GetBooleanParameter("VisibleIndividuallyOnly", visibleIndividuallyOnly);
+            var pMarkedAsNewOnly = _dataProvider.GetBooleanParameter("MarkedAsNewOnly", markedAsNewOnly);
             var pProductTagId = _dataProvider.GetInt32Parameter("ProductTagId", productTagId);
             var pFeaturedProducts = _dataProvider.GetBooleanParameter("FeaturedProducts", featuredProducts);
             var pPriceMin = _dataProvider.GetDecimalParameter("PriceMin", priceMin);
