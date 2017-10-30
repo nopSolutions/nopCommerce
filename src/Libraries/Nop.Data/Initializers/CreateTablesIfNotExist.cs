@@ -7,6 +7,10 @@ using System.Transactions;
 
 namespace Nop.Data.Initializers
 {
+    /// <summary>
+    /// CreateTablesIfNotExist database initializer
+    /// </summary>
+    /// <typeparam name="TContext">Type of context</typeparam>
     public class CreateTablesIfNotExist<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
         private readonly string[] _tablesToValidate;
@@ -23,6 +27,10 @@ namespace Nop.Data.Initializers
             this._customCommands = customCommands;
         }
 
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
         public void InitializeDatabase(TContext context)
         {
             bool dbExists;

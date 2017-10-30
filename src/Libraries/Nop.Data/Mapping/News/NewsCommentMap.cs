@@ -2,8 +2,14 @@ using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class NewsCommentMap : NopEntityTypeConfiguration<NewsComment>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public NewsCommentMap()
         {
             this.ToTable("NewsComment");

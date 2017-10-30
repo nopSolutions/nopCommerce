@@ -18,16 +18,24 @@ namespace Nop.Data
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="nameOrConnectionString">Connecting string</param>
         public NopObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
-        
+
         #endregion
 
         #region Utilities
 
+        /// <summary>
+        /// On model creating
+        /// </summary>
+        /// <param name="modelBuilder">Model builder</param>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //dynamically load all configuration

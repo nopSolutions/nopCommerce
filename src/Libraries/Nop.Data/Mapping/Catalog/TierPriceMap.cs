@@ -2,8 +2,14 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class TierPriceMap : NopEntityTypeConfiguration<TierPrice>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public TierPriceMap()
         {
             this.ToTable("TierPrice");

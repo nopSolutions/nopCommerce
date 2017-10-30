@@ -5,8 +5,16 @@ using System.IO;
 
 namespace Nop.Data.Initializers
 {
+    /// <summary>
+    /// SQL Server Compact initializer
+    /// </summary>
+    /// <typeparam name="T">The type of the context.</typeparam>
     public abstract class SqlCeInitializer<T> : IDatabaseInitializer<T> where T : DbContext
     {
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
         public abstract void InitializeDatabase(T context);
 
         #region Helpers

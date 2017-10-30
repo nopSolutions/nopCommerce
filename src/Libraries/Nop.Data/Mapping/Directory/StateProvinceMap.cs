@@ -2,8 +2,14 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class StateProvinceMap : NopEntityTypeConfiguration<StateProvince>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public StateProvinceMap()
         {
             this.ToTable("StateProvince");

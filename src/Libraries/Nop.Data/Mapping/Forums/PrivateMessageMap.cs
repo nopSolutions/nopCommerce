@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Forums
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class PrivateMessageMap : NopEntityTypeConfiguration<PrivateMessage>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public PrivateMessageMap()
         {
             this.ToTable("Forums_PrivateMessage");

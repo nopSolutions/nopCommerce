@@ -2,8 +2,14 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class DiscountMap : NopEntityTypeConfiguration<Discount>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public DiscountMap()
         {
             this.ToTable("Discount");

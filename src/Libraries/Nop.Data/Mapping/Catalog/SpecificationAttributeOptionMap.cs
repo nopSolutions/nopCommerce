@@ -2,8 +2,14 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class SpecificationAttributeOptionMap : NopEntityTypeConfiguration<SpecificationAttributeOption>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public SpecificationAttributeOptionMap()
         {
             this.ToTable("SpecificationAttributeOption");

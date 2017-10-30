@@ -2,8 +2,14 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class StockQuantityHistoryMap : NopEntityTypeConfiguration<StockQuantityHistory>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public StockQuantityHistoryMap()
         {
             this.ToTable("StockQuantityHistory");

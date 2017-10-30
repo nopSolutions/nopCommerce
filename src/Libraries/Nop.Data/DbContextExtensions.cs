@@ -9,6 +9,9 @@ using Nop.Core;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// DB context extensions
+    /// </summary>
     public static class DbContextExtensions
     {
         #region Utilities
@@ -212,6 +215,11 @@ namespace Nop.Data
             return queryResult;
         }
 
+        /// <summary>
+        /// Get database name
+        /// </summary>
+        /// <param name="context">DB context</param>
+        /// <returns>Database name</returns>
         public static string DbName(this IDbContext context)
         {
             var connection = ((IObjectContextAdapter)context).ObjectContext.Connection as EntityConnection;

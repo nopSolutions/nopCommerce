@@ -2,8 +2,14 @@
 
 namespace Nop.Data.Mapping.Forums
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ForumTopicMap : NopEntityTypeConfiguration<ForumTopic>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ForumTopicMap()
         {
             this.ToTable("Forums_Topic");

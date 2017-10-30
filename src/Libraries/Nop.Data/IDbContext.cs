@@ -4,6 +4,9 @@ using Nop.Core;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// DB context
+    /// </summary>
     public interface IDbContext
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace Nop.Data
         /// <summary>
         /// Save changes
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Result</returns>
         int SaveChanges();
 
         /// <summary>

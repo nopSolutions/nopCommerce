@@ -2,8 +2,14 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class AclRecordMap : NopEntityTypeConfiguration<AclRecord>
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public AclRecordMap()
         {
             this.ToTable("AclRecord");

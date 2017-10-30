@@ -5,6 +5,9 @@ using Nop.Core.Caching;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
