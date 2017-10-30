@@ -26,6 +26,14 @@ namespace Nop.Web.Framework.Themes
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="themeProvider">Theme provider</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="storeInformationSettings">Store information settings</param>
         public ThemeContext(IGenericAttributeService genericAttributeService,
             IStoreContext storeContext,
             IThemeProvider themeProvider,

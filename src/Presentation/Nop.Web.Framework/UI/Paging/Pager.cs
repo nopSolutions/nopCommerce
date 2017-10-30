@@ -20,21 +20,65 @@ namespace Nop.Web.Framework.UI.Paging
     /// Renders a pager component from an IPageableModel datasource.
     /// </summary>
     public partial class Pager : IHtmlContent
-	{
+    {
+        /// <summary>
+        /// Model
+        /// </summary>
         protected readonly IPageableModel model;
+        /// <summary>
+        /// ViewContext
+        /// </summary>
         protected readonly ViewContext viewContext;
+	    /// <summary>
+	    /// Page query string prameter name
+	    /// </summary>
         protected string pageQueryName = "page";
+	    /// <summary>
+	    /// A value indicating whether to show Total summary
+	    /// </summary>
         protected bool showTotalSummary;
+        /// <summary>
+        /// A value indicating whether to show pager items
+        /// </summary>
         protected bool showPagerItems = true;
+        /// <summary>
+        /// A value indicating whether to show the first item
+        /// </summary>
         protected bool showFirst = true;
+        /// <summary>
+        /// A value indicating whether to the previous item
+        /// </summary>
         protected bool showPrevious = true;
+        /// <summary>
+        /// A value indicating whether to show the next item
+        /// </summary>
         protected bool showNext = true;
+        /// <summary>
+        /// A value indicating whether to show the last item
+        /// </summary>
         protected bool showLast = true;
+        /// <summary>
+        /// A value indicating whether to show individual page
+        /// </summary>
         protected bool showIndividualPages = true;
+        /// <summary>
+        /// A value indicating whether to render empty query string parameters (without values)
+        /// </summary>
         protected bool renderEmptyParameters = true;
+        /// <summary>
+        /// Number of individual page items to display
+        /// </summary>
         protected int individualPagesDisplayedCount = 5;
+        /// <summary>
+        /// Boolean parameter names
+        /// </summary>
         protected IList<string> booleanParameterNames;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="model">Model</param>
+        /// <param name="context">ViewContext</param>
 		public Pager(IPageableModel model, ViewContext context)
 		{
             this.model = model;
@@ -42,78 +86,148 @@ namespace Nop.Web.Framework.UI.Paging
             this.booleanParameterNames = new List<string>();
 		}
 
+        /// <summary>
+        /// ViewContext
+        /// </summary>
 		protected ViewContext ViewContext 
 		{
 			get { return viewContext; }
 		}
-        
+
+        /// <summary>
+        /// Set 
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager QueryParam(string value)
 		{
             this.pageQueryName = value;
 			return this;
-		}
+        }
+        /// <summary>
+        /// Set a value indicating whether to show Total summary
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowTotalSummary(bool value)
         {
             this.showTotalSummary = value;
             return this;
         }
+        /// <summary>
+        /// Set a value indicating whether to show pager items
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowPagerItems(bool value)
         {
             this.showPagerItems = value;
             return this;
         }
+        /// <summary>
+        /// Set a value indicating whether to show the first item
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowFirst(bool value)
         {
             this.showFirst = value;
             return this;
         }
+        /// <summary>
+        /// Set a value indicating whether to the previous item
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowPrevious(bool value)
         {
             this.showPrevious = value;
             return this;
         }
+        /// <summary>
+        /// Set a  value indicating whether to show the next item
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowNext(bool value)
         {
             this.showNext = value;
             return this;
         }
+        /// <summary>
+        /// Set a value indicating whether to show the last item
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowLast(bool value)
         {
             this.showLast = value;
             return this;
         }
+        /// <summary>
+        /// Set number of individual page items to display
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager ShowIndividualPages(bool value)
         {
             this.showIndividualPages = value;
             return this;
         }
+        /// <summary>
+        /// Set a value indicating whether to render empty query string parameters (without values)
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager RenderEmptyParameters(bool value)
         {
             this.renderEmptyParameters = value;
             return this;
         }
+        /// <summary>
+        /// Set number of individual page items to display
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <returns>Pager</returns>
         public Pager IndividualPagesDisplayedCount(int value)
         {
             this.individualPagesDisplayedCount = value;
             return this;
         }
-        //little hack here due to ugly MVC implementation
-        //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+        /// <summary>
+        /// little hack here due to ugly MVC implementation
+        /// find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+        /// </summary>
+        /// <param name="paramName">Parameter name</param>
+        /// <returns>Pager</returns>
         public Pager BooleanParameterName(string paramName)
         {
             booleanParameterNames.Add(paramName);
             return this;
         }
 
+        /// <summary>
+        /// Write control
+        /// </summary>
+        /// <param name="writer">Writer</param>
+        /// <param name="encoder">Encoder</param>
 	    public void WriteTo(TextWriter writer, HtmlEncoder encoder)
 	    {
             var htmlString = GenerateHtmlString();
 	        writer.Write(htmlString);
 	    }
+        /// <summary>
+        /// Generate HTML control
+        /// </summary>
+        /// <returns>HTML control</returns>
 	    public override string ToString()
 	    {
 	        return GenerateHtmlString();
 	    }
+        /// <summary>
+        /// Generate HTML control
+        /// </summary>
+        /// <returns>HTML control</returns>
         public virtual string GenerateHtmlString()
 		{
             if (model.TotalItems == 0) 
@@ -187,12 +301,20 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return result;
 		}
+        /// <summary>
+        /// Is pager empty (only one page)?
+        /// </summary>
+        /// <returns>Result</returns>
 	    public virtual bool IsEmpty()
 	    {
             var html = GenerateHtmlString();
 	        return string.IsNullOrEmpty(html);
 	    }
 
+        /// <summary>
+        /// Get first individual page index
+        /// </summary>
+        /// <returns>Page index</returns>
         protected virtual int GetFirstIndividualPageIndex()
         {
             if ((model.TotalPages < individualPagesDisplayedCount) ||
@@ -206,6 +328,10 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return (model.PageIndex - (individualPagesDisplayedCount / 2));
         }
+        /// <summary>
+        /// Get last individual page index
+        /// </summary>
+        /// <returns>Page index</returns>
         protected virtual int GetLastIndividualPageIndex()
         {
             var num = individualPagesDisplayedCount / 2;
@@ -224,6 +350,13 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return (model.PageIndex + num);
         }
+        /// <summary>
+        /// Create page link
+        /// </summary>
+        /// <param name="pageNumber">Page number</param>
+        /// <param name="text">Text</param>
+        /// <param name="cssClass">CSS class</param>
+        /// <returns>Link</returns>
 		protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
 		{
             var liBuilder = new TagBuilder("li");
@@ -237,6 +370,11 @@ namespace Nop.Web.Framework.UI.Paging
             liBuilder.InnerHtml.AppendHtml(aBuilder);
 		    return liBuilder.RenderHtmlContent();
 		}
+        /// <summary>
+        /// Create default URL
+        /// </summary>
+        /// <param name="pageNumber">Page number</param>
+        /// <returns>URL</returns>
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{
             var routeValues = new RouteValueDictionary();

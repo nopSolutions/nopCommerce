@@ -15,6 +15,10 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="propertyBinders">Property binders</param>
         public NopModelBinder(IDictionary<ModelMetadata, IModelBinder> propertyBinders) : base(propertyBinders)
         {
         }

@@ -41,6 +41,9 @@ namespace Nop.Web.Framework
         /// </summary>
         public bool NewInputForEachValue { get; set; }
 
+        /// <summary>
+        /// Parames
+        /// </summary>
         public NameValueCollection Params
         {
             get

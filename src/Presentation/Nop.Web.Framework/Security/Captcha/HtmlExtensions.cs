@@ -4,8 +4,16 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
+    /// <summary>
+    /// HTML extensions
+    /// </summary>
     public static class HtmlExtensions
     {
+        /// <summary>
+        /// Generate reCAPTCHA
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <returns>Result</returns>
         public static IHtmlContent GenerateCaptcha(this IHtmlHelper helper)
         {
             var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();

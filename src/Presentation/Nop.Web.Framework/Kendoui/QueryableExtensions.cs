@@ -4,8 +4,18 @@ using System.Linq.Dynamic;
 
 namespace Nop.Web.Framework.Kendoui
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class QueryableExtensions
     {
+        /// <summary>
+        /// Filter a collection
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="queryable">Collection</param>
+        /// <param name="filter">Filter parameters</param>
+        /// <returns>Result</returns>
         public static IQueryable<T> Filter<T>(this IQueryable<T> queryable, Filter filter)
         {
             if (filter != null && filter.Logic != null)
@@ -26,6 +36,13 @@ namespace Nop.Web.Framework.Kendoui
             return queryable;
         }
 
+        /// <summary>
+        /// Sort a collection
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="queryable">Collection</param>
+        /// <param name="sort">Sort parameters</param>
+        /// <returns>Result</returns>
         public static IQueryable<T> Sort<T>(this IQueryable<T> queryable, IEnumerable<Sort> sort)
         {
             if (sort != null && sort.Any())

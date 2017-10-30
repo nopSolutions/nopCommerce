@@ -8,6 +8,9 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-nested-setting tag helper
+    /// </summary>
     [HtmlTargetElement("nop-nested-setting", Attributes = ForAttributeName)]
     public class NopNestedSettingTagHelper : TagHelper
     {
@@ -33,12 +36,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
+        /// <param name="adminAreaSettings">Admin area settings</param>
         public NopNestedSettingTagHelper(IHtmlGenerator generator, AdminAreaSettings adminAreaSettings)
         {
             Generator = generator;
             _adminAreaSettings = adminAreaSettings;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

@@ -12,15 +12,28 @@ using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Menu
 {
+    /// <summary>
+    /// XML sitemap
+    /// </summary>
     public class XmlSiteMap
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public XmlSiteMap()
         {
             RootNode = new SiteMapNode();
         }
 
+        /// <summary>
+        /// Root node
+        /// </summary>
         public SiteMapNode RootNode { get; set; }
 
+        /// <summary>
+        /// Load sitemap
+        /// </summary>
+        /// <param name="physicalPath">Filepath to load a sitemap</param>
         public virtual void LoadFrom(string physicalPath)
         {
             var filePath = CommonHelper.MapPath(physicalPath);

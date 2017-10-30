@@ -5,14 +5,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Nop.Web.Framework.Kendoui
 {
+    /// <summary>
+    /// ModelState extensions
+    /// </summary>
     public static class ModelStateExtensions
     {
-        public static object SerializeErrors(this ModelStateDictionary modelStateDictionary)
-        {
-            return modelStateDictionary.Where(entry => entry.Value.Errors.Any())
-                .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
-        }
-
         private static Dictionary<string, object> SerializeModelState(ModelStateEntry modelState)
         {
             var errors = new List<string>();
@@ -32,6 +29,22 @@ namespace Nop.Web.Framework.Kendoui
             return dictionary;
         }
 
+        /// <summary>
+        /// Serialize errors
+        /// </summary>
+        /// <param name="modelStateDictionary">ModelStateDictionary</param>
+        /// <returns>Result</returns>
+        public static object SerializeErrors(this ModelStateDictionary modelStateDictionary)
+        {
+            return modelStateDictionary.Where(entry => entry.Value.Errors.Any())
+                .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
+        }
+
+        /// <summary>
+        /// Serialized ModelStateDictionary errors
+        /// </summary>
+        /// <param name="modelState">ModelStateDictionary</param>
+        /// <returns>Result</returns>
         public static object ToDataSourceResult(this ModelStateDictionary modelState)
         {
             if (!modelState.IsValid)

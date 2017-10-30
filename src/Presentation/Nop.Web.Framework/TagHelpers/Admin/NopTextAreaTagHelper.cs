@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-textarea tag helper
+    /// </summary>
     [HtmlTargetElement("nop-textarea", Attributes = ForAttributeName)]
     public class NopTextAreaTagHelper : TextAreaTagHelper
     {
@@ -23,10 +26,19 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [HtmlAttributeName(RequiredAttributeName)]
         public string IsRequired { set; get; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
         public NopTextAreaTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             //tag details

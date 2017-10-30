@@ -5,23 +5,74 @@ using Newtonsoft.Json.Linq;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
+    /// <summary>
+    /// Google reCAPTCHA validator
+    /// </summary>
     public class GReCaptchaValidator
     {
         private const string RECAPTCHA_VERIFY_URL_VERSION1 = "https://www.google.com/recaptcha/api/verify?privatekey={0}&response={1}&remoteip={2}&challenge={3}";
         private const string RECAPTCHA_VERIFY_URL_VERSION2 = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
-
-        public string SecretKey { get; set; }
-        public string RemoteIp { get; set; }
-        public string Response { get; set; }
-        public string Challenge { get; set; }
-
+        
         private readonly ReCaptchaVersion _version;
 
+        /// <summary>
+        /// reCAPTCHA secret key
+        /// </summary>
+        public string SecretKey { get; set; }
+        /// <summary>
+        /// Remove IP address
+        /// </summary>
+        public string RemoteIp { get; set; }
+        /// <summary>
+        /// Response
+        /// </summary>
+        public string Response { get; set; }
+        /// <summary>
+        /// Challenge
+        /// </summary>
+        public string Challenge { get; set; }
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="version">Version</param>
         public GReCaptchaValidator(ReCaptchaVersion version = ReCaptchaVersion.Version1)
         {
             _version = version;
         }
 
+        /// <summary>
+        /// Parse response
+        /// </summary>
+        /// <param name="responseString">Response (string)</param>
+        /// <returns>Parsed response</returns>
+        private GReCaptchaResponse ParseResponseResult(string responseString)
+        {
+            var result = new GReCaptchaResponse();
+
+            if (_version == ReCaptchaVersion.Version1)
+            {
+                var resultObject = responseString.Split('\n');
+                result.IsValid = resultObject.Contains("true");
+                if (!result.IsValid)
+                    result.ErrorCodes.AddRange(resultObject.Where(r => !r.Equals("false", StringComparison.InvariantCultureIgnoreCase)));
+            }
+            else if (_version == ReCaptchaVersion.Version2)
+            {
+                var resultObject = JObject.Parse(responseString);
+                result.IsValid = resultObject.Value<bool>("success");
+                if (resultObject.Value<JToken>("error-codes") != null &&
+                    resultObject.Value<JToken>("error-codes").Values<string>().Any())
+                    result.ErrorCodes = resultObject.Value<JToken>("error-codes").Values<string>().ToList();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Validate
+        /// </summary>
+        /// <returns></returns>
         public GReCaptchaResponse Validate()
         {
             GReCaptchaResponse result = null;
@@ -56,29 +107,6 @@ namespace Nop.Web.Framework.Security.Captcha
             finally
             {
                 httpClient.Dispose();
-            }
-
-            return result;
-        }
-
-        private GReCaptchaResponse ParseResponseResult(string responseString)
-        {
-            var result = new GReCaptchaResponse();
-
-            if (_version == ReCaptchaVersion.Version1)
-            {
-                var resultObject = responseString.Split('\n');
-                result.IsValid = resultObject.Contains("true");
-                if(!result.IsValid)
-                    result.ErrorCodes.AddRange(resultObject.Where(r => !r.Equals("false", StringComparison.InvariantCultureIgnoreCase)));
-            }
-            else if (_version == ReCaptchaVersion.Version2)
-            {
-                var resultObject = JObject.Parse(responseString);
-                result.IsValid = resultObject.Value<bool>("success");
-                if (resultObject.Value<JToken>("error-codes") != null &&
-                        resultObject.Value<JToken>("error-codes").Values<string>().Any())
-                        result.ErrorCodes = resultObject.Value<JToken>("error-codes").Values<string>().ToList();
             }
 
             return result;

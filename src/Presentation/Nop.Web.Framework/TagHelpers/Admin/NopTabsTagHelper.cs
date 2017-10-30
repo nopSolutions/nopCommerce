@@ -8,6 +8,9 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-tabs tag helper
+    /// </summary>
     [HtmlTargetElement("nop-tabs", Attributes = IdAttributeName)]
     public class NopTabsTagHelper : TagHelper
     {
@@ -36,11 +39,21 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopTabsTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
+        /// <returns>Result</returns>
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -118,6 +131,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         }
     }
 
+    /// <summary>
+    /// "nop-tab tag helper
+    /// </summary>
     [HtmlTargetElement("nop-tab", ParentTag = "nop-tabs", Attributes = NameAttributeName)]
     public class NopTabTagHelper : TagHelper
     {
@@ -152,11 +168,20 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopTabTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -232,12 +257,24 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         }
     }
 
+    /// <summary>
+    /// Tab context item
+    /// </summary>
     public class NopTabContextItem
     {
+        /// <summary>
+        /// Title
+        /// </summary>
         public string Title { set; get; }
 
+        /// <summary>
+        /// Content
+        /// </summary>
         public string Content { set; get; }
 
+        /// <summary>
+        /// Is default tab
+        /// </summary>
         public bool IsDefault { set; get; }
     }
 }

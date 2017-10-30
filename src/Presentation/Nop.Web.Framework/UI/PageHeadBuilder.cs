@@ -79,6 +79,11 @@ namespace Nop.Web.Framework.UI
 
         #region Utilities
 
+        /// <summary>
+        /// Get bundled file name
+        /// </summary>
+        /// <param name="parts">Parts to bundle</param>
+        /// <returns>File name</returns>
         protected virtual string GetBundleFileName(string[] parts)
         {
             if (parts == null || parts.Length == 0)
@@ -109,6 +114,10 @@ namespace Nop.Web.Framework.UI
 
         #region Methods
 
+        /// <summary>
+        /// Add title element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Title part</param>
         public virtual void AddTitleParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -116,6 +125,10 @@ namespace Nop.Web.Framework.UI
 
             _titleParts.Add(part);
         }
+        /// <summary>
+        /// Append title element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Title part</param>
         public virtual void AppendTitleParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -123,6 +136,11 @@ namespace Nop.Web.Framework.UI
             
             _titleParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all title parts
+        /// </summary>
+        /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
+        /// <returns>Generated string</returns>
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
             var result = "";
@@ -161,7 +179,11 @@ namespace Nop.Web.Framework.UI
             }
             return result;
         }
-        
+
+        /// <summary>
+        /// Add meta description element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Meta description part</param>
         public virtual void AddMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -169,6 +191,10 @@ namespace Nop.Web.Framework.UI
             
             _metaDescriptionParts.Add(part);
         }
+        /// <summary>
+        /// Append meta description element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Meta description part</param>
         public virtual void AppendMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -176,13 +202,21 @@ namespace Nop.Web.Framework.UI
             
             _metaDescriptionParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all description parts
+        /// </summary>
+        /// <returns>Generated string</returns>
         public virtual string GenerateMetaDescription()
         {
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaDescription) ? metaDescription : _seoSettings.DefaultMetaDescription;
             return result;
         }
-        
+
+        /// <summary>
+        /// Add meta keyword element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Meta keyword part</param>
         public virtual void AddMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -190,6 +224,10 @@ namespace Nop.Web.Framework.UI
             
             _metaKeywordParts.Add(part);
         }
+        /// <summary>
+        /// Append meta keyword element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Meta keyword part</param>
         public virtual void AppendMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -197,13 +235,25 @@ namespace Nop.Web.Framework.UI
 
             _metaKeywordParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all keyword parts
+        /// </summary>
+        /// <returns>Generated string</returns>
         public virtual string GenerateMetaKeywords()
         {
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !string.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
-    
+
+        /// <summary>
+        /// Add script element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="src">Script path (minified version)</param>
+        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
+        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
@@ -223,6 +273,14 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+        /// <summary>
+        /// Append script element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="src">Script path (minified version)</param>
+        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
+        /// <param name="isAsync">A value indicating whether to add an attribute "async" or not for js files</param>
         public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
@@ -242,6 +300,13 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+        /// <summary>
+        /// Generate all script parts
+        /// </summary>
+        /// <param name="urlHelper">URL Helper</param>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
+        /// <returns>Generated string</returns>
         public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
@@ -342,6 +407,11 @@ namespace Nop.Web.Framework.UI
             }
         }
 
+        /// <summary>
+        /// Add inline script element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="script">Script</param>
         public virtual void AddInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
@@ -352,6 +422,11 @@ namespace Nop.Web.Framework.UI
 
             _inlineScriptParts[location].Add(script);
         }
+        /// <summary>
+        /// Append inline script element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="script">Script</param>
         public virtual void AppendInlineScriptParts(ResourceLocation location, string script)
         {
             if (!_inlineScriptParts.ContainsKey(location))
@@ -362,6 +437,12 @@ namespace Nop.Web.Framework.UI
 
             _inlineScriptParts[location].Insert(0, script);
         }
+        /// <summary>
+        /// Generate all inline script parts
+        /// </summary>
+        /// <param name="urlHelper">URL Helper</param>
+        /// <param name="location">A location of the script element</param>
+        /// <returns>Generated string</returns>
         public virtual string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location)
         {
             if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
@@ -379,6 +460,13 @@ namespace Nop.Web.Framework.UI
             return result.ToString();
         }
 
+        /// <summary>
+        /// Add CSS element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="src">Script path (minified version)</param>
+        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -397,6 +485,13 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+        /// <summary>
+        /// Append CSS element
+        /// </summary>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="src">Script path (minified version)</param>
+        /// <param name="debugSrc">Script path (full debug version). If empty, then minified version will be used</param>
+        /// <param name="excludeFromBundle">A value indicating whether to exclude this script from bundling</param>
         public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -415,6 +510,13 @@ namespace Nop.Web.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+        /// <summary>
+        /// Generate all CSS parts
+        /// </summary>
+        /// <param name="urlHelper">URL Helper</param>
+        /// <param name="location">A location of the script element</param>
+        /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
+        /// <returns>Generated string</returns>
         public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
@@ -527,6 +629,10 @@ namespace Nop.Web.Framework.UI
             }
         }
 
+        /// <summary>
+        /// Add canonical URL element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Canonical URL part</param>
         public virtual void AddCanonicalUrlParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -534,6 +640,10 @@ namespace Nop.Web.Framework.UI
                        
             _canonicalUrlParts.Add(part);
         }
+        /// <summary>
+        /// Append canonical URL element to the <![CDATA[<head>]]>
+        /// </summary>
+        /// <param name="part">Canonical URL part</param>
         public virtual void AppendCanonicalUrlParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -541,6 +651,10 @@ namespace Nop.Web.Framework.UI
                        
             _canonicalUrlParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all canonical URL parts
+        /// </summary>
+        /// <returns>Generated string</returns>
         public virtual string GenerateCanonicalUrls()
         {
             var result = new StringBuilder();
@@ -551,7 +665,11 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-        
+
+        /// <summary>
+        /// Add any custom element to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="part">The entire element. For example, <![CDATA[<meta name="msvalidate.01" content="123121231231313123123" />]]></param>
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -559,6 +677,10 @@ namespace Nop.Web.Framework.UI
 
             _headCustomParts.Add(part);
         }
+        /// <summary>
+        /// Append any custom element to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="part">The entire element. For example, <![CDATA[<meta name="msvalidate.01" content="123121231231313123123" />]]></param>
         public virtual void AppendHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -566,6 +688,10 @@ namespace Nop.Web.Framework.UI
 
             _headCustomParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all custom elements
+        /// </summary>
+        /// <returns>Generated string</returns>
         public virtual string GenerateHeadCustom()
         {
             //use only distinct rows
@@ -581,7 +707,11 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
-        
+
+        /// <summary>
+        /// Add CSS class to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="part">CSS class</param>
         public virtual void AddPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -589,6 +719,10 @@ namespace Nop.Web.Framework.UI
 
             _pageCssClassParts.Add(part);
         }
+        /// <summary>
+        /// Append CSS class to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="part">CSS class</param>
         public virtual void AppendPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -596,6 +730,10 @@ namespace Nop.Web.Framework.UI
 
             _pageCssClassParts.Insert(0, part);
         }
+        /// <summary>
+        /// Generate all title parts
+        /// </summary>
+        /// <returns>Generated string</returns>
         public virtual string GeneratePageCssClasses()
         {
             var result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
@@ -640,47 +778,90 @@ namespace Nop.Web.Framework.UI
         
         #region Nested classes
 
+        /// <summary>
+        /// JS file meta data
+        /// </summary>
         private class ScriptReferenceMeta : IEquatable<ScriptReferenceMeta>
         {
+            /// <summary>
+            /// A value indicating whether to exclude the script from bundling
+            /// </summary>
             public bool ExcludeFromBundle { get; set; }
 
+            /// <summary>
+            /// A value indicating whether to load the script asynchronously 
+            /// </summary>
             public bool IsAsync { get; set; }
 
+            /// <summary>
+            /// Src for production
+            /// </summary>
             public string Src { get; set; }
 
+            /// <summary>
+            /// Src for debugging
+            /// </summary>
             public string DebugSrc { get; set; }
 
+            /// <summary>
+            /// Equals
+            /// </summary>
+            /// <param name="item">Other item</param>
+            /// <returns>Result</returns>
             public bool Equals(ScriptReferenceMeta item)
             {
                 if (item == null)
                     return false;
                 return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
             }
+            /// <summary>
+            /// Get hash code
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return Src == null ? 0 : Src.GetHashCode();
             }
         }
 
+        /// <summary>
+        /// CSS file meta data
+        /// </summary>
         private class CssReferenceMeta : IEquatable<CssReferenceMeta>
         {
             public bool ExcludeFromBundle { get; set; }
 
+            /// <summary>
+            /// Src for production
+            /// </summary>
             public string Src { get; set; }
 
+            /// <summary>
+            /// Src for debugging
+            /// </summary>
             public string DebugSrc { get; set; }
 
+            /// <summary>
+            /// Equals
+            /// </summary>
+            /// <param name="item">Other item</param>
+            /// <returns>Result</returns>
             public bool Equals(CssReferenceMeta item)
             {
                 if (item == null)
                     return false;
                 return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
             }
+            /// <summary>
+            /// Get hash code
+            /// </summary>
+            /// <returns></returns>
             public override int GetHashCode()
             {
                 return Src == null ? 0 : Src.GetHashCode();
             }
         }
+
         #endregion
     }
 }
