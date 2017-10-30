@@ -52,7 +52,7 @@ namespace Nop.Core.Domain.Messages
         public const string OrderPaidStoreOwnerNotification = "OrderPaid.StoreOwnerNotification";
 
         /// <summary>
-        /// Represents system name of notification custoemer about paid order
+        /// Represents system name of notification customer about paid order
         /// </summary>
         public const string OrderPaidCustomerNotification = "OrderPaid.CustomerNotification";
 
