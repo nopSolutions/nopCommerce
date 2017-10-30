@@ -13,7 +13,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Diagnostic;
+using System.Threading.Tasks;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using StackExchange.Profiling.Storage;
@@ -53,18 +53,35 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //or use special exception handler
                 application.UseExceptionHandler("/errorpage.htm");
             }
-        }
 
-        /// <summary>
-        /// Add diagnostic listener
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseDiagnosticListener(this IApplicationBuilder application)
-        {
-            var diagnosticListener = EngineContext.Current.Resolve<DiagnosticListener>();
+            //log errors
+            application.UseExceptionHandler(handler =>
+            {
+                handler.Run(context =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                    if (exception == null)
+                        return Task.CompletedTask;
 
-            //listen for middleware events
-            diagnosticListener.SubscribeWithAdapter(new NopDiagnosticListener());
+                    try
+                    {
+                        //check whether database is installed
+                        if (DataSettingsHelper.DatabaseIsInstalled())
+                        {
+                            //get current customer
+                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+
+                            //log error
+                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                        }
+                    }
+                    finally
+                    {
+                        //rethrow the exception to show the error page
+                        throw exception;
+                    }
+                });
+            });
         }
 
         /// <summary>
@@ -114,7 +131,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             });
         }
 
-
         /// <summary>
         /// Adds a special handler that checks for responses with the 400 status code (bad request)
         /// </summary>
@@ -131,7 +147,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
 
-                return System.Threading.Tasks.Task.CompletedTask;
+                return Task.CompletedTask;
             });
         }
 

@@ -234,9 +234,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add custom model binder provider (to the top of the provider list)
             mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
 
-            //add global exception filter
-            mvcBuilder.AddMvcOptions(options => options.Filters.Add(new ExceptionFilter()));
-
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(NopValidatorFactory));
 
