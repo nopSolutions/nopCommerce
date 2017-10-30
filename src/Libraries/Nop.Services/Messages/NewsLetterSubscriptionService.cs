@@ -27,6 +27,14 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context">DB context</param>
+        /// <param name="subscriptionRepository">Subscription repository</param>
+        /// <param name="customerRepository">Customer repository</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="customerService">Customer service</param>
         public NewsLetterSubscriptionService(IDbContext context,
             IRepository<NewsLetterSubscription> subscriptionRepository,
             IRepository<Customer> customerRepository,

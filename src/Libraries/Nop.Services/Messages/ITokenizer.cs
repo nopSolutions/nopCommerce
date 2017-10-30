@@ -2,6 +2,9 @@
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Tokenizer
+    /// </summary>
     public partial interface ITokenizer
     {
         /// <summary>

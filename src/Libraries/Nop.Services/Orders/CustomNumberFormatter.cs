@@ -5,6 +5,9 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
 {
+    /// <summary>
+    /// Custom number formatter
+    /// </summary>
     public partial class CustomNumberFormatter : ICustomNumberFormatter
     {
         #region Fields
@@ -15,6 +18,10 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="orderSettings">Order settings</param>
         public CustomNumberFormatter(OrderSettings orderSettings)
         {
             _orderSettings = orderSettings;
@@ -24,6 +31,11 @@ namespace Nop.Services.Orders
 
         #region Methods
 
+        /// <summary>
+        /// Generate return request custom number
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <returns>Custom number</returns>
         public virtual string GenerateReturnRequestCustomNumber(ReturnRequest returnRequest)
         {
             string customNumber;
@@ -60,6 +72,11 @@ namespace Nop.Services.Orders
             return customNumber;
         }
 
+        /// <summary>
+        /// Generate order custom number
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Custom number</returns>
         public virtual string GenerateOrderCustomNumber(Order order)
         {
             if (string.IsNullOrEmpty(_orderSettings.CustomOrderNumberMask))

@@ -9,6 +9,9 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Campaign service
+    /// </summary>
     public partial class CampaignService : ICampaignService
     {
         private readonly IRepository<Campaign> _campaignRepository;

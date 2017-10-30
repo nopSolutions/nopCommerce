@@ -62,7 +62,11 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
         public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
         public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
-        
+
+        /// <summary>
+        /// Get permissions
+        /// </summary>
+        /// <returns>Permissions</returns>
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
             return new[] 
@@ -120,6 +124,10 @@ namespace Nop.Services.Security
             };
         }
 
+        /// <summary>
+        /// Get default permissions
+        /// </summary>
+        /// <returns>Permissions</returns>
         public virtual IEnumerable<DefaultPermissionRecord> GetDefaultPermissions()
         {
             return new[] 

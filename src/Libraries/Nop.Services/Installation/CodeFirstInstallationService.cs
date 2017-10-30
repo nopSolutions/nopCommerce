@@ -42,6 +42,9 @@ using Nop.Services.Seo;
 
 namespace Nop.Services.Installation
 {
+    /// <summary>
+    /// Code first installation service
+    /// </summary>
     public partial class CodeFirstInstallationService : IInstallationService
     {
         #region Fields
@@ -12068,6 +12071,12 @@ namespace Nop.Services.Installation
 
         #region Methods
 
+        /// <summary>
+        /// Install data
+        /// </summary>
+        /// <param name="defaultUserEmail">Default user email</param>
+        /// <param name="defaultUserPassword">Default user password</param>
+        /// <param name="installSampleData">A value indicating whether to install sample data</param>
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {

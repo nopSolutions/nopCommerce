@@ -3,6 +3,9 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
 {
+    /// <summary>
+    /// Discount (for caching)
+    /// </summary>
     [Serializable]
     public class DiscountForCaching
     {

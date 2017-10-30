@@ -4,6 +4,9 @@ using Nop.Core.Html;
 
 namespace Nop.Services.Vendors
 {
+    /// <summary>
+    /// Vendor extensions
+    /// </summary>
     public static class VendorExtensions
     {
         /// <summary>

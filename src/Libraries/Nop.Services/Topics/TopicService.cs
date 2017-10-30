@@ -59,6 +59,17 @@ namespace Nop.Services.Topics
 
         #region Ctor
 
+        /// <summary>
+        /// Topic service
+        /// </summary>
+        /// <param name="topicRepository">Topic repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="aclRepository">ACL repository</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="cacheManager">Cache manager</param>
         public TopicService(IRepository<Topic> topicRepository, 
             IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService,

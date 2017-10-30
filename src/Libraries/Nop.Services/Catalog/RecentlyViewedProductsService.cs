@@ -30,6 +30,12 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
+        /// <param name="productService">Product service</param>
         public RecentlyViewedProductsService(CatalogSettings catalogSettings,
             IHttpContextAccessor httpContextAccessor,
             IProductService productService)

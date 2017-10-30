@@ -221,8 +221,14 @@ namespace Nop.Services.Orders
 
         #region Nested classes
 
+        /// <summary>
+        /// PlaceOrder container
+        /// </summary>
         protected class PlaceOrderContainer
         {
+            /// <summary>
+            /// Ctor
+            /// </summary>
             public PlaceOrderContainer()
             {
                 this.Cart = new List<ShoppingCartItem>();
@@ -230,46 +236,150 @@ namespace Nop.Services.Orders
                 this.AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
+            /// <summary>
+            /// Customer
+            /// </summary>
             public Customer Customer { get; set; }
+            /// <summary>
+            /// Customer language
+            /// </summary>
             public Language CustomerLanguage { get; set; }
+            /// <summary>
+            /// Affiliate identifier
+            /// </summary>
             public int AffiliateId { get; set; }
+            /// <summary>
+            /// TAx display type
+            /// </summary>
             public TaxDisplayType CustomerTaxDisplayType {get; set; }
+            /// <summary>
+            /// Selected currency
+            /// </summary>
             public string CustomerCurrencyCode { get; set; }
+            /// <summary>
+            /// Customer currency rate
+            /// </summary>
             public decimal CustomerCurrencyRate { get; set; }
 
+            /// <summary>
+            /// Billing address
+            /// </summary>
             public Address BillingAddress { get; set; }
+            /// <summary>
+            /// Shipping address
+            /// </summary>
             public Address ShippingAddress {get; set; }
+            /// <summary>
+            /// Shipping status
+            /// </summary>
             public ShippingStatus ShippingStatus { get; set; }
+            /// <summary>
+            /// Selected shipping method
+            /// </summary>
             public string ShippingMethodName { get; set; }
+            /// <summary>
+            /// Shipping rate computation method system name
+            /// </summary>
             public string ShippingRateComputationMethodSystemName { get; set; }
+            /// <summary>
+            /// Is pickup in store selected?
+            /// </summary>
             public bool PickUpInStore { get; set; }
+            /// <summary>
+            /// Selected pickup address
+            /// </summary>
             public Address PickupAddress { get; set; }
 
+            /// <summary>
+            /// Is recurring shopping cart
+            /// </summary>
             public bool IsRecurringShoppingCart { get; set; }
-            //initial order (used with recurring payments)
+            /// <summary>
+            /// Initial order (used with recurring payments)
+            /// </summary>
             public Order InitialOrder { get; set; }
 
+            /// <summary>
+            /// Checkout attributes
+            /// </summary>
             public string CheckoutAttributeDescription { get; set; }
+            /// <summary>
+            /// Shopping cart
+            /// </summary>
             public string CheckoutAttributesXml { get; set; }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public IList<ShoppingCartItem> Cart { get; set; }
+            /// <summary>
+            /// Applied discounts
+            /// </summary>
             public List<DiscountForCaching> AppliedDiscounts { get; set; }
+            /// <summary>
+            /// Applied gift cards
+            /// </summary>
             public List<AppliedGiftCard> AppliedGiftCards { get; set; }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public decimal OrderSubTotalInclTax { get; set; }
+            /// <summary>
+            /// 
+            /// </summary>
             public decimal OrderSubTotalExclTax { get; set; }
+            /// <summary>
+            /// Subtotal discount (incl tax)
+            /// </summary>
             public decimal OrderSubTotalDiscountInclTax { get; set; }
+            /// <summary>
+            /// Subtotal discount (excl tax)
+            /// </summary>
             public decimal OrderSubTotalDiscountExclTax { get; set; }
+            /// <summary>
+            /// Shipping (incl tax)
+            /// </summary>
             public decimal OrderShippingTotalInclTax { get; set; }
+            /// <summary>
+            /// Shipping (excl tax)
+            /// </summary>
             public decimal OrderShippingTotalExclTax { get; set; }
+            /// <summary>
+            /// Payment additional fee (incl tax)
+            /// </summary>
             public decimal PaymentAdditionalFeeInclTax {get; set; }
+            /// <summary>
+            /// Payment additional fee (excl tax)
+            /// </summary>
             public decimal PaymentAdditionalFeeExclTax { get; set; }
+            /// <summary>
+            /// Tax
+            /// </summary>
             public decimal OrderTaxTotal  {get; set; }
+            /// <summary>
+            /// VAT number
+            /// </summary>
             public string VatNumber {get; set; }
+            /// <summary>
+            /// Tax rates
+            /// </summary>
             public string TaxRates {get; set; }
+            /// <summary>
+            /// Order total discount amount
+            /// </summary>
             public decimal OrderDiscountAmount { get; set; }
+            /// <summary>
+            /// Redeemed reward points
+            /// </summary>
             public int RedeemedRewardPoints { get; set; }
+            /// <summary>
+            /// Redeemed reward points amount
+            /// </summary>
             public decimal RedeemedRewardPointsAmount { get; set; }
+            /// <summary>
+            /// Order total
+            /// </summary>
             public decimal OrderTotal { get; set; }
         }
 

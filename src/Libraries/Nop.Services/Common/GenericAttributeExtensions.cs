@@ -6,6 +6,9 @@ using Nop.Data;
 
 namespace Nop.Services.Common
 {
+    /// <summary>
+    /// Generic attribute extensions
+    /// </summary>
     public static class GenericAttributeExtensions
     {
         /// <summary>

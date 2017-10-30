@@ -123,6 +123,9 @@ namespace Nop.Services.Localization
 
         #region Nested classes
 
+        /// <summary>
+        /// LocalizedProperty (for caching)
+        /// </summary>
         [Serializable]
         public class LocalizedPropertyForCaching
         {

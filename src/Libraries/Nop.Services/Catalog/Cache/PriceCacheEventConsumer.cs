@@ -81,6 +81,10 @@ namespace Nop.Services.Catalog.Cache
 
         private readonly IStaticCacheManager _cacheManager;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         public PriceCacheEventConsumer(IStaticCacheManager cacheManager)
         {
             this._cacheManager = cacheManager;

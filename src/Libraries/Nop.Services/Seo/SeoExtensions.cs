@@ -12,6 +12,9 @@ using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
 {
+    /// <summary>
+    /// SEO extensions
+    /// </summary>
     public static class SeoExtensions
     {
         #region Fields

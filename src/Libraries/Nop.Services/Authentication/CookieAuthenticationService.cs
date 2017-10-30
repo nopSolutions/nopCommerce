@@ -24,6 +24,12 @@ namespace Nop.Services.Authentication
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public CookieAuthenticationService(CustomerSettings customerSettings,
             ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor)

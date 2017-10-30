@@ -14,6 +14,9 @@ namespace Nop.Services.Shipping
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public GetShippingOptionRequest()
         {
             this.Items = new List<PackageItem>();
@@ -72,6 +75,9 @@ namespace Nop.Services.Shipping
 
         #region Nested classes
 
+        /// <summary>
+        /// Package item
+        /// </summary>
         public class PackageItem
         {
             /// <summary>
@@ -95,6 +101,10 @@ namespace Nop.Services.Shipping
             /// </summary>
             public int? OverriddenQuantity { get; set; }
 
+            /// <summary>
+            /// Get quantity
+            /// </summary>
+            /// <returns></returns>
             public int GetQuantity()
             {
                 if (OverriddenQuantity.HasValue)

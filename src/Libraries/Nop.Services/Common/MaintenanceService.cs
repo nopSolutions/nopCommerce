@@ -49,6 +49,11 @@ namespace Nop.Services.Common
 
         #region Utilities
 
+        /// <summary>
+        /// Get directory path for backs
+        /// </summary>
+        /// <param name="ensureFolderCreated">A value indicating whether a directory should be created if it doesn't exist</param>
+        /// <returns></returns>
         protected virtual string GetBackupDirectoryPath(bool ensureFolderCreated = true)
         {
             var path = Path.Combine(_hostingEnvironment.WebRootPath, "db_backups\\");
@@ -57,6 +62,9 @@ namespace Nop.Services.Common
             return path;
         }
 
+        /// <summary>
+        /// Check whether backups are supported
+        /// </summary>
         protected virtual void CheckBackupSupported()
         {
             if(_dataProvider.BackupSupported) return;

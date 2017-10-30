@@ -13,10 +13,6 @@
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />

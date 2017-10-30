@@ -13,6 +13,9 @@ using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {
+    /// <summary>
+    /// Customer extensions
+    /// </summary>
     public static class CustomerExtensions
     {
         /// <summary>

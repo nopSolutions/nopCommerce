@@ -49,7 +49,7 @@ namespace Nop.Services.Common
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingContext;
+        private readonly ISettingService _settingService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
@@ -62,6 +62,31 @@ namespace Nop.Services.Common
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="orderService">Order service</param>
+        /// <param name="paymentService">Payment service</param>
+        /// <param name="dateTimeHelper">Date time helper</param>
+        /// <param name="priceFormatter">Price formatter</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="measureService">Measure service</param>
+        /// <param name="pictureService">Picture service</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="storeService">Store service</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="settingService">Setting service</param>
+        /// <param name="addressAttributeFormatter">Address attribute formatter</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="currencySettings">Currency settings</param>
+        /// <param name="measureSettings">Measure settings</param>
+        /// <param name="pdfSettings">PDF sSettings</param>
+        /// <param name="taxSettings">Tax settings</param>
+        /// <param name="addressSettings">Address settings</param>
         public PdfService(ILocalizationService localizationService, 
             ILanguageService languageService,
             IWorkContext workContext,
@@ -76,7 +101,7 @@ namespace Nop.Services.Common
             IProductAttributeParser productAttributeParser,
             IStoreService storeService,
             IStoreContext storeContext,
-            ISettingService settingContext,
+            ISettingService settingService,
             IAddressAttributeFormatter addressAttributeFormatter,
             CatalogSettings catalogSettings, 
             CurrencySettings currencySettings,
@@ -99,7 +124,7 @@ namespace Nop.Services.Common
             this._productAttributeParser = productAttributeParser;
             this._storeService = storeService;
             this._storeContext = storeContext;
-            this._settingContext = settingContext;
+            this._settingService = settingService;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -165,27 +190,65 @@ namespace Nop.Services.Common
             return lang.Rtl ? Element.ALIGN_LEFT : Element.ALIGN_RIGHT;
         }
 
+        /// <summary>
+        /// Get PDF cell
+        /// </summary>
+        /// <param name="resourceKey">Locale</param>
+        /// <param name="lang">Language</param>
+        /// <param name="font">Font</param>
+        /// <returns>PDF cell</returns>
         protected virtual PdfPCell GetPdfCell(string resourceKey, Language lang, Font font)
         {
             return new PdfPCell(new Phrase(_localizationService.GetResource(resourceKey, lang.Id), font));
         }
 
+        /// <summary>
+        /// Get PDF cell
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <param name="font">Font</param>
+        /// <returns>PDF cell</returns>
         protected virtual PdfPCell GetPdfCell(object text, Font font)
         {
             return new PdfPCell(new Phrase(text.ToString(), font));
         }
 
+        /// <summary>
+        /// Get paragraph
+        /// </summary>
+        /// <param name="resourceKey">Locale</param>
+        /// <param name="lang">Language</param>
+        /// <param name="font">Font</param>
+        /// <param name="args">Locale arguments</param>
+        /// <returns>Paragraph</returns>
+        protected virtual Paragraph GetParagraph(string resourceKey, Language lang, Font font, params object[] args)
+        {
+            return GetParagraph(resourceKey, string.Empty, lang, font, args);
+        }
+
+        /// <summary>
+        /// Get paragraph
+        /// </summary>
+        /// <param name="resourceKey">Locale</param>
+        /// <param name="indent">Indent</param>
+        /// <param name="lang">Language</param>
+        /// <param name="font">Font</param>
+        /// <param name="args">Locale arguments</param>
+        /// <returns>Paragraph</returns>
         protected virtual Paragraph GetParagraph(string resourceKey, string indent, Language lang, Font font, params object[] args)
         {
             var formatText = _localizationService.GetResource(resourceKey, lang.Id);
             return new Paragraph(indent + (args.Any() ? string.Format(formatText, args) : formatText), font);
         }
 
-        protected virtual Paragraph GetParagraph(string resourceKey, Language lang, Font font, params object[] args)
-        {
-            return GetParagraph(resourceKey, string.Empty, lang, font, args);
-        }
-
+        /// <summary>
+        /// Print footer
+        /// </summary>
+        /// <param name="pdfSettingsByStore">PDF settings</param>
+        /// <param name="pdfWriter">PDF writer</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="lang">Language</param>
+        /// <param name="font">Font</param>
         protected virtual void PrintFooter(PdfSettings pdfSettingsByStore, PdfWriter pdfWriter, Rectangle pageSize, Language lang, Font font)
         {
             if (string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) && string.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2))
@@ -269,6 +332,15 @@ namespace Nop.Services.Common
             footerTable.WriteSelectedRows(0, totalLines, pageSize.GetLeft(margin), pageSize.GetBottom(margin) + footerHeight, directContent);
         }
 
+        /// <summary>
+        /// Print order notes
+        /// </summary>
+        /// <param name="pdfSettingsByStore">PDF settings</param>
+        /// <param name="order">Order</param>
+        /// <param name="lang">Language</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="doc">Document</param>
+        /// <param name="font">Font</param>
         protected virtual void PrintOrderNotes(PdfSettings pdfSettingsByStore, Order order, Language lang, Font titleFont, Document doc, Font font)
         {
             if (!pdfSettingsByStore.RenderOrderNotes)
@@ -329,7 +401,16 @@ namespace Nop.Services.Common
 
             doc.Add(notesTable);
         }
-
+        
+        /// <summary>
+        /// Print totals
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="lang">Language</param>
+        /// <param name="order">Order</param>
+        /// <param name="font">Text font</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="doc">PDF document</param>
         protected virtual void PrintTotals(int vendorId, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //vendors cannot see totals
@@ -580,6 +661,14 @@ namespace Nop.Services.Common
             doc.Add(totalsTable);
         }
 
+        /// <summary>
+        /// Print checkout attributes
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="order">Order</param>
+        /// <param name="doc">Document</param>
+        /// <param name="lang">Language</param>
+        /// <param name="font">Font</param>
         protected virtual void PrintCheckoutAttributes(int vendorId, Order order, Document doc, Language lang, Font font)
         {
             //vendors cannot see checkout attributes
@@ -600,6 +689,16 @@ namespace Nop.Services.Common
             doc.Add(attribTable);
         }
 
+        /// <summary>
+        /// Print products
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="lang">Language</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="doc">Document</param>
+        /// <param name="order">Order</param>
+        /// <param name="font">Text font</param>
+        /// <param name="attributesFont">Product attributes font</param>
         protected virtual void PrintProducts(int vendorId, Language lang, Font titleFont, Document doc, Order order, Font font, Font attributesFont)
         {
             var productsHeader = new PdfPTable(1)
@@ -768,6 +867,15 @@ namespace Nop.Services.Common
             doc.Add(productsTable);
         }
 
+        /// <summary>
+        /// Print addresses
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="lang">Language</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="order">Order</param>
+        /// <param name="font">Text font</param>
+        /// <param name="doc">Document</param>
         protected virtual void PrintAddresses(int vendorId, Language lang, Font titleFont, Order order, Font font, Document doc)
         {
             var addressTable = new PdfPTable(2) {RunDirection = GetDirection(lang)};
@@ -785,6 +893,14 @@ namespace Nop.Services.Common
             doc.Add(new Paragraph(" "));
         }
 
+        /// <summary>
+        /// Print shipping info
+        /// </summary>
+        /// <param name="lang">Language</param>
+        /// <param name="order">Order</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="font">Text font</param>
+        /// <param name="addressTable">PDF table for address</param>
         protected virtual void PrintShippingInfo(Language lang, Order order, Font titleFont, Font font, PdfPTable addressTable)
         {
             var shippingAddress = new PdfPTable(1)
@@ -863,6 +979,15 @@ namespace Nop.Services.Common
             }
         }
 
+        /// <summary>
+        /// Print billing info
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="lang">Language</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="order">Order</param>
+        /// <param name="font">Text font</param>
+        /// <param name="addressTable">Address PDF table</param>
         protected virtual void PrintBillingInfo(int vendorId, Language lang, Font titleFont, Order order, Font font, PdfPTable addressTable)
         {
             const string indent = "   ";
@@ -935,6 +1060,15 @@ namespace Nop.Services.Common
             addressTable.AddCell(billingAddress);
         }
 
+        /// <summary>
+        /// Print header
+        /// </summary>
+        /// <param name="pdfSettingsByStore">PDF settings</param>
+        /// <param name="lang">Language</param>
+        /// <param name="order">Order</param>
+        /// <param name="font">Text font</param>
+        /// <param name="titleFont">Title font</param>
+        /// <param name="doc">Document</param>
         protected virtual void PrintHeader(PdfSettings pdfSettingsByStore, Language lang, Order order, Font font, Font titleFont, Document doc)
         {
             //logo
@@ -1054,7 +1188,7 @@ namespace Nop.Services.Common
                 //by default _pdfSettings contains settings for the current active store
                 //and we need PdfSettings for the store which was used to place an order
                 //so let's load it based on a store of the current order
-                var pdfSettingsByStore = _settingContext.LoadSetting<PdfSettings>(order.StoreId);
+                var pdfSettingsByStore = _settingService.LoadSetting<PdfSettings>(order.StoreId);
 
                 var lang = _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)

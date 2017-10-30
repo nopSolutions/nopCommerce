@@ -27,6 +27,14 @@ namespace Nop.Services.News
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="newsItemRepository">News item repository</param>
+        /// <param name="newsCommentRepository">News comment repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public NewsService(IRepository<NewsItem> newsItemRepository, 
             IRepository<NewsComment> newsCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,

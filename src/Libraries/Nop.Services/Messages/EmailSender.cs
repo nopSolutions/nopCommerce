@@ -16,6 +16,10 @@ namespace Nop.Services.Messages
     {
         private readonly IDownloadService _downloadService;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="downloadService">Download service</param>
         public EmailSender(IDownloadService downloadService)
         {
             this._downloadService = downloadService;

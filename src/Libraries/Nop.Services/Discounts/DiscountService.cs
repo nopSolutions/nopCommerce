@@ -75,6 +75,9 @@ namespace Nop.Services.Discounts
 
         #region Nested classes
 
+        /// <summary>
+        /// DiscountRequirement (for caching)
+        /// </summary>
         [Serializable]
         public class DiscountRequirementForCaching
         {
