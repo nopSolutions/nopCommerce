@@ -3,8 +3,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Cms
 {
+    /// <summary>
+    /// Widget settings
+    /// </summary>
     public class WidgetSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public WidgetSettings()
         {
             ActiveWidgetSystemNames = new List<string>();

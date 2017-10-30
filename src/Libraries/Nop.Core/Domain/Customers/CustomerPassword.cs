@@ -7,6 +7,9 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerPassword : BaseEntity
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CustomerPassword()
         {
             this.PasswordFormat = PasswordFormat.Clear;

@@ -31,11 +31,18 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         static MemoryCacheManager()
         {
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="cache">Cache</param>
         public MemoryCacheManager(IMemoryCache cache)
         {
             _cache = cache;

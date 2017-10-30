@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Common
 {
+    /// <summary>
+    /// Address settings
+    /// </summary>
     public class AddressSettings : ISettings
     {
         /// <summary>

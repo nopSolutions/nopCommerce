@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Customers
 {
+    /// <summary>
+    /// Customer settings
+    /// </summary>
     public class CustomerSettings : ISettings
     {
         /// <summary>

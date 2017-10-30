@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Messages
 {
+    /// <summary>
+    /// Email account settings
+    /// </summary>
     public class EmailAccountSettings : ISettings
     {
         /// <summary>

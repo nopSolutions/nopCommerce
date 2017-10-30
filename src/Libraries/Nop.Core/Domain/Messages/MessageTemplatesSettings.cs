@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Messages
 {
+    /// <summary>
+    /// Message templates settings
+    /// </summary>
     public class MessageTemplatesSettings : ISettings
     {
         /// <summary>

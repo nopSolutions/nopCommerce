@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Tax
 {
+    /// <summary>
+    /// Tax settings
+    /// </summary>
     public class TaxSettings : ISettings
     {
         /// <summary>

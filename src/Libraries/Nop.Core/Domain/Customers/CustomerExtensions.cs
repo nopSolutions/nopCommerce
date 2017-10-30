@@ -5,6 +5,9 @@ using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {
+    /// <summary>
+    /// Customer extensions
+    /// </summary>
     public static class CustomerExtensions
     {
         #region Customer role
@@ -140,6 +143,11 @@ namespace Nop.Core.Domain.Customers
 
         #region Addresses
 
+        /// <summary>
+        /// Remove address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
         public static void RemoveAddress(this Customer customer, Address address)
         {
             if (customer.Addresses.Contains(address))

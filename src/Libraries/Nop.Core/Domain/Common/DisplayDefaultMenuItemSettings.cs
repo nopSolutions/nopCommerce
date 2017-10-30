@@ -2,6 +2,9 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Common
 {
+    /// <summary>
+    /// Display default menu item settings
+    /// </summary>
     public class DisplayDefaultMenuItemSettings: ISettings
     {
         /// <summary>

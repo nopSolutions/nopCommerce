@@ -3,6 +3,9 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Security
 {
+    /// <summary>
+    /// Security settings
+    /// </summary>
     public class SecuritySettings : ISettings
     {
         /// <summary>

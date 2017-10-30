@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.News
 {
+    /// <summary>
+    /// News settings
+    /// </summary>
     public class NewsSettings : ISettings
     {
         /// <summary>

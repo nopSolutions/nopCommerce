@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Catalog
 {
+    /// <summary>
+    /// Product editor settings
+    /// </summary>
     public class ProductEditorSettings : ISettings
     {
         /// <summary>

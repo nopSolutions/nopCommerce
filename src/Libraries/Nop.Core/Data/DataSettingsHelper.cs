@@ -22,7 +22,9 @@
             return _databaseIsInstalled.Value;
         }
 
-        //Reset information cached in the "DatabaseIsInstalled" method
+        /// <summary>
+        /// Reset information cached in the "DatabaseIsInstalled" method
+        /// </summary>
         public static void ResetCache()
         {
             _databaseIsInstalled = null;

@@ -35,6 +35,11 @@ namespace Nop.Core
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="hostingConfig">Hosting config</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public WebHelper(HostingConfig hostingConfig, IHttpContextAccessor httpContextAccessor)
         {
             this._hostingConfig = hostingConfig;
@@ -67,11 +72,20 @@ namespace Nop.Core
             return true;
         }
 
+        /// <summary>
+        /// Is IP address specified
+        /// </summary>
+        /// <param name="address">IP address</param>
+        /// <returns>Result</returns>
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
             return address != null && address.ToString() != NullIpAddress;
         }
 
+        /// <summary>
+        /// Try to write web.config file
+        /// </summary>
+        /// <returns></returns>
         protected virtual bool TryWriteWebConfig()
         {
             try

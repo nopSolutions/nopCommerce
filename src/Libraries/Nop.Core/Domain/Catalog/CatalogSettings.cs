@@ -8,6 +8,9 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public class CatalogSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CatalogSettings()
         {
             ProductSortingEnumDisabled = new List<int>();
