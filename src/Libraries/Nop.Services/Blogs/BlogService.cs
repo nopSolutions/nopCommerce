@@ -27,6 +27,14 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="blogPostRepository">Blog post repository</param>
+        /// <param name="blogCommentRepository">Blog comment repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,

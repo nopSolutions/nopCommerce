@@ -6,6 +6,9 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
 {
+    /// <summary>
+    /// Encryption service
+    /// </summary>
     public class EncryptionService : IEncryptionService
     {
         #region Fields
@@ -16,6 +19,10 @@ namespace Nop.Services.Security
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="securitySettings">Security settings</param>
         public EncryptionService(SecuritySettings securitySettings)
         {
             this._securitySettings = securitySettings;

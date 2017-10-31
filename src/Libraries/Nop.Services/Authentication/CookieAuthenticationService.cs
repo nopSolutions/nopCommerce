@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +24,12 @@ namespace Nop.Services.Authentication
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public CookieAuthenticationService(CustomerSettings customerSettings,
             ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor)
@@ -43,12 +50,17 @@ namespace Nop.Services.Authentication
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
         public virtual async void SignIn(Customer customer, bool isPersistent)
         {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
             //create claims for customer's username and email
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, NopCookieAuthenticationDefaults.ClaimsIssuer),
-                new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopCookieAuthenticationDefaults.ClaimsIssuer)
-            };
+            var claims = new List<Claim>();
+
+            if (!string.IsNullOrEmpty(customer.Username))
+                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, NopCookieAuthenticationDefaults.ClaimsIssuer));
+
+            if (!string.IsNullOrEmpty(customer.Email))
+                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, NopCookieAuthenticationDefaults.ClaimsIssuer));
 
             //create principal for the current authentication scheme
             var userIdentity = new ClaimsIdentity(claims, NopCookieAuthenticationDefaults.AuthenticationScheme);

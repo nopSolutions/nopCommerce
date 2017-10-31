@@ -7,6 +7,9 @@ namespace Nop.Services.Discounts
     /// </summary>
     public partial class DiscountValidationResult
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public DiscountValidationResult()
         {
             Errors = new List<string>();

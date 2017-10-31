@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
+    /// <summary>
+    /// input tag helper
+    /// </summary>
     [HtmlTargetElement("input", Attributes = ForAttributeName)]
     public class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
     {
@@ -15,10 +18,19 @@ namespace Nop.Web.Framework.TagHelpers.Public
         [HtmlAttributeName(DisabledAttributeName)]
         public string IsDisabled { set; get; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">IHTML generator</param>
         public InputTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             //add disabled attribute

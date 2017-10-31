@@ -116,6 +116,10 @@ namespace Nop.Services.Localization
 
         #region Utilities
 
+        /// <summary>
+        /// Insert resources
+        /// </summary>
+        /// <param name="resources">Resources</param>
         protected virtual void InsertLocaleStringResources(IList<LocaleStringResource> resources)
         {
             if (resources == null)
@@ -134,6 +138,10 @@ namespace Nop.Services.Localization
             }
         }
 
+        /// <summary>
+        /// Update resources
+        /// </summary>
+        /// <param name="resources">Resources</param>
         protected virtual void UpdateLocaleStringResources(IList<LocaleStringResource> resources)
         {
             if (resources == null)

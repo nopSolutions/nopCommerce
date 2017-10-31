@@ -4,7 +4,10 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class RecurringPaymenbuildertoryMap : NopEntityTypeConfiguration<RecurringPaymentHistory>
+    /// <summary>
+    /// Mapping class
+    /// </summary>
+    public partial class RecurringPaymentHistoryMap : NopEntityTypeConfiguration<RecurringPaymentHistory>
     {
         public override void Configure(EntityTypeBuilder<RecurringPaymentHistory> builder)
         {

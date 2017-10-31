@@ -210,10 +210,10 @@
                                     //some validation
                                     if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
                                         //option
-                                        alert('Select specification attribute option');
+                                        alert('@T("Admin.Catalog.Products.SpecificationAttributes.SelectOption")');
                                 } else {
                                     //other (text, hyperlink, etc)
-                                    alert('First, please create at least one specification attribute option');
+                                    alert('@T("Admin.Catalog.Products.SpecificationAttributes.NoAttributeOptions")');
                                 }
                             } else {
                                     $('#addProductSpec').attr('disabled', true);

@@ -16,7 +16,9 @@ namespace Nop.Data
     public class NopObjectContext : DbContext, IDbContext
     {
         #region Ctor
-
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public NopObjectContext(DbContextOptions<DbContext> options)
             : base(options)
         {
@@ -28,6 +30,10 @@ namespace Nop.Data
 
         #region Utilities
 
+        /// <summary>
+        /// On model creating
+        /// </summary>
+        /// <param name="modelBuilder">Model builder</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //dynamically load all configuration

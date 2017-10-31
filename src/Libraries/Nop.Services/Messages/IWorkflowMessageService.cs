@@ -11,6 +11,9 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Workflow message service
+    /// </summary>
     public partial interface IWorkflowMessageService
     {
         #region Customer workflow

@@ -273,12 +273,21 @@ namespace Nop.Web.Framework.Infrastructure
     }
 
 
+    /// <summary>
+    /// Setting source
+    /// </summary>
     public class SettingsSource : IRegistrationSource
     {
         static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
             "BuildRegistration",
             BindingFlags.Static | BindingFlags.NonPublic);
 
+        /// <summary>
+        /// Registrations for
+        /// </summary>
+        /// <param name="service">Service</param>
+        /// <param name="registrations">Registrations</param>
+        /// <returns>Registrations</returns>
         public IEnumerable<IComponentRegistration> RegistrationsFor(
             Service service,
             Func<Service, IEnumerable<IComponentRegistration>> registrations)
@@ -309,6 +318,9 @@ namespace Nop.Web.Framework.Infrastructure
                 .CreateRegistration();
         }
 
+        /// <summary>
+        /// Is adapter for individual components
+        /// </summary>
         public bool IsAdapterForIndividualComponents { get { return false; } }
     }
 

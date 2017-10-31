@@ -5,17 +5,27 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
 {
+    /// <summary>
+    /// Current (for caching)
+    /// </summary>
     [Serializable]
     //Entity Framework will assume that any class that inherits from a POCO class that is mapped to a table on the database requires a Discriminator column
     //That's why we have to add [NotMapped] as an attribute of the derived class.
     [NotMapped]
     public class CurrencyForCaching : Currency, IEntityForCaching
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CurrencyForCaching()
         {
 
         }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="c">Currency to copy</param>
         public CurrencyForCaching(Currency c)
         {
             Id = c.Id;

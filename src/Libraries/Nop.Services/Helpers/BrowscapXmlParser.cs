@@ -14,7 +14,12 @@ namespace Nop.Services.Helpers
     public class BrowscapXmlHelper
     {
         private readonly List<string> _crawlerUserAgentsRegexp;
-       
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="userAgentStringsPath">User agent file path</param>
+        /// <param name="crawlerOnlyUserAgentStringsPath">User agent with crawlers only file path</param>
         public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             _crawlerUserAgentsRegexp = new List<string>();

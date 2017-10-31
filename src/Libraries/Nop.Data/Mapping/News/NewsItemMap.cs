@@ -4,6 +4,9 @@ using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class NewsItemMap : NopEntityTypeConfiguration<NewsItem>
     {
         public override void Configure(EntityTypeBuilder<NewsItem> builder)

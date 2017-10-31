@@ -4,6 +4,9 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class BackInStockSubscriptionMap : NopEntityTypeConfiguration<BackInStockSubscription>
     {
         public override void Configure(EntityTypeBuilder<BackInStockSubscription> builder)

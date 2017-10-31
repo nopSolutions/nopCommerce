@@ -4,6 +4,9 @@ using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class CheckoutAttributeValueMap : NopEntityTypeConfiguration<CheckoutAttributeValue>
     {
         public override void Configure(EntityTypeBuilder<CheckoutAttributeValue> builder)

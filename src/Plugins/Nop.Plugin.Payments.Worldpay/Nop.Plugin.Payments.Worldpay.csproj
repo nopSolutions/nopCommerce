@@ -21,6 +21,10 @@
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
   
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\Payments.Worldpay</OutputPath>
     <OutDir>$(OutputPath)</OutDir>

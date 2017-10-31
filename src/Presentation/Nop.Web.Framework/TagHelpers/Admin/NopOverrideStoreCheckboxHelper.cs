@@ -8,6 +8,9 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-override-store-checkbox tag helper
+    /// </summary>
     [HtmlTargetElement("nop-override-store-checkbox", Attributes = ForAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class NopOverrideStoreCheckboxHelper : TagHelper
     {
@@ -56,11 +59,20 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopOverrideStoreCheckboxHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

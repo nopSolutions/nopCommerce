@@ -23,6 +23,12 @@ namespace Nop.Services.Orders
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="checkoutAttributeService">Checkout attribute service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="productService">Product service</param>
         public CheckoutAttributeParser(ICheckoutAttributeService checkoutAttributeService,
             IProductAttributeParser productAttributeParser,
             IProductService productService)

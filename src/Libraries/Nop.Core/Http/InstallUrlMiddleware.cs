@@ -18,6 +18,10 @@ namespace Nop.Core.Http
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
         public InstallUrlMiddleware(RequestDelegate next)
         {
             _next = next;

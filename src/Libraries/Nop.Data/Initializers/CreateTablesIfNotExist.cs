@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Nop.Data.Initializers
 {
-    public class CreateTablesIfNotExist<TContext> where TContext : DbContext
+    /// <summary>
+    /// CreateTablesIfNotExist database initializer
+    /// </summary>
+    /// <typeparam name="TContext">Type of context</typeparam>
+    public class CreateTablesIfNotExist<TContext> : where TContext : DbContext
     {
         private readonly string[] _tablesToValidate;
         private readonly string[] _customCommands;
@@ -24,6 +28,10 @@ namespace Nop.Data.Initializers
             this._customCommands = customCommands;
         }
 
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
         public void InitializeDatabase(TContext context)
         {
             RelationalDatabaseCreator creator = (RelationalDatabaseCreator)context.Database.GetService<IDatabaseCreator>();

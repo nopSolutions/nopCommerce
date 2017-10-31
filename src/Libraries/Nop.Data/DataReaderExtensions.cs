@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// Data reader extensions
+    /// </summary>
     public static class DataReaderExtensions
     {
         /// <summary>

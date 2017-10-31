@@ -1,17 +1,27 @@
-using System;
 using System.Linq;
 using FluentValidation.Validators;
 
 namespace Nop.Web.Framework.Validators
 {
+    /// <summary>
+    /// Credit card validator
+    /// </summary>
     public class CreditCardPropertyValidator : PropertyValidator
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CreditCardPropertyValidator()
             : base("Credit card number is not valid")
         {
 
         }
 
+        /// <summary>
+        /// Is valid?
+        /// </summary>
+        /// <param name="context">Validation context</param>
+        /// <returns>Result</returns>
         protected override bool IsValid(PropertyValidatorContext context)
         {
             var ccValue = context.PropertyValue as string;

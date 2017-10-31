@@ -4,6 +4,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class CampaignMap : NopEntityTypeConfiguration<Campaign>
     {
         public override void Configure(EntityTypeBuilder<Campaign> builder)

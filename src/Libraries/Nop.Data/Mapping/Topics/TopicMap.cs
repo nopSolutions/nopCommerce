@@ -4,6 +4,9 @@ using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Mapping.Topics
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public class TopicMap : NopEntityTypeConfiguration<Topic>
     {
         public override void Configure(EntityTypeBuilder<Topic> builder)

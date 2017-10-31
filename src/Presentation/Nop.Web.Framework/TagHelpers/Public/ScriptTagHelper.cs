@@ -9,6 +9,9 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Public
 {
+    /// <summary>
+    /// script tag helper
+    /// </summary>
     [HtmlTargetElement("script", Attributes = LocationAttributeName)]
     public class ScriptTagHelper : TagHelper
     {
@@ -29,12 +32,22 @@ namespace Nop.Web.Framework.TagHelpers.Public
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public ScriptTagHelper(IHtmlHelper htmlHelper, IHttpContextAccessor httpContextAccessor)
         {
             this._htmlHelper = htmlHelper;
             this._httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

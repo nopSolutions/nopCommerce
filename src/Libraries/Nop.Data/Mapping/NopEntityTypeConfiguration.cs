@@ -5,6 +5,9 @@ namespace Nop.Data.Mapping
 {
     public abstract class NopEntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : class
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         protected NopEntityTypeConfiguration()
         {
             PostInitialize();

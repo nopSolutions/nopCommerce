@@ -15,7 +15,11 @@ namespace Nop.Data.Initializers
     {
         #region Strategy implementation
 
-        public void InitializeDatabase(TContext context)
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        /// <param name="context">Context</param>
+        public override void InitializeDatabase(TContext context)
         {
             if (context == null)
             {

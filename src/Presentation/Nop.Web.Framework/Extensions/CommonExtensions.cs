@@ -13,6 +13,13 @@ namespace Nop.Web.Framework.Extensions
     /// </summary>
     public static class CommonExtensions
     {
+        /// <summary>
+        /// In-memory paging of entities (models)
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="current">Entities (models)</param>
+        /// <param name="command">Command (paging details)</param>
+        /// <returns>Paged entities (models)</returns>
         public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, DataSourceRequest command)
         {
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ForumTopicMap : NopEntityTypeConfiguration<ForumTopic>
     {
         public override void Configure(EntityTypeBuilder<ForumTopic> builder)

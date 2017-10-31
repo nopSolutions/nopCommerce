@@ -3,6 +3,9 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Security
 {
+    /// <summary>
+    /// Security settings
+    /// </summary>
     public class SecuritySettings : ISettings
     {
         /// <summary>
@@ -38,5 +41,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a honeypot input name
         /// </summary>
         public string HoneypotInputName { get; set; }
+
+        /// <summary>
+        /// Get or set the blacklist of static file extension for plugin directories
+        /// </summary>
+        public string PluginStaticFileExtensionsBlacklist { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Nop.Core.Plugins;
 namespace Nop.Services.Payments
 {
     /// <summary>
-    /// Provides an interface for creating payment gateways & methods
+    /// Provides an interface for creating payment gateways and methods
     /// </summary>
     public partial interface IPaymentMethod : IPlugin
     {

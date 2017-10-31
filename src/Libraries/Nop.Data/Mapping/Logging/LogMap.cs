@@ -4,6 +4,9 @@ using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class LogMap : NopEntityTypeConfiguration<Log>
     {
         public override void Configure(EntityTypeBuilder<Log> builder)

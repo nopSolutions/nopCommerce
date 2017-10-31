@@ -4,6 +4,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class NewsLetterSubscriptionMap : NopEntityTypeConfiguration<NewsLetterSubscription>
     {
         public override void Configure(EntityTypeBuilder<NewsLetterSubscription> builder)

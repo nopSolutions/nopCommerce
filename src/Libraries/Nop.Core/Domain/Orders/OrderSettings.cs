@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Orders
 {
+    /// <summary>
+    /// Order settings
+    /// </summary>
     public class OrderSettings : ISettings
     {
         /// <summary>

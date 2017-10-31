@@ -4,6 +4,9 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class DiscountMap : NopEntityTypeConfiguration<Discount>
     {
         public override void Configure(EntityTypeBuilder<Discount> builder)

@@ -7,24 +7,47 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
+    /// <summary>
+    /// Google reCAPTCHA control
+    /// </summary>
     public class GRecaptchaControl
     {
         private const string RECAPTCHA_API_URL_HTTP_VERSION1 = "http://www.google.com/recaptcha/api/challenge?k={0}";
         private const string RECAPTCHA_API_URL_HTTPS_VERSION1 = "https://www.google.com/recaptcha/api/challenge?k={0}";
         private const string RECAPTCHA_API_URL_VERSION2 = "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit";
 
+        /// <summary>
+        /// Identifier
+        /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// reCAPTCHA theme
+        /// </summary>
         public string Theme { get; set; }
+        /// <summary>
+        /// reCAPTCHA public key
+        /// </summary>
         public string PublicKey { get; set; }
+        /// <summary>
+        /// Language
+        /// </summary>
         public string Language { get; set; }
 
         private readonly ReCaptchaVersion _version;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="version">Version</param>
         public GRecaptchaControl(ReCaptchaVersion version = ReCaptchaVersion.Version1)
         {
             _version = version;
         }
 
+        /// <summary>
+        /// Render control
+        /// </summary>
+        /// <returns></returns>
         public string RenderControl()
         {
             SetTheme();

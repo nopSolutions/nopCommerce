@@ -4,6 +4,9 @@ using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class LocalizedPropertyMap : NopEntityTypeConfiguration<LocalizedProperty>
     {
         public override void Configure(EntityTypeBuilder<LocalizedProperty> builder)

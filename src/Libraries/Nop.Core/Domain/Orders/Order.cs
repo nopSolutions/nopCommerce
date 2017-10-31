@@ -26,6 +26,11 @@ namespace Nop.Core.Domain.Orders
 
         #region Utilities
 
+        /// <summary>
+        /// Parse tax rates
+        /// </summary>
+        /// <param name="taxRatesStr"></param>
+        /// <returns></returns>
         protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
         {
             var taxRatesDictionary = new SortedDictionary<decimal, decimal>();

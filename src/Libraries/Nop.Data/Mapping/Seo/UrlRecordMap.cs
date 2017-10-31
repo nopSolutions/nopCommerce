@@ -4,6 +4,9 @@ using Nop.Core.Domain.Seo;
 
 namespace Nop.Data.Mapping.Seo
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class UrlRecordMap : NopEntityTypeConfiguration<UrlRecord>
     {
         public override void Configure(EntityTypeBuilder<UrlRecord> builder)

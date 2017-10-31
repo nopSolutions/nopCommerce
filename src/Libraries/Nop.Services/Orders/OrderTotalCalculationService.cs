@@ -48,7 +48,28 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Ctor
-        
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="priceCalculationService">Price calculation service</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="productAttributeParser">Product attribute parser</param>
+        /// <param name="taxService">Tax service</param>
+        /// <param name="shippingService">Shipping service</param>
+        /// <param name="paymentService">Payment service</param>
+        /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
+        /// <param name="discountService">Discount service</param>
+        /// <param name="giftCardService">Gift card service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="rewardPointService">Reward point service</param>
+        /// <param name="taxSettings">Tax settings</param>
+        /// <param name="rewardPointsSettings">Reward points settings</param>
+        /// <param name="shippingSettings">Shipping settings</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
@@ -194,8 +215,19 @@ namespace Nop.Services.Orders
 
             return discountAmount;
         }
-        
-        protected virtual void UpdateTotal(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax, decimal discountAmountExclTax, decimal shippingTotalExclTax, Order updatedOrder, decimal taxTotal, Customer customer)
+
+        /// <summary>
+        /// Update order total
+        /// </summary>
+        /// <param name="updateOrderParameters">UpdateOrderParameters</param>
+        /// <param name="subTotalExclTax">Subtotal (excl tax)</param>
+        /// <param name="discountAmountExclTax">Discount amount (excl tax)</param>
+        /// <param name="shippingTotalExclTax">Shipping (excl tax)</param>
+        /// <param name="updatedOrder">Order</param>
+        /// <param name="taxTotal">Tax</param>
+        /// <param name="customer">Customer</param>
+        protected virtual void UpdateTotal(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax, 
+            decimal discountAmountExclTax, decimal shippingTotalExclTax, Order updatedOrder, decimal taxTotal, Customer customer)
         {
             var total = subTotalExclTax - discountAmountExclTax + shippingTotalExclTax + updatedOrder.PaymentMethodAdditionalFeeExclTax + taxTotal;
 
@@ -259,7 +291,17 @@ namespace Nop.Services.Orders
                     updateOrderParameters.AppliedDiscounts.Add(discount);
         }
 
-        protected virtual decimal UpdateTaxRates(SortedDictionary<decimal, decimal> subTotalTaxRates, decimal shippingTotalInclTax, decimal shippingTotalExclTax, decimal shippingTaxRate, Order updatedOrder)
+        /// <summary>
+        /// Update tax rates
+        /// </summary>
+        /// <param name="subTotalTaxRates">Subtotal tax rates</param>
+        /// <param name="shippingTotalInclTax">Shipping (incl tax)</param>
+        /// <param name="shippingTotalExclTax">Shipping (excl tax)</param>
+        /// <param name="shippingTaxRate">Shipping tax rates</param>
+        /// <param name="updatedOrder">Order</param>
+        /// <returns>Tax total</returns>
+        protected virtual decimal UpdateTaxRates(SortedDictionary<decimal, decimal> subTotalTaxRates, decimal shippingTotalInclTax,
+            decimal shippingTotalExclTax, decimal shippingTaxRate, Order updatedOrder)
         {
             var taxRates = new SortedDictionary<decimal, decimal>();
 
@@ -334,7 +376,20 @@ namespace Nop.Services.Orders
             return taxTotal;
         }
 
-        protected virtual decimal UpdateShipping(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, decimal subTotalInclTax, decimal subTotalExclTax, Order updatedOrder, Customer customer, out decimal shippingTotalInclTax, out decimal shippingTaxRate)
+        /// <summary>
+        /// Update shipping
+        /// </summary>
+        /// <param name="updateOrderParameters">UpdateOrderParameters</param>
+        /// <param name="restoredCart">Cart</param>
+        /// <param name="subTotalInclTax">Subtotal (incl tax)</param>
+        /// <param name="subTotalExclTax">Subtotal (excl tax)</param>
+        /// <param name="updatedOrder">Order</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="shippingTotalInclTax">Shipping (incl tax)</param>
+        /// <param name="shippingTaxRate">Shipping tax rate</param>
+        /// <returns>Shipping total</returns>
+        protected virtual decimal UpdateShipping(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, 
+            decimal subTotalInclTax, decimal subTotalExclTax, Order updatedOrder, Customer customer, out decimal shippingTotalInclTax, out decimal shippingTaxRate)
         {
             var shippingTotalExclTax = decimal.Zero;
             shippingTotalInclTax = decimal.Zero;
@@ -473,7 +528,21 @@ namespace Nop.Services.Orders
             return shippingTotalExclTax;
         }
 
-        protected virtual decimal UpdateSubTotal(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, OrderItem updatedOrderItem, Order updatedOrder, Customer customer, out decimal subTotalInclTax, out SortedDictionary<decimal, decimal> subTotalTaxRates, out decimal discountAmountExclTax)
+        /// <summary>
+        /// Update order parameters
+        /// </summary>
+        /// <param name="updateOrderParameters">UpdateOrderParameters</param>
+        /// <param name="restoredCart">Cart</param>
+        /// <param name="updatedOrderItem">Order item</param>
+        /// <param name="updatedOrder">Order</param>
+        /// <param name="customer">customer</param>
+        /// <param name="subTotalInclTax">Subtotal (incl tax)</param>
+        /// <param name="subTotalTaxRates">Subtotal tax rates</param>
+        /// <param name="discountAmountExclTax">Discount amount (excl tax)</param>
+        /// <returns>Subtotal</returns>
+        protected virtual decimal UpdateSubTotal(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart, 
+            OrderItem updatedOrderItem, Order updatedOrder, Customer customer, 
+            out decimal subTotalInclTax, out SortedDictionary<decimal, decimal> subTotalTaxRates, out decimal discountAmountExclTax)
         {
             var subTotalExclTax = decimal.Zero;
             subTotalInclTax = decimal.Zero;
@@ -570,8 +639,17 @@ namespace Nop.Services.Orders
                     updateOrderParameters.AppliedDiscounts.Add(discount);
             return subTotalExclTax;
         }
-        
-        protected virtual void SetRewardPoints(ref int redeemedRewardPoints, ref decimal redeemedRewardPointsAmount, bool? useRewardPoints, Customer customer, decimal orderTotal)
+
+        /// <summary>
+        /// Set reward points
+        /// </summary>
+        /// <param name="redeemedRewardPoints">Redeemed reward points</param>
+        /// <param name="redeemedRewardPointsAmount">Redeemed reward points amount</param>
+        /// <param name="useRewardPoints">A value indicating whether to use reward points</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="orderTotal">Order total</param>
+        protected virtual void SetRewardPoints(ref int redeemedRewardPoints, ref decimal redeemedRewardPointsAmount, 
+            bool? useRewardPoints, Customer customer, decimal orderTotal)
         {
             if (!_rewardPointsSettings.Enabled)
                 return;
@@ -604,7 +682,15 @@ namespace Nop.Services.Orders
             }
         }
 
-        protected virtual void AppliedGiftCards(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards, Customer customer, ref decimal resultTemp)
+        /// <summary>
+        /// Apply gift cards
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="appliedGiftCards">Applied gift cards</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="resultTemp"></param>
+        protected virtual void AppliedGiftCards(IList<ShoppingCartItem> cart, List<AppliedGiftCard> appliedGiftCards, 
+            Customer customer, ref decimal resultTemp)
         {
             if (cart.IsRecurring())
                 return;

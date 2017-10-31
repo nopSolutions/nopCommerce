@@ -3,8 +3,16 @@ using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Blogs
 {
+    /// <summary>
+    /// Blog extensions
+    /// </summary>
     public static class BlogExtensions
     {
+        /// <summary>
+        /// Parse tags
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        /// <returns>Tags</returns>
         public static string[] ParseTags(this BlogPost blogPost)
         {
             if (blogPost == null)

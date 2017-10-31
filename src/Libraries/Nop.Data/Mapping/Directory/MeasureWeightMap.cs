@@ -4,6 +4,9 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class MeasureWeightMap : NopEntityTypeConfiguration<MeasureWeight>
     {
         public override void Configure(EntityTypeBuilder<MeasureWeight> builder)

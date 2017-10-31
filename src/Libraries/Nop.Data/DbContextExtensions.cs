@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// DB context extensions
+    /// </summary>
     public static class DbContextExtensions
     {
         #region Utilities
@@ -177,6 +180,11 @@ namespace Nop.Data
             return new Dictionary<string, decimal>();
         }
 
+        /// <summary>
+        /// Get database name
+        /// </summary>
+        /// <param name="context">DB context</param>
+        /// <returns>Database name</returns>
         public static string DbName(this IDbContext context)
         {
             return ((DbContext)context).Database.GetDbConnection().Database;

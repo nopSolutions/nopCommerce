@@ -10,6 +10,9 @@ namespace Nop.Web.Framework.Mvc.Models
     {
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public BaseNopModel()
         {
             this.CustomProperties = new Dictionary<string, object>();

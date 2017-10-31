@@ -4,6 +4,9 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class AclRecordMap : NopEntityTypeConfiguration<AclRecord>
     {
         public override void Configure(EntityTypeBuilder<AclRecord> builder)

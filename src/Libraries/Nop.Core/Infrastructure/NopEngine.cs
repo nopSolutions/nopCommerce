@@ -34,6 +34,10 @@ namespace Nop.Core.Infrastructure
 
         #region Utilities
 
+        /// <summary>
+        /// Get IServiceProvider
+        /// </summary>
+        /// <returns>IServiceProvider</returns>
         protected IServiceProvider GetServiceProvider()
         {
             var accessor = ServiceProvider.GetService<IHttpContextAccessor>();

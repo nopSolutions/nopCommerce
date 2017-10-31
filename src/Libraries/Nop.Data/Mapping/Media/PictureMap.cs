@@ -4,6 +4,9 @@ using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class PictureMap : NopEntityTypeConfiguration<Picture>
     {
         public override void Configure(EntityTypeBuilder<Picture> builder)

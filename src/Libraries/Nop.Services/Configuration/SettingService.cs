@@ -60,6 +60,9 @@ namespace Nop.Services.Configuration
 
         #region Nested classes
 
+        /// <summary>
+        /// Setting (for caching)
+        /// </summary>
         [Serializable]
         public class SettingForCaching
         {

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class LanguageMap : NopEntityTypeConfiguration<Language>
     {
         public override void Configure(EntityTypeBuilder<Language> builder)

@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Common
 {
+    /// <summary>
+    /// Admin area settings
+    /// </summary>
     public class AdminAreaSettings : ISettings
     {
         /// <summary>

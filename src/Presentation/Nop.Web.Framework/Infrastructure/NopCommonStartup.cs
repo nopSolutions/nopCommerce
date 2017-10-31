@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -9,6 +8,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Compression;
 using Nop.Web.Framework.Infrastructure.Extensions;
@@ -90,17 +91,41 @@ namespace Nop.Web.Framework.Infrastructure
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
                 }
             });
+            
             //plugins
-            application.UseStaticFiles(new StaticFileOptions
+            var staticFileOptions = new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Plugins")),
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
                 {
                     if (!string.IsNullOrEmpty(nopConfig.StaticFilesCacheControl))
-                        ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, nopConfig.StaticFilesCacheControl);
+                        ctx.Context.Response.Headers.Append(HeaderNames.CacheControl,
+                            nopConfig.StaticFilesCacheControl);
                 }
-            });
+            };
+            //whether database is installed
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+                if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))
+                {
+                    var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+                    foreach (var ext in securitySettings.PluginStaticFileExtensionsBlacklist
+                        .Split(';', ',')
+                        .Select(e => e.Trim().ToLower())
+                        .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
+                        .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
+                    {
+                        fileExtensionContentTypeProvider.Mappings.Remove(ext);
+                    }
+
+                    staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
+                }
+            }
+            application.UseStaticFiles(staticFileOptions);
+
             //add support for backups
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".bak"] = MimeTypes.ApplicationOctetStream;

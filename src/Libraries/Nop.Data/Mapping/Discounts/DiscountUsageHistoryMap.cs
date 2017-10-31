@@ -4,6 +4,9 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class DiscountUsageHistoryMap : NopEntityTypeConfiguration<DiscountUsageHistory>
     {
         public override void Configure(EntityTypeBuilder<DiscountUsageHistory> builder)

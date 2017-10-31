@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Routing;
 //code from Telerik MVC Extensions
 namespace Nop.Web.Framework.Menu
 {
+    /// <summary>
+    /// Sitemap node
+    /// </summary>
     public class SiteMapNode
     {
         /// <summary>

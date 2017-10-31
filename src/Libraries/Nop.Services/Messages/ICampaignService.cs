@@ -3,6 +3,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Campaign service
+    /// </summary>
     public partial interface ICampaignService
     {
         /// <summary>

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class VendorMap : NopEntityTypeConfiguration<Vendor>
     {
         public override void Configure(EntityTypeBuilder<Vendor> builder)

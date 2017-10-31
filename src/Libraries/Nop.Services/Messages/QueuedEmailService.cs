@@ -10,6 +10,9 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Queued email service
+    /// </summary>
     public partial class QueuedEmailService : IQueuedEmailService
     {
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
     {
         public override void Configure(EntityTypeBuilder<DeliveryDate> builder)

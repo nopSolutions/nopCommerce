@@ -12,6 +12,9 @@ using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message template service
+    /// </summary>
     public partial class MessageTemplateService: IMessageTemplateService
     {
         #region Constants

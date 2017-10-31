@@ -4,6 +4,9 @@ using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class DownloadMap : NopEntityTypeConfiguration<Download>
     {
         public override void Configure(EntityTypeBuilder<Download> builder)

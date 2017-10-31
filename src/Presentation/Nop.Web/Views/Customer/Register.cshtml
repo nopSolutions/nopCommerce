@@ -326,29 +326,27 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        <div class="inputs">
-                            <label asp-for="Password" asp-postfix=":"></label>
-                            <input asp-for="Password" />
-                            <nop-required />
-                            <span asp-validation-for="Password"></span>
-                        </div>
-                        <div class="inputs">
-                            <label asp-for="ConfirmPassword" asp-postfix=":"></label>
-                            <input asp-for="ConfirmPassword" />
-                            <nop-required />
-                            <span asp-validation-for="ConfirmPassword"></span>
-                        </div>
-                        @if (Model.DisplayCaptcha)
-                        {
-                            <div class="captcha-box">
-                                <nop-captcha />
-                            </div>
-                        }
-                        @if (Model.HoneypotEnabled)
-                        {
-                            @Html.Raw(Html.GenerateHoneypotInput())
-                        }
+                        <label asp-for="Password" asp-postfix=":"></label>
+                        <input asp-for="Password" />
+                        <nop-required />
+                        <span asp-validation-for="Password"></span>
                     </div>
+                    <div class="inputs">
+                        <label asp-for="ConfirmPassword" asp-postfix=":"></label>
+                        <input asp-for="ConfirmPassword" />
+                        <nop-required />
+                        <span asp-validation-for="ConfirmPassword"></span>
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            <nop-captcha />
+                        </div>
+                    }
+                    @if (Model.HoneypotEnabled)
+                    {
+                        @Html.Raw(Html.GenerateHoneypotInput())
+                    }
                 </div>
                 @if (Model.AcceptPrivacyPolicyEnabled)
                 {

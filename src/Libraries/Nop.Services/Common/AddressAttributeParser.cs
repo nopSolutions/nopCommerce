@@ -15,6 +15,11 @@ namespace Nop.Services.Common
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILocalizationService _localizationService;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="addressAttributeService">Address attribute service</param>
+        /// <param name="localizationService">Localization service</param>
         public AddressAttributeParser(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService)
         {

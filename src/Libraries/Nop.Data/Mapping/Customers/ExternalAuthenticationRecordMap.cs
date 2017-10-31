@@ -4,6 +4,9 @@ using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ExternalAuthenticationRecordMap : NopEntityTypeConfiguration<ExternalAuthenticationRecord>
     {
         public override void Configure(EntityTypeBuilder<ExternalAuthenticationRecord> builder)

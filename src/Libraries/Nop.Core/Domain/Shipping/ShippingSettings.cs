@@ -3,8 +3,14 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Shipping
 {
+    /// <summary>
+    /// Shipping settings
+    /// </summary>
     public class ShippingSettings : ISettings
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public ShippingSettings()
         {
             ActiveShippingRateComputationMethodSystemNames = new List<string>();

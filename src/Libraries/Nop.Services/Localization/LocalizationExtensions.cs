@@ -12,6 +12,9 @@ using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
 {
+    /// <summary>
+    /// Localization extensions
+    /// </summary>
     public static class LocalizationExtensions
     {
         /// <summary>

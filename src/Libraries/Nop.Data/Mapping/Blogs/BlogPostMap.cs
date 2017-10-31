@@ -4,6 +4,9 @@ using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class BlogPostMap : NopEntityTypeConfiguration<BlogPost>
     {
         public override void Configure(EntityTypeBuilder<BlogPost> builder)

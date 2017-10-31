@@ -29,9 +29,6 @@ namespace Nop.Web.Framework.Infrastructure
             //exception handling
             application.UseNopExceptionHandler();
 
-            //diagnostic listener
-            application.UseDiagnosticListener();
-
             //handle 400 errors (bad request)
             application.UseBadRequestResult();
 

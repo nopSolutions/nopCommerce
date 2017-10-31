@@ -14,6 +14,9 @@ namespace Nop.Core.Plugins
     {
         #region Ctors
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();
@@ -21,9 +24,94 @@ namespace Nop.Core.Plugins
             this.LimitedToCustomerRoles = new List<int>();
         }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="referencedAssembly">Referenced assembly</param>
         public PluginDescriptor(Assembly referencedAssembly) : this()
         {
             this.ReferencedAssembly = referencedAssembly;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get the instance of the plugin
+        /// </summary>
+        /// <returns>Plugin instance</returns>
+        public IPlugin Instance()
+        {
+            return Instance<IPlugin>();
+        }
+
+        /// <summary>
+        /// Get the instance of the plugin
+        /// </summary>
+        /// <typeparam name="T">Type of the plugin</typeparam>
+        /// <returns>Plugin instance</returns>
+        public virtual T Instance<T>() where T : class, IPlugin
+        {
+            object instance = null;
+            try
+            {
+                instance = EngineContext.Current.Resolve(PluginType);
+            }
+            catch
+            {
+                //try resolve
+            }
+            if (instance == null)
+            {
+                //not resolved
+                instance = EngineContext.Current.ResolveUnregistered(PluginType);
+            }
+            var typedInstance = instance as T;
+            if (typedInstance != null)
+                typedInstance.PluginDescriptor = this;
+            return typedInstance;
+        }
+
+        /// <summary>
+        /// Compares this instance with a specified PluginDescriptor object
+        /// </summary>
+        /// <param name="other">The PluginDescriptor to compare with this instance</param>
+        /// <returns>An integer that indicates whether this instance precedes, follows, or appears in the same position in the sort order as the specified parameter</returns>
+        public int CompareTo(PluginDescriptor other)
+        {
+            if (DisplayOrder != other.DisplayOrder)
+                return DisplayOrder.CompareTo(other.DisplayOrder);
+
+            return FriendlyName.CompareTo(other.FriendlyName);
+        }
+
+        /// <summary>
+        /// Returns the plugin as a string
+        /// </summary>
+        /// <returns>Value of the FriendlyName</returns>
+        public override string ToString()
+        {
+            return FriendlyName;
+        }
+
+        /// <summary>
+        /// Determines whether this instance and another specified PluginDescriptor object have the same SystemName
+        /// </summary>
+        /// <param name="value">The PluginDescriptor to compare to this instance</param>
+        /// <returns>True if the SystemName of the value parameter is the same as the SystemName of this instance; otherwise, false</returns>
+        public override bool Equals(object value)
+        {
+            return SystemName?.Equals((value as PluginDescriptor)?.SystemName) ?? false;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this plugin descriptor
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code</returns>
+        public override int GetHashCode()
+        {
+            return SystemName.GetHashCode();
         }
 
         #endregion
@@ -122,85 +210,5 @@ namespace Nop.Core.Plugins
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Get the instance of the plugin
-        /// </summary>
-        /// <returns>Plugin instance</returns>
-        public IPlugin Instance()
-        {
-            return Instance<IPlugin>();
-        }
-
-        /// <summary>
-        /// Get the instance of the plugin
-        /// </summary>
-        /// <typeparam name="T">Type of the plugin</typeparam>
-        /// <returns>Plugin instance</returns>
-        public virtual T Instance<T>() where T : class, IPlugin
-        {
-            object instance = null;
-            try
-            {
-                instance = EngineContext.Current.Resolve(PluginType);
-            }
-            catch
-            {
-                //try resolve
-            }
-            if (instance == null)
-            {
-                //not resolved
-                instance = EngineContext.Current.ResolveUnregistered(PluginType);
-            }
-            var typedInstance = instance as T;
-            if (typedInstance != null)
-                typedInstance.PluginDescriptor = this;
-            return typedInstance;
-        }
-
-        /// <summary>
-        /// Compares this instance with a specified PluginDescriptor object
-        /// </summary>
-        /// <param name="other">The PluginDescriptor to compare with this instance</param>
-        /// <returns>An integer that indicates whether this instance precedes, follows, or appears in the same position in the sort order as the specified parameter</returns>
-        public int CompareTo(PluginDescriptor other)
-        {
-            if (DisplayOrder != other.DisplayOrder)
-                return DisplayOrder.CompareTo(other.DisplayOrder);
-
-            return FriendlyName.CompareTo(other.FriendlyName);
-        }
-
-        /// <summary>
-        /// Returns the plugin as a string
-        /// </summary>
-        /// <returns>Value of the FriendlyName</returns>
-        public override string ToString()
-        {
-            return FriendlyName;
-        }
-
-        /// <summary>
-        /// Determines whether this instance and another specified PluginDescriptor object have the same SystemName
-        /// </summary>
-        /// <param name="value">The PluginDescriptor to compare to this instance</param>
-        /// <returns>True if the SystemName of the value parameter is the same as the SystemName of this instance; otherwise, false</returns>
-        public override bool Equals(object value)
-        {
-            return SystemName?.Equals((value as PluginDescriptor)?.SystemName) ?? false;
-        }
-
-        /// <summary>
-        /// Returns the hash code for this plugin descriptor
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code</returns>
-        public override int GetHashCode()
-        {
-            return SystemName.GetHashCode();
-        }
-
-        #endregion
     }
 }

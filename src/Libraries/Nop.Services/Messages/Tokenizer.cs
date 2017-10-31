@@ -8,6 +8,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Tokenizer
+    /// </summary>
     public partial class Tokenizer : ITokenizer
     {
         #region Fields

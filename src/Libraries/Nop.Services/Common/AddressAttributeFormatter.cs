@@ -16,6 +16,12 @@ namespace Nop.Services.Common
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="addressAttributeService">Address attribute service</param>
+        /// <param name="addressAttributeParser">Address attribute parser</param>
         public AddressAttributeFormatter(IWorkContext workContext,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser)

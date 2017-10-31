@@ -1,5 +1,8 @@
 ﻿namespace Nop.Core
 {
+    /// <summary>
+    /// nopCommere version
+    /// </summary>
     public static class NopVersion
     {
         /// <summary>

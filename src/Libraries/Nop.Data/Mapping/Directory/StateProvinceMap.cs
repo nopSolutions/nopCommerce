@@ -4,6 +4,9 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class StateProvinceMap : NopEntityTypeConfiguration<StateProvince>
     {
         public override void Configure(EntityTypeBuilder<StateProvince> builder)

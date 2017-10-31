@@ -4,6 +4,9 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class GenericAttributeMap : NopEntityTypeConfiguration<GenericAttribute>
     {
         public override void Configure(EntityTypeBuilder<GenericAttribute> builder)

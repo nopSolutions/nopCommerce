@@ -36,6 +36,19 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
+        /// <param name="discountService">Discount service</param>
+        /// <param name="categoryService">Category service</param>
+        /// <param name="manufacturerService">Manufacturer service</param>
+        /// <param name="productAttributeParser">Product atrribute parser</param>
+        /// <param name="productService">Product service</param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public PriceCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IDiscountService discountService, 
@@ -63,16 +76,31 @@ namespace Nop.Services.Catalog
 
         #region Nested classes
 
+        /// <summary>
+        /// Product price (for caching)
+        /// </summary>
         [Serializable]
         protected class ProductPriceForCaching
         {
+            /// <summary>
+            /// Ctor
+            /// </summary>
             public ProductPriceForCaching()
             {
                 this.AppliedDiscounts = new List<DiscountForCaching>();
             }
 
+            /// <summary>
+            /// Price
+            /// </summary>
             public decimal Price { get; set; }
+            /// <summary>
+            /// Applied discount amount
+            /// </summary>
             public decimal AppliedDiscountAmount { get; set; }
+            /// <summary>
+            /// Applied discounts
+            /// </summary>
             public List<DiscountForCaching> AppliedDiscounts { get; set; }
         }
 

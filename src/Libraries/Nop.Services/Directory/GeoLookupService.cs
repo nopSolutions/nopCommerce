@@ -22,6 +22,10 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="logger">Logger</param>
         public GeoLookupService(ILogger logger)
         {
             this._logger = logger;
@@ -31,6 +35,11 @@ namespace Nop.Services.Directory
 
         #region Utilities
 
+        /// <summary>
+        /// Get information
+        /// </summary>
+        /// <param name="ipAddress">IP address</param>
+        /// <returns>Information</returns>
         protected virtual CountryResponse GetInformation(string ipAddress)
         {
             if (string.IsNullOrEmpty(ipAddress))

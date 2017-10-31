@@ -4,6 +4,9 @@ using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class CustomerPasswordMap : NopEntityTypeConfiguration<CustomerPassword>
     {
         public override void Configure(EntityTypeBuilder<CustomerPassword> builder)

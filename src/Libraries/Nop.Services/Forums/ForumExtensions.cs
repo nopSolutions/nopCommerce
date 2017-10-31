@@ -6,6 +6,9 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Forums
 {
+    /// <summary>
+    /// Forum extensions
+    /// </summary>
     public static class ForumExtensions
     {
         /// <summary>

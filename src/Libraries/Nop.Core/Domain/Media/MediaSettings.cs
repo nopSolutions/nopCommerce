@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Media
 {
+    /// <summary>
+    /// Media settings
+    /// </summary>
     public class MediaSettings : ISettings
     {
         /// <summary>

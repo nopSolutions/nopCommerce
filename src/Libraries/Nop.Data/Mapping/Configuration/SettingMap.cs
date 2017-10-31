@@ -4,6 +4,9 @@ using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data.Mapping.Configuration
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class SettingMap : NopEntityTypeConfiguration<Setting>
     {
         public override void Configure(EntityTypeBuilder<Setting> builder)

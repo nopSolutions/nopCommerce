@@ -7,8 +7,17 @@ namespace Nop.Core.Domain.Configuration
     /// </summary>
     public partial class Setting : BaseEntity, ILocalizedEntity
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public Setting() { }
-        
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="value">Value</param>
+        /// <param name="storeId">Store identifier</param>
         public Setting(string name, string value, int storeId = 0) {
             this.Name = name;
             this.Value = value;
@@ -30,6 +39,10 @@ namespace Nop.Core.Domain.Configuration
         /// </summary>
         public int StoreId { get; set; }
 
+        /// <summary>
+        /// To string
+        /// </summary>
+        /// <returns>Result</returns>
         public override string ToString()
         {
             return Name;

@@ -10,6 +10,9 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.TagHelpers.Shared
 {
+    /// <summary>
+    /// nop-date-picker tag helper
+    /// </summary>
     [HtmlTargetElement("nop-date-picker", 
         Attributes = DayNameAttributeName + "," + MonthNameAttributeName + "," + YearNameAttributeName, 
         TagStructure = TagStructure.WithoutEndTag)]
@@ -103,12 +106,22 @@ namespace Nop.Web.Framework.TagHelpers.Shared
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopDatePickerTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class AddressAttributeMap : NopEntityTypeConfiguration<AddressAttribute>
     {
         public override void Configure(EntityTypeBuilder<AddressAttribute> builder)

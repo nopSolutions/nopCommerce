@@ -4,6 +4,9 @@ using Nop.Core.Domain.Tasks;
 
 namespace Nop.Data.Mapping.Tasks
 {
+    /// <summary>
+    /// Mapping class
+    /// </summary>
     public partial class ScheduleTaskMap : NopEntityTypeConfiguration<ScheduleTask>
     {
         public override void Configure(EntityTypeBuilder<ScheduleTask> builder)
