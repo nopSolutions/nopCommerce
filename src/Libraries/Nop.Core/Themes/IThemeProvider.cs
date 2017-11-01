@@ -7,6 +7,8 @@ namespace Nop.Core.Themes
     /// </summary>
     public partial interface IThemeProvider
     {
+        #region Methods
+
         /// <summary>
         /// Get all themes
         /// </summary>
@@ -26,5 +28,21 @@ namespace Nop.Core.Themes
         /// <param name="systemName">Theme system name</param>
         /// <returns>True if the theme exists; otherwise false</returns>
         bool ThemeExists(string systemName);
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the path to themes folder
+        /// </summary>
+        string ThemesPath { get; }
+
+        /// <summary>
+        /// Gets the name of the theme description file
+        /// </summary>
+        string ThemeDescriptionFileName { get; }
+
+        #endregion
     }
 }

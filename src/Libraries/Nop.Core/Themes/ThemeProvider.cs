@@ -11,13 +11,6 @@ namespace Nop.Core.Themes
     /// </summary>
     public partial class ThemeProvider : IThemeProvider
     {
-        #region Constants
-
-        private const string ThemesPath = "~/Themes/";
-        private const string ThemeDescriptionFileName = "theme.json";
-
-        #endregion
-
         #region Fields
 
         private IList<ThemeDescriptor> _themeDescriptors;
@@ -99,6 +92,20 @@ namespace Nop.Core.Themes
 
             return GetThemes().Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the path to themes folder
+        /// </summary>
+        public string ThemesPath => "~/Themes";
+
+        /// <summary>
+        /// Gets the name of the theme description file
+        /// </summary>
+        public string ThemeDescriptionFileName => "theme.json";
 
         #endregion
     }
