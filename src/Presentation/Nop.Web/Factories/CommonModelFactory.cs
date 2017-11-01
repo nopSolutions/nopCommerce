@@ -587,14 +587,14 @@ namespace Nop.Web.Factories
         {
             var model = new StoreThemeSelectorModel();
 
-            var currentTheme = _themeProvider.GetThemeConfigurationBySystemName(_themeContext.WorkingThemeName);
+            var currentTheme = _themeProvider.GetThemeDescriptorBySystemName(_themeContext.WorkingThemeName);
             model.CurrentStoreTheme = new StoreThemeModel
             {
                 Name = currentTheme?.SystemName,
                 Title = currentTheme?.Title
             };
 
-            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations().Select(x => new StoreThemeModel
+            model.AvailableStoreThemes = _themeProvider.GetThemeDescriptors().Select(x => new StoreThemeModel
             {
                 Name = x.SystemName,
                 Title = x.Title

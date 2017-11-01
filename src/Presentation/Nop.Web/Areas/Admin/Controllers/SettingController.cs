@@ -1666,7 +1666,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
-            model.StoreInformationSettings.AvailableStoreThemes = _themeProvider.GetThemeConfigurations().Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel
+            model.StoreInformationSettings.AvailableStoreThemes = _themeProvider.GetThemeDescriptors().Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeDescriptorModel
             {
                 Title = x.Title,
                 SystemName = x.SystemName,

@@ -15,40 +15,40 @@ namespace Nop.Web.Framework.Themes
         #region Constants
 
         private const string ThemesPath = "~/Themes/";
-        private const string ThemeConfigurationFileName = "theme.json";
+        private const string ThemeDescriptionFileName = "theme.json";
 
         #endregion
 
         #region Fields
 
-        private IList<ThemeConfiguration> _themeConfigurations;
+        private IList<ThemeDescriptor> _themeDescriptors;
 
         #endregion
 
         #region Utilities
 
         /// <summary>
-        /// Get theme configuration from the file
+        /// Get theme descriptor from the file
         /// </summary>
-        /// <param name="filePath">Path to the configuration file</param>
-        /// <returns>Theme configuration</returns>
-        protected virtual ThemeConfiguration GeThemeConfiguration(string filePath)
+        /// <param name="filePath">Path to the description file</param>
+        /// <returns>Theme descriptor</returns>
+        protected virtual ThemeDescriptor GeThemeDescriptor(string filePath)
         {
             var text = File.ReadAllText(filePath);
             if (string.IsNullOrEmpty(text))
-                return new ThemeConfiguration();
+                return new ThemeDescriptor();
 
-            //get theme configuration from the JSON file
-            var themeConfiguration = JsonConvert.DeserializeObject<ThemeConfiguration>(text);
+            //get theme description from the JSON file
+            var themeDescriptor = JsonConvert.DeserializeObject<ThemeDescriptor>(text);
 
             //some validation
-            if (string.IsNullOrEmpty(themeConfiguration?.SystemName))
-                throw new Exception($"A theme configuration '{filePath}' has no system name");
+            if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
+                throw new Exception($"A theme descriptor '{filePath}' has no system name");
 
-            if (_themeConfigurations?.Any(configuration => configuration.SystemName.Equals(themeConfiguration.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
-                throw new Exception($"A theme with '{themeConfiguration.SystemName}' system name is already defined");
+            if (_themeDescriptors?.Any(descriptor => descriptor.SystemName.Equals(themeDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
+                throw new Exception($"A theme with '{themeDescriptor.SystemName}' system name is already defined");
 
-            return themeConfiguration;
+            return themeDescriptor;
         }
 
         #endregion
@@ -56,49 +56,49 @@ namespace Nop.Web.Framework.Themes
         #region Methods
 
         /// <summary>
-        /// Get all theme configurations
+        /// Get all theme descriptors
         /// </summary>
-        /// <returns>List of the theme configuration</returns>
-        public IList<ThemeConfiguration> GetThemeConfigurations()
+        /// <returns>List of the theme descriptor</returns>
+        public IList<ThemeDescriptor> GetThemeDescriptors()
         {
-            if (_themeConfigurations == null)
+            if (_themeDescriptors == null)
             {
-                //load all theme configurations
+                //load all theme descriptors
                 var themeFolder = new DirectoryInfo(CommonHelper.MapPath(ThemesPath));
-                _themeConfigurations = new List<ThemeConfiguration>();
-                foreach (var configurationFile in themeFolder.GetFiles(ThemeConfigurationFileName, SearchOption.AllDirectories))
+                _themeDescriptors = new List<ThemeDescriptor>();
+                foreach (var descriptionFile in themeFolder.GetFiles(ThemeDescriptionFileName, SearchOption.AllDirectories))
                 {
-                    _themeConfigurations.Add(GeThemeConfiguration(configurationFile.FullName));
+                    _themeDescriptors.Add(GeThemeDescriptor(descriptionFile.FullName));
                 }
             }
 
-            return _themeConfigurations;
+            return _themeDescriptors;
         }
 
         /// <summary>
-        /// Get theme configuration by theme system name
+        /// Get theme descriptor by theme system name
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>Theme configuration</returns>
-        public ThemeConfiguration GetThemeConfigurationBySystemName(string systemName)
+        /// <returns>Theme descriptor</returns>
+        public ThemeDescriptor GetThemeDescriptorBySystemName(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            return GetThemeConfigurations().SingleOrDefault(configuration => configuration.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return GetThemeDescriptors().SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
-        /// Check whether theme configuration with specified system name exists
+        /// Check whether theme descriptor with specified system name exists
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>True if theme configuration exists; otherwise false</returns>
-        public bool ThemeConfigurationExists(string systemName)
+        /// <returns>True if theme descriptor exists; otherwise false</returns>
+        public bool ThemeDescriptorExists(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return false;
 
-            return GetThemeConfigurations().Any(configuration => configuration.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return GetThemeDescriptors().Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         #endregion

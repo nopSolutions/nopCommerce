@@ -40,7 +40,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         {
             public StoreInformationSettingsModel()
             {
-                this.AvailableStoreThemes = new List<ThemeConfigurationModel>();
+                this.AvailableStoreThemes = new List<ThemeDescriptorModel>();
             }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
@@ -50,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
             public string DefaultStoreTheme { get; set; }
             public bool DefaultStoreTheme_OverrideForStore { get; set; }
-            public IList<ThemeConfigurationModel> AvailableStoreThemes { get; set; }
+            public IList<ThemeDescriptorModel> AvailableStoreThemes { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
             #region Nested classes
 
-            public partial class ThemeConfigurationModel
+            public partial class ThemeDescriptorModel
             {
                 public string SystemName { get; set; }
                 public string Title { get; set; }
