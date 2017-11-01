@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Nop.Web.Framework.Themes
+namespace Nop.Core.Themes
 {
     /// <summary>
     /// Represents a theme descriptor
