@@ -115,7 +115,7 @@ namespace Nop.Core.Plugins
                             using (var reader = new StreamReader(unzippedEntryStream))
                             {
                                 var text = reader.ReadToEnd();
-                                pluginDescriptor = GetPluginDescriptor(text);
+                                pluginDescriptor = GetPluginDescriptorFromText(text);
                                 if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
                                     StringComparer.InvariantCultureIgnoreCase))
                                     throw new Exception(
@@ -193,7 +193,7 @@ namespace Nop.Core.Plugins
                     {
                         using (var reader = new StreamReader(unzippedEntryStream))
                         {
-                            var pluginDescriptor = GetPluginDescriptor(reader.ReadToEnd());
+                            var pluginDescriptor = GetPluginDescriptorFromText(reader.ReadToEnd());
                             return new { DirectoryName = directoryName, PluginPath = pluginPath, PluginDescriptor = pluginDescriptor };
                         }
                     }
@@ -232,38 +232,6 @@ namespace Nop.Core.Plugins
 
                 return pluginsInArchive.Select(plugin => plugin.PluginDescriptor).ToList();
             }
-        }
-
-        /// <summary>
-        /// Get plugin descriptor from the plugin description file
-        /// </summary>
-        /// <param name="filePath">Path to the description file</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
-        {
-            var text = File.ReadAllText(filePath);
-
-            return GetPluginDescriptor(text);
-        }
-
-        /// <summary>
-        /// Get plugin descriptor from the description text
-        /// </summary>
-        /// <param name="text">Description text</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor GetPluginDescriptor(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return new PluginDescriptor();
-
-            //get plugin descriptor from the JSON file
-            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
-
-            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
-            if (!descriptor.SupportedVersions.Any())
-                descriptor.SupportedVersions.Add("2.00");
-
-            return descriptor;
         }
 
         /// <summary>
@@ -798,7 +766,39 @@ namespace Nop.Core.Plugins
 
             return pluginDescriptors;
         }
-        
+
+        /// <summary>
+        /// Get plugin descriptor from the plugin description file
+        /// </summary>
+        /// <param name="filePath">Path to the description file</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromFile(string filePath)
+        {
+            var text = File.ReadAllText(filePath);
+
+            return GetPluginDescriptorFromText(text);
+        }
+
+        /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
+        }
+
         /// <summary>
         /// Save plugin descriptor to the plugin description file
         /// </summary>
