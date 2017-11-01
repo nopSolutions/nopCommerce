@@ -440,6 +440,30 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.ExchangeRateProvider.Hint">
     <Value>Select an exchange rate provider.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewTheme">
+    <Value>Uploaded a new theme (FriendlyName: ''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>{0} plugins and {1} themes have been uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload plugin or theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
+    <Value>Uploading plugins and themes...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
+    <Value>The archive should contain only one root plugin or theme directory (already compiled for plugin). For example, Payments.PayPalDirect.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
+    <Value>Or it should have the ''{0}'' file with the archive structure (in case if the archive has many plugins and themes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
+    <Value>Please note that if the plugin or theme directory already exists, it will be overwritten.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
+    <Value>You can also manually upload a plugin or theme using FTP if this method doesn''t work for you.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -908,5 +932,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.plugins
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadNewTheme')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'UploadNewTheme', N'Upload a theme', N'true')
 END
 GO

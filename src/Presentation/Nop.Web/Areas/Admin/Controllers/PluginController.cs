@@ -31,8 +31,6 @@ using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Nop.Services.Events;
-using Nop.Core.Themes;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -267,44 +265,46 @@ namespace Nop.Web.Areas.Admin.Controllers
 	    }
 
 	    [HttpPost]
-	    public virtual IActionResult UploadPlugin(IFormFile archivefile)
+	    public virtual IActionResult UploadPluginsAndThemes(IFormFile archivefile)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
 	            return AccessDeniedView();
 
 	        try
 	        {
-	            if (archivefile != null && archivefile.Length > 0)
-	            {
-                    var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
-                    var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
-                    var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
+                if (archivefile == null || archivefile.Length == 0)
+                {
 
-                    //activity log
-                    foreach (var descriptor in pluginDescriptors)
-                    {
-                        _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName);
-                    }
-
-                    foreach (var descriptor in themeDescriptors)
-                    {
-                        _customerActivityService.InsertActivity("UploadNewTheme", _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName);
-                    }
-
-                    //events
-                    if (pluginDescriptors?.Any() ?? false)
-                        _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
-
-                    if (themeDescriptors?.Any() ?? false)
-                        _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
                 }
-                else
-	            {
-	                ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-	                return RedirectToAction("List");
-	            }
 
-	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"));
+                var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
+                var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
+                var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
+
+                //activity log
+                foreach (var descriptor in pluginDescriptors)
+                {
+                    _customerActivityService.InsertActivity("UploadNewPlugin", 
+                        _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName);
+                }
+
+                foreach (var descriptor in themeDescriptors)
+                {
+                    _customerActivityService.InsertActivity("UploadNewTheme",
+                        _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName);
+                }
+
+                //events
+                if (pluginDescriptors?.Any() ?? false)
+                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+
+                if (themeDescriptors?.Any() ?? false)
+                    _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
+
+                var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
+                SuccessNotification(message);
 
                 //restart application
                 _webHelper.RestartAppDomain();
@@ -313,6 +313,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            ErrorNotification(exc);
 	        }
+
 	        return RedirectToAction("List");
         }
 

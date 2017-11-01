@@ -1,12 +1,10 @@
 ﻿@model GeneralCommonSettingsModel
-
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("General settings");
 }
-
 
 <form asp-controller="Setting" asp-action="GeneralCommon" method="post">
     <div class="content-header clearfix">

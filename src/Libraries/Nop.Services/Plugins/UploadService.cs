@@ -174,6 +174,10 @@ namespace Nop.Services.Plugins
                     if (!item.Type.HasValue)
                         continue;
 
+                    //ensure that the current version of nopCommerce is supported
+                    if (!item.SupportedVersions?.Contains(NopVersion.CurrentVersion) ?? true)
+                        continue;
+
                     //the item path should end with a slash
                     var itemPath = $"{item.DirectoryPath?.TrimEnd('/')}/";
 
@@ -340,10 +344,10 @@ namespace Nop.Services.Plugins
             public string SystemName { get; set; }
 
             /// <summary>
-            /// Gets or sets the version
+            /// Gets or sets supported versions of nopCommerce
             /// </summary>
-            [JsonProperty(PropertyName = "Version")]
-            public string Version { get; set; }
+            [JsonProperty(PropertyName = "SupportedVersion")]
+            public string SupportedVersions { get; set; }
 
             /// <summary>
             /// Gets or sets the path to binary files directory
