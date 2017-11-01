@@ -17,35 +17,23 @@ namespace Nop.Core.Themes
 
         #endregion
 
-        #region Utilities
-
+        #region Methods
         /// <summary>
-        /// Get theme descriptor from the file
+        /// Get theme descriptor from the description text
         /// </summary>
-        /// <param name="filePath">Path to the description file</param>
+        /// <param name="text">Description text</param>
         /// <returns>Theme descriptor</returns>
-        protected virtual ThemeDescriptor GeThemeDescriptor(string filePath)
+        public ThemeDescriptor GetThemeDescriptorFromText(string text)
         {
-            var text = File.ReadAllText(filePath);
-            if (string.IsNullOrEmpty(text))
-                return new ThemeDescriptor();
-
             //get theme description from the JSON file
             var themeDescriptor = JsonConvert.DeserializeObject<ThemeDescriptor>(text);
 
             //some validation
-            if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
-                throw new Exception($"A theme descriptor '{filePath}' has no system name");
-
-            if (_themeDescriptors?.Any(descriptor => descriptor.SystemName.Equals(themeDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
+            if (_themeDescriptors?.Any(descriptor => descriptor.SystemName.Equals(themeDescriptor?.SystemName, StringComparison.InvariantCultureIgnoreCase)) ?? false)
                 throw new Exception($"A theme with '{themeDescriptor.SystemName}' system name is already defined");
 
             return themeDescriptor;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Get all themes
@@ -60,7 +48,18 @@ namespace Nop.Core.Themes
                 _themeDescriptors = new List<ThemeDescriptor>();
                 foreach (var descriptionFile in themeFolder.GetFiles(ThemeDescriptionFileName, SearchOption.AllDirectories))
                 {
-                    _themeDescriptors.Add(GeThemeDescriptor(descriptionFile.FullName));
+                    var text = File.ReadAllText(descriptionFile.FullName);
+                    if (string.IsNullOrEmpty(text))
+                        continue;
+
+                    //get theme descriptor
+                    var themeDescriptor = GetThemeDescriptorFromText(text);
+
+                    //some validation
+                    if (string.IsNullOrEmpty(themeDescriptor?.SystemName))
+                        throw new Exception($"A theme descriptor '{descriptionFile.FullName}' has no system name");
+
+                    _themeDescriptors.Add(themeDescriptor);
                 }
             }
 

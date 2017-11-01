@@ -10,6 +10,13 @@ namespace Nop.Core.Themes
         #region Methods
 
         /// <summary>
+        /// Get theme descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Theme descriptor</returns>
+        ThemeDescriptor GetThemeDescriptorFromText(string text);
+
+        /// <summary>
         /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
