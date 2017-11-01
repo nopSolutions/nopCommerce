@@ -269,7 +269,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            if (archivefile != null && archivefile.Length > 0)
 	            {
-                    var pluginDescriptors = UploadManager.UploadPlugins(archivefile);
+                    var pluginDescriptors = UploadManager.UploadPluginsAndThemes(archivefile).OfType<PluginDescriptor>().ToList();
 
                     //activity log
                     foreach (var pluginDescriptor in pluginDescriptors)

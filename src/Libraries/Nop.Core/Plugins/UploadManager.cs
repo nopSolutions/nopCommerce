@@ -3,180 +3,256 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Nop.Core.Infrastructure;
+using Nop.Core.Themes;
 
 namespace Nop.Core.Plugins
 {
     /// <summary>
-    /// Represents the manager for uploading plugins
+    /// Represents the manager for uploading application extensions (plugins or themes)
     /// </summary>
     public static class UploadManager
     {
         #region Properties
 
         /// <summary>
-        /// Gets the path to temp folder with uploads
+        /// Gets the path to temp directory with uploads
         /// </summary>
-        public static string PluginsTempPath => "~/App_Data/TempUploads";
+        public static string UploadsTempPath => "~/App_Data/TempUploads";
 
         /// <summary>
-        /// Gets the name of the file containing information about the uploaded plugins
+        /// Gets the name of the file containing information about the uploaded items
         /// </summary>
-        public static string UploadedPluginsFileName => "uploadedPlugins.json";
+        public static string UploadedItemsFileName => "uploadedItems.json";
 
         #endregion
 
         #region Utilities
 
         /// <summary>
-        /// Upload the single plugin from the archive into the plugin folder
+        /// Get information about the uploaded items in the archive
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
-        /// <returns>Plugin descriptor</returns>
-        private static PluginDescriptor UploadSinglePlugin(string archivePath)
+        /// <returns>List of an uploaded item</returns>
+        private static IList<UploadedItem> GetUploadedItems(string archivePath)
         {
-            //ensure we have a valid plugin description file and the current version is supported
-            PluginDescriptor pluginDescriptor = null;
-            var uploadedPluginDirectoryName = string.Empty;
             using (var archive = ZipFile.OpenRead(archivePath))
             {
-                //the archive should contain only one root directory (the plugin one)
-                var rootDirectories = archive.Entries
-                    .Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/"))
-                    .ToList();
-                if (rootDirectories.Count != 1)
-                    throw new Exception("The archive should contain only one root plugin directory. For example, Payments.PayPalDirect.");
-                //the plugin directory name (remove the ending /)
-                uploadedPluginDirectoryName = rootDirectories.First().FullName.Replace("/", "");
+                //try to get the entry containing information about the uploaded items 
+                var uploadedItemsFileEntry = archive.Entries
+                    .FirstOrDefault(entry => entry.Name.Equals(UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
+                        && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
+                if (uploadedItemsFileEntry == null)
+                    return null;
 
+                //read the content of this entry if exists
+                using (var unzippedEntryStream = uploadedItemsFileEntry.Open())
+                    using (var reader = new StreamReader(unzippedEntryStream))
+                        return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
+            }
+        }
+
+        /// <summary>
+        /// Upload single item from the archive into the physical directory
+        /// </summary>
+        /// <param name="archivePath">Path to the archive</param>
+        /// <returns>Uploaded item descriptor</returns>
+        private static IDescriptor UploadSingleItem(string archivePath)
+        {
+            //try to get a theme provider
+            var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
+
+            //get path to the plugins directory
+            var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
+
+            //get path to the themes directory
+            var themesDirectory = string.Empty;
+            if (!string.IsNullOrEmpty(themeProvider?.ThemesPath))
+                themesDirectory = CommonHelper.MapPath(themeProvider.ThemesPath);
+
+            IDescriptor descriptor = null;
+            var uploadedItemDirectoryName = string.Empty;
+            using (var archive = ZipFile.OpenRead(archivePath))
+            {
+                //the archive should contain only one root directory (the plugin one or the theme one)
+                var rootDirectories = archive.Entries.Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/")).ToList();
+                if (rootDirectories.Count != 1)
+                {
+                    throw new Exception($"The archive should contain only one root plugin or theme directory. " +
+                        $"For example, Payments.PayPalDirect or DefaultClean. " +
+                        $"To upload multiple items, the archive should have the '{UploadedItemsFileName}' file in the root");
+                }
+
+                //get directory name (remove the ending /)
+                uploadedItemDirectoryName = rootDirectories.First().FullName.TrimEnd('/');
+
+                //try to get descriptor of the uploaded item
                 foreach (var entry in archive.Entries)
                 {
-                    if (entry.FullName.Equals($"{uploadedPluginDirectoryName}/{PluginManager.PluginDescriptionFileName}",
-                        StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var unzippedEntryStream = entry.Open())
-                        {
-                            using (var reader = new StreamReader(unzippedEntryStream))
-                            {
-                                var text = reader.ReadToEnd();
-                                pluginDescriptor = PluginManager.GetPluginDescriptorFromText(text);
-                                if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion,
-                                    StringComparer.InvariantCultureIgnoreCase))
-                                    throw new Exception(
-                                        $"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
+                    //whether it's a plugin descriptor
+                    var isPluginDescriptor = entry.FullName
+                        .Equals($"{uploadedItemDirectoryName}/{PluginManager.PluginDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
-                                break;
+                    //or whether it's a theme descriptor
+                    var isThemeDescriptor = themeProvider != null && entry.FullName
+                        .Equals($"{uploadedItemDirectoryName}/{themeProvider.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+
+                    if (!isPluginDescriptor && !isThemeDescriptor)
+                        continue;
+
+                    using (var unzippedEntryStream = entry.Open())
+                    {
+                        using (var reader = new StreamReader(unzippedEntryStream))
+                        {
+                            //whether a plugin is upload 
+                            if (isPluginDescriptor)
+                            {
+                                descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
+
+                                //ensure that the plugin current version is supported
+                                if (!(descriptor as PluginDescriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
+                                    throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
                             }
+
+                            //or whether a theme is upload 
+                            if (themeProvider != null && isThemeDescriptor)
+                                descriptor = themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+
+                            break;
                         }
                     }
                 }
             }
 
-            if (pluginDescriptor == null)
-                throw new Exception($"No {PluginManager.PluginDescriptionFileName} file is found. It should be in the root of the archive.");
+            if (descriptor == null)
+                throw new Exception("No descriptor file is found. It should be in the root of the archive.");
 
-            //new plugin path
-            if (uploadedPluginDirectoryName == null)
-                throw new Exception("Cannot get the plugin directory name");
+            if (string.IsNullOrEmpty(uploadedItemDirectoryName))
+                throw new Exception($"Cannot get the {(descriptor is PluginDescriptor ? "plugin" : "theme")} directory name");
 
-            var pluginFolder = CommonHelper.MapPath(PluginManager.PluginsPath);
-            var uploadedPluginPath = Path.Combine(pluginFolder, uploadedPluginDirectoryName);
+            //get path to upload
+            var directoryPath = descriptor is PluginDescriptor ? pluginsDirectory : themesDirectory;
+            var pathToUpload = Path.Combine(directoryPath, uploadedItemDirectoryName);
 
             //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
             //furthermore, zip extract functionality cannot override existing files
             //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-            if (Directory.Exists(uploadedPluginPath))
-                CommonHelper.DeleteDirectory(uploadedPluginPath);
+            if (Directory.Exists(pathToUpload))
+                CommonHelper.DeleteDirectory(pathToUpload);
 
-            //extract to /Plugins
-            ZipFile.ExtractToDirectory(archivePath, pluginFolder);
+            //unzip archive
+            ZipFile.ExtractToDirectory(archivePath, directoryPath);
 
-            return pluginDescriptor;
+            return descriptor;
         }
 
         /// <summary>
-        /// Upload multiple plugins from the archive into the plugin folder
+        /// Upload multiple items from the archive into the physical directory
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
-        /// <returns>List of plugin descriptor</returns>
-        private static IList<PluginDescriptor> UploadMultiplePlugins(string archivePath)
+        /// <param name="uploadedItems">Uploaded items</param>
+        /// <returns>List of uploaded items descriptor</returns>
+        private static IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
+            //try to get a theme provider
+            var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
+
+            //get path to the plugins directory
+            var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
+
+            //get path to the themes directory
+            var themesDirectory = string.Empty;
+            if (!string.IsNullOrEmpty(themeProvider?.ThemesPath))
+                themesDirectory = CommonHelper.MapPath(themeProvider.ThemesPath);
+
+            //get descriptors of items contained in the archive
+            var descriptors = new List<IDescriptor>();
             using (var archive = ZipFile.OpenRead(archivePath))
             {
-                //get plugin directory names from the descriptive JSON file
-                var pluginDirectories = new List<string>();
-                var jsonFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(UploadedPluginsFileName, StringComparison.InvariantCultureIgnoreCase)
-                        && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
-                using (var unzippedEntryStream = jsonFileEntry.Open())
+                foreach (var item in uploadedItems)
                 {
-                    using (var reader = new StreamReader(unzippedEntryStream))
-                    {
-                        var definitionType = new[] { new { SystemName = string.Empty, Version = string.Empty, DirectoryPath = string.Empty, SourceDirectoryPath = string.Empty } };
-                        pluginDirectories = JsonConvert.DeserializeAnonymousType(reader.ReadToEnd(), definitionType)
-                            .Select(plugin => plugin.DirectoryPath).ToList();
-                    }
-                }
+                    if (!item.Type.HasValue)
+                        continue;
 
-                //get plugins descriptors contained in the archive and ensure that the current version is supported
-                var pluginsInArchive = pluginDirectories.Select(directoryPath =>
-                {
-                    //the plugin path should end with a slash
-                    var pluginPath = $"{directoryPath.TrimEnd('/')}/";
+                    //the item path should end with a slash
+                    var itemPath = $"{item.DirectoryPath?.TrimEnd('/')}/";
 
-                    //get the plugin directory name
-                    var directoryName = Path.GetFileName(pluginPath.TrimEnd('/'));
+                    //get path to the descriptor entry in the archive
+                    var descriptorPath = string.Empty;
+                    if (item.Type == UploadedItemType.Plugin)
+                        descriptorPath = $"{itemPath}{PluginManager.PluginDescriptionFileName}";
 
-                    //try to get the plugin descriptor entry
-                    var pluginDescriptorPath = $"{pluginPath}{PluginManager.PluginDescriptionFileName}";
-                    var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(pluginDescriptorPath, StringComparison.InvariantCultureIgnoreCase));
+                    if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(themeProvider?.ThemeDescriptionFileName))
+                        descriptorPath = $"{itemPath}{themeProvider.ThemeDescriptionFileName}";
+
+                    //try to get the descriptor entry
+                    var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));
                     if (descriptorEntry == null)
-                        return null;
+                        continue;
 
+                    //try to get descriptor of the uploaded item
+                    IDescriptor descriptor = null;
                     using (var unzippedEntryStream = descriptorEntry.Open())
                     {
                         using (var reader = new StreamReader(unzippedEntryStream))
                         {
-                            var pluginDescriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
-                            return new { DirectoryName = directoryName, PluginPath = pluginPath, PluginDescriptor = pluginDescriptor };
+                            //whether a plugin is upload 
+                            if (item.Type == UploadedItemType.Plugin)
+                                descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
+
+                            //or whether a theme is upload 
+                            if (item.Type == UploadedItemType.Theme && themeProvider != null)
+                                descriptor = themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                         }
                     }
-                }).Where(plugin => plugin?.PluginDescriptor?.SupportedVersions.Contains(NopVersion.CurrentVersion) ?? false).ToList();
+                    if (descriptor == null)
+                        continue;
 
-                //extract plugins into the plugin folder
-                var pluginFolder = CommonHelper.MapPath(PluginManager.PluginsPath);
-                foreach (var plugin in pluginsInArchive)
-                {
-                    var pluginPath = Path.Combine(pluginFolder, plugin.DirectoryName);
+                    //ensure that the plugin current version is supported
+                    if (descriptor is PluginDescriptor pluginDescriptor && !pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion))
+                        continue;
+                    
+                    //get path to upload
+                    var uploadedItemDirectoryName = Path.GetFileName(itemPath.TrimEnd('/'));
+                    var pathToUpload = Path.Combine(item.Type == UploadedItemType.Plugin ? pluginsDirectory : themesDirectory, uploadedItemDirectoryName);
 
-                    //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
+                    //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
                     //furthermore, zip extract functionality cannot override existing files
                     //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                    if (Directory.Exists(pluginPath))
-                        CommonHelper.DeleteDirectory(pluginPath);
-                    Directory.CreateDirectory(pluginPath);
+                    if (Directory.Exists(pathToUpload))
+                        CommonHelper.DeleteDirectory(pathToUpload);
 
-                    //extract entries into files
-                    var pluginEntries = archive.Entries.Where(entry => entry.FullName.StartsWith(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase)
-                        && !entry.FullName.Equals(plugin.PluginPath, StringComparison.InvariantCultureIgnoreCase));
-                    foreach (var entry in pluginEntries)
+                    //unzip entries into files
+                    var entries = archive.Entries.Where(entry => entry.FullName.StartsWith(itemPath, StringComparison.InvariantCultureIgnoreCase));
+                    foreach (var entry in entries)
                     {
-                        var entryPath = Path.Combine(pluginPath, entry.FullName.Substring(plugin.PluginPath.Length));
-                        var directoryPath = Path.GetDirectoryName(entryPath);
-                        if (!Directory.Exists(directoryPath))
-                        {
-                            Directory.CreateDirectory(directoryPath);
-                            if (directoryPath.Equals(pluginPath, StringComparison.InvariantCultureIgnoreCase))
-                                entry.ExtractToFile(entryPath);
-                        }
-                        else
-                            entry.ExtractToFile(entryPath);
-                    }
-                }
+                        //get name of the file
+                        var fileName = entry.FullName.Substring(itemPath.Length);
+                        if (string.IsNullOrEmpty(fileName))
+                            continue;
+                        
+                        var filePath = Path.Combine(pathToUpload, fileName.Replace("/", "\\"));
+                        var directoryPath = Path.GetDirectoryName(filePath);
 
-                return pluginsInArchive.Select(plugin => plugin.PluginDescriptor).ToList();
+                        //whether the file directory is already exists, otherwise create the new one
+                        if (!Directory.Exists(directoryPath))
+                            Directory.CreateDirectory(directoryPath);
+
+                        //unzip entry to the file (ignore directory entries)
+                        if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
+                            entry.ExtractToFile(filePath);
+                    }
+
+                    //item is uploaded
+                    descriptors.Add(descriptor);
+                }
             }
+
+            return descriptors;
         }
 
         #endregion
@@ -184,53 +260,42 @@ namespace Nop.Core.Plugins
         #region Methods
 
         /// <summary>
-        /// Upload plugins
+        /// Upload plugins and/or themes
         /// </summary>
-        /// <param name="archivefile">File</param>
-        /// <returns>List of plugin descriptor</returns>
-        public static IList<PluginDescriptor> UploadPlugins(IFormFile archivefile)
+        /// <param name="archivefile">Archive file</param>
+        /// <returns>List of uploaded items descriptor</returns>
+        public static IList<IDescriptor> UploadPluginsAndThemes(IFormFile archivefile)
         {
             if (archivefile == null)
                 throw new ArgumentNullException(nameof(archivefile));
 
-            string zipFilePath = null;
-            var pluginDescriptors = new List<PluginDescriptor>();
+            var zipFilePath = string.Empty;
+            var descriptors = new List<IDescriptor>();
             try
             {
                 //only zip archives are supported
-                var extension = Path.GetExtension(archivefile.FileName);
-                if (extension == null || !extension.Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                if (!Path.GetExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
                     throw new Exception("Only zip archives are supported");
 
-                //ensure temp folder is created
-                var pluginTempFolder = CommonHelper.MapPath(PluginsTempPath);
-                Directory.CreateDirectory(new DirectoryInfo(pluginTempFolder).FullName);
+                //ensure that temp directory is created
+                var tempDirectory = CommonHelper.MapPath(UploadsTempPath);
+                Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
 
-                //copy original archive to the temp folder
-                zipFilePath = Path.Combine(pluginTempFolder, archivefile.FileName);
+                //copy original archive to the temp directory
+                zipFilePath = Path.Combine(tempDirectory, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
                     archivefile.CopyTo(fileStream);
 
-                //check whether there is a descriptive JSON file in the root of the archive
+                //try to get information about the uploaded items from the JSON file in the root of the archive
                 //you can find a sample of such descriptive file in Libraries\Nop.Core\Plugins\Samples\
-                var jsonFileExists = false;
-                using (var archive = ZipFile.OpenRead(zipFilePath))
+                var uploadedItems = GetUploadedItems(zipFilePath);
+                if (!uploadedItems?.Any() ?? true)
                 {
-                    jsonFileExists = archive.Entries
-                        .Any(entry => entry.Name.Equals(UploadedPluginsFileName, StringComparison.InvariantCultureIgnoreCase)
-                            && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
-                }
-
-                if (!jsonFileExists)
-                {
-                    //JSON file doesn't exist, so there is a single plugin in the archive, just extract it
-                    pluginDescriptors.Add(UploadSinglePlugin(zipFilePath));
+                    //JSON file doesn't exist, so there is a single plugin or theme in the archive, just unzip it
+                    descriptors.Add(UploadSingleItem(zipFilePath));
                 }
                 else
-                {
-                    //JSON file exists, so there are multiple plugins or plugin versions in the archive
-                    pluginDescriptors.AddRange(UploadMultiplePlugins(zipFilePath));
-                }
+                    descriptors.AddRange(UploadMultipleItems(zipFilePath, uploadedItems));
             }
             finally
             {
@@ -239,7 +304,66 @@ namespace Nop.Core.Plugins
                     File.Delete(zipFilePath);
             }
 
-            return pluginDescriptors;
+            return descriptors;
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        /// <summary>
+        /// Represents uploaded item (plugin or theme) details 
+        /// </summary>
+        internal class UploadedItem
+        {
+            /// <summary>
+            /// Gets or sets the type of an uploaded item
+            /// </summary>
+            [JsonProperty(PropertyName = "Type")]
+            [JsonConverter(typeof(StringEnumConverter))]
+            public UploadedItemType? Type { get; set; }
+
+            /// <summary>
+            /// Gets or sets the system name
+            /// </summary>
+            [JsonProperty(PropertyName = "SystemName")]
+            public string SystemName { get; set; }
+
+            /// <summary>
+            /// Gets or sets the version
+            /// </summary>
+            [JsonProperty(PropertyName = "Version")]
+            public string Version { get; set; }
+
+            /// <summary>
+            /// Gets or sets the path to binary files directory
+            /// </summary>
+            [JsonProperty(PropertyName = "DirectoryPath")]
+            public string DirectoryPath { get; set; }
+
+            /// <summary>
+            /// Gets or sets the path to source files directory
+            /// </summary>
+            [JsonProperty(PropertyName = "SourceDirectoryPath")]
+            public string SourceDirectoryPath { get; set; }
+        }
+
+        /// <summary>
+        /// Uploaded item type enumeration
+        /// </summary>
+        internal enum UploadedItemType
+        {
+            /// <summary>
+            /// Plugin
+            /// </summary>
+            [EnumMember(Value = "Plugin")]
+            Plugin,
+
+            /// <summary>
+            /// Theme
+            /// </summary>
+            [EnumMember(Value = "Theme")]
+            Theme
         }
 
         #endregion
