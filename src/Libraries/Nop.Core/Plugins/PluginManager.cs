@@ -22,20 +22,6 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginManager
     {
-        #region Const
-
-        private const string ObsoleteInstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        private const string InstalledPluginsFilePath_ = "~/App_Data/installedPlugins.json";
-        private const string PluginsPath = "~/Plugins";
-        private const string PluginsTempPath = "~/App_Data/TempUploads";
-        private const string PluginsPathName = "Plugins";
-        private const string ShadowCopyPath = "~/Plugins/bin";
-        private const string RefsPathName = "refs";
-        private const string UploadedPluginsDescriptionFile = "uploadedPlugins.json";
-        private const string PluginDescriptionFileName = "plugin.json";
-
-        #endregion
-
         #region Fields
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
@@ -176,7 +162,7 @@ namespace Nop.Core.Plugins
                 //get plugin directory names from the descriptive JSON file
                 var pluginDirectories = new List<string>();
                 var jsonFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(UploadedPluginsDescriptionFile, StringComparison.InvariantCultureIgnoreCase)
+                    .FirstOrDefault(entry => entry.Name.Equals(UploadedPluginsFileName, StringComparison.InvariantCultureIgnoreCase)
                         && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
                 using (var unzippedEntryStream = jsonFileEntry.Open())
                 {
@@ -788,7 +774,7 @@ namespace Nop.Core.Plugins
                 using (var archive = ZipFile.OpenRead(zipFilePath))
                 {
                     jsonFileExists = archive.Entries
-                        .Any(entry => entry.Name.Equals(UploadedPluginsDescriptionFile, StringComparison.InvariantCultureIgnoreCase) 
+                        .Any(entry => entry.Name.Equals(UploadedPluginsFileName, StringComparison.InvariantCultureIgnoreCase) 
                             && string.IsNullOrEmpty(Path.GetDirectoryName(entry.FullName)));
                 }
 
@@ -861,9 +847,49 @@ namespace Nop.Core.Plugins
         #region Properties
 
         /// <summary>
+        /// Gets the path to file that contained (in previous versions) installed plugin system names
+        /// </summary>
+        public static string ObsoleteInstalledPluginsFilePath => "~/App_Data/InstalledPlugins.txt";
+
+        /// <summary>
         /// Gets the path to file that contains installed plugin system names
         /// </summary>
-        public static string InstalledPluginsFilePath => InstalledPluginsFilePath_;
+        public static string InstalledPluginsFilePath => "~/App_Data/installedPlugins.json";
+
+        /// <summary>
+        /// Gets the path to plugins folder
+        /// </summary>
+        public static string PluginsPath => "~/Plugins";
+
+        /// <summary>
+        /// Gets the path to temp folder with uploads
+        /// </summary>
+        public static string PluginsTempPath => "~/App_Data/TempUploads";
+
+        /// <summary>
+        /// Gets the plugins folder name
+        /// </summary>
+        public static string PluginsPathName => "Plugins";
+
+        /// <summary>
+        /// Gets the path to plugins shadow copies folder
+        /// </summary>
+        public static string ShadowCopyPath => "~/Plugins/bin";
+
+        /// <summary>
+        /// Gets the path to plugins refs folder
+        /// </summary>
+        public static string RefsPathName => "refs";
+
+        /// <summary>
+        /// Gets the name of the file containing information about the uploaded plugins
+        /// </summary>
+        public static string UploadedPluginsFileName => "uploadedPlugins.json";
+
+        /// <summary>
+        /// Gets the name of the plugin description file
+        /// </summary>
+        public static string PluginDescriptionFileName => "plugin.json";
 
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied
