@@ -14,10 +14,10 @@ namespace Nop.Core.Themes
         public string SystemName { get; set; }
 
         /// <summary>
-        /// Gets or sets the theme title
+        /// Gets or sets the theme friendly name
         /// </summary>
-        [JsonProperty(PropertyName = "Title")]
-        public string Title { get; set; }
+        [JsonProperty(PropertyName = "FriendlyName")]
+        public string FriendlyName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the theme supports RTL (right-to-left)

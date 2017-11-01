@@ -118,7 +118,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
             public partial class ThemeModel
             {
                 public string SystemName { get; set; }
-                public string Title { get; set; }
+                public string FriendlyName { get; set; }
                 public string PreviewImageUrl { get; set; }
                 public string PreviewText { get; set; }
                 public bool SupportRtl { get; set; }

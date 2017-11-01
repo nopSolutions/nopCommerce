@@ -1667,7 +1667,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider.GetThemes().Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeModel
             {
-                Title = x.Title,
+                FriendlyName = x.FriendlyName,
                 SystemName = x.SystemName,
                 PreviewImageUrl = x.PreviewImageUrl,
                 PreviewText = x.PreviewText,

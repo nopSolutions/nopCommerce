@@ -592,13 +592,13 @@ namespace Nop.Web.Factories
             model.CurrentStoreTheme = new StoreThemeModel
             {
                 Name = currentTheme?.SystemName,
-                Title = currentTheme?.Title
+                Title = currentTheme?.FriendlyName
             };
 
             model.AvailableStoreThemes = _themeProvider.GetThemes().Select(x => new StoreThemeModel
             {
                 Name = x.SystemName,
-                Title = x.Title
+                Title = x.FriendlyName
             }).ToList();
 
             return model;
