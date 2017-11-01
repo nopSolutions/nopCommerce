@@ -72,11 +72,11 @@ namespace Nop.Web.Framework.Themes
                     themeName = _storeInformationSettings.DefaultStoreTheme;
 
                 //ensure that this theme exists
-                if (!_themeProvider.ThemeDescriptorExists(themeName))
+                if (!_themeProvider.ThemeExists(themeName))
                 {
                     //if it does not exist, try to get the first one
-                    themeName = _themeProvider.GetThemeDescriptors()
-                        .FirstOrDefault()?.SystemName ?? throw new Exception("No theme could be loaded");
+                    themeName = _themeProvider.GetThemes().FirstOrDefault()?.SystemName 
+                        ?? throw new Exception("No theme could be loaded");
                 }
                 
                 //cache theme system name

@@ -8,23 +8,23 @@ namespace Nop.Web.Framework.Themes
     public partial interface IThemeProvider
     {
         /// <summary>
-        /// Get all theme descriptors
+        /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
-        IList<ThemeDescriptor> GetThemeDescriptors();
+        IList<ThemeDescriptor> GetThemes();
 
         /// <summary>
-        /// Get theme descriptor by theme system name
+        /// Get a theme by the system name
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>Theme descriptor</returns>
-        ThemeDescriptor GetThemeDescriptorBySystemName(string systemName);
+        ThemeDescriptor GetThemeBySystemName(string systemName);
 
         /// <summary>
-        /// Check whether theme descriptor with specified system name exists
+        /// Check whether the theme with specified system name exists
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>True if theme descriptor exists; otherwise false</returns>
-        bool ThemeDescriptorExists(string systemName);
+        /// <returns>True if the theme exists; otherwise false</returns>
+        bool ThemeExists(string systemName);
     }
 }

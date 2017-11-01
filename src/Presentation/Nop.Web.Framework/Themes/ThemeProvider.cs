@@ -56,10 +56,10 @@ namespace Nop.Web.Framework.Themes
         #region Methods
 
         /// <summary>
-        /// Get all theme descriptors
+        /// Get all themes
         /// </summary>
         /// <returns>List of the theme descriptor</returns>
-        public IList<ThemeDescriptor> GetThemeDescriptors()
+        public IList<ThemeDescriptor> GetThemes()
         {
             if (_themeDescriptors == null)
             {
@@ -76,29 +76,29 @@ namespace Nop.Web.Framework.Themes
         }
 
         /// <summary>
-        /// Get theme descriptor by theme system name
+        /// Get a theme by the system name
         /// </summary>
         /// <param name="systemName">Theme system name</param>
         /// <returns>Theme descriptor</returns>
-        public ThemeDescriptor GetThemeDescriptorBySystemName(string systemName)
+        public ThemeDescriptor GetThemeBySystemName(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            return GetThemeDescriptors().SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return GetThemes().SingleOrDefault(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
-        /// Check whether theme descriptor with specified system name exists
+        /// Check whether the theme with specified system name exists
         /// </summary>
         /// <param name="systemName">Theme system name</param>
-        /// <returns>True if theme descriptor exists; otherwise false</returns>
-        public bool ThemeDescriptorExists(string systemName)
+        /// <returns>True if the theme exists; otherwise false</returns>
+        public bool ThemeExists(string systemName)
         {
             if (string.IsNullOrEmpty(systemName))
                 return false;
 
-            return GetThemeDescriptors().Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+            return GetThemes().Any(descriptor => descriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         #endregion
