@@ -10,8 +10,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.IdForModel()").TouchSpin({
-            min: @(double.MinValue),
-            max: @(double.MaxValue),
+            min: @Html.Raw(double.MinValue),
+            max: @Html.Raw(double.MaxValue),
             decimals: 4, //always display 4 digits
             forcestepdivisibility: "none",
             verticalbuttons: true,
