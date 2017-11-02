@@ -8,28 +8,28 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Themes;
 
 namespace Nop.Services.Plugins
 {
     /// <summary>
-    /// Represents the manager for uploading application extensions (plugins or themes)
+    /// Represents the implementation of a service for uploading application extensions (plugins or themes)
     /// </summary>
-    public static class UploadManager
+    public class UploadService : IUploadService
     {
-        #region Properties
+        #region Fields
 
-        /// <summary>
-        /// Gets the path to temp directory with uploads
-        /// </summary>
-        public static string UploadsTempPath => "~/App_Data/TempUploads";
+        protected readonly IThemeProvider _themeProvider;
 
-        /// <summary>
-        /// Gets the name of the file containing information about the uploaded items
-        /// </summary>
-        public static string UploadedItemsFileName => "uploadedItems.json";
+        #endregion
+
+        #region Ctor
+
+        public UploadService(IThemeProvider themeProvider)
+        {
+            this._themeProvider = themeProvider;
+        }
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
         /// <returns>List of an uploaded item</returns>
-        private static IList<UploadedItem> GetUploadedItems(string archivePath)
+        protected virtual IList<UploadedItem> GetUploadedItems(string archivePath)
         {
             using (var archive = ZipFile.OpenRead(archivePath))
             {
@@ -63,18 +63,15 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivePath">Path to the archive</param>
         /// <returns>Uploaded item descriptor</returns>
-        private static IDescriptor UploadSingleItem(string archivePath)
+        protected virtual IDescriptor UploadSingleItem(string archivePath)
         {
-            //try to get a theme provider
-            var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
-
             //get path to the plugins directory
             var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
-            if (!string.IsNullOrEmpty(themeProvider?.ThemesPath))
-                themesDirectory = CommonHelper.MapPath(themeProvider.ThemesPath);
+            if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
+                themesDirectory = CommonHelper.MapPath(_themeProvider.ThemesPath);
 
             IDescriptor descriptor = null;
             var uploadedItemDirectoryName = string.Empty;
@@ -100,8 +97,8 @@ namespace Nop.Services.Plugins
                         .Equals($"{uploadedItemDirectoryName}/{PluginManager.PluginDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                     //or whether it's a theme descriptor
-                    var isThemeDescriptor = themeProvider != null && entry.FullName
-                        .Equals($"{uploadedItemDirectoryName}/{themeProvider.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
+                    var isThemeDescriptor = entry.FullName
+                        .Equals($"{uploadedItemDirectoryName}/{_themeProvider.ThemeDescriptionFileName}", StringComparison.InvariantCultureIgnoreCase);
 
                     if (!isPluginDescriptor && !isThemeDescriptor)
                         continue;
@@ -121,8 +118,8 @@ namespace Nop.Services.Plugins
                             }
 
                             //or whether a theme is upload 
-                            if (themeProvider != null && isThemeDescriptor)
-                                descriptor = themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                            if (isThemeDescriptor)
+                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
 
                             break;
                         }
@@ -158,18 +155,15 @@ namespace Nop.Services.Plugins
         /// <param name="archivePath">Path to the archive</param>
         /// <param name="uploadedItems">Uploaded items</param>
         /// <returns>List of uploaded items descriptor</returns>
-        private static IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
+        protected virtual IList<IDescriptor> UploadMultipleItems(string archivePath, IList<UploadedItem> uploadedItems)
         {
-            //try to get a theme provider
-            var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
-
             //get path to the plugins directory
             var pluginsDirectory = CommonHelper.MapPath(PluginManager.PluginsPath);
 
             //get path to the themes directory
             var themesDirectory = string.Empty;
-            if (!string.IsNullOrEmpty(themeProvider?.ThemesPath))
-                themesDirectory = CommonHelper.MapPath(themeProvider.ThemesPath);
+            if (!string.IsNullOrEmpty(_themeProvider.ThemesPath))
+                themesDirectory = CommonHelper.MapPath(_themeProvider.ThemesPath);
 
             //get descriptors of items contained in the archive
             var descriptors = new List<IDescriptor>();
@@ -188,8 +182,8 @@ namespace Nop.Services.Plugins
                     if (item.Type == UploadedItemType.Plugin)
                         descriptorPath = $"{itemPath}{PluginManager.PluginDescriptionFileName}";
 
-                    if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(themeProvider?.ThemeDescriptionFileName))
-                        descriptorPath = $"{itemPath}{themeProvider.ThemeDescriptionFileName}";
+                    if (item.Type == UploadedItemType.Theme && !string.IsNullOrEmpty(_themeProvider.ThemeDescriptionFileName))
+                        descriptorPath = $"{itemPath}{_themeProvider.ThemeDescriptionFileName}";
 
                     //try to get the descriptor entry
                     var descriptorEntry = archive.Entries.FirstOrDefault(entry => entry.FullName.Equals(descriptorPath, StringComparison.InvariantCultureIgnoreCase));
@@ -207,8 +201,8 @@ namespace Nop.Services.Plugins
                                 descriptor = PluginManager.GetPluginDescriptorFromText(reader.ReadToEnd());
 
                             //or whether a theme is upload 
-                            if (item.Type == UploadedItemType.Theme && themeProvider != null)
-                                descriptor = themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+                            if (item.Type == UploadedItemType.Theme)
+                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                         }
                     }
                     if (descriptor == null)
@@ -266,7 +260,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="archivefile">Archive file</param>
         /// <returns>List of uploaded items descriptor</returns>
-        public static IList<IDescriptor> UploadPluginsAndThemes(IFormFile archivefile)
+        public virtual IList<IDescriptor> UploadPluginsAndThemes(IFormFile archivefile)
         {
             if (archivefile == null)
                 throw new ArgumentNullException(nameof(archivefile));
@@ -311,12 +305,26 @@ namespace Nop.Services.Plugins
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the path to temp directory with uploads
+        /// </summary>
+        public string UploadsTempPath => "~/App_Data/TempUploads";
+
+        /// <summary>
+        /// Gets the name of the file containing information about the uploaded items
+        /// </summary>
+        public string UploadedItemsFileName => "uploadedItems.json";
+
+        #endregion
+
         #region Nested classes
 
         /// <summary>
         /// Represents uploaded item (plugin or theme) details 
         /// </summary>
-        internal class UploadedItem
+        public class UploadedItem
         {
             /// <summary>
             /// Gets or sets the type of an uploaded item
@@ -353,7 +361,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Uploaded item type enumeration
         /// </summary>
-        internal enum UploadedItemType
+        public enum UploadedItemType
         {
             /// <summary>
             /// Plugin

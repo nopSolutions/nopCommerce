@@ -37,6 +37,7 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -211,6 +212,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerLifetimeScope();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerLifetimeScope();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerLifetimeScope();
+            builder.RegisterType<UploadService>().As<IUploadService>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalAuthenticationService>().As<IExternalAuthenticationService>().InstancePerLifetimeScope();

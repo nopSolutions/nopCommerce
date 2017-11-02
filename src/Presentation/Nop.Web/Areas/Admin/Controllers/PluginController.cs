@@ -55,6 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly WidgetSettings _widgetSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly IUploadService _uploadService;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -76,6 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             WidgetSettings widgetSettings,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            IUploadService uploadService,
             IEventPublisher eventPublisher)
         {
             this._pluginFinder = pluginFinder;
@@ -93,6 +95,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._widgetSettings = widgetSettings;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
+            this._uploadService = uploadService;
             this._eventPublisher = eventPublisher;
         }
 
@@ -273,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            if (archivefile != null && archivefile.Length > 0)
 	            {
-                    var descriptors = UploadManager.UploadPluginsAndThemes(archivefile);
+                    var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
                     var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
                     var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
 

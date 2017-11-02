@@ -1,4 +1,5 @@
 ﻿@using System.Text.Encodings.Web
+@inject Nop.Services.Plugins.IUploadService uploadService
 @model PluginListModel
 
 @{
@@ -292,7 +293,7 @@
                                 @T("Admin.Configuration.Plugins.Upload.Hint1")
                             </li>
                             <li>
-                                @T("Admin.Configuration.Plugins.Upload.Hint2")
+                                @string.Format(T("Admin.Configuration.Plugins.Upload.Hint2").Text, uploadService.UploadedItemsFileName)
                             </li>
                             <li>
                                 <em>@T("Admin.Configuration.Plugins.Upload.Hint3")</em>
