@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Nop.Core.Plugins;
 
-namespace Nop.Core.Themes
+namespace Nop.Services.Themes
 {
     /// <summary>
     /// Represents a theme descriptor

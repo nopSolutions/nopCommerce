@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nop.Core.Themes
+namespace Nop.Services.Themes
 {
     /// <summary>
     /// Represents a theme provider

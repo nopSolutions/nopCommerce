@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Nop.Core;
 
-namespace Nop.Core.Themes
+namespace Nop.Services.Themes
 {
     /// <summary>
     /// Represents a default theme provider implementation

@@ -16,19 +16,23 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Services.Events;
+using Nop.Core.Themes;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -269,16 +273,27 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            if (archivefile != null && archivefile.Length > 0)
 	            {
-                    var pluginDescriptors = UploadManager.UploadPluginsAndThemes(archivefile).OfType<PluginDescriptor>().ToList();
+                    var descriptors = UploadManager.UploadPluginsAndThemes(archivefile);
+                    var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
+                    var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
 
                     //activity log
-                    foreach (var pluginDescriptor in pluginDescriptors)
+                    foreach (var descriptor in pluginDescriptors)
                     {
-                        _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
+                        _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName);
                     }
 
-                    //event
-                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+                    foreach (var descriptor in themeDescriptors)
+                    {
+                        _customerActivityService.InsertActivity("UploadNewTheme", _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName);
+                    }
+
+                    //events
+                    if (pluginDescriptors?.Any() ?? false)
+                        _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+
+                    if (themeDescriptors?.Any() ?? false)
+                        _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
                 }
                 else
 	            {

@@ -3,8 +3,8 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Themes;
 using Nop.Services.Common;
+using Nop.Services.Themes;
 
 namespace Nop.Web.Framework.Themes
 {

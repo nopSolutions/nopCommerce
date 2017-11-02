@@ -7,10 +7,12 @@ using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Core.Themes;
+using Nop.Core.Plugins;
+using Nop.Services.Themes;
 
-namespace Nop.Core.Plugins
+namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Represents the manager for uploading application extensions (plugins or themes)
@@ -141,7 +143,7 @@ namespace Nop.Core.Plugins
             //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin)
             //furthermore, zip extract functionality cannot override existing files
             //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-            if (Directory.Exists(pathToUpload))
+            if (System.IO.Directory.Exists(pathToUpload))
                 CommonHelper.DeleteDirectory(pathToUpload);
 
             //unzip archive
@@ -223,7 +225,7 @@ namespace Nop.Core.Plugins
                     //ensure it's a new directory (e.g. some old files are not required when re-uploading a plugin or a theme)
                     //furthermore, zip extract functionality cannot override existing files
                     //but there could deletion issues (related to file locking, etc). In such cases the directory should be deleted manually
-                    if (Directory.Exists(pathToUpload))
+                    if (System.IO.Directory.Exists(pathToUpload))
                         CommonHelper.DeleteDirectory(pathToUpload);
 
                     //unzip entries into files
@@ -239,8 +241,8 @@ namespace Nop.Core.Plugins
                         var directoryPath = Path.GetDirectoryName(filePath);
 
                         //whether the file directory is already exists, otherwise create the new one
-                        if (!Directory.Exists(directoryPath))
-                            Directory.CreateDirectory(directoryPath);
+                        if (!System.IO.Directory.Exists(directoryPath))
+                            System.IO.Directory.CreateDirectory(directoryPath);
 
                         //unzip entry to the file (ignore directory entries)
                         if (!filePath.Equals($"{directoryPath}\\", StringComparison.InvariantCultureIgnoreCase))
@@ -279,7 +281,7 @@ namespace Nop.Core.Plugins
 
                 //ensure that temp directory is created
                 var tempDirectory = CommonHelper.MapPath(UploadsTempPath);
-                Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
+                System.IO.Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
 
                 //copy original archive to the temp directory
                 zipFilePath = Path.Combine(tempDirectory, archivefile.FileName);
