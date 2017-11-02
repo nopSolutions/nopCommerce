@@ -317,6 +317,9 @@ namespace Nop.Plugin.Payments.Worldpay
             //set amount in USD
             var amount = _currencyService.ConvertCurrency(capturePaymentRequest.Order.OrderTotal, capturePaymentRequest.Order.CurrencyRate);
 
+            //whether there are non-downloadable order items
+            var nonDownloadable = capturePaymentRequest.Order.OrderItems.Any(item => !item.Product?.IsDownload ?? true);
+
             //capture transaction
             var transaction = _worldpayPaymentManager.CaptureTransaction(new CaptureRequest
             {
@@ -324,6 +327,7 @@ namespace Nop.Plugin.Payments.Worldpay
                 Amount = Math.Round(amount, 2),
                 ExtendedInformation = new ExtendedInformation
                 {
+                    GoodsType = nonDownloadable ? GoodsType.Physical : GoodsType.Digital,
                     InvoiceNumber = capturePaymentRequest.Order.CustomOrderNumber,
                     InvoiceDescription = $"Order from the '{_storeService.GetStoreById(capturePaymentRequest.Order.StoreId)?.Name}'"
                 }
