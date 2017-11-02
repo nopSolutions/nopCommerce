@@ -383,8 +383,9 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <param name="plug">Plugin file info</param>
         /// <param name="applicationPartManager">Application part manager</param>
+        /// <param name="config">Config</param>
         /// <returns>Assembly</returns>
-        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager)
+        private static Assembly PerformFileDeploy(FileInfo plug, ApplicationPartManager applicationPartManager, NopConfig config)
         {
             if (plug.Directory == null || plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name + " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
@@ -393,8 +394,32 @@ namespace Nop.Core.Plugins
             var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
             var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
 
+
             //we can now register the plugin definition
-            var shadowCopiedAssembly = Assembly.Load(AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName));
+            var assemblyName = AssemblyName.GetAssemblyName(shadowCopiedPlug.FullName);
+            Assembly shadowCopiedAssembly;
+            try
+            {
+                shadowCopiedAssembly = Assembly.Load(assemblyName);
+            }
+            catch (FileLoadException)
+            {
+                if (config.UseUnsafeLoadAssembly)
+                {
+                    //if an application has been copied from the web, it is flagged by Windows as being a web application,
+                    //even if it resides on the local computer.You can change that designation by changing the file properties,
+                    //or you can use the<loadFromRemoteSources> element to grant the assembly full trust.As an alternative,
+                    //you can use the UnsafeLoadFrom method to load a local assembly that the operating system has flagged as
+                    //having been loaded from the web.
+                    //see http://go.microsoft.com/fwlink/?LinkId=155569 for more information.
+                    shadowCopiedAssembly = Assembly.UnsafeLoadFrom(shadowCopiedPlug.FullName);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+           
             Debug.WriteLine("Adding to ApplicationParts: '{0}'", shadowCopiedAssembly.FullName);
             applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
 
@@ -587,13 +612,13 @@ namespace Nop.Core.Plugins
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //shadow copy main plugin file
-                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile, applicationPartManager);
+                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile, applicationPartManager, config);
 
                             //load all other referenced assemblies now
                             foreach (var plugin in pluginFiles
                                 .Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase))
                                 .Where(x => !IsAlreadyLoaded(x)))
-                                    PerformFileDeploy(plugin, applicationPartManager);
+                                    PerformFileDeploy(plugin, applicationPartManager, config);
                             
                             //init plugin type (only one plugin per assembly is allowed)
                             foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
