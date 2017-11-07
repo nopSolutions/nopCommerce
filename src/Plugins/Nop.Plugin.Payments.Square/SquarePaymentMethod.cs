@@ -209,6 +209,7 @@ namespace Nop.Plugin.Payments.Square
                 BuyerEmailAddress: email,
                 DelayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
                 IdempotencyKey: Guid.NewGuid().ToString(),
+                Note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
                 ReferenceId: paymentRequest.OrderGuid.ToString(),
                 ShippingAddress: shippingAddress
             );
