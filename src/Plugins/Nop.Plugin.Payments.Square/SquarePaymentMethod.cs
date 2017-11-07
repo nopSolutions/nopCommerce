@@ -119,9 +119,9 @@ namespace Nop.Plugin.Payments.Square
             var chargeRequest = CreateChargeRequest(paymentRequest, isRecurringPayment);
 
             //charge transaction
-            var transaction = _squarePaymentManager.Charge(chargeRequest);
+            var (transaction, error) = _squarePaymentManager.Charge(chargeRequest);
             if (transaction == null)
-                throw new NopException("Failed to retrieve transaction. Error details in the log");
+                throw new NopException(error);
 
             //get transaction tender
             var tender = transaction.Tenders?.FirstOrDefault();
@@ -383,9 +383,9 @@ namespace Nop.Plugin.Payments.Square
 
             //capture transaction
             var transactionId = capturePaymentRequest.Order.AuthorizationTransactionId;
-            var successfullyCaptured = _squarePaymentManager.CaptureTransaction(transactionId);
+            var (successfullyCaptured, error) = _squarePaymentManager.CaptureTransaction(transactionId);
             if (!successfullyCaptured)
-                throw new NopException("An error occurred while processing. Error details in the log");
+                throw new NopException(error);
 
             //successfully captured
             return new CapturePaymentResult
@@ -421,9 +421,9 @@ namespace Nop.Plugin.Payments.Square
 
             //first try to get the transaction
             var transactionId = refundPaymentRequest.Order.CaptureTransactionId;
-            var transaction = _squarePaymentManager.GetTransaction(transactionId);
+            var (transaction, transactionError) = _squarePaymentManager.GetTransaction(transactionId);
             if (transaction == null)
-                throw new NopException("Failed to retrieve transaction. Error details in the log");
+                throw new NopException(transactionError);
 
             //get tender
             var tender = transaction.Tenders?.FirstOrDefault();
@@ -437,16 +437,16 @@ namespace Nop.Plugin.Payments.Square
                 IdempotencyKey: Guid.NewGuid().ToString(),
                 TenderId: tender.Id
             );
-            var createdRefund = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
+            var (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
             if (createdRefund == null)
-                throw new NopException("Failed to create refund. Error details in the log");
+                throw new NopException(refundError);
 
             //if refund status is 'pending', try to refund once more with the same request parameters
             if (createdRefund.Status == SquareModel.Refund.StatusEnum.PENDING)
             {
-                createdRefund = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
+                (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
                 if (createdRefund == null)
-                    throw new NopException("Failed to create refund. Error details in the log");
+                    throw new NopException(refundError);
             }
 
             //check whether refund is approved
@@ -472,9 +472,9 @@ namespace Nop.Plugin.Payments.Square
 
             //void transaction
             var transactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
-            var successfullyVoided = _squarePaymentManager.VoidTransaction(transactionId);
+            var (successfullyVoided, error) = _squarePaymentManager.VoidTransaction(transactionId);
             if (!successfullyVoided)
-                throw new NopException("An error occurred while processing. Error details in the log");
+                throw new NopException(error);
 
             //successfully voided
             return new VoidPaymentResult
