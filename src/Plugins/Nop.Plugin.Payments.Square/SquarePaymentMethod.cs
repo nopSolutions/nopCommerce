@@ -159,7 +159,7 @@ namespace Nop.Plugin.Payments.Square
         /// <param name="paymentRequest">Payment request parameters</param>
         /// <param name="isRecurringPayment">Whether it is a recurring payment</param>
         /// <returns>Charge request parameters</returns>
-        private SquareModel.ChargeRequest CreateChargeRequest(ProcessPaymentRequest paymentRequest, bool isRecurringPayment)
+        private ExtendedChargeRequest CreateChargeRequest(ProcessPaymentRequest paymentRequest, bool isRecurringPayment)
         {
             //get customer
             var customer = _customerService.GetCustomerById(paymentRequest.CustomerId);
@@ -202,13 +202,14 @@ namespace Nop.Plugin.Payments.Square
             var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: moneyCurrency);
 
             //create common charge request parameters
-            var chargeRequest = new SquareModel.ChargeRequest
+            var chargeRequest = new ExtendedChargeRequest
             (
                 AmountMoney: amountMoney,
                 BillingAddress: billingAddress,
                 BuyerEmailAddress: email,
                 DelayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
                 IdempotencyKey: Guid.NewGuid().ToString(),
+                IntegrationId: !string.IsNullOrEmpty(_squarePaymentSettings.IntegrationId) ? _squarePaymentSettings.IntegrationId : null,
                 Note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
                 ReferenceId: paymentRequest.OrderGuid.ToString(),
                 ShippingAddress: shippingAddress
@@ -589,7 +590,8 @@ namespace Nop.Plugin.Payments.Square
             _settingService.SaveSetting(new SquarePaymentSettings
             {
                 LocationId = "0",
-                TransactionMode = TransactionMode.Charge
+                TransactionMode = TransactionMode.Charge,
+                IntegrationId = SquarePaymentDefaults.IntegrationId
             });
 
             //install renew access token schedule task

@@ -284,7 +284,7 @@ namespace Nop.Plugin.Payments.Square.Services
         /// </summary>
         /// <param name="chargeRequest">Request parameters to charge transaction</param>
         /// <returns>Transaction and/or errors if exist</returns>
-        public (Transaction, string) Charge(ChargeRequest chargeRequest)
+        public (Transaction, string) Charge(ExtendedChargeRequest chargeRequest)
         {
             try
             {
