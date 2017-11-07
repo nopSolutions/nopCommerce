@@ -216,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             else
                 model.Add(new SystemWarningModel
                 {
-                    Level = SystemWarningLevel.Warning,
+                    Level = SystemWarningLevel.Fail,
                     Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), currentStoreUrl, _webHelper.GetStoreLocation(false))
                 });
 
