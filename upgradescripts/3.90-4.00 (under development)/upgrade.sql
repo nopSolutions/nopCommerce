@@ -485,6 +485,12 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Square.AccessTokenRenewalPeriod.Error">
     <Value>Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Shipping.NoComputationMethods">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Shipping.OnlyOneOffline">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

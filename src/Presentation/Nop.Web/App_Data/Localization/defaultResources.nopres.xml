@@ -13233,12 +13233,6 @@
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.Set">
     <Value>Primary store currency is set</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.Warnings.Shipping.NoComputationMethods">
-    <Value>No shipping rate computation methods enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.Warnings.Shipping.OnlyOneOffline">
-    <Value>Only one offline shipping rate computation method is recommended to use</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.URL.Match">
     <Value>Specified store URL matches this store URL</Value>
   </LocaleResource>

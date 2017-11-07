@@ -37,7 +37,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IPaymentService _paymentService;
-        private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
@@ -64,7 +63,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public CommonController(IPaymentService paymentService,
-            IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ICurrencyService currencyService,
             IMeasureService measureService,
@@ -87,7 +85,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStaticCacheManager cacheManager)
         {
             this._paymentService = paymentService;
-            this._shippingService = shippingService;
             this._shoppingCartService = shoppingCartService;
             this._currencyService = currencyService;
             this._measureService = measureService;
@@ -324,22 +321,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.NotSet")
                 });
             }
-
-            //shipping rate coputation methods
-            var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
-            if (!srcMethods.Any())
-                model.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Fail,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.NoComputationMethods")
-                });
-            if (srcMethods.Count(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline) > 1)
-                model.Add(new SystemWarningModel
-                {
-                    Level = SystemWarningLevel.Warning,
-                    Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.OnlyOneOffline")
-                });
-
+            
             //payment methods
             if (_paymentService.LoadActivePaymentMethods().Any())
                 model.Add(new SystemWarningModel
