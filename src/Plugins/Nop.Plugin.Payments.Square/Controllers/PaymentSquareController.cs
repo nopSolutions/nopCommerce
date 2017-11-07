@@ -51,20 +51,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Check whether this plugin is configured
-        /// </summary>
-        /// <returns>True if it is configured; otherwise false</returns>
-        private bool IsConfigured()
-        {
-            return !string.IsNullOrEmpty(_squarePaymentSettings.ApplicationId)
-                && !string.IsNullOrEmpty(_squarePaymentSettings.ApplicationSecret);
-        }
-
-        #endregion
-
         #region Methods
 
         [AuthorizeAdmin]
@@ -78,7 +64,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //prepare model
             var model = new ConfigurationModel
             {
-                IsConfigured = IsConfigured(),
                 ApplicationId = _squarePaymentSettings.ApplicationId,
                 ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                 AccessToken = _squarePaymentSettings.AccessToken,
@@ -203,7 +188,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //handle access token callback
             try
             {
-                if (!IsConfigured())
+                if (string.IsNullOrEmpty(_squarePaymentSettings.ApplicationId) || string.IsNullOrEmpty(_squarePaymentSettings.ApplicationSecret))
                     throw new NopException("Plugin is not configured");
 
                 //check whether there are errors in the request

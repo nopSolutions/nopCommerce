@@ -609,9 +609,9 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize", "Authorize only");
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken", "Access token");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint", "Specify the personal access token, available from the application dashboard. You can also use the automatically renewed OAuth access tokens, that you can get by pressing button 'Obtain access token'");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint", "Get the automatically renewed OAuth access token by pressing button 'Obtain access token'.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod", "Access token renewal period (days)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint", "Access tokens besides your personal access token expire after thirty days, so it is recommended that you specify 30 days for the period. Specify 0 if you use the personal access token.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint", "Access tokens expire after thirty days, so it is recommended that you specify 30 days for the period.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max", "Token renewal limit to 45 days max");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");

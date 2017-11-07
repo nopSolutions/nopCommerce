@@ -13,12 +13,7 @@
                         <nop-label asp-for="ApplicationId" />
                     </div>
                     <div class="col-md-9">
-                        <div class="input-group input-group-required">
-                            <nop-editor asp-for="ApplicationId" />
-                            <div class="input-group-btn">
-                                <nop-required/>
-                            </div>
-                        </div>
+                        <nop-editor asp-for="ApplicationId" asp-required="true" />
                         <span asp-validation-for="ApplicationId"></span>
                     </div>
                 </div>
@@ -27,12 +22,7 @@
                         <nop-label asp-for="ApplicationSecret" />
                     </div>
                     <div class="col-md-9">
-                        <div class="input-group input-group-required">
-                            <nop-editor asp-for="ApplicationSecret" />
-                            <div class="input-group-btn">
-                                <nop-required/>
-                            </div>
-                        </div>
+                        <nop-editor asp-for="ApplicationSecret" asp-required="true" />
                         <span asp-validation-for="ApplicationSecret"></span>
                     </div>
                 </div>
@@ -41,12 +31,7 @@
                         <nop-label asp-for="LocationId" />
                     </div>
                     <div class="col-md-9">
-                        <div class="input-group input-group-required">
-                            <nop-select asp-for="LocationId" asp-items="Model.Locations" />
-                            <div class="input-group-btn">
-                                <nop-required/>
-                            </div>
-                        </div>                            
+                        <nop-select asp-for="LocationId" asp-items="Model.Locations" asp-required="true" />                         
                         <span asp-validation-for="LocationId"></span>
                     </div>
                 </div>
@@ -55,27 +40,15 @@
                         <nop-label asp-for="AccessToken" />
                     </div>
                     <div class="col-md-9">
-                        @if (!Model.IsConfigured)
-                        {
-                            <div class="input-group input-group-required">
-                                <nop-editor asp-for="AccessToken" />
-                                <div class="input-group-btn">
-                                    <nop-required />
-                                </div>
-                            </div>                            
-                        }
-                        else
-                        {
-                            <div class="input-group">
-                                <nop-editor asp-for="AccessToken" />
-                                <div class="input-group-btn">
-                                    <button type="submit" name="obtainAccessToken" class="btn btn-info">
-                                        @T("Plugins.Payments.Square.ObtainAccessToken")
-                                    </button>
-                                </div>
+                        <div class="input-group input-group-required">
+                            <nop-editor asp-for="AccessToken" asp-disabled="true"/>
+                            <div class="input-group-btn">
+                                <button type="submit" name="obtainAccessToken" class="btn btn-info">
+                                    @T("Plugins.Payments.Square.ObtainAccessToken")
+                                </button>
+                                <nop-required />
                             </div>
-                        }
-                        <span asp-validation-for="AccessToken"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -120,7 +93,9 @@
                             <div class="input-group-text">
                                 <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
                             </div>
-                            @if (Model.IsConfigured && !string.IsNullOrEmpty(Model.AccessToken))
+                            @if (!string.IsNullOrEmpty(Model.ApplicationId) && 
+                                !string.IsNullOrEmpty(Model.ApplicationSecret) && 
+                                !string.IsNullOrEmpty(Model.AccessToken))
                             {
                                 <div class="input-group-btn">
                                     <button type="submit" name="revokeAccessTokens" class="btn bg-red">

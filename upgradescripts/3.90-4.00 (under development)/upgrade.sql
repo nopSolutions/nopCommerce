@@ -464,6 +464,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
     <Value>You can also manually upload a plugin or theme using FTP if this method doesn''t work for you.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessToken.Hint">
+    <Value>Get the automatically renewed OAuth access token by pressing button ''Obtain access token''.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint">
+    <Value>Access tokens expire after thirty days, so it is recommended that you specify 30 days for the period.</Value>
+  </LocaleResource>
 </Language>
 '
 

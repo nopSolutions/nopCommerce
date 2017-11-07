@@ -22,8 +22,6 @@ namespace Nop.Plugin.Payments.Square.Models
 
         #region Properties
 
-        public bool IsConfigured { get; set; }
-
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.ApplicationId")]
         public string ApplicationId { get; set; }
 
@@ -33,6 +31,8 @@ namespace Nop.Plugin.Payments.Square.Models
         public string ApplicationSecret { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.AccessToken")]
+        [DataType(DataType.Password)]
+        [NoTrim]
         public string AccessToken { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod")]
