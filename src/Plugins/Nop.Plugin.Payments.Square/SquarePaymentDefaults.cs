@@ -37,6 +37,16 @@ namespace Nop.Plugin.Payments.Square
         public static string RenewAccessTokenTask => $"Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask, {typeof(SquarePaymentDefaults).Assembly.FullName}";
 
         /// <summary>
+        /// Default access token renewal period in days
+        /// </summary>
+        public static int AccessTokenRenewalPeriodRecommended => 14;
+
+        /// <summary>
+        /// Max access token renewal period in days
+        /// </summary>
+        public static int AccessTokenRenewalPeriodMax => 45;
+
+        /// <summary>
         /// Note passed for each payment transaction
         /// </summary>
         /// <remarks>

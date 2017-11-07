@@ -470,6 +470,21 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint">
     <Value>Access tokens expire after thirty days, so it is recommended that you specify 30 days for the period.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.TaskChanged">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.AccessTokenRenewalPeriod.Error">
+    <Value>Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -947,4 +962,9 @@ BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'UploadNewTheme', N'Upload a theme', N'true')
 END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'squarepaymentsettings.accesstokenrenewalperiod'
 GO

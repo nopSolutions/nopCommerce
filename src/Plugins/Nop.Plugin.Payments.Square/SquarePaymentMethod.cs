@@ -586,13 +586,11 @@ namespace Nop.Plugin.Payments.Square
         public override void Install()
         {
             //settings
-            var settings = new SquarePaymentSettings
+            _settingService.SaveSetting(new SquarePaymentSettings
             {
                 LocationId = "0",
-                TransactionMode = TransactionMode.Charge,
-                AccessTokenRenewalPeriod = 30
-            };
-            _settingService.SaveSetting(settings);
+                TransactionMode = TransactionMode.Charge
+            });
 
             //install renew access token schedule task
             if (_scheduleTaskService.GetTaskByType(SquarePaymentDefaults.RenewAccessTokenTask) == null)
@@ -600,7 +598,7 @@ namespace Nop.Plugin.Payments.Square
                 _scheduleTaskService.InsertTask(new ScheduleTask
                 {
                     Enabled = true,
-                    Seconds = settings.AccessTokenRenewalPeriod * 24 * 60 * 60,
+                    Seconds = SquarePaymentDefaults.AccessTokenRenewalPeriodRecommended * 24 * 60 * 60,
                     Name = SquarePaymentDefaults.RenewAccessTokenTaskName,
                     Type = SquarePaymentDefaults.RenewAccessTokenTask,
                 });
@@ -609,11 +607,9 @@ namespace Nop.Plugin.Payments.Square
             //locales
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize", "Authorize only");
             this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error", "Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken", "Access token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint", "Get the automatically renewed OAuth access token by pressing button 'Obtain access token'.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod", "Access token renewal period (days)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint", "Access tokens expire after thirty days, so it is recommended that you specify 30 days for the period.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max", "Token renewal limit to 45 days max");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -662,7 +658,6 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens", "Revoke access tokens");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error", "An error occurred while revoking access tokens");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success", "All access tokens were successfully revoked");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.TaskChanged", "Task parameters has been changed, do not forget to restart the application");
             
             base.Install();
         }
@@ -683,11 +678,9 @@ namespace Nop.Plugin.Payments.Square
             //locales
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize");
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Max");
-            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod");
-            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage");
@@ -720,7 +713,6 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success");
-            this.DeletePluginLocaleResource("Plugins.Payments.Square.TaskChanged");
 
             base.Uninstall();
         }

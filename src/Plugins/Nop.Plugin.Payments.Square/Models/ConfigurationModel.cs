@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Plugin.Payments.Square.Validators;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Plugin.Payments.Square.Models
 {
-    [Validator(typeof(ConfigurationValidator))]
     public class ConfigurationModel : BaseNopModel
     {
         #region Ctor
@@ -34,9 +31,6 @@ namespace Nop.Plugin.Payments.Square.Models
         [DataType(DataType.Password)]
         [NoTrim]
         public string AccessToken { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod")]
-        public int AccessTokenRenewalPeriod { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
