@@ -72,8 +72,13 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //prepare business locations, every payment a merchant processes is associated with one of these locations
             if (!string.IsNullOrEmpty(model.AccessToken))
             {
-                model.Locations = _squarePaymentManager.GetActiveLocations()
-                    .Select(location => new SelectListItem { Text = location.BusinessName, Value = location.Id }).ToList();
+                model.Locations = _squarePaymentManager.GetActiveLocations().Select(location =>
+                {
+                    var name = location.BusinessName;
+                    if (!location.Name.Equals(location.BusinessName))
+                        name = $"{name} ({location.Name})";
+                    return new SelectListItem { Text = name, Value = location.Id };
+                }).ToList();
             }
 
             //add the special item for 'there are no location' with value 0
