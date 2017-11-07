@@ -491,6 +491,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Shipping.OnlyOneOffline">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value>The store has some error(s). Please find more information on the Warnings page.</Value>
+  </LocaleResource>
 </Language>
 '
 

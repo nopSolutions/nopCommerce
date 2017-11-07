@@ -13191,6 +13191,9 @@
   <LocaleResource Name="Admin.System.Warnings.DirectoryPermission.Wrong">
     <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value>The store has some error(s). Please find more information on the Warnings page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.ExchangeCurrency.NotSet">
     <Value>Primary exchange rate currency is not set</Value>
   </LocaleResource>
