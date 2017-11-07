@@ -14,6 +14,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <None Remove="Content\styles.css" />
     <None Remove="logo.png" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
@@ -32,6 +33,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -22,6 +22,7 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Tasks;
+using Nop.Web.Framework.UI;
 using SquareModel = Square.Connect.Model;
 
 namespace Nop.Plugin.Payments.Square
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.Square
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ISettingService _settingService;
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IWebHelper _webHelper;
@@ -57,6 +59,7 @@ namespace Nop.Plugin.Payments.Square
             ILocalizationService localizationService,
             ILogger logger,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IPageHeadBuilder pageHeadBuilder,
             ISettingService settingService,
             IScheduleTaskService scheduleTaskService,
             IWebHelper webHelper,
@@ -70,6 +73,7 @@ namespace Nop.Plugin.Payments.Square
             this._localizationService = localizationService;
             this._logger = logger;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._pageHeadBuilder = pageHeadBuilder;
             this._settingService = settingService;
             this._scheduleTaskService = scheduleTaskService;
             this._webHelper = webHelper;
@@ -452,7 +456,13 @@ namespace Nop.Plugin.Payments.Square
 
             //check whether refund is approved
             if (createdRefund.Status != SquareModel.Refund.StatusEnum.APPROVED)
-                throw new NopException($"Refund is {createdRefund.Status}");
+            {
+                //change error notification to warning one (for the pending status)
+                if (createdRefund.Status == SquareModel.Refund.StatusEnum.PENDING)
+                    _pageHeadBuilder.AddCssFileParts(ResourceLocation.Head, @"~/Plugins/Payments.Square/Content/styles.css", null);
+
+                return new RefundPaymentResult { Errors = new[] { $"Refund is {createdRefund.Status}" }.ToList() };
+            }
 
             //successfully refunded
             return new RefundPaymentResult
