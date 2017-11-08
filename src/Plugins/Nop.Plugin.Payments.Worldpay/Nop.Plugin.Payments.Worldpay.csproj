@@ -14,6 +14,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <None Remove="cards.jpg" />
     <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
     <None Remove="Views\Configure.cshtml" />
@@ -36,6 +37,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="cards.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
