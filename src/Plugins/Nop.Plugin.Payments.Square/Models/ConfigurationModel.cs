@@ -32,6 +32,9 @@ namespace Nop.Plugin.Payments.Square.Models
         [NoTrim]
         public string AccessToken { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.Square.Fields.UseSandbox")]
+        public bool UseSandbox { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
         public SelectList TransactionModes { get; set; }

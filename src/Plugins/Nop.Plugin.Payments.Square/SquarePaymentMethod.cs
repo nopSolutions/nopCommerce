@@ -601,6 +601,7 @@ namespace Nop.Plugin.Payments.Square
             {
                 LocationId = "0",
                 TransactionMode = TransactionMode.Charge,
+                UseSandbox = true
             });
 
             //install renew access token schedule task
@@ -643,6 +644,8 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard", "Select a card");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode", "Transaction mode");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint", "Choose the transaction mode.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox", "Use sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint", "Determine whether to use sandbox credentials.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Instructions", @"
                 <p>
                     For plugin configuration follow these steps:<br />
@@ -714,6 +717,8 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Instructions");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error");

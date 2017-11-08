@@ -494,6 +494,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Errors">
     <Value>The store has some error(s). Please find more information on the Warnings page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.UseSandbox">
+    <Value>Use sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.UseSandbox.Hint">
+    <Value>Determine whether to use sandbox credentials.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -976,4 +982,12 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [name] = N'squarepaymentsettings.accesstokenrenewalperiod'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'squarepaymentsettings.usesandbox')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'squarepaymentsettings.usesandbox', N'true', 0)
+END
 GO

@@ -24,6 +24,11 @@ namespace Nop.Plugin.Payments.Square
         public string AccessToken { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use sandbox credentials
+        /// </summary>
+        public bool UseSandbox { get; set; }
+
+        /// <summary>
         /// Gets or sets access token verification string
         /// </summary>
         public string AccessTokenVerificationString { get; set; }
