@@ -213,7 +213,7 @@ namespace Nop.Plugin.Payments.Square
                 BuyerEmailAddress: email,
                 DelayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
                 IdempotencyKey: Guid.NewGuid().ToString(),
-                IntegrationId: !string.IsNullOrEmpty(_squarePaymentSettings.IntegrationId) ? _squarePaymentSettings.IntegrationId : null,
+                IntegrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
                 Note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
                 ReferenceId: paymentRequest.OrderGuid.ToString(),
                 ShippingAddress: shippingAddress
@@ -601,7 +601,6 @@ namespace Nop.Plugin.Payments.Square
             {
                 LocationId = "0",
                 TransactionMode = TransactionMode.Charge,
-                IntegrationId = SquarePaymentDefaults.IntegrationId
             });
 
             //install renew access token schedule task

@@ -977,11 +977,3 @@ GO
 DELETE FROM [Setting]
 WHERE [name] = N'squarepaymentsettings.accesstokenrenewalperiod'
 GO
-
---new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'squarepaymentsettings.integrationid')
-BEGIN
-	INSERT [Setting] ([Name], [Value], [StoreId])
-	VALUES (N'squarepaymentsettings.integrationid', N'sqi_4efb0346e2ef4b1375319dcd6e9977c0', 0)
-END
-GO
