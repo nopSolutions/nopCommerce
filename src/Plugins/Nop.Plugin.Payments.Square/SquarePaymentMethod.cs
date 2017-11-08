@@ -119,6 +119,11 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Process payment result</returns>
         private ProcessPaymentResult ProcessPayment(ProcessPaymentRequest paymentRequest, bool isRecurringPayment)
         {
+            //validate access token
+            if (_squarePaymentSettings.UseSandbox && 
+                (String.IsNullOrWhiteSpace(_squarePaymentSettings.AccessToken) || !_squarePaymentSettings.AccessToken.StartsWith("sandbox-", StringComparison.InvariantCultureIgnoreCase)))
+                throw new NopException("Sandbox access token should start with 'sandbox-'");
+
             //create charge request
             var chargeRequest = CreateChargeRequest(paymentRequest, isRecurringPayment);
 
@@ -636,6 +641,8 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist", "No locations");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode", "Postal code");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key", "Postal code");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken", "Sandbox access token");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint", "Enter your sandbox access token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard", "Save the card data for future purchasing");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key", "Save card details");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard", "Use a previously saved card");
@@ -709,6 +716,8 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard");

@@ -500,6 +500,12 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Square.Fields.UseSandbox.Hint">
     <Value>Determine whether to use sandbox credentials.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxAccessToken">
+    <Value>Sandbox access token</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxAccessToken.Hint">
+    <Value>Enter your sandbox access token</Value>
+  </LocaleResource>
 </Language>
 '
 

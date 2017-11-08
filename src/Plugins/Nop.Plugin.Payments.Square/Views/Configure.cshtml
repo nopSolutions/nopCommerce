@@ -63,15 +63,20 @@
                         <span asp-validation-for="LocationId"></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="sandboxAccessToken">
                     <div class="col-md-3">
-                        <nop-label asp-for="AccessToken" />
+                        <nop-label asp-for="SandboxAccessToken" />
                     </div>
-                    <div class="col-md-9" id="sandboxAccessToken">
+                    <div class="col-md-9">
                         <nop-editor asp-for="AccessToken" asp-required="true" />
                         <span asp-validation-for="AccessToken"></span>
                     </div>
-                    <div class="col-md-9" id="oauthAccessToken">
+                </div>
+                <div class="form-group" id="oauthAccessToken">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AccessToken" />
+                    </div>
+                    <div class="col-md-9">
                         <div class="input-group input-group-required">
                             <div class="form-text-row">@(new string('*', Model.AccessToken.Length))</div>
                             <div class="input-group-btn">
