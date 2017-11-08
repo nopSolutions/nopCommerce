@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
@@ -43,7 +44,10 @@ namespace Nop.Services.Tasks
             if (!Enabled)
                 return;
 
-            var type = Type.GetType(ScheduleTask.Type);
+            var type = Type.GetType(ScheduleTask.Type) ??
+                       AppDomain.CurrentDomain.GetAssemblies()
+                           .Select(a => a.GetType(ScheduleTask.Type))
+                           .FirstOrDefault(t => t != null);
             if (type == null)
                 throw new Exception($"Schedule task ({ScheduleTask.Type}) cannot by instantiated");
 
