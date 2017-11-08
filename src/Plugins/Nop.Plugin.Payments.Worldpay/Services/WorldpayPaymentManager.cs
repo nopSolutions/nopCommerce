@@ -46,7 +46,7 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         /// <returns>URL</returns>
         private string GetServiceUrl()
         {
-            return _worldpayPaymentSettings.UseSandbox ? "https://gwapi.demo.securenet.com" : " https://gwapi.securenet.com";
+            return _worldpayPaymentSettings.UseSandbox ? "https://gwapi.demo.securenet.com" : "https://gwapi.securenet.com";
         }
 
         /// <summary>
