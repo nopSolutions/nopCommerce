@@ -558,23 +558,30 @@ namespace Nop.Plugin.Payments.Worldpay
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.WorldpayCustomerId.Hint", "Displays Worldpay Vault customer ID. If the customer is not yet stored in the Worldpay Vault, specify the customer ID and click the button 'Store customer to the Worldpay Vault'");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Instructions", @"
                 <p>
-                    For plugin configuration follow these steps:<br />
+                    For plugin configuration follow these steps:
+                    <ul style=""list-style-type:none;"">
+                        <li>
+                            1. Sign up for a <a href=""https://www.worldpay.us/Partner/nopcommerce"" target=""_blank"">Merchant Account</a>
+                        </li>
+                        <li>
+                            2. Upon merchant account approval an email will be sent to you with your Virtual Terminal credentials where you can obtain your SecureNet ID, Secure Key and Public Key
+                        </li>
+                        <li>
+                            3. Steps to obtain each:
+                            <ul style=""list-style-type:none;"">
+                                <li>a. Sign into the Virtual Terminal with the login credentials that you received</li>
+                                <li>b. The SecureNet ID will be found on the upper right hand side of your Virtual Terminal page</li>
+                                <li>c. To obtain your Keys, navigate to the Settings tab and select the Key Management link</li>
+                                <li>d. Select appropriate tab – SecureKey or Public Key</li>
+                            </ul>
+                        </li>
+                        <li>
+                            4. Fill in the remaining fields and save to complete the configuration
+                        </li>
+                    </ul>
+                    <em>Note: This plugin supports merchants domiciled in the United States only.</em>
                     <br />
-                    1. Sign up for a <a href=""https://www.worldpay.us/Partner/nopcommerce"" target=""_blank"">merchant</a> or <a href=""http://www.worldpay.com/us/developers/developer-resources/developer-sandbox-signup"" target=""_blank"">sandbox</a> account<br />
-                    2. The SecureNet ID can be obtained from the email that you received during the sign-up process.<br />
-                    3. You can obtain the Secure Key by signing into the Virtual Terminal with the login credentials that you were also emailed to you. 
-                       You will then need to navigate to Settings and click on the Key Management link.<br /> 
-                    4. A public key will be sent to the email address that you signed up with during the sandbox sign-up process.<br />
-                    5. Then you should send the source code to Worldpay to pass the <a href=""https://www.worldpay.com/us/forms/get-certified"" target=""_blank"">plugin code certification</a>. 
-                       After the certification you will get certified credentials that will replace the testing credentials you obtained when signing up for your sandbox and also unique Developer ID and Application Version.
-                       You cannot go live with the application until Worldpay technical team has certified your application and you receive the confirmation letter with the credentials. 
-                       This process is needed to ensure that you are using the Worldpay Total platform correctly and obtaining valid results.<br />
-                       <em>Note: For testing purposes, use the sandbox and set your Developer Id to '12345678' and Application version to '1.2'</em><br />
-                    6. Fill in the remaining fields and save to complete the configuration<br />
-                    <br />
-                    <em>Note: This plugin supports US merchants only.</em>
-                    <br />
-                    <em>Note: The Worldpay Total platform supports only USD currency, ensure that you have correctly configured exchange rate from your primary store currency to the USD currency.</em>
+                    <em>Note: The Worldpay US platform supports only USD currency; ensure that you have correctly configured the exchange rate from your primary store currency to the USD currency.</em>
                     <br />
                 </p>");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.PaymentMethodDescription", "Pay by credit card using Worldpay");
