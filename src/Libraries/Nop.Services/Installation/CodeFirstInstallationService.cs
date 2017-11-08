@@ -11768,6 +11768,12 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     Name = "Upload a plugin"
                 },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UploadNewTheme",
+                    Enabled = true,
+                    Name = "Upload a theme"
+                }
             };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }

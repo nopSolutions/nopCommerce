@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Domain.Tasks;
 using Nop.Plugin.Payments.Square.Domain;
 using Nop.Plugin.Payments.Square.Models;
 using Nop.Plugin.Payments.Square.Services;
@@ -12,7 +11,6 @@ using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Services.Tasks;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -26,7 +24,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
 
@@ -37,30 +34,14 @@ namespace Nop.Plugin.Payments.Square.Controllers
         public PaymentSquareController(ILocalizationService localizationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IScheduleTaskService scheduleTaskService,
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._settingService = settingService;
-            this._scheduleTaskService = scheduleTaskService;
             this._squarePaymentManager = squarePaymentManager;
             this._squarePaymentSettings = squarePaymentSettings;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Check whether this plugin is configured
-        /// </summary>
-        /// <returns>True if it is configured; otherwise false</returns>
-        private bool IsConfigured()
-        {
-            return !string.IsNullOrEmpty(_squarePaymentSettings.ApplicationId)
-                && !string.IsNullOrEmpty(_squarePaymentSettings.ApplicationSecret);
         }
 
         #endregion
@@ -78,11 +59,9 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //prepare model
             var model = new ConfigurationModel
             {
-                IsConfigured = IsConfigured(),
                 ApplicationId = _squarePaymentSettings.ApplicationId,
                 ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                 AccessToken = _squarePaymentSettings.AccessToken,
-                AccessTokenRenewalPeriod = _squarePaymentSettings.AccessTokenRenewalPeriod,
                 TransactionModeId = (int)_squarePaymentSettings.TransactionMode,
                 TransactionModes = _squarePaymentSettings.TransactionMode.ToSelectList(),
                 LocationId = _squarePaymentSettings.LocationId,
@@ -93,8 +72,13 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //prepare business locations, every payment a merchant processes is associated with one of these locations
             if (!string.IsNullOrEmpty(model.AccessToken))
             {
-                model.Locations = _squarePaymentManager.GetActiveLocations()
-                    .Select(location => new SelectListItem { Text = location.BusinessName, Value = location.Id }).ToList();
+                model.Locations = _squarePaymentManager.GetActiveLocations().Select(location =>
+                {
+                    var name = location.BusinessName;
+                    if (!location.Name.Equals(location.BusinessName))
+                        name = $"{name} ({location.Name})";
+                    return new SelectListItem { Text = name, Value = location.Id };
+                }).ToList();
             }
 
             //add the special item for 'there are no location' with value 0
@@ -103,11 +87,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 var noLocationText = _localizationService.GetResource("Plugins.Payments.Square.Fields.Location.NotExist");
                 model.Locations.Add(new SelectListItem { Text = noLocationText, Value = "0" });
             }
-
-            //get access token renewal period in days
-            var task = _scheduleTaskService.GetTaskByType(SquarePaymentDefaults.RenewAccessTokenTask);
-            if (task != null)
-                model.AccessTokenRenewalPeriod = task.Seconds / 60 / 60 / 24;
 
             return View("~/Plugins/Payments.Square/Views/Configure.cshtml", model);
         }
@@ -130,43 +109,11 @@ namespace Nop.Plugin.Payments.Square.Controllers
             _squarePaymentSettings.ApplicationId = model.ApplicationId;
             _squarePaymentSettings.ApplicationSecret = model.ApplicationSecret;
             _squarePaymentSettings.AccessToken = model.AccessToken;
-            _squarePaymentSettings.AccessTokenRenewalPeriod = model.AccessTokenRenewalPeriod;
             _squarePaymentSettings.TransactionMode = (TransactionMode)model.TransactionModeId;
             _squarePaymentSettings.LocationId = model.LocationId;
             _squarePaymentSettings.AdditionalFee = model.AdditionalFee;
             _squarePaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_squarePaymentSettings);
-
-            //get task parameters
-            var enableTask = model.AccessTokenRenewalPeriod > 0;
-            var taskPeriodInSeconds = model.AccessTokenRenewalPeriod * 24 * 60 * 60;
-
-            //update renew access token task, if task parameters was changed
-            var task = _scheduleTaskService.GetTaskByType(SquarePaymentDefaults.RenewAccessTokenTask);
-            if (task != null)
-            {
-                if (task.Enabled != enableTask || task.Seconds != taskPeriodInSeconds)
-                {
-                    task.Enabled = enableTask;
-                    task.Seconds = taskPeriodInSeconds;
-                    _scheduleTaskService.UpdateTask(task);
-
-                    WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
-                }
-            }
-            else
-            {
-                //or create the new one if not exists
-                _scheduleTaskService.InsertTask(new ScheduleTask
-                {
-                    Enabled = enableTask,
-                    Seconds = taskPeriodInSeconds,
-                    Name = SquarePaymentDefaults.RenewAccessTokenTaskName,
-                    Type = SquarePaymentDefaults.RenewAccessTokenTask,
-                });
-
-                WarningNotification(_localizationService.GetResource("Plugins.Payments.Square.TaskChanged"));
-            }
 
             //warn admin that the location is a required parameter
             if (string.IsNullOrEmpty(_squarePaymentSettings.LocationId) || _squarePaymentSettings.LocationId.Equals("0"))
@@ -203,7 +150,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             //handle access token callback
             try
             {
-                if (!IsConfigured())
+                if (string.IsNullOrEmpty(_squarePaymentSettings.ApplicationId) || string.IsNullOrEmpty(_squarePaymentSettings.ApplicationSecret))
                     throw new NopException("Plugin is not configured");
 
                 //check whether there are errors in the request

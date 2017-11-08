@@ -24,11 +24,6 @@ namespace Nop.Plugin.Payments.Square
         public string AccessToken { get; set; }
 
         /// <summary>
-        /// Gets or sets access token renewal period in days
-        /// </summary>
-        public int AccessTokenRenewalPeriod { get; set; }
-
-        /// <summary>
         /// Gets or sets access token verification string
         /// </summary>
         public string AccessTokenVerificationString { get; set; }

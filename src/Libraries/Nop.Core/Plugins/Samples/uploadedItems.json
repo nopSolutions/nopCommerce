@@ -1,0 +1,46 @@
+//this file should be in the root of the archive
+[
+  //assume that the archive sample contains three plugins and one theme:
+
+  //"Must be assigned to customer role" discount rule for version 3.90
+  {
+    //uploaded item type (required)
+    "Type": "Plugin",
+
+    //supported nopCommerce version (required)
+    "SupportedVersion": "3.90",
+
+    //path to the directory with plugin binary files or theme files in the archive (required)
+    "DirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 3.90/DiscountRules.CustomerRoles/",
+
+    //plugin or theme system name (not required)
+    "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
+
+    //path to the directory with plugin source files in the archive, if exist (not required)
+    "SourceDirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 3.90/Nop.Plugin.DiscountRules.CustomerRoles/"
+  },
+
+  //"Must be assigned to customer role" discount rule for version 4.00
+  {
+    "Type": "Plugin",
+    "SupportedVersion": "4.00",
+    "DirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 4.00/DiscountRules.CustomerRoles/",
+    "SystemName": "DiscountRequirement.MustBeAssignedToCustomerRole",
+    "SourceDirectoryPath": "DiscountRules.CustomerRoles/nopCommerce 4.00/Nop.Plugin.DiscountRules.CustomerRoles/"
+  },
+
+  //"Has one product" discount rule for version 4.00
+  {
+    "Type": "Plugin",
+    "SupportedVersion": "4.00",
+    "DirectoryPath": "DiscountRules.HasOneProduct/",
+    "SystemName": "DiscountRequirement.HasOneProduct"
+  },
+
+  //"Default clean" theme for version 4.00
+  {
+    "Type": "Theme",
+    "SupportedVersion": "4.00",
+    "DirectoryPath": "DefaultClean/"
+  }
+]

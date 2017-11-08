@@ -440,6 +440,60 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.ExchangeRateProvider.Hint">
     <Value>Select an exchange rate provider.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewTheme">
+    <Value>Uploaded a new theme (FriendlyName: ''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>{0} plugins and {1} themes have been uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload plugin or theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Progress">
+    <Value>Uploading plugins and themes...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint1">
+    <Value>The archive should contain only one root plugin or theme directory (already compiled for plugin). For example, Payments.PayPalDirect.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint2">
+    <Value>Or it should have the ''{0}'' file with the archive structure (in case if the archive has many plugins and themes).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint3">
+    <Value>Please note that if the plugin or theme directory already exists, it will be overwritten.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint4">
+    <Value>You can also manually upload a plugin or theme using FTP if this method doesn''t work for you.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessToken.Hint">
+    <Value>Get the automatically renewed OAuth access token by pressing button ''Obtain access token''.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint">
+    <Value>Access tokens expire after thirty days, so it is recommended that you specify 30 days for the period.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.AccessTokenRenewalPeriod.Max">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.TaskChanged">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.AccessTokenRenewalPeriod.Error">
+    <Value>Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Shipping.NoComputationMethods">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Shipping.OnlyOneOffline">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Errors">
+    <Value>The store has some error(s). Please find more information on the Warnings page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -909,4 +963,17 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
 END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadNewTheme')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'UploadNewTheme', N'Upload a theme', N'true')
+END
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'squarepaymentsettings.accesstokenrenewalperiod'
 GO

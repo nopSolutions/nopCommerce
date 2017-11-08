@@ -16,19 +16,21 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Nop.Services.Events;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -51,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly WidgetSettings _widgetSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly IUploadService _uploadService;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -72,6 +75,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             WidgetSettings widgetSettings,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            IUploadService uploadService,
             IEventPublisher eventPublisher)
         {
             this._pluginFinder = pluginFinder;
@@ -89,6 +93,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._widgetSettings = widgetSettings;
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
+            this._uploadService = uploadService;
             this._eventPublisher = eventPublisher;
         }
 
@@ -260,33 +265,46 @@ namespace Nop.Web.Areas.Admin.Controllers
 	    }
 
 	    [HttpPost]
-	    public virtual IActionResult UploadPlugin(IFormFile archivefile)
+	    public virtual IActionResult UploadPluginsAndThemes(IFormFile archivefile)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
 	            return AccessDeniedView();
 
 	        try
 	        {
-	            if (archivefile != null && archivefile.Length > 0)
-	            {
-                    var pluginDescriptors = PluginManager.UploadPlugins(archivefile);
+                if (archivefile == null || archivefile.Length == 0)
+                {
 
-                    //activity log
-                    foreach (var pluginDescriptor in pluginDescriptors)
-                    {
-                        _customerActivityService.InsertActivity("UploadNewPlugin", _localizationService.GetResource("ActivityLog.UploadNewPlugin"), pluginDescriptor.FriendlyName);
-                    }
-
-                    //event
-                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
                 }
-                else
-	            {
-	                ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-	                return RedirectToAction("List");
-	            }
 
-	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"));
+                var descriptors = _uploadService.UploadPluginsAndThemes(archivefile);
+                var pluginDescriptors = descriptors.OfType<PluginDescriptor>().ToList();
+                var themeDescriptors = descriptors.OfType<ThemeDescriptor>().ToList();
+
+                //activity log
+                foreach (var descriptor in pluginDescriptors)
+                {
+                    _customerActivityService.InsertActivity("UploadNewPlugin", 
+                        _localizationService.GetResource("ActivityLog.UploadNewPlugin"), descriptor.FriendlyName);
+                }
+
+                foreach (var descriptor in themeDescriptors)
+                {
+                    _customerActivityService.InsertActivity("UploadNewTheme",
+                        _localizationService.GetResource("ActivityLog.UploadNewTheme"), descriptor.FriendlyName);
+                }
+
+                //events
+                if (pluginDescriptors?.Any() ?? false)
+                    _eventPublisher.Publish(new PluginsUploadedEvent(pluginDescriptors));
+
+                if (themeDescriptors?.Any() ?? false)
+                    _eventPublisher.Publish(new ThemesUploadedEvent(themeDescriptors));
+
+                var message = string.Format(_localizationService.GetResource("Admin.Configuration.Plugins.Uploaded"), pluginDescriptors.Count, themeDescriptors.Count);
+                SuccessNotification(message);
 
                 //restart application
                 _webHelper.RestartAppDomain();
@@ -295,6 +313,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 	        {
 	            ErrorNotification(exc);
 	        }
+
 	        return RedirectToAction("List");
         }
 

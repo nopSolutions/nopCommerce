@@ -113,7 +113,7 @@
                             <nop-label asp-for="IsSystemRole"/>
                         </div>
                         <div class="col-md-9">
-                            <div class="form-text-row">@Model.IsSystemRole.ToString()</div>
+                            <div class="form-text-row">@T(Model.IsSystemRole ? "Admin.Common.Yes" : "Admin.Common.No")</div>
                             <input type="hidden" asp-for="IsSystemRole"/>
                             <span asp-validation-for="IsSystemRole"></span>
                         </div>

@@ -10,7 +10,7 @@ namespace Nop.Core.Plugins
     /// <summary>
     /// Represents a plugin descriptor
     /// </summary>
-    public class PluginDescriptor : IComparable<PluginDescriptor>
+    public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
     {
         #region Ctors
 
@@ -125,13 +125,13 @@ namespace Nop.Core.Plugins
         public virtual string Group { get; set; }
 
         /// <summary>
-        /// Gets or sets the friendly name
+        /// Gets or sets the plugin friendly name
         /// </summary>
         [JsonProperty(PropertyName = "FriendlyName")]
         public virtual string FriendlyName { get; set; }
 
         /// <summary>
-        /// Gets or sets the system name
+        /// Gets or sets the plugin system name
         /// </summary>
         [JsonProperty(PropertyName = "SystemName")]
         public virtual string SystemName { get; set; }
