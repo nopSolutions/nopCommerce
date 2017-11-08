@@ -13,6 +13,8 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Compression;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using System.Linq;
+using System.Text;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -147,6 +149,8 @@ namespace Nop.Web.Framework.Infrastructure
 
             //use request localization
             application.UseRequestLocalization();
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         /// <summary>
