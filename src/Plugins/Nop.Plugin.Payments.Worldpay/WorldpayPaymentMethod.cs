@@ -508,7 +508,7 @@ namespace Nop.Plugin.Payments.Worldpay
             _settingService.SaveSetting(new WorldpayPaymentSettings
             {
                 //default sandbox values
-                DeveloperId = "12345678",
+                DeveloperId = "10000786",
                 DeveloperVersion = "1.2",
                 UseSandbox = true,
 
