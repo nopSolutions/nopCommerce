@@ -579,7 +579,7 @@ namespace Nop.Plugin.Payments.Worldpay
                             4. Fill in the remaining fields and save to complete the configuration
                         </li>
                     </ul>
-                    <em>Note: This plugin supports merchants domiciled in the United States only.</em>
+                    <br /><em>Note: This plugin supports merchants domiciled in the United States only.</em>
                     <br />
                     <em>Note: The Worldpay US platform supports only USD currency; ensure that you have correctly configured the exchange rate from your primary store currency to the USD currency.</em>
                     <br />
