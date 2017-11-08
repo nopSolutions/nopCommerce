@@ -12,7 +12,7 @@ namespace Nop.Data.Initializers
     /// CreateTablesIfNotExist database initializer
     /// </summary>
     /// <typeparam name="TContext">Type of context</typeparam>
-    public class CreateTablesIfNotExist<TContext> : where TContext : DbContext
+    public class CreateTablesIfNotExist<TContext> where TContext : DbContext
     {
         private readonly string[] _tablesToValidate;
         private readonly string[] _customCommands;

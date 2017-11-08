@@ -19,7 +19,7 @@ namespace Nop.Data.Initializers
         /// Initialize database
         /// </summary>
         /// <param name="context">Context</param>
-        public override void InitializeDatabase(TContext context)
+        public void InitializeDatabase(TContext context)
         {
             if (context == null)
             {
