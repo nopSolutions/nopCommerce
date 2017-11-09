@@ -58,6 +58,15 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <returns>The API Configuration</returns>
         private Configuration CreateApiConfiguration()
         {
+            //validate access token
+            if (_squarePaymentSettings.UseSandbox && 
+                (string.IsNullOrEmpty(_squarePaymentSettings.AccessToken) || 
+                    !_squarePaymentSettings.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase)))
+
+            {
+                throw new NopException($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
+            }
+
             return new Configuration
             {
                 AccessToken = _squarePaymentSettings.AccessToken,

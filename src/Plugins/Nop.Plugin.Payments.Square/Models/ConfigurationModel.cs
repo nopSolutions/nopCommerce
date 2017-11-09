@@ -25,6 +25,9 @@ namespace Nop.Plugin.Payments.Square.Models
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.ApplicationId")]
         public string ApplicationId { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.Square.Fields.SandboxApplicationId")]
+        public string SandboxApplicationId { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.ApplicationSecret")]
         [DataType(DataType.Password)]
         [NoTrim]
@@ -34,9 +37,8 @@ namespace Nop.Plugin.Payments.Square.Models
         [DataType(DataType.Password)]
         [NoTrim]
         public string AccessToken { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.SandboxAccessToken")]
-        [DataType(DataType.Password)]
-        [NoTrim]
         public string SandboxAccessToken { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.UseSandbox")]

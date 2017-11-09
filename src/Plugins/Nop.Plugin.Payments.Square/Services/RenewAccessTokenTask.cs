@@ -59,6 +59,10 @@ namespace Nop.Plugin.Payments.Square.Services
             if (!_paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName).IsPaymentMethodActive(_paymentSettings))
                 return;
 
+            //do not execute for sandbox environment
+            if (_squarePaymentSettings.UseSandbox)
+                return;
+
             try
             {
                 //get the new access token

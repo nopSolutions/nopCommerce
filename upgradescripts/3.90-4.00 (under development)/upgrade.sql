@@ -504,7 +504,13 @@ set @resources='
     <Value>Sandbox access token</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxAccessToken.Hint">
-    <Value>Enter your sandbox access token</Value>
+    <Value>Enter your sandbox access token, available from the application dashboard.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxApplicationId">
+    <Value>Sandbox application ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxApplicationId.Hint">
+    <Value>Enter your sandbox application ID, available from the application dashboard.</Value>
   </LocaleResource>
 </Language>
 '

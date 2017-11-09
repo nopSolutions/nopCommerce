@@ -52,6 +52,11 @@ namespace Nop.Plugin.Payments.Square
         public static int AccessTokenRenewalPeriodMax => 45;
 
         /// <summary>
+        /// Sandbox credentials should start with this prefix
+        /// </summary>
+        public static string SandboxCredentialsPrefix => "sandbox-";
+
+        /// <summary>
         /// Note passed for each payment transaction
         /// </summary>
         /// <remarks>
