@@ -1003,3 +1003,9 @@ BEGIN
 	VALUES (N'squarepaymentsettings.usesandbox', N'true', 0)
 END
 GO
+
+--update schedule task type
+UPDATE [ScheduleTask]
+SET [Type] = 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask'
+WHERE [Type] like 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask%'
+GO
