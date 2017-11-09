@@ -29,16 +29,6 @@ namespace Nop.Plugin.Payments.Worldpay
         public TransactionMode TransactionMode { get; set; }
 
         /// <summary>
-        /// Gets or sets a developer identifier
-        /// </summary>
-        public string DeveloperId { get; set; }
-
-        /// <summary>
-        /// Gets or sets a developer version
-        /// </summary>
-        public string DeveloperVersion { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to use sandbox (testing environment)
         /// </summary>
         public bool UseSandbox { get; set; }

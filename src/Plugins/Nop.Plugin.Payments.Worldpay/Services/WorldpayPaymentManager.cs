@@ -56,12 +56,12 @@ namespace Nop.Plugin.Payments.Worldpay.Services
         /// <param name="request">Request</param>
         private void SetDeveloperCredentials<TRequest>(TRequest request) where TRequest : WorldpayPostRequest
         {
-            if (int.TryParse(_worldpayPaymentSettings.DeveloperId, out int developerId))
+            if (int.TryParse(_worldpayPaymentSettings.UseSandbox ? WorldpayPaymentDefaults.SandboxDeveloperId : WorldpayPaymentDefaults.DeveloperId, out int developerId))
             {
                 request.DeveloperApplication = new DeveloperApplication
                 {
                     DeveloperId = developerId,
-                    DeveloperVersion = _worldpayPaymentSettings.DeveloperVersion
+                    DeveloperVersion = _worldpayPaymentSettings.UseSandbox ? WorldpayPaymentDefaults.SandboxDeveloperVersion : WorldpayPaymentDefaults.DeveloperVersion
                 };
             }
         }

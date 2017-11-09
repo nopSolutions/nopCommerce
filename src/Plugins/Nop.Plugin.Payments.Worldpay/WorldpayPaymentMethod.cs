@@ -507,11 +507,7 @@ namespace Nop.Plugin.Payments.Worldpay
             //settings
             _settingService.SaveSetting(new WorldpayPaymentSettings
             {
-                //default sandbox values
-                DeveloperId = "10000786",
-                DeveloperVersion = "1.2",
                 UseSandbox = true,
-
                 TransactionMode = TransactionMode.Charge
             });
 
@@ -530,10 +526,6 @@ namespace Nop.Plugin.Payments.Worldpay
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId", "Card ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType", "Card type");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId", "Developer ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId.Hint", "Specify developer ID of integrator as assigned by Worldpay (available after certification).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion", "Application version");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion.Hint", "Specify version number of the integrator's application (available after certification).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate", "Expiration date");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber", "Masked number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey", "Public key");
@@ -615,10 +607,6 @@ namespace Nop.Plugin.Payments.Worldpay
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.AdditionalFeePercentage.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardId");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.CardType");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperId.Hint");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion");
-            this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.DeveloperVersion.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.ExpirationDate");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.MaskedNumber");
             this.DeletePluginLocaleResource("Plugins.Payments.Worldpay.Fields.PublicKey");

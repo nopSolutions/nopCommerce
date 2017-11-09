@@ -49,8 +49,8 @@
                 },
                 'developerApplication':
                 {
-                    'developerId': '@worldpayPaymentSettings.DeveloperId',
-                    'version': '@worldpayPaymentSettings.DeveloperVersion'
+                    'developerId': '@(worldpayPaymentSettings.UseSandbox ? WorldpayPaymentDefaults.SandboxDeveloperId : WorldpayPaymentDefaults.DeveloperId)',
+                    'version': '@(worldpayPaymentSettings.UseSandbox ? WorldpayPaymentDefaults.SandboxDeveloperVersion : WorldpayPaymentDefaults.DeveloperVersion)'
                 }
             }).done(function (result) {
                 var response = $.parseJSON(JSON.stringify(result));

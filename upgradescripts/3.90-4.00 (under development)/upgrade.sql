@@ -512,6 +512,18 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Square.Fields.SandboxApplicationId.Hint">
     <Value>Enter your sandbox application ID, available from the application dashboard.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Worldpay.Fields.DeveloperId">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Worldpay.Fields.DeveloperId.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Worldpay.Fields.DeveloperVersion">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Worldpay.Fields.DeveloperVersion.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1008,4 +1020,14 @@ GO
 UPDATE [ScheduleTask]
 SET [Type] = 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask'
 WHERE [Type] like 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask%'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'worldpaypaymentsettings.developerid'
+GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [name] = N'worldpaypaymentsettings.developerversion'
 GO

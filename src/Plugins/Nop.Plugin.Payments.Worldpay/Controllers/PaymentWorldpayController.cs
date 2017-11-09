@@ -76,8 +76,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
                 SecureNetId = _worldpayPaymentSettings.SecureNetId,
                 SecureKey = _worldpayPaymentSettings.SecureKey,
                 PublicKey = _worldpayPaymentSettings.PublicKey,
-                DeveloperId = _worldpayPaymentSettings.DeveloperId,
-                DeveloperVersion = _worldpayPaymentSettings.DeveloperVersion,
                 TransactionModeId = (int)_worldpayPaymentSettings.TransactionMode,
                 TransactionModes = _worldpayPaymentSettings.TransactionMode.ToSelectList(),
                 UseSandbox = _worldpayPaymentSettings.UseSandbox,
@@ -103,8 +101,6 @@ namespace Nop.Plugin.Payments.Worldpay.Controllers
             _worldpayPaymentSettings.SecureNetId = model.SecureNetId;
             _worldpayPaymentSettings.SecureKey = model.SecureKey;
             _worldpayPaymentSettings.PublicKey = model.PublicKey;
-            _worldpayPaymentSettings.DeveloperId = model.DeveloperId;
-            _worldpayPaymentSettings.DeveloperVersion = model.DeveloperVersion;
             _worldpayPaymentSettings.TransactionMode = (TransactionMode)model.TransactionModeId;
             _worldpayPaymentSettings.UseSandbox = model.UseSandbox;
             _worldpayPaymentSettings.ValidateAddress = model.ValidateAddress;
