@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.1.1" />
-    <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.1.10" />
+    <PackageReference Include="ImageResizer.Plugins.PrettyGifs" Version="4.1.11" />
     <PackageReference Include="iTextSharp" Version="5.5.12" />
     <PackageReference Include="MaxMind.GeoIP2" Version="2.9.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
