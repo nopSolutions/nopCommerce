@@ -977,3 +977,10 @@ GO
 DELETE FROM [Setting]
 WHERE [name] = N'squarepaymentsettings.accesstokenrenewalperiod'
 GO
+
+
+--update schedule task type
+UPDATE [ScheduleTask]
+SET [Type] = 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask'
+WHERE [Type] like 'Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask%'
+GO
