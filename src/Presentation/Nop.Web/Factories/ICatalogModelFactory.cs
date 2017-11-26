@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Factories
 {
@@ -88,7 +89,7 @@ namespace Nop.Web.Factories
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>List of category (simple) models</returns>
         List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            bool loadSubCategories = true, IList<Category> allCategories = null);
+            bool loadSubCategories = true, IList<Category> allCategories = null, IList<UrlRecord> slugs = null, bool topmenu = false, bool navigation = false);
 
         #endregion
 

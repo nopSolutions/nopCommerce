@@ -27,6 +27,7 @@ using Nop.Web.Framework.Events;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Factories
 {
@@ -61,6 +62,7 @@ namespace Nop.Web.Factories
         private readonly VendorSettings _vendorSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly IStaticCacheManager _cacheManager;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
 
@@ -96,7 +98,8 @@ namespace Nop.Web.Factories
             BlogSettings blogSettings,
             ForumSettings  forumSettings,
             IStaticCacheManager cacheManager,
-            DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings)
+            DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
+            CommonSettings commonSettings)
         {
             this._productModelFactory = productModelFactory;
             this._categoryService = categoryService;
@@ -127,6 +130,7 @@ namespace Nop.Web.Factories
             this._forumSettings = forumSettings;
             this._cacheManager = cacheManager;
             this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
+            this._commonSettings = commonSettings;
         }
 
         #endregion
@@ -559,11 +563,15 @@ namespace Nop.Web.Factories
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
-            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            List<CategorySimpleModel> CategoriesModel = null;
+            if (_commonSettings.LargeDatabase)
+                CategoriesModel = PrepareCategorySimpleModels(activeCategoryId, navigation: true);
+            else
+                CategoriesModel = PrepareCategorySimpleModels();
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
-                Categories = cachedCategoriesModel
+                Categories = CategoriesModel
             };
 
             return model;
@@ -576,7 +584,7 @@ namespace Nop.Web.Factories
         public virtual TopMenuModel PrepareTopMenuModel()
         {
             //categories
-            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            var cachedCategoriesModel = PrepareCategorySimpleModels(0, topmenu: true);
 
             //top menu topics
             var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
@@ -682,12 +690,12 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
-        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="CategoryId">Root category identifier</param> pass 0 when loading all, pass 0 when loading top menu, pass current for navigation
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>List of category (simple) models</returns>
-        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            bool loadSubCategories = true, IList<Category> allCategories = null)
+        public virtual List<CategorySimpleModel> PrepareCategorySimpleModels(int CategoryId,
+            bool loadSubCategories = true, IList<Category> allCategories = null, IList<UrlRecord> slugs = null, bool topmenu = false, bool navigation = false)
         {
             var result = new List<CategorySimpleModel>();
 
@@ -703,18 +711,50 @@ namespace Nop.Web.Factories
                 //load categories if null passed
                 //we implemeneted it this way for performance optimization - recursive iterations (below)
                 //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                if (topmenu)
+                {
+                    var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TOP_MENU_MODEL_KEY,
+                        _workContext.WorkingLanguage.Id,
+                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                        _storeContext.CurrentStore.Id);
+                    allCategories = _cacheManager.Get(cacheKey, () => _categoryService.GetAllCategoriesInTopMenu());
+                }
+                else if (navigation)
+                {
+                    allCategories = _categoryService.GetCategoriesForNavigation(CategoryId);
+                }
+                else
+                { 
+                    allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                }
+                slugs = _categoryService.LoadLocalizedNamesAndSeNames(ref allCategories);
             }
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
+
+            List<Category> categories = null;
+            
+            if (topmenu || navigation)
+            {
+                categories = allCategories.Where(c => c.ParentCategoryId == 0).ToList();
+                
+            }
+            else
+                categories = allCategories.Where(c => c.ParentCategoryId == CategoryId).ToList();
+
+            
+
             foreach (var category in categories)
             {
-                var categoryModel = new CategorySimpleModel
+
+                CategorySimpleModel categoryModel = null;
+                var slug = slugs.Where(x => x.EntityId == category.Id).FirstOrDefault();
+                categoryModel = new CategorySimpleModel
                 {
                     Id = category.Id,
-                    Name = category.GetLocalized(x => x.Name),
-                    SeName = category.GetSeName(),
+                    Name = category.Name,
+                    SeName = slug.Slug,
                     IncludeInTopMenu = category.IncludeInTopMenu
                 };
+                    
 
                 //number of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
@@ -736,7 +776,8 @@ namespace Nop.Web.Factories
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
+                    List<CategorySimpleModel> subCategories = null;
+                    subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories, slugs);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);

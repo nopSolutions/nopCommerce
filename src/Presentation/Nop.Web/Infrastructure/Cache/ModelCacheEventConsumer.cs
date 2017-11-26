@@ -215,6 +215,17 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_ALL_PATTERN_KEY = "Nop.pres.category.all";
 
         /// <summary>
+        /// Key for list of CategorySimpleModel caching for top menu
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string CATEGORY_TOP_MENU_MODEL_KEY = "Nop.pres.category.topmenu-{0}-{1}-{2}";
+        public const string CATEGORY_TOP_MENU_PATTERN_KEY = "Nop.pres.category.topmenu";
+
+        /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>

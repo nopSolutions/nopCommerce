@@ -14,6 +14,10 @@ using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Catalog
 {
@@ -176,6 +180,63 @@ namespace Nop.Services.Catalog
             }
         }
         
+        public virtual List<Category> GetAllCategoriesInTopMenu()
+        {
+            List<Category> forallstores = _categoryRepository.Table.Where(x => x.IncludeInTopMenu == true && !x.Deleted && x.Published && !x.LimitedToStores).ToList();
+            List<Category> forthisstore = _dbContext.SqlQuery<Category>($"select * from Category where IncludeInTopMenu = 1 and Deleted = 0 and Published = 1 and LimitedToStores = 1 and Id in (select EntityId from StoreMapping where StoreId = {_storeContext.CurrentStore.Id} and EntityName = 'Category')").ToList();
+            forthisstore.AddRange(forallstores);
+            return forthisstore;
+        }
+
+        public virtual List<Category> GetCategoriesForNavigation(int CategoryId)
+        {
+            List<Category> result = new List<Category>();
+            //add children
+            List<Category> childrenallstores = null;
+            List<Category> childrenthisstore = null;
+            //add higher levels
+            int parent = CategoryId;
+            List<int> ids = new List<int>();
+            while (parent != 0)
+            {
+                parent = _categoryRepository.Table.Where(x => x.Id == parent).Select(x => x.ParentCategoryId).First();
+                ids.Add(parent);
+            }
+            foreach (var id in ids)
+            {
+                childrenallstores = _categoryRepository.Table.Where(x => x.ParentCategoryId == id && !x.Deleted && x.Published && !x.LimitedToStores).ToList();
+                childrenthisstore = _dbContext.SqlQuery<Category>($"select * from Category where ParentCategoryId = {id} and Deleted = 0 and Published = 1 and LimitedToStores = 1 and Id in (select EntityId from StoreMapping where StoreId = {_storeContext.CurrentStore.Id} and EntityName = 'Category')").ToList();
+                result.AddRange(childrenallstores); result.AddRange(childrenthisstore);
+            }
+            return result;
+        }
+
+        public virtual List<UrlRecord> LoadLocalizedNamesAndSeNames(ref IList<Category> categories)
+        {
+            List<UrlRecord> result = new List<UrlRecord>();
+            var loadLocalizedValue = true;
+            var lService = EngineContext.Current.Resolve<ILanguageService>();
+            var totalPublishedLanguages = lService.GetAllLanguages().Count;
+            loadLocalizedValue = totalPublishedLanguages >= 2;
+            if (loadLocalizedValue)
+            {
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
+                List<int> catids = categories.Select(x => x.Id).ToList();
+                var properties = _dbContext.Set<LocalizedProperty>().Where(x => x.LanguageId == workContext.WorkingLanguage.Id && x.LocaleKeyGroup == "Category" && x.LocaleKey == "Name" && catids.Contains(x.EntityId)).ToList();
+                var urlrecords = _dbContext.Set<UrlRecord>().Where(x => x.EntityName == "Category" && catids.Contains(x.EntityId)).ToList();
+                foreach (var category in categories)
+                {
+                    var newname = properties.Where(x => x.EntityId == category.Id).FirstOrDefault();
+                    if (newname != null) category.Name = newname.LocaleValue;
+                    UrlRecord slug = urlrecords.Where(x => x.EntityId == category.Id && x.LanguageId == workContext.WorkingLanguage.Id && x.IsActive).FirstOrDefault();
+                    if (slug == null) slug = urlrecords.Where(x => x.EntityId == category.Id && x.LanguageId == 0 && x.IsActive).FirstOrDefault();
+                    if (slug != null) result.Add(slug);
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// Gets all categories
         /// </summary>
@@ -662,7 +723,6 @@ namespace Nop.Services.Catalog
             
             return query.ToList();
         }
-
         #endregion
     }
 }
