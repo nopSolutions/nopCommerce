@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping.Shipping
     /// <summary>
     /// Mapping class
     /// </summary>
-    public class WarehouseMap : NopEntityTypeConfiguration<Warehouse>
+    public partial class WarehouseMap : NopEntityTypeConfiguration<Warehouse>
     {
         /// <summary>
         /// Ctor

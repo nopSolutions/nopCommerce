@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping.Tax
     /// <summary>
     /// Mapping class
     /// </summary>
-    public class TaxCategoryMap : NopEntityTypeConfiguration<TaxCategory>
+    public partial class TaxCategoryMap : NopEntityTypeConfiguration<TaxCategory>
     {
         /// <summary>
         /// Ctor
