@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-        private ICollection<Product_ProductTag_Mappng> _productTags;
+        private ICollection<Product_ProductTag_Mapping> _productTags;
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
@@ -721,15 +721,15 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product tags
         /// </summary>
-        public virtual ICollection<Product_ProductTag_Mappng> ProductTags
+        public virtual ICollection<Product_ProductTag_Mapping> ProductTags
         {
-            get { return _productTags ?? (_productTags = new List<Product_ProductTag_Mappng>()); }
+            get { return _productTags ?? (_productTags = new List<Product_ProductTag_Mapping>()); }
             protected set { _productTags = value; }
         }
 
         public void ProductTagsAdd(ProductTag productTag)
         {
-            Product_ProductTag_Mappng ppt = new Product_ProductTag_Mappng()
+            Product_ProductTag_Mapping ppt = new Product_ProductTag_Mapping()
             {
                 ProductTag = productTag,
                 ProductTagId = productTag.Id,
@@ -741,7 +741,7 @@ namespace Nop.Core.Domain.Catalog
 
         public void ProductTagsRemove(ProductTag productTag)
         {
-            var item = ((List<Product_ProductTag_Mappng>)ProductTags).Find(p => p.ProductTagId == productTag.Id && p.ProductId == this.Id);
+            var item = ((List<Product_ProductTag_Mapping>)ProductTags).Find(p => p.ProductTagId == productTag.Id && p.ProductId == this.Id);
             ProductTags.Remove(item);
         }
 

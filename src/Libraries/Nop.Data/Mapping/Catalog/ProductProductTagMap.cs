@@ -6,9 +6,9 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public class ProductProductTagMap : NopEntityTypeConfiguration<Product_ProductTag_Mappng>
+    public class ProductProductTagMap : NopEntityTypeConfiguration<Product_ProductTag_Mapping>
     {
-        public override void Configure(EntityTypeBuilder<Product_ProductTag_Mappng> builder)
+        public override void Configure(EntityTypeBuilder<Product_ProductTag_Mapping> builder)
         {
             base.Configure(builder);
             builder.HasKey(t => new { t.ProductId, t.ProductTagId });
