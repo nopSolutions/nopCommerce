@@ -601,6 +601,7 @@ namespace Nop.Plugin.Payments.Square
             {
                 LocationId = "0",
                 TransactionMode = TransactionMode.Charge,
+                UseSandbox = true
             });
 
             //install renew access token schedule task
@@ -635,6 +636,10 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist", "No locations");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode", "Postal code");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key", "Postal code");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken", "Sandbox access token");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint", "Enter your sandbox access token, available from the application dashboard.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId", "Sandbox application ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId.Hint", "Enter your sandbox application ID, available from the application dashboard.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard", "Save the card data for future purchasing");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key", "Save card details");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard", "Use a previously saved card");
@@ -643,6 +648,8 @@ namespace Nop.Plugin.Payments.Square
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard", "Select a card");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode", "Transaction mode");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint", "Choose the transaction mode.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox", "Use sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint", "Determine whether to use sandbox credentials.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Instructions", @"
                 <p>
                     For plugin configuration follow these steps:<br />
@@ -706,6 +713,10 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard");
@@ -714,6 +725,8 @@ namespace Nop.Plugin.Payments.Square
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.Instructions");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken");
             this.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error");

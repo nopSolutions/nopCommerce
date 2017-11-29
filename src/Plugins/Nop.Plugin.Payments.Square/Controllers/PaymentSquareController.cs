@@ -62,6 +62,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 ApplicationId = _squarePaymentSettings.ApplicationId,
                 ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                 AccessToken = _squarePaymentSettings.AccessToken,
+                UseSandbox = _squarePaymentSettings.UseSandbox,
                 TransactionModeId = (int)_squarePaymentSettings.TransactionMode,
                 TransactionModes = _squarePaymentSettings.TransactionMode.ToSelectList(),
                 LocationId = _squarePaymentSettings.LocationId,
@@ -109,6 +110,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             _squarePaymentSettings.ApplicationId = model.ApplicationId;
             _squarePaymentSettings.ApplicationSecret = model.ApplicationSecret;
             _squarePaymentSettings.AccessToken = model.AccessToken;
+            _squarePaymentSettings.UseSandbox = model.UseSandbox;
             _squarePaymentSettings.TransactionMode = (TransactionMode)model.TransactionModeId;
             _squarePaymentSettings.LocationId = model.LocationId;
             _squarePaymentSettings.AdditionalFee = model.AdditionalFee;

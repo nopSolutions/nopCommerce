@@ -21,12 +21,6 @@ namespace Nop.Plugin.Payments.Worldpay.Models
         [NopResourceDisplayName("Plugins.Payments.Worldpay.Fields.PublicKey")]
         public string PublicKey { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.Worldpay.Fields.DeveloperId")]
-        public string DeveloperId { get; set; }
-
-        [NopResourceDisplayName("Plugins.Payments.Worldpay.Fields.DeveloperVersion")]
-        public string DeveloperVersion { get; set; }
-
         [NopResourceDisplayName("Plugins.Payments.Worldpay.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
         public SelectList TransactionModes { get; set; }

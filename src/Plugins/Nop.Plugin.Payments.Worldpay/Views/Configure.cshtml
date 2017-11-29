@@ -3,23 +3,6 @@
     Layout = "_ConfigurePlugin";
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#@Html.IdFor(model => model.UseSandbox)').click(toggleUseSandbox);
-        toggleUseSandbox();
-    });
-
-    function toggleUseSandbox() {
-        if ($('#@Html.IdFor(model => model.UseSandbox)').is(':checked')) {
-            $('#groupDeveloperId').hide();
-            $('#groupDeveloperVersion').hide();
-        } else {
-            $('#groupDeveloperId').show();
-            $('#groupDeveloperVersion').show();
-        }
-    }
-</script>
-
 <form asp-controller="PaymentWorldpay" asp-action="Configure" method="post">
     <div class="panel-group">
         <div class="panel panel-default">
@@ -32,24 +15,6 @@
                     <div class="col-md-9">
                         <nop-editor asp-for="UseSandbox" />
                         <span asp-validation-for="UseSandbox"></span>
-                    </div>
-                </div>
-                <div class="form-group" id="groupDeveloperId">
-                    <div class="col-md-3">
-                        <nop-label asp-for="DeveloperId" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="DeveloperId" />
-                        <span asp-validation-for="DeveloperId"></span>
-                    </div>
-                </div>
-                <div class="form-group" id="groupDeveloperVersion">
-                    <div class="col-md-3">
-                        <nop-label asp-for="DeveloperVersion" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="DeveloperVersion" />
-                        <span asp-validation-for="DeveloperVersion"></span>
                     </div>
                 </div>
                 <div class="form-group">

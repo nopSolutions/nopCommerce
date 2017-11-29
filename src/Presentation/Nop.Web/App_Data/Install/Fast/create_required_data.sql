@@ -1416,6 +1416,7 @@ INSERT [dbo].[ActivityLogType] ([Id], [SystemKeyword], [Name], [Enabled]) VALUES
 INSERT [dbo].[ActivityLogType] ([Id], [SystemKeyword], [Name], [Enabled]) VALUES (137, N'PublicStore.EditForumPost', N'Public store. Edit forum post', 0)
 INSERT [dbo].[ActivityLogType] ([Id], [SystemKeyword], [Name], [Enabled]) VALUES (138, N'PublicStore.DeleteForumPost', N'Public store. Delete forum post', 0)
 INSERT [dbo].[ActivityLogType] ([Id], [SystemKeyword], [Name], [Enabled]) VALUES (139, N'UploadNewPlugin', N'Upload a plugin', 1)
+INSERT [dbo].[ActivityLogType] ([Id], [SystemKeyword], [Name], [Enabled]) VALUES (140, N'UploadNewTheme', N'Upload a theme', 1)
 SET IDENTITY_INSERT [dbo].[ActivityLogType] OFF
 GO
 
@@ -1940,6 +1941,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (513, N'display
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (514, N'displaydefaultmenuitemsettings.displayblogmenuitem', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (515, N'displaydefaultmenuitemsettings.displayforumsmenuitem', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (516, N'displaydefaultmenuitemsettings.displaycontactusmenuitem', N'False', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (517, N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)
 SET IDENTITY_INSERT [dbo].[Setting] OFF
 GO
 

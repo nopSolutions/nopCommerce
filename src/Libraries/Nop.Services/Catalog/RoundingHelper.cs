@@ -60,13 +60,14 @@ namespace Nop.Services.Catalog
                 case RoundingType.Rounding005Down:
                     fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
 
-                    if(fractionPart == 5)
+                    fractionPart = fractionPart % 5;
+                    if (fractionPart == 0)
                         break;
 
-                    if (roundingType == RoundingType.Rounding005Down)
-                        fractionPart = fractionPart > 5 ? 5 - fractionPart : fractionPart * -1;
+                    if (roundingType == RoundingType.Rounding005Up)
+                        fractionPart = 5 - fractionPart;
                     else
-                        fractionPart = fractionPart > 5 ? 10 - fractionPart : 5 - fractionPart;
+                        fractionPart = fractionPart * -1;
 
                     rez += fractionPart / 100;
                     break;

@@ -39,7 +39,7 @@ namespace Nop.Plugin.Payments.Square
         /// <summary>
         /// Type of the renew access token schedule task
         /// </summary>
-        public static string RenewAccessTokenTask => $"Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask, {typeof(SquarePaymentDefaults).Assembly.FullName}";
+        public static string RenewAccessTokenTask => "Nop.Plugin.Payments.Square.Services.RenewAccessTokenTask";
 
         /// <summary>
         /// Default access token renewal period in days
@@ -50,6 +50,11 @@ namespace Nop.Plugin.Payments.Square
         /// Max access token renewal period in days
         /// </summary>
         public static int AccessTokenRenewalPeriodMax => 45;
+
+        /// <summary>
+        /// Sandbox credentials should start with this prefix
+        /// </summary>
+        public static string SandboxCredentialsPrefix => "sandbox-";
 
         /// <summary>
         /// Note passed for each payment transaction
