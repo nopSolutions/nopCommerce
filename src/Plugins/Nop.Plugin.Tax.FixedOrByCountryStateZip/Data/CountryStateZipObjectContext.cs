@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
@@ -15,8 +16,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
     {
         #region Ctor
 
-        public CountryStateZipObjectContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
+        public CountryStateZipObjectContext(DbContextOptions<DbContext> options)
+            : base(options)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
@@ -25,10 +26,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 
         #region Utilities
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new TaxRateMap());
-
+            modelBuilder.ApplyConfiguration(new TaxRateMap());
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
             base.OnModelCreating(modelBuilder);
@@ -40,10 +40,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 
         public string CreateDatabaseScript()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
+            return "";
         }
 
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -54,8 +54,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         public void Install()
         {
             //create the table
-            var dbScript = CreateDatabaseScript();
-            Database.ExecuteSqlCommand(dbScript);
+            RelationalDatabaseCreator creator = (RelationalDatabaseCreator)Database.GetService<IDatabaseCreator>();
+            creator.CreateTables();
             SaveChanges();
         }
 
@@ -89,7 +89,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         /// <param name="sql">The SQL query string.</param>
         /// <param name="parameters">The parameters to apply to the SQL query string.</param>
         /// <returns>Result</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters) where TElement : new()
         {
             throw new NotImplementedException();
         }
@@ -116,7 +116,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+            ((DbContext)this).Remove(entity);
         }
 
         #endregion
@@ -128,13 +128,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         /// </summary>
         public virtual bool ProxyCreationEnabled
         {
-            get
-            {
-                return Configuration.ProxyCreationEnabled;
-            }
+            get { return false; }
             set
             {
-                Configuration.ProxyCreationEnabled = value;
+                
             }
         }
 
@@ -143,13 +140,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         /// </summary>
         public virtual bool AutoDetectChangesEnabled
         {
-            get
-            {
-                return Configuration.AutoDetectChangesEnabled;
-            }
+            get { return true; }
             set
             {
-                Configuration.AutoDetectChangesEnabled = value;
             }
         }
 

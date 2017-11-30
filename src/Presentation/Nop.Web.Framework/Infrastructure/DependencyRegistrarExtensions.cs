@@ -1,5 +1,7 @@
 ﻿using System;
 using Autofac;
+using Microsoft.EntityFrameworkCore;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
@@ -26,25 +28,46 @@ namespace Nop.Web.Framework.Infrastructure
             //data layer
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings(filePath, reloadSettings);
-
+            DbContextOptionsBuilder<DbContext> dbBuilder = new DbContextOptionsBuilder<DbContext>();
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
+                switch (dataProviderSettings.DataProvider)
+                {
+                    case "sqlserver":
+                        dbBuilder.UseSqlServer(dataProviderSettings.DataConnectionString);
+                        break;
+                    case "sqlite":
+                        dbBuilder.UseSqlite(CommonHelper.ReplaceDataDirectory(dataProviderSettings.DataConnectionString));
+                        break;
+                    case "mysql":
+                        dbBuilder.UseMySQL(dataProviderSettings.DataConnectionString);
+                        break;
+                    case "pgsql":
+                        dbBuilder.UseNpgsql(dataProviderSettings.DataConnectionString);
+                        break;
+                }
                 //register named context
-                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dbBuilder.Options }))
                     .Named<IDbContext>(contextName)
                     .InstancePerLifetimeScope();
 
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dbBuilder.Options }))
                     .InstancePerLifetimeScope();
             }
             else
             {
                 //register named context
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[]
+                    {
+                        c.Resolve<DataSettings>().DataProvider.Equals("sqlite") ? dbBuilder.UseSqlite(CommonHelper.ReplaceDataDirectory(c.Resolve<DataSettings>().DataConnectionString)).Options : c.Resolve<DataSettings>().DataProvider.Equals("npgsql") ? dbBuilder.UseNpgsql(c.Resolve<DataSettings>().DataConnectionString).Options : c.Resolve<DataSettings>().DataProvider.Equals("mysql") ? dbBuilder.UseMySQL(c.Resolve<DataSettings>().DataConnectionString).Options :dbBuilder.UseSqlServer(c.Resolve<DataSettings>().DataConnectionString).Options
+                    }))
                     .Named<IDbContext>(contextName)
                     .InstancePerLifetimeScope();
 
-                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[]
+                    {
+                        c.Resolve<DataSettings>().DataProvider.Equals("sqlite") ? dbBuilder.UseSqlite(CommonHelper.ReplaceDataDirectory(c.Resolve<DataSettings>().DataConnectionString)).Options : c.Resolve<DataSettings>().DataProvider.Equals("npgsql") ? dbBuilder.UseNpgsql(c.Resolve<DataSettings>().DataConnectionString).Options : c.Resolve<DataSettings>().DataProvider.Equals("mysql") ? dbBuilder.UseMySQL(c.Resolve<DataSettings>().DataConnectionString).Options :dbBuilder.UseSqlServer(c.Resolve<DataSettings>().DataConnectionString).Options
+                    }))
                     .InstancePerLifetimeScope();
             }
         }

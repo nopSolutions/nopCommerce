@@ -61,7 +61,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid e-mail address and false if it's not</returns>
         public static bool IsValidEmail(string email)
         {
-            if (string.IsNullOrEmpty(email))
+            if (String.IsNullOrEmpty(email))
                 return false;
 
             email = email.Trim();
@@ -87,9 +87,9 @@ namespace Nop.Core
         public static string GenerateRandomDigitCode(int length)
         {
             var random = new Random();
-            var str = string.Empty;
+            var str = String.Empty;
             for (var i = 0; i < length; i++)
-                str = string.Concat(str, random.Next(10).ToString());
+                str = String.Concat(str, random.Next(10).ToString());
             return str;
         }
 
@@ -99,7 +99,7 @@ namespace Nop.Core
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
         /// <returns>Result</returns>
-        public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
+        public static int GenerateRandomInteger(int min = 0, int max = Int32.MaxValue)
         {
             var randomNumberBuffer = new byte[10];
             new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
@@ -115,7 +115,7 @@ namespace Nop.Core
         /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
         public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
         {
-            if (string.IsNullOrEmpty(str))
+            if (String.IsNullOrEmpty(str))
                 return str;
 
             if (str.Length > maxLength)
@@ -123,7 +123,7 @@ namespace Nop.Core
                 var pLen = postfix == null ? 0 : postfix.Length;
 
                 var result = str.Substring(0, maxLength - pLen);
-                if (!string.IsNullOrEmpty(postfix))
+                if (!String.IsNullOrEmpty(postfix))
                 {
                     result += postfix;
                 }
@@ -140,7 +140,7 @@ namespace Nop.Core
         /// <returns>Input string with only numeric values, empty string if input is null/empty</returns>
         public static string EnsureNumericOnly(string str)
         {
-            return string.IsNullOrEmpty(str) ? string.Empty : new string(str.Where(p => char.IsDigit(p)).ToArray());
+            return String.IsNullOrEmpty(str) ? String.Empty : new string(str.Where(p => Char.IsDigit(p)).ToArray());
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static string EnsureNotNull(string str)
         {
-            return str ?? string.Empty;
+            return str ?? String.Empty;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Nop.Core
         /// <returns>Boolean</returns>
         public static bool AreNullOrEmpty(params string[] stringsToValidate)
         {
-            return stringsToValidate.Any(p => string.IsNullOrEmpty(p));
+            return stringsToValidate.Any(p => String.IsNullOrEmpty(p));
         }
 
         /// <summary>
@@ -273,8 +273,8 @@ namespace Nop.Core
         /// <returns>Converted string</returns>
         public static string ConvertEnum(string str)
         {
-            if (string.IsNullOrEmpty(str)) return string.Empty;
-            var result = string.Empty;
+            if (String.IsNullOrEmpty(str)) return String.Empty;
+            var result = String.Empty;
             foreach (var c in str)
                 if (c.ToString() != c.ToString().ToLower())
                     result += " " + c.ToString();
@@ -322,7 +322,7 @@ namespace Nop.Core
         public static string MapPath(string path)
         {
             path = path.Replace("~/", "").TrimStart('/');
-            return Path.Combine(BaseDirectory??string.Empty, path);
+            return Path.Combine(BaseDirectory??String.Empty, path);
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace Nop.Core
                 throw new ArgumentNullException("target", "The assignment target cannot be null.");
             }
 
-            if (string.IsNullOrEmpty(fieldName))
+            if (String.IsNullOrEmpty(fieldName))
             {
                 throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
             }
@@ -369,7 +369,7 @@ namespace Nop.Core
         /// <param name="path">Directory path</param>
         public static void DeleteDirectory(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(path))
                 throw new ArgumentNullException(path);
 
             //find more info about directory deletion
@@ -392,6 +392,27 @@ namespace Nop.Core
             {
                 Directory.Delete(path, true);
             }
+        }
+
+        public static string ReplaceDataDirectory(string inputString)
+        {
+            string str = null;
+            if (inputString != null)
+                str = inputString.Trim();
+            if (String.IsNullOrEmpty(inputString) || !inputString.Contains("|DataDirectory|"))
+            {
+                return str;
+            }
+            var data = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
+            if (String.IsNullOrEmpty(data))
+            {
+                data = AppDomain.CurrentDomain.BaseDirectory ?? Environment.CurrentDirectory;
+            }
+            if (String.IsNullOrEmpty(data))
+            {
+                data = String.Empty;
+            }
+            return inputString.Replace("|DataDirectory|", data);
         }
 
         #endregion

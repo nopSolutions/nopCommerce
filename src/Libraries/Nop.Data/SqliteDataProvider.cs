@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Data.Initializers;
 
@@ -16,7 +17,7 @@ namespace Nop.Data
 
         public SqliteDataProvider(string dataConnectionString)
         {
-            this.dataConnectionString = ReplaceDataDirectory(dataConnectionString);
+            this.dataConnectionString = CommonHelper.ReplaceDataDirectory(dataConnectionString);
             DbContextOptionsBuilder<DbContext> builder2 = new DbContextOptionsBuilder<DbContext>();
             builder2.UseSqlite(this.dataConnectionString);
             _options = builder2.Options;
@@ -69,28 +70,6 @@ namespace Nop.Data
         public int SupportedLengthOfBinaryHash()
         {
             return 0; //HASHBYTES functions is missing in SQL CE
-        }
-
-
-        private static string ReplaceDataDirectory(string inputString)
-        {
-            string str = null;
-            if (inputString != null)
-                str = inputString.Trim();
-            if (string.IsNullOrEmpty(inputString) || !inputString.Contains("|DataDirectory|"))
-            {
-                return str;
-            }
-            var data = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
-            if (string.IsNullOrEmpty(data))
-            {
-                data = AppDomain.CurrentDomain.BaseDirectory ?? Environment.CurrentDirectory;
-            }
-            if (string.IsNullOrEmpty(data))
-            {
-                data = string.Empty;
-            }
-            return inputString.Replace("|DataDirectory|", data);
         }
     }
 }

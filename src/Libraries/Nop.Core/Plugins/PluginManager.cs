@@ -202,7 +202,7 @@ namespace Nop.Core.Plugins
             Assembly shadowCopiedAssembly;
             try
             {
-                shadowCopiedAssembly = Assembly.Load(assemblyName);
+                shadowCopiedAssembly = Assembly.LoadFile(shadowCopiedPlug.FullName);
             }
             catch (FileLoadException)
             {

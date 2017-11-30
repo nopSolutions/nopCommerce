@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
 {
@@ -9,7 +8,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         {
             //It's required to set initializer to null (for SQL Server Compact).
             //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
-            Database.SetInitializer<CountryStateZipObjectContext>(null);
         }
 
         public int Order

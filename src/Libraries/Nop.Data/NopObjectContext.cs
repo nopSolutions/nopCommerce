@@ -38,7 +38,6 @@ namespace Nop.Data
         {
             //dynamically load all configuration
             //System.Type configType = typeof(LanguageMap);   //any of your configuration classes here
-            //var typesToRegister = Assembly.GetAssembly(configType).GetTypes()
 
             var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
             .Where(type => !string.IsNullOrEmpty(type.Namespace))
@@ -48,7 +47,6 @@ namespace Nop.Data
             {
                 dynamic configurationInstance = Activator.CreateInstance(type);
                 modelBuilder.ApplyConfiguration(configurationInstance);
-                //modelBuilder.Configurations.Add(configurationInstance);
             }
             //...or do it manually below. For example,
             //modelBuilder.Configurations.Add(new LanguageMap());
@@ -239,8 +237,6 @@ namespace Nop.Data
                     result = 0;
                 }
             }
-
-            //return result
             return result;
         }
 
