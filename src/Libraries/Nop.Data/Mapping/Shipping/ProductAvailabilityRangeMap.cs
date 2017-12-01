@@ -5,7 +5,7 @@ namespace Nop.Data.Mapping.Shipping
     /// <summary>
     /// Mapping class
     /// </summary>
-    public public class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
+    public partial class ProductAvailabilityRangeMap : NopEntityTypeConfiguration<ProductAvailabilityRange>
     {
         /// <summary>
         /// Ctor
