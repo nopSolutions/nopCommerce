@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Shipping.FixedOrByWeight.Domain;
@@ -15,8 +16,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
     {
         #region Ctor
 
-        public ShippingByWeightObjectContext(string nameOrConnectionString)
-            : base(nameOrConnectionString)
+        public ShippingByWeightObjectContext(DbContextOptions<DbContext> options)
+            : base(options)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
@@ -25,10 +26,9 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
 
         #region Utilities
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new ShippingByWeightRecordMap());
-
+            modelBuilder.ApplyConfiguration(new ShippingByWeightRecordMap());
             //disable EdmMetadata generation
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
          base.OnModelCreating(modelBuilder);
@@ -40,10 +40,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
 
         public string CreateDatabaseScript()
         {
-            return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
+            return "";
         }
 
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -54,8 +54,8 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
         public void Install()
         {
             //create the table
-            var dbScript = CreateDatabaseScript();
-            Database.ExecuteSqlCommand(dbScript);
+            RelationalDatabaseCreator creator = (RelationalDatabaseCreator)Database.GetService<IDatabaseCreator>();
+            creator.CreateTables();
             SaveChanges();
         }
 
@@ -89,7 +89,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
         /// <param name="sql">The SQL query string.</param>
         /// <param name="parameters">The parameters to apply to the SQL query string.</param>
         /// <returns>Result</returns>
-        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
+        public IEnumerable<TElement> SqlQuery<TElement>(string sql, params object[] parameters) where TElement : new()
         {
             throw new NotImplementedException();
         }
@@ -116,7 +116,7 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+            ((DbContext)this).Remove(entity);
         }
 
         #endregion
@@ -128,13 +128,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
         /// </summary>
         public virtual bool ProxyCreationEnabled
         {
-            get
-            {
-                return this.Configuration.ProxyCreationEnabled;
-            }
+            get { return false; }
             set
             {
-                this.Configuration.ProxyCreationEnabled = value;
+                
             }
         }
 
@@ -143,13 +140,10 @@ namespace Nop.Plugin.Shipping.FixedOrByWeight.Data
         /// </summary>
         public virtual bool AutoDetectChangesEnabled
         {
-            get
-            {
-                return this.Configuration.AutoDetectChangesEnabled;
-            }
+            get { return true; }
             set
             {
-                this.Configuration.AutoDetectChangesEnabled = value;
+                
             }
         }
 
