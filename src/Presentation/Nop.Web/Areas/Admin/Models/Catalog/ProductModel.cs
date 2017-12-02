@@ -381,6 +381,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public IList<int> SelectedCategoryIds { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CategoriesToAdd")]
+        public string CategoriesToAdd { get; set; }
+
         //manufacturers
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Manufacturers")]
         public IList<int> SelectedManufacturerIds { get; set; }

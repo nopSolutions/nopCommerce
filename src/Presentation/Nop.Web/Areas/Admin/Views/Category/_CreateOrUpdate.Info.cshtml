@@ -88,7 +88,14 @@
                     <nop-label asp-for="ParentCategoryId" />
                 </div>
                 <div class="col-md-9">
+                    @if (!Model.AvailableCategories.SelectionIsNotPossible())
+                    {
                     <nop-select asp-for="ParentCategoryId" asp-items="Model.AvailableCategories" />
+                    }
+                    else
+                    {
+                    <nop-editor asp-for="ParentCategoryId" />
+                    }
                     <span asp-validation-for="ParentCategoryId"></span>
                 </div>
             </div>

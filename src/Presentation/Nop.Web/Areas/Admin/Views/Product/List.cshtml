@@ -96,15 +96,22 @@
                                         <nop-editor asp-for="SearchProductName" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchCategoryId" />
                                     </div>
                                     <div class="col-md-8">
+                                        @if (!Model.AvailableCategories.SelectionIsNotPossible())
+                                        {
                                         <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                        }
+                                        else
+                                        {
+                                        <nop-editor asp-for="SearchCategoryId"/>
+                                        }
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchIncludeSubCategories" />
                                     </div>

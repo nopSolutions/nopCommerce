@@ -228,7 +228,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         IPagedList<Product> GetLowStockProducts(int vendorId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
-
+        int GetLowStockProductsCount(int vendorId = 0);
         /// <summary>
         /// Get low stock product combinations
         /// </summary>
@@ -238,7 +238,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product combinations</returns>
         IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int vendorId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
-
+        int GetLowStockProductCombinationsCount(int vendorId = 0);
         /// <summary>
         /// Gets a product by SKU
         /// </summary>

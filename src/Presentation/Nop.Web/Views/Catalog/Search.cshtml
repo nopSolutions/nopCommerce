@@ -45,12 +45,13 @@
                         <div class="advanced-search" id="advanced-search-block">
                             @if (Model.AvailableCategories.Count > 0)
                             {
+
                                 <div class="inputs">
                                     <label asp-for="cid">@T("Search.Category"):</label>
                                     <select asp-for="cid" asp-items="Model.AvailableCategories"></select>
                                 </div>
                                 <div class="inputs reversed">
-                                    <input asp-for="isc"/>
+                                    <input asp-for="isc" />
                                     <label asp-for="isc">@T("Search.IncludeSubCategories")</label>
                                 </div>
                             }

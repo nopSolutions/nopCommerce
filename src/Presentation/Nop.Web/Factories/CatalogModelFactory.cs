@@ -1270,51 +1270,54 @@ namespace Nop.Web.Factories
                 _catalogSettings.SearchPagePageSizeOptions,
                 _catalogSettings.SearchPageProductsPerPage);
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id); 
-            var categories = _cacheManager.Get(cacheKey, () =>
+            if (!_commonSettings.LargeDatabase)
             {
-                var categoriesModel = new List<SearchModel.CategoryModel>();
-                //all categories
-                var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-                foreach (var c in allCategories)
+                var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY,
+                    _workContext.WorkingLanguage.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                var categories = _cacheManager.Get(cacheKey, () =>
                 {
-                    //generate full category name (breadcrumb)
-                    var categoryBreadcrumb= "";
-                    var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
-                    for (var i = 0; i <= breadcrumb.Count - 1; i++)
+                    var categoriesModel = new List<SearchModel.CategoryModel>();
+                    //all categories
+                    var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+                    foreach (var c in allCategories)
                     {
-                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
-                        if (i != breadcrumb.Count - 1)
-                            categoryBreadcrumb += " >> ";
+                        //generate full category name (breadcrumb)
+                        var categoryBreadcrumb = "";
+                        var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
+                        for (var i = 0; i <= breadcrumb.Count - 1; i++)
+                        {
+                            categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
+                            if (i != breadcrumb.Count - 1)
+                                categoryBreadcrumb += " >> ";
+                        }
+                        categoriesModel.Add(new SearchModel.CategoryModel
+                        {
+                            Id = c.Id,
+                            Breadcrumb = categoryBreadcrumb
+                        });
                     }
-                    categoriesModel.Add(new SearchModel.CategoryModel
-                    {
-                        Id = c.Id,
-                        Breadcrumb = categoryBreadcrumb
-                    });
-                }
-                return categoriesModel;
-            });
-            if (categories.Any())
-            {
-                //first empty entry
-                model.AvailableCategories.Add(new SelectListItem
-                    {
-                         Value = "0",
-                         Text = _localizationService.GetResource("Common.All")
-                    });
-                //all other categories
-                foreach (var c in categories)
+                    return categoriesModel;
+                });
+                if (categories.Any())
                 {
+                    //first empty entry
                     model.AvailableCategories.Add(new SelectListItem
                     {
-                        Value = c.Id.ToString(),
-                        Text = c.Breadcrumb,
-                        Selected = model.cid == c.Id
+                        Value = "0",
+                        Text = _localizationService.GetResource("Common.All")
                     });
+                    //all other categories
+                    foreach (var c in categories)
+                    {
+                        model.AvailableCategories.Add(new SelectListItem
+                        {
+                            Value = c.Id.ToString(),
+                            Text = c.Breadcrumb,
+                            Selected = model.cid == c.Id
+                        });
+                    }
                 }
             }
 
