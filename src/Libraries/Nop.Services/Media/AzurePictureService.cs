@@ -76,7 +76,8 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config,
             IDataProvider dataProvider,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IRepository<Thumbnail> thumbRepository)
             : base(pictureRepository,
                 productPictureRepository,
                 settingService,
@@ -86,7 +87,7 @@ namespace Nop.Services.Media
                 eventPublisher,
                 mediaSettings,
                 dataProvider,
-                hostingEnvironment)
+                hostingEnvironment, thumbRepository)
         {
             this._cacheManager = cacheManager;
             this._mediaSettings = mediaSettings;
@@ -134,9 +135,9 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected override async void DeletePictureThumbs(Picture picture)
+        protected override async void DeletePictureThumbs(int PictureId)
         {
-            await DeletePictureThumbsAsync(picture);
+            await DeletePictureThumbsAsync(PictureId);
         }
 
         /// <summary>
@@ -187,10 +188,10 @@ namespace Nop.Services.Media
         /// Initiates an asynchronous operation to delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual async Task DeletePictureThumbsAsync(Picture picture)
+        protected virtual async Task DeletePictureThumbsAsync(int PictureId)
         {
             //create a string containing the blob name prefix
-            var prefix = $"{picture.Id:0000000}";
+            var prefix = $"{PictureId:0000000}";
 
             BlobContinuationToken continuationToken = null;
             do
