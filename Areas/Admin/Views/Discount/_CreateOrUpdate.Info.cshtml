@@ -1,0 +1,223 @@
+﻿@model DiscountModel
+@using Nop.Core.Domain.Discounts
+@using Nop.Services
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
+        $("#@Html.IdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+        $("#@Html.IdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+        $("#@Html.IdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+
+        toggleDiscountType();
+        toggleLimitation();
+        toggleUsePercentage();
+        toggleRequiresCouponCode();
+    });
+
+    function toggleDiscountType() {
+        var selectedDiscountTypeId = $("#@Html.IdFor(model => model.DiscountTypeId)").val();
+        if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
+            $('[data-tab-name=tab-applied-to-categories]').show();
+        $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+        $('[data-tab-name=tab-applied-to-products]').hide();
+        $('#pnlMaximumDiscountedQuantity').show();
+        $('#pnlAppliedToSubCategories').show();
+    } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
+        $('[data-tab-name=tab-applied-to-categories]').hide();
+        $('[data-tab-name=tab-applied-to-manufacturers]').show();
+        $('[data-tab-name=tab-applied-to-products]').hide();
+        $('#pnlMaximumDiscountedQuantity').show();
+        $('#pnlAppliedToSubCategories').hide();
+    } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
+        $('[data-tab-name=tab-applied-to-categories]').hide();
+        $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+        $('[data-tab-name=tab-applied-to-products]').show();
+        $('#pnlMaximumDiscountedQuantity').show();
+        $('#pnlAppliedToSubCategories').hide();
+    } else {
+            $('[data-tab-name=tab-applied-to-categories]').hide();
+    $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+    $('[data-tab-name=tab-applied-to-products]').hide();
+    $('#pnlMaximumDiscountedQuantity').hide();
+    $('#pnlAppliedToSubCategories').hide();
+    }
+    }
+
+    function toggleLimitation() {
+        var selectedDiscountLimitationId = $("#@Html.IdFor(model => model.DiscountLimitationId)").val();
+        if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
+            //'N Times Only' or 'N Times Per Customer'
+            $('#pnlLimitationTimes').show();
+    } else {
+            $('#pnlLimitationTimes').hide();
+    }
+    }
+
+    function toggleUsePercentage() {
+        if ($('#@Html.IdFor(model => model.UsePercentage)').is(':checked')) {
+            $('#pnlDiscountPercentage').show();
+            $('#pnlDiscountAmount').hide();
+            $('#pnlMaximumDiscountAmount').show();
+        } else {
+            $('#pnlDiscountPercentage').hide();
+            $('#pnlDiscountAmount').show();
+            $('#pnlMaximumDiscountAmount').hide();
+        }
+    }
+
+    function toggleRequiresCouponCode() {
+        if ($('#@Html.IdFor(model => model.RequiresCouponCode)').is(':checked')) {
+            $('#pnlCouponCode').show();
+        } else {
+            $('#pnlCouponCode').hide();
+        }
+    }
+</script>
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_info_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Name"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Name" asp-required="true"/>
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DiscountTypeId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="DiscountTypeId" asp-items="@((DiscountType) Model.DiscountTypeId).ToSelectList()" />
+                    <span asp-validation-for="DiscountTypeId"></span>
+                </div>
+            </div>
+            <div class="form-group" id="pnlAppliedToSubCategories">
+                <div class="col-md-3">
+                    <nop-label asp-for="AppliedToSubCategories"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AppliedToSubCategories"/>
+                    <span asp-validation-for="AppliedToSubCategories"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="UsePercentage"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="UsePercentage"/>
+                    <span asp-validation-for="UsePercentage"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="UsePercentage">
+                <div class="form-group" id="pnlDiscountPercentage">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DiscountPercentage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DiscountPercentage" />
+                        <span asp-validation-for="DiscountPercentage"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="pnlMaximumDiscountAmount">
+                    <div class="col-md-3">
+                        <nop-label asp-for="MaximumDiscountAmount" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="MaximumDiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                        <span asp-validation-for="MaximumDiscountAmount"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group" id="pnlDiscountAmount">
+                <div class="col-md-3">
+                    <nop-label asp-for="DiscountAmount" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DiscountAmount" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                    <span asp-validation-for="DiscountAmount"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="RequiresCouponCode"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="RequiresCouponCode"/>
+                    <span asp-validation-for="RequiresCouponCode"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="RequiresCouponCode">
+                <div class="form-group" id="pnlCouponCode">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CouponCode" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CouponCode" />
+                        <span asp-validation-for="CouponCode"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="StartDateUtc"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="StartDateUtc"/>
+                    <span asp-validation-for="StartDateUtc"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="EndDateUtc"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EndDateUtc"/>
+                    <span asp-validation-for="EndDateUtc"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsCumulative"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsCumulative"/>
+                    <span asp-validation-for="IsCumulative"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="DiscountLimitationId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="DiscountLimitationId" asp-items="@(((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())" />
+                    <span asp-validation-for="DiscountLimitationId"></span>
+                </div>
+            </div>
+            <div class="form-group" id="pnlLimitationTimes">
+                <div class="col-md-3">
+                    <nop-label asp-for="LimitationTimes"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="LimitationTimes"/>
+                    <span asp-validation-for="LimitationTimes"></span> @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+                </div>
+            </div>
+            <div class="form-group" id="pnlMaximumDiscountedQuantity">
+                <div class="col-md-3">
+                    <nop-label asp-for="MaximumDiscountedQuantity"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MaximumDiscountedQuantity"/>
+                    <span asp-validation-for="MaximumDiscountedQuantity"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_info_bottom", additionalData = Model.Id })
+</div>

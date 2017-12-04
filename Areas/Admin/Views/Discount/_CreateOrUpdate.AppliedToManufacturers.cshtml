@@ -1,0 +1,115 @@
+﻿@model DiscountModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_manufacturers_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            <div class="panel-body">
+                <div id="manufacturers-grid"></div>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#manufacturers-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "ManufacturerId",
+                                        fields: {
+                                            ManufacturerName: { editable: false, type: "string" },
+                                            ManufacturerId: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "ManufacturerName",
+                                    title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
+                                }, {
+                                    field: "ManufacturerId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [
+                                        {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 150
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewManufacturer" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                    @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
+                </button>
+                <input type="submit" id="btnRefreshManufacturers" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#btnRefreshManufacturers').click(function() {
+                            //refresh grid
+                            var grid = $("#manufacturers-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_manufacturers_bottom", additionalData = Model.Id })
+</div>

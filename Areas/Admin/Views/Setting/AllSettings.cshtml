@@ -1,0 +1,238 @@
+﻿@model AllSettingsListModel
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+
+@using System.Text.Encodings.Web
+@using Nop.Services.Stores
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("All settings");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Settings.AllSettings")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_setting_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_top" })
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchSettingName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchSettingName" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchSettingValue" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchSettingValue" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-settings" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="settings-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#settings-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        },
+                                        create: {
+                                            url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                Value: { editable: true, type: "string" },
+                                                Store: { editable: true, type: "string" },
+                                                StoreId: { editable: true, type: "number" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "Value",
+                                        title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
+                                        width: 300
+                                    }, {
+                                        field: "StoreId",
+                                        title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
+                                        width: 150,
+                                        editor: storeDropDownEditor,
+                                        template: "#:Store#"
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
+                                    }
+                                ]
+                            });
+                        });
+
+                        //local datasource
+                        var allStores = [
+                            {
+                                Id: 0,
+                                Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+                            }
+                            @{
+                                var allStores = storeService.GetAllStores();
+                            }
+                            @foreach (var store in allStores)
+                            {
+                                <text>
+                                , {
+                                    Id: @(store.Id),
+                                    Name: "@(Html.Raw(JavaScriptEncoder.Default.Encode(store.Name)))"
+                                }
+                                </text>
+                            }
+                        ];
+
+                        function storeDropDownEditor(container, options) {
+                            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    autoBind: false,
+                                    dataSource: allStores
+                                });
+                        }
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#search-settings').click(function() {
+                                var grid = $('#settings-grid').data('kendoGrid');
+                                grid.dataSource.page(1);
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchSettingName: $('#@Html.IdFor(model => model.SearchSettingName)').val(),
+                                SearchSettingValue: $('#@Html.IdFor(model => model.SearchSettingValue)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        $("".concat("#@Html.IdFor(model => model.SearchSettingName),",
+                            "#@Html.IdFor(model => model.SearchSettingValue)")).keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#search-settings").click();
+                                    return false;
+                                }
+                            });
+                    </script>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_all_settings_bottom" })
+        </div>
+    </div>
+</div>

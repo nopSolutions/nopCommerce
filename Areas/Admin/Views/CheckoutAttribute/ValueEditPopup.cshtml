@@ -1,0 +1,26 @@
+﻿@model CheckoutAttributeValueModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails").Text;
+}
+
+<form asp-controller="CheckoutAttribute" asp-action="ValueEditPopup"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_buttons", additionalData = Model.Id })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateValue", Model)
+</form>

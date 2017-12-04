@@ -1,0 +1,77 @@
+﻿@model CustomerModel
+@using Nop.Services.Stores
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
+}
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="backinstock-subscriptions-grid"></div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#backinstock-subscriptions-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("BackInStockSubscriptionList", "Customer", new { customerId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "StoreName",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                            title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Store")",
+                            width: 200,
+                        }, {
+                            field: "ProductId",
+                            title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Product")",
+                            width: 300,
+                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                        },{
+                            field: "CreatedOn",
+                            title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_back_in_stock_bottom", additionalData = Model.Id })
+</div>

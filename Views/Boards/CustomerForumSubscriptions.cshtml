@@ -1,8 +1,6 @@
 ﻿@model CustomerForumSubscriptionsModel
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Customer;
 @{    
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
@@ -12,7 +10,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
+    @await Component.InvokeAsync("CustomerNavigation",new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
 }
 <div class="page account-page forum-subscriptions-page">
     <div class="page-title">
@@ -24,9 +22,8 @@
             <div class="description">
                 @T("Account.ForumSubscriptions.Description")
             </div>
-            <script type="text/javascript">
+            <script type="text/javascript" asp-location="Footer">
                 $(document).ready(function () {
-
                     $('#selectall').click(function () {
                         $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
                     });
@@ -38,16 +35,15 @@
                     });
                 });
             </script>
-            using (Html.BeginRouteForm("CustomerForumSubscriptions", FormMethod.Post))
-            {
-            <div class="subscription-list">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <colgroup>
-                            <col width="1" />
-                            <col />
-                        </colgroup>
-                        <thead>
+            <form asp-route="CustomerForumSubscriptions" method="post">
+                <div class="subscription-list">
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col width="1" />
+                                <col />
+                            </colgroup>
+                            <thead>
                             <tr>
                                 <th class="select-boxes">
                                     <input type="checkbox" id="selectall" />
@@ -56,9 +52,9 @@
                                     @T("Account.ForumSubscriptions.InfoColumn")
                                 </th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < Model.ForumSubscriptions.Count; i++)
+                            </thead>
+                            <tbody>
+                            @for (var i = 0; i < Model.ForumSubscriptions.Count; i++)
                             {
                                 var item = Model.ForumSubscriptions[i];
                                 <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
@@ -77,23 +73,23 @@
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
-                </div>
-                @{
-                    var pager = Html.Pager(Model.PagerModel);
-                }
-                @if (!MvcHtmlString.IsNullOrEmpty(pager))
-                {
-                    <div class="pager">
-                        @pager
+                            </tbody>
+                        </table>
                     </div>
-                }
-                <div class="buttons">
-                    <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                    @{
+                        var pager = Html.Pager(Model.PagerModel);
+                    }
+                    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
+                    <div class="buttons">
+                        <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                    </div>
                 </div>
-            </div>
-            }
+            </form>
         }
         else
         {

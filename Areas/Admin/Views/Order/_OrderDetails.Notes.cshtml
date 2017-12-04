@@ -1,0 +1,203 @@
+﻿@model OrderModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_notes_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="ordernotes-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#ordernotes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order", new {orderId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new {orderId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        //do not implicitly specify all fields
+                                        //we do it only for fields which implicitly require it
+                                        //otherwise, they'll be formatted wrong way
+                                        CreatedOn: { type: "date" }
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                        {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Note",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
+                            encoded: false
+                        }, {
+                            field: "DownloadId",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
+                            width: 200,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(DownloadId > 0) {# <a class="btn btn-default" href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#"><i class="fa fa-download"></i>@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                        }, {
+                            field: "DisplayToCustomer",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
+                            width: 150,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(DisplayToCustomer) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 100
+                        }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.IdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
+                toggleAddOrderNoteHasDownload();
+            });
+
+            function toggleAddOrderNoteHasDownload() {
+                if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                    $('#pnlAddOrderNoteDownloadId').show();
+                }
+                else {
+                    $('#pnlAddOrderNoteDownloadId').hide();
+                }
+            }
+        </script>
+
+        <div class="panel-heading">
+            @T("Admin.Orders.OrderNotes.AddTitle")
+        </div>
+
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteMessage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddOrderNoteMessage" />
+                    <span asp-validation-for="AddOrderNoteMessage"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteDownloadId" />
+                </div>
+                <div class="col-md-9">
+                    <div class="checkbox">
+                        <label>
+                            <nop-editor asp-for="AddOrderNoteHasDownload" />
+                            @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                        </label>
+                    </div>
+                    <div id="pnlAddOrderNoteDownloadId">
+                        <nop-editor asp-for="AddOrderNoteDownloadId" />
+                        <span asp-validation-for="AddOrderNoteDownloadId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddOrderNoteDisplayToCustomer" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddOrderNoteDisplayToCustomer" />
+                    <span asp-validation-for="AddOrderNoteDisplayToCustomer"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <button type="button" id="addOrderNote" class="btn btn-primary">@T("Admin.Orders.OrderNotes.AddButton")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_notes_bottom", additionalData = Model.Id })
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addOrderNote').click(function () {
+            var orderNoteMessage = $("#@Html.IdFor(model => model.AddOrderNoteMessage)").val();
+            var orderNoteDownloadId = 0;
+            if ($('#@Html.IdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                orderNoteDownloadId = $("#@Html.IdFor(model => model.AddOrderNoteDownloadId)").val();
+            }
+            var orderNoteDisplayToCustomer = $("#@Html.IdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+            $('#addOrderNote').attr('disabled', true);
+
+            var postData = {
+                DisplayToCustomer: orderNoteDisplayToCustomer,
+                message: orderNoteMessage,
+                downloadId: orderNoteDownloadId,
+                orderId: @Model.Id
+                };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("OrderNoteAdd", "Order"))",
+                data: postData,
+                success: function (data) {
+                    var grid = $("#ordernotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    $('#addOrderNote').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add order note.');
+                    $('#addOrderNote').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>

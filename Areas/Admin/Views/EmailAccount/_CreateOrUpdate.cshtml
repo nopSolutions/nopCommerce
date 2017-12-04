@@ -1,0 +1,125 @@
+﻿@model EmailAccountModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_email_account_details_top", additionalData = Model.Id })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Email"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Email" asp-required="true"/>
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DisplayName"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DisplayName" asp-required="true"/>
+                            <span asp-validation-for="DisplayName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Host"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Host"/>
+                            <span asp-validation-for="Host"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Port"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Port"/>
+                            <span asp-validation-for="Port"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Username"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Username"/>
+                            <span asp-validation-for="Username"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Password"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <nop-editor asp-for="Password"/>
+                                <div class="input-group-btn">
+                                    @if (Model.Id > 0)
+                                    {
+                                        <button type="submit" name="changepassword" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.Fields.Password.Change")
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="EnableSsl"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="EnableSsl"/>
+                            <span asp-validation-for="EnableSsl"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="UseDefaultCredentials"/>
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseDefaultCredentials"/>
+                            <span asp-validation-for="UseDefaultCredentials"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.EmailAccounts.SendTestEmail")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SendTestEmailTo"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <nop-editor asp-for="SendTestEmailTo"/>
+                                    <div class="input-group-btn">
+                                        <button type="submit" name="sendtestemail" class="btn btn-info">
+                                            @T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")
+                                        </button>
+                                    </div>
+                                </div>
+                            <span asp-validation-for="SendTestEmailTo"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_email_account_details_bottom", additionalData = Model.Id })
+        </div>
+    </div>
+</div>

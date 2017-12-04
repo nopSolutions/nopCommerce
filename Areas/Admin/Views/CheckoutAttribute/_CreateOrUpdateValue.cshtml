@@ -1,0 +1,118 @@
+﻿@model CheckoutAttributeValueModel
+
+@{
+    Html.AddScriptParts("~/lib/farbtastic/farbtastic.js");
+    Html.AddCssFileParts("~/lib/farbtastic/farbtastic.css");
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="CheckoutAttributeId" type="hidden" />
+<input asp-for="DisplayColorSquaresRgb" type="hidden" />
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_top", additionalData = Model.Id })
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    @(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="@Model.Locales[item].Name"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="@Model.Locales[item].Name"/>
+                                <span asp-validation-for="@Model.Locales[item].Name"></span>
+                            </div>
+                        </div>
+                         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                    </div>
+    ,
+                    @<div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="Name"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="Name" asp-required="true"/>
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+                    </div>
+    ))
+                    @if (Model.DisplayColorSquaresRgb)
+                    {
+                        //ensure "ColorSquaresRgb" has some default value. Otherwise farbtastic won't set a selected value
+                        if (string.IsNullOrEmpty(Model.ColorSquaresRgb))
+                        {
+                            Model.ColorSquaresRgb = "#000000";
+                        }
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <nop-label asp-for="ColorSquaresRgb"/>
+                            </div>
+                            <div class="col-sm-9">
+                                <nop-editor asp-for="ColorSquaresRgb"/>
+                                <div id="color-picker"></div>
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        $('#color-picker').farbtastic('#@Html.IdFor(model => model.ColorSquaresRgb)');
+                    });
+                                </script>
+                                <span asp-validation-for="ColorSquaresRgb"></span>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="PriceAdjustment"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="PriceAdjustment" asp-postfix="@Model.PrimaryStoreCurrencyCode"/>
+                            <span asp-validation-for="PriceAdjustment"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="WeightAdjustment"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="WeightAdjustment" asp-postfix="@Model.BaseWeightIn"/>
+                            <span asp-validation-for="WeightAdjustment"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="IsPreSelected"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="IsPreSelected"/>
+                            <span asp-validation-for="IsPreSelected"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <nop-label asp-for="DisplayOrder"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <nop-editor asp-for="DisplayOrder"/>
+                            <span asp-validation-for="DisplayOrder"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_checkout_attribute_value_details_bottom", additionalData = Model.Id })
+        </div>
+    </div>
+</div>

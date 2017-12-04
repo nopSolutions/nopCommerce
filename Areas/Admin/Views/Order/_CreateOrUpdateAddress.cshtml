@@ -1,0 +1,17 @@
+﻿@model OrderAddressModel
+
+<div asp-validation-summary="All"></div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_address_details_top", additionalData = Model.Address.Id })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <nop-editor asp-for="Address" asp-template="Address" />
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_address_details_bottom", additionalData = Model.Address.Id })
+        </div>
+    </div>
+</div>

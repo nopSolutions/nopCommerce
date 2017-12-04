@@ -1,0 +1,156 @@
+﻿@model CustomerModel
+@using Nop.Services.Stores
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
+}
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_reward_points_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="customer-rewardpoints-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#customer-rewardpoints-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new {customerId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                        {
+                            field: "StoreName",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                        }, {
+                            field: "Points",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
+                        }, {
+                            field: "PointsBalance",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
+                        }, {
+                            field: "Message",
+                            title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Customers.Customers.RewardPoints.AddTitle")
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddRewardPointsValue" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddRewardPointsValue" />
+                    <span asp-validation-for="AddRewardPointsValue"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AddRewardPointsMessage" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AddRewardPointsMessage" />
+                    <span asp-validation-for="AddRewardPointsMessage"></span>
+                </div>
+            </div>
+            <div class="form-group" @(Model.RewardPointsAvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    <nop-label asp-for="AddRewardPointsStoreId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="AddRewardPointsStoreId" asp-items="Model.RewardPointsAvailableStores" />
+                    <span asp-validation-for="AddRewardPointsStoreId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <button type="button" id="addRewardPoints" class="btn btn-primary">@T("Admin.Customers.Customers.RewardPoints.AddButton")</button>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#addRewardPoints').click(function () {
+                    var rewardPointsValue = $("#@Html.IdFor(model => model.AddRewardPointsValue)").val();
+                    var rewardPointsMessage = $("#@Html.IdFor(model => model.AddRewardPointsMessage)").val();
+                    var rewardPointsStoreId = $("#@Html.IdFor(model => model.AddRewardPointsStoreId)").val();
+                    $('#addRewardPoints').attr('disabled', true);
+
+                    var postData = {
+                        addRewardPointsValue: rewardPointsValue,
+                        addRewardPointsMessage: rewardPointsMessage,
+                        storeId: rewardPointsStoreId,
+                        customerId: @Model.Id
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
+                        data: postData,
+                        success: function (data) {
+                            var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                            $('#addRewardPoints').attr('disabled', false);
+                        },
+                        error:function (xhr, ajaxOptions, thrownError){
+                            alert('Failed to add reward points.');
+                            $('#addRewardPoints').attr('disabled', false);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_reward_points_bottom", additionalData = Model.Id })
+</div>

@@ -1,0 +1,24 @@
+﻿@model RecurringPaymentModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="recurringpayment-edit">
+            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.RecurringPayments.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            <nop-tab asp-name="tab-history" asp-title="@T("Admin.RecurringPayments.History")">@await Html.PartialAsync("_CreateOrUpdate.History", Model)</nop-tab>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

@@ -1,0 +1,120 @@
+﻿@model RecurringPaymentModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (Model.LastPaymentFailed)
+            {
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @T("Admin.RecurringPayments.History.LastPaymentFailed")
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.NextPaymentDate))
+            {
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @T("Admin.RecurringPayments.History.NextPaymentDate")
+                        <text>:</text>
+                        @Model.NextPaymentDate
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.NextPaymentDate) || Model.CanCancelRecurringPayment)
+            {
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @if (!string.IsNullOrEmpty(Model.NextPaymentDate))
+                        {
+                            <button type="submit" name="processnextpayment" class="btn bg-green">
+                                @T("Admin.RecurringPayments.History.ProcessNextPayment")
+                            </button>
+                        }
+                        @if (Model.CanCancelRecurringPayment)
+                        {
+                            <button type="submit" name="cancelpayment" class="btn bg-navy">
+                                @T("Admin.RecurringPayments.History.CancelPayment")
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div id="history-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#history-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new {recurringPaymentId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "CustomOrderNumber",
+                                title: "@T("Admin.RecurringPayments.History.CustomOrderNumber")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-eye"></i>#=CustomOrderNumber# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderStatus",
+                                title: "@T("Admin.RecurringPayments.History.OrderStatus")",
+                                width: 200
+                            }, {
+                                field: "PaymentStatus",
+                                title: "@T("Admin.RecurringPayments.History.PaymentStatus")",
+                                width: 200
+                            }, {
+                                field: "ShippingStatus",
+                                title: "@T("Admin.RecurringPayments.History.ShippingStatus")",
+                                width: 200
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.RecurringPayments.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reccuring_payment_details_history_bottom", additionalData = Model.Id })
+</div>

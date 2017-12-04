@@ -1,8 +1,7 @@
 ﻿@model ProductReviewOverviewModel
 @using System.Globalization
-@using Nop.Web.Models.Catalog;
 @{
-    int ratingPercent = 0;
+    var ratingPercent = 0;
     if (Model.TotalReviews != 0)
     {
         ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
@@ -25,7 +24,7 @@
                     @T("Reviews.Overview.Reviews")</a> <span class="separator">|</span> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
             </div>
             @*hidden microdata info*@
-            decimal ratingValue = ratingPercent / (decimal)20;
+            var ratingValue = ratingPercent / (decimal)20;
             <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
             <span itemprop="reviewCount" style="display: none;">@Model.TotalReviews</span>
         }

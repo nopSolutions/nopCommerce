@@ -1,0 +1,30 @@
+﻿@model OrderAddressModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Orders.Address.EditAddress").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
+}
+
+<form asp-controller="Order" asp-action="AddressEdit"
+      asp-route-addressId="@Context.Request.Query["addressId"]"
+      asp-route-orderId="@Context.Request.Query["orderId"]">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Orders.Address.EditAddress")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Address.BackToOrder")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_address_details_buttons", additionalData = Model.Address.Id })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateAddress", Model)
+</form>

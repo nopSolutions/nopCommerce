@@ -1,0 +1,262 @@
+﻿@model TopicModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_topic_details_info_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].Title" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].Title" />
+                        <span asp-validation-for="@Model.Locales[item].Title"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="@Model.Locales[item].Body" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                        <span asp-validation-for="@Model.Locales[item].Body"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+    ,
+            @<div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Title" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Title" />
+                        <span asp-validation-for="Title"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Body" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Body" asp-template="RichEditor" />
+                        <span asp-validation-for="Body"></span>
+                    </div>
+                </div>
+            </div>
+      ))
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="SystemName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SystemName"/>
+                    <span asp-validation-for="SystemName"></span>
+                </div>
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Url" />
+                    </div>
+                    <div class="col-md-9">
+                        <a href="@Model.Url">@Model.Url</a>
+                    </div>
+                </div>
+            }
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="Published" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Published" />
+                    <span asp-validation-for="Published"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsPasswordProtected" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsPasswordProtected" />
+                    <span asp-validation-for="IsPasswordProtected"></span>
+                </div>
+            </div>
+            <nop-nested-setting asp-for="IsPasswordProtected">
+                <div class="form-group advanced-setting" id="pnlPasswordEnabled">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Password" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                </div>
+            </nop-nested-setting>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IncludeInTopMenu" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeInTopMenu" />
+                    <span asp-validation-for="IncludeInTopMenu"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IncludeInFooterColumn1" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeInFooterColumn1" />
+                    <span asp-validation-for="IncludeInFooterColumn1"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IncludeInFooterColumn2" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeInFooterColumn2" />
+                    <span asp-validation-for="IncludeInFooterColumn2"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IncludeInFooterColumn3" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeInFooterColumn3" />
+                    <span asp-validation-for="IncludeInFooterColumn3"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="IncludeInSitemap" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IncludeInSitemap" />
+                    <span asp-validation-for="IncludeInSitemap"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="SelectedCustomerRoleIds" />
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                            <script type="text/javascript">
+                                $(document).ready(function() {
+                                    var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                                    rolesIdsInput.setOptions({
+                                        autoClose: false,
+                                        filter: "contains"
+                                    });
+
+                                    @if (Model.AvailableCustomerRoles.Count == 0)
+                                    {
+                                        <text>
+                                            rolesIdsInput.setOptions({
+                                                enable: false,
+                                                placeholder: 'No customer roles available'
+                                            });
+                                            rolesIdsInput._placeholder();
+                                            rolesIdsInput._enable();
+                                        </text>
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div class="col-md-8">
+                            @await Component.InvokeAsync("AclDisabledWarning")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="SelectedStoreIds" />
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
+                            <script type="text/javascript">
+                    $(document).ready(function() {
+                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
+                        storesIdsInput.setOptions({
+                            autoClose: false,
+                            filter: "contains"
+                        });
+
+                        @if (Model.AvailableStores.Count == 0)
+                        {
+                            <text>
+                                storesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: 'No stores available'
+                                });
+                                storesIdsInput._placeholder();
+                                storesIdsInput._enable();
+                            </text>
+                        }
+                    });
+                            </script>
+                        </div>
+                        <div class="col-md-8">
+                            @await Component.InvokeAsync("MultistoreDisabledWarning")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="DisplayOrder" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="DisplayOrder" />
+                    <span asp-validation-for="DisplayOrder"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting">
+                <div class="col-md-3">
+                    <nop-label asp-for="AccessibleWhenStoreClosed" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="AccessibleWhenStoreClosed" />
+                    <span asp-validation-for="AccessibleWhenStoreClosed"></span>
+                </div>
+            </div>
+            <div class="form-group advanced-setting" @(Model.AvailableTopicTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                <div class="col-md-3">
+                    <nop-label asp-for="TopicTemplateId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="TopicTemplateId" asp-items="Model.AvailableTopicTemplates" />
+                    <span asp-validation-for="TopicTemplateId"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_topic_details_info_bottom", additionalData = Model.Id })
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.IsPasswordProtected)").click(togglePassword);
+        togglePassword();
+    });
+
+    function togglePassword() {
+        if ($('#@Html.IdFor(model => model.IsPasswordProtected)').is(':checked')) {
+            $('#pnlPasswordEnabled').show();
+        } else {
+            $('#pnlPasswordEnabled').hide();
+        }
+    }
+</script>

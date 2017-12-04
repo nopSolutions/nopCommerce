@@ -1,0 +1,37 @@
+﻿@model CustomerModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="customer-edit">
+            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Customers.Customers.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-orders" asp-title="@T("Admin.Customers.Customers.Orders")">@await Html.PartialAsync("_CreateOrUpdate.Orders", Model)</nop-tab>
+                <nop-tab asp-name="tab-address" asp-title="@T("Admin.Customers.Customers.Addresses")">@await Html.PartialAsync("_CreateOrUpdate.Addresses", Model)</nop-tab>
+                <nop-tab asp-name="tab-cart" asp-title="@T("Admin.Customers.Customers.CurrentShoppingCart")">@await Html.PartialAsync("_CreateOrUpdate.CurrentShoppingCart", Model)</nop-tab>
+                <nop-tab asp-name="tab-wishlist" asp-title="@T("Admin.Customers.Customers.CurrentWishlist")">@await Html.PartialAsync("_CreateOrUpdate.CurrentWishlist", Model)</nop-tab>
+                <nop-tab asp-name="tab-activitylog" asp-title="@T("Admin.Customers.Customers.ActivityLog")">@await Html.PartialAsync("_CreateOrUpdate.ActivityLog", Model)</nop-tab>
+                <nop-tab asp-name="tab-impersonate" asp-title="@T("Admin.Customers.Customers.Impersonate")">@await Html.PartialAsync("_CreateOrUpdate.Impersonate", Model)</nop-tab>
+                <nop-tab asp-name="tab-backinstock" asp-title="@T("Admin.Customers.Customers.BackInStockSubscriptions")">@await Html.PartialAsync("_CreateOrUpdate.BackInStockSubscriptions", Model)</nop-tab>
+            }
+            @if (Model.DisplayRewardPointsHistory)
+            {
+                <nop-tab asp-name="tab-rewardpoints" asp-title="@T("Admin.Customers.Customers.RewardPoints")">@await Html.PartialAsync("_CreateOrUpdate.RewardPoints", Model)</nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

@@ -1,0 +1,118 @@
+﻿@model SpecificationAttributeModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_specification_attribute_details_options_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            <div class="panel-body">
+                <div id="specificationattributeoptions-grid"></div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#specificationattributeoptions-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new {specificationAttributeId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    //TODO display localized values here
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")"
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
+                                    width: 100
+                                }, {
+                                    field: "NumberOfAssociatedProducts",
+                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")",
+                                    width: 250
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 400, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewOption" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new {specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form"}))', 800, 400, true); return false;" class="btn btn-primary">
+                    @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")
+                </button>
+                <input type="submit" id="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var grid = $("#specificationattributeoptions-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_specification_attribute_details_options_bottom", additionalData = Model.Id })
+</div>

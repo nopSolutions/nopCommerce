@@ -1,0 +1,219 @@
+﻿@model ProductModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_top", additionalData = Model.Id })
+    @if (Model.Id > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="productpictures-grid"></div>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#productpictures-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProductPictureList", "Product", new {productId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("ProductPictureUpdate", "Product"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ProductPictureDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            PictureUrl: { editable: false, type: "string" },
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            OverrideAltAttribute: { editable: true, type: "string" },
+                                            OverrideTitleAttribute: { editable: true, type: "string" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "PictureUrl",
+                                title: "@T("Admin.Catalog.Products.Pictures.Fields.Picture")",
+                                template: '<a href="#=PictureUrl#" target="_blank"><img alt="#=PictureId#" src="#=PictureUrl#" width="150" /></a>',
+                                width: 200
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")",
+                                //integer format
+                                format: "{0:0}",
+                                width: 150
+                            }, {
+                                field: "OverrideAltAttribute",
+                                title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")",
+                                width: 200
+                            }, {
+                                field: "OverrideTitleAttribute",
+                                title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")",
+                                width: 200
+                            }, {
+                                command: [
+                                {
+                                    name: "edit",
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
+                                    }
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }
+                                ],
+                                width: 200
+                            }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Catalog.Products.Pictures.AddNew")
+            </div>
+            <div class="panel-body">
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#addProductPicture').click(function() {
+                            var pictureId = $("#@Html.IdFor(model => model.AddPictureModel.PictureId)").val();
+                            var overrideAltAttribute = $("#@Html.IdFor(model => model.AddPictureModel.OverrideAltAttribute)").val();
+                            var overrideTitleAttribute = $("#@Html.IdFor(model => model.AddPictureModel.OverrideTitleAttribute)").val();
+                            var displayOrder = $("#@Html.IdFor(model => model.AddPictureModel.DisplayOrder)").val();
+
+                            if (pictureId == 0) {
+                                alert('Upload picture first');
+                                return;
+                            }
+
+                            $('#addProductPicture').attr('disabled', true);
+
+                            var postData = {
+                                pictureId: pictureId,
+                                displayOrder: displayOrder,
+                                overrideAltAttribute: overrideAltAttribute,
+                                overrideTitleAttribute: overrideTitleAttribute,
+                                productId: @Model.Id
+                                };
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@(Url.Action("ProductPictureAdd", "Product"))",
+                                data: postData,
+                                success: function(data) {
+                                    var grid = $("#productpictures-grid");
+                                    grid.data('kendoGrid').dataSource.read();
+                                    $('#addProductPicture').attr('disabled', false);
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to add product picture.');
+                                    $('#addProductPicture').attr('disabled', false);
+                                }
+                            });
+                        });
+                    });
+                </script>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddPictureModel.PictureId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddPictureModel.PictureId" />
+                        <span asp-validation-for="AddPictureModel.PictureId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddPictureModel.OverrideAltAttribute" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddPictureModel.OverrideAltAttribute" />
+                        <span asp-validation-for="AddPictureModel.OverrideAltAttribute"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddPictureModel.OverrideTitleAttribute" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddPictureModel.OverrideTitleAttribute" />
+                        <span asp-validation-for="AddPictureModel.OverrideTitleAttribute"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AddPictureModel.DisplayOrder" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AddPictureModel.DisplayOrder" />
+                        <span asp-validation-for="AddPictureModel.DisplayOrder"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="addProductPicture" class="btn btn-primary">@T("Admin.Catalog.Products.Pictures.AddButton")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_pictures_bottom", additionalData = Model.Id })
+</div>

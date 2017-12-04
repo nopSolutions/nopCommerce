@@ -1,0 +1,189 @@
+﻿@model OrderModel.AddOrderProductModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="Edit" asp-route-id="@Model.OrderId">@T("Admin.Orders.Products.AddNew.BackToOrder")</a>
+        </small>
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchProductName" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchProductName" />
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchCategoryId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchManufacturerId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchProductTypeId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-products" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="products-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                //selectable
+                                selectable: true,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Common.Select")",
+                                    width: 50,
+                                    template: '<button type="button" onclick="addProductToOrder(#=Id#)" class="btn btn-default">@T("Admin.Common.Select")</button>'
+                                },{
+                                    field: "Id",
+                                    title: "ID",
+                                    width: 50
+                                }, {
+                                    field: "Name",
+                                    title: "@T("Admin.Orders.Products.AddNew.Name")",
+                                    width: 400
+                                }, {
+                                    field: "Sku",
+                                    title: "@T("Admin.Orders.Products.AddNew.SKU")",
+                                    width: 100
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#search-products').click(function() {
+                                var grid = $('#products-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
+
+                        $("#@Html.IdFor(model => model.SearchProductName)").keydown(function(event) {
+                            if (event.keyCode == 13) {
+                                $("#search-products").click();
+                                return false;
+                            }
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchProductName: $('#@Html.IdFor(model => model.SearchProductName)').val(),
+                                SearchCategoryId: $('#SearchCategoryId').val(),
+                                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                SearchProductTypeId: $('#SearchProductTypeId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        function addProductToOrder(productId) {
+                            //load "product details page" block
+                            var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new {orderId = Model.OrderId, productId = "productidplaceholder"}))';
+                            productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productId);
+                            setLocation(productDetailsActionUrl);
+                        }
+                    </script>
+                </div>
+            </div>
+            <div id="productdetails">
+            </div>
+            <input asp-for="OrderId" type="hidden" />
+        </div>
+    </div>
+</div>

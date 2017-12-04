@@ -1,7 +1,6 @@
 ﻿@model SitemapModel
-@using Nop.Web.Models.Common;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.Sitemap").Text);
@@ -16,7 +15,7 @@
         <div class="description">
             @T("Sitemap.Description")
         </div>
-        @Html.Widget("sitemap_before")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_before" })
         <div class="entity">
             <div class="entity-title">
                 <h2>@T("Sitemap.General")</h2>
@@ -97,6 +96,22 @@
                 </div>
             </div>
         }
-        @Html.Widget("sitemap_after")
+        @if (Model.ProductTags.Count > 0)
+        {
+            <div class="entity">
+                <div class="entity-title">
+                    <h2>@T("Sitemap.ProductTags")</h2>
+                </div>
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var productTag in Model.ProductTags)
+                        {
+                            <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = productTag.Id, SeName = productTag.SeName })">@productTag.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_after" })
     </div>
 </div>

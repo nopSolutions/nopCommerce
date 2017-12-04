@@ -1,0 +1,13 @@
+@model DateTime?
+@using System.Globalization
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat) : null)" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.IdForModel()").kendoDateTimePicker({
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+    });
+</script>

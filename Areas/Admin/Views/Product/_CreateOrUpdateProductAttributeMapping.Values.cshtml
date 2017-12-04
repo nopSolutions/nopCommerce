@@ -1,0 +1,153 @@
+﻿@model ProductModel.ProductAttributeMappingModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_values_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+    @if (Model.Id > 0)
+    {
+        <div class="panel-body">
+            <div id="productattributevalues-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#productattributevalues-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url:
+                                        "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new {productAttributeMappingId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Product2Name: { editable: false, type: "string" },
+                                        ProductId2: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "AttributeValueTypeName",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")",
+                                width: 200
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")",
+                                width: 200
+                            }, {
+                                field: "AssociatedProductName",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")",
+                                width: 200
+                            }, {
+                                field: "PriceAdjustmentStr",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")",
+                                width: 150
+                            }, {
+                                field: "WeightAdjustmentStr",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")",
+                                width: 150
+                            }, {
+                                field: "IsPreSelected",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")",
+                                width: 150,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template:
+                                    '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                            }, {
+                                field: "PictureThumbnailUrl",
+                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")",
+                                template: '<img src="#=PictureThumbnailUrl#" />',
+                                width: 200
+                            }, {
+                                field: "DisplayOrder",
+                                title:
+                                    "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")",
+                                width: 150
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template:
+                                    "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 750, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new {productAttributeMappingId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 750, true);return false;" class="btn btn-primary">
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")
+            </button>
+            <input type="submit" id="btnRefresh" style="display: none"/>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#btnRefresh').click(function() {
+                        //refresh grid
+                        var grid = $("#productattributevalues-grid").data('kendoGrid');
+                        grid.dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+    }
+    else
+    {
+        <div class="panel-body">
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.SaveBeforeEdit")
+        </div>
+    }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_attribute_mapping_details_values_bottom", additionalData = Model.Id })
+</div>

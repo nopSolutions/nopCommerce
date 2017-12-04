@@ -1,0 +1,57 @@
+﻿<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="registered-customers-grid"></div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#registered-customers-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ReportRegisteredCustomersList", "Customer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Period",
+                            title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")"
+                        }, {
+                            field: "Customers",
+                            title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Customers")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script> 
+        </div>
+    </div>
+</div>

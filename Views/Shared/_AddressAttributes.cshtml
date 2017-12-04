@@ -1,9 +1,9 @@
-﻿@model IList<Nop.Web.Models.Common.AddressAttributeModel>
+﻿@model IList<AddressAttributeModel>
 @using Nop.Core.Domain.Catalog;
 @foreach (var attribute in Model)
 {
-    string controlId = string.Format("address_attribute_{0}", attribute.Id);
-    string textPrompt = attribute.Name;
+    var controlId = $"address_attribute_{attribute.Id}";
+    var textPrompt = attribute.Name;
 
     <div class="inputs custom-attributes">
         <label>@textPrompt:</label>
@@ -72,7 +72,7 @@
         }
         @if (attribute.IsRequired)
         {
-            @Html.RequiredHint()
+            <nop-required />
         }
     </div>
 }

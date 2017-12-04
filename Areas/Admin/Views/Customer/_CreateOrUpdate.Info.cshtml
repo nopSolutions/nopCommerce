@@ -1,0 +1,525 @@
+﻿@using System.Text.Encodings.Web
+@model CustomerModel
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.IdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+
+                var postData = {
+                    countryId: selectedItem,
+                    addSelectStateItem: "true"
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: postData,
+                    success: function(data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
+                });
+            });
+        });
+    </script>
+}
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (Model.UsernamesEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Username"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Username"/>
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Email"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Email"/>
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Password"/>
+                </div>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <nop-editor asp-for="Password"/>
+                        <div class="input-group-btn">
+                            @if (Model.Id > 0)
+                            {
+                                <button type="submit" name="changepassword" class="btn btn-info">
+                                    @T("Admin.Customers.Customers.Fields.Password.Change")
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+            @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AssociatedExternalAuthRecords"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div id="externalauthrecords-grid"></div>
+
+                        <script type="text/javascript">
+
+                            //local datasource
+                            var externalauthrecords = [
+                            @for (var i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
+                            {
+                                var aear = Model.AssociatedExternalAuthRecords[i];
+                                <text>
+                                    {
+                                        AuthMethodName: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.AuthMethodName)))",
+                                        Email: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.Email)))",
+                                        ExternalIdentifier: "@(Html.Raw(JavaScriptEncoder.Default.Encode(aear.ExternalIdentifier)))"
+                                    }
+                                </text>
+                                if (i != Model.AssociatedExternalAuthRecords.Count - 1)
+                                {
+                                    <text>,</text>
+                                }
+                            }
+                            ];
+
+                            $(document).ready(function () {
+                                $("#externalauthrecords-grid").kendoGrid({
+                                    dataSource: {
+                                        data: externalauthrecords,
+                                        schema: {
+                                            model: {
+                                                fields: {
+                                                    AuthMethodName: { type: "string" },
+                                                    Email: { type: "string" },
+                                                    ExternalIdentifier: { type: "string" }
+                                                }
+                                            }
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        }
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false,
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "AuthMethodName",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
+                                            width: 100
+                                        }, {
+                                            field: "Email",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
+                                            width: 100
+                                        },{
+                                            field: "ExternalIdentifier",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
+                                            width: 300
+                                        }
+                                    ]
+                                });
+                            });
+
+                        </script>
+                    </div>
+                </div>
+            }
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="SelectedCustomerRoleIds"/>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group input-group-required">
+                    <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true"/>
+                    <div class="input-group-btn">
+                        <nop-required />
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        var customerRolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
+                        customerRolesIdsInput.setOptions({
+                            customerRolesIdsInput: false,
+                            filter: "contains"
+                        });
+
+                        @if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>
+                                customerRolesIdsInput.setOptions({
+                                    enable: false,
+                                    placeholder: '@T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")'
+                                });
+                                customerRolesIdsInput._placeholder();
+                                customerRolesIdsInput._enable();
+                            </text>
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="VendorId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                    <span asp-validation-for="VendorId"></span>
+                    <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
+                </div>
+            </div>
+            @if (Model.GenderEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Gender"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="raw">
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                                        @T("Admin.Customers.Customers.Fields.Gender.Male")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-11">
+                                <div class="radio">
+                                    <label>
+                                        @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                                        @T("Admin.Customers.Customers.Fields.Gender.Female")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="FirstName"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="FirstName"/>
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="LastName"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="LastName"/>
+                    <span asp-validation-for="LastName"></span>
+                </div>
+            </div>
+            @if (Model.DateOfBirthEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="DateOfBirth"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="DateOfBirth"/>
+                        <span asp-validation-for="DateOfBirth"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CompanyEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Company"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Company"/>
+                        <span asp-validation-for="Company"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.StreetAddressEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StreetAddress"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="StreetAddress"/>
+                        <span asp-validation-for="StreetAddress"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.StreetAddress2Enabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StreetAddress2"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="StreetAddress2"/>
+                        <span asp-validation-for="StreetAddress2"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.ZipPostalCodeEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ZipPostalCode"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ZipPostalCode"/>
+                        <span asp-validation-for="ZipPostalCode"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CityEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="City"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="City"/>
+                        <span asp-validation-for="City"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CountryEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CountryId"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries"/>
+                        <span asp-validation-for="CountryId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StateProvinceId"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates"/>
+                        <span asp-validation-for="StateProvinceId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.PhoneEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Phone"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Phone"/>
+                        <span asp-validation-for="Phone"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.FaxEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Fax"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Fax"/>
+                        <span asp-validation-for="Fax"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CustomerAttributes.Count > 0)
+            {
+                @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="AdminComment"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="AdminComment"/>
+                    <span asp-validation-for="AdminComment"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="IsTaxExempt"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="IsTaxExempt"/>
+                    <span asp-validation-for="IsTaxExempt"></span>
+                </div>
+            </div>
+            @if (Model.AllowCustomersToSetTimeZone)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TimeZoneId"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"/>
+                        <span asp-validation-for="TimeZoneId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.AffiliateId > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AffiliateId"/>
+                    </div>
+                    <div class="col-md-9">
+                        <a asp-controller="Affiliate" asp-action="Edit" asp-route-id="@Model.AffiliateId">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                        <button type="submit" name="remove-affiliate" class="btn bg-red">
+                            @T("Admin.Customers.Customers.Fields.Affiliate.Remove")
+                        </button>
+                    </div>
+                </div>
+            }
+            @if (Model.DisplayVatNumber)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="VatNumber"/>
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="VatNumber"/>
+                        (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                        <button type="submit" name="markVatNumberAsValid" class="btn btn-primary">
+                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")
+                        </button>
+                        <button type="submit" name="markVatNumberAsInvalid" class="btn bg-red">
+                            @T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")
+                        </button>
+                        <span asp-validation-for="VatNumber"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds"/>
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />
+                                    (@(store.Name))
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="Active"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Active"/>
+                    <span asp-validation-for="Active"></span>
+                </div>
+            </div>
+            @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.RegisteredInStore))
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="RegisteredInStore"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.RegisteredInStore</div>
+                    </div>
+                </div>
+            }
+            @if (Model.Id > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LastIpAddress"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.LastIpAddress</div>
+                    </div>
+                </div>
+            }
+            @if (Model.Id > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CreatedOn"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.CreatedOn</div>
+                    </div>
+                </div>
+            }
+            @if (Model.Id > 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LastActivityDate"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.LastActivityDate</div>
+                    </div>
+                </div>
+            }
+            @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.LastVisitedPage))
+            {
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LastVisitedPage"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-text-row">@Model.LastVisitedPage</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_info_bottom", additionalData = Model.Id })
+</div>

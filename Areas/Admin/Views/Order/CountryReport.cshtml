@@ -1,0 +1,149 @@
+﻿@model CountryReportModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.SalesReport.Country").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Country report");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.SalesReport.Country")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="StartDate" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="StartDate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="EndDate" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="EndDate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="OrderStatusId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="PaymentStatusId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-countryreport" class="btn btn-primary btn-search">
+                                        <i class="fa fa-line-chart"></i>
+                                        @T("Admin.SalesReport.Country.RunReport")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="countryreport-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#countryreport-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CountryReportList", "Order"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "CountryName",
+                                    title: "@T("Admin.SalesReport.Country.Fields.CountryName")"
+                                }, {
+                                    field: "TotalOrders",
+                                    title: "@T("Admin.SalesReport.Country.Fields.TotalOrders")"
+                                }, {
+                                    field: "SumOrders",
+                                    title: "@T("Admin.SalesReport.Country.Fields.SumOrders")"
+                                }]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#search-countryreport').click(function () {
+                                var grid = $('#countryreport-grid').data('kendoGrid');
+                                grid.dataSource.read();
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                OrderStatusId: $('#OrderStatusId').val(),
+                                PaymentStatusId: $('#PaymentStatusId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

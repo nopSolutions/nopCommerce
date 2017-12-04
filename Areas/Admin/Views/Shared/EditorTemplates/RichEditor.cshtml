@@ -1,0 +1,119 @@
+﻿@model String
+@inject IPermissionService permissionService
+@inject AdminAreaSettings adminAreaSettings
+@using Nop.Web.Areas.Admin.Helpers
+@using Nop.Core
+@using Nop.Services.Security
+@using Nop.Web.Framework.UI
+@{
+    //we do not bundle this script file (does not work for some reasons in bundle)
+    Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
+
+    // tinyMCE language
+    var language = TinyMceHelper.GetTinyMceLanguage();
+
+    var allowJbimages = false;
+    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+
+    var random = CommonHelper.GenerateRandomInteger();
+
+    //extend editor with additional settings
+    //Sample setting value (below):
+    //settings.plugins.push('print'); settings.toolbar += ' | print';
+    var additionalEditorSettings = adminAreaSettings.RichEditorAdditionalSettings;
+    //is java-script supported?
+    var allowJavaScript = adminAreaSettings.RichEditorAllowJavaScript;
+
+    //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
+    //false by default
+    var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        @* wooncherk contribution *@
+        function RoxyFileBrowser@(random)(field_name, url, type, win) {
+            //we manually generate the configuration file to ensure that it works fine in virtual directory
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("CreateConfiguration", "RoxyFileman"))",
+                success: function (data) {
+                    var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
+                    if (roxyFileman.indexOf("?") < 0) {
+                        roxyFileman += "?type=" + type;
+                    } else {
+                        roxyFileman += "&type=" + type;
+                    }
+                    roxyFileman += '&input=' + field_name + '&value=' + document.getElementById(field_name).value;
+                    tinyMCE.activeEditor.windowManager.open({
+                        file: roxyFileman,
+                        title: 'Roxy Fileman',
+                        width: 850,
+                        height: 650,
+                        resizable: "yes",
+                        plugins: "media",
+                        inline: "yes",
+                        close_previous: "no"
+                    }, { window: win, input: field_name });
+                    return false;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError);
+                }
+            });
+        }
+
+        var defaultEditorSettings@(random) = {
+            selector: "#@Html.IdForModel()",
+            fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
+            height: 200,
+            width: '100%',
+            autoresize_min_height: 200,
+            autoresize_max_height: 200,
+            plugins: [
+                "advlist autolink autoresize directionality lists link image charmap preview anchor",
+                "searchreplace visualblocks code fullscreen textcolor",
+                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
+            ],
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
+            //"relative_urls" required by jbimages plugin to be set to "false"
+            relative_urls: false,
+            @if (allowJavaScript)
+            {
+                <text>
+                    valid_elements: "*[*]",
+                </text>
+            }
+            @if (allowRoxyFileman)
+            {
+                <text>
+                    //picture manager
+                    file_browser_callback: RoxyFileBrowser@(random),
+                </text>
+            }
+            @if (!string.IsNullOrEmpty(language))
+            {
+                <text>
+                    //language
+                    language: "@language",
+                </text>
+            }
+            //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
+            //otherwise, it'll break existing links when editing message template
+            convert_urls: false,
+            //ensure that special chars are not encoded. For example, ä, ö and ü should NOT become "&auml;", "&ouml;" and "&uuml;"
+            //Otherwise, database searches become impossible when words contain a character of this kind
+            entity_encoding: "raw"
+        };
+
+        function getAdditionalEditorSettings@(random)(settings) {
+            @Html.Raw(additionalEditorSettings)
+            return settings;
+        }
+
+        tinyMCE.init(getAdditionalEditorSettings@(random)(defaultEditorSettings@(random)));
+    });
+</script>
+
+<textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>

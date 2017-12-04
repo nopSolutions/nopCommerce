@@ -1,0 +1,48 @@
+﻿@model CustomerReportsModel
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Reports").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customer reports");
+}
+
+<nop-antiforgery-token/>
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Customers.Reports")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_reports_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-tabs id="customer-reports">
+            @{
+                var dataDictAttributesByTotal = new ViewDataDictionary(ViewData);
+                dataDictAttributesByTotal.TemplateInfo.HtmlFieldPrefix = "bestbyordertotal";
+
+                var dataDictAttributesByNumber = new ViewDataDictionary(ViewData);
+                dataDictAttributesByNumber.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
+            }
+            <nop-tab asp-name="tab-ordertotal" asp-title="@T("Admin.Customers.Reports.BestBy.BestByOrderTotal")" asp-default="true">@await Html.PartialAsync("_ReportBestCustomersByOrderTotal", Model.BestCustomersByOrderTotal, dataDictAttributesByTotal)</nop-tab>
+            <nop-tab asp-name="tab-numberoforders" asp-title="@T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")">@await Html.PartialAsync("_ReportBestCustomersByNumberOfOrders", Model.BestCustomersByOrderTotal, dataDictAttributesByNumber)</nop-tab>
+            <nop-tab asp-name="tab-registeredcustomers" asp-title="@T("Admin.Customers.Reports.RegisteredCustomers")">@await Html.PartialAsync("_ReportRegisteredCustomers", Model)</nop-tab>
+        </nop-tabs>
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}

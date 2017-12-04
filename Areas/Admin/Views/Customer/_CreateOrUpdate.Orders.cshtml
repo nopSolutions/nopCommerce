@@ -1,0 +1,105 @@
+﻿@model CustomerModel
+@using Nop.Services.Stores
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
+}
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="order-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#order-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "CustomOrderNumber",
+                            title: "@T("Admin.Customers.Customers.Orders.CustomOrderNumber")",
+                            width: 200
+                        }, {
+                            field: "OrderTotal",
+                            title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
+                            width: 200
+                        }, {
+                            field: "OrderStatus",
+                            title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
+                            width: 200,
+                            template: '<span class="grid-report-item ' +
+                                                '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                '# if(OrderStatusId == 20) {# blue #} #' +
+                                                '# if(OrderStatusId == 30) {# green #} #' +
+                                                '# if(OrderStatusId == 40) {# red #} #' +
+                                                '">#=OrderStatus#</span>'
+                        }, {
+                            field: "PaymentStatus",
+                            title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
+                            width: 200
+                        }, {
+                            field: "ShippingStatus",
+                            title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
+                            width: 200
+                        },{
+                            field: "StoreName",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                            title: "@T("Admin.Customers.Customers.Orders.Store")",
+                            width: 200
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.System.Log.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        }]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_orders_bottom", additionalData = Model.Id })
+</div>

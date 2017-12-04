@@ -1,0 +1,147 @@
+﻿@model Nop.Plugin.Payments.Worldpay.Models.Customer.WorldpayCustomerModel
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (!Model.CustomerExists)
+            {
+                <p>
+                    @T("Plugins.Payments.Worldpay.WorldpayCustomer.NotExists")
+                </p>
+            }
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="WorldpayCustomerId"/>
+                </div>
+                <div class="col-md-9">
+                    @if (!Model.CustomerExists)
+                    {
+                        <div class="input-group">
+                            <nop-editor asp-for="WorldpayCustomerId"/>
+                            <div class="input-group-btn">
+                                @if (Model.Id > 0)
+                                {
+                                    <button type="button" id="WorldpayCustomerCreate" class="btn btn-info">
+                                        @T("Plugins.Payments.Worldpay.WorldpayCustomer.Create")
+                                    </button>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#WorldpayCustomerCreate').click(function () {
+                                                var worldpayCustomerId = $("#@Html.IdFor(model => model.WorldpayCustomerId)").val();
+                                                var customerId = '@Model.Id';
+                                                $('#WorldpayCustomerCreate').prop('disabled', true);
+                                                $.ajax({
+                                                    cache: false,
+                                                    type: "POST",
+                                                    url: "@(Url.Action("CreateUpdateCustomer", "PaymentWorldpay"))",
+                                                    data: {
+                                                        "customerId": customerId,
+                                                        "worldpayCustomerId": worldpayCustomerId
+                                                    },
+                                                    success: function (data) {
+                                                        location.reload();
+                                                    },
+                                                    error: function (xhr, ajaxOptions, thrownError) {
+                                                        alert('Failed to create customer.');
+                                                    },
+                                                    complete: function (xhr, ajaxOptions, thrownError) {
+                                                        $('#WorldpayCustomerCreate').prop('disabled', false);
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                }
+                            </div>
+                        </div>
+                        <span asp-validation-for="WorldpayCustomerId"></span>
+                    }
+                    else
+                    {
+                        <div class="form-text-row">@Model.WorldpayCustomerId</div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (Model.CustomerExists)
+        {
+            <div class="panel-body">
+                <div id="worldpay-customer-cards-grid"></div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#worldpay-customer-cards-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("CardList", "PaymentWorldpay", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("CardDelete", "PaymentWorldpay", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "CardId",
+                                title: "@T("Plugins.Payments.Worldpay.Fields.CardId")",
+                                width: 200
+                            }, {
+                                field: "CardType",
+                                title: "@T("Plugins.Payments.Worldpay.Fields.CardType")",
+                                width: 150
+                            }, {
+                                field: "MaskedNumber",
+                                title: "@T("Plugins.Payments.Worldpay.Fields.MaskedNumber")",
+                                width: 150
+                            }, {
+                                field: "ExpirationDate",
+                                title: "@T("Plugins.Payments.Worldpay.Fields.ExpirationDate")",
+                                width: 100
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" }
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+        }
+    </div>
+</div>

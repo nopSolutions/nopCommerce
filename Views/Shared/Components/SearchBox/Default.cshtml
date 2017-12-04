@@ -1,0 +1,47 @@
+﻿@model SearchBoxModel
+@using System.Text.Encodings.Web
+<form asp-route="ProductSearch" method="get" id="small-search-box-form">
+    <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" />
+    @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
+    <input type="submit" class="button-1 search-box-button" value="@T("Search.Button")" />
+    @if (Model.SearchTermMinimumLength > 0)
+    {
+        <script type="text/javascript" asp-location="Footer">
+            $("#small-search-box-form").submit(function(event) {
+                if ($("#small-searchterms").val() == "") {
+                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                    $("#small-searchterms").focus();
+                    event.preventDefault();
+                }
+            });
+        </script>
+    }
+    @if (Model.AutoCompleteEnabled)
+    {
+        <script type="text/javascript" asp-location="Footer">
+            $(document).ready(function() {
+                $('#small-searchterms').autocomplete({
+                        delay: 500,
+                        minLength: @(Model.SearchTermMinimumLength.ToString()),
+                        source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                        appendTo: '.search-box',
+                        select: function(event, ui) {
+                            $("#small-searchterms").val(ui.item.label);
+                            setLocation(ui.item.producturl);
+                            return false;
+                        }
+                    })
+                    .data("ui-autocomplete")._renderItem = function(ul, item) {
+                        var t = item.label;
+                        //html encode
+                        t = htmlEncode(t);
+                        return $("<li></li>")
+                            .data("item.autocomplete", item)
+                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                            .appendTo(ul);
+                    };
+            });
+        </script>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
+</form>

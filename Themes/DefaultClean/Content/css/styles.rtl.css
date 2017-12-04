@@ -40,9 +40,11 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea {
-	border-radius: 0;
+    border-radius: 0;
 }
 input[type="button"],
 input[type="submit"],
@@ -84,11 +86,13 @@ table {
 }
 input[type="text"],
 input[type="password"],
+input[type="email"],
+input[type="tel"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
 input, textarea, select {
 	font-size: 14px;
@@ -104,10 +108,12 @@ select {
 	padding: 6px;
 }
 input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus, select:focus {
-	border-color: #ccc;
-	color: #444;
+    border-color: #ccc;
+    color: #444;
 }
 input[type="checkbox"],
 input[type="radio"],
@@ -266,11 +272,13 @@ label, label + * {
 	color: #444;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select, .inputs textarea {
-	width: 400px;
-	max-width: 100%;
-	background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
 }
 
 .inputs.custom-attributes {
@@ -987,7 +995,7 @@ label, label + * {
 	display: inline-block;
 	overflow: hidden; 
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	float: right;
 	width: 180px;
 	height: 36px;
@@ -1884,7 +1892,6 @@ label, label + * {
 }
 .overview .delivery,
 .variant-overview .delivery {
-	margin: 25px 0;
 	overflow: hidden;
 }
 .overview .min-qty-notification,
@@ -1895,12 +1902,20 @@ label, label + * {
 }
 .overview .free-shipping,
 .variant-overview .free-shipping {
-	display: inline-block;
-	margin: 0 0 10px;
-	background: url('../images/shipping.png') right center no-repeat;
-	padding: 2px 28px 2px 0;
-	font-weight: bold;
-	color: #444;
+    display: none;
+    margin: 0 0 10px;
+    background: url('../images/shipping.png') right center no-repeat;
+    padding: 2px 28px 2px 0;
+    font-weight: bold;
+    color: #444;
+}
+.overview .free-shipping.visible,
+.variant-overview .free-shipping.visible {
+    display: inline-block;
+}
+.overview .delivery-date,
+.variant-overview .delivery-date {
+    margin: 10px 0;
 }
 .overview .download-sample,
 .variant-overview .download-sample {
@@ -2007,6 +2022,13 @@ label, label + * {
 	text-align: center;
     font-size: 15px;
 	color: #444;
+}
+.overview .qty-dropdown,
+.variant-overview .qty-dropdown {
+    height: 43px;
+    padding: 0 12px;
+    font-size: 15px;
+    color: #444;
 }
 .overview .add-to-cart-button,
 .variant-overview .add-to-cart-button {
@@ -2793,6 +2815,18 @@ label, label + * {
 	color: #4ab2f1;
 }
 
+.apply-vendor-page .terms-of-service {
+    text-align: center;
+}
+.apply-vendor-page .terms-of-service > * {
+    display: inline-block;
+    line-height: 32px;
+}
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a {
+    color: #4ab2f1;
+    cursor: pointer;
+}
 
 /********** REGISTRATION, LOGIN, ACCOUNT PAGES  **********/
 
@@ -2810,6 +2844,9 @@ label, label + * {
 	margin: 0 5px;
 	line-height: 32px;
 }
+.date-of-birth .date-picker-wrapper {
+    display: inline;
+} 
 .date-of-birth select {
 	width: 31%; /*always single line*/
 	max-width: 126px;
@@ -2837,7 +2874,8 @@ label, label + * {
 	display: inline-block;
 	line-height: 32px;
 }
-.accept-privacy-policy span {
+.accept-privacy-policy span,
+.accept-privacy-policy a {
 	color: #4ab2f1;
 	cursor: pointer;
 }
@@ -4784,12 +4822,12 @@ label, label + * {
 	font-size: 14px; /*reset zeroing*/
 	white-space: normal;
 }
-.forum-edit-page .toolbar,
-.private-message-send-page .toolbar {
-	max-width: 400px;
-	margin: 20px auto;
-	background-color: #ddd;
-	padding: 10px;
+.forum-edit-page .bb-code-editor-wrapper,
+.private-message-send-page .bb-code-editor-wrapper {
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #ddd;
+    padding: 10px;
 }
 .forum-edit-page .toolbar .button,
 .private-message-send-page .toolbar .button {
@@ -5310,7 +5348,7 @@ pre {
 .footer-block {
 	width: 85%;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 240px;
 }
 
@@ -5365,7 +5403,7 @@ pre {
     margin: 0 0 15px;
 }
 .item-box .prices {
-    height: 40px;
+    min-height: 40px;
 }
 .item-box .product-title {
     min-height: 42px;
@@ -6094,9 +6132,11 @@ pre {
 	text-align: left;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select {
-	min-height: 40px;
+    min-height: 40px;
 }
 .inputs .option-list li {
 	margin: 0 0 0 10px;
@@ -6426,7 +6466,7 @@ pre {
 .newsletter-email {
 	display: block;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 200px;
 }
 .newsletter-email .newsletter-subscribe-button {
@@ -6639,8 +6679,9 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 300px;
+    width: 300px;
 }
 
 .address-list-page .section,
@@ -6815,12 +6856,12 @@ pre {
 	width: 600px;
 	height: 250px;
 }
-.private-message-send-page .toolbar {
-	display: inline-block;
-	width: 400px;
-	margin: 10px 0;
-	vertical-align: middle;
-}
+    .private-message-send-page .bb-code-editor-wrapper {
+        display: inline-block;
+        width: 400px;
+        margin: 10px 0;
+        vertical-align: middle;
+    }
 
 }
 
@@ -6896,8 +6937,9 @@ pre {
 
 
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 360px;
+    width: 360px;
 }
 .registration-page .vat-note {
     margin-right: 385px;

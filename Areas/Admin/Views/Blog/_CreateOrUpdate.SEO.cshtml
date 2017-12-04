@@ -1,0 +1,57 @@
+﻿@model BlogPostModel
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_details_seo_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="MetaKeywords" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MetaKeywords" />
+                    <span asp-validation-for="MetaKeywords"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="MetaDescription" />
+                </div>
+                <div class="col-md-9">
+                    <nop-textarea asp-for="MetaDescription"></nop-textarea>
+                    <span asp-validation-for="MetaDescription"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="MetaTitle" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="MetaTitle" />
+                    <span asp-validation-for="MetaTitle"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="SeName" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SeName" />
+                    <span asp-validation-for="SeName"></span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#@Html.IdFor(model => model.SeName)').on('input propertychange paste', function () {
+                        var parameters = {
+                            entityId: '@Model.Id',
+                            entityName: 'BlogPost',
+                            seName: $(this).val()
+                        };
+                        warningValidation('@Url.Action("UrlReservedWarning", "Common")', '@Html.NameFor(model => model.SeName)', parameters);
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_details_seo_bottom", additionalData = Model.Id })
+</div>

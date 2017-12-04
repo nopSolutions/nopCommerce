@@ -1,0 +1,115 @@
+﻿@model DiscountModel
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_products_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
+            <div class="panel-body">
+                <div id="products-grid"></div>
+
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $("#products-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProductList", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ProductDelete", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "ProductId",
+                                        fields: {
+                                            ProductName: { editable: false, type: "string" },
+                                            ProductId: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "ProductName",
+                                    title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
+                                }, {
+                                    field: "ProductId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [
+                                        {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 150
+                                }
+                            ]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" id="btnAddNewProduct" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-primary">
+                    @T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")
+                </button>
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#btnRefreshProducts').click(function() {
+                            //refresh grid
+                            var grid = $("#products-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_applied_to_products_bottom", additionalData = Model.Id })
+</div>

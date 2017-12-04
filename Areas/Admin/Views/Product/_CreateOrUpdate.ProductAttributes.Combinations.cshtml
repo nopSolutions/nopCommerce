@@ -1,0 +1,205 @@
+﻿@model ProductModel
+
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_top", additionalData = Model.Id })
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p>
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
+        </p>
+
+        <div id="attributecombinations-grid"></div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#attributecombinations-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new {productId = Model.Id}))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            update: {
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //ProductId: { editable: false, type: "number" },
+                                    AttributesXml: { editable: false, type: "string" },
+                                    Warnings: { editable: false, type: "string" },
+                                    StockQuantity: { editable: true, type: "number" },
+                                    AllowOutOfStockOrders: { editable: true, type: "boolean" },
+                                    Sku: { editable: true, type: "string" },
+                                    ManufacturerPartNumber: { editable: true, type: "string" },
+                                    Gtin: { editable: true, type: "string" },
+                                    OverriddenPrice: { editable: true, type: "number" },
+                                    NotifyAdminForQuantityBelow: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "number" }
+                                }
+                            }
+                        },
+                        requestEnd: function(e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false,
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "AttributesXml",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
+                            width: 400,
+                            template: "#=AttributesXml# # if(Warnings !== null) {# <div><span style=\"color: red\">#=Warnings#</span></div> #}  #",
+                            encoded: false
+                        }, {
+                            field: "StockQuantity",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
+                            width: 150,
+                            //integer format
+                            format: "{0:0}"
+                        }, {
+                            field: "AllowOutOfStockOrders",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
+                            width: 150,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                        }, {
+                            field: "Sku",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",
+                            width: 200
+                        }, {
+                            field: "ManufacturerPartNumber",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
+                            width: 200
+                        }, {
+                            field: "Gtin",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")",
+                            width: 200
+                        }, {
+                            field: "OverriddenPrice",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
+                            width: 200,
+                            editor: function(container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                    .appendTo(container)
+                                    .kendoNumericTextBox({
+                                        format: "{0:n4}",
+                                        decimals: 4
+                                    });
+                            }
+                        }, {
+                            field: "NotifyAdminForQuantityBelow",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")",
+                            width: 150,
+                            //integer format
+                            format: "{0:0}"
+                        }, {
+                            command: [
+                                {
+                                    name: "edit",
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
+                                    }
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }
+                            ],
+                            width: 200
+                        }
+                    ]
+                });
+            });
+        </script>
+
+        <input type="submit" id="btnRefreshCombinations" style="display: none" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                //refresh button
+                $('#btnRefreshCombinations').click(function() {
+                    //refresh grid
+                    var grid = $("#attributecombinations-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+                
+                //generate combinations
+                $('#btnGenerateAllCombinations').click(function() {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+
+                        var postData = {
+
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache: false,
+                            type: 'POST',
+                            url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new {productId = Model.Id})',
+                            data: postData,
+                            dataType: 'json',
+                            success: function(data) {
+                                //refresh grid
+                                var grid = $("#attributecombinations-grid").data('kendoGrid');
+                                grid.dataSource.read();
+                            },
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                alert('Error while generating attribute combinations');
+                            }
+                        });
+                    }
+                    return false;
+                });
+            });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form"}))', 800, 700, true); return false;" class="btn btn-primary">
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
+        </button>
+        <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")</button>
+    </div>
+</div>
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_bottom", additionalData = Model.Id })

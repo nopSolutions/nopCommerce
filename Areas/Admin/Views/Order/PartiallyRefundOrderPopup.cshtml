@@ -1,0 +1,66 @@
+﻿@model OrderModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+
+<form asp-controller="Order" asp-action="PartiallyRefundOrderPopup"
+      asp-route-online="@Context.Request.Query["online"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Orders.Fields.PartialRefund")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_partially_refund_buttons", additionalData = Model.Id })
+        </div>
+    </div>
+
+    <div class="content">
+        <div asp-validation-summary="All"></div>
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-popup">
+                    <div class="panel-heading">
+                        @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <nop-label asp-for="AmountToRefund" />
+                            </div>
+                            <div class="col-sm-7">
+                                <nop-editor asp-for="AmountToRefund" />
+                                <span style="white-space: nowrap">
+                                    @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-7 col-sm-offset-5">
+                                <button type="submit" name="partialrefundorder" id="partialrefundorder" class="btn btn-primary">
+                                    @T("Admin.Orders.Fields.Refund")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

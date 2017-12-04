@@ -1,7 +1,6 @@
 ﻿@model ProductReviewsModel
-@using Nop.Web.Models.Catalog;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(Model.ProductName);
@@ -14,7 +13,7 @@
         <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
     </div>
     <div class="page-body">
-        @Html.Widget("productreviews_page_top", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_top", additionalData = Model.ProductId })
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
@@ -27,38 +26,32 @@
                 <div class="title">
                     <strong>@T("Reviews.Write")</strong>
                 </div>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
-                    var validationSummary = Html.ValidationSummary(true);
-                    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-                    {
-                        <div class="message-error">@validationSummary</div>
-                    }
+                <form asp-route="ProductReviews" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="fieldset">
                         <div class="form-fields">
                             <div class="inputs">
-                                @Html.LabelFor(model => model.AddProductReview.Title, new { }, ":")
-                                @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                                <label asp-for="AddProductReview.Title" asp-postfix=":"></label>
+                                <input asp-for="AddProductReview.Title" class="review-title" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"/>
+                                <nop-required />
+                                <span asp-validation-for="AddProductReview.Title"></span>
                             </div>
                             <div class="inputs">
-                                @Html.LabelFor(model => model.AddProductReview.ReviewText, new { }, ":")
-                                @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                                <label asp-for="AddProductReview.ReviewText" asp-postfix=":"></label>
+                                <textarea asp-for="AddProductReview.ReviewText" class="review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
+                                <nop-required />
+                                <span asp-validation-for="AddProductReview.ReviewText"></span>
                             </div>
                             <div class="review-rating">
-                                @Html.LabelFor(model => model.AddProductReview.Rating, new { }, ":")
+                                <label asp-for="AddProductReview.Rating" asp-postfix=":"></label>
                                 <ul>
                                     <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li class="rating-options">
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { id = "addproductrating_1" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { id = "addproductrating_2" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { id = "addproductrating_3" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { id = "addproductrating_4" })
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { id = "addproductrating_5" })
+                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1"/>
+                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2"/>
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3"/>
+                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4"/>
+                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5"/>
                                     </li>
                                     <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
                                 </ul>
@@ -66,7 +59,7 @@
                             @if (Model.AddProductReview.DisplayCaptcha)
                             {
                                 <div class="captcha-box">
-                                    @Html.Raw(Html.GenerateCaptcha())
+                                    <nop-captcha />
                                 </div>
                             }
                         </div>
@@ -74,7 +67,7 @@
                     <div class="buttons">
                         <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
                     </div>
-                }
+                </form>
             </div>
         }
         @if (Model.Items.Count > 0)
@@ -85,7 +78,7 @@
                 </div>
                 @foreach (var review in Model.Items)
                 {
-                    int ratingPercent = review.Rating * 20;
+                    var ratingPercent = review.Rating * 20;
                     <div class="product-review-item">
                         <div class="review-item-head">
                             <div class="review-title">
@@ -120,9 +113,9 @@
                                     <span>@review.WrittenOnStr</span>
                                 </span>
                             </div>
-                            @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
-                            @Html.Widget("productreviews_page_inside_review", review.Id)
-                            @if (!String.IsNullOrEmpty(review.ReplyText))
+                            @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
+                            @if (!string.IsNullOrEmpty(review.ReplyText))
                             {
                                 <div class="reply">
                                     <div class="reply-header">
@@ -138,6 +131,6 @@
                 }
             </div>
         }
-        @Html.Widget("productreviews_page_bottom", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_bottom", additionalData = Model.ProductId })
     </div>
 </div>

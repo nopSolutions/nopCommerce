@@ -1,0 +1,109 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Languages").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Languages");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Languages")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="languages-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#languages-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "Language"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Configuration.Languages.Fields.Name")"
+                                }, {
+                                    field: "FlagImageFileName",
+                                    title: "@T("Admin.Configuration.Languages.Fields.FlagImage")",
+                                    width: 100,
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/images/flags/")#=FlagImageFileName#" />'
+                                }, {
+                                    field: "LanguageCulture",
+                                    title: "@T("Admin.Configuration.Languages.Fields.LanguageCulture")",
+                                    width: 200
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Configuration.Languages.Fields.DisplayOrder")",
+                                    width: 150
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Configuration.Languages.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,7 @@
 ﻿@model ForumPageModel
-@using Nop.Core.Domain.Forums;
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
+@using Nop.Core.Domain.Forums
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(Model.Name);
@@ -11,9 +9,9 @@
     Html.AppendPageCssClassParts("html-forum-page");
 }
 <div class="page forum-page">
-    @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
-    @Html.Partial("_ForumHeader")
-    @Html.Widget("boards_forum_after_header", Model.Id)
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_after_header", additionalData = Model.Id })
     <div class="forum-info">
         <div class="forum-name">
             @if (Model.ForumFeedsEnabled)
@@ -32,7 +30,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
-                <script type="text/javascript">
+                <script type="text/javascript" asp-location="Footer">
                     $(document).ready(function() {
                         $('#watch-forum').click(function() {
                             $.ajax({
@@ -52,7 +50,7 @@
                 </script>
             }
         </div>
-        @Html.Widget("boards_forum_top", Model.Id)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_top", additionalData = Model.Id })
         @{
             var pager = Html.Pager(new PagerModel
             {
@@ -65,7 +63,7 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -110,7 +108,7 @@
                         @foreach (var topic in @Model.ForumTopics)
                         {
                             var topicType = "post";
-                            var topicText = String.Empty;
+                            var topicText = string.Empty;
                             switch (topic.ForumTopicType)
                             {
                                 case ForumTopicType.Normal:
@@ -118,11 +116,11 @@
                                     break;
                                 case ForumTopicType.Sticky:
                                     topicType = "sticky";
-                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                    topicText = $"[{T("Forum.Sticky")}]";
                                     break;
                                 case ForumTopicType.Announcement:
                                     topicType = "announcement";
-                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                    topicText = $"[{T("Forum.Announcement")}]";
                                     break;
                                 default:
                                     topicType = "post";
@@ -135,7 +133,7 @@
                                 <td class="topic-details">
                                     <div class="topic-title">
                                         @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                        @if (!String.IsNullOrEmpty(topicText))
+                                        @if (!string.IsNullOrEmpty(topicText))
                                         {
                                             <span class="topic-type">@topicText</span>
                                         }
@@ -174,7 +172,7 @@
                                     </td>
                                 }
                                 <td class="latest-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                    @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
@@ -183,11 +181,11 @@
             </div>
         }
     </div>
-    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
     {
         <div class="pager lower">
             @pager
         </div>
     }
-    @Html.Widget("boards_forum_bottom", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forum_bottom", additionalData = Model.Id })
 </div>

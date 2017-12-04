@@ -1,0 +1,37 @@
+﻿@model DiscountModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Discounts");
+}
+
+<form asp-controller="Discount" asp-action="Edit" method="post" id="discount-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Promotions.Discounts.EditDiscountDetails") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Promotions.Discounts.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="discount-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_discount_details_buttons", additionalData = Model.Id })
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="discount-delete" />

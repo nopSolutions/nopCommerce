@@ -1,162 +1,160 @@
 ﻿@model AddressModel
-@using Nop.Web.Models.Common;
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
+    //we don't move this script to the footer as it's used in Ajax requests where footer is not available
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
-                var statesProgress = $("#states-loading-progress");
-                statesProgress.show();
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+            var statesProgress = $("#states-loading-progress");
+            statesProgress.show();
                 $.ajax({
-                    cache: false,
+                cache: false,
                     type: "GET",
                     url: "@(Url.RouteUrl("GetStatesByCountryId"))",
                     data: { "countryId": selectedItem, "addSelectStateItem": "true" },
                     success: function (data) {
-                        ddlStates.html('');
+                    ddlStates.html('');
                         $.each(data, function (id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        statesProgress.hide();
-                    },
+                        ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                    statesProgress.hide();
+                },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        statesProgress.hide();
-                    }
-                });
+                    alert('Failed to retrieve states.');
+                    statesProgress.hide();
+                }
             });
         });
+    });
     </script>
 }
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden"/>
 <div class="edit-address">
     <div class="inputs">
-        @Html.LabelFor(model => model.FirstName, new { }, ":")
-            @Html.EditorFor(model => model.FirstName)
-        @Html.RequiredHint()
-        @Html.ValidationMessageFor(model => model.FirstName)
+        <label asp-for="FirstName" asp-postfix=":"></label>
+        <input asp-for="FirstName" />
+        <nop-required />
+        <span asp-validation-for="FirstName"></span>
     </div>
     <div class="inputs">
-        @Html.LabelFor(model => model.LastName, new { }, ":")
-            @Html.EditorFor(model => model.LastName)
-        @Html.RequiredHint()
-        @Html.ValidationMessageFor(model => model.LastName)
-
+        <label asp-for="LastName" asp-postfix=":"></label>
+        <input asp-for="LastName" />
+        <nop-required />
+        <span asp-validation-for="LastName"></span>
     </div>
     <div class="inputs">
-        @Html.LabelFor(model => model.Email, new { }, ":")
-            @Html.EditorFor(model => model.Email)
-        @Html.RequiredHint()
-        @Html.ValidationMessageFor(model => model.Email)
+        <label asp-for="Email" asp-postfix=":"></label>
+        <input asp-for="Email" />
+        <nop-required />
+        <span asp-validation-for="Email"></span>
     </div>
     @if (Model.CompanyEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.Company, new { }, ":")
-                @Html.EditorFor(model => model.Company)
+            <label asp-for="Company" asp-postfix=":"></label>
+            <input asp-for="Company" />
             @if (Model.CompanyRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.Company)
+            <span asp-validation-for="Company"></span>
         </div>
     }
     @if (Model.CountryEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.CountryId, new { }, ":")
-                @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
-            @Html.RequiredHint()
-            @Html.ValidationMessageFor(model => model.CountryId)
+            <label asp-for="CountryId" asp-postfix=":"></label>
+            <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
+            <nop-required />
+            <span asp-validation-for="CountryId"></span>
         </div>
     }
 
     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
-                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+            <label asp-for="StateProvinceId" asp-postfix=":"></label>
+            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            @Html.ValidationMessageFor(model => model.StateProvinceId)
+            <span asp-validation-for="StateProvinceId"></span>
         </div>
     }
     @if (Model.CityEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.City, new { }, ":")
-                @Html.EditorFor(model => model.City)
-
+            <label asp-for="City" asp-postfix=":"></label>
+            <input asp-for="City" />
             @if (Model.CityRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.City)
+            <span asp-validation-for="City"></span>
         </div>
     }
     @if (Model.StreetAddressEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.Address1, new { }, ":")
-                @Html.EditorFor(model => model.Address1)
+            <label asp-for="Address1" asp-postfix=":"></label>
+            <input asp-for="Address1" />
             @if (Model.StreetAddressRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.Address1)
+            <span asp-validation-for="Address1"></span>
         </div>
     }
     @if (Model.StreetAddress2Enabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.Address2, new { }, ":")
-                @Html.EditorFor(model => model.Address2)
+            <label asp-for="Address2" asp-postfix=":"></label>
+            <input asp-for="Address2" />
             @if (Model.StreetAddress2Required)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.Address2)
+            <span asp-validation-for="Address2"></span>
         </div>
     }
     @if (Model.ZipPostalCodeEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
-                @Html.EditorFor(model => model.ZipPostalCode)
+            <label asp-for="ZipPostalCode" asp-postfix=":"></label>
+            <input asp-for="ZipPostalCode" />
             @if (Model.ZipPostalCodeRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.ZipPostalCode)
+            <span asp-validation-for="ZipPostalCode"></span>
         </div>
     }
     @if (Model.PhoneEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.PhoneNumber, new { }, ":")
-                @Html.EditorFor(model => model.PhoneNumber)
+            <label asp-for="PhoneNumber" asp-postfix=":"></label>
+            <input asp-for="PhoneNumber" />
             @if (Model.PhoneRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.PhoneNumber)
+            <span asp-validation-for="PhoneNumber"></span>
         </div>
     }
     @if (Model.FaxEnabled)
     {
         <div class="inputs">
-            @Html.LabelFor(model => model.FaxNumber, new { }, ":")
-                @Html.EditorFor(model => model.FaxNumber)
+            <label asp-for="FaxNumber" asp-postfix=":"></label>
+            <input asp-for="FaxNumber" />
             @if (Model.FaxRequired)
             {
-                @Html.RequiredHint()
+                <nop-required />
             }
-            @Html.ValidationMessageFor(model => model.FaxNumber)
+            <span asp-validation-for="FaxNumber"></span>
         </div>
     }
     @if (Model.CustomAddressAttributes.Count > 0)
     {
-        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }
 </div>

@@ -1,0 +1,159 @@
+﻿@using Nop.Services.Stores
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
+
+    //page title
+    ViewBag.Title = T("Admin.CurrentWishlists").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Current wishlists");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.CurrentWishlists")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_current_wishlist_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="carts-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#carts-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CurrentWishlists", "ShoppingCart"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                //details grid
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "CustomerId",
+                                        title: "@T("Admin.CurrentCarts.Customer")",
+                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                                    }, {
+                                        field: "TotalItems",
+                                        title: "@T("Admin.CurrentCarts.TotalItems")",
+                                        width: 150
+                                    }
+                                ]
+                            });
+                        });
+
+                        //details grid
+                        function detailInit(e) {
+                            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("GetWishlistDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                scrollable: false,
+                                sortable: true,
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                columns: [
+                                    {
+                                        field: "ProductName",
+                                        title: "@T("Admin.CurrentCarts.Product")",
+                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                                            '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #',
+                                        width: 400
+                                    },{
+                                        field: "Quantity",
+                                        title: "@T("Admin.CurrentCarts.Quantity")",
+                                        width: 150
+                                    },{
+                                        field: "UnitPrice",
+                                        title: "@T("Admin.CurrentCarts.UnitPrice")",
+                                        width: 150
+                                    },{
+                                        field: "Total",
+                                        title: "@T("Admin.CurrentCarts.Total")",
+                                        width: 150
+                                    },{
+                                        field: "Store",
+                                        hidden: @(stores.Count > 1 ? "false" : "true"),
+                                        title: "@T("Admin.CurrentCarts.Store")",
+                                        width: 150
+                                    },{
+                                        field: "UpdatedOn",
+                                        title: "@T("Admin.CurrentCarts.UpdatedOn")",
+                                        width: 150,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }
+                                ]
+                            });
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

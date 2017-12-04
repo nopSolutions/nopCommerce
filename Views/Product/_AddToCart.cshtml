@@ -1,9 +1,8 @@
 ﻿@model ProductDetailsModel.AddToCartModel
-@using Nop.Web.Models.Catalog;
-@using Nop.Core.Domain.Orders;
+@using Nop.Core.Domain.Orders
 @if (Model.UpdatedShoppingCartItemId > 0)
 {
-    @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+    <input asp-for="UpdatedShoppingCartItemId" type="hidden"/>
 }
 @if (!Model.DisableBuyButton || Model.CustomerEntersPrice)
 {
@@ -12,34 +11,34 @@
         {
             <div class="customer-entered-price">
                 <div class="price-input">
-                    @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" }, ":")
+                    <label asp-for="CustomerEnteredPrice" asp-postfix=":" class="enter-price-label"></label>
                     @*round price*@
-                    @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "enter-price-input" })
+                    <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="enter-price-input"/>
                 </div>
                 <div class="price-range">
                     @Model.CustomerEnteredPriceRange
                 </div>
             </div>
         }
-        @if (!String.IsNullOrEmpty(Model.MinimumQuantityNotification))
+        @if (!string.IsNullOrEmpty(Model.MinimumQuantityNotification))
         {
             <div class="min-qty-notification">@Model.MinimumQuantityNotification</div>
         }
         @if (!Model.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
-                @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }, ":")
+                <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
                 @if (Model.AllowedQuantities.Count > 0)
                 {
-                    @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown" })
+                    <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown"></select>
                 }
                 else
                 {
-                    @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
-                    //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $("#@Html.FieldIdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                    <input asp-for="EnteredQuantity" class="qty-input" type="text"/>
+                    <script type="text/javascript" asp-location="Footer">
+                        //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+                        $(document).ready(function() {
+                            $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function(event) {
                                 if (event.keyCode == 13) {
                                     $("#add-to-cart-button-@Model.ProductId").click();
                                     return false;
@@ -66,10 +65,10 @@
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
                     }
-                    <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />
+                    <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.ShoppingCart})', '#product-details-form');return false;"/>
                 }
             </div>
         }
-        @Html.Widget("productdetails_add_info", Model.ProductId)
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.ProductId })
     </div>
 }

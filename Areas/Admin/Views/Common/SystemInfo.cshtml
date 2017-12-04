@@ -1,0 +1,183 @@
+﻿@model SystemInfoModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.SystemInfo").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("System information");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.System.SystemInfo")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_buttons" })
+    </div>
+</div>
+
+<script type="text/javascript">
+    function toggleLoadedAssemblies() {
+        $('#pnlLoadedAssemblies').toggle();
+        if ($('#pnlLoadedAssemblies').css('display') == 'none') {
+            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Hide")');
+        }
+    }
+
+    function toggleLoadedHeaders() {
+        $('#pnlHeaders').toggle();
+        if ($('#pnlHeaders').css('display') == 'none') {
+            $('#headersShowHide').html('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#headersShowHide').html('@T("Admin.Common.Hide")');
+        }
+    }
+</script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_top" })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="NopVersion"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.NopVersion</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="OperatingSystem"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.OperatingSystem</div>
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AspNetInfo"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.AspNetInfo</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IsFullTrust"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.IsFullTrust</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ServerTimeZone"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.ServerTimeZone</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ServerLocalTime"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.ServerLocalTime.ToString("F")</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="UtcTime"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.UtcTime.ToString("F")</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CurrentUserTime"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.CurrentUserTime.ToString("F")</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="HttpHost"/>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.HttpHost</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Headers"/>
+                        </div>
+                        <div class="col-md-9">
+                            <a id="headersShowHide" href="javascript:toggleLoadedHeaders();">@T("Admin.Common.Show")</a>
+                            <div id="pnlHeaders" style="display: none; word-break: break-all">
+                                <ul>
+                                    @foreach (var header in Model.Headers)
+                                    {
+                                        <li>
+                                            <strong>@header.Name</strong>: @header.Value
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LoadedAssemblies"/>
+                        </div>
+                        <div class="col-md-9">
+                            <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
+                            <div id="pnlLoadedAssemblies" style="display: none">
+                                <ul>
+                                    @foreach (var assembly in Model.LoadedAssemblies)
+                                    {
+                                        <li>
+                                            <div>
+                                                <strong>@assembly.FullName</strong>
+                                                @if (assembly.IsDebug)
+                                                {
+                                                    <span class="label label-warning">Debug</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-success">Release</span>
+                                                }
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(assembly.Location))
+                                            {
+                                                <div style="white-space: nowrap;">
+                                                    <em>@assembly.Location</em>
+                                                </div>
+                                            }
+                                            @if (assembly.BuildDate.HasValue)
+                                            {
+                                                <div>
+                                                    @assembly.BuildDate.Value.ToString("s")
+                                                </div>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>  
+                </div>           
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_system_info_bottom" })
+        </div>
+    </div>
+</div>

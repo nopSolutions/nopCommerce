@@ -1,12 +1,10 @@
 ﻿@model ForumPostModel
 @using Nop.Core
-@using Nop.Core.Infrastructure
-@using Nop.Web.Models.Boards;
+@inject IWebHelper webHelper;
 @{
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     var thisPageUrl = webHelper.GetThisPageUrl(true);
 }
-<div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
+<div class="topic-post" id="@Html.Encode($"post{Model.Id}")">
     <div class="post-info">
         <div class="user-info">
             @if (Model.AllowViewingProfiles)
@@ -17,7 +15,7 @@
             {
                 <span class="username">@Model.CustomerName</span>
             }
-            @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
+            @if (!string.IsNullOrEmpty(Model.CustomerAvatarUrl))
             {
                 <div class="avatar">
                     @if (Model.AllowViewingProfiles)
@@ -55,7 +53,7 @@
                     <span>@Model.CustomerJoinDate.ToString("d")</span>
                 </li>
             }
-            @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
+            @if (Model.ShowCustomersLocation && !string.IsNullOrEmpty(Model.CustomerLocation))
             {
                 <li class="location">
                     <label>@T("Forum.Location"):</label>
@@ -99,45 +97,45 @@
             </div>
             @if (Model.AllowPostVoting)
             {
-                <script type="text/javascript">
-                $(document).ready(function () {
-                    var post = '#post-vote-' + @Model.Id;
-                    $(post + ' span.vote').click(function () {
-                        var postData = {
-                            postId: @Model.Id,
-                            IsUp: $(this).hasClass('up')
-                        };
-                        addAntiForgeryToken(postData);
-                        $.ajax({
-                            cache: false,
-                            type: "POST",
-                            url: '@Url.Action("PostVote", "Boards")',
-                            data: postData,
-                            success: function (data) {
-                                if (data.Error) {
-                                    alert(data.Error);
-                                }
-                                else {
-                                    $(post + ' div.vote-count-post').html(data.VoteCount);
-                                    $(post + ' span.up').removeClass('selected');
-                                    $(post + ' span.down').removeClass('selected');
-                                    if (data.IsUp) {
-                                        $(post + ' span.up').addClass('selected');
+                <script type="text/javascript" asp-location="Footer">
+                    $(document).ready(function () {
+                        var post = '#post-vote-' + @Model.Id;
+                        $(post + ' span.vote').click(function () {
+                            var postData = {
+                                postId: @Model.Id,
+                                IsUp: $(this).hasClass('up')
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: '@Url.Action("PostVote", "Boards")',
+                                data: postData,
+                                success: function (data) {
+                                    if (data.Error) {
+                                        alert(data.Error);
                                     }
-                                    if (data.IsUp == false) {
-                                        $(post + ' span.down').addClass('selected');
+                                    else {
+                                        $(post + ' div.vote-count-post').html(data.VoteCount);
+                                        $(post + ' span.up').removeClass('selected');
+                                        $(post + ' span.down').removeClass('selected');
+                                        if (data.IsUp) {
+                                            $(post + ' span.up').addClass('selected');
+                                        }
+                                        if (data.IsUp == false) {
+                                            $(post + ' span.down').addClass('selected');
+                                        }
                                     }
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to vote');
                                 }
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to vote');
-                            }
+                            });
                         });
                     });
-                });
                 </script>
 
-                <div class="post-vote" id="@String.Format("post-vote-{0}", Model.Id)">
+                <div class="post-vote" id="@($"post-vote-{Model.Id}")">
                     <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
                           title="This post/answer is useful"></span>
                     <div class="vote-count-post"> @Model.VoteCount </div>
@@ -146,7 +144,7 @@
                 </div>
             }
         </div>
-        @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+        @if (Model.SignaturesEnabled & !string.IsNullOrEmpty(Model.FormattedSignature))
         {
             <div class="signature">
                 @Html.Raw(Model.FormattedSignature)

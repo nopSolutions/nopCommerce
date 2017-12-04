@@ -1,8 +1,6 @@
 ﻿@model CustomerRewardPointsModel
-@using Nop.Web.Models.Customer
-@using Nop.Web.Models.Order
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
@@ -12,7 +10,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
 <div class="page account-page reward-points-page">
     <div class="page-title">
@@ -57,7 +55,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                        @for (var i = 0; i < Model.RewardPoints.Count; i++)
                         {
                             var item = Model.RewardPoints[i];
                             <tr @(i%2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
@@ -79,7 +77,7 @@
                     </table>
                 </div>
                 var pager = Html.Pager(Model.PagerModel);
-                if (!MvcHtmlString.IsNullOrEmpty(pager))
+                if (!string.IsNullOrEmpty(pager.ToHtmlString()))
                 {
                     <div class="pager">
                         @pager

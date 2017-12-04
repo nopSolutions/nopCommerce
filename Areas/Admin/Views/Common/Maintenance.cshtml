@@ -1,0 +1,276 @@
+﻿@using System.Text.Encodings.Web
+@model MaintenanceModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Maintenance").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Maintenance");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.System.Maintenance")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_buttons" })
+    </div>
+</div>
+
+<form asp-controller="Common" asp-action="Maintenance" method="post">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_top" })
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-default" style="min-height: 230px;">
+                                    <div class="panel-heading">
+                                        @T("Admin.System.Maintenance.DeleteGuests")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteGuests.StartDate" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteGuests.StartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteGuests.EndDate" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteGuests.EndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-6">
+                                                <button type="submit" name="delete-guests" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
+                                        {
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-success alert-dismissible no-margin">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                        @string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-default" style="min-height: 230px;">
+                                    <div class="panel-heading">
+                                        @T("Admin.System.Maintenance.DeleteAbandonedCarts")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteAbandonedCarts.OlderThan" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteAbandonedCarts.OlderThan" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-6">
+                                                <button type="submit" name="delete-abondoned-carts" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
+                                        {
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-success alert-dismissible no-margin">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                        @string.Format(T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-default" style="min-height: 230px;">
+                                    <div class="panel-heading">
+                                        @T("Admin.System.Maintenance.DeleteExportedFiles")
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteExportedFiles.StartDate" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteExportedFiles.StartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <nop-label asp-for="DeleteExportedFiles.EndDate" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-editor asp-for="DeleteExportedFiles.EndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-6">
+                                                <button type="submit" name="delete-exported-files" class="btn btn-default">
+                                                    <i class="fa fa-trash"></i>
+                                                    @T("Admin.Common.Delete")
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)
+                                        {
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-success alert-dismissible no-margin">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                                        @string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")
+                    </div>
+                    <div class="panel-body">
+                        <div id="backup-list"></div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" id="backup-database" name="backup-database" class="btn btn-primary">
+                            @T("Admin.System.Maintenance.BackupDatabase.BackupNow")
+                        </button>
+                    </div>
+                </div>
+                <div id="backup-data" style="display: none"></div>
+
+                <script type="text/javascript">
+                    function submitBackupAction(fileName, action) {
+                        $("#backup-data").children().remove();
+                        $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
+                        $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
+                        showProgress();
+                    };
+
+                    function showProgress() {
+                        $("html, body").animate({ scrollTop: 0 }, 400);
+                        showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
+                    };
+
+                    $(document).ready(function () {
+                        $("#backup-database").on("click", function () {
+                            showProgress();
+                        });
+                    });
+                </script>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#backup-list").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("BackupFiles", "Common"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false,
+                                @await Html.PartialAsync("_GridPagerMessages")
+                            },
+                            editable: {
+                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.System.Maintenance.BackupDatabase.FileName")"
+                                }, {
+                                    field: "Length",
+                                    title: "@T("Admin.System.Maintenance.BackupDatabase.FileSize")"
+                                }, {
+                                    field: "Link",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
+                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Download")",
+                                    template: '<a class="btn btn-default" href="#=Link#"><i class="fa fa-download"></i>@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
+                                }, {
+                                    field: "Name",
+                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
+                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'restore-backup\')"><i class="fa fa-database"></i>@T("Admin.System.Maintenance.BackupDatabase.Restore")</button>'
+                                },
+                                {
+                                    field: "Name",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 150,
+                                    title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
+                                    template: '<button type="submit" class="btn btn-default" onclick="submitBackupAction(\'#=Name#\',\'delete-backup\')"><i class="fa fa-trash"></i>@T("Admin.System.Maintenance.BackupDatabase.Delete")</button>'
+                                }
+                            ]
+                        });
+                    });
+                </script>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_maintenance_bottom" })
+            </div>
+        </div>
+    </div>
+</form>

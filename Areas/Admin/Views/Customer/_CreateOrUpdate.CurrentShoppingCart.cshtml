@@ -1,0 +1,89 @@
+﻿@model CustomerModel
+@using Nop.Core.Domain.Orders
+@using Nop.Services.Stores
+@inject IStoreService storeService
+@{
+      var stores = storeService.GetAllStores();
+}  
+
+<div class="panel-group">
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_top", additionalData = Model.Id })
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="currentshoppingcart-grid"></div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#currentshoppingcart-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.ShoppingCart }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ProductName",
+                            title: "@T("Admin.CurrentCarts.Product")",
+                            width:500,
+                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                                '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
+                        }, {
+                            field: "Quantity",
+                            title: "@T("Admin.CurrentCarts.Quantity")",
+                            width:200
+                        },{
+                            field: "UnitPrice",
+                            title: "@T("Admin.CurrentCarts.UnitPrice")",
+                            width:200
+                        },{
+                            field: "Total",
+                            title: "@T("Admin.CurrentCarts.Total")",
+                            width:200
+                        },{
+                            field: "Store",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                            title: "@T("Admin.CurrentCarts.Store")",
+                            width:200
+                        },{
+                            field: "UpdatedOn",
+                            title: "@T("Admin.CurrentCarts.UpdatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }]
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_customer_details_shopping_cart_bottom", additionalData = Model.Id })
+</div>

@@ -1,0 +1,76 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Configuration.Settings.Order.ReturnRequestReasons")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Hint")</em>
+        </p>
+        <div id="returnrequestreasons-grid"></div>
+
+        <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#returnrequestreasons-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ReturnRequestReasonList"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false,
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")",
+                            width: 300
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Setting/ReturnRequestReasonEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+        </script>
+    </div>
+    <div class="panel-footer">
+        <a asp-action="ReturnRequestReasonCreate" class="btn btn-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>

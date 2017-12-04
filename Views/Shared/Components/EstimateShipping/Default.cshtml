@@ -1,0 +1,84 @@
+﻿@model EstimateShippingModel
+<div class="shipping">
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+                var estimateProgress = $("#estimate-shipping-loading-progress");
+                estimateProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
+                    success: function(data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        estimateProgress.hide();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        estimateProgress.hide();
+                    }
+                });
+            });
+        });
+    
+        $(document).ready(function () {
+            $('#estimate-shipping-button').click(function() {
+                displayAjaxLoading(true);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.RouteUrl("EstimateShipping"))",
+                    data: $("#shopping-cart-form").serialize(),
+                    success: function(data) {
+                        displayAjaxLoading();
+                        $('.estimate-shipping-result').html(data);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        displayAjaxLoading();
+                        alert('Failed to retrieve estimate shipping.');
+                    }
+                });
+            });
+
+            $("#@Html.IdFor(model => model.ZipPostalCode)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#estimate-shipping-button").click();
+                    return false;
+                }
+            });
+        });
+    </script>
+    <div class="estimate-shipping">
+        <div class="title">
+            <strong>@T("ShoppingCart.EstimateShipping")</strong>
+        </div>
+        <div class="hint">@T("ShoppingCart.EstimateShipping.Tooltip")</div>
+        <div class="shipping-options">
+            <div class="inputs">
+                <label asp-for="CountryId" asp-postfix=":"></label>
+                <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="country-input"></select>
+                <nop-required />
+            </div>
+            <div class="inputs">
+                <label asp-for="StateProvinceId" asp-postfix=":"></label>
+                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates" class="state-input"></select>
+                <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            </div>
+            <div class="inputs">
+                <label asp-for="ZipPostalCode" asp-postfix=":"></label>
+                <input asp-for="ZipPostalCode" class="zip-input"/>
+                <nop-required />
+            </div>
+            <div class="buttons">
+                <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
+            </div>
+        </div>
+        <div class="estimate-shipping-result"></div>
+    </div>
+</div>

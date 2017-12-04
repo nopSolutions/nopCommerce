@@ -1,0 +1,148 @@
+﻿@model Nop.Plugin.Payments.Square.Models.ConfigurationModel
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#@Html.IdFor(model => model.UseSandbox)').click(toggleUseSandbox);
+        toggleUseSandbox();
+    });
+
+    function toggleUseSandbox() {
+        if ($('#@Html.IdFor(model => model.UseSandbox)').is(':checked')) {
+            $('#groupApplicationSecret').hide();
+            $('#liveAccessToken').hide();
+            $('#sandboxAccessToken').show();
+            $('#liveApplicationId').hide();
+            $('#sandboxApplicationId').show();
+        } else {
+            $('#groupApplicationSecret').show();
+            $('#liveAccessToken').show();
+            $('#sandboxAccessToken').hide();
+            $('#liveApplicationId').show();
+            $('#sandboxApplicationId').hide();
+        }
+    }
+</script>
+
+<form asp-controller="PaymentSquare" asp-action="Configure" method="post">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.Raw(string.Format(T("Plugins.Payments.Square.Instructions").Text, Url.RouteUrl(SquarePaymentDefaults.AccessTokenRoute, null, Context.Request.Scheme)))
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="UseSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3" id="sandboxApplicationId">
+                        <nop-label asp-for="SandboxApplicationId" />
+                    </div>
+                    <div class="col-md-3" id="liveApplicationId">
+                        <nop-label asp-for="ApplicationId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApplicationId" asp-required="true" />
+                        <span asp-validation-for="ApplicationId"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="groupApplicationSecret">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ApplicationSecret" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ApplicationSecret" asp-required="true" />
+                        <span asp-validation-for="ApplicationSecret"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LocationId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="LocationId" asp-items="Model.Locations" asp-required="true" />                         
+                        <span asp-validation-for="LocationId"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="sandboxAccessToken">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SandboxAccessToken" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AccessToken" asp-required="true" />
+                        <span asp-validation-for="AccessToken"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="liveAccessToken">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AccessToken" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group input-group-required">
+                            <div class="form-text-row">@(new string('*', Model.AccessToken?.Length ?? 0))</div>
+                            <div class="input-group-btn">
+                                <button type="submit" name="obtainAccessToken" class="btn btn-info">
+                                    @T("Plugins.Payments.Square.ObtainAccessToken")
+                                </button>
+                                <nop-required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="TransactionModeId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="TransactionModeId" asp-items="Model.TransactionModes" />
+                        <span asp-validation-for="TransactionModeId"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AdditionalFee" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFee" />
+                        <span asp-validation-for="AdditionalFee"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AdditionalFeePercentage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AdditionalFeePercentage" />
+                        <span asp-validation-for="AdditionalFeePercentage"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <div class="input-group input-group-short">
+                            <div class="input-group-text">
+                                <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+                            </div>
+                            @if (!Model.UseSandbox &&
+                                !string.IsNullOrEmpty(Model.ApplicationId) && 
+                                !string.IsNullOrEmpty(Model.ApplicationSecret) && 
+                                !string.IsNullOrEmpty(Model.AccessToken))
+                            {
+                                <div class="input-group-btn">
+                                    <button type="submit" name="revokeAccessTokens" class="btn bg-red">
+                                        @T("Plugins.Payments.Square.RevokeAccessTokens")
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

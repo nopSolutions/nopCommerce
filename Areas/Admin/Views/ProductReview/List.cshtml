@@ -1,0 +1,409 @@
+﻿@using Nop.Services.Stores
+@model ProductReviewListModel
+@inject AdminAreaSettings adminAreaSettings
+@inject IStoreService storeService
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+    var stores = storeService.GetAllStores();
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product reviews");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.ProductReviews")
+    </h1>
+    <div class="pull-right">
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            //these buttons are not visible to vendors
+            <button type="button" id="approve-selected" class="btn bg-green">
+                <i class="fa fa-check-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.ApproveSelected")
+            </button>
+            <button type="button" id="disapprove-selected" class="btn bg-navy">
+                <i class="fa fa-minus-square-o"></i>
+                @T("Admin.Catalog.ProductReviews.DisapproveSelected")
+            </button>
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Catalog.ProductReviews.DeleteSelected")
+            </button>
+        }
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_review_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default panel-search">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnFrom" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnFrom" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="CreatedOnTo" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="CreatedOnTo" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchText" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-editor asp-for="SearchText" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchApprovedId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchApprovedId" asp-items="Model.AvailableApprovedOptions" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchProductId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="search-product-name" autocomplete="off" />
+                                    <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $('#search-product-name').autocomplete({
+                                            delay: 500,
+                                            minLength: 3,
+                                            source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                            select: function(event, ui) {
+                                                $('#@Html.IdFor(model => model.SearchProductId)').val(ui.item.productid);
+                                                $('#search-product-friendly-name').text(ui.item.label);
+                                                $('#search-product-clear').show();
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                    </script>
+
+                                    <span id="search-product-friendly-name"></span>
+                                    <button type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;">@T("Admin.Common.Clear")</button>
+                                    <input asp-for="SearchProductId" autocomplete = "off" style = "display:none;" />
+
+                                    <script type="text/javascript">
+                                    //remove button
+                                    $('#search-product-clear').click(function() {
+                                        $('#@Html.IdFor(model => model.SearchProductId)').val('0');
+                                        $('#search-product-friendly-name').text('');
+                                        $('#search-product-clear').hide();
+                                        return false;
+                                    });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="col-md-4">
+                                    <nop-label asp-for="SearchStoreId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="button" id="search-productreviews" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="productreviews-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("#productreviews-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "ProductReview"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)],
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                scrollable: false,
+                                dataBound: onDataBound,
+                                columns: [
+                                    {
+                                        field: "Id",
+                                        hidden: @(Model.IsLoggedInAsVendor ? "true" : "false"),
+                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                        width: 50
+                                    }, {
+                                        field: "StoreName",
+                                        hidden: @(stores.Count > 1 ? "false" : "true"),
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.Store")",
+                                        width: 150
+                                    }, {
+                                        field: "ProductName",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
+                                        width: 200,
+                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                                    }, {
+                                        field: "CustomerId",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
+                                        width: 200,
+                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                                    }, {
+                                        field: "Title",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
+                                        width: 200
+                                    }, {
+                                        field: "ReviewText",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.ReviewText")",
+                                        width: 400,
+                                        encoded: false
+                                    },  {
+                                        field: "ReplyText",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.ReplyText")",
+                                        width: 400,
+                                        encoded: false
+                                    }, {
+                                        field: "Rating",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" }
+                                    }, {
+                                        field: "IsApproved",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(IsApproved) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                    }, {
+                                        field: "CreatedOn",
+                                        title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 50,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+                        var selectedIds = [];
+
+                        $(document).ready(function() {
+                            //search button
+                            $('#search-productreviews').click(function() {
+                                //search
+                                var grid = $('#productreviews-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                //clear selected checkboxes
+                                $('.checkboxGroups').attr('checked', false).change();
+                                selectedIds = [];
+                                return false;
+                            });
+
+                            //"approve selected" button
+                            $('#approve-selected').click(function(e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("ApproveSelected", "ProductReview"))",
+                                    data: postData,
+                                    complete: function(data) {
+                                        //reload grid
+                                        var grid = $('#productreviews-grid').data('kendoGrid');
+                                        grid.dataSource.read();
+                                    },
+                                    error: function(xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                return false;
+                            });
+
+                            //"disapprove selected" button
+                            $('#disapprove-selected').click(function(e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
+                                    data: postData,
+                                    complete: function(data) {
+                                        //reload grid
+                                        var grid = $('#productreviews-grid').data('kendoGrid');
+                                        grid.dataSource.read();
+                                    },
+                                    error: function(xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                return false;
+                            });
+
+                            //"delete selected" button
+                            $('#delete-selected').click(function(e) {
+                                e.preventDefault();
+
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "ProductReview"))",
+                                    data: postData,
+                                    complete: function(data) {
+                                        //reload grid
+                                        var grid = $('#productreviews-grid').data('kendoGrid');
+                                        grid.dataSource.read();
+                                    },
+                                    error: function(xhr, ajaxOptions, thrownError) {
+                                        alert(thrownError);
+                                    },
+                                    traditional: true
+                                });
+                                return false;
+                            });
+
+
+                            $('#mastercheckbox').click(function() {
+                                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                            });
+
+                            //wire up checkboxes.
+                            $('#productreviews-grid').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function(e) {
+                                var $check = $(this);
+                                if ($check.is(":checked") == true) {
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
+                                    if (checked == -1) {
+                                        //add id to selectedIds.
+                                        selectedIds.push($check.val());
+                                    }
+                                } else {
+                                    var checked = jQuery.inArray($check.val(), selectedIds);
+                                    if (checked > -1) {
+                                        //remove id from selectedIds.
+                                        selectedIds = $.grep(selectedIds, function(item, index) {
+                                            return item != $check.val();
+                                        });
+                                    }
+                                }
+                                updateMasterCheckbox();
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                CreatedOnFrom: $('#@Html.IdFor(model => model.CreatedOnFrom)').val(),
+                                CreatedOnTo: $('#@Html.IdFor(model => model.CreatedOnTo)').val(),
+                                SearchText: $('#@Html.IdFor(model => model.SearchText)').val(),
+                                SearchStoreId: $('#@Html.IdFor(model => model.SearchStoreId)').val(),
+                                SearchProductId: $('#@Html.IdFor(model => model.SearchProductId)').val(),
+                                SearchApprovedId: $('#SearchApprovedId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        function onDataBound(e) {
+
+                            $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').each(function() {
+                                var currentId = $(this).val();
+                                var checked = jQuery.inArray(currentId, selectedIds);
+                                //set checked based on if current checkbox's value is in selectedIds.
+                                $(this).attr('checked', checked > -1);
+                            });
+
+                            updateMasterCheckbox();
+                        }
+
+                        function updateMasterCheckbox() {
+                            var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
+                            var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
+                            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                        }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

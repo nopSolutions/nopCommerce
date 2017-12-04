@@ -1,0 +1,96 @@
+﻿@using Nop.Core
+@using Nop.Services.Common
+@inject IWorkContext workContext
+@{
+    const string panelId = "bestsellers-report-amount-box";
+    const string hidePanelAttributeName = "HideBestsellersBriefReportByAmountPanel";
+    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var gridPageSize = 5;
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-star-o"></i>
+            @T("Admin.SalesReport.BestSellers.ByAmount")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="bestsellers-byamount-grid"></div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+
+                $("#bestsellers-byamount-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("BestsellersBriefReportByAmountList", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(gridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    editable: {
+                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "ProductName",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+                    }, {
+                        field: "TotalQuantity",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+                    }, {
+                        field: "TotalAmount",
+                        title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
+                    }, {
+                        field: "ProductId",
+                        title: "@T("Admin.Common.View")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<a class="btn btn-xs btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                    }]
+                });
+            });
+        </script>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+﻿@using Nop.Core
+@using Nop.Services.Common
+@using Nop.Services.Stores
+@inject IWorkContext workContext
+@inject IStoreService storeService
+@{
+    const string panelId = "latest-orders-box";
+    const string hidePanelAttributeName = "HideLatestOrdersPanel";
+    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var gridPageSize = 5;
+    var stores = storeService.GetAllStores();
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-cart-plus"></i>
+            @T("Admin.Dashboard.LatestOrders")
+            <a asp-controller="Order" asp-action="List" class="btn btn-xs btn-info btn-flat margin-l-10">@T("Admin.Dashboard.LatestOrders.ViewAll")</a>
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="orders-grid"></div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+                });
+
+                $("#orders-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("OrderList", "Order"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: additionalDataLatestOrders
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(gridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        @await Html.PartialAsync("_GridPagerMessages")
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "CustomOrderNumber",
+                            title: "@T("Admin.Orders.Fields.CustomOrderNumber")",
+                            width: 80
+                        },
+                        {
+                            field: "OrderStatus",
+                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                            width: 100,
+                            template: '<span class="grid-report-item ' +
+                                                    '# if(OrderStatusId == 10) {# yellow #} #' +
+                                                    '# if(OrderStatusId == 20) {# blue #} #' +
+                                                    '# if(OrderStatusId == 30) {# green #} #' +
+                                                    '# if(OrderStatusId == 40) {# red #} #' +
+                                '">#=OrderStatus#</span>'
+                        },
+                        {
+                            field: "CustomerEmail",
+                            title: "@T("Admin.Orders.Fields.Customer")",
+                            width: 250,
+                            template: '#=CustomerFullName# (#=CustomerEmail#)'
+                        },
+                        {
+                            field: "StoreName",
+                            hidden: @(stores.Count > 1 ? "false" : "true"),
+                            title: "@T("Admin.Orders.Fields.Store")",
+                            width: 100
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Orders.Fields.CreatedOn")",
+                            width: 150,
+                            type: "date",
+                            format: "{0:G}"
+                        },
+                        {
+                            field: "Id",
+                            title: "@T("Admin.Common.View")",
+                            width: 30,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<a class="btn btn-xs btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                        }
+                    ]
+                });
+            });
+
+            function additionalDataLatestOrders() {
+                var data = {};
+                addAntiForgeryToken(data);
+                return data;
+            }
+        </script>
+    </div>
+</div>

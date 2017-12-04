@@ -1,0 +1,105 @@
+﻿@model IList<AddProductAttributeCombinationModel.ProductAttributeModel>
+
+@using Nop.Core.Domain.Catalog;
+
+@if (Model.Count > 0)
+{
+    foreach (var attribute in Model)
+    {
+        var controlId = $"product_attribute_{attribute.Id}";
+        var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+        <div class="form-group">
+            <div class="col-sm-4">
+                <div class="label-wrapper">
+                    <label class="control-label">
+                        @textPrompt
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="input-group input-group-required">
+                    @switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                            {
+                                <select name="@(controlId)" id="@(controlId)" class="form-control">
+                                    @if (!attribute.IsRequired)
+                                    {
+                                        <option value="0">---</option>
+                                    }
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                            @attributeValue.Name
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            break;
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
+                            {
+                                foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div class="radio">
+                                        <label>
+                                            <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            break;
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                            @attributeValue.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                            {
+                                <input name="@(controlId)" type="text" id="@(controlId)" class="form-control" />
+                            }
+                            break;
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" class="form-control"></textarea>
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                <nop-date-picker 
+                                    asp-day-name="@(controlId + "_day")" 
+                                    asp-month-name="@(controlId + "_month")" 
+                                    asp-year-name="@(controlId + "_year")"
+                                    asp-begin-year="@(DateTime.Now.Year)"
+                                    asp-end-year="@(DateTime.Now.Year + 1)"
+                                />
+                            }
+                            break;
+                        case AttributeControlType.FileUpload:
+                            {
+                                <input type="file" id="@(controlId)" name="@(controlId)" class="form-control" />
+                            }
+                            break;
+                    }
+                    <div class="input-group-btn">
+                        @if (attribute.IsRequired)
+                        {
+                            <nop-required />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

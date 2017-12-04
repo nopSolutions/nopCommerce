@@ -1,0 +1,185 @@
+﻿@model RewardPointsSettingsModel
+
+@using Nop.Core.Domain.Customers
+@using Nop.Services
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Reward points");
+}
+
+<form asp-controller="Setting" asp-action="RewardPoints" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.RewardPoints")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_buttons" })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_top" })
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Configuration.Settings.RewardPoints.Description")
+                        </p>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExchangeRate_OverrideForStore" asp-input="ExchangeRate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExchangeRate" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
+                                <div class="pull-left">
+                                    <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode"  />
+                                    <span asp-validation-for="ExchangeRate"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MinimumRewardPointsToUse_OverrideForStore" asp-input="MinimumRewardPointsToUse" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MinimumRewardPointsToUse" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MinimumRewardPointsToUse" />
+                                <span asp-validation-for="MinimumRewardPointsToUse"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.RewardPoints.Earning")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PointsForPurchases_OverrideForStore" asp-input="PointsForPurchases_Amount" asp-input2="PointsForPurchases_Points" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PointsForPurchases_Amount" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")</div>
+                                <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Amount" asp-postfix="@Model.PrimaryStoreCurrencyCode" /></div>
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")</div>
+                                <div class="pull-left margin-r-10"><nop-editor asp-for="PointsForPurchases_Points" /></div>
+                                <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")</div>
+                                <span asp-validation-for="PointsForPurchases_Amount"></span>
+                                <span asp-validation-for="PointsForPurchases_Points"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PointsForRegistration_OverrideForStore" asp-input="PointsForRegistration" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PointsForRegistration" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PointsForRegistration" />
+                                <span asp-validation-for="PointsForRegistration"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ActivatePointsImmediately" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ActivatePointsImmediately" />
+                                <span asp-validation-for="ActivatePointsImmediately"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting" id="pnl-activating-delay">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ActivationDelay_OverrideForStore" asp-input="ActivationDelay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ActivationDelay" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <nop-editor asp-for="ActivationDelay" />
+                                        <span asp-validation-for="ActivationDelay"></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <nop-select asp-for="ActivationDelayPeriodId" asp-items="@(((RewardPointsActivatingDelayPeriod) Model.ActivationDelayPeriodId).ToSelectList())" style="max-width: 200px;" />
+                                        <span asp-validation-for="ActivationDelayPeriodId"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayHowMuchWillBeEarned_OverrideForStore" asp-input="DisplayHowMuchWillBeEarned" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayHowMuchWillBeEarned" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayHowMuchWillBeEarned" />
+                                <span asp-validation-for="DisplayHowMuchWillBeEarned"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PointsAccumulatedForAllStores" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PointsAccumulatedForAllStores" />
+                                <span asp-validation-for="PointsAccumulatedForAllStores"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PageSize_OverrideForStore" asp-input="PageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PageSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PageSize" />
+                                <span asp-validation-for="PageSize"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.ActivatePointsImmediately)").click(activatePointsImmediately);
+                            activatePointsImmediately();
+                        });
+
+                        function activatePointsImmediately() {
+                            if ($('#@Html.IdFor(model => model.ActivatePointsImmediately)').is(':checked'))
+                                $('#pnl-activating-delay').hide();
+                            else
+                                $('#pnl-activating-delay').show();
+                        }
+                    </script>
+
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_reward_points_settings_bottom" })
+            </div>
+        </div>
+    </div>
+</form>

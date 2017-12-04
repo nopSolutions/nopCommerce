@@ -1,0 +1,133 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.System.Templates.Category").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Category templates");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.System.Templates.Category")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_category_template_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="templates-grid"></div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#templates-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CategoryTemplates", "Template"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        create: {
+                                            url: "@Html.Raw(Url.Action("CategoryTemplateAdd", "Template"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("CategoryTemplateUpdate", "Template"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("CategoryTemplateDelete", "Template"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                ViewPath: { editable: true, type: "string" },
+                                                DisplayOrder: { editable: true, type: "number" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false,
+                                    @await Html.PartialAsync("_GridPagerMessages")
+                                },
+                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Name",
+                                    title: "@T("Admin.System.Templates.Category.Name")",
+                                    width: 300
+                                }, {
+                                    field: "ViewPath",
+                                    title: "@T("Admin.System.Templates.Category.ViewPath")",
+                                    width: 300
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.System.Templates.Category.DisplayOrder")",
+                                    //integer format
+                                    format: "{0:0}",
+                                    width: 100
+                                }, {
+                                    command: [{
+                                        name: "edit",
+                                        text: {
+                                            edit: "@T("Admin.Common.Edit")",
+                                            update: "@T("Admin.Common.Update")",
+                                            cancel: "@T("Admin.Common.Cancel")"
+                                        }
+                                    }, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }],
+                                    width: 200
+                                }]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

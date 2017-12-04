@@ -1,0 +1,72 @@
+﻿@model OrderModel
+@inject IEventPublisher eventPublisher
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
+}
+
+<form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Orders.EditOrderDetails") - @Model.CustomOrderNumber
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Orders.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <a asp-action="PdfInvoice" asp-route-orderId="@Model.Id" class="btn bg-purple">
+                <i class="fa fa-file-pdf-o"></i>
+                @T("Admin.Orders.PdfInvoice")
+            </a>
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                <span id="order-delete" class="btn bg-red">
+                    <i class="fa fa-trash-o"></i>
+                    @T("Admin.Common.Delete")
+                </span>
+            }
+            <input type="submit" id="btnRefreshPage" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshPage').click(function () {
+                        //refresh pageed
+                        location.reload();
+                    });
+                });
+            </script>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_order_details_buttons", additionalData = Model.Id })
+        </div>
+    </div>
+
+    <div asp-validation-summary="All"></div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-tabs id="order-edit">
+                <nop-tab asp-name="tab-info" asp-title="@T("Admin.Orders.Info")" asp-default="true">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-tab>
+                <nop-tab asp-name="tab-billing-info" asp-title="@T("Admin.Orders.BillingInfo")">@await Html.PartialAsync("_OrderDetails.Billing", Model)</nop-tab>
+                <nop-tab asp-name="tab-shipping-info" asp-title="@T("Admin.Orders.ShippingInfo")">@await Html.PartialAsync("_OrderDetails.Shipping", Model)</nop-tab>
+                <nop-tab asp-name="tab-products" asp-title="@T("Admin.Orders.Products")">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-tab>
+                @if (!Model.IsLoggedInAsVendor)
+                {
+                    <nop-tab asp-name="tab-order-notes" asp-title="@T("Admin.Orders.OrderNotes")">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-tab>
+                }
+            </nop-tabs>
+        </div>
+    </div>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
+        eventPublisher.Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="order-delete" />

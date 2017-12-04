@@ -1,0 +1,42 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.Measures").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Measures");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Shipping.Measures")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_measure_list_buttons" })
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Shipping.Measures.Dimensions")
+                    </div>
+                    <div class="panel-body">
+                        @await Html.PartialAsync("Dimensions")
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Shipping.Measures.Weights")
+                    </div>
+                    <div class="panel-body">
+                        @await Html.PartialAsync("Weights")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

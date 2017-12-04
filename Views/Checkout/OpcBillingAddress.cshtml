@@ -1,13 +1,12 @@
 ﻿@model CheckoutBillingAddressModel
-@using Nop.Web.Models.Checkout;
 <div class="checkout-data">
-    @Html.Widget("op_checkout_billing_address_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_top" })
     @if (Model.ShipToSameAddressAllowed)
     {
         <div class="section ship-to-same-address">
             <p class="selector">
-                @Html.CheckBoxFor(x => x.ShipToSameAddress)
-                <label for="@Html.FieldIdFor(model => model.ShipToSameAddress)">@T("Checkout.ShipToSameAddress")</label>
+                <input asp-for="ShipToSameAddress"/>
+                <label asp-for="ShipToSameAddress">@T("Checkout.ShipToSameAddress")</label>
             </p>
         </div>
     }
@@ -23,23 +22,23 @@
                         var addressLine = "";
                         addressLine += address.FirstName;
                         addressLine += " " + address.LastName;
-                        if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                        if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
                         {
                             addressLine += ", " + address.Address1;
                         }
-                        if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                        if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
                         {
                             addressLine += ", " + address.City;
                         }
-                        if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                        if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                         {
                             addressLine += ", " + address.StateProvinceName;
                         }
-                        if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                        if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                         {
                             addressLine += " " + address.ZipPostalCode;
                         }
-                        if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                        if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
                         {
                             addressLine += ", " + address.CountryName;
                         }
@@ -51,24 +50,16 @@
             </div>
         </div>
     }
-    @Html.Widget("op_checkout_billing_address_middle")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
     <div class="section new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
             @{
-                var validationSummary = Html.ValidationSummary(true);
-            }
-            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
-            {
-                <div class="message-error">@validationSummary</div>
-            }
-            @{
-                var dataDictAddress = new ViewDataDictionary();
-                //Merge ModelState (required for validation)
-                dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                var dataDictAddress = new ViewDataDictionary(ViewData);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
-                @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.BillingNewAddress, dataDictAddress)
             }
         </div>
     </div>
-    @Html.Widget("op_checkout_billing_address_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
 </div>

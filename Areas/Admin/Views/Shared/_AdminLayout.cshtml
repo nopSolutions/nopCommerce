@@ -1,0 +1,272 @@
+﻿@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject IDateTimeHelper dateTimeHelper
+@inject IPermissionService permissionService
+@inject IEventPublisher eventPublisher
+@inject IHttpContextAccessor httpContextAccessor
+@inject CommonSettings commonSettings
+@inject LocalizationSettings localizationSettings
+@inject StoreInformationSettings storeInformationSettings
+@using System.Globalization
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Http
+@using Nop.Core.Domain.Customers
+@using Nop.Web.Framework.UI;
+@using Nop.Core;
+@using Nop.Core.Domain
+@using Nop.Core.Domain.Localization
+@using Nop.Services.Common
+@using Nop.Services.Customers
+@using Nop.Services.Helpers
+@using Nop.Services.Security;
+@{
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+    
+    var kendoVersion = "2014.1.318";
+    var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
+
+    //CSS resources
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/css/admin/styles.rtl.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.rtl.css");
+        Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/css/admin/styles.css");
+        Html.AppendCssFileParts("~/lib/adminLTE/AdminLTE-2.3.0.min.css");
+        Html.AppendCssFileParts("~/lib/bootstrap/css/bootstrap.min.css");
+    }
+
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
+    Html.AppendCssFileParts("~/lib/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome-4.6.3.min.css");
+    Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
+    Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
+    <!-- AdminLTE Skins (choose a skin from the css/skins) -->
+    Html.AppendCssFileParts("~/lib/adminLTE/skins/_all-skins.min.css");
+
+    //scripts
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
+    Html.AppendScriptParts("~/js/admin.search.js");
+    Html.AppendScriptParts("~/js/admin.navigation.js");
+    Html.AppendScriptParts("~/js/admin.common.js");
+    Html.AppendScriptParts("~/lib/typeahead/typeahead.bundle.min.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/lib/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/lib/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
+    Html.AppendScriptParts("~/lib/jquery-1.10.2.min.js");
+
+    //page title
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    adminPageTitle += T("Admin.PageTitle").Text;
+
+    //has "Manage Maintenance" permission?
+    var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
+
+    //X-UA-Compatible tag
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
+    }
+
+    //sidebar
+    const string hideSidebarAttributeName = "HideSidebar";
+    var hideSidebar = workContext.CurrentCustomer.GetAttribute<bool>(hideSidebarAttributeName);
+
+    //avatar
+    var currentCustomer = workContext.CurrentCustomer;
+
+    //event
+    eventPublisher.Publish(new PageRenderingEvent(this.Html));
+
+    //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
+}
+<!DOCTYPE html>
+<html@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+    <head>
+        <title>@adminPageTitle</title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        @Html.NopHeadCustom()
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+    </head>
+    <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
+                                                    {<text>sidebar-collapse</text>}">
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">@T("Common.Wait...")</h1>
+                    <p>
+                        <img src="@Url.Content("~/css/admin/images/throbber-synchronizing.gif")" alt="" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="ajaxBusy">
+            <span>&nbsp;</span>
+        </div>
+        <div class="wrapper">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header")
+            }
+            else
+            {
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
+                <div class="main-header">
+                    <a href="@Url.Content("~/Admin")" class="logo">
+                        <!-- mini logo for sidebar mini 50x50 pixels -->
+                        <span class="logo-mini"></span>
+                        <!-- logo for regular state and mobile devices -->
+                        <span class="logo-lg"></span>
+                    </a>
+                    <div class="navbar navbar-static-top" role="navigation">
+                        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">&nbsp;</span>
+                        </a>
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_toggle_after" })
+                        <div class="navbar-custom-menu">
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_before" })
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    @await Component.InvokeAsync("AdminLanguageSelector")
+                                </li>
+                                @if (currentCustomer.IsRegistered())
+                                {
+                                    <li class="account-info">
+                                        @currentCustomer.GetFullName()
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Customer" asp-action="Logout" asp-area="">@T("Admin.Header.Logout")</a>
+                                    </li>
+                                }
+                                <li>
+                                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_middle" })
+                                </li>
+                                <li>
+                                    <a asp-controller="Home" asp-action="Index" asp-area="">@T("Admin.Header.PublicStore")</a>
+                                </li>
+                                @if (canManageMaintenance)
+                                {
+                                    <li class="dropdown">
+                                        <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
+                                        <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
+                                            <li>
+                                                <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
+                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <button type="submit" class="bg-light-blue">
+                                                        <span>@T("Admin.Header.ClearCache")</span>
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
+                                                    <input name="returnurl" type="hidden" value="@rawUrl">
+                                                    <button id="restart-application" type="submit" class="bg-light-blue">
+                                                        <span>@T("Admin.Header.RestartApplication")</span>
+                                                    </button>
+                                                    <script type="text/javascript">
+                                                        $(document).ready(function () {
+                                                            $("#restart-application").click(function (e) {
+                                                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+                                                            });
+                                                        });
+                                                    </script>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_navbar_after" })
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_after" })
+            }
+            @if (IsSectionDefined("headermenu"))
+            {
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                <div class="main-sidebar">
+                    <div class="sidebar">
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_searchbox_before" })
+                        <div class="sidebar-form">
+                            <div id="search-box">
+                                <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                Admin.Search.init();
+                            });
+                        </script>
+                        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_menu_before" })
+                        @await Html.PartialAsync("Menu")
+                    </div>
+                </div>
+            }
+            <div class="content-wrapper">
+                @await Html.PartialAsync("Notifications")
+                <div>
+                    @RenderBody()
+                </div>
+            </div>
+            <div class="main-footer clearfix">
+                @if (!storeInformationSettings.HidePoweredByNopCommerce)
+                {
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
+                    <div class="pull-left">
+                        Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
+                    </div>
+                }
+                <div class="pull-right hidden-xs">
+                    <b>nopCommerce version @NopVersion.CurrentVersion</b>
+                </div>
+                <div class="text-center">
+                    @{
+                        var currentCulture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                    }
+                    @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var AdminLTEOptions = {
+                boxWidgetOptions: {
+                    boxWidgetIcons: {
+                        collapse: 'fa-minus',
+                        open: 'fa-plus'
+                    }
+                }
+            };
+        </script>
+        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
+        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        <a id="backTop" class="btn btn-back-top bg-teal"></a>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#backTop').backTop();
+
+                $('a.sidebar-toggle').on('click', function () {
+                    var collapsed = $('body').hasClass('sidebar-collapse');
+                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hideSidebarAttributeName', collapsed);
+                });
+            });
+        </script>
+    </body>
+</html>

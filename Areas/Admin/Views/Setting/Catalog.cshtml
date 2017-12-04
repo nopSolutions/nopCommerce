@@ -1,0 +1,1014 @@
+﻿@model CatalogSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Catalog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Catalog settings");
+}
+
+
+<form asp-controller="Setting" asp-action="Catalog" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Catalog")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_buttons" })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_top" })
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Search")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteEnabled_OverrideForStore" asp-input="ProductSearchAutoCompleteEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductSearchAutoCompleteEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductSearchAutoCompleteEnabled" />
+                                <span asp-validation-for="ProductSearchAutoCompleteEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ProductSearchAutoCompleteEnabled">
+                            <div class="form-group advanced-setting" id="pnlProductSearchAutoCompleteNumberOfProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductSearchAutoCompleteNumberOfProducts_OverrideForStore" asp-input="ProductSearchAutoCompleteNumberOfProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                                    <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
+                                </div>
+                            </div>
+                            <div class="form-group advanced-setting" id="pnlShowProductImagesInSearchAutoComplete">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowProductImagesInSearchAutoComplete_OverrideForStore" asp-input="ShowProductImagesInSearchAutoComplete" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowProductImagesInSearchAutoComplete" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowProductImagesInSearchAutoComplete" />
+                                    <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductSearchTermMinimumLength_OverrideForStore" asp-input="ProductSearchTermMinimumLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductSearchTermMinimumLength" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductSearchTermMinimumLength" />
+                                <span asp-validation-for="ProductSearchTermMinimumLength"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SearchPageAllowCustomersToSelectPageSize_OverrideForStore" asp-input="SearchPageAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SearchPageAllowCustomersToSelectPageSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SearchPageAllowCustomersToSelectPageSize" />
+                                <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="SearchPageAllowCustomersToSelectPageSize">
+                            <div class="form-group advanced-setting" id="pnlSearchPageProductsPerPage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="SearchPageProductsPerPage_OverrideForStore" asp-input="SearchPageProductsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SearchPageProductsPerPage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SearchPageProductsPerPage" />
+                                    <span asp-validation-for="SearchPageProductsPerPage"></span>
+                                </div>
+                            </div>
+                            <div class="form-group advanced-setting" id="pnlSearchPagePageSizeOptions">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="SearchPagePageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SearchPagePageSizeOptions" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SearchPagePageSizeOptions" />
+                                    <span asp-validation-for="SearchPagePageSizeOptions"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+                            $("#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+
+                            toggleSearchPagePageSize();
+                            toggleProductSearchAutoComplete();
+                        });
+
+                        function toggleSearchPagePageSize() {
+                            if ($('#@Html.IdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+                                $('#pnlSearchPageProductsPerPage').hide();
+                                $('#pnlSearchPagePageSizeOptions').show();
+                            } else {
+                                $('#pnlSearchPageProductsPerPage').show();
+                                $('#pnlSearchPagePageSizeOptions').hide();
+                            }
+                        }
+
+                        function toggleProductSearchAutoComplete() {
+                            if ($('#@Html.IdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+                                $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+                                $('#pnlShowProductImagesInSearchAutoComplete').show();
+                            } else {
+                                $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+                                $('#pnlShowProductImagesInSearchAutoComplete').hide();
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductReviews")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductReviewsMustBeApproved_OverrideForStore" asp-input="ProductReviewsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductReviewsMustBeApproved" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductReviewsMustBeApproved" />
+                                <span asp-validation-for="ProductReviewsMustBeApproved"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowAnonymousUsersToReviewProduct_OverrideForStore" asp-input="AllowAnonymousUsersToReviewProduct" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowAnonymousUsersToReviewProduct" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowAnonymousUsersToReviewProduct" />
+                                <span asp-validation-for="AllowAnonymousUsersToReviewProduct"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore" asp-input="ProductReviewPossibleOnlyAfterPurchasing" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductReviewPossibleOnlyAfterPurchasing" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductReviewPossibleOnlyAfterPurchasing" />
+                                <span asp-validation-for="ProductReviewPossibleOnlyAfterPurchasing"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NotifyStoreOwnerAboutNewProductReviews_OverrideForStore" asp-input="NotifyStoreOwnerAboutNewProductReviews" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyStoreOwnerAboutNewProductReviews" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NotifyStoreOwnerAboutNewProductReviews" />
+                                <span asp-validation-for="NotifyStoreOwnerAboutNewProductReviews"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductReviewsPerStore_OverrideForStore" asp-input="ShowProductReviewsPerStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductReviewsPerStore" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductReviewsPerStore" />
+                                <span asp-validation-for="ShowProductReviewsPerStore"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductReviewsOnAccountPage_OverrideForStore" asp-input="ShowProductReviewsTabOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductReviewsTabOnAccountPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductReviewsTabOnAccountPage" />
+                                <span asp-validation-for="ShowProductReviewsTabOnAccountPage"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ShowProductReviewsTabOnAccountPage">
+                            <div class="form-group advanced-setting" id="pnlProductReviewsPageSizeOnAccountPage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductReviewsPageSizeOnAccountPage_OverrideForStore" asp-input="ProductReviewsPageSizeOnAccountPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductReviewsPageSizeOnAccountPage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductReviewsPageSizeOnAccountPage" />
+                                    <span asp-validation-for="ProductReviewsPageSizeOnAccountPage"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)").click(toggleProductReviewsPageSizeOnAccountPage);
+
+                            toggleProductReviewsPageSizeOnAccountPage();
+                        });
+
+                        function toggleProductReviewsPageSizeOnAccountPage() {
+                            if ($('#@Html.IdFor(model => model.ShowProductReviewsTabOnAccountPage)').is(':checked')) {
+                                $('#pnlProductReviewsPageSizeOnAccountPage').show();
+                            } else {
+                                $('#pnlProductReviewsPageSizeOnAccountPage').hide();
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Performance")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IgnoreAcl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IgnoreAcl" />
+                                <span asp-validation-for="IgnoreAcl"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IgnoreStoreLimitations" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IgnoreStoreLimitations" />
+                                <span asp-validation-for="IgnoreStoreLimitations"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IgnoreDiscounts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IgnoreDiscounts" />
+                                <span asp-validation-for="IgnoreDiscounts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IgnoreFeaturedProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IgnoreFeaturedProducts" />
+                                <span asp-validation-for="IgnoreFeaturedProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CacheProductPrices" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CacheProductPrices" />
+                                <span asp-validation-for="CacheProductPrices"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Share")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowShareButton_OverrideForStore" asp-input="ShowShareButton" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowShareButton" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowShareButton" />
+                                <span asp-validation-for="ShowShareButton"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ShowShareButton">
+                            <div class="form-group advanced-setting" id="pnlPageShareCode">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="PageShareCode_OverrideForStore" asp-input="PageShareCode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="PageShareCode" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-textarea asp-for="PageShareCode" />
+                                    <span asp-validation-for="PageShareCode"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EmailAFriendEnabled_OverrideForStore" asp-input="EmailAFriendEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EmailAFriendEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EmailAFriendEnabled" />
+                                <span asp-validation-for="EmailAFriendEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="EmailAFriendEnabled">
+                            <div class="form-group advanced-setting" id="pnlAllowAnonymousUsersToEmailAFriend">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="AllowAnonymousUsersToEmailAFriend_OverrideForStore" asp-input="AllowAnonymousUsersToEmailAFriend" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="AllowAnonymousUsersToEmailAFriend" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="AllowAnonymousUsersToEmailAFriend" />
+                                    <span asp-validation-for="AllowAnonymousUsersToEmailAFriend"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@Html.IdFor(model => model.ShowShareButton)").click(togglePageShareCode);
+                                togglePageShareCode();
+                            });
+
+                            function togglePageShareCode() {
+                                if ($('#@Html.IdFor(model => model.ShowShareButton)').is(':checked')) {
+                                    $('#pnlPageShareCode').show();
+                                } else {
+                                    $('#pnlPageShareCode').hide();
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Compare")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CompareProductsEnabled_OverrideForStore" asp-input="CompareProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CompareProductsEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CompareProductsEnabled" />
+                                <span asp-validation-for="CompareProductsEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="CompareProductsEnabled">
+                            <div class="form-group advanced-setting" id="pnlIncludeShortDescriptionInCompareProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IncludeShortDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeShortDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IncludeShortDescriptionInCompareProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IncludeShortDescriptionInCompareProducts" />
+                                    <span asp-validation-for="IncludeShortDescriptionInCompareProducts"></span>
+                                </div>
+                            </div>
+                            <div class="form-group advanced-setting" id="IncludeFullDescriptionInCompareProducts">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IncludeFullDescriptionInCompareProducts_OverrideForStore" asp-input="IncludeFullDescriptionInCompareProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IncludeFullDescriptionInCompareProducts" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IncludeFullDescriptionInCompareProducts" />
+                                    <span asp-validation-for="IncludeFullDescriptionInCompareProducts"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#@Html.IdFor(model => model.CompareProductsEnabled)").click(toggleCompareProductsEnabled);
+                                toggleCompareProductsEnabled();
+                            });
+
+                            function toggleCompareProductsEnabled() {
+                                if ($('#@Html.IdFor(model => model.CompareProductsEnabled)').is(':checked')) {
+                                    $('#pnlIncludeShortDescriptionInCompareProducts').show();
+                                    $('#IncludeFullDescriptionInCompareProducts').show();
+                                } else {
+                                    $('#pnlIncludeShortDescriptionInCompareProducts').hide();
+                                    $('#IncludeFullDescriptionInCompareProducts').hide();
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.AdditionalSections")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowBestsellersOnHomepage_OverrideForStore" asp-input="ShowBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowBestsellersOnHomepage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowBestsellersOnHomepage" />
+                                <span asp-validation-for="ShowBestsellersOnHomepage"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ShowBestsellersOnHomepage">
+                            <div class="form-group advanced-setting" id="pnlNumberOfBestsellersOnHomepage">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NumberOfBestsellersOnHomepage_OverrideForStore" asp-input="NumberOfBestsellersOnHomepage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NumberOfBestsellersOnHomepage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NumberOfBestsellersOnHomepage" />
+                                    <span asp-validation-for="NumberOfBestsellersOnHomepage"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedEnabled_OverrideForStore" asp-input="ProductsAlsoPurchasedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductsAlsoPurchasedEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductsAlsoPurchasedEnabled" />
+                                <span asp-validation-for="ProductsAlsoPurchasedEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ProductsAlsoPurchasedEnabled">
+                            <div class="form-group advanced-setting" id="pnlProductsAlsoPurchasedNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsAlsoPurchasedNumber_OverrideForStore" asp-input="ProductsAlsoPurchasedNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsAlsoPurchasedNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsAlsoPurchasedNumber" />
+                                    <span asp-validation-for="ProductsAlsoPurchasedNumber"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="RecentlyViewedProductsEnabled_OverrideForStore" asp-input="RecentlyViewedProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="RecentlyViewedProductsEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="RecentlyViewedProductsEnabled" />
+                                <span asp-validation-for="RecentlyViewedProductsEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="RecentlyViewedProductsEnabled">
+                            <div class="form-group advanced-setting" id="pnlRecentlyViewedProductsNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="RecentlyViewedProductsNumber_OverrideForStore" asp-input="RecentlyViewedProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="RecentlyViewedProductsNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="RecentlyViewedProductsNumber" />
+                                    <span asp-validation-for="RecentlyViewedProductsNumber"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NewProductsEnabled_OverrideForStore" asp-input="NewProductsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NewProductsEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NewProductsEnabled" />
+                                <span asp-validation-for="NewProductsEnabled"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="NewProductsEnabled">
+                            <div class="form-group" id="pnlNewProductsNumber">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NewProductsNumber_OverrideForStore" asp-input="NewProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NewProductsNumber" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NewProductsNumber" />
+                                    <span asp-validation-for="NewProductsNumber"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductFields")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowSkuOnProductDetailsPage_OverrideForStore" asp-input="ShowSkuOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowSkuOnProductDetailsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowSkuOnProductDetailsPage" />
+                                <span asp-validation-for="ShowSkuOnProductDetailsPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowSkuOnCatalogPages_OverrideForStore" asp-input="ShowSkuOnCatalogPages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowSkuOnCatalogPages" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowSkuOnCatalogPages" />
+                                <span asp-validation-for="ShowSkuOnCatalogPages"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowGtin_OverrideForStore" asp-input="ShowGtin" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowGtin" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowGtin" />
+                                <span asp-validation-for="ShowGtin"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowManufacturerPartNumber_OverrideForStore" asp-input="ShowManufacturerPartNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowManufacturerPartNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowManufacturerPartNumber" />
+                                <span asp-validation-for="ShowManufacturerPartNumber"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductPage")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowFreeShippingNotification_OverrideForStore" asp-input="ShowFreeShippingNotification" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowFreeShippingNotification" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowFreeShippingNotification" />
+                                <span asp-validation-for="ShowFreeShippingNotification"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowViewUnpublishedProductPage_OverrideForStore" asp-input="AllowViewUnpublishedProductPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowViewUnpublishedProductPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowViewUnpublishedProductPage" />
+                                <span asp-validation-for="AllowViewUnpublishedProductPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore" asp-input="DisplayDiscontinuedMessageForUnpublishedProducts" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayDiscontinuedMessageForUnpublishedProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayDiscontinuedMessageForUnpublishedProducts" />
+                                <span asp-validation-for="DisplayDiscontinuedMessageForUnpublishedProducts"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.CatalogPages")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowProductViewModeChanging_OverrideForStore" asp-input="AllowProductViewModeChanging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowProductViewModeChanging" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowProductViewModeChanging" />
+                                <span asp-validation-for="AllowProductViewModeChanging"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowProductsFromSubcategories" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowProductsFromSubcategories" />
+                                <span asp-validation-for="ShowProductsFromSubcategories"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowCategoryProductNumber_OverrideForStore" asp-input="ShowCategoryProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowCategoryProductNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowCategoryProductNumber" />
+                                <span asp-validation-for="ShowCategoryProductNumber"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ShowCategoryProductNumber">
+                            <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                                    <span asp-validation-for="ShowCategoryProductNumberIncludingSubcategories"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CategoryBreadcrumbEnabled_OverrideForStore" asp-input="CategoryBreadcrumbEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CategoryBreadcrumbEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CategoryBreadcrumbEnabled" />
+                                <span asp-validation-for="CategoryBreadcrumbEnabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ManufacturersBlockItemsToDisplay_OverrideForStore" asp-input="ManufacturersBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ManufacturersBlockItemsToDisplay" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ManufacturersBlockItemsToDisplay" />
+                                <span asp-validation-for="ManufacturersBlockItemsToDisplay"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Tags")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfProductTags_OverrideForStore" asp-input="NumberOfProductTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfProductTags" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfProductTags" />
+                                <span asp-validation-for="NumberOfProductTags"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore" asp-input="ProductsByTagAllowCustomersToSelectPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductsByTagAllowCustomersToSelectPageSize" />
+                                <span asp-validation-for="ProductsByTagAllowCustomersToSelectPageSize"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="ProductsByTagAllowCustomersToSelectPageSize">
+                            <div class="form-group" id="pnlProductsByTagPageSize">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSize_OverrideForStore" asp-input="ProductsByTagPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsByTagPageSize" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsByTagPageSize" />
+                                    <span asp-validation-for="ProductsByTagPageSize"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlProductsByTagPageSizeOptions">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="ProductsByTagPageSizeOptions_OverrideForStore" asp-input="ProductsByTagPageSizeOptions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="ProductsByTagPageSizeOptions" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="ProductsByTagPageSizeOptions" />
+                                    <span asp-validation-for="ProductsByTagPageSizeOptions"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>                        
+                    </div>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.IdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+                            $("#@Html.IdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
+                            $("#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
+                            $("#@Html.IdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
+                            $("#@Html.IdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
+                            $("#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
+                            $("#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+
+                            toggleShowCategoryProductNumberIncludingSubcategories();
+                            toggleEmailAFriend();
+                            toggleRecentlyViewedProducts();
+                            toggleNewProducts();
+                            toggleBestsellersOnHomepage();
+                            toggleProductsAlsoPurchasedNumber();
+                            toggleProductsByTagPageSize();
+                        });
+
+                        function toggleShowCategoryProductNumberIncludingSubcategories() {
+                            if ($('#@Html.IdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
+                                $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
+                            } else {
+                                $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
+                            }
+                        }
+
+                        function toggleEmailAFriend() {
+                            if ($('#@Html.IdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
+                                $('#pnlAllowAnonymousUsersToEmailAFriend').show();
+                            } else {
+                                $('#pnlAllowAnonymousUsersToEmailAFriend').hide();
+                            }
+                        }
+
+                        function toggleRecentlyViewedProducts() {
+                            if ($('#@Html.IdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
+                                $('#pnlRecentlyViewedProductsNumber').show();
+                            } else {
+                                $('#pnlRecentlyViewedProductsNumber').hide();
+                            }
+                        }
+
+                        function toggleNewProducts() {
+                            if ($('#@Html.IdFor(model => model.NewProductsEnabled)').is(':checked')) {
+                                $('#pnlNewProductsNumber').show();
+                            } else {
+                                $('#pnlNewProductsNumber').hide();
+                            }
+                        }
+
+                        function toggleBestsellersOnHomepage() {
+                            if ($('#@Html.IdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
+                                $('#pnlNumberOfBestsellersOnHomepage').show();
+                            } else {
+                                $('#pnlNumberOfBestsellersOnHomepage').hide();
+                            }
+                        }
+
+                        function toggleProductsAlsoPurchasedNumber() {
+                            if ($('#@Html.IdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
+                                $('#pnlProductsAlsoPurchasedNumber').show();
+                            } else {
+                                $('#pnlProductsAlsoPurchasedNumber').hide();
+                            }
+                        }
+
+                        function toggleProductsByTagPageSize() {
+                            if ($('#@Html.IdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
+                                $('#pnlProductsByTagPageSize').hide();
+                                $('#pnlProductsByTagPageSizeOptions').show();
+                            } else {
+                                $('#pnlProductsByTagPageSize').show();
+                                $('#pnlProductsByTagPageSizeOptions').hide();
+                            }
+                        }
+
+                    </script>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.Tax")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoFooter_OverrideForStore" asp-input="DisplayTaxShippingInfoFooter" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoFooter" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoFooter" />
+                                <span asp-validation-for="DisplayTaxShippingInfoFooter"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoProductDetailsPage_OverrideForStore" asp-input="DisplayTaxShippingInfoProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoProductDetailsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoProductDetailsPage" />
+                                <span asp-validation-for="DisplayTaxShippingInfoProductDetailsPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoProductBoxes_OverrideForStore" asp-input="DisplayTaxShippingInfoProductBoxes" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoProductBoxes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoProductBoxes" />
+                                <span asp-validation-for="DisplayTaxShippingInfoProductBoxes"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoShoppingCart_OverrideForStore" asp-input="DisplayTaxShippingInfoShoppingCart" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoShoppingCart" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoShoppingCart" />
+                                <span asp-validation-for="DisplayTaxShippingInfoShoppingCart"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoWishlist_OverrideForStore" asp-input="DisplayTaxShippingInfoWishlist" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoWishlist" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoWishlist" />
+                                <span asp-validation-for="DisplayTaxShippingInfoWishlist"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore" asp-input="DisplayTaxShippingInfoOrderDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DisplayTaxShippingInfoOrderDetailsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="DisplayTaxShippingInfoOrderDetailsPage" />
+                                <span asp-validation-for="DisplayTaxShippingInfoOrderDetailsPage"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.ExportImport")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportProductAttributes_OverrideForStore" asp-input="ExportImportProductAttributes" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportProductAttributes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportProductAttributes" />
+                                <span asp-validation-for="ExportImportProductAttributes"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportProductSpecificationAttributes_OverrideForStore" asp-input="ExportImportProductSpecificationAttributes" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportProductSpecificationAttributes" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportProductSpecificationAttributes" />
+                                <span asp-validation-for="ExportImportProductSpecificationAttributes"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportProductCategoryBreadcrumb_OverrideForStore" asp-input="ExportImportProductCategoryBreadcrumb" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportProductCategoryBreadcrumb" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportProductCategoryBreadcrumb" />
+                                <span asp-validation-for="ExportImportProductCategoryBreadcrumb"></span>
+							</div>
+						</div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ExportImportCategoriesUsingCategoryName_OverrideForStore" asp-input="ExportImportCategoriesUsingCategoryName" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ExportImportCategoriesUsingCategoryName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExportImportCategoriesUsingCategoryName" />
+                                <span asp-validation-for="ExportImportCategoriesUsingCategoryName"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default advanced-setting">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Catalog.BlockTitle.ProductSorting")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowProductSorting_OverrideForStore" asp-input="AllowProductSorting" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowProductSorting" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowProductSorting" />
+                                <span asp-validation-for="AllowProductSorting"></span>
+                            </div>
+                        </div>
+                        <div id="sortoptions-grid"></div>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#sortoptions-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("SortOptionsList", "Setting"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                            update: {
+                                                url: "@Html.Raw(Url.Action("SortOptionUpdate", "Setting"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id",
+                                                fields: {
+                                                    Name: { editable: false, type: "string" },
+                                                    DisplayOrder: { editable: true, type: "number" },
+                                                    IsActive: { editable: true, type: "boolean" }
+                                                }
+                                            }
+                                        },
+                                        requestEnd: function (e) {
+                                            if (e.type == "update") {
+                                                this.read();
+                                            }
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false,
+                                        @await Html.PartialAsync("_GridPagerMessages")
+                                    },
+                                    editable: {
+                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "Name",
+                                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.Name")",
+                                            width: 250
+                                        }, {
+                                            field: "DisplayOrder",
+                                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")",
+                                            //integer format
+                                            format: "{0:0}",
+                                            width: 100
+                                        }, {
+                                            field: "IsActive",
+                                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.IsActive")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
+                                        }, {
+                                            command: {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            },
+                                            title: "@T("Admin.Common.Edit")",
+                                            width: 150
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_catalog_settings_bottom" })
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,217 @@
+﻿@model QueuedEmailModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_top", additionalData = Model.Id })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="PriorityName" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.PriorityName</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="From" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="From" asp-required="true" />
+                            <span asp-validation-for="From"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FromName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FromName" />
+                            <span asp-validation-for="FromName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="To" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="To" asp-required="true" />
+                            <span asp-validation-for="To"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ToName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ToName" />
+                            <span asp-validation-for="ToName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ReplyTo" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ReplyTo" />
+                            <span asp-validation-for="ReplyTo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ReplyToName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ReplyToName" />
+                            <span asp-validation-for="ReplyToName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CC" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CC" />
+                            <span asp-validation-for="CC"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Bcc" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Bcc" />
+                            <span asp-validation-for="Bcc"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Subject" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Subject" />
+                            <span asp-validation-for="Subject"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Body" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Body" asp-template="RichEditor" />
+                            <span asp-validation-for="Body"></span>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.AttachmentFilePath))
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AttachmentFilePath" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.AttachmentFilePath</div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.AttachedDownloadId > 0)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AttachedDownloadId" />
+                            </div>
+                            <div class="col-md-9">
+                                @{
+                                    //Static file attachments do not support URLs yet
+                                    //A store owner have to upload a file
+                                    //we store a value into "ViewData" and then use it in the Download.cshtml file
+                                    ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                                }
+                                <div>
+                                    <nop-editor asp-for="AttachedDownloadId" />
+                                    <span asp-validation-for="AttachedDownloadId"></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CreatedOn" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.CreatedOn</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SendImmediately" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SendImmediately" />
+                            <span asp-validation-for="SendImmediately"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnl-send-date">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DontSendBeforeDate" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DontSendBeforeDate" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SentTries" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SentTries" />
+                            <span asp-validation-for="SentTries"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SentOn" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.SentOn.HasValue)
+                            {
+                                <div class="form-text-row">@Model.SentOn</div>
+                            }
+                            else
+                            {
+                                <div class="form-text-row">@T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="EmailAccountName" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.EmailAccountName</div>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);
+                        sendImmediately();
+                    });
+
+                    function sendImmediately() {
+                        if ($('#@Html.IdFor(model => model.SendImmediately)').is(':checked'))
+                            $('#pnl-send-date').hide();
+                        else
+                            $('#pnl-send-date').show();
+                    }
+                </script>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_queued_email_details_bottom", additionalData = Model.Id })
+        </div>
+    </div>
+</div>

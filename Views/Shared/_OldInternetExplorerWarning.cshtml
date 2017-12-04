@@ -1,0 +1,13 @@
+﻿@inject IThemeContext ThemeContext
+@{
+    var currentThemeName = ThemeContext.WorkingThemeName;
+    var logoPath = "~/Themes/" + currentThemeName + "/Content/images/ie_warning.jpg";
+
+}
+<!--[if lte IE 7]>
+    <div style="clear:both;height:59px;text-align:center;position:relative;">
+        <a href="http://www.microsoft.com/windows/internet-explorer/default.aspx" target="_blank">
+            <img src="@Url.Content(logoPath)" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+    </div>
+<![endif]-->

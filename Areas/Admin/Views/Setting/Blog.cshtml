@@ -1,0 +1,129 @@
+﻿@model BlogSettingsModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Blog").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog settings");
+}
+
+<form asp-controller="Setting" asp-action="Blog" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Blog")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_settings_buttons" })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <div class="panel-group">
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_settings_top" })
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Blog.BlockTitle.Common")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="Enabled"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PostsPageSize_OverrideForStore" asp-input="PostsPageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PostsPageSize" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PostsPageSize" />
+                                <span asp-validation-for="PostsPageSize"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NumberOfTags_OverrideForStore" asp-input="NumberOfTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NumberOfTags" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NumberOfTags" />
+                                <span asp-validation-for="NumberOfTags"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowHeaderRssUrl_OverrideForStore" asp-input="ShowHeaderRssUrl" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowHeaderRssUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowHeaderRssUrl" />
+                                <span asp-validation-for="ShowHeaderRssUrl"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.Blog.BlockTitle.BlogComments")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AllowNotRegisteredUsersToLeaveComments_OverrideForStore" asp-input="AllowNotRegisteredUsersToLeaveComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AllowNotRegisteredUsersToLeaveComments" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AllowNotRegisteredUsersToLeaveComments" />
+                                <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="BlogCommentsMustBeApproved_OverrideForStore" asp-input="BlogCommentsMustBeApproved" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="BlogCommentsMustBeApproved" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BlogCommentsMustBeApproved" />
+                                <span asp-validation-for="BlogCommentsMustBeApproved"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="NotifyAboutNewBlogComments_OverrideForStore" asp-input="NotifyAboutNewBlogComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="NotifyAboutNewBlogComments" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="NotifyAboutNewBlogComments" />
+                                <span asp-validation-for="NotifyAboutNewBlogComments"></span>
+                            </div>
+                        </div>
+                        <div class="form-group advanced-setting">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ShowBlogCommentsPerStore" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowBlogCommentsPerStore" />
+                                <span asp-validation-for="ShowBlogCommentsPerStore"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_blog_settings_bottom" })
+            </div>
+        </div>
+    </div>
+</form>

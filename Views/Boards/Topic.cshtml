@@ -1,8 +1,6 @@
 ﻿@model ForumTopicPageModel
-@using Nop.Web.Models.Boards;
-@using Nop.Web.Models.Common;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(Model.Subject);
@@ -10,10 +8,10 @@
     Html.AppendPageCssClassParts("html-forum-topic-page");
 }
 <div class="page forum-topic-page">
-    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    @Html.Partial("_ForumHeader")
-    @Html.Widget("boards_topic_after_header", Model.Id)
-    @Html.AntiForgeryToken()
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
+    <nop-antiforgery-token />
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
@@ -26,7 +24,7 @@
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
                 <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
-                <script type="text/javascript">
+                <script type="text/javascript" asp-location="Footer">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
                             var postData = {
@@ -59,7 +57,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
-                <script type="text/javascript">
+                <script type="text/javascript" asp-location="Footer">
                     $(document).ready(function () {
                         $('#watch-topic-top').click(function () {
                             $.ajax({
@@ -92,8 +90,8 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @Html.Widget("boards_topic_top", Model.Id)
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_top", additionalData = Model.Id })
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -114,7 +112,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
-                <script type="text/javascript">
+                <script type="text/javascript" asp-location="Footer">
                     $(document).ready(function() {
                         $('#watch-topic-bottom').click(function() {
                             var postData = {};
@@ -139,16 +137,16 @@
                 </script>
             }
         </div>
-        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager lower">
                 @pager
             </div>
         }
     </div>
-    @Html.Widget("boards_topic_bottom", Model.Id)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_bottom", additionalData = Model.Id })
 </div>
-<script type="text/javascript">
+<script type="text/javascript" asp-location="Footer">
     function deletepost(postId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {

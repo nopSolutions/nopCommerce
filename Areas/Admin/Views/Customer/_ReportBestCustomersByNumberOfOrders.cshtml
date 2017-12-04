@@ -1,0 +1,151 @@
+﻿@model BestCustomersReportModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="StartDate"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="StartDate"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="EndDate"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EndDate"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="OrderStatusId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="PaymentStatusId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="ShippingStatusId"/>
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-md-offset-3">
+                    <button type="button" id="search-best-customers-numberoforders-grid" class="btn btn-primary btn-search">
+                        <i class="fa fa-line-chart"></i>
+                        @T("Admin.Customers.Reports.RunReport")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="best-customers-numberoforders-grid"></div>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("#best-customers-numberoforders-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ReportBestCustomersByNumberOfOrdersList", "Customer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: bestCustomersNumberOfOrdersAdditionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)],
+                            @await Html.PartialAsync("_GridPagerMessages")
+                        },
+                        editable: {
+                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "CustomerName",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")"
+                            }, {
+                                field: "OrderTotal",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
+                            }, {
+                                field: "OrderCount",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
+                            }
+                        ]
+                    });
+                });
+            </script>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#search-best-customers-numberoforders-grid').click(function() {
+                        var grid = $('#best-customers-numberoforders-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        return false;
+                    });
+                });
+
+                function bestCustomersNumberOfOrdersAdditionalData(e) {
+                    var data = {
+                        StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                        EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                        OrderStatusId: $('#@Html.IdFor(model => model.OrderStatusId)').val(),
+                        PaymentStatusId: $('#@Html.IdFor(model => model.PaymentStatusId)').val(),
+                        ShippingStatusId: $('#@Html.IdFor(model => model.ShippingStatusId)').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+            </script>
+        </div>
+    </div>
+</div>
