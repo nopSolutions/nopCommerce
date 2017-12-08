@@ -63,7 +63,8 @@ namespace Nop.Plugin.Payments.Square.Services
             if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
                 actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
             {
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, "https://js.squareup.com/v2/paymentform");
+                eventMessage.Helper
+                    .AddScriptParts(ResourceLocation.Footer, "https://js.squareup.com/v2/paymentform", excludeFromBundle: true);
             }
         }
 

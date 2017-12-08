@@ -345,8 +345,17 @@ namespace Nop.Web.Framework.UI
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
                     {
-                        new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                        var path = new PathString();
+                        try
+                        {
+                            new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
+                                .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out path);
+                        }
+                        catch (ArgumentException)
+                        {
+                            continue;
+                        }
+
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory

@@ -70,7 +70,8 @@ namespace Nop.Plugin.Payments.Worldpay.Services
             if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
                 actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
             {
-                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js");
+                eventMessage.Helper
+                    .AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js", excludeFromBundle: true);
             }
         }
 

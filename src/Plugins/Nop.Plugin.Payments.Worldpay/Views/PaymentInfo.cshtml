@@ -1,7 +1,7 @@
 ﻿@model Nop.Plugin.Payments.Worldpay.Models.PaymentInfoModel
 @{
     Layout = "";
-    Html.AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js", excludeFromBundle: true);
 }
 @inject Nop.Core.IWorkContext workContext
 @inject WorldpayPaymentSettings worldpayPaymentSettings
