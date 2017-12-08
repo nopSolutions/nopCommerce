@@ -679,6 +679,14 @@ namespace Nop.Plugin.Shipping.UPS
                             {
                                 break;
                             }
+                            if ((tr.Name == "RatedPackage") && (tr.NodeType == XmlNodeType.Element))
+                            {
+                                while (tr.Read())
+                                {
+                                    if ((tr.Name == "RatedPackage") && (tr.NodeType == XmlNodeType.EndElement))
+                                        break;
+                                }
+                            }
                             if ((tr.Name == "TotalCharges") && (tr.NodeType == XmlNodeType.Element))
                             {
                                 while (tr.Read())
@@ -802,6 +810,237 @@ namespace Nop.Plugin.Shipping.UPS
                     _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
                 var error = "";
+                responseXml = @"<?xml version=""1.0""?>
+<RatingServiceSelectionResponse>
+  <Response>
+    <TransactionReference>
+      <CustomerContext>Bare Bones Rate Request</CustomerContext>
+      <XpciVersion>1.0001</XpciVersion>
+    </TransactionReference>
+    <ResponseStatusCode>1</ResponseStatusCode>
+    <ResponseStatusDescription>Success</ResponseStatusDescription>
+  </Response>
+  <RatedShipment>
+    <Service>
+      <Code>02</Code>
+    </Service>
+    <RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning>
+    <BillingWeight>
+      <UnitOfMeasurement>
+        <Code>LBS</Code>
+      </UnitOfMeasurement>
+      <Weight>5.0</Weight>
+    </BillingWeight>
+    <TransportationCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>24.60</MonetaryValue>
+    </TransportationCharges>
+    <ServiceOptionsCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>0.00</MonetaryValue>
+    </ServiceOptionsCharges>
+    <TotalCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>24.60</MonetaryValue>
+    </TotalCharges>
+    <GuaranteedDaysToDelivery>2</GuaranteedDaysToDelivery>
+    <ScheduledDeliveryTime/>
+    <RatedPackage>
+      <TransportationCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>24.60</MonetaryValue>
+      </TransportationCharges>
+      <ServiceOptionsCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </ServiceOptionsCharges>
+      <TotalCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </TotalCharges>
+      <Weight>1.0</Weight>
+      <BillingWeight>
+        <UnitOfMeasurement>
+          <Code>LBS</Code>
+        </UnitOfMeasurement>
+        <Weight>5.0</Weight>
+      </BillingWeight>
+    </RatedPackage>
+    <NegotiatedRates>
+      <NetSummaryCharges>
+        <GrandTotal>
+          <CurrencyCode>USD</CurrencyCode>
+          <MonetaryValue>24.35</MonetaryValue>
+        </GrandTotal>
+      </NetSummaryCharges>
+    </NegotiatedRates>
+  </RatedShipment>
+  <RatedShipment>
+    <Service>
+      <Code>13</Code>
+    </Service>
+    <RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning>
+    <BillingWeight>
+      <UnitOfMeasurement>
+        <Code>LBS</Code>
+      </UnitOfMeasurement>
+      <Weight>5.0</Weight>
+    </BillingWeight>
+    <TransportationCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>39.25</MonetaryValue>
+    </TransportationCharges>
+    <ServiceOptionsCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>0.00</MonetaryValue>
+    </ServiceOptionsCharges>
+    <TotalCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>39.25</MonetaryValue>
+    </TotalCharges>
+    <GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery>
+    <ScheduledDeliveryTime/>
+    <RatedPackage>
+      <TransportationCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>39.25</MonetaryValue>
+      </TransportationCharges>
+      <ServiceOptionsCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </ServiceOptionsCharges>
+      <TotalCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </TotalCharges>
+      <Weight>1.0</Weight>
+      <BillingWeight>
+        <UnitOfMeasurement>
+          <Code>LBS</Code>
+        </UnitOfMeasurement>
+        <Weight>5.0</Weight>
+      </BillingWeight>
+    </RatedPackage>
+    <NegotiatedRates>
+      <NetSummaryCharges>
+        <GrandTotal>
+          <CurrencyCode>USD</CurrencyCode>
+          <MonetaryValue>38.86</MonetaryValue>
+        </GrandTotal>
+      </NetSummaryCharges>
+    </NegotiatedRates>
+  </RatedShipment>
+  <RatedShipment>
+    <Service>
+      <Code>14</Code>
+    </Service>
+    <RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning>
+    <BillingWeight>
+      <UnitOfMeasurement>
+        <Code>LBS</Code>
+      </UnitOfMeasurement>
+      <Weight>5.0</Weight>
+    </BillingWeight>
+    <TransportationCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>74.91</MonetaryValue>
+    </TransportationCharges>
+    <ServiceOptionsCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>0.00</MonetaryValue>
+    </ServiceOptionsCharges>
+    <TotalCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>74.91</MonetaryValue>
+    </TotalCharges>
+    <GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery>
+    <ScheduledDeliveryTime>8:00 A.M.</ScheduledDeliveryTime>
+    <RatedPackage>
+      <TransportationCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>74.91</MonetaryValue>
+      </TransportationCharges>
+      <ServiceOptionsCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </ServiceOptionsCharges>
+      <TotalCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>74.91</MonetaryValue>
+      </TotalCharges>
+      <Weight>1.0</Weight>
+      <BillingWeight>
+        <UnitOfMeasurement>
+          <Code>LBS</Code>
+        </UnitOfMeasurement>
+        <Weight>5.0</Weight>
+      </BillingWeight>
+    </RatedPackage>
+    <NegotiatedRates>
+      <NetSummaryCharges>
+        <GrandTotal>
+          <CurrencyCode>USD</CurrencyCode>
+          <MonetaryValue>74.16</MonetaryValue>
+        </GrandTotal>
+      </NetSummaryCharges>
+    </NegotiatedRates>
+  </RatedShipment>
+  <RatedShipment>
+    <Service>
+      <Code>01</Code>
+    </Service>
+    <RatedShipmentWarning>Your invoice may vary from the displayed reference rates</RatedShipmentWarning>
+    <BillingWeight>
+      <UnitOfMeasurement>
+        <Code>LBS</Code>
+      </UnitOfMeasurement>
+      <Weight>5.0</Weight>
+    </BillingWeight>
+    <TransportationCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>42.74</MonetaryValue>
+    </TransportationCharges>
+    <ServiceOptionsCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>0.00</MonetaryValue>
+    </ServiceOptionsCharges>
+    <TotalCharges>
+      <CurrencyCode>USD</CurrencyCode>
+      <MonetaryValue>42.74</MonetaryValue>
+    </TotalCharges>
+    <GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery>
+    <ScheduledDeliveryTime>10:30 A.M.</ScheduledDeliveryTime>
+    <RatedPackage>
+      <TransportationCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>42.74</MonetaryValue>
+      </TransportationCharges>
+      <ServiceOptionsCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>0.00</MonetaryValue>
+      </ServiceOptionsCharges>
+      <TotalCharges>
+        <CurrencyCode>USD</CurrencyCode>
+        <MonetaryValue>42.74</MonetaryValue>
+      </TotalCharges>
+      <Weight>1.0</Weight>
+      <BillingWeight>
+        <UnitOfMeasurement>
+          <Code>LBS</Code>
+        </UnitOfMeasurement>
+        <Weight>5.0</Weight>
+      </BillingWeight>
+    </RatedPackage>
+    <NegotiatedRates>
+      <NetSummaryCharges>
+        <GrandTotal>
+          <CurrencyCode>USD</CurrencyCode>
+          <MonetaryValue>42.31</MonetaryValue>
+        </GrandTotal>
+      </NetSummaryCharges>
+    </NegotiatedRates>
+  </RatedShipment>
+</RatingServiceSelectionResponse>";
                 var shippingOptions = ParseResponse(responseXml, false, ref error);
                 if (string.IsNullOrEmpty(error))
                 {
