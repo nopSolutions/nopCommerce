@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -252,7 +253,9 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME,
+                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
+                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();
@@ -279,7 +282,9 @@ namespace Nop.Web.Extensions
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TITLE_BY_SYSTEMNAME, 
+                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
+                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTitle = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();

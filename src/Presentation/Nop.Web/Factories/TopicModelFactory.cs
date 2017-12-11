@@ -134,11 +134,6 @@ namespace Nop.Web.Factories
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
                     return null;
-                if (!topic.Published)
-                    return null;
-                //ACL (access control list)
-                if (!_aclService.Authorize(topic))
-                    return null;
                 return PrepareTopicModel(topic);
             });
 

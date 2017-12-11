@@ -390,8 +390,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : topic system name
         /// {1} : language id
         /// {2} : store id
+        /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}";
+        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
@@ -399,8 +400,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : topic system name
         /// {1} : language id
         /// {2} : store id
+        /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_TITLE_BY_SYSTEMNAME = "Nop.pres.topic.title.bysystemname-{0}-{1}-{2}";
+        public const string TOPIC_TITLE_BY_SYSTEMNAME = "Nop.pres.topic.title.bysystemname-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
