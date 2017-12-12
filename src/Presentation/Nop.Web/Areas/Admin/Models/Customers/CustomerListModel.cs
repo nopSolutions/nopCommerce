@@ -50,5 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchIpAddress")]
         public string SearchIpAddress { get; set; }
+
+        public bool AvatarEnabled { get; internal set; }
     }
 }
