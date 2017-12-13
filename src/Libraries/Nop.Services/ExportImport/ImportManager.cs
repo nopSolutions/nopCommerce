@@ -26,6 +26,7 @@ using Nop.Services.Shipping.Date;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using OfficeOpenXml;
+using System.Net;
 
 namespace Nop.Services.ExportImport
 {
@@ -38,6 +39,8 @@ namespace Nop.Services.ExportImport
 
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string IMAGE_HASH_ALGORITHM = "SHA1";
+
+        private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
 
         private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
@@ -65,6 +68,7 @@ namespace Nop.Services.ExportImport
         private readonly ICustomerActivityService _customerActivityService;
         private readonly VendorSettings _vendorSettings;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly ILogger _logger;
 
         #endregion
 
@@ -95,7 +99,8 @@ namespace Nop.Services.ExportImport
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             VendorSettings vendorSettings,
-            ISpecificationAttributeService specificationAttributeService)
+            ISpecificationAttributeService specificationAttributeService,
+            ILogger logger)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -123,6 +128,7 @@ namespace Nop.Services.ExportImport
             this._customerActivityService = customerActivityService;
             this._vendorSettings = vendorSettings;
             this._specificationAttributeService = specificationAttributeService;
+            this._logger = logger;
         }
 
         #endregion
@@ -234,6 +240,14 @@ namespace Nop.Services.ExportImport
             return newPicture;
         }
 
+        private void LogPictureInsertError(string picturePath, Exception ex)
+        {
+            var fi = new FileInfo(picturePath);
+            var point = string.IsNullOrEmpty(fi.Extension) ? string.Empty : ".";
+            var fileName = fi.Exists ? $"{fi.Name}{point}{fi.Extension}" : string.Empty;
+            _logger.Error($"Insert picture failed (file name: {fileName})", ex);
+        }
+
         protected virtual void ImportProductImagesUsingServices(IList<ProductPictureMetadata> productPictureMetadata)
         {
             foreach (var product in productPictureMetadata)
@@ -266,16 +280,24 @@ namespace Nop.Services.ExportImport
 
                     if (pictureAlreadyExists)
                         continue;
-                    var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                    product.ProductItem.ProductPictures.Add(new ProductPicture
+
+                    try
                     {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
-                        PictureId = newPicture.Id,
-                        DisplayOrder = 1,
-                    });
-                    _productService.UpdateProduct(product.ProductItem);
+                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                        product.ProductItem.ProductPictures.Add(new ProductPicture
+                        {
+                            //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                            //pictures are duplicated
+                            //maybe because entity size is too large
+                            PictureId = newPicture.Id,
+                            DisplayOrder = 1,
+                        });
+                        _productService.UpdateProduct(product.ProductItem);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogPictureInsertError(picturePath, ex);
+                    }
                 }
             }
         }
@@ -294,34 +316,45 @@ namespace Nop.Services.ExportImport
                 {
                     if (string.IsNullOrEmpty(picturePath))
                         continue;
-
-                    var mimeType = GetMimeTypeFromFilePath(picturePath);
-                    var newPictureBinary = File.ReadAllBytes(picturePath);
-                    var pictureAlreadyExists = false;
-                    if (!product.IsNew)
+                    try
                     {
-                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
-                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray(), IMAGE_HASH_ALGORITHM);
+                        var mimeType = GetMimeTypeFromFilePath(picturePath);
+                        var newPictureBinary = File.ReadAllBytes(picturePath);
+                        var pictureAlreadyExists = false;
+                        if (!product.IsNew)
+                        {
+                            var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(),
+                                IMAGE_HASH_ALGORITHM);
+                            var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType)
+                                .Take(takeCount)
+                                .ToArray(), IMAGE_HASH_ALGORITHM);
 
-                        var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
-                            ? productsImagesIds[product.ProductItem.Id]
-                            : new int[0];
+                            var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
+                                ? productsImagesIds[product.ProductItem.Id]
+                                : new int[0];
 
-                        pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key)).Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                            pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
+                                .Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                        }
+
+                        if (pictureAlreadyExists)
+                            continue;
+
+                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                        product.ProductItem.ProductPictures.Add(new ProductPicture
+                        {
+                            //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                            //pictures are duplicated
+                            //maybe because entity size is too large
+                            PictureId = newPicture.Id,
+                            DisplayOrder = 1,
+                        });
+                        _productService.UpdateProduct(product.ProductItem);
                     }
-
-                    if (pictureAlreadyExists)
-                        continue;
-                    var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                    product.ProductItem.ProductPictures.Add(new ProductPicture
+                    catch (Exception ex)
                     {
-                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                        //pictures are duplicated
-                        //maybe because entity size is too large
-                        PictureId = newPicture.Id,
-                        DisplayOrder = 1,
-                    });
-                    _productService.UpdateProduct(product.ProductItem);
+                        LogPictureInsertError(picturePath, ex);
+                    }
                 }
             }
         }
@@ -675,7 +708,59 @@ namespace Nop.Services.ExportImport
                 _specificationAttributeService.UpdateProductSpecificationAttribute(productSpecificationAttribute);
             }
         }
-        
+
+        private string DownloadFile(string urlString, IList<string> downloadedFiles)
+        {
+            if (string.IsNullOrEmpty(urlString))
+                return string.Empty;
+
+            if (!Uri.IsWellFormedUriString(urlString, UriKind.Absolute))
+                return urlString;
+
+            if (!_catalogSettings.ExportImportAllowDownloadImages)
+                return string.Empty;
+
+            //ensure that temp directory is created
+            var tempDirectory = CommonHelper.MapPath(UPLOADS_TEMP_PATH);
+            System.IO.Directory.CreateDirectory(new DirectoryInfo(tempDirectory).FullName);
+
+            var fileName = Path.GetFileName(urlString);
+            if (string.IsNullOrEmpty(fileName))
+                return string.Empty;
+
+            var filePath = Path.Combine(tempDirectory, fileName);
+            try
+            {
+                WebRequest.Create(urlString);
+            }
+            catch
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                byte[] fileData;
+                using (var client = new WebClient())
+                {
+                    fileData = client.DownloadData(urlString);
+                }
+                using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
+                {
+                    fs.Write(fileData, 0, fileData.Length);
+                }
+
+                downloadedFiles?.Add(filePath);
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Download image failed", ex);
+            }
+
+            return string.Empty;
+        }
+
         #endregion
 
         #region Methods
@@ -723,6 +808,8 @@ namespace Nop.Services.ExportImport
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
+                
+                var downloadedFiles = new List<string>();
 
                 //the columns
                 var properties = GetPropertiesByExcelCells<Product>(worksheet);
@@ -1406,9 +1493,9 @@ namespace Nop.Services.ExportImport
                         _productTagService.UpdateProductTags(product, productTags);
                     }
 
-                    var picture1 = manager.GetProperty("Picture1")?.StringValue ?? string.Empty;
-                    var picture2 = manager.GetProperty("Picture2")?.StringValue ?? string.Empty;
-                    var picture3 = manager.GetProperty("Picture3")?.StringValue ?? string.Empty;
+                    var picture1 = DownloadFile(manager.GetProperty("Picture1")?.StringValue, downloadedFiles);
+                    var picture2 = DownloadFile(manager.GetProperty("Picture2")?.StringValue, downloadedFiles);
+                    var picture3 = DownloadFile(manager.GetProperty("Picture3")?.StringValue, downloadedFiles);
 
                     productPictureMetadata.Add(new ProductPictureMetadata
                     {
@@ -1430,6 +1517,21 @@ namespace Nop.Services.ExportImport
                     ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
                 else
                     ImportProductImagesUsingServices(productPictureMetadata);
+
+                foreach (var downloadedFile in downloadedFiles)
+                {
+                    if(!File.Exists(downloadedFile))
+                        continue;
+
+                    try
+                    {
+                        File.Delete(downloadedFile);
+                    }
+                    catch
+                    {
+                       
+                    }
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("ImportProducts", _localizationService.GetResource("ActivityLog.ImportProducts"), countProductsInFile);
@@ -1815,7 +1917,7 @@ namespace Nop.Services.ExportImport
 
             public bool IsNew { get; set; }
         }
-        
+
         #endregion
     }
 }
