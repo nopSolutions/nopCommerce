@@ -9,9 +9,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
     /// Model cache event consumer (used for caching of presentation layer models)
     /// </summary>
     public partial class ModelCacheEventConsumer :
-        IConsumer<EntityInserted<Setting>>,
-        IConsumer<EntityUpdated<Setting>>,
-        IConsumer<EntityDeleted<Setting>>
+        IConsumer<EntityInsertedEvent<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
+        IConsumer<EntityDeletedEvent<Setting>>
     {
         /// <summary>
         /// Key for caching
@@ -29,15 +29,15 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache
             this._cacheManager = cacheManager;
         }
 
-        public void HandleEvent(EntityInserted<Setting> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Setting> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Setting> eventMessage)
         {
             _cacheManager.RemoveByPattern(PICTURE_URL_PATTERN_KEY);
         }

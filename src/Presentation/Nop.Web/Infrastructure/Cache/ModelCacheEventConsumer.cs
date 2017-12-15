@@ -20,128 +20,128 @@ namespace Nop.Web.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer :
         //languages
-        IConsumer<EntityInserted<Language>>,
-        IConsumer<EntityUpdated<Language>>,
-        IConsumer<EntityDeleted<Language>>,
+        IConsumer<EntityInsertedEvent<Language>>,
+        IConsumer<EntityUpdatedEvent<Language>>,
+        IConsumer<EntityDeletedEvent<Language>>,
         //currencies
-        IConsumer<EntityInserted<Currency>>,
-        IConsumer<EntityUpdated<Currency>>,
-        IConsumer<EntityDeleted<Currency>>,
+        IConsumer<EntityInsertedEvent<Currency>>,
+        IConsumer<EntityUpdatedEvent<Currency>>,
+        IConsumer<EntityDeletedEvent<Currency>>,
         //settings
-        IConsumer<EntityUpdated<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
         //manufacturers
-        IConsumer<EntityInserted<Manufacturer>>,
-        IConsumer<EntityUpdated<Manufacturer>>,
-        IConsumer<EntityDeleted<Manufacturer>>,
+        IConsumer<EntityInsertedEvent<Manufacturer>>,
+        IConsumer<EntityUpdatedEvent<Manufacturer>>,
+        IConsumer<EntityDeletedEvent<Manufacturer>>,
         //vendors
-        IConsumer<EntityInserted<Vendor>>,
-        IConsumer<EntityUpdated<Vendor>>,
-        IConsumer<EntityDeleted<Vendor>>,
+        IConsumer<EntityInsertedEvent<Vendor>>,
+        IConsumer<EntityUpdatedEvent<Vendor>>,
+        IConsumer<EntityDeletedEvent<Vendor>>,
         //product manufacturers
-        IConsumer<EntityInserted<ProductManufacturer>>,
-        IConsumer<EntityUpdated<ProductManufacturer>>,
-        IConsumer<EntityDeleted<ProductManufacturer>>,
+        IConsumer<EntityInsertedEvent<ProductManufacturer>>,
+        IConsumer<EntityUpdatedEvent<ProductManufacturer>>,
+        IConsumer<EntityDeletedEvent<ProductManufacturer>>,
         //categories
-        IConsumer<EntityInserted<Category>>,
-        IConsumer<EntityUpdated<Category>>,
-        IConsumer<EntityDeleted<Category>>,
+        IConsumer<EntityInsertedEvent<Category>>,
+        IConsumer<EntityUpdatedEvent<Category>>,
+        IConsumer<EntityDeletedEvent<Category>>,
         //product categories
-        IConsumer<EntityInserted<ProductCategory>>,
-        IConsumer<EntityUpdated<ProductCategory>>,
-        IConsumer<EntityDeleted<ProductCategory>>,
+        IConsumer<EntityInsertedEvent<ProductCategory>>,
+        IConsumer<EntityUpdatedEvent<ProductCategory>>,
+        IConsumer<EntityDeletedEvent<ProductCategory>>,
         //products
-        IConsumer<EntityInserted<Product>>,
-        IConsumer<EntityUpdated<Product>>,
-        IConsumer<EntityDeleted<Product>>,
+        IConsumer<EntityInsertedEvent<Product>>,
+        IConsumer<EntityUpdatedEvent<Product>>,
+        IConsumer<EntityDeletedEvent<Product>>,
         //related product
-        IConsumer<EntityInserted<RelatedProduct>>,
-        IConsumer<EntityUpdated<RelatedProduct>>,
-        IConsumer<EntityDeleted<RelatedProduct>>,
+        IConsumer<EntityInsertedEvent<RelatedProduct>>,
+        IConsumer<EntityUpdatedEvent<RelatedProduct>>,
+        IConsumer<EntityDeletedEvent<RelatedProduct>>,
         //product tags
-        IConsumer<EntityInserted<ProductTag>>,
-        IConsumer<EntityUpdated<ProductTag>>,
-        IConsumer<EntityDeleted<ProductTag>>,
+        IConsumer<EntityInsertedEvent<ProductTag>>,
+        IConsumer<EntityUpdatedEvent<ProductTag>>,
+        IConsumer<EntityDeletedEvent<ProductTag>>,
         //specification attributes
-        IConsumer<EntityUpdated<SpecificationAttribute>>,
-        IConsumer<EntityDeleted<SpecificationAttribute>>,
+        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
+        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
         //specification attribute options
-        IConsumer<EntityUpdated<SpecificationAttributeOption>>,
-        IConsumer<EntityDeleted<SpecificationAttributeOption>>,
+        IConsumer<EntityUpdatedEvent<SpecificationAttributeOption>>,
+        IConsumer<EntityDeletedEvent<SpecificationAttributeOption>>,
         //Product specification attribute
-        IConsumer<EntityInserted<ProductSpecificationAttribute>>,
-        IConsumer<EntityUpdated<ProductSpecificationAttribute>>,
-        IConsumer<EntityDeleted<ProductSpecificationAttribute>>,
+        IConsumer<EntityInsertedEvent<ProductSpecificationAttribute>>,
+        IConsumer<EntityUpdatedEvent<ProductSpecificationAttribute>>,
+        IConsumer<EntityDeletedEvent<ProductSpecificationAttribute>>,
         //Product attributes
-        IConsumer<EntityDeleted<ProductAttribute>>,
+        IConsumer<EntityDeletedEvent<ProductAttribute>>,
         //Product attributes
-        IConsumer<EntityInserted<ProductAttributeMapping>>,
-        IConsumer<EntityDeleted<ProductAttributeMapping>>,
+        IConsumer<EntityInsertedEvent<ProductAttributeMapping>>,
+        IConsumer<EntityDeletedEvent<ProductAttributeMapping>>,
         //Product attribute values
-        IConsumer<EntityUpdated<ProductAttributeValue>>,
+        IConsumer<EntityUpdatedEvent<ProductAttributeValue>>,
         //Topics
-        IConsumer<EntityInserted<Topic>>,
-        IConsumer<EntityUpdated<Topic>>,
-        IConsumer<EntityDeleted<Topic>>,
+        IConsumer<EntityInsertedEvent<Topic>>,
+        IConsumer<EntityUpdatedEvent<Topic>>,
+        IConsumer<EntityDeletedEvent<Topic>>,
         //Orders
-        IConsumer<EntityInserted<Order>>,
-        IConsumer<EntityUpdated<Order>>,
-        IConsumer<EntityDeleted<Order>>,
+        IConsumer<EntityInsertedEvent<Order>>,
+        IConsumer<EntityUpdatedEvent<Order>>,
+        IConsumer<EntityDeletedEvent<Order>>,
         //Picture
-        IConsumer<EntityInserted<Picture>>,
-        IConsumer<EntityUpdated<Picture>>,
-        IConsumer<EntityDeleted<Picture>>,
+        IConsumer<EntityInsertedEvent<Picture>>,
+        IConsumer<EntityUpdatedEvent<Picture>>,
+        IConsumer<EntityDeletedEvent<Picture>>,
         //Product picture mapping
-        IConsumer<EntityInserted<ProductPicture>>,
-        IConsumer<EntityUpdated<ProductPicture>>,
-        IConsumer<EntityDeleted<ProductPicture>>,
+        IConsumer<EntityInsertedEvent<ProductPicture>>,
+        IConsumer<EntityUpdatedEvent<ProductPicture>>,
+        IConsumer<EntityDeletedEvent<ProductPicture>>,
         //Product review
-        IConsumer<EntityDeleted<ProductReview>>,
+        IConsumer<EntityDeletedEvent<ProductReview>>,
         //polls
-        IConsumer<EntityInserted<Poll>>,
-        IConsumer<EntityUpdated<Poll>>,
-        IConsumer<EntityDeleted<Poll>>,
+        IConsumer<EntityInsertedEvent<Poll>>,
+        IConsumer<EntityUpdatedEvent<Poll>>,
+        IConsumer<EntityDeletedEvent<Poll>>,
         //blog posts
-        IConsumer<EntityInserted<BlogPost>>,
-        IConsumer<EntityUpdated<BlogPost>>,
-        IConsumer<EntityDeleted<BlogPost>>,
+        IConsumer<EntityInsertedEvent<BlogPost>>,
+        IConsumer<EntityUpdatedEvent<BlogPost>>,
+        IConsumer<EntityDeletedEvent<BlogPost>>,
         //blog comments
-        IConsumer<EntityDeleted<BlogComment>>,
+        IConsumer<EntityDeletedEvent<BlogComment>>,
         //news items
-        IConsumer<EntityInserted<NewsItem>>,
-        IConsumer<EntityUpdated<NewsItem>>,
-        IConsumer<EntityDeleted<NewsItem>>,
+        IConsumer<EntityInsertedEvent<NewsItem>>,
+        IConsumer<EntityUpdatedEvent<NewsItem>>,
+        IConsumer<EntityDeletedEvent<NewsItem>>,
         //news comments
-        IConsumer<EntityDeleted<NewsComment>>,
+        IConsumer<EntityDeletedEvent<NewsComment>>,
         //states/province
-        IConsumer<EntityInserted<StateProvince>>,
-        IConsumer<EntityUpdated<StateProvince>>,
-        IConsumer<EntityDeleted<StateProvince>>,
+        IConsumer<EntityInsertedEvent<StateProvince>>,
+        IConsumer<EntityUpdatedEvent<StateProvince>>,
+        IConsumer<EntityDeletedEvent<StateProvince>>,
         //return requests
-        IConsumer<EntityInserted<ReturnRequestAction>>,
-        IConsumer<EntityUpdated<ReturnRequestAction>>,
-        IConsumer<EntityDeleted<ReturnRequestAction>>,
-        IConsumer<EntityInserted<ReturnRequestReason>>,
-        IConsumer<EntityUpdated<ReturnRequestReason>>,
-        IConsumer<EntityDeleted<ReturnRequestReason>>,
+        IConsumer<EntityInsertedEvent<ReturnRequestAction>>,
+        IConsumer<EntityUpdatedEvent<ReturnRequestAction>>,
+        IConsumer<EntityDeletedEvent<ReturnRequestAction>>,
+        IConsumer<EntityInsertedEvent<ReturnRequestReason>>,
+        IConsumer<EntityUpdatedEvent<ReturnRequestReason>>,
+        IConsumer<EntityDeletedEvent<ReturnRequestReason>>,
         //templates
-        IConsumer<EntityInserted<CategoryTemplate>>,
-        IConsumer<EntityUpdated<CategoryTemplate>>,
-        IConsumer<EntityDeleted<CategoryTemplate>>,
-        IConsumer<EntityInserted<ManufacturerTemplate>>,
-        IConsumer<EntityUpdated<ManufacturerTemplate>>,
-        IConsumer<EntityDeleted<ManufacturerTemplate>>,
-        IConsumer<EntityInserted<ProductTemplate>>,
-        IConsumer<EntityUpdated<ProductTemplate>>,
-        IConsumer<EntityDeleted<ProductTemplate>>,
-        IConsumer<EntityInserted<TopicTemplate>>,
-        IConsumer<EntityUpdated<TopicTemplate>>,
-        IConsumer<EntityDeleted<TopicTemplate>>,
+        IConsumer<EntityInsertedEvent<CategoryTemplate>>,
+        IConsumer<EntityUpdatedEvent<CategoryTemplate>>,
+        IConsumer<EntityDeletedEvent<CategoryTemplate>>,
+        IConsumer<EntityInsertedEvent<ManufacturerTemplate>>,
+        IConsumer<EntityUpdatedEvent<ManufacturerTemplate>>,
+        IConsumer<EntityDeletedEvent<ManufacturerTemplate>>,
+        IConsumer<EntityInsertedEvent<ProductTemplate>>,
+        IConsumer<EntityUpdatedEvent<ProductTemplate>>,
+        IConsumer<EntityDeletedEvent<ProductTemplate>>,
+        IConsumer<EntityInsertedEvent<TopicTemplate>>,
+        IConsumer<EntityUpdatedEvent<TopicTemplate>>,
+        IConsumer<EntityDeletedEvent<TopicTemplate>>,
         //checkout attributes
-        IConsumer<EntityInserted<CheckoutAttribute>>,
-        IConsumer<EntityUpdated<CheckoutAttribute>>,
-        IConsumer<EntityDeleted<CheckoutAttribute>>,
+        IConsumer<EntityInsertedEvent<CheckoutAttribute>>,
+        IConsumer<EntityUpdatedEvent<CheckoutAttribute>>,
+        IConsumer<EntityDeletedEvent<CheckoutAttribute>>,
         //shopping cart items
-        IConsumer<EntityUpdated<ShoppingCartItem>>
+        IConsumer<EntityUpdatedEvent<ShoppingCartItem>>
     {
         #region Fields
 
@@ -784,7 +784,7 @@ namespace Nop.Web.Infrastructure.Cache
         #region Methods
 
         //languages
-        public void HandleEvent(EntityInserted<Language> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -799,7 +799,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Language> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -814,7 +814,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Language> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
@@ -831,20 +831,20 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //currencies
-        public void HandleEvent(EntityInserted<Currency> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Currency> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Currency> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Currency> eventMessage)
         {
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
 
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY); //depends on CatalogSettings.NumberOfProductTags
@@ -863,35 +863,35 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //vendors
-        public void HandleEvent(EntityInserted<Vendor> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(VENDOR_PICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.Id));
         }
-        public void HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
         }
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
 
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_PICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.Id));
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
@@ -899,24 +899,24 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //product manufacturers
-        public void HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
-        public void HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
-        public void HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductManufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_MANUFACTURERS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.ManufacturerId));
         }
 
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
@@ -925,7 +925,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -937,7 +937,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(CATEGORY_PICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.Id));
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -950,7 +950,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //product categories
-        public void HandleEvent(EntityInserted<ProductCategory> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_BREADCRUMB_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             if (_catalogSettings.ShowCategoryProductNumber)
@@ -962,13 +962,13 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.CategoryId));
         }
-        public void HandleEvent(EntityUpdated<ProductCategory> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_BREADCRUMB_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(string.Format(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY_BY_ID, eventMessage.Entity.CategoryId));
         }
-        public void HandleEvent(EntityDeleted<ProductCategory> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_BREADCRUMB_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             if (_catalogSettings.ShowCategoryProductNumber)
@@ -982,11 +982,11 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //products
-        public void HandleEvent(EntityInserted<Product> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Product> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
@@ -995,7 +995,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_REVIEWS_PATTERN_KEY_BY_ID, eventMessage.Entity.Id));
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Product> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
@@ -1004,165 +1004,165 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //product tags
-        public void HandleEvent(EntityInserted<ProductTag> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ProductTag> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ProductTag> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_PATTERN_KEY);
         }
 
         //related products
-        public void HandleEvent(EntityInserted<RelatedProduct> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<RelatedProduct> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<RelatedProduct> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
 
         //specification attributes
-        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
 
         //specification attribute options
-        public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
 
         //Product specification attribute
-        public void HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_SPECS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_SPECS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_SPECS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
 
         //Product attributes
-        public void HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
         //Product attributes
-        public void HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
         }
-        public void HandleEvent(EntityDeleted<ProductAttributeMapping> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
         }
         //Product attributes
-        public void HandleEvent(EntityUpdated<ProductAttributeValue> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductAttributeValue> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
         }
 
         //Topics
-        public void HandleEvent(EntityInserted<Topic> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Topic> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Topic> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
         //Orders
-        public void HandleEvent(EntityInserted<Order> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Order> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Order> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
         //Pictures
-        public void HandleEvent(EntityInserted<Picture> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Picture> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Picture> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
 
         //Product picture mappings
-        public void HandleEvent(EntityInserted<ProductPicture> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DEFAULTPICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ProductPicture> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DEFAULTPICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ProductPicture> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DEFAULTPICTURE_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_DETAILS_PICTURES_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
@@ -1171,170 +1171,170 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //Polls
-        public void HandleEvent(EntityInserted<Poll> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Poll> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Poll> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Poll> eventMessage)
         {
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
 
         //Blog posts
-        public void HandleEvent(EntityInserted<BlogPost> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<BlogPost> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<BlogPost> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
 
         //Blog comments
-        public void HandleEvent(EntityDeleted<BlogComment> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<BlogComment> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_COMMENTS_PATTERN_KEY);
         }
 
         //News items
-        public void HandleEvent(EntityInserted<NewsItem> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<NewsItem> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<NewsItem> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
         //News comments
-        public void HandleEvent(EntityDeleted<NewsComment> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<NewsComment> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_COMMENTS_PATTERN_KEY);
         }
 
         //State/province
-        public void HandleEvent(EntityInserted<StateProvince> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<StateProvince> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<StateProvince> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
 
         //return requests
-        public void HandleEvent(EntityInserted<ReturnRequestAction> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ReturnRequestAction> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ReturnRequestAction> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ReturnRequestAction> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityInserted<ReturnRequestReason> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ReturnRequestReason> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ReturnRequestReason> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ReturnRequestReason> eventMessage)
         {
             _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
         }
 
         //templates
-        public void HandleEvent(EntityInserted<CategoryTemplate> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<CategoryTemplate> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<CategoryTemplate> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<CategoryTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityInserted<ManufacturerTemplate> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ManufacturerTemplate> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ManufacturerTemplate> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ManufacturerTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityInserted<ProductTemplate> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<ProductTemplate> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityInserted<TopicTemplate> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<TopicTemplate> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<TopicTemplate> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
         }
 
         //checkout attributes
-        public void HandleEvent(EntityInserted<CheckoutAttribute> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<CheckoutAttribute> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<CheckoutAttribute> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
         }
 
         //shopping cart items
-        public void HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<ShoppingCartItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
 
         //product reviews
-        public void HandleEvent(EntityDeleted<ProductReview> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<ProductReview> eventMessage)
         {
             _cacheManager.RemoveByPattern(string.Format(PRODUCT_REVIEWS_PATTERN_KEY_BY_ID, eventMessage.Entity.ProductId));
         }

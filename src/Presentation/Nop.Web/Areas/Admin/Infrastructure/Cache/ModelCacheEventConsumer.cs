@@ -12,23 +12,23 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     /// </summary>
     public partial class ModelCacheEventConsumer: 
         //settings
-        IConsumer<EntityUpdated<Setting>>,
+        IConsumer<EntityUpdatedEvent<Setting>>,
         //specification attributes
-        IConsumer<EntityInserted<SpecificationAttribute>>,
-        IConsumer<EntityUpdated<SpecificationAttribute>>,
-        IConsumer<EntityDeleted<SpecificationAttribute>>,
+        IConsumer<EntityInsertedEvent<SpecificationAttribute>>,
+        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
+        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
         //categories
-        IConsumer<EntityInserted<Category>>,
-        IConsumer<EntityUpdated<Category>>,
-        IConsumer<EntityDeleted<Category>>,
+        IConsumer<EntityInsertedEvent<Category>>,
+        IConsumer<EntityUpdatedEvent<Category>>,
+        IConsumer<EntityDeletedEvent<Category>>,
         //manufacturers
-        IConsumer<EntityInserted<Manufacturer>>,
-        IConsumer<EntityUpdated<Manufacturer>>,
-        IConsumer<EntityDeleted<Manufacturer>>,
+        IConsumer<EntityInsertedEvent<Manufacturer>>,
+        IConsumer<EntityUpdatedEvent<Manufacturer>>,
+        IConsumer<EntityDeletedEvent<Manufacturer>>,
         //vendors
-        IConsumer<EntityInserted<Vendor>>,
-        IConsumer<EntityUpdated<Vendor>>,
-        IConsumer<EntityDeleted<Vendor>>
+        IConsumer<EntityInsertedEvent<Vendor>>,
+        IConsumer<EntityUpdatedEvent<Vendor>>,
+        IConsumer<EntityDeletedEvent<Vendor>>
     {
         /// <summary>
         /// Key for nopCommerce.com news cache
@@ -76,64 +76,64 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
             this._cacheManager = cacheManager;
         }
 
-        public void HandleEvent(EntityUpdated<Setting> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Setting> eventMessage)
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(OFFICIAL_NEWS_PATTERN_KEY); //depends on AdminAreaSettings.HideAdvertisementsOnAdminArea
         }
         
         //specification attributes
-        public void HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
 
         //categories
-        public void HandleEvent(EntityInserted<Category> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORIES_LIST_PATTERN_KEY);
         }
 
         //manufacturers
-        public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURERS_LIST_PATTERN_KEY);
         }
 
         //vendors
-        public void HandleEvent(EntityInserted<Vendor> eventMessage)
+        public void HandleEvent(EntityInsertedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityUpdated<Vendor> eventMessage)
+        public void HandleEvent(EntityUpdatedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<Vendor> eventMessage)
+        public void HandleEvent(EntityDeletedEvent<Vendor> eventMessage)
         {
             _cacheManager.RemoveByPattern(VENDORS_LIST_PATTERN_KEY);
         }
