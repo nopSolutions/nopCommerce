@@ -2855,6 +2855,9 @@ namespace Nop.Services.Orders
 
                     //check order status
                     CheckOrderStatus(order);
+
+                    //raise event       
+                    _eventPublisher.Publish(new OrderVoidedEvent(order));
                 }
             }
             catch (Exception exc)
@@ -2928,6 +2931,9 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
+
+            //raise event       
+            _eventPublisher.Publish(new OrderVoidedEvent(order));
         }
 
         /// <summary>
