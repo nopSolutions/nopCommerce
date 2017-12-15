@@ -31,7 +31,7 @@ namespace Nop.Web.Areas.Admin.Components
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                widget.GetPublicViewComponent(widgetZone, out string viewComponentName);
+                widget.GetWidgetViewComponent(widgetZone, out string viewComponentName);
 
                 var widgetModel = new RenderWidgetModel
                 {

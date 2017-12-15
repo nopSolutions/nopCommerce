@@ -15,10 +15,10 @@ namespace Nop.Services.Cms
         IList<string> GetWidgetZones();
 
         /// <summary>
-        /// Gets a view component for displaying plugin in public store
+        /// Gets a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
         /// <param name="viewComponentName">View component name</param>
-        void GetPublicViewComponent(string widgetZone, out string viewComponentName);
+        void GetWidgetViewComponent(string widgetZone, out string viewComponentName);
     }
 }
