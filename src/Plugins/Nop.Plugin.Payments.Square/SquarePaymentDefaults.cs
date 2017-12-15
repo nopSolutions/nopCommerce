@@ -12,6 +12,11 @@ namespace Nop.Plugin.Payments.Square
         public static string SystemName => "Payments.Square";
 
         /// <summary>
+        /// Name of the view component to display plugin in public store
+        /// </summary>
+        public const string ViewComponentName = "PaymentSquare";
+
+        /// <summary>
         /// User agent used for requesting Square services
         /// </summary>
         public static string UserAgent => "Square-connect-nopCommerce-1.0";

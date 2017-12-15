@@ -45,13 +45,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         }
 
         /// <summary>
-        /// Gets a view component for displaying widget
+        /// Gets a name of a view component for displaying widget
         /// </summary>
         /// <param name="widgetZone">Name of the widget zone</param>
-        /// <param name="viewComponentName">View component name</param>
-        public void GetWidgetViewComponent(string widgetZone, out string viewComponentName)
+        /// <returns>View component name</returns>
+        public string GetWidgetViewComponentName(string widgetZone)
         {
-            viewComponentName = "WidgetsGoogleAnalytics";
+            return "WidgetsGoogleAnalytics";
         }
 
         /// <summary>

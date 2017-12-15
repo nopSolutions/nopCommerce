@@ -31,15 +31,11 @@ namespace Nop.Web.Areas.Admin.Components
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                widget.GetWidgetViewComponent(widgetZone, out string viewComponentName);
-
-                var widgetModel = new RenderWidgetModel
+                model.Add(new RenderWidgetModel
                 {
-                    WidgetViewComponentName = viewComponentName,
+                    WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
                     WidgetViewComponentArguments = additionalData
-                };
-
-                model.Add(widgetModel);
+                });
             }
 
             //no data?

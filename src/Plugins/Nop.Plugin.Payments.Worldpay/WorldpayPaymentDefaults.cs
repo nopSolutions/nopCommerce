@@ -6,12 +6,17 @@ namespace Nop.Plugin.Payments.Worldpay
     /// <summary>
     /// Represents constants of the Worldpay payment plugin
     /// </summary>
-    public static class WorldpayPaymentDefaults
+    public class WorldpayPaymentDefaults
     {
         /// <summary>
         /// Worldpay payment method system name
         /// </summary>
         public static string SystemName => "Payments.WorldpayUS";
+
+        /// <summary>
+        /// Name of the view component to display plugin in public store
+        /// </summary>
+        public const string ViewComponentName = "PaymentWorldpay";
 
         /// <summary>
         /// User agent used for requesting Worldpay services

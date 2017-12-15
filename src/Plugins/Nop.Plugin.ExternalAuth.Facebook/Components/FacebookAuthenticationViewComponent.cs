@@ -3,7 +3,7 @@ using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Components
 {
-    [ViewComponent(Name = "FacebookAuthentication")]
+    [ViewComponent(Name = FacebookAuthenticationDefaults.ViewComponentName)]
     public class FacebookAuthenticationViewComponent : NopViewComponent
     {
         public IViewComponentResult Invoke()

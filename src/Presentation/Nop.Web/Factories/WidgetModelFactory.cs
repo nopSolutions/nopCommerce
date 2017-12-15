@@ -69,15 +69,11 @@ namespace Nop.Web.Factories
                 var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 foreach (var widget in widgets)
                 {
-                    widget.GetWidgetViewComponent(widgetZone, out string viewComponentName);
-
-                    var widgetModel = new RenderWidgetModel
+                    model.Add(new RenderWidgetModel
                     {
-                        WidgetViewComponentName = viewComponentName,
+                        WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
                         WidgetViewComponentArguments = additionalData
-                    };
-
-                    model.Add(widgetModel);
+                    });
                 }
                 return model;
             });
