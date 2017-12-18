@@ -863,7 +863,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ExportImportProductAttributes_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportProductSpecificationAttributes_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ExportImportProductCategoryBreadcrumb_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.ExportImportCategoriesUsingCategoryName_OverrideForStore, mo => mo.Ignore());
+                .ForMember(dest => dest.ExportImportCategoriesUsingCategoryName_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ExportImportSplitProductsFile_OverrideForStore, mo => mo.Ignore());
             CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
@@ -879,7 +880,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.DefaultManufacturerPageSize, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSortingEnumDisabled, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSortingEnumDisplayOrder, mo => mo.Ignore())
-                .ForMember(dest => dest.ExportImportUseDropdownlistsForAssociatedEntities, mo => mo.Ignore());
+                .ForMember(dest => dest.ExportImportUseDropdownlistsForAssociatedEntities, mo => mo.Ignore())
+                .ForMember(dest => dest.ExportImportProductsCountInOneFile, mo => mo.Ignore());
             CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

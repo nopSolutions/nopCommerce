@@ -6062,7 +6062,9 @@ namespace Nop.Services.Installation
                 ProductReviewsPageSizeOnAccountPage = 10,
                 ExportImportProductAttributes = true,
                 ExportImportProductSpecificationAttributes = true,
-                ExportImportUseDropdownlistsForAssociatedEntities = true
+                ExportImportUseDropdownlistsForAssociatedEntities = true,
+                ExportImportProductsCountInOneFile = 500,
+                ExportImportSplitProductsFile = false
             });
 
             settingService.SaveSetting(new LocalizationSettings

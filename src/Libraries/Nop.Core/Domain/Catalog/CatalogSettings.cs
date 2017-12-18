@@ -402,5 +402,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the categories need to be exported/imported using name of category
         /// </summary>
         public bool ExportImportCategoriesUsingCategoryName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether products must be importing by separated files
+        /// </summary>
+        public bool ExportImportSplitProductsFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of max products count in one file 
+        /// </summary>
+        public int ExportImportProductsCountInOneFile { get; set; }
     }
 }
