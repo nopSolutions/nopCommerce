@@ -310,6 +310,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
 		}
+        private string MakeImagesPathsAbsolute(string body, int storeid)
+        {
+            if (storeid == 0) storeid = 1;
+            var store = _storeService.GetStoreById(storeid);
+            return body.Replace("src=\"/", "src=\"" + store.Url);
+        }
 
         [HttpPost,ActionName("Edit")]
         [FormValueRequired("send-test-email")]
@@ -322,7 +328,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
-            
+
+            campaign.Body = MakeImagesPathsAbsolute(campaign.Body, campaign.StoreId);
+
             model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
@@ -378,6 +386,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
+
+            campaign.Body = MakeImagesPathsAbsolute(campaign.Body, campaign.StoreId);
 
             model.AllowedTokens = string.Join(", ", _messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
