@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.Worldpay.Models.Customer;
@@ -67,12 +68,9 @@ namespace Nop.Plugin.Payments.Worldpay.Services
                 return;
 
             //add js sсript to one page checkout
-            if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
-                actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
-            {
-                eventMessage.Helper
-                    .AddScriptParts(ResourceLocation.Footer, "https://gwapi.demo.securenet.com/v1/PayOS.js", excludeFromBundle: true);
-            }
+            var matchedRoutes = eventMessage.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
+            if (matchedRoutes.Any(route => route.Name.Equals("CheckoutOnePage")))
+                eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, WorldpayPaymentDefaults.PaymentScriptPath, excludeFromBundle: true);
         }
 
         /// <summary>

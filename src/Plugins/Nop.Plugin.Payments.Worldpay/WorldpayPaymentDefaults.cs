@@ -24,6 +24,11 @@ namespace Nop.Plugin.Payments.Worldpay
         public static string UserAgent => "nopCommerce-plugin-3.0";
 
         /// <summary>
+        /// Path to the Worldpay payment js script
+        /// </summary>
+        public static string PaymentScriptPath => "https://gwapi.demo.securenet.com/v1/PayOS.js";
+
+        /// <summary>
         /// Key of the attribute to store Worldpay Vault customer identifier
         /// </summary>
         public static string CustomerIdAttribute => "WorldpayCustomerId";
