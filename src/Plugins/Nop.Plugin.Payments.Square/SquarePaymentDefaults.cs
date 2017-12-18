@@ -27,6 +27,11 @@ namespace Nop.Plugin.Payments.Square
         public static string IntegrationId => "sqi_4efb0346e2ef4b1375319dcd6e9977c0";
 
         /// <summary>
+        /// Path to the Square payment form js script
+        /// </summary>
+        public static string PaymentFormScriptPath => "https://js.squareup.com/v2/paymentform";
+
+        /// <summary>
         /// Key of the attribute to store Square customer identifier
         /// </summary>
         public static string CustomerIdAttribute => "SquareCustomerId";

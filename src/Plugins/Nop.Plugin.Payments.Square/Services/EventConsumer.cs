@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -60,11 +61,11 @@ namespace Nop.Plugin.Payments.Square.Services
                 return;
 
             //add js sсript to one page checkout
-            if (eventMessage.Helper.ViewContext.ActionDescriptor is ControllerActionDescriptor actionDescriptor &&
-                actionDescriptor.ControllerName == "Checkout" && actionDescriptor.ActionName == "OnePageCheckout")
+            var matchedRoutes = eventMessage.Helper.ViewContext.RouteData.Routers.OfType<INamedRouter>();
+            if (matchedRoutes.Any(route => route.Name.Equals("CheckoutOnePage")))
             {
                 eventMessage.Helper
-                    .AddScriptParts(ResourceLocation.Footer, "https://js.squareup.com/v2/paymentform", excludeFromBundle: true);
+                    .AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
             }
         }
 
