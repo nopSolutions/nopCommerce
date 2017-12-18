@@ -235,6 +235,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ExportImportCategoriesUsingCategoryName { get; set; }
         public bool ExportImportCategoriesUsingCategoryName_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages")]
+        public bool ExportImportAllowDownloadImages { get; set; }
+        public bool ExportImportAllowDownloadImages_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts")]
