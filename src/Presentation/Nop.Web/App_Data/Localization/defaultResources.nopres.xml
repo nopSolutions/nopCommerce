@@ -9759,6 +9759,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Remove">
     <Value>Remove affiliate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
+    <Value>Avatar</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.City">
     <Value>City</Value>
   </LocaleResource>

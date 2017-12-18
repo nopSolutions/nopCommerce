@@ -20,6 +20,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -37,6 +38,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -99,6 +101,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IPictureService _pictureService;
+        private readonly MediaSettings _mediaSettings;
         
         #endregion
         
@@ -146,7 +150,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
             IRewardPointService rewardPointService,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            IPictureService pictureService,
+            MediaSettings mediaSettings)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -191,6 +197,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._workflowMessageService = workflowMessageService;
             this._rewardPointService = rewardPointService;
             this._cacheManager = cacheManager;
+            this._mediaSettings = mediaSettings;
+            this._pictureService = pictureService;
         }
         
         #endregion
@@ -266,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         
         protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
-            return new CustomerModel
+            var model = new CustomerModel
             {
                 Id = customer.Id,
                 Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
@@ -278,8 +286,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 CustomerRoleNames = GetCustomerRolesNames(customer.CustomerRoles.ToList()),
                 Active = customer.Active,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc),
-                LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc),
+                LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc)
             };
+
+            if (_customerSettings.AllowCustomersToUploadAvatars)
+            {
+                model.AvatarUrl = _pictureService.GetPictureUrl(
+                    customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                    _mediaSettings.AvatarPictureSize,
+                    _customerSettings.DefaultAvatarEnabled,
+                    defaultPictureType: PictureType.Avatar);
+            }
+
+            return model;
         }
         
         protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
@@ -770,6 +789,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                AvatarEnabled = _customerSettings.AllowCustomersToUploadAvatars,
                 DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,

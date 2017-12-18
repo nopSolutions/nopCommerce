@@ -194,6 +194,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
 
+        public string AvatarUrl { get; internal set; }
+
         #region Nested classes
 
         public partial class StoreModel : BaseNopEntityModel

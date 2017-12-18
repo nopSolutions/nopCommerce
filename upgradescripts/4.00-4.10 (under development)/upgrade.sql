@@ -8,6 +8,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.CurrencyCode.Hint">
     <Value>The currency code. For a list of currency codes, go to: https://en.wikipedia.org/wiki/ISO_4217</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Avatar">
+    <Value>Avatar</Value>
+  </LocaleResource>  
 </Language>
 '
 
