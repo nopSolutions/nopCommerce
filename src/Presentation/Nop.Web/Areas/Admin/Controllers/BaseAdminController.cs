@@ -79,10 +79,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
             //TODO rename setting
             var useIsoDateTime = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson;
-            var serializerSettings = new JsonSerializerSettings
+            var serializerSettings = new JsonSerializerSettings();
+            if (useIsoDateTime)
             {
-                DateFormatHandling = useIsoDateTime ? DateFormatHandling.IsoDateFormat : DateFormatHandling.MicrosoftDateFormat                
-            };
+                serializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
+            }
 
             return base.Json(data, serializerSettings);
         }
