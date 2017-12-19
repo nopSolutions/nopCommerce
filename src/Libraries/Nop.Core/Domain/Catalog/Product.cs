@@ -771,5 +771,15 @@ namespace Nop.Core.Domain.Catalog
             get { return _productWarehouseInventory ?? (_productWarehouseInventory = new List<ProductWarehouseInventory>()); }
             protected set { _productWarehouseInventory = value; }
         }
+
+        /// <summary>
+        /// Used to identify products supplier
+        /// </summary>
+        public int? ExternalType { get; set; }
+
+        /// <summary>
+        /// Used to identify product in supplier price list
+        /// </summary>
+        public long? ExternalId { get; set; }
     }
 }
