@@ -1969,6 +1969,9 @@ namespace Nop.Services.Catalog
             if (vendorId > 0)
                 query = query.Where(pr => pr.Product.VendorId == vendorId);
 
+            //ignore deleted products
+            query = query.Where(pr => pr.Product != null && !pr.Product.Deleted);
+
             query = query.OrderBy(pr => pr.CreatedOnUtc).ThenBy(pr => pr.Id);
 
             var productReviews = new PagedList<ProductReview>(query, pageIndex, pageSize);
