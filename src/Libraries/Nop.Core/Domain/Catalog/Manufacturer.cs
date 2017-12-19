@@ -113,5 +113,16 @@ namespace Nop.Core.Domain.Catalog
             get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
             protected set { _appliedDiscounts = value; }
         }
+
+        /// <summary>
+        /// Used to identify products supplier
+        /// </summary>
+        public int? ExternalType { get; set; }
+
+        /// <summary>
+        /// Used to identify manufacturer in products supplier price list
+        /// </summary>
+        public long? ExternalId { get; set; }
+
     }
 }
