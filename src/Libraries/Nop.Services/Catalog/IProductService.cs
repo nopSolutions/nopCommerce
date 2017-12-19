@@ -497,12 +497,13 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="productId">The product identifier; pass 0 to load all records</param>
         /// <param name="vendorId">The vendor identifier (limit to products of this vendor); pass 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
         IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0, int vendorId = 0,
+            string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

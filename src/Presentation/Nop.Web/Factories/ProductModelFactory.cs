@@ -1431,6 +1431,7 @@ namespace Nop.Web.Factories
 
             var list = _productService.GetAllProductReviews(customerId: _workContext.CurrentCustomer.Id, 
                 approved: null, 
+                storeId: _storeContext.CurrentStore.Id,
                 pageIndex: pageIndex, 
                 pageSize: pageSize);
 

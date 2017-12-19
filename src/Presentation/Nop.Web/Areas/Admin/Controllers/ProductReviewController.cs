@@ -159,7 +159,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var productReviews = _productService.GetAllProductReviews(0, approved, 
                 createdOnFromValue, createdToFromValue, model.SearchText, 
-                model.SearchStoreId, model.SearchProductId, vendorId, 
+                model.SearchStoreId, model.SearchProductId, vendorId, true,
                 command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult

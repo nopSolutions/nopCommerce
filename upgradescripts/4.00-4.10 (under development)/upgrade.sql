@@ -22,6 +22,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchKeywords.Hint">
     <Value>Search topic(s) by specific keywords.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
+    <Value>Check to display reviews written in the current store only (on a product details page and on the account product reviews page).</Value>
   </LocaleResource>
 </Language>
 '

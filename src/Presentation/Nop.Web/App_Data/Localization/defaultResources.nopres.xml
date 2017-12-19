@@ -5536,7 +5536,7 @@
     <Value>Reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Check to display reviews written in the current store only (on a product details page).</Value>
+    <Value>Check to display reviews written in the current store only (on a product details page and on the account product reviews page).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsTabOnAccountPage">
     <Value>Show product reviews tab on 'My account' page</Value>
