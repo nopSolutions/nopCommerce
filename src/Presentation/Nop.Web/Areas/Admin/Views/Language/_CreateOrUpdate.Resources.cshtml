@@ -2,7 +2,7 @@
 @inject AdminAreaSettings adminAreaSettings
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_top", additionalData = Model })
     <div class="panel panel-default panel-search">
         <div class="panel-body">
             <div class="row">
@@ -188,5 +188,5 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_language_details_resources_bottom", additionalData = Model })
 </div>

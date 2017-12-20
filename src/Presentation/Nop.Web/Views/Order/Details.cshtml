@@ -34,7 +34,7 @@
         </div>
     }
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model.Id })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_top", additionalData = Model })
         <div class="order-overview">
             <div class="order-number">
                 <strong>@T("Order.Order#")@Model.CustomOrderNumber</strong>
@@ -50,7 +50,7 @@
                     @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
                 </li>
             </ul>
-            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model.Id })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_overview", additionalData = Model })
         </div>
         <div class="order-details-area">
             <div class="billing-info-wrap">
@@ -466,7 +466,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model })
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
@@ -549,7 +549,7 @@
                                                 <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item })
                                     </td>
                                     <td class="unit-price">
                                         <label class="td-title">@T("Order.Product(s).Price"):</label>
@@ -578,7 +578,7 @@
                     </div>
                 }
             </div>
-            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model })
             <div class="section options">
                 @if (!string.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
@@ -719,6 +719,6 @@
                 }
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model.Id })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_bottom", additionalData = Model })
     </div>
 </div>

@@ -6,7 +6,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_top", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_top", additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
@@ -30,7 +30,7 @@
                     <nop-editor asp-for="Address" asp-template="Address" />
                 </div>
             </div>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_bottom", additionalData = Model.Id })
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_warehouse_details_bottom", additionalData = Model })
         </div>
     </div>
 </div>

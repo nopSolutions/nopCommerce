@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_top", additionalData = Model.Id })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_top", additionalData = Model })
 <div class="panel panel-default">
     <div class="panel-body">
         <p>
@@ -202,4 +202,4 @@
         <button type="button" id="btnGenerateAllCombinations" class="btn bg-aqua">@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")</button>
     </div>
 </div>
-@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_bottom", additionalData = Model.Id })
+@await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_product_details_product_attributes_combinations_bottom", additionalData = Model })

@@ -28,7 +28,7 @@
                     <div class="buttons">
                         <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">@T("News.MoreInfo")</a>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_inside_item", additionalData = item.Id })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_inside_item", additionalData = item })
                 </div>
             }
         </div>

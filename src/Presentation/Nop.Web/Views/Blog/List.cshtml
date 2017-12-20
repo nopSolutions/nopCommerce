@@ -40,17 +40,17 @@
         <div class="blog-posts">
             @foreach (var item in Model.BlogPosts)
             {
-                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post", additionalData = item.Id })
+                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post", additionalData = item })
                 <div class="post">
                     <div class="post-head">
                         <a class="post-title" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">@item.Title</a>
                         <span class="post-date">-@item.CreatedOn.ToString("D")</span>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item })
                     <div class="post-body">
                         @Html.Raw(!string.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item })
                     <div class="blog-details">
                         @if (item.Tags.Count > 0)
                         {
@@ -77,9 +77,9 @@
                             <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item.Id })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item })
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
+                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item })
             }
         </div>
         @{

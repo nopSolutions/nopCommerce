@@ -1,7 +1,7 @@
 ﻿@model AddressAttributeModel
 
 <div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_address_attribute_details_values_top", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_address_attribute_details_values_top", additionalData = Model })
     <div class="panel panel-default">
         @if (Model.Id > 0)
         {
@@ -115,5 +115,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_address_attribute_details_values_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_address_attribute_details_values_bottom", additionalData = Model })
 </div>
