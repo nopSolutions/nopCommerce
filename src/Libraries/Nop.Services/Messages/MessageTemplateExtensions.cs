@@ -64,7 +64,7 @@ namespace Nop.Services.Messages
                 case MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification:
                 case MessageTemplateSystemNames.NewReturnRequestCustomerNotification:
                 case MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification:
-                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens };
+                    return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ReturnRequestTokens };
 
                 case MessageTemplateSystemNames.NewForumTopicMessage:
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ForumTopicTokens, TokenGroupNames.ForumTokens, TokenGroupNames.CustomerTokens };

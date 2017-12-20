@@ -1141,6 +1141,7 @@ namespace Nop.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, orderItem.Order, languageId);
             _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
@@ -1178,6 +1179,7 @@ namespace Nop.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, orderItem.Order, languageId);
             _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
@@ -1219,6 +1221,7 @@ namespace Nop.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, orderItem.Order, languageId);
             _messageTokenProvider.AddCustomerTokens(tokens, returnRequest.Customer);
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
