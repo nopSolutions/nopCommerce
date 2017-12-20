@@ -164,8 +164,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
+            
+            var model = new LanguageModel
+            {
+                DisplayOrder = _languageService.GetAllLanguages().Max(l => l.DisplayOrder) + 1
+            };
 
-            var model = new LanguageModel();
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //currencies
